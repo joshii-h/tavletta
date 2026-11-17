@@ -130,6 +130,9 @@ def extras(element: TextElement, dpi: float) -> Extras:
     )
 
 
+# pixels of an image cairo makes at most, wide or high
+CAIRO_MAX = 32767
+
 # names fontconfig always resolves to some font: never "missing"
 GENERIC_FONTS = frozenset(
     {"sans", "sans-serif", "serif", "monospace", "mono", "system-ui", "cursive", "fantasy"}
@@ -358,8 +361,10 @@ def block(
     extra = extras(element, dpi)
     width = max(1, logical.width) + 2 * extra.pad + extra.shadow
     height = max(1, logical.height) + 2 * extra.pad + extra.shadow
-    from tavletta.render import check_size  # render imports this module
+    from tavletta.render import ElementError, check_size  # render imports this module
 
+    if max(width, height) > CAIRO_MAX:  # a long line: cairo cannot make the image
+        raise ElementError("text_too_long", chars=len(element.text))
     check_size(width, height)  # within limits (the print server)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
     ctx = cairo.Context(surface)
