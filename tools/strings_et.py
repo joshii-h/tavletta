@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "Tavletta tähendab romanši keeles väikest tahvlit (sõnast tavla, tahvel/laud). Hääldus: tav-LET-ta.",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "luba dokumendilehti (PDF, pildid) päringuga saadetud siltides; PDF-id joonistatakse siis piirangutega eraldi protsessis (vaikimisi väljas)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Dokumendilehed pole label_content'is lubatud (--allow-pdf-pages)",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Element %(n)d: tekst on ühel real joonistamiseks liiga pikk – jaga see ridadeks või lühenda seda",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Silt on %(width)s lai, kuid printer on seadistatud %(loaded)s laiustele siltidele. Kontrolli sildi suurust või pane sisse sobivad sildid.",
 }

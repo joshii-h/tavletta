@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "Tavletta 在羅曼什語中意為「小板子」（源自 tavla，板、桌）。讀作 tav-LET-ta。",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "允許隨請求傳送的標籤中含有文件頁面（PDF、圖片）；PDF 會在有限制的獨立程序中繪製（預設關閉）",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content 中不允許文件頁面（--allow-pdf-pages）",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "元素 %(n)d：文字太長，無法在一行中繪製 – 請分成多行或縮短",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "標籤寬 %(width)s，但印表機設定的標籤寬度為 %(loaded)s。請檢查標籤尺寸，或裝入相符的標籤。",
 }

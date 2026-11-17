@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "Tavletta signifie « petite tablette » en romanche (de tavla, table, planche). Prononcé tav-LET-ta.",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "autoriser les pages de document (PDF, images) dans les étiquettes envoyées avec la requête ; les PDF sont alors dessinés dans un processus séparé avec des limites (désactivé par défaut)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Les pages de document ne sont pas autorisées dans label_content (--allow-pdf-pages)",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Élément %(n)d\xa0: le texte est trop long pour être dessiné sur une seule ligne – répartissez-le sur plusieurs lignes ou raccourcissez-le",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "L’étiquette mesure %(width)s de large, mais l’imprimante est réglée pour des étiquettes de %(loaded)s de large. Vérifiez la taille de l’étiquette ou chargez les étiquettes correspondantes.",
 }

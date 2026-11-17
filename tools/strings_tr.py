@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "Tavletta, Romanşçada küçük bir tablet anlamına gelir (tavla, yani tahta/levha sözcüğünden). Okunuşu: tav-LET-ta.",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "istekle gönderilen etiketlerde belge sayfalarına (PDF, görseller) izin ver; PDF'ler bu durumda sınırlı ayrı bir süreçte çizilir (varsayılan olarak kapalı)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content içinde belge sayfalarına izin verilmez (--allow-pdf-pages)",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Öge %(n)d: metin tek satırda çizilemeyecek kadar uzun – satırlara bölün ya da kısaltın",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Etiket %(width)s genişliğinde, ancak yazıcı %(loaded)s genişliğindeki etiketlere ayarlı. Etiket boyutunu denetleyin ya da uygun etiketleri takın.",
 }
