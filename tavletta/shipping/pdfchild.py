@@ -41,9 +41,25 @@ def _memory(max_pixels: int) -> int:
     return BASE_MEMORY + MEMORY_PER_PIXEL * max_pixels
 
 
+def _seconds() -> tuple[float, bool]:
+    """The wall time this child may take, and whether that is what is left
+    of the render's budget for all its PDF pages (render.pdf_seconds_left)
+    rather than the limit of one child."""
+    from tavletta.render import pdf_seconds_left
+
+    left = pdf_seconds_left()
+    if left is not None and left < SECONDS:
+        return left, True
+    return SECONDS, False
+
+
 def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
     """The child's answer to request (op "info" or "draw", see _answer())
-    about the PDF raw, and the pixels of a drawing."""
+    about the PDF raw, and the pixels of a drawing. Within the render's
+    time for all its PDF pages: refused (ChildLimit) once that is used up."""
+    seconds, budget = _seconds()
+    if seconds <= 0:
+        raise ChildLimit("the PDF pages took more than their time")
     root = str(Path(__file__).resolve().parent.parent.parent)
     env = dict(os.environ)
     env["PYTHONPATH"] = os.pathsep.join(p for p in (root, env.get("PYTHONPATH", "")) if p)
@@ -53,11 +69,13 @@ def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
             [sys.executable, "-m", __name__],
             input=json.dumps(request).encode() + b"\n" + raw,
             capture_output=True,
-            timeout=SECONDS,
+            timeout=seconds,
             env=env,
             check=False,
         )
     except subprocess.TimeoutExpired:
+        if budget:
+            raise ChildLimit("the PDF pages took more than their time") from None
         raise ChildLimit("the PDF took more than %.0f s" % SECONDS) from None
     except OSError as e:
         raise ChildFailed(str(e)) from None
