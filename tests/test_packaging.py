@@ -6,6 +6,8 @@ import re
 import tomllib
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -308,3 +310,27 @@ def test_the_docs_deploy_folder_is_a_repository_variable():
     text = (ROOT / ".forgejo" / "workflows" / "docs.yml").read_text(encoding="utf-8")
     assert "SITE_DIR: ${{ vars.DOCS_SITE_DIR ||" in text
     assert "`DOCS_SITE_DIR`" in (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+
+
+def test_pngs_carry_no_dates():
+    """Reproducible files: no date:create/date:modify text or tIME chunks
+    (tools/screenshots.sh writes none)."""
+    import struct
+    import subprocess
+
+    tracked = subprocess.run(
+        ["git", "ls-files", "*.png"], cwd=ROOT, capture_output=True, text=True, check=False
+    ).stdout.split()
+    if not tracked:
+        pytest.skip("not a git checkout")
+    for name in tracked:
+        data = (ROOT / name).read_bytes()
+        at = 8
+        while at < len(data):
+            (size,) = struct.unpack(">I", data[at : at + 4])
+            kind, body = data[at + 4 : at + 8], data[at + 8 : at + 8 + size]
+            assert kind != b"tIME", name
+            if kind in (b"tEXt", b"zTXt", b"iTXt"):
+                assert not body.startswith(b"date:"), name
+            at += 12 + size
+    assert "png:exclude-chunks=date,time" in (ROOT / "tools" / "screenshots.sh").read_text()

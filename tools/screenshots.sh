@@ -128,7 +128,7 @@ shoot() { # output example state language scheme
     $IM -size "$size" xc:black -fill white -draw "roundrectangle 0,0 $((w-1)),$((h-1)) 12,12" "$CONF/mask.png"
     $IM "$out.raw.png" "$CONF/mask.png" -alpha off -compose CopyOpacity -composite -compose Over \
         \( +clone -background black -shadow 35x14+0+4 \) +swap -background none -layers merge +repage \
-        "$out.png"
+        -strip -define png:exclude-chunks=date,time "$out.png"  # no dates: reproducible files
     [ -n "${KEEP_RAW:-}" ] || rm -f "$out.raw.png"
     echo "$out.png"
 }
