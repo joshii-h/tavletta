@@ -17,6 +17,7 @@ from tavletta.backends import usb
 from tavletta.backends.base import (
     Capabilities,
     FoundPrinter,
+    HostMemory,
     LabelSize,
     LabelTooWide,
     Level,
@@ -150,7 +151,7 @@ class Dymo(RawBackend):
         super().__init__(port)
         # models of network printers as they announce themselves, by host
         # ("" = looked for, not announced): the 4XL has a wider head
-        self.models: dict[str, str] = {}
+        self.models: HostMemory[str] = HostMemory()
 
     def model(self, host: str) -> str:
         return usb_model(host) or self.models.get(host, "")

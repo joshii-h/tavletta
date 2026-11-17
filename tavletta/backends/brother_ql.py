@@ -28,6 +28,7 @@ from tavletta.backends.base import (
     CassetteInfo,
     CoverOpen,
     FoundPrinter,
+    HostMemory,
     LabelSize,
     LabelTooLong,
     OutOfLabels,
@@ -812,8 +813,8 @@ class _Plan:
 # what was learned about a printer, by host, for both backends: the model
 # its network name says, and whether the red and black roll is loaded (the
 # status does not tell; a job of the wrong kind is refused)
-_found_models: dict[str, Model] = {}
-_two_color_rolls: dict[str, bool] = {}
+_found_models: HostMemory[Model] = HostMemory()
+_two_color_rolls: HostMemory[bool] = HostMemory()
 
 
 class _BrotherQL(Backend):

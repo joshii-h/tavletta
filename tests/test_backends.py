@@ -301,3 +301,31 @@ def test_backends_offer_only_known_extras_and_cut_modes():
     for backend in backends():
         assert set(backend.capabilities.extras) <= set(base._EXTRAS), backend.id
         assert set(backend.capabilities.cut_modes) <= set(base.CUT_MODES), backend.id
+
+
+def test_host_memory_forgets_the_least_recently_used_printer():
+    """What backends learn per printer address stays bounded (a server whose
+    --allow-printer pattern admits any address)."""
+    from tavletta.backends import brother_ql, cab, niimbot, zpl
+    from tavletta.backends.base import HOSTS_REMEMBERED, HostMemory
+
+    memory: HostMemory[int] = HostMemory(3)
+    for n, host in enumerate("abc"):
+        memory[host] = n
+    assert memory.get("a") == 0  # used: kept
+    memory["d"] = 3
+    assert list(memory) == ["c", "a", "d"] and "b" not in memory
+    assert memory.get("b", -1) == -1 and memory == {"c": 2, "a": 0, "d": 3}
+    memory["c"] = 5  # written again: the most recent
+    memory["e"] = 4
+    assert list(memory) == ["d", "c", "e"]  # "a" forgotten
+    assert memory.pop("c") == 5 and memory.pop("x", None) is None
+
+    backend = cab.Cab()
+    for n in range(HOSTS_REMEMBERED + 10):
+        backend._learn("10.0.%d.%d" % divmod(n, 256), 12.0)
+    assert len(backend.reported) == HOSTS_REMEMBERED
+    assert isinstance(cab._setups, HostMemory)
+    assert isinstance(niimbot.Niimbot().models, HostMemory)
+    assert isinstance(zpl.Zpl().reported, HostMemory)
+    assert isinstance(brother_ql._found_models, HostMemory)

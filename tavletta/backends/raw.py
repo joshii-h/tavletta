@@ -27,6 +27,7 @@ from tavletta.backends import mdns, net, usb
 from tavletta.backends.base import (
     Backend,
     FoundPrinter,
+    HostMemory,
     PrinterError,
     PrinterInfo,
     PrinterPaused,
@@ -287,7 +288,7 @@ class RawBackend(Backend):
             self.port = port
         # resolutions the printers reported (where they can), by address:
         # prepare() renders for the job's printer with "auto"
-        self.reported: dict[str, float] = {}
+        self.reported: HostMemory[float] = HostMemory()
 
     def report_dpi(self, host: str, dpi: float) -> None:
         self.reported[host] = dpi
