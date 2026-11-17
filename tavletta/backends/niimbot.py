@@ -33,6 +33,7 @@ from tavletta.backends.base import (
     CoverOpen,
     FoundPrinter,
     HeadOpen,
+    HostMemory,
     JobCanceled,
     LabelNotFound,
     LabelSize,
@@ -919,7 +920,7 @@ class Niimbot(Backend):
         self.model: Model | None = None  # of the printer last asked
         # the models the printers reported, by address: a job renders for
         # its own printer (PrintOptions.host), also beside others
-        self.models: dict[str, Model] = {}
+        self.models: HostMemory[Model] = HostMemory()
 
     def _model(self, info: PrinterInfo | None, host: str = "") -> Model | None:
         """The model of the answer; else the one this printer reported,

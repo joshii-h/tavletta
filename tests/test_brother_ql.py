@@ -249,8 +249,8 @@ class FakeLink:
 @pytest.fixture(autouse=True)
 def _forget(monkeypatch):
     """What the backend learned about printers stays in the test."""
-    monkeypatch.setattr(ql, "_found_models", {})
-    monkeypatch.setattr(ql, "_two_color_rolls", {})
+    monkeypatch.setattr(ql, "_found_models", ql.HostMemory())
+    monkeypatch.setattr(ql, "_two_color_rolls", ql.HostMemory())
 
 
 @pytest.fixture

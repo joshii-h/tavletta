@@ -10,12 +10,14 @@ from __future__ import annotations
 
 import math
 import socket
+import threading
 from abc import ABC, abstractmethod
+from collections import OrderedDict
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import KW_ONLY, dataclass, field, replace
 from datetime import date
-from typing import Literal
+from typing import Literal, TypeVar
 
 from PIL import Image
 
@@ -25,6 +27,9 @@ from tavletta.render import DEFAULT_SAFE_MM, PRINT_DPI, Rendered, RenderWarning,
 ColorModel = Literal["color", "mono", "two-color"]
 # rounding in unit conversions must not make a label "too long" or "too wide"
 LIMIT_SLACK_MM = 0.01
+# printers whose answers a backend remembers by address (HostMemory)
+HOSTS_REMEMBERED = 64
+_V = TypeVar("_V")
 # every cut mode a backend may offer; "end": one cut after the last label of
 # a job, the copies stay together
 CUT_MODES = ("full", "half", "end", "none")
@@ -37,6 +42,38 @@ _EXTRAS = ("chain", "high_res", "feed")
 
 
 # --- what a printer can do --------------------------------------------------
+
+
+class HostMemory(OrderedDict[str, _V]):
+    """What a backend learned about printers, by address, for the last
+    `size` printers used (least recently used forgotten first): a print
+    server whose --allow-printer pattern admits any address cannot make
+    it grow without bound. Safe to share between threads."""
+
+    def __init__(self, size: int = HOSTS_REMEMBERED):
+        super().__init__()
+        self.size = size
+        self._lock = threading.RLock()
+
+    def __setitem__(self, host: str, value: _V) -> None:
+        with self._lock:
+            super().__setitem__(host, value)
+            self.move_to_end(host)
+            while len(self) > self.size:
+                self.popitem(last=False)
+
+    def __getitem__(self, host: str) -> _V:
+        with self._lock:
+            value = super().__getitem__(host)
+            self.move_to_end(host)
+            return value
+
+    def get(self, host: str, default=None):
+        with self._lock:
+            try:
+                return self[host]
+            except KeyError:
+                return default
 
 
 @dataclass(frozen=True)

@@ -36,6 +36,7 @@ from tavletta.backends.base import (
     Choice,
     FoundPrinter,
     HeadOpen,
+    HostMemory,
     LabelNotFound,
     LabelSize,
     OutOfLabels,
@@ -282,7 +283,7 @@ def _fetch_setup(host: str) -> bytes | None:
         return None
 
 
-_setups: dict[str, tuple[float, Setup]] = {}  # host -> (when read, setup)
+_setups: HostMemory[tuple[float, Setup]] = HostMemory()  # host -> (when read, setup)
 _setups_lock = threading.Lock()
 
 
@@ -456,7 +457,7 @@ class Cab(Backend):
         # the resolutions the printers reported, by address: prepare()
         # renders for the job's printer (PrintOptions.host); one backend
         # serves every cab printer of a print server
-        self.reported: dict[str, float] = {}
+        self.reported: HostMemory[float] = HostMemory()
         # the printer last asked: for a job whose printer is not known
         self.dots_per_mm = DEFAULT_DOTS_PER_MM
 
