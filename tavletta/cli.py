@@ -73,6 +73,7 @@ from tavletta.ui.texts import (
     data_error_text,
     label_error_text,
     other_pitch_text,
+    other_width_text,
     printed_remark,
     printer_error_text,
     save_error_text,
@@ -1116,13 +1117,19 @@ def _for_the_printer(
 
 
 def _check_pitch(job: Job, info: PrinterInfo, settings: Settings) -> None:
-    """Die-cut labels: a roll whose measured label distance is not the
-    label's gets a hint, as the window warns; printed anyway."""
+    """Die-cut labels: a roll whose measured label distance (or the width
+    the printer is set up for) is not the label's gets a hint, as the
+    window warns; printed anyway."""
     caps, label = job.backend.capabilities, job.label
-    if caps.continuous or caps.pages or not info.pitch_mm:
+    if caps.continuous or caps.pages:
         return
-    if abs(info.pitch_mm - label.pitch_mm()) > PITCH_TOLERANCE_MM:
-        text = other_pitch_text(label, info.pitch_mm, unit_for(settings.units))
+    unit = unit_for(settings.units)
+    text = ""
+    if info.pitch_mm and abs(info.pitch_mm - label.pitch_mm()) > PITCH_TOLERANCE_MM:
+        text = other_pitch_text(label, info.pitch_mm, unit)
+    elif info.width_mm and abs(info.width_mm - label.media_size()[0]) > PITCH_TOLERANCE_MM:
+        text = other_width_text(label, info.width_mm, unit)
+    if text:
         _say(text.replace("\u2068", "").replace("\u2069", ""))  # no bidi marks
 
 

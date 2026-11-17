@@ -1350,6 +1350,21 @@ def test_a_roll_with_another_label_distance_gets_a_hint(cab_cli, capsys):
     assert "measured" not in err(capsys)
 
 
+def test_labels_of_another_width_get_a_hint(cab_cli, capsys):
+    """A ZPL printer tells only the width it is set up for (a print width
+    below the head's): another one is said, and the label printed anyway."""
+    cab_cli.info.width_mm = 75.0
+    assert run("print", cab_cli.path) == 0
+    assert err(capsys) == (
+        "tavletta: The label is 50.0 mm wide, but the printer is set up for labels "
+        "75.0 mm wide. Check the label size, or load the matching labels.\n"
+    )
+    cab_cli.info.width_mm = 50.4
+    assert run("print", cab_cli.path) == 0
+    assert "wide" not in err(capsys)
+    assert len(cab_cli.printed) == 2
+
+
 def test_print_refuses_a_code_128_too_long(mono, label_file, capsys):
     from tavletta.render import CODE128_MAX
 

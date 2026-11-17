@@ -286,6 +286,9 @@ class PrinterInfo:
     qualities: tuple[str, ...] = ()  # print qualities of the connected model; empty = unknown
     # die-cut: the size of the loaded labels (width, height), if the printer knows it
     label_mm: tuple[float, float] | None = None
+    # die-cut: only the width of the loaded labels (across the head), if
+    # the printer knows that but not their height (ZPL: a print width set)
+    width_mm: float | None = None
     # the id of another backend that fits the loaded media (e.g. die-cut
     # labels loaded while the label is for continuous rolls); "" = none
     media_backend: str = ""
