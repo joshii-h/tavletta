@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME = labelprinter
+# the tests read data files next to them, which are not installed: run them
+# from the source tree against the built module
+export PYBUILD_TEST_CUSTOM = 1
+export PYBUILD_TEST_ARGS = cd {dir} && PYTHONPATH={build_dir} {interpreter} -m pytest -q -p no:cacheprovider labelprinter/test
+
+%:
+	dh $@ --buildsystem=pybuild
+
+execute_after_dh_auto_install:
+	# the library only: the command line tools (label-text, label-queue, the
+	# CUPS backend) are not part of it, nor the tests
+	rm -rf debian/python3-labelprinter/usr/bin
+	rm -rf debian/python3-labelprinter/usr/lib/python3/dist-packages/labelprinter/test

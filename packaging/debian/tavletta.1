@@ -1,0 +1,183 @@
+.\" Tavletta manual page (roff, man(7)); shared by the Debian and RPM packages.
+.\" The full documentation: https://tavletta.joshuahirsig.xyz/ and docs/cli.md.
+.TH TAVLETTA 1 2026-11-17 "Tavletta 1.1" "User Commands"
+.SH NAME
+tavletta \- design and print labels on label printers
+.SH SYNOPSIS
+.B tavletta
+.RI [ FILE ...]
+.br
+.B tavletta print
+.I FILE
+.RB [ \-\-printer
+.IR ID ]
+.RB [ \-\-host
+.IR ADDR ]
+.RB [ \-\-copies
+.IR N ]
+.RB [ \-\-set
+.IR NAME = VALUE ]
+.RB [ \-\-data
+.IR FILE ]
+.RB [ \-\-dry\-run
+.RB [ \-\-output
+.IR PNG ]]
+.RI [ options ]
+.br
+.B tavletta list\-printers
+.RB [ \-\-printer
+.IR ID ]
+.br
+.B tavletta serve
+.RI [ options ]
+.br
+.B tavletta mcp
+.RI [ options ]
+.br
+.B tavletta token new
+.I NAME
+.RI [ options ]
+.br
+.B tavletta
+.BR \-\-version " | " \-\-help
+.SH DESCRIPTION
+Tavletta designs labels with text, images, symbols and codes, shows them
+exactly as they will be printed and prints them over the network or USB:
+on label printers with endless tape or die\-cut labels, and on office
+printers, one label per page or on label sheets.
+.PP
+Without a command the application window opens; label files
+.RI ( .tavletta )
+given on the command line open in it.
+The commands below need no display.
+.SH COMMANDS
+.TP
+.BI print " FILE"
+Print a label file without opening a window.
+Without
+.B \-\-host
+the printer set in the application is used, or the only one found.
+.RS
+.TP
+.BI \-\-printer " ID"
+printer model, by default the label's:
+vc500w, ptouch, brother_ql, brother_ql_diecut, cab, system, dymo, escpos,
+niimbot, tspl, epl, zpl
+.TP
+.BI \-\-host " ADDR"
+printer address (host name, IP address or USB device)
+.TP
+.BI \-\-copies " N"
+number of copies
+.TP
+.BI \-\-set " NAME=VALUE"
+text of the element
+.IR NAME ,
+or value of the variable
+.BI {= NAME };
+repeatable.
+.B \-\-set\-literal
+takes the value as it is.
+.TP
+.BI \-\-counter\-start " N"
+counter of the first label
+.TP
+.B \-\-no\-save\-counter
+do not save the next counter value in the label file
+.TP
+.B \-\-no\-query
+do not ask the printer before rendering
+.TP
+.B \-\-printer\-defaults
+print with the printer model's defaults instead of the choices last made
+in the application
+.TP
+.BR \-\-print\-method " printer|transfer|direct"
+print method of a thermal printer that has the setting
+.TP
+.BI \-\-data " FILE"
+serial labels: one label for each row of a CSV, ODS or XLSX file;
+.BI \-\-sheet " NAME"
+and
+.BI \-\-rows " FROM\-TO"
+choose which
+.TP
+.B \-\-dry\-run
+check and render only, do not print
+.TP
+.BI \-\-output " PNG"
+with
+.BR \-\-dry\-run :
+save each label as PNG
+.RB ( \-
+for standard output: the first only)
+.RE
+.TP
+.B list\-printers
+List the printers found on the network: model, address, name.
+.TP
+.B serve
+Run a print server with a REST API and, with
+.BR \-\-mcp ,
+MCP for AI clients.
+It listens on 127.0.0.1:8790 unless
+.B \-\-host
+and
+.B \-\-port
+say otherwise.
+See
+.B tavletta serve \-\-help
+for its options.
+.TP
+.B mcp
+Serve MCP on standard input and output, for AI clients.
+.TP
+.BI "token new" " NAME"
+Make an access token for the print server and add its hash to
+.IR tokens.toml .
+.SH EXIT STATUS
+.TP
+.B 0
+printed
+.TP
+.B 1
+printer problem, or no printer found
+.TP
+.B 2
+wrong arguments
+.TP
+.B 3
+the label file cannot be read (or is still locked after 60 s), or the
+output not written
+.TP
+.B 4
+the label cannot be printed as it is (empty, unknown variable or column,
+a code that cannot be made)
+.TP
+.B 5
+the counter cannot be saved
+.TP
+.B 130
+interrupted (Ctrl+C, SIGTERM or SIGHUP)
+.SH FILES
+.TP
+.I ~/.config/tavletta/
+settings: printers, last choices
+.TP
+.I ~/.local/share/tavletta/templates/
+saved templates
+.TP
+.I ~/.config/tavletta/tokens.toml
+the print server's access tokens
+.TP
+.I ~/.local/share/tavletta/labels/
+the label files the print server uses
+.SH SEE ALSO
+The user guide: <https://tavletta.joshuahirsig.xyz/>
+.br
+The command line in detail:
+<https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/cli.md>
+.SH AUTHOR
+Joshua Hirsig and contributors.
+Tavletta is free software under the GNU Affero General Public License,
+version 3 or later.

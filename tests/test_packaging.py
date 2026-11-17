@@ -96,7 +96,6 @@ def test_the_flatpak_ships_every_licence_once():
     assert set(by_hand) == {
         "python3-segno",
         "python3-python-barcode",
-        "python3-zint-bindings",
         "poppler-data",
         "poppler",
         "tavletta",
@@ -107,6 +106,11 @@ def test_the_flatpak_ships_every_licence_once():
     assert "LICENSE.zint" not in "".join(by_hand.values())  # a source: copied by itself
     zint = next(m for m in manifest["modules"] if m["name"] == "python3-zint-bindings")
     assert {"type": "file", "path": "LICENSE.zint"} in zint["sources"]
+    # Flathub builds from source: the sdist, patched for an offline CMake build
+    # (its LICENSE.md at the top, which flatpak-builder copies by itself)
+    assert [s["type"] for s in zint["sources"]] == ["archive", "patch", "file"]
+    assert zint["sources"][0]["url"].endswith(".tar.gz")
+    assert (path.parent / zint["sources"][1]["path"]).is_file()
     cleanup = [c for module in manifest["modules"] for c in module.get("cleanup", [])]
     assert "/share/man/man1/segno.1" in cleanup
     for unused in ("test", "cups_backend.py", "__main__.py", "print_text.py", "queue_*.py"):
@@ -115,6 +119,33 @@ def test_the_flatpak_ships_every_licence_once():
         for source in module.get("sources", []):
             if source.get("type") in ("file", "archive") and "url" in source:
                 assert "x-checker-data" in source, (module["name"], source["url"])
+            # prebuilt binaries only as pure Python wheels (py3-none-any)
+            if source.get("url", "").endswith(".whl"):
+                assert source["url"].endswith("-py3-none-any.whl"), source["url"]
+
+    # the manifest for Flathub: the same, with the release tag instead of the checkout
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("flathub", path.parent / "flathub.py")
+    flathub = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(flathub)
+    text = path.read_text(encoding="utf-8")
+    release = yaml.safe_load(flathub.flathub_manifest(text, "v1.1.0", "0" * 40))
+    sources = [s for m in release["modules"] for s in m.get("sources", [])]
+    assert not [s for s in sources if s["type"] == "dir"]  # Flathub rejects dir sources
+    assert release["modules"][-1]["sources"] == [
+        {
+            "type": "git",
+            "url": "https://git.joshuahirsig.xyz/joshii/tavletta.git",
+            "tag": "v1.1.0",
+            "commit": "0" * 40,
+            "x-checker-data": {"type": "git", "tag-pattern": r"^v([\d.]+)$"},
+        }
+    ]
+    assert release["modules"][:-1] == manifest["modules"][:-1]
+    for name in flathub.local_files(text):  # the files the pull request needs too
+        assert (path.parent / name).is_file(), name
+    assert set(flathub.local_files(text)) == {"LICENSE.zint", "zint-bindings-offline.patch"}
 
 
 def _workflow(name: str, forge: str = ".github") -> dict:

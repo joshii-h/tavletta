@@ -1,0 +1,80 @@
+Build zint-bindings with plain CMake, offline (Flatpak, distributions)
+
+- no bundled vcpkg: it clones and bootstraps vcpkg from the network;
+  fmt, pybind11, zlib and libpng come from the SDK and the manifest
+- no type stubs: their generator pip-installs its tools at configure time
+  (network); the stubs are type hints only, not needed at run time
+- fmt::format is declared in fmt/format.h: fmt/core.h no longer
+  includes it since fmt 11 (the SDK has fmt 12)
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,5 @@
+ cmake_minimum_required(VERSION 3.28...4.1)
+ 
+-include(scripts/cmake/bundled-vcpkg.cmake)
+ if(SKBUILD)
+ 	set(PROJECT_VERSION "${SKBUILD_PROJECT_VERSION}")
+ else()
+@@ -72,37 +71,5 @@
+ add_dependencies(${extension} _generate_enums)
+ 
+ 
+-# scripts/generate-stub.py ---------------------------------------------------------------------------------------------
+-execute_process(
+-	# Install dependencies at configure time
+-	COMMAND "${Python3_EXECUTABLE}" -m pip install -r "${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate-stub.requirements.txt"
+-	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+-	COMMAND_ERROR_IS_FATAL ANY
+-)
+-add_custom_command(TARGET ${extension} POST_BUILD
+-	COMMAND "${CMAKE_COMMAND}" -E make_directory "zint-stubs"
+-	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate-stub.py"
+-		$<TARGET_FILE:${extension}>
+-		--format-config "${CMAKE_CURRENT_SOURCE_DIR}"
+-		--output "zint-stubs/__init__.pyi"
+-	BYPRODUCTS "${CMAKE_CURRENT_BUILD_DIR}/zint-stubs"
+-	WORKING_DIRECTORY "${CMAKE_CURRENT_BUILD_DIR}"
+-	COMMENT "Generating stub file"
+-	VERBATIM
+-)
+-
+-if(Python3_VERSION_MINOR STREQUAL 13)  # Update this when Python 3.14 is released
+-	# Copy stubs into the source directory so they are visible in source control and PRs
+-	add_custom_command(TARGET ${extension} POST_BUILD
+-		COMMAND "${CMAKE_COMMAND}" -E copy
+-			"${CMAKE_CURRENT_BINARY_DIR}/zint-stubs/__init__.pyi"
+-			"src/generated/stubs.pyi"
+-		BYPRODUCTS "src/generated/stubs.pyi"
+-		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+-		COMMENT "Updating reference stub file"
+-		VERBATIM
+-	)
+-endif()
+-
+-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/zint-stubs" DESTINATION . COMPONENT ${extension})
+-# ----------------------------------------------------------------------------------------------------------------------
++# scripts/generate-stub.py: removed (offline build: it pip-installs its tools at
++# configure time; the stubs are only type hints)
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -13,7 +13,7 @@
+ #include "enums.hpp"
+ #include "utility.hpp"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ // Include zint last, so that its defines do not mess with enums
+ #include <zint.h>
+--- a/src/utility.hpp
++++ b/src/utility.hpp
+@@ -7,7 +7,7 @@
+ #include <string_view>
+ #include <type_traits>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace py = pybind11;
+ 

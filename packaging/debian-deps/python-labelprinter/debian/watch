@@ -1,0 +1,5 @@
+version=4
+# no releases yet: Tavletta pins a commit of the fork (see pyproject.toml);
+# packaging/debian/build.sh downloads that commit's archive
+opts="mode=git,pgpmode=none,pretty=0.1.0+git%cd.%h" \
+  https://github.com/joshii-h/labelprinter-vc500w.git HEAD
