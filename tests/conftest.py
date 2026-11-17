@@ -468,6 +468,18 @@ def _busy(win) -> bool:
     return title in ("Searching…", "Connecting…", "Searching for printers…")
 
 
+def printed(win, timeout: float = 120.0) -> bool:
+    """Wait until the window's print job has ended: its thread first, as
+    long as it takes (rendering a label at 600 dpi in two colours takes
+    seconds on a loaded test machine, with coverage, beside the other
+    xdist workers), then the main loop for its outcome. pump()'s few
+    seconds would measure the machine's load instead."""
+    for thread in threading.enumerate():
+        if thread.name == "tavletta-print":
+            thread.join(timeout)
+    return pump(lambda: not win.print_flow.busy)
+
+
 def render_now(win) -> None:
     """Run the debounced preview render immediately."""
 

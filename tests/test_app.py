@@ -17,7 +17,7 @@ from types import SimpleNamespace
 from urllib.parse import parse_qs, urlparse
 
 import pytest
-from conftest import gtk_available, pump, read_only, render_now, toast_titles
+from conftest import gtk_available, printed, pump, read_only, render_now, toast_titles
 
 pytestmark = pytest.mark.gui
 if not gtk_available():
@@ -3559,7 +3559,7 @@ def test_ql_print_dialog_offers_cut_colours_and_quality(ql_window, ql_env):
     colours.set_selected(1)
     quality.set_selected(1)
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     options = ql_env.prints[0][2]
     assert (options.cut, options.mode, options.quality) == ("end", "red", "high")
     saved = Settings.load().data["printers"]["brother_ql"]
@@ -3694,7 +3694,7 @@ def test_ql_says_when_the_roll_decided_the_colours(ql_window, ql_env, monkeypatc
         lambda image, host, options, progress=None: PrintResult(mode="red", reason="roll"),
     )
     win.print_flow.start(PrintOptions(mode="black"))
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert toast_titles(win)[-1] == "Printed with “Red and black”, as the loaded roll needs it"
 
 

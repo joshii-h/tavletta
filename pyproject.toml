@@ -52,6 +52,7 @@ version = {attr = "tavletta.__version__"}
 dev = [
     "pytest>=8",
     "pytest-cov>=5",
+    "pytest-xdist>=3",  # tools/check.sh and the CI run the tests in parallel
     "hypothesis>=6",
     "ruff>=0.6",
     "zxing-cpp>=2.2",  # reads the codes back in the tests
