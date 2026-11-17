@@ -94,7 +94,8 @@ jobs:
       - name: pytest
         working-directory: src
         # fail_under for the coverage comes from pyproject.toml
-        run: xvfb-run -a .venv/bin/python -m pytest -q --cov=tavletta --cov-report=term-missing
+        # in parallel (pytest-xdist, in the dev group), as tools/check.sh
+        run: xvfb-run -a .venv/bin/python -m pytest -q --cov=tavletta --cov-report=term-missing -n auto
 
       - name: Translations
         working-directory: src

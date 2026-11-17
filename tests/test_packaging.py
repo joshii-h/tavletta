@@ -48,7 +48,18 @@ def test_check_sh_runs_what_the_ci_runs():
         assert command in check and command in ci, command
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dev = " ".join(project["dependency-groups"]["dev"])
-    for tool in ("pytest", "ruff", "mypy", "bandit", "radon", "xenon", "pip-audit", "pyyaml"):
+    assert "-n auto" in check and "--cov-report=term-missing -n auto" in ci  # pytest-xdist
+    for tool in (
+        "pytest",
+        "pytest-xdist",
+        "ruff",
+        "mypy",
+        "bandit",
+        "radon",
+        "xenon",
+        "pip-audit",
+        "pyyaml",
+    ):
         assert tool in dev, tool
     for loop in ("for po in po/*.po site/po/*.po; do", "for po in site/po/*.po; do"):
         assert loop in check and loop in ci, loop  # the documentation's catalogs too
