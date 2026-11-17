@@ -52,17 +52,34 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
 | `~HI` | `<STX>ZD621-203dpi,V93.21.18Z,8,8192KB<ETX><CR><LF>` | model, firmware, dots per mm (8, 12, 24 = 203, 300, 600 dpi) |
 | `~HS` | three frames `<STX>…<ETX><CR><LF>` | paper out, paused, labels waiting (frame 1); head up, ribbon out, labels remaining (frame 2) |
 | `~HQES` | text with `ERRORS: 1 00000000 00000005` | the second hex word is a bit field of errors |
+| `^XA^HH^XZ` | one frame of lines `  <value>   <NAME>` | the loaded media: LABEL LENGTH, PRINT WIDTH, MEDIA TYPE, RESOLUTION (head dots), PRINT METHOD |
 
 - `~HI`: LPrint reads the model and dots per mm the same way. [LPrint]
 - `~HS` frame 1 is `aaa,b,c,dddd,eee,…`: b paper out, c paused, dddd label
   length in dots, eee formats in the buffer. Frame 2 is
-  `mmm,n,o,p,q,r,s,t,uuuuuuuu,…`: o head up, p ribbon out, uuuuuuuu labels
-  remaining. LPrint reads only the label length. [spec] [assumed: field
-  positions from the manual, not seen on a printer]
+  `mmm,n,o,p,q,r,s,t,uuuuuuuu,…`: o head up, p ribbon out, q thermal
+  transfer mode, uuuuuuuu labels remaining. LPrint reads only the label
+  length. [spec] Seen on a GX420d: `030,0,1,0422,…` (paused, 422 dots)
+  and `000,0,0,0,0,2,4,0,00000000,1,000` (direct thermal, tear off).
 - `~HQES` error bits (from LPrint's header): `0x1` media out, `0x2`
   ribbon out, `0x4` head open, `0x8` cutter fault, `0x1000` paper jam,
   `0x10000` paused, `0x40000`/`0x80000` black mark not found. Tavletta
   asks it only when `~HS` was answered and showed no problem. [LPrint]
+- `^HH` sends the configuration to the host and prints nothing (seen on a
+  GX420d, firmware V56.17.17Z; its answers are the fixtures in
+  `tests/zebra_gx420d.py`). A status query asks it once `~HS` was
+  answered. On gap or mark media LABEL LENGTH is what the printer measured
+  from one label to the next: the label distance, compared with the
+  label's size plus gap, as for cab. PRINT WIDTH is the whole head
+  ("832 8/MM FULL" in RESOLUTION) unless set lower; only a lower one is
+  taken as the label width. Each Tavletta job sets `^PW` to the label's
+  width, so it is the width of the last label printed until another
+  job or the setup changes it. The GX and ZD series centre narrower labels
+  under the head, and they centre the `^PW` area with them: a label of the
+  right size prints centred (seen on the GX420d with 75 mm labels). The
+  print method is `~HS` frame 2 field q (1 thermal transfer), or PRINT
+  METHOD in `^HH`. SGD (`! U1 getvar`) would give the same values on
+  printers that have it; not used yet.
 - Before a job Tavletta asks `~HS` (and `~HQES`) and stops if the printer
   reports a problem; a printer that does not answer gets the job anyway.
 - Answers that do not have this shape (garbage, half an answer) count as no
