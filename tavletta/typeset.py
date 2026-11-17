@@ -134,6 +134,19 @@ def extras(element: TextElement, dpi: float) -> Extras:
 GENERIC_FONTS = frozenset(
     {"sans", "sans-serif", "serif", "monospace", "mono", "system-ui", "cursive", "fantasy"}
 )
+# metric-compatible stand-ins fontconfig puts in for common office fonts
+# (its 30-metric-aliases.conf): the same widths, so a label drawn with one
+# looks as designed. A family resolved to one of these counts as installed.
+METRIC_ALIASES: dict[str, frozenset[str]] = {
+    "arial": frozenset({"liberation sans", "arimo", "albany amt"}),
+    "helvetica": frozenset({"liberation sans", "arimo", "nimbus sans", "nimbus sans l"}),
+    "times new roman": frozenset({"liberation serif", "tinos", "thorndale amt"}),
+    "times": frozenset({"liberation serif", "tinos", "nimbus roman", "nimbus roman no9 l"}),
+    "courier new": frozenset({"liberation mono", "cousine", "cumberland amt"}),
+    "courier": frozenset({"liberation mono", "cousine", "nimbus mono ps", "nimbus mono l"}),
+    "calibri": frozenset({"carlito"}),
+    "cambria": frozenset({"caladea"}),
+}
 _fonts: dict[str, bool] = {}  # family (case folded) -> installed, per process
 _fonts_lock = threading.Lock()
 
@@ -159,7 +172,8 @@ def _installed(name: str) -> bool:
 
 def _look_up(name: str) -> bool:
     """A family of that name, or a font fontconfig finds for it whose family
-    begins the name (a style named as a family: "Source Code Pro Black")."""
+    begins the name (a style named as a family: "Source Code Pro Black") or
+    is a metric-compatible stand-in for it (resolves_to)."""
     key = name.casefold()
     fontmap = PangoCairo.FontMap.get_default()
     if any(f.get_name().casefold() == key for f in fontmap.list_families()):
@@ -168,7 +182,19 @@ def _look_up(name: str) -> bool:
     desc.set_family(name)
     font = fontmap.load_font(fontmap.create_context(), desc)
     loaded = font.describe().get_family().casefold() if font is not None else ""
-    return bool(loaded) and (key == loaded or key.startswith(loaded + " "))
+    return resolves_to(key, loaded)
+
+
+def resolves_to(asked: str, loaded: str) -> bool:
+    """Whether the font fontconfig loaded for a family stands for it: the
+    family itself, the family of a style named as a family, or a metric
+    alias (Liberation Sans for Arial, Carlito for Calibri)."""
+    asked, loaded = asked.casefold(), loaded.casefold()
+    if not loaded:
+        return False
+    if asked == loaded or asked.startswith(loaded + " "):
+        return True
+    return loaded in METRIC_ALIASES.get(asked, frozenset())
 
 
 # the weights Pango names; a font weight between them takes the nearest. By
