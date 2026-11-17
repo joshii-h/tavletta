@@ -400,6 +400,10 @@ def warning_text(warning: RenderWarning) -> str:
             "Element %(n)d: PDF files need Poppler (poppler-glib), which is not installed"
         ),
         "element_failed": _("Element %(n)d cannot be drawn"),
+        "text_too_long": _(
+            "Element %(n)d: the text is too long to be drawn in one line – break it into "
+            "lines or shorten it"
+        ),
         "font_missing": _(
             "Element %(n)d: the font %(font)s is not installed – another font is used"
         ),

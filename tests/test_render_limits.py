@@ -499,3 +499,15 @@ def test_a_child_cut_short_by_the_budget_is_refused(monkeypatch):
     assert pdfchild._seconds()[1]  # what is left of the budget, below SECONDS
     render_module._PDF_DEADLINE.set(None)
     assert pdfchild._seconds() == (pdfchild.SECONDS, False)
+
+
+def test_a_line_too_long_is_a_warning_within_limits_too(make_server):
+    """The server's preview of a 5000-character line: text_too_long."""
+    _server, base = make_server()
+    text = {"kind": "text", "text": "x" * 5000}
+    content = {"printer": "fake-mono", "tape_mm": 12, "elements": [text]}
+    body = {"label_content": content, "format": "json"}
+    status, _response, answer = call(base, "POST", "/api/v1/preview", body=body)
+    assert status == 200
+    assert [w["code"] for w in answer["warnings"]] == ["text_too_long"]
+    assert "one line" in answer["warnings"][0]["message"]

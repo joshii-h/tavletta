@@ -654,6 +654,18 @@ def test_other_element_errors(make_label, monkeypatch):
     assert rendered.warnings == [RenderWarning("element_failed", {"n": 1})]
 
 
+def test_a_line_too_long_for_cairo_says_so(make_label):
+    """5000 characters in one line are wider than the 32767 pixels cairo
+    draws: a clear warning, not element_failed; in lines it is drawn."""
+    from tavletta.ui import texts
+
+    rendered = render(make_label(elements=[TextElement(text="x" * 5000)]))
+    assert rendered.warnings == [RenderWarning("text_too_long", {"n": 1, "chars": 5000})]
+    assert "too long to be drawn in one line" in texts.warning_text(rendered.warnings[0])
+    lines = "\n".join(["x" * 50] * 100)
+    assert render(make_label(elements=[TextElement(text=lines)])).warnings == []
+
+
 def test_valid_codes_render_without_warnings(make_label):
     for code in (
         CodeElement(data="https://example.org"),
