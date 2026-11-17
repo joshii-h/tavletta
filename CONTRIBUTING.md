@@ -533,6 +533,17 @@ Thai (`th`), Vietnamese (`vi`), Indonesian (`id`), Malay (`ms`), Korean
 - New languages are welcome: add `tools/strings_<lang>.py`, the plural rule
   in `tools/fill_po.py`, and the language to the desktop and metainfo files.
 
+## Maintainer setup
+
+Repository settings the workflows need on Forgejo (Settings -> Actions ->
+Variables):
+
+- `DOCS_SITE_DIR`: the folder of the documentation's Docker stack on the
+  host whose Docker socket the runner mounts (`.forgejo/workflows/docs.yml`
+  writes the build into its `public/` folder, then restarts the container
+  `tavletta-docs`). An absolute host path; without the variable the
+  workflow falls back to the folder of the current deploy.
+
 ## Reporting bugs
 
 Please include the Tavletta version, your distribution, how you installed

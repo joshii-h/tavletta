@@ -34,7 +34,10 @@ env:
   LANG: C.UTF-8
   # match the host's Docker daemon
   DOCKER_CLI_VERSION: "29.6.2"
-  SITE_DIR: /home/joshii/Docker/tavletta-docs
+  # the stack's folder on the Docker host: the repository variable
+  # DOCS_SITE_DIR (Settings -> Actions -> Variables, see CONTRIBUTING.md,
+  # "Maintainer setup"); the fallback is the current deploy's folder
+  SITE_DIR: ${{ vars.DOCS_SITE_DIR || '/home/joshii/Docker/tavletta-docs' }}
   CONTAINER: tavletta-docs
   DOCS_HOST: tavletta.joshuahirsig.xyz
 

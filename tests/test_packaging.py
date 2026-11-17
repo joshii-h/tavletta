@@ -290,3 +290,21 @@ def test_the_readme_is_short_and_every_markdown_link_resolves():
                     path.name,
                     link,
                 )
+
+
+def test_the_container_workflow_takes_only_semver_tags():
+    """The semver tag rules tag vMAJOR.MINOR.PATCH(-pre) only: v1.1 would
+    pass a looser check and then get no image tag at all."""
+    workflow = _workflow("docker.yml")
+    check = next(s for s in workflow["jobs"]["check"]["steps"] if s.get("name") == "Check the tag")
+    pattern = re.search(r"grep -Eq '([^']+)'", check["run"]).group(1)
+    accepted = ("v1.1.1", "v1.10.0", "v2.0.0-rc.1", "v1.1.1-beta2")
+    refused = ("v1.1", "v1", "v1.1.1.1", "1.1.1", "v1.1.1-", "v1.1.x")
+    assert all(re.fullmatch(pattern, tag) for tag in accepted)
+    assert not any(re.fullmatch(pattern, tag) for tag in refused)
+
+
+def test_the_docs_deploy_folder_is_a_repository_variable():
+    text = (ROOT / ".forgejo" / "workflows" / "docs.yml").read_text(encoding="utf-8")
+    assert "SITE_DIR: ${{ vars.DOCS_SITE_DIR ||" in text
+    assert "`DOCS_SITE_DIR`" in (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
