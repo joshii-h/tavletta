@@ -238,7 +238,8 @@ def test_a_zpl_printer_on_tcp(monkeypatch):
     info = zpl.Zpl(port=server.port).query("127.0.0.1")
     server.join(5)
     assert (info.model, info.state) == ("ZD621-203dpi", "IDLE")
-    assert server.received == b"~HI\n~HS\n~HQES\n"
+    # the loaded media too (^HH sends the configuration, prints nothing)
+    assert server.received == b"~HI\n~HS\n~HQES\n^XA^HH^XZ\n"
 
     server = Server(answers)
     server.start()
