@@ -10,6 +10,7 @@ import json
 import signal
 import subprocess
 import sys
+import time
 
 import pytest
 from PIL import Image
@@ -459,3 +460,42 @@ def test_picture_kind():
     assert imagefx.picture_kind(tones) == "tones"
     gradient = Image.linear_gradient("L").resize((64, 64))
     assert imagefx.picture_kind(gradient) == "photo"
+
+
+def test_pdf_pages_of_one_render_share_a_time_budget(monkeypatch):
+    """Each page may take pdfchild.SECONDS, but all pages of one render
+    together only Limits.pdf_seconds: fifty slow pages must not hold a
+    render slot for minutes."""
+    timeouts = []
+
+    def slow(*_args, timeout, **_kwargs):
+        timeouts.append(timeout)
+        time.sleep(0.2)
+        return subprocess.CompletedProcess([], 0, b'{"error": "unreadable"}\n', b"")
+
+    monkeypatch.setattr(pdfchild.subprocess, "run", slow)
+    pages = [PageElement(data=b64(b"%PDF-1.4 page")) for _ in range(10)]
+    label = Label(tape_mm=12, elements=pages)
+    with limited(10**7, pdf_seconds=0.5), pytest.raises(RenderTooLarge):
+        render(label, 100)
+    assert 2 <= len(timeouts) <= 4  # not all ten: refused once the time is used up
+    assert timeouts[0] <= 0.5 and timeouts == sorted(timeouts, reverse=True)
+    # the next render has its own budget
+    timeouts.clear()
+    with limited(10**7, pdf_seconds=0.5), pytest.raises(RenderTooLarge):
+        render(label, 100)
+    assert timeouts and timeouts[0] > 0.4
+
+
+def test_a_child_cut_short_by_the_budget_is_refused(monkeypatch):
+    def timeout(*_args, **kwargs):
+        raise subprocess.TimeoutExpired("child", kwargs["timeout"])
+
+    monkeypatch.setattr(pdfchild.subprocess, "run", timeout)
+    monkeypatch.setattr(render_module, "_PDF_DEADLINE", render_module.ContextVar("d"))
+    render_module._PDF_DEADLINE.set(time.monotonic() + 5)
+    with pytest.raises(pdfchild.ChildLimit, match="their time"):
+        pdfchild.ask(b"", {})
+    assert pdfchild._seconds()[1]  # what is left of the budget, below SECONDS
+    render_module._PDF_DEADLINE.set(None)
+    assert pdfchild._seconds() == (pdfchild.SECONDS, False)

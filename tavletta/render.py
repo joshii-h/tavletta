@@ -11,6 +11,7 @@ import base64
 import contextlib
 import io
 import math
+import time
 from collections.abc import Callable, Iterator, Mapping
 from contextvars import ContextVar
 from dataclasses import dataclass, field, fields, replace
@@ -64,6 +65,10 @@ class RenderTooLarge(ValueError):
 
 TEXT_CHARS = 5000  # characters of a text or code within limits (as the server's MAX_TEXT)
 TEXT_LINES = 100  # lines of a text within limits (MAX_LINES)
+# seconds the PDF children of one render may take together: one page may
+# take pdfchild.SECONDS, but fifty of them would hold a render slot for
+# many minutes
+PDF_SECONDS = 30.0
 
 
 @dataclass(frozen=True)
@@ -78,6 +83,7 @@ class Limits:
     # text can grow a thousandfold)
     text_chars: int = TEXT_CHARS
     text_lines: int = TEXT_LINES
+    pdf_seconds: float = PDF_SECONDS  # of all PDF pages of one render together
 
     @property
     def image_pixels(self) -> int:
@@ -90,6 +96,9 @@ class Limits:
 # thousands of lines or a tiny PNG that unpacks to gigapixels must fail,
 # not fill the memory. The window and the command line render without.
 _LIMITS: ContextVar[Limits | None] = ContextVar("render_limits", default=None)
+# within limits: when the PDF pages of the render running in this thread
+# have taken their time (time.monotonic(); Limits.pdf_seconds)
+_PDF_DEADLINE: ContextVar[float | None] = ContextVar("pdf_deadline", default=None)
 
 
 @contextlib.contextmanager
@@ -97,11 +106,14 @@ def limited(
     pixels: int,
     max_length_mm: float | None = None,
     slot: Callable[[], contextlib.AbstractContextManager] | None = None,
+    pdf_seconds: float | None = None,
 ) -> Iterator[None]:
     """Render within limits in this thread while the block runs; images
     are then decoded without the caches (they would keep large ones).
-    `slot()` is held by every render meanwhile."""
-    token = _LIMITS.set(Limits(pixels, max_length_mm, slot))
+    `slot()` is held by every render meanwhile; the PDF pages of each
+    render take pdf_seconds (default PDF_SECONDS) together at most."""
+    seconds = PDF_SECONDS if pdf_seconds is None else pdf_seconds
+    token = _LIMITS.set(Limits(pixels, max_length_mm, slot, pdf_seconds=seconds))
     try:
         yield
     finally:
@@ -113,6 +125,13 @@ def check_size(width: int, height: int) -> None:
     limits = _LIMITS.get()
     if limits is not None and width * height > limits.pixels:
         raise RenderTooLarge("%d x %d pixels" % (width, height))
+
+
+def pdf_seconds_left() -> float | None:
+    """Seconds the PDF pages of the render running in this thread may
+    still take (0 or less: none), None without limits."""
+    deadline = _PDF_DEADLINE.get()
+    return None if deadline is None else deadline - time.monotonic()
 
 
 def active_limits() -> Limits | None:
@@ -1544,8 +1563,13 @@ def render(
     limits = _LIMITS.get()
     token = _RENDER_CACHE.set({}) if limits else None
     slot = limits.slot() if limits and limits.slot else contextlib.nullcontext()
+    deadline = None
     try:
         with slot:
+            # the time of its PDF pages counts from here, in the slot; a
+            # render within a render (a sheet's labels) shares the outer one's
+            if limits and _PDF_DEADLINE.get() is None:
+                deadline = _PDF_DEADLINE.set(time.monotonic() + limits.pdf_seconds)
             return _render(
                 label,
                 dpi,
@@ -1556,6 +1580,8 @@ def render(
                 (along_step, across_step),
             )
     finally:
+        if deadline is not None:
+            _PDF_DEADLINE.reset(deadline)
         if token is not None:
             _RENDER_CACHE.reset(token)
 
