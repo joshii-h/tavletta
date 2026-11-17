@@ -531,3 +531,17 @@ def test_workflows_install_librsvg_and_watch_the_icons():
     assert len(filters) == 2
     for line in filters:
         assert '"data/*.svg"' in line and '"data/icons/**"' in line
+
+
+def test_tool_help_is_not_an_output_folder(tool, tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as stop:
+        tool.main(["icons.py", "--help"])
+    assert stop.value.code == 0 and "output folder" in capsys.readouterr().out
+    assert list(tmp_path.iterdir()) == []  # no folder named --help
+    with pytest.raises(SystemExit):
+        tool.main(["icons.py", "--bogus"])
+    built = []
+    monkeypatch.setattr(tool, "build", lambda out: built.append(out) or [])
+    assert tool.main(["icons.py", str(tmp_path / "out")]) == 0
+    assert built == [tmp_path / "out"] and (tmp_path / "out").is_dir()
