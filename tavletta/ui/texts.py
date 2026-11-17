@@ -482,6 +482,17 @@ def other_pitch_text(label, measured_mm: float, unit: Unit) -> str:
     }
 
 
+def other_width_text(label, loaded_mm: float, unit: Unit) -> str:
+    """The printer is set up for labels of another width than the label."""
+    return _(
+        "The label is %(width)s wide, but the printer is set up for labels %(loaded)s "
+        "wide. Check the label size, or load the matching labels."
+    ) % {
+        "width": isolate(unit.format(label.media_size()[0])),
+        "loaded": isolate(unit.format(loaded_mm)),
+    }
+
+
 def code_text(code: str, unit: Unit, max_mm: float = 0.0) -> str:
     """The text for a PrinterError code (also PrinterInfo.error); max_mm
     is the limit of "too_long" and "too_wide"."""

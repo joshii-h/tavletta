@@ -348,6 +348,15 @@ class Printer:
         differs = abs(info.pitch_mm - label.pitch_mm()) > PITCH_TOLERANCE_MM
         return info.pitch_mm if differs else None
 
+    def other_width(self) -> float | None:
+        """Die-cut printers that know only the width of the loaded labels
+        (ZPL): that width if it is not the label's."""
+        info, label = self.info, self.window.label
+        if self.window.backend.capabilities.continuous or not info or not info.width_mm:
+            return None
+        differs = abs(info.width_mm - label.media_size()[0]) > PITCH_TOLERANCE_MM
+        return info.width_mm if differs else None
+
     def failed(self, error: Exception, generation: int | None = None) -> bool:
         if self._outdated(generation):
             return False

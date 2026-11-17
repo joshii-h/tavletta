@@ -44,6 +44,7 @@ from tavletta.ui.texts import (
     data_error_text,
     error_details,
     other_pitch_text,
+    other_width_text,
     printed_remark,
     printed_text,
     printer_error_text,
@@ -113,6 +114,11 @@ class PrintFlow:
             self._other_size_dialog(size)
         elif pitch := window.printer.other_pitch():
             self._wrong_labels_dialog(pitch)
+        elif width := window.printer.other_width():
+            self._warn(
+                _("Different labels loaded"),
+                other_width_text(window.label, width, window.unit),
+            )
         else:
             self.dialog()
 

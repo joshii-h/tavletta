@@ -945,3 +945,80 @@ def test_prepare_reads_the_resolution_once(backend_id, monkeypatch):
         image = backend.prepare(label, options)
         assert image.info[raw.DPI_INFO] == 8 * 25.4
         assert image.height == escpos.head_dots(80, 8 * 25.4)
+
+
+# --- the loaded media of a real Zebra GX420d (tests/zebra_gx420d.py) ---------------
+
+
+def test_zpl_configuration_of_a_real_gx420d():
+    from zebra_gx420d import GX420D_HH, GX420D_HS
+
+    config = zpl.parse_configuration(GX420D_HH)
+    assert config == zpl.Configuration(
+        print_width=600, label_length=422, head_width=832, dots_per_mm=8, media="gap"
+    )
+    status = zpl.parse_host_status(GX420D_HS)
+    assert status is not None and status.method == "direct" and status.paused
+    # 75 x 50 mm labels with a 2.8 mm gap: a label every 52.75 mm
+    assert zpl.media(config, status, 0) == zpl.Media(52.8, 75.0, "direct")
+
+
+@pytest.mark.parametrize(
+    ("changes", "expected"),
+    [
+        # the whole head: says nothing of the labels (centred under it)
+        ({"print_width": 832}, zpl.Media(52.8, None, "direct")),
+        # continuous media: the label length is only what was set
+        ({"media": "continuous"}, zpl.Media(None, 75.0, "direct")),
+        ({"media": "mark"}, zpl.Media(52.8, 75.0, "direct")),
+        # no head width told: a print width proves nothing
+        ({"head_width": 0}, zpl.Media(52.8, None, "direct")),
+        # the print method in ^HH (thermal transfer printers) wins
+        ({"method": "transfer"}, zpl.Media(52.8, 75.0, "transfer")),
+        # no resolution in ^HH: the one of ~HI; none at all: nothing
+        ({"dots_per_mm": 0}, zpl.Media(35.2, 50.0, "direct")),
+    ],
+)
+def test_zpl_media(changes, expected):
+    from dataclasses import replace
+
+    from zebra_gx420d import GX420D_HH, GX420D_HS
+
+    config = replace(zpl.parse_configuration(GX420D_HH), **changes)
+    status = zpl.parse_host_status(GX420D_HS)
+    assert zpl.media(config, status, 12) == expected
+    if changes == {"dots_per_mm": 0}:
+        assert zpl.media(config, None, 0) == zpl.Media()
+
+
+def test_zpl_configuration_garbage():
+    assert zpl.parse_configuration(b"") == zpl.Configuration()
+    assert zpl.parse_configuration(b"\x02nonsense\x03") == zpl.Configuration()
+
+
+def test_zpl_query_reports_the_loaded_labels_of_a_real_gx420d(monkeypatch):
+    from zebra_gx420d import GX420D_HH, GX420D_HI, GX420D_HQES, GX420D_HS
+
+    backend = zpl.Zpl()
+    answers = {
+        b"~HI\n": GX420D_HI,
+        b"~HS\n": GX420D_HS,
+        b"~HQES\n": GX420D_HQES,
+        b"^XA^HH^XZ\n": GX420D_HH,
+    }
+    printer = FakePrinter(answers)
+    install(monkeypatch, printer)
+    info = backend.query("zebra.invalid")
+    assert (info.model, info.firmware, info.state) == ("GX420d-200dpi", "V56.17.17Z", "PAUSED")
+    assert (info.pitch_mm, info.width_mm, info.print_method) == (52.8, 75.0, "direct")
+    assert printer.jobs == []  # questions only: nothing printed
+    assert b"^XA^HH^XZ\n" in printer.requests
+    # a printer that does not answer ^HH: the method of ~HS, no sizes
+    del printer.answers[b"^XA^HH^XZ\n"]
+    info = backend.query("zebra.invalid")
+    assert (info.pitch_mm, info.width_mm, info.print_method) == (None, None, "direct")
+    # one that does not answer ~HS is not asked ^HH
+    printer.requests.clear()
+    printer.answers = {b"~HI\n": GX420D_HI}
+    backend.query("zebra.invalid")
+    assert b"^XA^HH^XZ\n" not in printer.requests

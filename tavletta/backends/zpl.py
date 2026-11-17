@@ -4,7 +4,9 @@ docs/zpl.md).
 The label goes to the printer's RAM as a graphic (~DG, hex rows with
 Zebra's run-length compression) and is printed from there (^XG), as LPrint
 by Michael R Sweet (Apache-2.0) does; written anew. ~HI names the model and
-resolution, ~HS and ~HQES report problems.
+resolution, ~HS and ~HQES report problems, ^HH (the configuration sent
+to the host, nothing printed) the loaded media: the label length the
+printer measured (the label pitch) and a print width set below the head's.
 """
 
 from __future__ import annotations
@@ -51,6 +53,10 @@ FINISH = {"tear": "T,Y", "peel": "P,N", "cut": "C,Y"}
 # ^MN: gap labels are "web" (Y), black marks M, continuous N. LPrint sends M
 # for gap labels too, which the manual calls black mark sensing.
 MEDIA = {"gap": "Y", "mark": "M", "continuous": "N"}
+
+# ^HH: the configuration as text, without printing it (a ^ command, so in a
+# format; one without fields prints nothing)
+CONFIGURATION = b"^XA^HH^XZ\n"
 
 # 4 inch heads: 832 dots at 203 dpi (manual), the usual widest label
 MAX_WIDTH_MM = 104.0
@@ -231,14 +237,15 @@ def parse_identity(raw: bytes) -> Identity:
 class HostStatus:
     """~HS, three frames; the flags Tavletta uses. Line 1
     "aaa,b,c,dddd,eee,...": b paper out, c paused, eee formats waiting.
-    Line 2 "mmm,n,o,p,...,uuuuuuuu,...": o head up, p ribbon out,
-    uuuuuuuu labels still to print."""
+    Line 2 "mmm,n,o,p,q,...,uuuuuuuu,...": o head up, p ribbon out,
+    q thermal transfer mode, uuuuuuuu labels still to print."""
 
     paper_out: bool = False
     paused: bool = False
     head_up: bool = False
     ribbon_out: bool = False
     busy: bool = False
+    method: str = ""  # line 2, field e: thermal transfer (1) or direct (0)
     raw: str = ""
 
 
@@ -258,6 +265,7 @@ def parse_host_status(raw: bytes) -> HostStatus | None:
         head_up=_flag(two, 2),
         ribbon_out=_flag(two, 3),
         busy=_number(one, 4) > 0 or _number(two, 8) > 0,
+        method={"1": "transfer", "0": "direct"}.get(two[4].strip() if len(two) > 4 else "", ""),
         raw=raw.decode("ascii", "replace").strip(),
     )
 
@@ -288,6 +296,78 @@ def errors_error(bits: int) -> PrinterError | None:
         if bits & bit:
             return cls("~HQES errors %08X: %s" % (bits, text))
     return None
+
+
+@dataclass(frozen=True)
+class Configuration:
+    """What ^HH tells of the loaded media, in dots; 0 or "" = not told.
+
+    label_length: LABEL LENGTH, measured on gap or mark media from the
+    start of one label to the next (the pitch); print_width: PRINT WIDTH,
+    the whole head unless set lower (^PW, set by the last job too);
+    head_width: the head's dots (RESOLUTION "832 8/MM FULL")."""
+
+    print_width: int = 0
+    label_length: int = 0
+    head_width: int = 0
+    dots_per_mm: int = 0
+    media: str = ""  # "gap", "mark", "continuous"
+    method: str = ""  # "direct", "transfer"
+
+
+_CONFIG_LINE = re.compile(r"^\s*(\S.*?)\s{2,}(\S.*?)\s*$")
+_MEDIA_TYPES = {"GAP/NOTCH": "gap", "MARK": "mark", "CONTINUOUS": "continuous"}
+_METHODS = {"DIRECT-THERMAL": "direct", "THERMAL-TRANS.": "transfer"}
+
+
+def _int(text: str) -> int:
+    match = re.match(r"\d+", text)
+    return int(match.group()) if match else 0
+
+
+def parse_configuration(raw: bytes) -> Configuration:
+    """The ^HH answer: one line per setting, "  <value>   <NAME>"."""
+    values: dict[str, str] = {}
+    for line in raw.decode("ascii", "replace").replace("\x02", "").splitlines():
+        if match := _CONFIG_LINE.match(line):
+            values.setdefault(match.group(2).strip(), match.group(1).strip())
+    resolution = values.get("RESOLUTION", "")
+    dpmm = re.search(r"(\d+)/MM", resolution)
+    return Configuration(
+        print_width=_int(values.get("PRINT WIDTH", "")),
+        label_length=_int(values.get("LABEL LENGTH", "")),
+        head_width=_int(resolution),
+        dots_per_mm=int(dpmm.group(1)) if dpmm else 0,
+        media=_MEDIA_TYPES.get(values.get("MEDIA TYPE", ""), ""),
+        method=_METHODS.get(values.get("PRINT METHOD", ""), ""),
+    )
+
+
+@dataclass(frozen=True)
+class Media:
+    """The loaded labels as far as the printer tells (PrinterInfo)."""
+
+    pitch_mm: float | None = None
+    width_mm: float | None = None
+    method: str = ""
+
+
+def media(config: Configuration, status: HostStatus | None, dots_per_mm: int) -> Media:
+    """The pitch from the measured label length (gap or mark media only: on
+    continuous media it is just the length set); the width only from a
+    print width below the head's: the whole head says nothing (the GX and
+    ZD series centre narrower labels under it); the print method from ^HH,
+    else from ~HS."""
+    dpmm = config.dots_per_mm or dots_per_mm
+    if not dpmm:
+        return Media(method=config.method or (status.method if status else ""))
+    pitch = None
+    if config.media in ("gap", "mark") and config.label_length:
+        pitch = round(config.label_length / dpmm, 1)
+    width = None
+    if config.head_width and 0 < config.print_width < config.head_width:
+        width = round(config.print_width / dpmm, 1)
+    return Media(pitch, width, config.method or (status.method if status else ""))
 
 
 # --- the backend ------------------------------------------------------------------
@@ -350,6 +430,11 @@ class Zpl(RawBackend):
         answer = s.ask(b"~HI\n", frames_done(1))
         status, error, more = self._status(s)
         identity = self._identity(s, answer + more)  # a late ~HI answer comes with ~HS
+        loaded = Media()
+        if status is not None:  # a printer that answers ~HS: what is loaded
+            config = parse_configuration(s.ask(CONFIGURATION, frames_done(1)))
+            dpmm = {v: k for k, v in DOTS_PER_MM.items()}.get(identity.dpi, 0)
+            loaded = media(config, status, dpmm)
         return PrinterInfo(
             identity.model,
             None,
@@ -359,6 +444,9 @@ class Zpl(RawBackend):
             error=error.code if error else "",
             firmware=identity.firmware,
             dpi=DPI[identity.dpi] if identity.dpi else None,
+            pitch_mm=loaded.pitch_mm,
+            width_mm=loaded.width_mm,
+            print_method=loaded.method,
         )
 
     def problem(self, s: Session) -> PrinterError | None:

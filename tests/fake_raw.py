@@ -30,6 +30,7 @@ QUESTIONS = {
     b"~HI\n",
     b"~HS\n",
     b"~HQES\n",
+    b"^XA^HH^XZ\n",
     b"\x1b!?",
     b"~!T\r\n",
     b"\x10\x04\x02",

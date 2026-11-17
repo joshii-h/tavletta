@@ -2048,6 +2048,22 @@ def test_cab_different_labels_loaded(cab_window, cab_env, answer, prints):
     assert (following is not None and following.get_heading() == "Print label") == prints
 
 
+def test_labels_of_another_width_loaded(cab_window, cab_env):
+    """Only the width of the loaded labels known (a ZPL printer's print
+    width): another one is warned about, the same one prints directly."""
+    win = cab_window
+    cab_env.info.width_mm = 75.0
+    win.print_flow.on_print()
+    dialog = win.get_visible_dialog()
+    assert dialog.get_heading() == "Different labels loaded"
+    body = dialog.get_body().replace("\u2068", "").replace("\u2069", "")
+    assert "50.0 mm wide" in body and "75.0 mm wide" in body
+    respond(dialog, "cancel")
+    cab_env.info.width_mm = 50.0
+    win.print_flow.on_print()
+    assert win.get_visible_dialog().get_heading() == "Print label"
+
+
 def test_cab_close_enough_pitch_prints_directly(cab_window, cab_env):
     cab_env.info.pitch_mm = 28.8  # the sensor measures in whole mm
     cab_window.print_flow.on_print()
