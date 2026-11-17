@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "A Tavletta rétorománul kis táblát jelent (a tavla, tábla/deszka szóból). Kiejtése: tav-LET-ta.",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "dokumentumoldalak (PDF, képek) engedélyezése a kéréssel küldött címkékben; a PDF-eket ekkor külön, korlátozott folyamat rajzolja (alapértelmezés szerint ki)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "A label_content nem tartalmazhat dokumentumoldalakat (--allow-pdf-pages)",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "%(n)d. elem: a szöveg túl hosszú ahhoz, hogy egy sorban legyen megrajzolva – ossza sorokra, vagy rövidítse le",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "A címke %(width)s széles, de a nyomtató %(loaded)s széles címkékre van beállítva. Ellenőrizze a címkeméretet, vagy töltse be a megfelelő címkéket.",
 }

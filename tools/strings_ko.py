@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "Tavletta는 로망슈어로 작은 판을 뜻합니다(tavla, 판·탁자에서 유래). 발음은 tav-LET-ta입니다.",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "요청과 함께 보낸 라벨에 문서 페이지(PDF, 이미지)를 허용합니다. PDF는 제한이 있는 별도 프로세스에서 그려집니다(기본값: 꺼짐)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content에서는 문서 페이지를 사용할 수 없습니다 (--allow-pdf-pages)",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "요소 %(n)d: 텍스트가 너무 길어 한 줄로 그릴 수 없습니다 – 여러 줄로 나누거나 줄이세요",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "라벨 너비는 %(width)s이지만 프린터는 너비 %(loaded)s 라벨로 설정되어 있습니다. 라벨 크기를 확인하거나 맞는 라벨을 넣으세요.",
 }

@@ -795,4 +795,6 @@ TRANSLATIONS = {
     "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced tav-LET-ta.": "Tavletta adalah bahasa Romansh untuk papan kecil (dari tavla, papan/meja). Dibaca tav-LET-ta.",
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "izinkan halaman dokumen (PDF, gambar) pada label yang dikirim bersama permintaan; PDF lalu digambar dalam proses terpisah dengan batasan (nonaktif secara bawaan)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Halaman dokumen tidak diizinkan dalam label_content (--allow-pdf-pages)",
+    "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Elemen %(n)d: teks terlalu panjang untuk digambar dalam satu baris – pecah menjadi beberapa baris atau persingkat",
+    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Label selebar %(width)s, tetapi printer disetel untuk label selebar %(loaded)s. Periksa ukuran label, atau pasang label yang cocok.",
 }
