@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export PYBUILD_NAME = zint
+# scikit-build-core: the system's CMake and Ninja, nothing from the network
+export SKBUILD_CMAKE_ARGS = -DCMAKE_BUILD_TYPE=RelWithDebInfo
+# the upstream tests are not in the sdist; check that the module loads and encodes
+export PYBUILD_TEST_CUSTOM = 1
+export PYBUILD_TEST_ARGS = cd {build_dir} && {interpreter} -c "import zint; s = zint.Symbol(); s.symbology = zint.Symbology.DATAMATRIX; s.encode('Tavletta'); assert s.rows > 0, s.rows"
+
+%:
+	dh $@ --buildsystem=pybuild

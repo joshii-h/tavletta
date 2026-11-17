@@ -1,0 +1,36 @@
+Source: python-zint-bindings
+Section: python
+Priority: optional
+Maintainer: Joshua Hirsig <joshuahirsig@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-sequence-python3,
+ cmake,
+ libfmt-dev,
+ libzint-dev,
+ ninja-build,
+ pybind11-dev,
+ pybuild-plugin-pyproject,
+ python3-all-dev,
+ python3-pybind11,
+ python3-pytest <!nocheck>,
+ python3-scikit-build-core,
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/bindreams/zint-bindings
+Vcs-Browser: https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/packaging/debian-deps/python-zint-bindings
+Vcs-Git: https://git.joshuahirsig.xyz/joshii/tavletta.git
+Testsuite: autopkgtest-pkg-pybuild
+
+Package: python3-zint-bindings
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ ${shlibs:Depends},
+Description: Python bindings for the Zint barcode library
+ zint-bindings exposes libzint, a barcode encoding library supporting over
+ 50 symbologies (QR Code, Data Matrix, PDF417, Aztec, Code 128, EAN, UPC,
+ GS1 and many more), to Python as the module "zint".
+ .
+ This package builds the bindings against the system's libzint.
