@@ -33,6 +33,7 @@ Needs PyGObject with librsvg (Rsvg 2.0), pycairo and Pillow.
 
 from __future__ import annotations
 
+import argparse
 import io
 import struct
 import sys
@@ -230,7 +231,18 @@ def build(out: Path) -> list[Path]:
 
 
 def main(argv: list[str]) -> int:
-    out = Path(argv[1]) if len(argv) > 1 else ROOT / "build" / "icons"
+    parser = argparse.ArgumentParser(
+        prog="tools/icons.py",
+        description="Render Tavletta's icon into PNG (hicolor), ICO and ICNS files.",
+    )
+    parser.add_argument(
+        "out",
+        nargs="?",
+        type=Path,
+        default=ROOT / "build" / "icons",
+        help="output folder (default: build/icons)",
+    )
+    out = parser.parse_args(argv[1:]).out
     out.mkdir(parents=True, exist_ok=True)
     for path in build(out):
         print(path)
