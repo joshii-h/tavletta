@@ -22,7 +22,7 @@ BuildRequires:  python3-pytest
 
 %global _description %{expand:
 A Python library and command line tools that talk to the Brother VC-500W
-colour label printer over its native network protocol: printer status,
+color label printer over its native network protocol: printer status,
 configuration and printing of images.}
 
 %description %_description
@@ -37,6 +37,8 @@ Suggests:       python3-cups
 
 %prep
 %autosetup -p1 -n labelprinter-vc500w-%{commit}
+# modules, not scripts: the commands come from the entry points
+sed -i '1{/^#!/d}' labelprinter/*.py labelprinter/test/*.py
 
 
 %generate_buildrequires

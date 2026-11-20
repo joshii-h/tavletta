@@ -10,7 +10,6 @@
 set -euo pipefail
 DEBS="$(realpath "$1")"
 EXPECT="${2:-}"
-SRC="$(cd "$(dirname "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 export DEBIAN_FRONTEND=noninteractive
@@ -27,7 +26,7 @@ if [ -n "$EXPECT" ] && [ "$version" != "tavletta $EXPECT" ]; then
   echo "error: expected tavletta $EXPECT" >&2
   exit 1
 fi
-cp "$SRC/docs/examples/party.tavletta" qr.tavletta
+cp /usr/share/doc/tavletta/examples/party.tavletta qr.tavletta
 sed 's/"symbology": *"qr"/"symbology": "datamatrix"/' qr.tavletta > datamatrix.tavletta
 for label in qr datamatrix; do
   tavletta print "$label.tavletta" --dry-run --no-query --no-save-counter --output "$label.png"

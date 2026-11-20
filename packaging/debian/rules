@@ -12,8 +12,12 @@ export PYBUILD_TEST_ARGS = cd {dir} && FONTCONFIG_FILE={dir}/tests/fonts.conf {i
 	dh $@ --buildsystem=pybuild
 
 execute_after_dh_auto_install:
-	# the licence texts are in debian/copyright; the notices and credits go to
-	# /usr/share/doc/tavletta (debian/docs)
-	rm -rf debian/tavletta/usr/lib/python3/dist-packages/tavletta-*.dist-info/licenses
-	rm -f debian/tavletta/usr/lib/python3/dist-packages/tavletta/sheets/LICENSE.glabels \
-	      debian/tavletta/usr/lib/python3/dist-packages/tavletta/symbols/LICENSE.mdi
+	# licence texts: in debian/copyright; the notices, credits and the
+	# data licences (LICENSE.glabels, LICENSE.mdi) in /usr/share/doc/tavletta
+	rm -rf debian/tavletta/usr/lib/python3*/dist-packages/tavletta-*.dist-info/licenses
+	rm -f debian/tavletta/usr/lib/python3*/dist-packages/tavletta/sheets/LICENSE.glabels \
+	      debian/tavletta/usr/lib/python3*/dist-packages/tavletta/symbols/LICENSE.mdi
+
+override_dh_compress:
+	# the example labels stay as they are, to open and print
+	dh_compress -Xexamples/
