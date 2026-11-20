@@ -27,6 +27,8 @@ Summary:        %{summary}
 
 %prep
 %autosetup -p1 -n segno-%{version}
+# a module, not a script: the command comes from the entry point
+sed -i '1{/^#!/d}' segno/cli.py
 
 
 %generate_buildrequires

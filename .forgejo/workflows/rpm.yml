@@ -48,7 +48,8 @@ jobs:
       image: fedora:44
     timeout-minutes: 60
     env:
-      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+      # (a push: the tag pushed; a manual run: the tag given, possibly empty)
+      TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
       PUBLISH: ${{ github.event_name == 'push' }}
     steps:
       - name: Install git

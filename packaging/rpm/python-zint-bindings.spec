@@ -21,9 +21,9 @@ BuildRequires:  fmt-devel
 BuildRequires:  zint-devel
 
 %global _description %{expand:
-Python bindings for libzint, a barcode encoding library that supports over
-50 symbologies: QR Code, Data Matrix, PDF417, Aztec, Code 128, EAN, UPC,
-GS1 DataBar and many more.}
+Python bindings for the Zint library, which encodes over 50 kinds of
+barcodes: QR Code, Data Matrix, PDF417, Aztec, Code 128, EAN, UPC, GS1
+DataBar and many more.}
 
 %description %_description
 

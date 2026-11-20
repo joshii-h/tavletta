@@ -4,7 +4,7 @@
 set -eu
 cd "$AUTOPKGTEST_TMP"
 tavletta --version
-cp "$OLDPWD/docs/examples/party.tavletta" qr.tavletta
+cp /usr/share/doc/tavletta/examples/party.tavletta qr.tavletta
 sed 's/"symbology": *"qr"/"symbology": "datamatrix"/' qr.tavletta > datamatrix.tavletta
 for label in qr datamatrix; do
   tavletta print "$label.tavletta" --dry-run --no-query --no-save-counter --output "$label.png"
