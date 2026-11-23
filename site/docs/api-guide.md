@@ -60,6 +60,10 @@ curl -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
 - With `"format": "json"` the answer is JSON with the image in base64
   and the `warnings` (for example `font_missing`, `barcode_narrow`).
 - `"view": "printer"` shows the image as the printer gets it (turned).
+- `other_labels_loaded` in the `warnings`: the printer has other labels
+  loaded than the label's (another size, or another label distance
+  measured). Load the matching roll, or check the label's size and gap.
+  A printer that does not answer within a second gives no such warning.
 - A preview needs only the role `preview`.
 
 ## 3. Print one label { #one }
@@ -78,6 +82,8 @@ curl -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   `GET /api/v1/jobs/{id}`.
 - Each printer prints one job after the other; jobs of different printers
   run side by side.
+- The job prints despite its `warnings`; `other_labels_loaded` is
+  replaced by what the printer reports when the job prints.
 
 ## 4. A series in one request { #series }
 

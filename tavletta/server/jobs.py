@@ -64,7 +64,9 @@ class PrintJob:
     rows_printed: int = 0
     failure: Failure | None = None
     remark: Callable[[], str | None] | None = None
-    warnings: list = field(default_factory=list)  # the check's warnings (RenderWarning)
+    # the check's warnings (RenderWarning); other_labels_loaded replaced when it
+    # prints, by what its printer reports then (service._for_the_printer())
+    warnings: list = field(default_factory=list)
     owner: str = ""  # the name of the token that asked for it
     # a named token of tokens.toml: held to MAX_PER_OWNER (one shared token,
     # or none, is everyone: only the overall limit applies)

@@ -23,7 +23,7 @@ import socket
 import threading
 import time
 from collections.abc import Callable, Iterator, Mapping
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -48,7 +48,7 @@ from tavletta.cli import (
     apply_assignments,
     ask_printer,
 )
-from tavletta.job import Job, PrepareFailed, preview_image
+from tavletta.job import Job, PrepareFailed, other_labels, preview_image
 from tavletta.merge import MergeError, read_book
 from tavletta.model import (
     CodeElement,
@@ -83,10 +83,12 @@ from tavletta.typeset import font_installed
 from tavletta.ui.i18n import _
 from tavletta.ui.settings import PrinterSettings, Settings
 from tavletta.ui.texts import (
+    OTHER_LABELS,
     backend_name,
     code_text,
     data_error_text,
     label_error_text,
+    other_labels_warning,
     printed_remark,
     printer_error_text,
     save_error_text,
@@ -99,6 +101,10 @@ from tavletta.variables import BUILTIN, Values, label_names, uses_counter
 log = logging.getLogger(__name__)
 DISCOVERY_SECONDS = 30.0  # printers found are remembered this long
 STATUS_SECONDS = 5.0  # the state of printers in the list, as long
+# a preview or a print request waits this long for the state of its printer
+# (other labels loaded than the label's); one that answers later warns the
+# next request (STATUS_SECONDS), a print job when it prints
+STATE_WAIT = 1.0
 MAX_HOST = 512
 RENDERS = 2  # renders for previews and checks at once: a large label takes much memory
 RENDER_WAIT = 20.0  # seconds a request waits for one, then 503
@@ -156,6 +162,9 @@ class Checked:
     warnings: list[RenderWarning]
     save: bool  # the next counter value goes into the label file
     total: int  # labels
+    # the question to its printer of printers.toml, asked while it is checked
+    # (_labels_question())
+    question: Future[PrinterInfo | Exception] | None = None
 
 
 @dataclass
@@ -379,7 +388,8 @@ class Service:
         self._label_locks: dict[str, threading.Lock] = {}
         self._searches: dict[str, threading.Lock] = {}
         self._states: dict[str, tuple[float, PrinterInfo | Exception]] = {}
-        self._asking: dict[str, threading.Lock] = {}
+        # the question to a printer running now, by its name (_question())
+        self._asking: dict[str, Future[PrinterInfo | Exception]] = {}
         self._renders = threading.BoundedSemaphore(RENDERS)
         self._held = threading.local()  # render slots this thread holds
         self._waiting = 0  # requests waiting for a render slot
@@ -430,21 +440,40 @@ class Service:
         seconds and asked for once at a time per printer: a list asked for
         often must not keep every printer busy. Kept raw, so each answer is
         in the language of its request."""
+        return self._question(printer).result()
+
+    def _question(self, printer: NamedPrinter) -> Future[PrinterInfo | Exception]:
+        """The printer's answer of the last STATUS_SECONDS, else the
+        question to it running now, else a new one: in a thread of its own,
+        so a caller can stop waiting for it (_loaded_warnings())."""
         with self._found_lock:
-            asking = self._asking.setdefault(printer.name, threading.Lock())
-        with asking:
-            with self._found_lock:
-                cached = self._states.get(printer.name)
+            cached = self._states.get(printer.name)
             if cached and time.monotonic() - cached[0] < STATUS_SECONDS:
-                return cached[1]
-            try:
-                outcome: PrinterInfo | Exception = get_backend(printer.backend).query(printer.host)
-            except Exception as e:  # noqa: BLE001 - the backend's errors, like in the window
-                _detach(e)
-                outcome = e
+                answered: Future[PrinterInfo | Exception] = Future()
+                answered.set_result(cached[1])
+                return answered
+            running = self._asking.get(printer.name)
+            if running is not None:
+                return running
+            question: Future[PrinterInfo | Exception] = Future()
+            self._asking[printer.name] = question
+        threading.Thread(
+            target=self._ask, args=(printer, question), name="tavletta-probe", daemon=True
+        ).start()
+        return question
+
+    def _ask(self, printer: NamedPrinter, question: Future[PrinterInfo | Exception]) -> None:
+        outcome: PrinterInfo | Exception = RuntimeError("the question ended without an answer")
+        try:
+            outcome = get_backend(printer.backend).query(printer.host)
+        except Exception as e:  # noqa: BLE001 - the backend's errors, like in the window
+            _detach(e)
+            outcome = e
+        finally:  # answered in any case: no one waits for ever, the next one asks anew
             with self._found_lock:
                 self._states[printer.name] = (time.monotonic(), outcome)
-            return outcome
+                del self._asking[printer.name]
+            question.set_result(outcome)
 
     def _named_state(self, printer: NamedPrinter) -> dict:
         """The state of a printer of printers.toml; ApiError if it fails."""
@@ -827,6 +856,7 @@ class Service:
         if prepared.rows and index >= len(prepared.rows):
             raise invalid_field("row")
         job = prepared.job(index=index if prepared.rows else None)
+        question = self._labels_question(prepared)  # answered while it renders
         with self._rendering(prepared):
             label, warnings = job.expanded(1)
             if request.view == "printer":
@@ -841,6 +871,7 @@ class Service:
             buffer = io.BytesIO()
             image.save(buffer, format="PNG")
         warnings += font_warnings(prepared.label)
+        warnings += self._loaded_warnings(prepared, question)
         texts = [_warning(w.key, warning_text(w)) for w in warnings]
         if prepared.rows and (unknown := unknown_columns(prepared.label, list(prepared.rows[0]))):
             names = ", ".join("{%s}" % name for name in unknown)
@@ -973,10 +1004,11 @@ class Service:
                 "too_many_labels",
                 _("At most %d labels in one print job") % self.max_labels,
             )
+        question = self._labels_question(prepared)  # answered while it is checked
         with self._rendering(prepared):
             warnings = self._check(prepared) + font_warnings(prepared.label)
         save = self._saves(prepared, request.no_save_counter)
-        return Checked(request, prepared, warnings, save, total)
+        return Checked(request, prepared, warnings, save, total, question)
 
     def queue_print(self, checked: Checked, caller: Caller = LOCAL) -> PrintJob:
         prepared, save = checked.prepared, checked.save
@@ -986,9 +1018,8 @@ class Service:
         def run(job: PrintJob):
             return self._print(job, prepared, save)
 
-        job = PrintJob(
-            prepared.backend.id, host, name, checked.total, run, warnings=checked.warnings
-        )
+        warnings = checked.warnings + self._loaded_warnings(prepared, checked.question)
+        job = PrintJob(prepared.backend.id, host, name, checked.total, run, warnings=warnings)
         job.owner = caller.name
         job.limited = caller.named
         job.printer_name = prepared.named.name if prepared.named else ""
@@ -1010,6 +1041,35 @@ class Service:
             checked.total,
         )
         return job
+
+    def _labels_question(self, prepared: Prepared) -> Future[PrinterInfo | Exception] | None:
+        """The question to the printer of printers.toml a request is for,
+        for what it reports of the loaded labels (_loaded_warnings()); None
+        without one, and for tape and page printers (nothing to compare)."""
+        caps = prepared.backend.capabilities
+        if prepared.named is None or caps.continuous or caps.pages:
+            return None
+        return self._question(prepared.named)
+
+    def _loaded_warnings(
+        self, prepared: Prepared, question: Future[PrinterInfo | Exception] | None
+    ) -> list[RenderWarning]:
+        """other_labels_loaded if the printer has other labels loaded than
+        the label's, as far as it answered by now or within STATE_WAIT
+        seconds more (waited for without a render slot); nothing if it does
+        not answer, or with an error. Printed anyway, as from the command
+        line."""
+        if question is None:
+            return []
+        if not question.done():
+            with self.slot_released(), contextlib.suppress(TimeoutError):
+                question.result(timeout=STATE_WAIT)
+        if not question.done():
+            return []
+        outcome = question.result()
+        if isinstance(outcome, Exception):
+            return []
+        return _other_labels(prepared, prepared.options.settings, outcome)
 
     def _saves(self, prepared: Prepared, no_save: bool) -> bool:
         """Whether the job saves the next counter value into the label
@@ -1107,6 +1167,9 @@ class Service:
                 info = ask_printer(backend, job.host, QUERY_WAIT + QUERY_FINISH, 0.0)
         options = prepared.options
         options = prepared.printer.options(info, options.copies, options.gap_mm, host=job.host)
+        if info is not None:  # the labels loaded now: what the job prints on
+            loaded = _other_labels(prepared, options.settings, info)
+            job.warnings = [w for w in job.warnings if w.key != OTHER_LABELS] + loaded
         return replace(prepared, options=options)
 
     def _fresh_values(self, prepared: Prepared, save: bool) -> Values:
@@ -1240,6 +1303,15 @@ def font_warnings(label: Label) -> list[RenderWarning]:
         for n, element in enumerate(label.elements, 1)
         if isinstance(element, TextElement) and not font_installed(element.font)
     ]
+
+
+def _other_labels(
+    prepared: Prepared, chosen: Mapping[str, object], info: PrinterInfo
+) -> list[RenderWarning]:
+    """The warning of other labels loaded than the label's, as the window
+    and the command line give it (job.other_labels()), if they are."""
+    other = other_labels(prepared.backend, prepared.label, info, chosen)
+    return [other_labels_warning(other, prepared.settings.units)] if other else []
 
 
 def _require(caller: Caller, role: str) -> None:

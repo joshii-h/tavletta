@@ -186,7 +186,10 @@ SCHEMAS: dict[str, Any] = {
         "type": "object",
         "required": ["code", "message"],
         "properties": {
-            "code": {"type": "string", "examples": ["barcode_narrow", "font_missing"]},
+            "code": {
+                "type": "string",
+                "examples": ["barcode_narrow", "font_missing", "other_labels_loaded"],
+            },
             "message": {"type": "string"},
         },
     },
@@ -387,7 +390,13 @@ SCHEMAS: dict[str, Any] = {
         "properties": {
             "width": {"type": "integer"},
             "height": {"type": "integer"},
-            "warnings": {"type": "array", "items": _ref("Warning")},
+            "warnings": {
+                "type": "array",
+                "items": _ref("Warning"),
+                "description": "What would print wrongly. other_labels_loaded: the printer "
+                "of printers.toml reports other labels loaded than the label's (their size, "
+                "or the label distance it measured), if it answers within a second.",
+            },
             "png": {"type": "string", "contentEncoding": "base64"},
         },
     },
@@ -474,7 +483,11 @@ SCHEMAS: dict[str, Any] = {
             "warnings": {
                 "type": "array",
                 "items": _ref("Warning"),
-                "description": "Found when it was checked; it printed anyway.",
+                "description": "Found when it was checked; it printed anyway. "
+                "other_labels_loaded: the printer reports other labels loaded than the "
+                "label's (their size, or the label distance it measured); told by the "
+                "printer of printers.toml when the job is queued, and replaced by what the "
+                "printer reports when it prints (if it is asked then).",
             },
             "created": {"type": "string", "format": "date-time", "description": "UTC."},
             "started": {"type": ["string", "null"], "format": "date-time"},

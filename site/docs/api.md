@@ -405,7 +405,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `cancel_requested` | boolean | DELETE was sent. |
 | `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |
 | `remark` | string or null | A note of the printer, for people. |
-| `warnings` | array of Warning | Found when it was checked; it printed anyway. |
+| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); told by the printer of `printers.toml` when the job is queued, and replaced by what the printer reports when it prints (if it is asked then). |
 | `created` | string | UTC. |
 | `started` | string or null |  |
 | `finished` | string or null |  |
@@ -465,7 +465,7 @@ A printer of printers.toml.
 |---|---|---|
 | `width` | integer |  |
 | `height` | integer |  |
-| `warnings` | array of Warning |  |
+| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured), if it answers within a second. |
 | `png` | string |  |
 
 Example of a job:

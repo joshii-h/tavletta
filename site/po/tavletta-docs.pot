@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 13:55+0100\n"
+"POT-Creation-Date: 2026-11-23 15:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,6 +140,12 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/api-guide.md
 #, markdown-text
+msgid "`other_labels_loaded` in the `warnings`: the printer has other labels loaded than the label's (another size, or another label distance measured). Load the matching roll, or check the label's size and gap.  A printer that does not answer within a second gives no such warning."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/api-guide.md
+#, markdown-text
 msgid "A preview needs only the role `preview`."
 msgstr ""
 
@@ -174,6 +180,12 @@ msgstr ""
 #: docs/api-guide.md
 #, markdown-text
 msgid "Each printer prints one job after the other; jobs of different printers run side by side."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/api-guide.md
+#, markdown-text
+msgid "The job prints despite its `warnings`; `other_labels_loaded` is replaced by what the printer reports when the job prints."
 msgstr ""
 
 #. type: Title ##
@@ -1295,7 +1307,7 @@ msgid ""
 "| `cancel_requested` | boolean | DELETE was sent. |\n"
 "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
 "| `remark` | string or null | A note of the printer, for people. |\n"
-"| `warnings` | array of Warning | Found when it was checked; it printed anyway. |\n"
+"| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); told by the printer of `printers.toml` when the job is queued, and replaced by what the printer reports when it prints (if it is asked then). |\n"
 "| `created` | string | UTC. |\n"
 "| `started` | string or null |  |\n"
 "| `finished` | string or null |  |\n"
@@ -1395,7 +1407,7 @@ msgid ""
 "|---|---|---|\n"
 "| `width` | integer |  |\n"
 "| `height` | integer |  |\n"
-"| `warnings` | array of Warning |  |\n"
+"| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured), if it answers within a second. |\n"
 "| `png` | string |  |\n"
 msgstr ""
 
@@ -3695,6 +3707,7 @@ msgid ""
 "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
 "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
 "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
+"| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
 "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
 "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
 "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"

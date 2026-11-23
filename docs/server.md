@@ -269,6 +269,19 @@ variables, dates out of range, elements or images that cannot be drawn,
 placeholders without a column and codes a row cannot make are refused
 (422) before anything is queued; other warnings are returned with the job.
 
+Like the window and `tavletta print`, the server warns when the printer
+has other die-cut labels loaded than the label's: labels of another size,
+or another label distance measured (warning `other_labels_loaded`; a ZPL
+printer's hint suggests calibrating it, its distance may be from an
+earlier roll). The label prints anyway. A preview and a print request for
+a printer of `printers.toml` ask it (its answer of the last 5 seconds
+counts, as for the printer list) and wait at most a second: a printer that
+does not answer gives no warning and does not hold the request up. When
+the job prints, it is replaced by what the printer reports then, for every
+printer the job asks before it prints. Not for a job that senses the
+labels otherwise than the printer reports (a continuous job on a printer
+set to gap labels).
+
 Example, with the example labels of `docs/examples` as the labels folder
 (`serial.tavletta` has the placeholders `{Code}`, `{Name}`, `{Shelf}` and
 `{Box}`):
