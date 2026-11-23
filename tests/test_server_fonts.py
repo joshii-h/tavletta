@@ -124,7 +124,8 @@ def test_more_metric_aliases_and_styles(asked, loaded, stands_for):
         ("Source Code Pro Heavy", "Source Code Pro", None, False),  # weight unknown
         ("Helvetica Neue", "Helvetica", 400, False),
         ("Arial Rounded MT Bold", "Arial", 700, False),
-        ("DejaVu Sans Condensed", "DejaVu Sans", 400, False),
+        ("Arial -", "Arial", 400, False),  # a separator, no style after it
+        ("Arial-", "Liberation Sans", 400, False),
         # two words of one weight, a hyphen after the family
         ("Calibri Semi Bold", "Carlito", 600, True),
         ("Calibri Extra Light", "Carlito", 200, True),
@@ -141,6 +142,56 @@ def test_style_words_after_the_family(asked, loaded, weight, stands_for):
     assert typeset.resolves_to(asked, loaded, weight) is stands_for
 
 
+@pytest.mark.parametrize(
+    ("asked", "loaded", "stretch", "stands_for"),
+    [
+        # a width face of the family itself: the font loaded must be that wide
+        ("DejaVu Sans Condensed", "DejaVu Sans", 3, True),  # semi-condensed
+        ("DejaVu Sans Condensed", "DejaVu Sans", 4, False),  # the normal face
+        ("Noto Sans Condensed", "Noto Sans", 2, True),
+        ("Noto Sans SemiCondensed", "Noto Sans", 3, True),
+        ("Noto Sans Semi Condensed Bold", "Noto Sans", 3, True),
+        ("Noto Sans ExtraCondensed", "Noto Sans", 1, True),
+        ("Noto Sans Condensed", "Noto Sans", 6, False),  # wider, not narrower
+        ("Noto Sans Expanded", "Noto Sans", 6, True),
+        ("Noto Sans SemiExpanded", "Noto Sans", 3, False),
+        ("Source Sans 3 Narrow", "Source Sans 3", 2, True),
+        ("DejaVu Sans Condensed", "DejaVu Sans", None, False),  # stretch unknown
+        # a stand-in has the widths of the regular face: never for widths
+        ("Arial Condensed", "Liberation Sans", 2, False),
+        ("Calibri Condensed", "Carlito", 2, False),
+    ],
+)
+def test_width_faces_count_when_the_font_loaded_is_that_wide(asked, loaded, stretch, stands_for):
+    assert typeset.resolves_to(asked, loaded, 400, stretch) is stands_for
+
+
+def test_installed_width_faces_on_this_system():
+    """With the real fonts, where the test system has them."""
+    from gi.repository import PangoCairo
+
+    families = {f.get_name() for f in PangoCairo.FontMap.get_default().list_families()}
+    checked = 0
+    for family, face in (
+        ("DejaVu Sans", "DejaVu Sans Condensed"),
+        ("Noto Sans", "Noto Sans Condensed"),
+        ("Noto Sans", "Noto Sans SemiCondensed"),
+    ):
+        if family not in families:
+            continue
+        loaded = typeset._look_up(face)
+        # only where fontconfig gives the narrow face for the name
+        desc = typeset.Pango.FontDescription()
+        desc.set_family(face)
+        fontmap_ = PangoCairo.FontMap.get_default()
+        found = fontmap_.load_font(fontmap_.create_context(), desc).describe()
+        if int(found.get_stretch()) < int(typeset.Pango.Stretch.NORMAL):
+            assert loaded, face
+            checked += 1
+    if not checked:
+        pytest.skip("no condensed face of DejaVu Sans or Noto Sans installed")
+
+
 def test_font_installed_passes_the_weight_loaded(monkeypatch):
     """Arial Black where fontconfig loads regular Arial: missing."""
     for weight, installed in ((400, False), (900, True)):
@@ -152,9 +203,12 @@ def test_font_installed_passes_the_weight_loaded(monkeypatch):
         assert typeset.font_installed("Arial Black") is installed
 
 
-def fontmap(loads: str, weight: int = 400):
-    """A Pango font map without the asked family that loads `loads` for it."""
-    described = SimpleNamespace(get_family=lambda: loads, get_weight=lambda: weight)
+def fontmap(loads: str, weight: int = 400, stretch: int = 4):
+    """A Pango font map without the asked family that loads `loads` for it
+    (stretch 4: Pango.Stretch.NORMAL)."""
+    described = SimpleNamespace(
+        get_family=lambda: loads, get_weight=lambda: weight, get_stretch=lambda: stretch
+    )
     font = SimpleNamespace(describe=lambda: described)
     return SimpleNamespace(
         list_families=lambda: [SimpleNamespace(get_name=lambda: "DejaVu Sans")],

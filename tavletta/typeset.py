@@ -194,29 +194,34 @@ def _look_up(name: str) -> bool:
     if font is None:
         return False
     found = font.describe()
-    return resolves_to(key, found.get_family() or "", int(found.get_weight()))
+    family, weight = found.get_family() or "", int(found.get_weight())
+    return resolves_to(key, family, weight, int(found.get_stretch()))
 
 
-def resolves_to(asked: str, loaded: str, weight: int | None = None) -> bool:
+def resolves_to(
+    asked: str, loaded: str, weight: int | None = None, stretch: int | None = None
+) -> bool:
     """Whether the font fontconfig loaded for a family stands for it: the
     family itself, or a metric alias (Liberation Sans for Arial, Carlito
     for Calibri); also for a style named as a family ("Source Code Pro
     Bold", "Arial Bold", "Calibri Light"; _styled: "Arial Black" is
-    another family unless the font loaded is that heavy, `weight`): the
-    alias of the longest family that begins the name ("Arial Narrow
-    Bold": Arial Narrow's, not Arial's)."""
+    another family unless the font loaded is that heavy, `weight`; "DejaVu
+    Sans Condensed" counts if the font loaded is that narrow, `stretch`
+    (Pango.Stretch), for the family itself only: a stand-in has the widths
+    of the regular face): the alias of the longest family that begins the
+    name ("Arial Narrow Bold": Arial Narrow's, not Arial's)."""
     asked, loaded = asked.casefold(), loaded.casefold()
     if not loaded:
         return False
-    if _styled(asked, loaded, weight):
+    if _styled(asked, loaded, weight, stretch):
         return True
     families = [key for key in METRIC_ALIASES if _styled(asked, key, weight)]
     return bool(families) and loaded in METRIC_ALIASES[max(families, key=len)]
 
 
 # the words of a style named as part of a family ("Arial Bold Italic",
-# "Calibri Semi Bold"); not Rounded, Neue, Unicode, Condensed: those are
-# families of their own, of other widths
+# "Calibri Semi Bold"); not Rounded, Neue, Unicode: those are families of
+# their own, of other widths
 STYLE_WORDS = frozenset(
     {
         "regular",
@@ -239,6 +244,20 @@ STYLE_WORDS = frozenset(
 # heavier than bold: Black and Heavy name families of their own too ("Arial
 # Black"), so they count only when the font loaded is that heavy
 HEAVY_WORDS = {"extrabold": 800, "ultrabold": 800, "black": 900, "heavy": 900}
+# the width of a face ("DejaVu Sans Condensed"): counts only if the font
+# loaded is narrower (-1) or wider (+1) than normal (Pango.Stretch)
+WIDTH_WORDS = {
+    "narrow": -1,
+    "condensed": -1,
+    "semicondensed": -1,
+    "extracondensed": -1,
+    "ultracondensed": -1,
+    "expanded": 1,
+    "semiexpanded": 1,
+    "extraexpanded": 1,
+    "ultraexpanded": 1,
+}
+_NORMAL_STRETCH = int(Pango.Stretch.NORMAL)
 _PREFIXES = ("semi", "demi", "extra", "ultra")  # "Semi Bold" is "SemiBold"
 
 
@@ -252,20 +271,31 @@ def _style_words(rest: str) -> list[str]:
     return words
 
 
-def _styled(asked: str, family: str, weight: int | None = None) -> bool:
+def _styled(
+    asked: str, family: str, weight: int | None = None, stretch: int | None = None
+) -> bool:
     """The (case folded) name is the family, or the family followed (after
     a space or a hyphen: "arial-bold") only by style words ("calibri
-    light", "times new roman bold italic"), heavy ones only if `weight` is."""
+    light", "times new roman bold italic"): heavy ones only if `weight`
+    is, width ones only if `stretch` is (None: never)."""
     if asked == family:
         return True
     if not asked.startswith(family) or asked[len(family)] not in " -":
         return False
-    for word in _style_words(asked[len(family) :]):
-        heavy = HEAVY_WORDS.get(word)
-        if word in STYLE_WORDS or (heavy and weight is not None and weight >= heavy - 50):
-            continue
-        return False
-    return True
+    words = _style_words(asked[len(family) :])
+    return bool(words) and all(_style_word(word, weight, stretch) for word in words)
+
+
+def _style_word(word: str, weight: int | None, stretch: int | None) -> bool:
+    if word in STYLE_WORDS:
+        return True
+    heavy = HEAVY_WORDS.get(word)
+    if heavy is not None:
+        return weight is not None and weight >= heavy - 50
+    width = WIDTH_WORDS.get(word)
+    if width is not None and stretch is not None:
+        return (stretch - _NORMAL_STRETCH) * width > 0
+    return False
 
 
 # the weights Pango names; a font weight between them takes the nearest. By
