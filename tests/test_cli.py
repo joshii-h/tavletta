@@ -347,8 +347,10 @@ def test_set_of_a_data_column_with_data_given(mono, label_file, tmp_path, capsys
 @pytest.mark.parametrize("column", ["date", "counter", "time"])
 def test_set_of_a_builtin_is_no_data_column(mono, label_file, capsys, column):
     """{date} as a column of the label: --set date=... still sets the
-    moment, and the built-in variables keep their own message."""
-    path = label_file(TextElement(text="{%s} {=date}" % column))
+    moment, and the built-in variables keep their own message. The date
+    in a format of its own: {=date} alone writes it as the system's
+    locale does."""
+    path = label_file(TextElement(text="{%s} {=date:%%d.%%m.%%Y}" % column))
     code = run("print", path, "--host", "h", "--set", "%s=2026-12-24T08:30" % column)
     if column == "date":
         assert code == 0 and contents(mono) == [["{date} 24.12.2026"]]
