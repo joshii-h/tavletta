@@ -480,3 +480,14 @@ def test_the_text_of_other_labels_needs_a_difference():
         other_labels_text(OtherLabels((50, 25), 3.0, 28.0, None, None), unit_for("mm"))
     with pytest.raises(TypeError, match="without OtherLabels"):
         warning_text(RenderWarning(OTHER_LABELS, {"other": None, "units": "mm"}))
+
+
+def test_a_busy_answer_is_no_sign_of_another_sensing():
+    """A busy Zebra answers without a media type: for a job set to gap
+    labels that is not another sensing, the answer tells nothing."""
+    from tavletta.backends import get_backend
+    from tavletta.job import labels_reported
+
+    busy = _info()
+    assert not labels_reported(get_backend("zpl"), busy, {"media": "gap"})
+    assert labels_reported(get_backend("zpl"), _info(media_type="mark"), {"media": "gap"})

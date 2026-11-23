@@ -121,12 +121,13 @@ def other_labels(
 
 def labels_reported(backend: Backend, info: PrinterInfo, chosen: Mapping[str, object]) -> bool:
     """Whether an answer of the printer tells of the labels a job prints
-    on: their size or measured distance, or that the job senses them
-    otherwise than the printer reports (nothing to compare: Backend.
-    senses_as_reported). A busy or unsynchronised printer tells neither."""
+    on: their size or measured distance, or how it is set to find them,
+    otherwise than the job does (nothing to compare: Backend.
+    senses_as_reported). A busy or unsynchronised printer tells none of
+    it: its answer without a media type is no sign of another sensing."""
     if info.label_mm or info.pitch_mm:
         return True
-    return not backend.senses_as_reported(chosen, info)
+    return bool(info.media_type) and not backend.senses_as_reported(chosen, info)
 
 
 class PrepareFailed(Exception):
