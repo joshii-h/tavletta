@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "zezwalaj na strony dokumentów (PDF, obrazy) w etykietach wysyłanych z żądaniem; pliki PDF są wtedy rysowane w osobnym procesie z limitami (domyślnie wyłączone)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Strony dokumentów nie są dozwolone w label_content (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Element %(n)d: tekst jest za długi, by narysować go w jednym wierszu – podziel go na wiersze albo skróć",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Etykieta ma %(width)s szerokości, ale drukarka jest ustawiona na etykiety o szerokości %(loaded)s. Sprawdź rozmiar etykiety albo załaduj pasujące etykiety.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Etykieta ma %(size)s z odstępem %(gap)s, więc nowa zaczyna się co %(pitch)s. Drukarka zmierzyła etykietę co %(measured)s. Sprawdź rozmiar etykiety i odstęp albo skalibruj drukarkę.",
+    "Print width set on the printer": "Szerokość druku ustawiona w drukarce",
 }

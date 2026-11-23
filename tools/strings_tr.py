@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "istekle gönderilen etiketlerde belge sayfalarına (PDF, görseller) izin ver; PDF'ler bu durumda sınırlı ayrı bir süreçte çizilir (varsayılan olarak kapalı)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content içinde belge sayfalarına izin verilmez (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Öge %(n)d: metin tek satırda çizilemeyecek kadar uzun – satırlara bölün ya da kısaltın",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Etiket %(width)s genişliğinde, ancak yazıcı %(loaded)s genişliğindeki etiketlere ayarlı. Etiket boyutunu denetleyin ya da uygun etiketleri takın.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Etiket boyutu %(size)s, boşluk %(gap)s; yani yeni bir etiket her %(pitch)s mesafede başlar. Yazıcı etiketler arasında %(measured)s ölçtü. Etiket boyutunu ve boşluğu kontrol edin ya da yazıcıyı kalibre edin.",
+    "Print width set on the printer": "Yazıcıda ayarlanan baskı genişliği",
 }

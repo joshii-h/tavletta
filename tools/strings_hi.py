@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "अनुरोध के साथ भेजे गए लेबलों में दस्तावेज़ पृष्ठों (PDF, चित्र) की अनुमति दें; तब PDF सीमाओं वाली एक अलग प्रक्रिया में बनाए जाते हैं (डिफ़ॉल्ट रूप से बंद)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content में दस्तावेज़ पृष्ठों की अनुमति नहीं है (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "तत्व %(n)d: टेक्स्ट एक पंक्ति में बनाने के लिए बहुत लंबा है – इसे पंक्तियों में बाँटें या छोटा करें",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "लेबल %(width)s चौड़ा है, पर प्रिंटर %(loaded)s चौड़े लेबल के लिए सेट है। लेबल का आकार जाँचें, या सही लेबल लगाएँ।",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "लेबल %(size)s का है और गैप %(gap)s है, इसलिए हर %(pitch)s पर नया लेबल शुरू होता है। प्रिंटर ने हर %(measured)s पर एक लेबल मापा। लेबल का आकार और गैप जाँचें, या प्रिंटर को कैलिब्रेट करें।",
+    "Print width set on the printer": "प्रिंटर पर सेट प्रिंट चौड़ाई",
 }

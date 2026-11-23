@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "允许随请求发送的标签中包含文档页面（PDF、图片）；PDF 将在有限制的独立进程中绘制（默认关闭）",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content 中不允许文档页面（--allow-pdf-pages）",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "元素 %(n)d：文本太长，无法在一行中绘制 – 请分成多行或缩短",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "标签宽 %(width)s，但打印机设置的标签宽度为 %(loaded)s。请检查标签尺寸，或装入相符的标签。",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "标签为 %(size)s，间隙为 %(gap)s，因此每 %(pitch)s 开始一张新标签。打印机测得每 %(measured)s 一张标签。请检查标签尺寸和间隙，或校准打印机。",
+    "Print width set on the printer": "打印机上设置的打印宽度",
 }

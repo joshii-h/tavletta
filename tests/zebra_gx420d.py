@@ -1,6 +1,14 @@
 """Real answers of a Zebra GX420d (203 dpi, firmware V56.17.17Z) over USB,
-recorded 2026-11-17 with read-only questions (nothing fed or printed).
-Loaded: die-cut labels 75 x 50 mm, 2.8 mm gap (52.8 mm pitch), direct thermal."""
+recorded 2026-11-17 with read-only questions (nothing fed or printed),
+while the printer was paused (~HS shows it); its serial number is
+replaced by a placeholder. Loaded: die-cut labels 75 x 50 mm, 2.8 mm gap
+(52.8 mm pitch), direct thermal.
+
+Asked again un-paused (state IDLE) on 2026-11-23, ^HH answered the same
+way and no label was fed. LABEL LENGTH is the measured distance (422 dots
+= 52.75 mm); a job's ^LL does not change it: after a Tavletta job with
+^LL400 on these labels it still said 0422. PRINT WIDTH 600 is the last
+job's ^PW (75 mm), a setting: after a power cycle it says 832 again."""
 
 GX420D_HI = b"\x02GX420d-200dpi,V56.17.17Z,8,2104KB\x03\r\n"
 GX420D_HS = b"\x02030,0,1,0422,000,0,0,0,000,0,0,0\x03\r\n\x02000,0,0,0,0,2,4,0,00000000,1,000\x03\r\n\x021234,0\x03\r\n"

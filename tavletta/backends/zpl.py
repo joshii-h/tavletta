@@ -6,12 +6,15 @@ Zebra's run-length compression) and is printed from there (^XG), as LPrint
 by Michael R Sweet (Apache-2.0) does; written anew. ~HI names the model and
 resolution, ~HS and ~HQES report problems, ^HH (the configuration sent
 to the host, nothing printed) the loaded media: the label length the
-printer measured (the label pitch) and a print width set below the head's.
+printer measured (the label pitch), the media type and print method, and
+the print width set (information only: a setting, which Tavletta's own
+jobs set too).
 """
 
 from __future__ import annotations
 
 import re
+import time
 from dataclasses import dataclass
 
 from PIL import Image
@@ -20,6 +23,7 @@ from tavletta.backends.base import (
     Capabilities,
     Choice,
     HeadOpen,
+    HostMemory,
     LabelNotFound,
     LabelSize,
     Level,
@@ -57,6 +61,10 @@ MEDIA = {"gap": "Y", "mark": "M", "continuous": "N"}
 # ^HH: the configuration as text, without printing it (a ^ command, so in a
 # format; one without fields prints nothing)
 CONFIGURATION = b"^XA^HH^XZ\n"
+# a printer that left ^HH unanswered is not asked again for this long
+# (seconds): each question waits for the whole answer timeout
+CONFIGURATION_RETRY = 600.0
+_clock = time.monotonic  # replaced in tests
 
 # 4 inch heads: 832 dots at 203 dpi (manual), the usual widest label
 MAX_WIDTH_MM = 104.0
@@ -245,7 +253,7 @@ class HostStatus:
     head_up: bool = False
     ribbon_out: bool = False
     busy: bool = False
-    method: str = ""  # line 2, field e: thermal transfer (1) or direct (0)
+    method: str = ""  # line 2, field q: thermal transfer (1) or direct (0)
     raw: str = ""
 
 
@@ -305,7 +313,8 @@ class Configuration:
     label_length: LABEL LENGTH, measured on gap or mark media from the
     start of one label to the next (the pitch); print_width: PRINT WIDTH,
     the whole head unless set lower (^PW, set by the last job too);
-    head_width: the head's dots (RESOLUTION "832 8/MM FULL")."""
+    head_width and dots_per_mm: RESOLUTION ("832 8/MM FULL"; 12/MM at
+    300 dpi, 24/MM at 600 dpi)."""
 
     print_width: int = 0
     label_length: int = 0
@@ -315,8 +324,12 @@ class Configuration:
     method: str = ""  # "direct", "transfer"
 
 
-_CONFIG_LINE = re.compile(r"^\s*(\S.*?)\s{2,}(\S.*?)\s*$")
+# "  <value>   <NAME>": the name is what follows the last run of two or
+# more spaces (a value may have such runs: "39.0IN   989MM")
+_CONFIG_LINE = re.compile(r"^\s*(\S.*)\s{2,}(\S+(?: \S+)*)\s*$")
 _MEDIA_TYPES = {"GAP/NOTCH": "gap", "MARK": "mark", "CONTINUOUS": "continuous"}
+# older firmware: MEDIA TYPE NON-CONTINUOUS, the sensor tells which kind
+_SENSOR_TYPES = {"WEB": "gap", "MARK": "mark"}
 _METHODS = {"DIRECT-THERMAL": "direct", "THERMAL-TRANS.": "transfer"}
 
 
@@ -325,20 +338,39 @@ def _int(text: str) -> int:
     return int(match.group()) if match else 0
 
 
+# names that only the ^HH answer has (in English, the display language
+# the printer is set to; see docs/zpl.md)
+_CONFIG_NAMES = re.compile(rb"\x02[^\x02\x03]*(?:LABEL LENGTH|RESOLUTION)[^\x02\x03]*\x03")
+
+
+def configuration_done(answer: bytes) -> bool:
+    """The whole ^HH frame has come: not any frame, a late answer to an
+    earlier question (~HQES) may come first."""
+    return _CONFIG_NAMES.search(answer) is not None
+
+
 def parse_configuration(raw: bytes) -> Configuration:
-    """The ^HH answer: one line per setting, "  <value>   <NAME>"."""
+    """The ^HH answer: one line per setting, "  <value>   <NAME>"; other
+    frames in it (late answers to other questions) are left out."""
+    frames = [m.group() for m in _CONFIG_NAMES.finditer(raw)] or [raw]
     values: dict[str, str] = {}
-    for line in raw.decode("ascii", "replace").replace("\x02", "").splitlines():
-        if match := _CONFIG_LINE.match(line):
-            values.setdefault(match.group(2).strip(), match.group(1).strip())
+    for frame in frames:
+        for line in frame.decode("ascii", "replace").strip("\x02\x03").splitlines():
+            if match := _CONFIG_LINE.match(line):
+                values.setdefault(match.group(2).strip(), match.group(1).strip())
     resolution = values.get("RESOLUTION", "")
     dpmm = re.search(r"(\d+)/MM", resolution)
+    kind = values.get("MEDIA TYPE", "")
+    if kind == "NON-CONTINUOUS":
+        media_type = _SENSOR_TYPES.get(values.get("SENSOR TYPE", ""), "")
+    else:
+        media_type = _MEDIA_TYPES.get(kind, "")
     return Configuration(
         print_width=_int(values.get("PRINT WIDTH", "")),
         label_length=_int(values.get("LABEL LENGTH", "")),
         head_width=_int(resolution),
         dots_per_mm=int(dpmm.group(1)) if dpmm else 0,
-        media=_MEDIA_TYPES.get(values.get("MEDIA TYPE", ""), ""),
+        media=media_type,
         method=_METHODS.get(values.get("PRINT METHOD", ""), ""),
     )
 
@@ -348,26 +380,26 @@ class Media:
     """The loaded labels as far as the printer tells (PrinterInfo)."""
 
     pitch_mm: float | None = None
-    width_mm: float | None = None
+    width_mm: float | None = None  # the print width set: information only
     method: str = ""
+    media_type: str = ""  # "gap", "mark", "continuous"
 
 
 def media(config: Configuration, status: HostStatus | None, dots_per_mm: int) -> Media:
     """The pitch from the measured label length (gap or mark media only: on
-    continuous media it is just the length set); the width only from a
-    print width below the head's: the whole head says nothing (the GX and
-    ZD series centre narrower labels under it); the print method from ^HH,
-    else from ~HS."""
+    continuous media it is just the length set); the print width set (a
+    setting, not the loaded labels: the GX and ZD series centre narrower
+    labels under the head); the print method from ^HH, else from ~HS.
+    Dots per mm from ^HH's RESOLUTION, else `dots_per_mm` (from ~HI)."""
+    method = config.method or (status.method if status else "")
     dpmm = config.dots_per_mm or dots_per_mm
     if not dpmm:
-        return Media(method=config.method or (status.method if status else ""))
+        return Media(method=method, media_type=config.media)
     pitch = None
     if config.media in ("gap", "mark") and config.label_length:
         pitch = round(config.label_length / dpmm, 1)
-    width = None
-    if config.head_width and 0 < config.print_width < config.head_width:
-        width = round(config.print_width / dpmm, 1)
-    return Media(pitch, width, config.method or (status.method if status else ""))
+    width = round(config.print_width / dpmm, 1) if config.print_width else None
+    return Media(pitch, width, method, config.media)
 
 
 # --- the backend ------------------------------------------------------------------
@@ -397,6 +429,15 @@ class Zpl(RawBackend):
             Toggle("upside_down"),
         ),
     )
+
+    # LABEL LENGTH is what the printer measured last, maybe on another roll
+    # (MEDIA POWER UP NO MOTION, HEAD CLOSE FEED do not measure again)
+    pitch_may_be_old = True
+
+    def __init__(self, port: int | None = None):
+        super().__init__(port)
+        # when a printer left ^HH unanswered, by address
+        self.unanswered: HostMemory[float] = HostMemory()
 
     def display_name(self, info: PrinterInfo | None) -> str:
         """The model the printer names in ~HI, e.g. "ZD621-203dpi"."""
@@ -430,11 +471,7 @@ class Zpl(RawBackend):
         answer = s.ask(b"~HI\n", frames_done(1))
         status, error, more = self._status(s)
         identity = self._identity(s, answer + more)  # a late ~HI answer comes with ~HS
-        loaded = Media()
-        if status is not None:  # a printer that answers ~HS: what is loaded
-            config = parse_configuration(s.ask(CONFIGURATION, frames_done(1)))
-            dpmm = {v: k for k, v in DOTS_PER_MM.items()}.get(identity.dpi, 0)
-            loaded = media(config, status, dpmm)
+        loaded = self._loaded(s, status, identity)
         return PrinterInfo(
             identity.model,
             None,
@@ -447,7 +484,25 @@ class Zpl(RawBackend):
             pitch_mm=loaded.pitch_mm,
             width_mm=loaded.width_mm,
             print_method=loaded.method,
+            media_type=loaded.media_type,
         )
+
+    def _loaded(self, s: Session, status: HostStatus | None, identity: Identity) -> Media:
+        """What is loaded (^HH), asked of a printer that answers ~HS and is
+        not printing, unless it left ^HH unanswered in the last
+        CONFIGURATION_RETRY seconds; else what ~HS tells."""
+        if status is None:
+            return Media()
+        asked = self.unanswered.get(s.host)
+        if status.busy or (asked is not None and 0 <= _clock() - asked < CONFIGURATION_RETRY):
+            return Media(method=status.method)
+        answer = s.ask(CONFIGURATION, configuration_done)
+        if not configuration_done(answer):
+            self.unanswered[s.host] = _clock()
+            return Media(method=status.method)
+        self.unanswered.pop(s.host, None)
+        dpmm = {v: k for k, v in DOTS_PER_MM.items()}.get(identity.dpi, 0)
+        return media(parse_configuration(answer), status, dpmm)
 
     def problem(self, s: Session) -> PrinterError | None:
         return self._status(s)[1]

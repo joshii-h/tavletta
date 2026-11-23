@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "benarkan halaman dokumen (PDF, imej) dalam label yang dihantar bersama permintaan; PDF kemudian dilukis dalam proses berasingan dengan had (dimatikan secara lalai)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Halaman dokumen tidak dibenarkan dalam label_content (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Elemen %(n)d: teks terlalu panjang untuk dilukis dalam satu baris – pecahkan kepada beberapa baris atau pendekkan",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Label selebar %(width)s, tetapi pencetak ditetapkan untuk label selebar %(loaded)s. Semak saiz label, atau masukkan label yang sepadan.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Label berukuran %(size)s dengan jurang %(gap)s, jadi label baharu bermula setiap %(pitch)s. Pencetak mengukur satu label setiap %(measured)s. Semak saiz label dan jurang, atau tentukur pencetak.",
+    "Print width set on the printer": "Lebar cetakan yang ditetapkan pada pencetak",
 }

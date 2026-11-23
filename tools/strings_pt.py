@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "permitir páginas de documento (PDF, imagens) nas etiquetas enviadas com o pedido; os PDF são então desenhados num processo separado com limites (desativado por predefinição)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Não são permitidas páginas de documento em label_content (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Elemento %(n)d: o texto é demasiado longo para ser desenhado numa linha – divida-o em linhas ou encurte-o",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "A etiqueta tem %(width)s de largura, mas a impressora está configurada para etiquetas de %(loaded)s de largura. Verifique o tamanho da etiqueta ou carregue as etiquetas adequadas.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "A etiqueta tem %(size)s com um espaço de %(gap)s, por isso começa uma nova a cada %(pitch)s. A impressora mediu uma etiqueta a cada %(measured)s. Verifique o tamanho da etiqueta e o espaço, ou calibre a impressora.",
+    "Print width set on the printer": "Largura de impressão definida na impressora",
 }

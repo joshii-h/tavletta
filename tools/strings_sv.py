@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "tillåt dokumentsidor (PDF, bilder) i etiketter som skickas med begäran; PDF-filer ritas då i en egen process med gränser (av som standard)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Dokumentsidor är inte tillåtna i label_content (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Element %(n)d: texten är för lång för att ritas på en rad – dela upp den på rader eller korta den",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Etiketten är %(width)s bred, men skrivaren är inställd på etiketter som är %(loaded)s breda. Kontrollera etikettstorleken eller sätt i rätt etiketter.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Etiketten är %(size)s med ett mellanrum på %(gap)s, så en ny börjar var %(pitch)s. Skrivaren mätte en etikett var %(measured)s. Kontrollera etikettstorleken och mellanrummet, eller kalibrera skrivaren.",
+    "Print width set on the printer": "Utskriftsbredd inställd på skrivaren",
 }

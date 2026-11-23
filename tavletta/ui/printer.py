@@ -14,7 +14,7 @@ from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from tavletta.backends import backends, get_backend  # noqa: E402
 from tavletta.backends.base import Choice, PrinterInfo, Setting, Toggle  # noqa: E402
-from tavletta.model import PITCH_TOLERANCE_MM  # noqa: E402
+from tavletta.model import measured_differs  # noqa: E402
 from tavletta.ui.i18n import _, isolate, month_year  # noqa: E402
 from tavletta.ui.texts import (  # noqa: E402
     CONNECTION_ERRORS,
@@ -329,33 +329,34 @@ class Printer:
             return None
         return info.tape_mm if info.tape_mm != label.tape_mm else None
 
+    def _die_cut_info(self) -> PrinterInfo | None:
+        """The status of a die-cut printer, if what it reports of the loaded
+        labels is for the job (Backend.senses_as_reported)."""
+        backend, info = self.window.backend, self.info
+        if backend.capabilities.continuous or not info:
+            return None
+        chosen = self.window.printer_settings.backend_settings()
+        return info if backend.senses_as_reported(chosen, info) else None
+
     def other_label_size(self) -> tuple[float, float] | None:
         """Die-cut printers: the loaded label size if it is not the label's."""
-        info, label = self.info, self.window.label
-        if self.window.backend.capabilities.continuous or not info or not info.label_mm:
+        info = self._die_cut_info()
+        if not info or not info.label_mm:
             return None
-        size = label.media_size()
-        differs = any(
-            abs(a - b) > PITCH_TOLERANCE_MM for a, b in zip(info.label_mm, size, strict=True)
-        )
+        size = self.window.label.media_size()
+        differs = any(measured_differs(a, b) for a, b in zip(info.label_mm, size, strict=True))
         return info.label_mm if differs else None
 
     def other_pitch(self) -> float | None:
         """Die-cut printers: the measured label distance if it is not the label's."""
-        info, label = self.info, self.window.label
-        if self.window.backend.capabilities.continuous or not info or not info.pitch_mm:
+        info = self._die_cut_info()
+        if not info or not info.pitch_mm:
             return None
-        differs = abs(info.pitch_mm - label.pitch_mm()) > PITCH_TOLERANCE_MM
-        return info.pitch_mm if differs else None
-
-    def other_width(self) -> float | None:
-        """Die-cut printers that know only the width of the loaded labels
-        (ZPL): that width if it is not the label's."""
-        info, label = self.info, self.window.label
-        if self.window.backend.capabilities.continuous or not info or not info.width_mm:
-            return None
-        differs = abs(info.width_mm - label.media_size()[0]) > PITCH_TOLERANCE_MM
-        return info.width_mm if differs else None
+        return (
+            info.pitch_mm
+            if measured_differs(info.pitch_mm, self.window.label.pitch_mm())
+            else None
+        )
 
     def failed(self, error: Exception, generation: int | None = None) -> bool:
         if self._outdated(generation):
@@ -440,6 +441,11 @@ class Printer:
             (_("Firmware"), info.firmware),
             self._media_row(info),
             (_("Label distance"), unit.format(info.pitch_mm) if info.pitch_mm else ""),
+            # a setting (Tavletta's own jobs set it), not the loaded labels
+            (
+                _("Print width set on the printer"),
+                unit.format(info.width_mm) if info.width_mm else "",
+            ),
             # Tavletta's own choice (the printer setting) may differ for a job
             (
                 _("Print method set on the printer"),

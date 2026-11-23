@@ -583,6 +583,9 @@ class Service:
                 "remaining_mm": info.remaining_mm,
                 "total_mm": info.total_mm,
                 "pitch_mm": info.pitch_mm,
+                # settings on the printer, not the loaded labels (ZPL, cab)
+                "width_mm": info.width_mm,
+                "print_method": info.print_method or None,
                 "cassette": (
                     {
                         "lot": cassette.lot,

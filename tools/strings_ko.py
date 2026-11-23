@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "요청과 함께 보낸 라벨에 문서 페이지(PDF, 이미지)를 허용합니다. PDF는 제한이 있는 별도 프로세스에서 그려집니다(기본값: 꺼짐)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content에서는 문서 페이지를 사용할 수 없습니다 (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "요소 %(n)d: 텍스트가 너무 길어 한 줄로 그릴 수 없습니다 – 여러 줄로 나누거나 줄이세요",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "라벨 너비는 %(width)s이지만 프린터는 너비 %(loaded)s 라벨로 설정되어 있습니다. 라벨 크기를 확인하거나 맞는 라벨을 넣으세요.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "라벨은 %(size)s이고 간격은 %(gap)s이므로 %(pitch)s마다 새 라벨이 시작됩니다. 프린터는 %(measured)s마다 라벨을 측정했습니다. 라벨 크기와 간격을 확인하거나 프린터를 보정하세요.",
+    "Print width set on the printer": "프린터에 설정된 인쇄 폭",
 }

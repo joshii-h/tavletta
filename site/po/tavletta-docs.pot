@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-12 17:27+0100\n"
+"POT-Creation-Date: 2026-11-23 13:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1377,7 +1377,7 @@ msgid ""
 "| `dpi` | number |  |\n"
 "| `firmware` | string or null |  |\n"
 "| `modes` | array of string |  |\n"
-"| `media` | object | What is loaded, as far as the printer tells: tape_mm, remaining_mm, total_mm, pitch_mm, cassette. |\n"
+"| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), cassette. |\n"
 msgstr ""
 
 #. type: Title ###

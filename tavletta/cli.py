@@ -46,7 +46,6 @@ from tavletta.backends.cab import METHODS  # the choices of the printer setting 
 from tavletta.job import Job, PrepareFailed
 from tavletta.merge import MergeError, read_book
 from tavletta.model import (
-    PITCH_TOLERANCE_MM,
     CodeElement,
     Label,
     LabelError,
@@ -54,6 +53,7 @@ from tavletta.model import (
     TextElement,
     data_inside,
     locked,
+    measured_differs,
     writable,
 )
 from tavletta.serial import (
@@ -73,7 +73,6 @@ from tavletta.ui.texts import (
     data_error_text,
     label_error_text,
     other_pitch_text,
-    other_width_text,
     printed_remark,
     printer_error_text,
     save_error_text,
@@ -1105,31 +1104,32 @@ def _for_the_printer(
     )
     if info is None:
         return series
-    _check_pitch(job, info, settings)
     options = _flagged(
         args,
         _choices(args, settings, job.backend).options(
             info, job.options.copies, job.options.gap_mm, host=host
         ),
     )
+    _check_pitch(job, info, settings, options)
     job.options = options
     return replace(series, options=options) if series else None
 
 
-def _check_pitch(job: Job, info: PrinterInfo, settings: Settings) -> None:
-    """Die-cut labels: a roll whose measured label distance (or the width
-    the printer is set up for) is not the label's gets a hint, as the
-    window warns; printed anyway."""
-    caps, label = job.backend.capabilities, job.label
-    if caps.continuous or caps.pages:
+def _check_pitch(job: Job, info: PrinterInfo, settings: Settings, options: PrintOptions) -> None:
+    """Die-cut labels: a roll whose measured label distance is not the
+    label's gets a hint, as the window warns; printed anyway. Not when the
+    job senses the labels otherwise than the printer reports them
+    (Backend.senses_as_reported)."""
+    backend, label = job.backend, job.label
+    caps = backend.capabilities
+    if caps.continuous or caps.pages or not info.pitch_mm:
         return
-    unit = unit_for(settings.units)
-    text = ""
-    if info.pitch_mm and abs(info.pitch_mm - label.pitch_mm()) > PITCH_TOLERANCE_MM:
-        text = other_pitch_text(label, info.pitch_mm, unit)
-    elif info.width_mm and abs(info.width_mm - label.media_size()[0]) > PITCH_TOLERANCE_MM:
-        text = other_width_text(label, info.width_mm, unit)
-    if text:
+    if not backend.senses_as_reported(options.settings, info):
+        return
+    if measured_differs(info.pitch_mm, label.pitch_mm()):
+        text = other_pitch_text(
+            label, info.pitch_mm, unit_for(settings.units), backend.pitch_may_be_old
+        )
         _say(text.replace("\u2068", "").replace("\u2069", ""))  # no bidi marks
 
 

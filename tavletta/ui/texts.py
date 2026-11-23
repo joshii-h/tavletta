@@ -468,28 +468,27 @@ def printer_error_text(error: Exception, unit: Unit) -> str:
     return text
 
 
-def other_pitch_text(label, measured_mm: float, unit: Unit) -> str:
-    """The roll in the printer has another label distance than the label."""
-    return _(
-        "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
-        "%(pitch)s. The printer measured a label every %(measured)s. Check the "
-        "label size and the gap."
-    ) % {
+def other_pitch_text(label, measured_mm: float, unit: Unit, calibrate: bool = False) -> str:
+    """The roll in the printer has another label distance than the label;
+    calibrate: the printer may have measured it on an earlier roll
+    (Backend.pitch_may_be_old)."""
+    if calibrate:
+        text = _(
+            "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
+            "%(pitch)s. The printer measured a label every %(measured)s. Check the "
+            "label size and the gap, or calibrate the printer."
+        )
+    else:
+        text = _(
+            "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
+            "%(pitch)s. The printer measured a label every %(measured)s. Check the "
+            "label size and the gap."
+        )
+    return text % {
         "size": isolate(unit.size(*label.media_size())),
         "gap": isolate(unit.format(label.gap_mm)),
         "pitch": isolate(unit.format(label.pitch_mm())),
         "measured": isolate(unit.format(measured_mm)),
-    }
-
-
-def other_width_text(label, loaded_mm: float, unit: Unit) -> str:
-    """The printer is set up for labels of another width than the label."""
-    return _(
-        "The label is %(width)s wide, but the printer is set up for labels %(loaded)s "
-        "wide. Check the label size, or load the matching labels."
-    ) % {
-        "width": isolate(unit.format(label.media_size()[0])),
-        "loaded": isolate(unit.format(loaded_mm)),
     }
 
 

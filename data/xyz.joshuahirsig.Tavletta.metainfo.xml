@@ -180,7 +180,7 @@
       <description>
         <p>Bug fixes.</p>
         <ul>
-          <li>Zebra (ZPL) printers report the loaded labels: a label distance or width other than the label's is pointed out before printing</li>
+          <li>Zebra (ZPL) printers report the loaded labels: a label distance other than the label's is pointed out before printing</li>
           <li>A text line too long to be drawn now says so, instead of a general error</li>
           <li>Print server: Arial, Calibri and other office fonts drawn by their metric-compatible stand-ins no longer count as missing</li>
           <li>Print server: the document pages of one label share a time limit, and per-printer memory is bounded</li>

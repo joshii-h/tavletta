@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "السماح بصفحات المستندات (PDF، الصور) في الملصقات المرسلة مع الطلب؛ تُرسم ملفات PDF حينها في عملية منفصلة ذات حدود (معطّل افتراضيًا)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "صفحات المستندات غير مسموح بها في label_content (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "العنصر %(n)d: النص أطول من أن يُرسم في سطر واحد – قسّمه إلى أسطر أو اختصره",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "عرض الملصق %(width)s، لكن الطابعة مضبوطة على ملصقات بعرض %(loaded)s. تحقق من حجم الملصق أو ضع الملصقات المناسبة.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "حجم الملصق %(size)s مع فراغ %(gap)s، لذا يبدأ ملصق جديد كل %(pitch)s. قاست الطابعة ملصقًا كل %(measured)s. تحقق من حجم الملصق والفراغ، أو قم بمعايرة الطابعة.",
+    "Print width set on the printer": "عرض الطباعة المضبوط على الطابعة",
 }

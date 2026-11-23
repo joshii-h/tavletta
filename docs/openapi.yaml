@@ -1587,8 +1587,49 @@ components:
             type: string
         media:
           type: object
-          description: 'What is loaded, as far as the printer tells: tape_mm, remaining_mm, total_mm,
-            pitch_mm, cassette.'
+          description: 'What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm,
+            total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width
+            set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer,
+            as set on the printer), cassette.'
+          properties:
+            tape_mm:
+              type:
+              - number
+              - 'null'
+            remaining_mm:
+              type:
+              - integer
+              - 'null'
+            total_mm:
+              type:
+              - integer
+              - 'null'
+            pitch_mm:
+              type:
+              - number
+              - 'null'
+              description: 'Die-cut labels: the distance from one label to the next, as the printer measured
+                it.'
+            width_mm:
+              type:
+              - number
+              - 'null'
+              description: 'The print width set on the printer (ZPL): a setting, which each Tavletta
+                job sets too, not the width of the loaded labels.'
+            print_method:
+              type:
+              - string
+              - 'null'
+              enum:
+              - direct
+              - transfer
+              - null
+              description: 'Thermal printers: the print method set on the printer, direct (thermal direct)
+                or transfer (with a ribbon).'
+            cassette:
+              type:
+              - object
+              - 'null'
     LabelFile:
       type: object
       required:

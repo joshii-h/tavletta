@@ -66,20 +66,44 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   `0x10000` paused, `0x40000`/`0x80000` black mark not found. Tavletta
   asks it only when `~HS` was answered and showed no problem. [LPrint]
 - `^HH` sends the configuration to the host and prints nothing (seen on a
-  GX420d, firmware V56.17.17Z; its answers are the fixtures in
+  GX420d, firmware V56.17.17Z, both while paused and while idle: it
+  answered and fed no label; its answers are the fixtures in
   `tests/zebra_gx420d.py`). A status query asks it once `~HS` was
-  answered. On gap or mark media LABEL LENGTH is what the printer measured
-  from one label to the next: the label distance, compared with the
-  label's size plus gap, as for cab. PRINT WIDTH is the whole head
-  ("832 8/MM FULL" in RESOLUTION) unless set lower; only a lower one is
-  taken as the label width. Each Tavletta job sets `^PW` to the label's
-  width, so it is the width of the last label printed until another
-  job or the setup changes it. The GX and ZD series centre narrower labels
+  answered, not while the printer is printing (`~HS` shows labels or
+  formats waiting). The answer counts once a frame with LABEL LENGTH or
+  RESOLUTION has come, not at the first frame: a late `~HQES` answer may
+  come first. A printer that leaves `^HH` unanswered is not asked again
+  for 10 minutes (each question waits the whole answer timeout).
+- Each line of `^HH` is `  <value>   <NAME>`: the name is what follows
+  the last run of two or more spaces (`39.0IN   989MM      MAXIMUM
+  LENGTH`). The names are English only while the printer's display
+  language is English; in another language Tavletta finds none of them
+  and the status shows no label distance (the rest of the status works).
+- On gap or mark media LABEL LENGTH is what the printer measured from one
+  label to the next: the label distance, compared with the label's size
+  plus gap, as for cab (within 1 mm, or 1 % of a long label). The
+  conversion uses the dots per mm of RESOLUTION (`832 8/MM FULL`; 300 dpi
+  printers report 12/MM, which Zebra's manuals define as 300 dpi, 600 dpi
+  ones 24/MM), else those of `~HI`. LABEL LENGTH is the last measurement:
+  with MEDIA POWER UP NO MOTION and HEAD CLOSE FEED (the GX420d's setup)
+  the printer does not measure again after a roll change, so the hint
+  about another label distance suggests calibrating the printer too. A
+  Tavletta job's `^LL` does not change it: after a job with `^LL400` on
+  gap labels the GX420d still reported LABEL LENGTH 0422, its measured
+  distance. MEDIA TYPE is GAP/NOTCH, MARK or CONTINUOUS; older firmware
+  says NON-CONTINUOUS and names the sensor in SENSOR TYPE (WEB = gap,
+  MARK = black mark). The comparison is skipped when the job's `media`
+  setting is neither `printer` nor the type the printer reports (a
+  continuous job on a printer set to gap labels).
+- PRINT WIDTH is a setting, not the loaded labels: each Tavletta job sets
+  `^PW` to the label's width, and after a power cycle the GX420d reported
+  the whole head again (832). The GX and ZD series centre narrower labels
   under the head, and they centre the `^PW` area with them: a label of the
-  right size prints centred (seen on the GX420d with 75 mm labels). The
-  print method is `~HS` frame 2 field q (1 thermal transfer), or PRINT
-  METHOD in `^HH`. SGD (`! U1 getvar`) would give the same values on
-  printers that have it; not used yet.
+  right size prints centred (seen on the GX420d with 75 mm labels). So
+  Tavletta only shows it (printer details, the API's `width_mm`) and
+  warns about nothing. The print method is `~HS` frame 2 field q (1
+  thermal transfer), or PRINT METHOD in `^HH`. SGD (`! U1 getvar`) would
+  give the same values on printers that have it; not used yet.
 - Before a job Tavletta asks `~HS` (and `~HQES`) and stops if the printer
   reports a problem; a printer that does not answer gets the job anyway.
 - Answers that do not have this shape (garbage, half an answer) count as no

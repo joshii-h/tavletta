@@ -456,7 +456,7 @@ A printer of printers.toml.
 | `dpi` | number |  |
 | `firmware` | string or null |  |
 | `modes` | array of string |  |
-| `media` | object | What is loaded, as far as the printer tells: tape_mm, remaining_mm, total_mm, pitch_mm, cassette. |
+| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), cassette. |
 
 ### Preview { #preview }
 

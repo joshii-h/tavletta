@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "リクエストで送られるラベルに文書ページ (PDF、画像) を許可する。PDF は制限付きの別プロセスで描画される (既定ではオフ)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "label_content では文書ページは使えません (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "要素 %(n)d: テキストが長すぎて 1 行に描画できません – 複数行に分けるか短くしてください",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "ラベルの幅は %(width)s ですが、プリンターは幅 %(loaded)s のラベルに設定されています。ラベルサイズを確認するか、合うラベルをセットしてください。",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "ラベルは %(size)s、間隔は %(gap)s なので、%(pitch)s ごとに新しいラベルが始まります。プリンターは %(measured)s ごとにラベルを検出しました。ラベルサイズと間隔を確認するか、プリンターをキャリブレーションしてください。",
+    "Print width set on the printer": "プリンターで設定した印刷幅",
 }

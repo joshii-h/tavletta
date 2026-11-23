@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "salli asiakirjasivut (PDF, kuvat) pyynnön mukana lähetetyissä tarroissa; PDF:t piirretään silloin erillisessä prosessissa rajoituksin (oletuksena pois)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Asiakirjasivut eivät ole sallittuja label_content-kentässä (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Elementti %(n)d: teksti on liian pitkä piirrettäväksi yhdelle riville – jaa se riveihin tai lyhennä sitä",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Tarra on %(width)s leveä, mutta tulostin on asetettu %(loaded)s leveille tarroille. Tarkista tarran koko tai aseta sopivat tarrat.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Tarran koko on %(size)s ja rako %(gap)s, joten uusi tarra alkaa %(pitch)s välein. Tulostin mittasi tarran %(measured)s välein. Tarkista tarran koko ja rako tai kalibroi tulostin.",
+    "Print width set on the printer": "Tulostimeen asetettu tulostusleveys",
 }

@@ -1350,19 +1350,62 @@ def test_a_roll_with_another_label_distance_gets_a_hint(cab_cli, capsys):
     assert "measured" not in err(capsys)
 
 
-def test_labels_of_another_width_get_a_hint(cab_cli, capsys):
-    """A ZPL printer tells only the width it is set up for (a print width
-    below the head's): another one is said, and the label printed anyway."""
-    cab_cli.info.width_mm = 75.0
-    assert run("print", cab_cli.path) == 0
-    assert err(capsys) == (
-        "tavletta: The label is 50.0 mm wide, but the printer is set up for labels "
-        "75.0 mm wide. Check the label size, or load the matching labels.\n"
+@pytest.fixture
+def zpl_cli(monkeypatch, mono, tmp_path):
+    """The ZPL backend with faked query and print; a 50 × 25 mm label with a
+    3 mm gap; the printer set to gap labels and measured 20 mm."""
+    from tavletta.backends import get_backend
+
+    backend = get_backend("zpl")
+    printed: list = []
+    # a print width set (75 mm) is a setting: no hint of its own
+    info = PrinterInfo(
+        "GX420d-200dpi",
+        None,
+        None,
+        None,
+        "IDLE",
+        dpi=203.2,
+        pitch_mm=20.0,
+        width_mm=75.0,
+        media_type="gap",
     )
-    cab_cli.info.width_mm = 50.4
-    assert run("print", cab_cli.path) == 0
-    assert "wide" not in err(capsys)
-    assert len(cab_cli.printed) == 2
+    monkeypatch.setattr(backend, "query", lambda host: info)
+    monkeypatch.setattr(
+        backend,
+        "print_label",
+        lambda image, host, options, progress=None: printed.append(options),
+    )
+    label = Label(printer="zpl", auto_length=False, orientation="across")
+    label.set_media_size(50, 25)
+    label.elements = [TextElement(text="x")]
+    path = tmp_path / "zpl.tavletta"
+    label.save(path)
+    return SimpleNamespace(path=path, printed=printed, info=info)
+
+
+@pytest.mark.parametrize(
+    ("media", "hint"),
+    [
+        (None, True),  # the default: as set on the printer
+        ("printer", True),
+        ("gap", True),  # as the printer reports
+        ("mark", False),  # sensed otherwise: the reported distance is not for the job
+        ("continuous", False),
+    ],
+)
+def test_zpl_label_distance_hint_suggests_calibrating(zpl_cli, capsys, media, hint):
+    """A ZPL printer reports the distance it measured last, maybe on an
+    earlier roll; a job that senses the labels otherwise gets no hint."""
+    Settings({"printers": {"zpl": {"host": "h", "media": media}}}).save()
+    assert run("print", zpl_cli.path) == 0
+    expected = (
+        "tavletta: The label is 50 × 25 mm with a gap of 3.0 mm, so a new one starts "
+        "every 28.0 mm. The printer measured a label every 20.0 mm. Check the label "
+        "size and the gap, or calibrate the printer.\n"
+    )
+    assert err(capsys) == (expected if hint else "")
+    assert len(zpl_cli.printed) == 1
 
 
 def test_print_refuses_a_code_128_too_long(mono, label_file, capsys):

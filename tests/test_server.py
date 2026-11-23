@@ -423,10 +423,23 @@ def test_printer_status(api, server_env):
     assert body["error"]["code"] == "cover_open" and "cover" in body["error"]["message"]
     assert body["media"]["remaining_mm"] == 900 and body["dpi"] == 203
     assert body["modes"] == ["standard"] and body["firmware"] == "1.2"
+    assert body["media"]["width_mm"] is None and body["media"]["print_method"] is None
     status, _r, body = call(
         api.base, "GET", "/api/v1/printers/fake-mono/status?host=other.local", headers=ASK
     )
     assert server_env.printer.queries[-1] == "other.local"
+
+
+def test_printer_status_print_width_and_method(api, server_env):
+    """Settings on the printer (a ZPL print width, the print method): shown
+    as they are, information only."""
+    server_env.printer.info = PrinterInfo(
+        "Fake", None, None, None, "IDLE", pitch_mm=52.8, width_mm=75.0, print_method="direct"
+    )
+    status, _r, body = call(api.base, "GET", "/api/v1/printers/fake-mono/status", headers=ASK)
+    assert status == 200
+    media = body["media"]
+    assert (media["pitch_mm"], media["width_mm"], media["print_method"]) == (52.8, 75.0, "direct")
 
 
 def test_printer_status_problems(api, server_env, make_server):

@@ -69,8 +69,11 @@ MIN_TAPE_LENGTH_MM = 15.0  # endless tape: the shortest fixed length a file may 
 # die-cut labels: smallest and largest side a file may have
 MIN_SIZE_MM, MAX_SIZE_MM = 5.0, 1000.0
 MAX_GAP_MM = 50.0
-# a measured label distance this far from the label's own is a different roll
+# a measured label distance (or size) further from the label's own than
+# this is a different roll: 1 mm, or 1 % of a long label (the printer
+# measures in dots, rounded, and the roll stretches)
 PITCH_TOLERANCE_MM = 1.0
+PITCH_TOLERANCE = 0.01
 # {=counter}: up to 15 digits stay exact in the interface's number fields
 MAX_COUNTER = 10**15 - 1
 MAX_COUNTER_STEP = 10**6
@@ -80,6 +83,11 @@ MAX_FILE_BYTES = 200 * 1024 * 1024
 # what a printer model decides about a label: kept per model when switching
 GEOMETRY_FIELDS = ("tape_mm", "auto_length", "length_mm", "orientation", "gap_mm", "sheet")
 MAX_SHEET_POSITIONS = 10000  # far more than any sheet has
+
+
+def measured_differs(measured_mm: float, label_mm: float) -> bool:
+    """A distance or size the printer measured is not the label's."""
+    return abs(measured_mm - label_mm) > max(PITCH_TOLERANCE_MM, label_mm * PITCH_TOLERANCE)
 
 
 class LabelError(ValueError):

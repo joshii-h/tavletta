@@ -355,9 +355,12 @@ class PrinterInfo:
     qualities: tuple[str, ...] = ()  # print qualities of the connected model; empty = unknown
     # die-cut: the size of the loaded labels (width, height), if the printer knows it
     label_mm: tuple[float, float] | None = None
-    # die-cut: only the width of the loaded labels (across the head), if
-    # the printer knows that but not their height (ZPL: a print width set)
+    # the print width set on the printer (ZPL: PRINT WIDTH, which each job
+    # sets with ^PW): information only, not the width of the loaded labels
     width_mm: float | None = None
+    # die-cut: how the printer is set to find the labels, "gap", "mark" or
+    # "continuous"; "" = unknown
+    media_type: str = ""
     # the id of another backend that fits the loaded media (e.g. die-cut
     # labels loaded while the label is for continuous rolls); "" = none
     media_backend: str = ""
@@ -765,6 +768,9 @@ class Backend(ABC):
     id: str = ""
     name: str = ""
     capabilities: Capabilities
+    # the label distance the printer reports may be from an earlier roll
+    # (it measured last, not now): the hint suggests calibrating it
+    pitch_may_be_old: bool = False
 
     def configured_host(self) -> str | None:
         """A host configured outside Tavletta (e.g. by a CLI tool), if any."""
@@ -782,6 +788,17 @@ class Backend(ABC):
             if setting.key == key:
                 return setting.value(options.settings.get(key))
         raise KeyError(key)
+
+    def senses_as_reported(self, chosen: Mapping[str, object], info: PrinterInfo) -> bool:
+        """Whether what the printer reports of the loaded labels (their
+        size, distance) is for the job: one whose "media" setting (`chosen`,
+        PrintOptions.settings) leaves the sensing to the printer or sets the
+        kind it reports. A continuous job on a printer set to gap labels
+        senses no labels at all: nothing to compare."""
+        for setting in self.settings(info):
+            if setting.key == "media":
+                return setting.value(chosen.get("media")) in ("printer", info.media_type)
+        return True
 
     def modes(self, info: PrinterInfo | None) -> tuple[PrintMode, ...]:
         """Print modes of the connected printer, else the documented ones."""

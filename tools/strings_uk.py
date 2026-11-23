@@ -796,5 +796,6 @@ TRANSLATIONS = {
     "allow document pages (PDF, images) in labels sent with the request; PDFs are then drawn in a separate process with limits (off by default)": "дозволити сторінки документів (PDF, зображення) в етикетках, надісланих із запитом; PDF тоді малюються в окремому процесі з обмеженнями (типово вимкнено)",
     "Document pages in label_content are not allowed (--allow-pdf-pages)": "Сторінки документів у label_content не дозволені (--allow-pdf-pages)",
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Елемент %(n)d: текст задовгий, щоб намалювати його в одному рядку – розбийте його на рядки або скоротіть",
-    "The label is %(width)s wide, but the printer is set up for labels %(loaded)s wide. Check the label size, or load the matching labels.": "Ширина етикетки %(width)s, але принтер налаштовано на етикетки шириною %(loaded)s. Перевірте розмір етикетки або завантажте відповідні етикетки.",
+    "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Розмір етикетки — %(size)s із проміжком %(gap)s, тому нова починається кожні %(pitch)s. Принтер виміряв одну етикетку кожні %(measured)s. Перевірте розмір етикетки та проміжок або відкалібруйте принтер.",
+    "Print width set on the printer": "Ширина друку, задана на принтері",
 }
