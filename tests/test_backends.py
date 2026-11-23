@@ -410,8 +410,9 @@ def test_host_memory_from_many_threads():
 
 
 def test_host_memory_is_read_through_snapshots():
-    """Iterating, its views, len, ==, repr: under the lock, over a copy:
+    """Iterating, its views, len, ==, !=, repr: under the lock, over a copy:
     another thread may change it meanwhile without a RuntimeError."""
+    import operator
     import threading
 
     from tavletta.backends.base import HostMemory
@@ -432,7 +433,19 @@ def test_host_memory_is_read_through_snapshots():
     twin: HostMemory[int] = HostMemory(3)
     twin.update(xb=0, xc=0, xa=0)
     assert memory == twin and memory != HostMemory(3)
-    assert repr(memory) == "HostMemory(3, {'xb': 0, 'xc': 0, 'xa': 0})"
+    assert repr(memory) == "<HostMemory size=3 {'xb': 0, 'xc': 0, 'xa': 0}>"
+    assert operator.ne(memory, twin) is False and memory != {"xb": 0} and memory != 5
+    calls = []
+    real = HostMemory._items
+
+    def counted(self):
+        calls.append(self)
+        return real(self)
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(HostMemory, "_items", counted)
+        assert operator.ne(memory, twin) is False  # through the snapshots, locked
+    assert any(c is memory for c in calls) and any(c is twin for c in calls)
     errors: list[BaseException] = []
 
     def writer() -> None:

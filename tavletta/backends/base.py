@@ -138,10 +138,14 @@ class HostMemory(OrderedDict[str, _V]):
             other = OrderedDict(other._items())
         return OrderedDict(self._items()) == other
 
+    def __ne__(self, other: object) -> bool:
+        # OrderedDict's own != would compare the live entries, unlocked
+        return not self == other
+
     __hash__ = None  # type: ignore[assignment]  # mutable, as dict
 
     def __repr__(self) -> str:
-        return "HostMemory(%d, %r)" % (self.size, dict(self._items()))
+        return "<HostMemory size=%d %r>" % (self.size, dict(self._items()))
 
     def _items(self) -> list[tuple[str, _V]]:
         """The entries, least recently used first, without using them."""
