@@ -76,6 +76,9 @@ PDF_SECONDS = 30.0
 # many, and this many bytes of drawings
 PDF_KEPT = 32
 PDF_KEPT_BYTES = 32 * 1024 * 1024
+# ... and of all blocks running at once (the print server's jobs): beyond
+# this nothing more is kept until a block ends
+PDF_KEPT_ALL_BYTES = 64 * 1024 * 1024
 _clock = time.monotonic  # replaced in tests
 
 
@@ -122,14 +125,47 @@ class PdfBudget:
 _PDF_BUDGET: ContextVar[PdfBudget | None] = ContextVar("pdf_budget", default=None)
 
 
+class KeptBytes:
+    """The bytes all PdfAnswers of the process keep together, at most
+    `limit`: thread-safe, taken when an answer is kept, given back when it
+    is dropped or its block ends."""
+
+    def __init__(self, limit: int):
+        self.limit = limit
+        self.used = 0
+        self._lock = threading.Lock()
+
+    def take(self, count: int) -> bool:
+        with self._lock:
+            if self.used + count > self.limit:
+                return False
+            self.used += count
+            return True
+
+    def give_back(self, count: int) -> None:
+        with self._lock:
+            self.used -= count
+
+
+_KEPT_BYTES = KeptBytes(PDF_KEPT_ALL_BYTES)
+
+
 class PdfAnswers:
     """What the PDF children answered within one limited() block, by PDF
     file and question: a series prints the same page on every row, and
     each row would start a child again. The least recently used go first,
-    beyond PDF_KEPT answers or PDF_KEPT_BYTES of drawings."""
+    beyond PDF_KEPT answers or PDF_KEPT_BYTES of drawings; an answer the
+    process-wide budget (`shared`, PDF_KEPT_ALL_BYTES) has no room for is
+    not kept. close() gives everything back."""
 
-    def __init__(self, items: int = PDF_KEPT, max_bytes: int = PDF_KEPT_BYTES):
+    def __init__(
+        self,
+        items: int = PDF_KEPT,
+        max_bytes: int = PDF_KEPT_BYTES,
+        shared: KeptBytes | None = None,
+    ):
         self.items, self.max_bytes = items, max_bytes
+        self.shared = _KEPT_BYTES if shared is None else shared
         self._kept: OrderedDict[tuple, tuple[dict, bytes]] = OrderedDict()
         self._bytes = 0
         self._lock = threading.Lock()
@@ -145,14 +181,27 @@ class PdfAnswers:
         if len(body) > self.max_bytes:
             return
         with self._lock:
-            old = self._kept.pop(key, None)
-            if old is not None:
-                self._bytes -= len(old[1])
+            self._drop(key)
+            while self._kept and (
+                len(self._kept) >= self.items or self._bytes + len(body) > self.max_bytes
+            ):
+                self._drop(next(iter(self._kept)))
+            if not self.shared.take(len(body)):
+                return  # the other blocks keep enough: not this one
             self._kept[key] = (answer, body)
             self._bytes += len(body)
-            while len(self._kept) > self.items or self._bytes > self.max_bytes:
-                _key, (_answer, dropped) = self._kept.popitem(last=False)
-                self._bytes -= len(dropped)
+
+    def _drop(self, key: tuple) -> None:
+        old = self._kept.pop(key, None)
+        if old is not None:
+            self._bytes -= len(old[1])
+            self.shared.give_back(len(old[1]))
+
+    def close(self) -> None:
+        """Drop everything kept, giving its bytes back."""
+        with self._lock:
+            while self._kept:
+                self._drop(next(iter(self._kept)))
 
 
 _PDF_ANSWERS: ContextVar[PdfAnswers | None] = ContextVar("pdf_answers", default=None)
@@ -178,10 +227,12 @@ def limited(
     rows)."""
     seconds = PDF_SECONDS if pdf_seconds is None else pdf_seconds
     token = _LIMITS.set(Limits(pixels, max_length_mm, slot, pdf_seconds=seconds))
-    answers = _PDF_ANSWERS.set(PdfAnswers())
+    kept = PdfAnswers()
+    answers = _PDF_ANSWERS.set(kept)
     try:
         yield
     finally:
+        kept.close()
         _PDF_ANSWERS.reset(answers)
         _LIMITS.reset(token)
 

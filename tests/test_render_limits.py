@@ -544,7 +544,7 @@ def test_a_series_with_the_same_page_asks_the_child_once(monkeypatch):
 
 
 def test_pdf_answers_are_bounded():
-    answers = render_module.PdfAnswers(items=2, max_bytes=10)
+    answers = render_module.PdfAnswers(items=2, max_bytes=10, shared=render_module.KeptBytes(100))
     answers.put(("a",), {}, b"1234")
     answers.put(("b",), {}, b"1234")
     assert answers.get(("a",)) is not None  # used: kept
@@ -557,6 +557,33 @@ def test_pdf_answers_are_bounded():
     assert answers.get(("e",)) is None and answers.get(("d",)) is not None
     answers.put(("d",), {"n": 1}, b"1")  # replaced
     assert answers.get(("d",)) == ({"n": 1}, b"1")
+
+
+def test_pdf_answers_share_one_budget_for_the_process():
+    """Many jobs at once keep PDF_KEPT_ALL_BYTES together at most: what
+    finds no room is not kept, and a job that ends gives its bytes back."""
+    shared = render_module.KeptBytes(10)
+    one = render_module.PdfAnswers(shared=shared)
+    other = render_module.PdfAnswers(shared=shared)
+    one.put(("a",), {}, b"x" * 8)
+    other.put(("b",), {}, b"y" * 4)  # no room left
+    assert other.get(("b",)) is None and shared.used == 8
+    one.put(("a",), {}, b"x" * 2)  # replaced: the 8 bytes given back first
+    other.put(("b",), {}, b"y" * 4)
+    assert other.get(("b",)) is not None and shared.used == 6
+    one.close()
+    other.close()
+    assert shared.used == 0 and one.get(("a",)) is None
+
+
+def test_a_limited_block_gives_its_kept_drawings_back(monkeypatch):
+    _SlowChild(monkeypatch, 0.1, drawing=True)
+    assert render_module._KEPT_BYTES.used == 0
+    with limited(10**7):
+        render(_pages(1), 100)
+        assert render_module._KEPT_BYTES.used > 0
+    assert render_module._KEPT_BYTES.used == 0
+    assert render_module.PDF_KEPT_ALL_BYTES >= render_module.PDF_KEPT_BYTES
 
 
 def test_without_limits_a_child_has_its_own_time(monkeypatch):

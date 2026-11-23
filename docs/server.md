@@ -594,14 +594,17 @@ images towards the 50 images and codes; within the render limits:
   20 s in all and an address space of 512 MB plus 24 bytes per pixel of
   the drawing; one that breaks these limits refuses the label (413), a
   damaged one or a crash of the child is a warning (`page_unreadable`).
-  Nothing of it is kept in the server's process;
+  Poppler never runs in the server's process; only the drawings the
+  children send back are kept, for the preview or print job they belong
+  to (see below);
 - the PDF pages of one label take 30 s in all at most, counted while
   their children run (not while the render waits for its slot): a label
   whose pages need longer is refused (413) like a page that breaks its
   own limit, so 50 slow pages cannot hold a render slot for minutes. Each
   row of a series is a label of its own with its own 30 s, and what the
-  children drew is kept for the preview or print job (at most 32 drawings
-  and 32 MB): the same page on every row is drawn once.
+  children drew is kept until the preview or print job ends (at most 32
+  drawings and 32 MB per job, 64 MB for all jobs together; beyond that
+  nothing more is kept): the same page on every row is drawn once.
 
 Each page drawn starts a child (about 0.1 s, a black-and-white printer
 two), so the option is off by default.
