@@ -330,8 +330,21 @@ def test_the_docs_deploy_folder_is_a_repository_variable():
     steps = _workflow("docs.yml", ".forgejo")["jobs"]["docs"]["steps"]
     first = steps[0]
     assert first["name"] == "Check the deploy folder"
-    assert '[ -z "$SITE_DIR" ]' in first["run"] and "exit 1" in first["run"]
     assert "DOCS_SITE_DIR" in first["run"]
+    # the step itself, run with the variable unset, relative and absolute
+    import subprocess
+
+    for value, ok in (("", False), ("docs/site", False), ("~/x", False), ("/srv/docs", True)):
+        done = subprocess.run(
+            ["sh", "-c", first["run"]],
+            env={"SITE_DIR": value, "PATH": "/usr/bin:/bin"},
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert (done.returncode == 0) is ok, (value, done.stdout)
+        assert ok or "::error::" in done.stdout
+    assert not re.search(r"~/|/home/", text)  # no host path in the workflow
     assert "`DOCS_SITE_DIR`" in (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
 
 

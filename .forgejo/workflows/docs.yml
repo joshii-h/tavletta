@@ -7,8 +7,8 @@
 #
 # Deploy like the website joshuahirsig.xyz: the runner mounts the host's
 # Docker socket into the job, a short-lived helper container writes the build
-# into ~/Docker/tavletta-docs/public on the vServer, then the nginx container
-# of that stack is restarted. A smoke test rolls back on failure. No secrets.
+# into the public/ folder of the documentation's stack on the Docker host
+# (DOCS_SITE_DIR), then the nginx container of that stack is restarted. A smoke test rolls back on failure. No secrets.
 #
 # actions/checkout does not work on this instance (the runner reaches Forgejo
 # as server:3000), so the code is fetched with plain git.
@@ -54,10 +54,15 @@ jobs:
     steps:
       - name: Check the deploy folder
         run: |
-          if [ -z "$SITE_DIR" ]; then
-            echo "::error::the repository variable DOCS_SITE_DIR is not set (the documentation stack's folder on the Docker host; see CONTRIBUTING.md, Maintainer setup)"
-            exit 1
-          fi
+          case "$SITE_DIR" in
+            /*) ;;
+            "")
+              echo "::error::the repository variable DOCS_SITE_DIR is not set (the documentation stack's folder on the Docker host; see CONTRIBUTING.md, Maintainer setup)"
+              exit 1 ;;
+            *)
+              echo "::error::DOCS_SITE_DIR must be an absolute path on the Docker host: $SITE_DIR"
+              exit 1 ;;
+          esac
 
       - name: Install system packages
         # GTK/libadwaita for the screenshots (librsvg2-common renders the
