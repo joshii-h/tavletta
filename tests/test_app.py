@@ -3401,6 +3401,29 @@ def test_raw_printer_settings_rows(make_window, raw_env):
     assert Settings.load().data["printers"]["zpl"]["upside_down"] is True
 
 
+@pytest.mark.parametrize(
+    ("sensor", "warned"),
+    [(0, True), (1, True), (2, False), (3, False)],  # printer, gap, mark, continuous
+)
+def test_zpl_label_distance_only_for_a_job_that_senses_as_the_printer(
+    make_window, raw_env, sensor, warned
+):
+    """The printer is set to gap labels and measured another distance: a
+    job whose label sensor is another one (black mark, continuous) does
+    not print on what was measured, so nothing is said."""
+    raw_env.info = PrinterInfo(
+        "GX420d-200dpi", None, None, None, "IDLE", pitch_mm=200.0, media_type="gap"
+    )
+    win = _raw_window(make_window, "zpl")
+    one(win.sidebar, Adw.ComboRow, title="Label sensor").set_selected(sensor)
+    win.print_flow.on_print()
+    dialog = win.get_visible_dialog()
+    expected = "Different labels loaded" if warned else "Print label"
+    assert dialog.get_heading() == expected
+    if warned:
+        assert dialog.get_body().endswith("or calibrate the printer.")
+
+
 def test_raw_printer_settings_are_shown_as_stored(make_window, raw_env):
     win = make_window(
         {
