@@ -206,22 +206,24 @@ def test_a_roll_changed_before_the_job_prints(
     assert done["state"] == "done" and not answers
 
 
+@pytest.mark.parametrize("settings", ["", 'media = "gap"\n'])
 def test_a_printer_that_tells_nothing_of_the_labels_keeps_the_warning(
-    make_server, server_env, zpl, monkeypatch, held
+    make_server, server_env, zpl, monkeypatch, held, settings
 ):
     """A Zebra still busy with the job before answers without a label
-    distance: the job keeps the warning of the request."""
+    distance and without a media type (CONFIGURATION_RETRY): the job keeps
+    the warning of the request, also when its own media setting is gap."""
     monkeypatch.setattr(service_module, "STATUS_SECONDS", 0)  # asked anew every time
-    busy = PrinterInfo("GX420d-200dpi", None, None, None, "BUSY", dpi=203.2, media_type="gap")
+    busy = PrinterInfo("GX420d-200dpi", None, None, None, "BUSY", dpi=203.2)
     answers = [zpl["info"], busy]
     zpl["answer"] = lambda: answers.pop(0)
-    _server, base = _named(make_server, server_env)
+    _server, base = _named(make_server, server_env, settings)
     job, done = _print(base, held)
     assert CODE in _codes(job["warnings"]) and not answers
     assert CODE in _codes(done["warnings"]) and done["state"] == "done"
 
 
-def test_a_job_asks_anew_after_an_error_of_the_last_seconds(make_server, server_env, zpl):
+def test_a_job_asks_anew_after_an_error_of_the_last_seconds(make_server, server_env, zpl, held):
     """A status request while the printer was busy (an error remembered for
     a few seconds): the job does not take that error, it asks again and
     prints with what the printer reports."""
@@ -237,7 +239,7 @@ def test_a_job_asks_anew_after_an_error_of_the_last_seconds(make_server, server_
     _server, base = _named(make_server, server_env)
     status, _r, _body = call(base, "GET", "/api/v1/printers/z/status", headers=ASK)
     assert status == 502
-    job, done = _print(base)
+    job, done = _print(base, held)
     assert CODE not in _codes(job["warnings"])  # the error: nothing known for the request
     assert CODE in _codes(done["warnings"]) and zpl["queries"] == 2
     assert zpl["printed"][0].info is zpl["info"]
@@ -258,16 +260,22 @@ def test_an_unreachable_printer_gives_no_warning_and_no_long_wait(
         raise OSError("no answer")
 
     zpl["answer"] = silent
-    _server, base = _named(make_server, server_env)
+    server, base = _named(make_server, server_env)
     try:
         started = time.monotonic()
         assert CODE not in _codes(_preview(base, printer="z"))
         assert time.monotonic() - started < 5.0
     finally:
         released.set()
+    _done_asking(server)
 
 
 # --- what is known of a printer counts without waiting ---------------------------------
+
+
+def _done_asking(server) -> None:
+    """The questions still running end (no thread outlives the test)."""
+    wait_for(lambda: not server.service._asking)
 
 
 def _hanging(zpl):
@@ -298,6 +306,7 @@ def test_a_known_answer_counts_while_it_is_asked_anew(make_server, server_env, z
         assert zpl["queries"] == 2
     finally:
         released.set()
+    _done_asking(server)
 
 
 def test_a_recent_error_counts_as_nothing_known_without_waiting(make_server, server_env, zpl):
@@ -316,8 +325,55 @@ def test_a_recent_error_counts_as_nothing_known_without_waiting(make_server, ser
         started = time.monotonic()
         assert CODE not in _codes(_preview(base))
         assert time.monotonic() - started < 5.0
+        wait_for(lambda: zpl["queries"] == 2)  # asked anew in the background
     finally:
         released.set()
+    _done_asking(server)
+
+
+def test_an_error_after_an_answer_counts_as_nothing_known(
+    make_server, server_env, zpl, monkeypatch
+):
+    """An answer 21 s ago, an error 1 s ago: the roll may have changed
+    meanwhile, no warning from the older answer."""
+    server, base = _named(make_server, server_env)
+    clock = server.service._monotonic = Clock()
+    assert CODE in _codes(_preview(base))
+    clock.now += 20
+
+    def refused():
+        raise OSError("refused")
+
+    zpl["answer"] = refused
+    status, _r, _body = call(base, "GET", "/api/v1/printers/z/status", headers=ASK)
+    assert status == 502
+    clock.now += 1
+    assert CODE not in _codes(_preview(base))
+    assert zpl["queries"] == 2  # the error is fresh: not asked again
+
+
+def test_an_old_error_is_asked_anew_without_waiting(make_server, server_env, zpl):
+    """A printer that did not answer a minute ago is asked again in the
+    background; the request does not wait for it again."""
+    server, base = _named(make_server, server_env)
+    clock = server.service._monotonic = Clock()
+
+    def refused():
+        raise OSError("refused")
+
+    zpl["answer"] = refused
+    assert CODE not in _codes(_preview(base))
+    clock.now += service_module.KNOWN_SECONDS + 1
+    zpl["answer"] = lambda: zpl["info"]
+    released = _hanging(zpl)
+    try:
+        started = time.monotonic()
+        assert CODE not in _codes(_preview(base))
+        assert time.monotonic() - started < 5.0  # STATE_WAIT is 30 s here
+        wait_for(lambda: zpl["queries"] == 2)
+    finally:
+        released.set()
+    _done_asking(server)
 
 
 def test_an_old_answer_is_waited_for_again(make_server, server_env, zpl, monkeypatch):
@@ -333,6 +389,7 @@ def test_an_old_answer_is_waited_for_again(make_server, server_env, zpl, monkeyp
         assert time.monotonic() - started >= 0.2
     finally:
         released.set()
+    _done_asking(server)
 
 
 def test_a_printer_printing_a_job_is_not_asked(make_server, server_env, zpl, monkeypatch):
@@ -377,7 +434,6 @@ def test_the_question_comes_after_the_render(make_server, server_env, zpl, monke
     assert CODE in _codes(_preview(base))
     assert "render" in events and events[-1] == "query"
     server.service._states.clear()  # nothing known: the print request asks
-    server.service._answers.clear()
     events.clear()
     status, _r, job = call(base, "POST", "/api/v1/print", body={"label": "zpl", "wait": 10})
     assert CODE in _codes(job["warnings"])
@@ -430,3 +486,24 @@ def test_a_question_without_a_thread_is_answered_with_the_error(server_env, monk
     assert isinstance(outcome, RuntimeError) and service._asking == {}
     service._states.clear()
     assert service._probe(printer) is zpl["info"]
+
+
+def test_closing_waits_for_the_questions_still_running(server_env, zpl):
+    """A question still running when the server closes is waited for (within
+    the timeout): no thread asks a printer after it."""
+    text = '[printers.z]\nbackend = "zpl"\nhost = "zpl.local"\n'
+    printers = load_printers(write(server_env.tmp / "printers.toml", text))
+    service = Service(server_env.labels, printers=printers)
+    released = _hanging(zpl)
+    question = service._question(printers["z"])
+    threading.Timer(0.2, released.set).start()
+    service.close(timeout=10)
+    assert question.done() and service._asking == {}
+    released.clear()  # a question that does not end: close() gives up after its timeout
+    service._states.clear()  # nothing known: asked anew
+    question = service._question(printers["z"])
+    started = time.monotonic()
+    service.close(timeout=0.2)
+    assert not question.done() and time.monotonic() - started < 5.0
+    released.set()
+    question.result(timeout=10)

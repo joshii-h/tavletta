@@ -63,9 +63,10 @@ curl -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
 - `other_labels_loaded` in the `warnings`: the printer has other labels
   loaded than the label's (another size, or another label distance
   measured). Load the matching roll, or check the label's size and gap.
-  The printer's answer of the last minute counts; a printer the server
-  knows nothing of yet is waited for up to a second after the label is
-  rendered, and one that does not answer by then gives no such warning.
+  The printer's latest answer counts if it is of the last minute (after
+  an error nothing is known); a printer the server knows nothing of yet
+  is waited for up to a second after the label is rendered, and one that
+  does not answer by then gives no such warning.
 - A preview needs only the role `preview`.
 
 ## 3. Print one label { #one }

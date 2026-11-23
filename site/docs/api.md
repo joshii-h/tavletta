@@ -465,7 +465,7 @@ A printer of printers.toml.
 |---|---|---|
 | `width` | integer |  |
 | `height` | integer |  |
-| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its answer of the last minute counts (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |
+| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |
 | `png` | string |  |
 
 Example of a job:

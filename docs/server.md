@@ -283,12 +283,14 @@ printer's hint suggests calibrating it, its distance may be from an
 earlier roll). The label prints anyway. Only printers that tell of their
 labels are asked for it: cab, ZPL and Brother QL with die-cut labels. A
 preview and a print request for a printer of `printers.toml` take the
-printer's answer of the last minute, a recent error as nothing known,
-without waiting, and ask it anew in the background once the answer is
-older than 5 s (not while a job of the server prints on it). Only a
-printer the server knows nothing of yet is waited for, after the label is
-rendered, up to a second; a printer that does not answer by then gives no
-warning. When the job prints, the warning is replaced by what the printer
+printer's latest answer if it is of the last minute, without waiting; if
+the latest was an error, nothing is known (the roll may have changed).
+The printer is asked anew in the background once that is older than 5 s
+(not while a job of the server prints on it). Only a printer the server
+knows nothing of yet, or whose answer is older than a minute, is waited
+for, after the label is rendered, up to a second; a printer that does not
+answer by then gives no warning, and one whose latest question ended in
+an error is not waited for again. When the job prints, the warning is replaced by what the printer
 reports then, if it tells of the loaded labels (a busy printer, or one
 that has not measured the labels, leaves it as it was); without
 `printers.toml` only the job warns. Not for a job that finds the labels

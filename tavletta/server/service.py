@@ -389,8 +389,6 @@ class Service:
         self._label_locks: dict[str, threading.Lock] = {}
         self._searches: dict[str, threading.Lock] = {}
         self._states: dict[str, tuple[float, PrinterInfo | Exception]] = {}
-        # the last answer of each printer that was not an error, and when
-        self._answers: dict[str, tuple[float, PrinterInfo]] = {}
         # the question to a printer running now, by its name (_question())
         self._asking: dict[str, Future[PrinterInfo | Exception]] = {}
         self._renders = threading.BoundedSemaphore(RENDERS)
@@ -399,8 +397,16 @@ class Service:
         self._waiting_lock = threading.Lock()
 
     def close(self, timeout: float = 30.0) -> None:
-        """Cancel the waiting jobs; printing ones stop after their label."""
+        """Cancel the waiting jobs; printing ones stop after their label.
+        Questions to printers still running are waited for, within the
+        same `timeout`."""
+        deadline = time.monotonic() + timeout
         self.jobs.close(timeout)
+        with self._found_lock:
+            asking = list(self._asking.values())
+        for question in asking:
+            with contextlib.suppress(TimeoutError):
+                question.result(timeout=max(0.0, deadline - time.monotonic()))
 
     # --- printers -------------------------------------------------------------
 
@@ -490,10 +496,7 @@ class Service:
             outcome = e
         finally:  # answered in any case: no one waits for ever, the next one asks anew
             with self._found_lock:
-                now = self._monotonic()
-                self._states[printer.name] = (now, outcome)
-                if isinstance(outcome, PrinterInfo):
-                    self._answers[printer.name] = (now, outcome)
+                self._states[printer.name] = (self._monotonic(), outcome)
                 del self._asking[printer.name]
             question.set_result(outcome)
 
@@ -1083,22 +1086,27 @@ class Service:
 
     def _recent_info(self, printer: NamedPrinter) -> PrinterInfo | None:
         """What the printer reported lately, for a request's warning: its
-        last answer of KNOWN_SECONDS (None after an error of that time and
-        no answer), asked anew in the background once it is older than
-        STATUS_SECONDS; with nothing known, its answer within STATE_WAIT
-        seconds (waited for without a render slot). Not asked while a job
-        of this server prints on it: the job asks it itself, and a USB
-        printer would keep the question waiting for it."""
+        latest outcome, asked anew in the background once it is older than
+        STATUS_SECONDS. An answer of KNOWN_SECONDS counts; an error (of any
+        age) is nothing known, the roll may have changed meanwhile. With
+        nothing known (or an answer older than that), its answer within
+        STATE_WAIT seconds (waited for without a render slot); a printer
+        whose latest outcome is an error is not waited for again. Not asked
+        while a job of this server prints on it: the job asks it itself, and
+        a USB printer would keep the question waiting for it."""
         now = self._monotonic()
         printing = self.jobs.printing(queue_key(printer.host))
         with self._found_lock:
             state = self._states.get(printer.name)
-            answer = self._answers.get(printer.name)
         question = None
         if not printing and (state is None or now - state[0] >= STATUS_SECONDS):
             question = self._question(printer)  # a refresh, or the first question
-        if state is not None and now - state[0] <= KNOWN_SECONDS:
-            return answer[1] if answer and now - answer[0] <= KNOWN_SECONDS else None
+        if state is not None:
+            outcome = state[1]
+            if isinstance(outcome, Exception):
+                return None
+            if now - state[0] <= KNOWN_SECONDS:
+                return outcome
         if question is None:
             return None
         if not question.done():

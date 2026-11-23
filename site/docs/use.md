@@ -414,7 +414,8 @@ tavletta --version
   (Brother QL with DK labels), gets a hint, as in the window; the label
   is printed anyway.
 - Some printers are asked before the label is drawn, because it depends
-  on what they report (the tape, the resolution); a printer that does not
+  on what they report (the tape, the resolution), a Brother QL with DK
+  labels for the hint above (the labels loaded); a printer that does not
   answer within 5 s (2 s for `--dry-run`) gets the label drawn without.
   A question still on its way then gets up to 10 s more to end before
   the label is sent (Tavletta says so); an answer in that time is used.
