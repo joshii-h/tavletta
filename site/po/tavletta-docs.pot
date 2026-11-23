@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 13:47+0100\n"
+"POT-Creation-Date: 2026-11-23 13:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2424,7 +2424,7 @@ msgstr ""
 #. type: Plain text
 #: docs/printer.md
 #, markdown-text
-msgid "Tavletta prints on label printers that take the label as an image in their own printer language. These printers have not been tried with Tavletta yet: if you have one, a report of what works and what does not helps a lot ([[ui:Report a problem…]])."
+msgid "Tavletta prints on label printers that take the label as an image in their own printer language. Zebra ZPL was tried on a Zebra GX420d over USB (status and printing); the other printers have not been tried with Tavletta yet: if you have one, a report of what works and what does not helps a lot ([[ui:Report a problem…]])."
 msgstr ""
 
 #. type: Plain text
@@ -2503,7 +2503,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 #, markdown-text
-msgid "The label comes out upside down: switch on [[ui:Print upside down]], and please report it with the printer model; the orientation could not be tried on a printer yet."
+msgid "The label comes out upside down: switch on [[ui:Print upside down]], and please report it with the printer model; the orientation was tried on a Zebra GX420d only."
 msgstr ""
 
 #. type: Bullet: '- '

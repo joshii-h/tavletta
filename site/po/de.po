@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 13:47+0100\n"
+"POT-Creation-Date: 2026-11-23 13:55+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -3355,14 +3355,16 @@ msgstr "Etikettendrucker mit ZPL, EPL2, TSPL, ESC/POS oder DYMO { #raw }"
 #: docs/printer.md
 msgid ""
 "Tavletta prints on label printers that take the label as an image in their "
-"own printer language. These printers have not been tried with Tavletta yet: "
-"if you have one, a report of what works and what does not helps a lot "
+"own printer language. Zebra ZPL was tried on a Zebra GX420d over USB (status "
+"and printing); the other printers have not been tried with Tavletta yet: if "
+"you have one, a report of what works and what does not helps a lot "
 "([[ui:Report a problem…]])."
 msgstr ""
 "Tavletta druckt auf Etikettendrucker, die das Etikett als Bild in ihrer "
-"eigenen Druckersprache erhalten. Diese Drucker wurden mit Tavletta noch "
-"nicht ausprobiert: Wer einen hat, hilft sehr mit einer Rückmeldung, was "
-"funktioniert und was nicht ([[ui:Report a problem…]])."
+"eigenen Druckersprache erhalten. Zebra ZPL wurde an einem Zebra GX420d über "
+"USB ausprobiert (Status und Drucken); die anderen Drucker wurden mit "
+"Tavletta noch nicht ausprobiert: Wer einen hat, hilft sehr mit einer "
+"Rückmeldung, was funktioniert und was nicht ([[ui:Report a problem…]])."
 
 #. type: Plain text
 #: docs/printer.md
@@ -3493,12 +3495,12 @@ msgstr ""
 #: docs/printer.md
 msgid ""
 "The label comes out upside down: switch on [[ui:Print upside down]], and "
-"please report it with the printer model; the orientation could not be tried "
-"on a printer yet."
+"please report it with the printer model; the orientation was tried on a "
+"Zebra GX420d only."
 msgstr ""
 "Das Etikett kommt verkehrt herum heraus: [[ui:Print upside down]] "
-"einschalten und bitte mit dem Druckermodell melden; die Ausrichtung konnte "
-"noch an keinem Drucker ausprobiert werden."
+"einschalten und bitte mit dem Druckermodell melden; die Ausrichtung wurde "
+"nur an einem Zebra GX420d ausprobiert."
 
 #. type: Bullet: '- '
 #: docs/printer.md

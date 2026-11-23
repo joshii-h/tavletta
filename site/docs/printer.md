@@ -331,8 +331,9 @@ as one page of exactly its size, unscaled.
 ## Label printers with ZPL, EPL2, TSPL, ESC/POS or DYMO { #raw }
 
 Tavletta prints on label printers that take the label as an image in their
-own printer language. These printers have not been tried with Tavletta yet:
-if you have one, a report of what works and what does not helps a lot
+own printer language. Zebra ZPL was tried on a Zebra GX420d over USB (status
+and printing); the other printers have not been tried with Tavletta yet: if
+you have one, a report of what works and what does not helps a lot
 ([[ui:Report a problem…]]).
 
 | Printer model in Tavletta | Printers |
@@ -374,8 +375,8 @@ if you have one, a report of what works and what does not helps a lot
 - The printer did not report its resolution in time: choose it under
   [[ui:Resolution]] instead of [[ui:As reported by the printer]].
 - The label comes out upside down: switch on [[ui:Print upside down]], and
-  please report it with the printer model; the orientation could not be
-  tried on a printer yet.
+  please report it with the printer model; the orientation was tried on a
+  Zebra GX420d only.
 - Print too pale or too dark: change [[ui:Darkness]].
 - The printer prints several blank labels or stops between labels: the
   [[ui:Label sensor]] does not match the roll, or the printer has to measure

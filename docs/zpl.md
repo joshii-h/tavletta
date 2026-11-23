@@ -2,8 +2,9 @@
 
 How Tavletta talks to printers that speak ZPL (Zebra Programming Language):
 Zebra's desktop and industrial printers (GK, GX, ZD, ZT series and others)
-and the many printers that emulate ZPL. **Not yet tried on a printer**: no ZPL
-printer was available while this was written.
+and the many printers that emulate ZPL. Tried on a Zebra GX420d (203 dpi,
+firmware V56.17.17Z) over USB: the status questions and printing; other
+models and the network connection are not tried yet.
 
 The byte sequences follow [LPrint](https://github.com/michaelrsweet/lprint)
 by Michael R Sweet (Apache-2.0, `lprint-zpl.c`), which prints on these
