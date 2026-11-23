@@ -11,6 +11,8 @@ import errno
 import html
 import io
 import json
+import threading
+import time
 from dataclasses import replace
 from datetime import date, timedelta
 from types import SimpleNamespace
@@ -4445,3 +4447,18 @@ def test_the_preview_texture_takes_the_pixels_as_they_are():
         image = Image.new(mode, (5, 3), color)
         texture = preview.texture(image)
         assert (texture.get_width(), texture.get_height()) == (5, 3), mode
+
+
+def test_printed_waits_only_for_its_own_print_thread(make_window):
+    """A print thread of another window (or a stuck one of an earlier
+    test) is not waited for: printed() joins its window's thread only."""
+    win = make_window()
+    stuck = threading.Event()
+    other = threading.Thread(target=stuck.wait, name="tavletta-print", daemon=True)
+    other.start()
+    try:
+        start = time.monotonic()
+        assert printed(win, timeout=30.0)  # nothing printing in this window
+        assert time.monotonic() - start < 10
+    finally:
+        stuck.set()

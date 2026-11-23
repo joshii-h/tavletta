@@ -74,6 +74,8 @@ class PrintFlow:
         self.open_dialog: Adw.AlertDialog | None = None  # the print dialog, while open
         self._printing: Label | None = None
         self._stop = threading.Event()  # serial labels: stop after the current one
+        # the thread of the job running or run last (a test waits for it)
+        self.thread: threading.Thread | None = None
 
     def _modes(self) -> tuple[PrintMode, ...]:
         return self.window.backend.modes(self.window.printer.info)
@@ -572,7 +574,8 @@ class PrintFlow:
             else:
                 GLib.idle_add(self.done, None, None, job, result)
 
-        threading.Thread(target=work, name="tavletta-print", daemon=True).start()
+        self.thread = threading.Thread(target=work, name="tavletta-print", daemon=True)
+        self.thread.start()
 
     def start_series(
         self, options: PrintOptions, indexes: Sequence[int], sheet: SheetJob | None = None
@@ -624,7 +627,8 @@ class PrintFlow:
                 return
             GLib.idle_add(self.series_done, outcome, options)
 
-        threading.Thread(target=work, name="tavletta-print", daemon=True).start()
+        self.thread = threading.Thread(target=work, name="tavletta-print", daemon=True)
+        self.thread.start()
 
     def stop(self) -> None:
         """Stop a series after the label being printed."""

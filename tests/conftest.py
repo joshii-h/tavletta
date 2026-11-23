@@ -495,12 +495,21 @@ def printed(win, timeout: float = 120.0) -> bool:
     """Wait until the window's print job has ended: its thread first, as
     long as it takes (rendering a label at 600 dpi in two colours takes
     seconds on a loaded test machine, with coverage, beside the other
-    xdist workers), then the main loop for its outcome. pump()'s few
-    seconds would measure the machine's load instead."""
-    for thread in threading.enumerate():
-        if thread.name == "tavletta-print":
-            thread.join(timeout)
-    return pump(lambda: not win.print_flow.busy)
+    xdist workers), then the main loop for its outcome; a job that starts
+    another thread (the rest of a series) is waited for too. Only this
+    window's threads, all within one `timeout`. pump()'s few seconds would
+    measure the machine's load instead."""
+    flow = win.print_flow
+    deadline = time.monotonic() + timeout
+    while True:
+        thread = flow.thread
+        if thread is not None:
+            thread.join(max(0.0, deadline - time.monotonic()))
+        pump(lambda thread=thread: not flow.busy or flow.thread is not thread)
+        if not flow.busy:
+            return True
+        if flow.thread is thread or time.monotonic() > deadline:
+            return False  # still busy, and no new thread to wait for
 
 
 def render_now(win) -> None:
