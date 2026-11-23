@@ -10,6 +10,7 @@ from PIL import Image
 
 from tavletta import imageformats
 from tavletta.backends.base import PrinterError, PrinterInfo, PrintOptions, PrintResult
+from tavletta.job import OtherLabels
 from tavletta.merge import MergeError
 from tavletta.model import (
     ImageElement,
@@ -24,7 +25,7 @@ from tavletta.shipping.detect import Detection
 from tavletta.shipping.source import SourceError
 from tavletta.shipping.targets import Target
 from tavletta.ui.i18n import _, isolate, month_name, pgettext
-from tavletta.units import Unit
+from tavletta.units import Unit, unit_for
 
 # cassettes older than this get a hint: old ZINK paper prints paler
 OLD_CASSETTE_DAYS = 2 * 365
@@ -335,7 +336,22 @@ def backend_name(backend) -> str:
     return names.get(backend.id, backend.name)
 
 
+# the warning of other labels loaded than the label's (other_labels_warning())
+OTHER_LABELS = "other_labels_loaded"
+
+
+def other_labels_warning(other: OtherLabels, units: str | None) -> RenderWarning:
+    """job.other_labels() as a warning of a print job, its text made when it
+    is shown (warning_text(): in the language asked for then), with sizes in
+    `units` (Settings.units)."""
+    return RenderWarning(OTHER_LABELS, {"other": other, "units": units})
+
+
 def warning_text(warning: RenderWarning) -> str:
+    if warning.key == OTHER_LABELS:
+        other, units = warning.params["other"], warning.params["units"]
+        assert isinstance(other, OtherLabels)
+        return other_labels_text(other, unit_for(units if isinstance(units, str) else None))
     texts = {
         "code_empty": _("Element %(n)d: the code is empty"),
         "ean13_digits": _("Element %(n)d: EAN-13 needs exactly 12 digits"),
@@ -471,11 +487,18 @@ def printer_error_text(error: Exception, unit: Unit) -> str:
     return text
 
 
-def other_pitch_text(label, measured_mm: float, unit: Unit, calibrate: bool = False) -> str:
-    """The roll in the printer has another label distance than the label;
-    calibrate: the printer may have measured it on an earlier roll
-    (Backend.pitch_may_be_old)."""
-    if calibrate:
+def other_labels_text(other: OtherLabels, unit: Unit) -> str:
+    """Labels of another size are loaded, or the roll has another label
+    distance than the label (job.other_labels()); with other.calibrate the
+    printer may have measured it on an earlier roll."""
+    size = isolate(unit.size(*other.size_mm))
+    if other.loaded_mm:
+        text = _(
+            "The label is %(size)s, but labels of %(loaded)s are loaded. Check the "
+            "label size, or load the matching roll."
+        )
+        return text % {"size": size, "loaded": isolate(unit.size(*other.loaded_mm))}
+    if other.calibrate:
         text = _(
             "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
             "%(pitch)s. The printer measured a label every %(measured)s. Check the "
@@ -488,10 +511,10 @@ def other_pitch_text(label, measured_mm: float, unit: Unit, calibrate: bool = Fa
             "label size and the gap."
         )
     return text % {
-        "size": isolate(unit.size(*label.media_size())),
-        "gap": isolate(unit.format(label.gap_mm)),
-        "pitch": isolate(unit.format(label.pitch_mm())),
-        "measured": isolate(unit.format(measured_mm)),
+        "size": size,
+        "gap": isolate(unit.format(other.gap_mm)),
+        "pitch": isolate(unit.format(other.pitch_mm)),
+        "measured": isolate(unit.format(other.measured_mm or 0.0)),
     }
 
 

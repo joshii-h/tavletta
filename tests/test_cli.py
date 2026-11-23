@@ -1394,6 +1394,18 @@ def test_a_roll_with_another_label_distance_gets_a_hint(cab_cli, capsys):
     assert "measured" not in err(capsys)
 
 
+def test_labels_of_another_size_get_a_hint(cab_cli, capsys):
+    """A printer that reports the size of the loaded labels: told before
+    the distance, as the window and the server do (job.other_labels())."""
+    cab_cli.info.label_mm = (75.0, 50.0)
+    assert run("print", cab_cli.path) == 0
+    assert err(capsys) == (
+        "tavletta: The label is 50 × 25 mm, but labels of 75 × 50 mm are loaded. Check "
+        "the label size, or load the matching roll.\n"
+    )
+    assert len(cab_cli.printed) == 1
+
+
 @pytest.fixture
 def zpl_cli(monkeypatch, mono, tmp_path):
     """The ZPL backend with faked query and print; a 50 × 25 mm label with a

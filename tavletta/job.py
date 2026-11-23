@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import threading
 from collections.abc import Callable, Iterator, Mapping
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from datetime import datetime
 
 from PIL import Image
@@ -20,6 +20,7 @@ from PIL import Image
 from tavletta.backends.base import (
     Backend,
     PrinterError,
+    PrinterInfo,
     PrintOptions,
     PrintResult,
     Progress,
@@ -27,7 +28,7 @@ from tavletta.backends.base import (
     RenderAgain,
     check_codes,
 )
-from tavletta.model import Label
+from tavletta.model import Label, measured_differs
 from tavletta.render import DEFAULT_SAFE_MM, Rendered, RenderWarning, whole_tape
 from tavletta.sheets import Sheet
 from tavletta.sheets.layout import Copies, LabelSource, Pages, SheetJob, clip_preview
@@ -66,6 +67,56 @@ def preview_image(
     if sheet is not None:
         image = clip_preview(image, sheet, rotated)
     return rendered, image, dpi
+
+
+@dataclass(frozen=True)
+class OtherLabels:
+    """Die-cut labels loaded that are not the label's: their size, or the
+    label distance the printer measured. The label's own size, gap and
+    distance are kept for the message (texts.other_labels_text())."""
+
+    size_mm: tuple[float, float]  # the label's (Label.media_size())
+    gap_mm: float
+    pitch_mm: float  # the label's distance from label to label
+    # the size of the loaded labels if it is not the label's; None: the same or unknown
+    loaded_mm: tuple[float, float] | None
+    # the label distance measured if it is not the label's (and the size is
+    # not known to differ); None: the same or unknown
+    measured_mm: float | None
+    # the printer may have measured it on an earlier roll: calibrate it
+    # (Backend.pitch_may_be_old)
+    calibrate: bool = False
+
+
+def other_labels(
+    backend: Backend, label: Label, info: PrinterInfo | None, chosen: Mapping[str, object]
+) -> OtherLabels | None:
+    """What the printer reports of the loaded die-cut labels (`info`), if
+    it is not the label: their size, else their measured distance. The
+    window, the command line and the server warn of it; printing is not
+    refused. None for tape and page printers, a printer that reports
+    neither, and a job that senses the labels otherwise than the printer
+    reports them (`chosen`, PrintOptions.settings: Backend.senses_as_reported;
+    a continuous job on a printer set to gap labels)."""
+    caps = backend.capabilities
+    if info is None or caps.continuous or caps.pages:
+        return None
+    if not info.label_mm and not info.pitch_mm:
+        return None
+    if not backend.senses_as_reported(chosen, info):
+        return None
+    size = label.media_size()
+    loaded = info.label_mm
+    if loaded and not any(measured_differs(a, b) for a, b in zip(loaded, size, strict=True)):
+        loaded = None
+    measured = info.pitch_mm
+    if loaded or (measured and not measured_differs(measured, label.pitch_mm())):
+        measured = None
+    if not loaded and not measured:
+        return None
+    return OtherLabels(
+        size, label.gap_mm, label.pitch_mm(), loaded, measured, backend.pitch_may_be_old
+    )
 
 
 class PrepareFailed(Exception):

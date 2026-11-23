@@ -20,7 +20,7 @@ from tavletta.backends.base import (
     PrintResult,
     Progress,
 )
-from tavletta.job import Job, PrepareFailed
+from tavletta.job import Job, OtherLabels, PrepareFailed
 from tavletta.merge import MergeError
 from tavletta.model import Label
 from tavletta.serial import (
@@ -43,7 +43,7 @@ from tavletta.ui.texts import (
     QUALITY_NAMES,
     data_error_text,
     error_details,
-    other_pitch_text,
+    other_labels_text,
     printed_remark,
     printed_text,
     printer_error_text,
@@ -111,10 +111,8 @@ class PrintFlow:
             return
         if tape := window.printer.other_tape():
             self._wrong_cassette_dialog(tape)
-        elif size := window.printer.other_label_size():
-            self._other_size_dialog(size)
-        elif pitch := window.printer.other_pitch():
-            self._wrong_labels_dialog(pitch)
+        elif other := window.printer.other_labels():
+            self._other_labels_dialog(other)
         else:
             self.dialog()
 
@@ -176,28 +174,8 @@ class PrintFlow:
             },
         )
 
-    def _other_size_dialog(self, loaded: tuple[float, float]) -> None:
-        unit, label = self.window.unit, self.window.label
-        self._warn(
-            _("Different labels loaded"),
-            _(
-                "The label is %(size)s, but labels of %(loaded)s are loaded. Check the "
-                "label size, or load the matching roll."
-            )
-            % {
-                "size": isolate(unit.size(*label.media_size())),
-                "loaded": isolate(unit.size(*loaded)),
-            },
-        )
-
-    def _wrong_labels_dialog(self, measured_mm: float) -> None:
-        window = self.window
-        self._warn(
-            _("Different labels loaded"),
-            other_pitch_text(
-                window.label, measured_mm, window.unit, window.backend.pitch_may_be_old
-            ),
-        )
+    def _other_labels_dialog(self, other: OtherLabels) -> None:
+        self._warn(_("Different labels loaded"), other_labels_text(other, self.window.unit))
 
     # --- print dialog ------------------------------------------------------------
 

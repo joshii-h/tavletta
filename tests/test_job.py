@@ -381,3 +381,77 @@ def test_an_export_that_cannot_be_drawn_fails_as_prepare_does(monkeypatch):
     label = Label(printer=backend.id, tape_mm=12)
     with pytest.raises(PrepareFailed, match="kaputt"):
         Job(backend, label, PrintOptions()).export(label)
+
+
+# --- other labels loaded than the label's (the window, the command line, the server) ----
+
+
+def _die_cut(printer: str, width: float = 50, height: float = 25) -> Label:
+    label = Label(printer=printer, auto_length=False, orientation="across")
+    label.set_media_size(width, height)  # gap 3 mm: a new one every 28 mm
+    return label
+
+
+def _info(**fields):
+    from tavletta.backends.base import PrinterInfo
+
+    return PrinterInfo("Printer", None, None, None, "IDLE", **fields)
+
+
+def test_other_labels_by_the_measured_distance():
+    from tavletta.backends import get_backend
+    from tavletta.job import OtherLabels, other_labels
+
+    cab = get_backend("cab")
+    label = _die_cut("cab")
+    assert other_labels(cab, label, None, {}) is None  # nothing reported
+    assert other_labels(cab, label, _info(), {}) is None  # not synchronised
+    assert other_labels(cab, label, _info(pitch_mm=28.9), {}) is None  # within the tolerance
+    assert other_labels(cab, label, _info(pitch_mm=20.0), {}) == OtherLabels(
+        (50, 25), 3.0, 28.0, None, 20.0, calibrate=False
+    )
+
+
+def test_other_labels_by_their_size_first():
+    from tavletta.backends import get_backend
+    from tavletta.job import other_labels
+
+    ql = get_backend("brother_ql_diecut")
+    label = _die_cut("brother_ql_diecut", 62, 29)
+    other = other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {})
+    assert other is not None
+    assert (other.loaded_mm, other.measured_mm) == ((29, 90), None)
+    label.set_media_size(29, 90)
+    label.gap_mm = 3.0
+    assert other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {}) is None
+
+
+@pytest.mark.parametrize(
+    ("media", "reported", "warned"),
+    [
+        (None, "gap", True),  # as set on the printer
+        ("gap", "gap", True),
+        ("mark", "gap", False),  # sensed otherwise than the printer reports
+        ("continuous", "gap", False),  # a continuous job senses no labels at all
+    ],
+)
+def test_other_labels_only_as_the_job_senses_them(media, reported, warned):
+    from tavletta.backends import get_backend
+    from tavletta.job import other_labels
+
+    zpl = get_backend("zpl")
+    info = _info(pitch_mm=20.0, media_type=reported)
+    chosen = {"media": media} if media else {}
+    other = other_labels(zpl, _die_cut("zpl"), info, chosen)
+    assert (other is not None) == warned
+    if other:
+        assert other.calibrate  # a ZPL printer reports the distance it measured last
+
+
+def test_no_other_labels_on_tape_and_page_printers():
+    from tavletta.backends import get_backend
+    from tavletta.job import other_labels
+
+    info = _info(pitch_mm=20.0, label_mm=(10, 10))
+    assert other_labels(FakeMono(), Label(printer="fake-mono", tape_mm=12), info, {}) is None
+    assert other_labels(get_backend("system"), _die_cut("system"), info, {}) is None

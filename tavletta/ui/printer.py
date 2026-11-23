@@ -14,7 +14,7 @@ from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from tavletta.backends import backends, get_backend  # noqa: E402
 from tavletta.backends.base import Choice, PrinterInfo, Setting, Toggle  # noqa: E402
-from tavletta.model import measured_differs  # noqa: E402
+from tavletta.job import OtherLabels, other_labels  # noqa: E402
 from tavletta.ui.i18n import _, isolate, month_year  # noqa: E402
 from tavletta.ui.texts import (  # noqa: E402
     CONNECTION_ERRORS,
@@ -329,34 +329,12 @@ class Printer:
             return None
         return info.tape_mm if info.tape_mm != label.tape_mm else None
 
-    def _die_cut_info(self) -> PrinterInfo | None:
-        """The status of a die-cut printer, if what it reports of the loaded
-        labels is for the job (Backend.senses_as_reported)."""
-        backend, info = self.window.backend, self.info
-        if backend.capabilities.continuous or not info:
-            return None
-        chosen = self.window.printer_settings.backend_settings()
-        return info if backend.senses_as_reported(chosen, info) else None
-
-    def other_label_size(self) -> tuple[float, float] | None:
-        """Die-cut printers: the loaded label size if it is not the label's."""
-        info = self._die_cut_info()
-        if not info or not info.label_mm:
-            return None
-        size = self.window.label.media_size()
-        differs = any(measured_differs(a, b) for a, b in zip(info.label_mm, size, strict=True))
-        return info.label_mm if differs else None
-
-    def other_pitch(self) -> float | None:
-        """Die-cut printers: the measured label distance if it is not the label's."""
-        info = self._die_cut_info()
-        if not info or not info.pitch_mm:
-            return None
-        return (
-            info.pitch_mm
-            if measured_differs(info.pitch_mm, self.window.label.pitch_mm())
-            else None
-        )
+    def other_labels(self) -> OtherLabels | None:
+        """Die-cut printers: the loaded labels if they are not the label's
+        (job.other_labels(): their size, else their distance)."""
+        window = self.window
+        chosen = window.printer_settings.backend_settings()
+        return other_labels(window.backend, window.label, self.info, chosen)
 
     def failed(self, error: Exception, generation: int | None = None) -> bool:
         if self._outdated(generation):

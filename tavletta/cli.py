@@ -43,7 +43,7 @@ from tavletta import __version__
 from tavletta.backends import backends, get_backend
 from tavletta.backends.base import Backend, PrinterError, PrinterInfo, PrintOptions
 from tavletta.backends.cab import METHODS  # the choices of the printer setting "method"
-from tavletta.job import Job, PrepareFailed
+from tavletta.job import Job, PrepareFailed, other_labels
 from tavletta.merge import MergeError, read_book
 from tavletta.model import (
     CodeElement,
@@ -53,7 +53,6 @@ from tavletta.model import (
     TextElement,
     data_inside,
     locked,
-    measured_differs,
     writable,
 )
 from tavletta.serial import (
@@ -73,7 +72,7 @@ from tavletta.ui.settings import PrinterSettings, Settings
 from tavletta.ui.texts import (
     data_error_text,
     label_error_text,
-    other_pitch_text,
+    other_labels_text,
     printed_remark,
     printer_error_text,
     save_error_text,
@@ -1140,26 +1139,18 @@ def _for_the_printer(
             info, job.options.copies, job.options.gap_mm, host=host
         ),
     )
-    _check_pitch(job, info, settings, options)
+    _check_labels(job, info, settings, options)
     job.options = options
     return replace(series, options=options) if series else None
 
 
-def _check_pitch(job: Job, info: PrinterInfo, settings: Settings, options: PrintOptions) -> None:
-    """Die-cut labels: a roll whose measured label distance is not the
-    label's gets a hint, as the window warns; printed anyway. Not when the
-    job senses the labels otherwise than the printer reports them
-    (Backend.senses_as_reported)."""
-    backend, label = job.backend, job.label
-    caps = backend.capabilities
-    if caps.continuous or caps.pages or not info.pitch_mm:
-        return
-    if not backend.senses_as_reported(options.settings, info):
-        return
-    if measured_differs(info.pitch_mm, label.pitch_mm()):
-        text = other_pitch_text(
-            label, info.pitch_mm, unit_for(settings.units), backend.pitch_may_be_old
-        )
+def _check_labels(job: Job, info: PrinterInfo, settings: Settings, options: PrintOptions) -> None:
+    """Die-cut labels: a roll of another label size or label distance than
+    the label gets a hint, as the window and the server warn
+    (job.other_labels()); printed anyway."""
+    other = other_labels(job.backend, job.label, info, options.settings)
+    if other:
+        text = other_labels_text(other, unit_for(settings.units))
         _say(text.replace("\u2068", "").replace("\u2069", ""))  # no bidi marks
 
 
