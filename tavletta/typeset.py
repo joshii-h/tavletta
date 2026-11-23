@@ -199,16 +199,50 @@ def resolves_to(asked: str, loaded: str) -> bool:
     """Whether the font fontconfig loaded for a family stands for it: the
     family itself, the family of a style named as a family, or a metric
     alias (Liberation Sans for Arial, Carlito for Calibri), also of a style
-    named as a family ("Arial Bold", "Calibri Light"): the alias of the
-    longest family that begins the name ("Arial Narrow Bold": Arial
-    Narrow's, not Arial's)."""
+    named as a family ("Arial Bold", "Calibri Light", STYLE_WORDS only:
+    "Arial Black" is another family): the alias of the longest family that
+    begins the name ("Arial Narrow Bold": Arial Narrow's, not Arial's)."""
     asked, loaded = asked.casefold(), loaded.casefold()
     if not loaded:
         return False
     if asked == loaded or asked.startswith(loaded + " "):
         return True
-    families = [key for key in METRIC_ALIASES if asked == key or asked.startswith(key + " ")]
+    families = [key for key in METRIC_ALIASES if _styled(asked, key)]
     return bool(families) and loaded in METRIC_ALIASES[max(families, key=len)]
+
+
+# the words of a style named as part of a family ("Arial Bold Italic");
+# not Black, Heavy, Rounded, Neue, Unicode: those are families of their own
+# ("Arial Black"), with other widths than the stand-in
+STYLE_WORDS = frozenset(
+    {
+        "regular",
+        "normal",
+        "book",
+        "roman",
+        "italic",
+        "oblique",
+        "bold",
+        "semibold",
+        "demibold",
+        "medium",
+        "light",
+        "thin",
+        "extralight",
+        "ultralight",
+    }
+)
+
+
+def _styled(asked: str, family: str) -> bool:
+    """The (case folded) name is the family, or the family followed only
+    by style words ("calibri light", "times new roman bold italic")."""
+    if asked == family:
+        return True
+    if not asked.startswith(family + " "):
+        return False
+    words = asked[len(family) :].replace("-", "").split()  # "Semi-Bold" as "SemiBold"
+    return all(word in STYLE_WORDS for word in words)
 
 
 # the weights Pango names; a font weight between them takes the nearest. By

@@ -95,6 +95,16 @@ def test_a_metric_alias_counts_as_installed():
         ("Arial Narrow Bold", "Liberation Sans", False),
         ("Times New Roman Italic", "Liberation Serif", True),
         ("Arialic", "Liberation Sans", False),  # a word of its own, not Arial
+        ("Times New Roman Bold Italic", "Liberation Serif", True),
+        ("Calibri Semi-Bold", "Carlito", True),
+        # families of their own, of other widths: not the stand-in's
+        ("Arial Black", "Liberation Sans", False),
+        ("Arial Rounded MT Bold", "Liberation Sans", False),
+        ("Arial Unicode MS", "Liberation Sans", False),
+        ("Helvetica Neue", "Liberation Sans", False),
+        ("Helvetica Neue", "TeX Gyre Heros", False),
+        ("Helvetica Narrow", "Liberation Sans", False),
+        ("Arial Condensed", "Liberation Sans", False),
         ("Georgia Pro", "Liberation Serif", False),
     ],
 )
