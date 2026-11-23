@@ -187,15 +187,21 @@ class Session:
         request: bytes,
         done: Callable[[bytes], bool],
         timeout: float | None = None,
+        limit: float | None = None,
     ) -> bytes:
         """Send a question, read the answer until done(answer) or the
         timeout (ANSWER_TIMEOUT). What came by then is returned, b"" if
         nothing: many of these printers do not answer every question, which
-        is no error. On USB a late answer could come before the next one;
-        each session starts by dropping what is left (usb.connect)."""
+        is no error. With `limit` the timeout counts from the last data
+        received, up to `limit` seconds in all: a long answer on a slow
+        line (a serial adapter at 9600 baud) is read while it keeps coming.
+        On USB a late answer could come before the next one; each session
+        starts by dropping what is left (usb.connect)."""
         self.send(request)
         answer = b""
-        deadline = _clock() + (ANSWER_TIMEOUT if timeout is None else timeout)
+        wait = ANSWER_TIMEOUT if timeout is None else timeout
+        start = _clock()
+        deadline = start + wait
         try:
             while not done(answer):
                 remaining = deadline - _clock()
@@ -206,6 +212,8 @@ class Session:
                 if not chunk:  # TCP: the printer closed the connection
                     break
                 answer += chunk
+                if limit is not None:  # data came: wait again, within the limit
+                    deadline = min(start + limit, _clock() + wait)
         except (TimeoutError, PrinterTimeout):
             pass
         finally:

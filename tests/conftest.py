@@ -48,6 +48,7 @@ from tavletta.backends import (
     serialport,
     usb,
     vc500w,
+    zpl,
 )
 from tavletta.backends.base import PrinterInfo, Progress
 from tavletta.model import Label, TextElement
@@ -109,6 +110,7 @@ def _no_network(request, monkeypatch):
     monkeypatch.setattr(cab, "_connect", refusal("printer"))
     monkeypatch.setattr(cab, "_fetch_setup", refusal("printer"))  # nor its web interface
     monkeypatch.setattr(cab, "_setups", cab.HostMemory())  # nor remember one of another test
+    monkeypatch.setattr(zpl, "unanswered", zpl.HostMemory())
     monkeypatch.setattr(brother_ql, "_connect", refusal("printer"))
     monkeypatch.setattr(ptouch, "_connect", refusal("printer"))
     monkeypatch.setattr(ptouch, "_browse", refusal("mDNS"))  # nor search the network

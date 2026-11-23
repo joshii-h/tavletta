@@ -73,7 +73,11 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   formats waiting). The answer counts once a frame with LABEL LENGTH or
   RESOLUTION has come, not at the first frame: a late `~HQES` answer may
   come first. A printer that leaves `^HH` unanswered is not asked again
-  for 10 minutes (each question waits the whole answer timeout).
+  for 10 minutes (each question waits the whole answer timeout). The
+  answer (about 3.5 kB) is read while it keeps coming, up to 10 s: on a
+  serial adapter at 9600 baud it takes about 4 s. Part of it (the line
+  went silent) still counts as answered; so does a whole frame of
+  settings whose names Tavletta does not know (see below).
 - Each line of `^HH` is `  <value>   <NAME>`: the name is what follows
   the last run of two or more spaces (`39.0IN   989MM      MAXIMUM
   LENGTH`). The names are English only while the printer's display
@@ -92,7 +96,9 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   gap labels the GX420d still reported LABEL LENGTH 0422, its measured
   distance. MEDIA TYPE is GAP/NOTCH, MARK or CONTINUOUS; older firmware
   says NON-CONTINUOUS and names the sensor in SENSOR TYPE (WEB = gap,
-  MARK = black mark). The comparison is skipped when the job's `media`
+  MARK = black mark; TRANSMISSIVE and REFLECTIVE are read as gap and mark
+  too), else in SENSOR SELECT. Only WEB was seen on a printer; the other
+  spellings are assumed, not verified on a device. The comparison is skipped when the job's `media`
   setting is neither `printer` nor the type the printer reports (a
   continuous job on a printer set to gap labels).
 - PRINT WIDTH is a setting, not the loaded labels: each Tavletta job sets

@@ -64,6 +64,12 @@ CONFIGURATION = b"^XA^HH^XZ\n"
 # a printer that left ^HH unanswered is not asked again for this long
 # (seconds): each question waits for the whole answer timeout
 CONFIGURATION_RETRY = 600.0
+# seconds the ^HH answer (about 3.5 kB) is read at most while it keeps
+# coming: about 4 s on a serial adapter at 9600 baud
+CONFIGURATION_LIMIT = 10.0
+# lines of settings that make an answer the configuration, its names
+# known or not (a display language other than English): ~HQES has 3
+CONFIGURATION_LINES = 10
 _clock = time.monotonic  # replaced in tests
 
 # 4 inch heads: 832 dots at 203 dpi (manual), the usual widest label
@@ -328,8 +334,10 @@ class Configuration:
 # more spaces (a value may have such runs: "39.0IN   989MM")
 _CONFIG_LINE = re.compile(r"^\s*(\S.*)\s{2,}(\S+(?: \S+)*)\s*$")
 _MEDIA_TYPES = {"GAP/NOTCH": "gap", "MARK": "mark", "CONTINUOUS": "continuous"}
-# older firmware: MEDIA TYPE NON-CONTINUOUS, the sensor tells which kind
-_SENSOR_TYPES = {"WEB": "gap", "MARK": "mark"}
+# older firmware: MEDIA TYPE NON-CONTINUOUS, the sensor tells which kind:
+# SENSOR TYPE, else SENSOR SELECT (gap labels are sensed through the web,
+# black marks reflect; the spellings other than WEB are not seen on a printer)
+_SENSOR_TYPES = {"WEB": "gap", "TRANSMISSIVE": "gap", "MARK": "mark", "REFLECTIVE": "mark"}
 _METHODS = {"DIRECT-THERMAL": "direct", "THERMAL-TRANS.": "transfer"}
 
 
@@ -345,8 +353,24 @@ _CONFIG_NAMES = re.compile(rb"\x02[^\x02\x03]*(?:LABEL LENGTH|RESOLUTION)[^\x02\
 
 def configuration_done(answer: bytes) -> bool:
     """The whole ^HH frame has come: not any frame, a late answer to an
-    earlier question (~HQES) may come first."""
-    return _CONFIG_NAMES.search(answer) is not None
+    earlier question (~HQES) may come first. A whole frame of settings
+    whose names are not known (another display language) counts too:
+    answered, nothing to read in it."""
+    if _CONFIG_NAMES.search(answer) is not None:
+        return True
+    frames = re.findall(rb"\x02([^\x02\x03]*)\x03", answer)
+    return any(_setting_lines(frame) >= CONFIGURATION_LINES for frame in frames)
+
+
+def configuration_answered(answer: bytes) -> bool:
+    """Some of the configuration came (maybe not all of it, on a slow
+    line): the printer answers ^HH."""
+    return configuration_done(answer) or _setting_lines(answer) >= CONFIGURATION_LINES
+
+
+def _setting_lines(raw: bytes) -> int:
+    text = raw.decode("ascii", "replace")
+    return sum(1 for line in text.splitlines() if _CONFIG_LINE.match(line.strip("\x02\x03")))
 
 
 def parse_configuration(raw: bytes) -> Configuration:
@@ -362,7 +386,9 @@ def parse_configuration(raw: bytes) -> Configuration:
     dpmm = re.search(r"(\d+)/MM", resolution)
     kind = values.get("MEDIA TYPE", "")
     if kind == "NON-CONTINUOUS":
-        media_type = _SENSOR_TYPES.get(values.get("SENSOR TYPE", ""), "")
+        media_type = _SENSOR_TYPES.get(values.get("SENSOR TYPE", ""), "") or _SENSOR_TYPES.get(
+            values.get("SENSOR SELECT", ""), ""
+        )
     else:
         media_type = _MEDIA_TYPES.get(kind, "")
     return Configuration(
@@ -404,6 +430,10 @@ def media(config: Configuration, status: HostStatus | None, dots_per_mm: int) ->
 
 # --- the backend ------------------------------------------------------------------
 
+# when a printer left ^HH unanswered, by address; of the module, so that a
+# copy of the backend (a dry run, the print server) knows it too
+unanswered: HostMemory[float] = HostMemory()
+
 
 class Zpl(RawBackend):
     id = "zpl"
@@ -433,11 +463,6 @@ class Zpl(RawBackend):
     # LABEL LENGTH is what the printer measured last, maybe on another roll
     # (MEDIA POWER UP NO MOTION, HEAD CLOSE FEED do not measure again)
     pitch_may_be_old = True
-
-    def __init__(self, port: int | None = None):
-        super().__init__(port)
-        # when a printer left ^HH unanswered, by address
-        self.unanswered: HostMemory[float] = HostMemory()
 
     def display_name(self, info: PrinterInfo | None) -> str:
         """The model the printer names in ~HI, e.g. "ZD621-203dpi"."""
@@ -493,14 +518,14 @@ class Zpl(RawBackend):
         CONFIGURATION_RETRY seconds; else what ~HS tells."""
         if status is None:
             return Media()
-        asked = self.unanswered.get(s.host)
+        asked = unanswered.get(s.host)
         if status.busy or (asked is not None and 0 <= _clock() - asked < CONFIGURATION_RETRY):
             return Media(method=status.method)
-        answer = s.ask(CONFIGURATION, configuration_done)
-        if not configuration_done(answer):
-            self.unanswered[s.host] = _clock()
+        answer = s.ask(CONFIGURATION, configuration_done, limit=CONFIGURATION_LIMIT)
+        if not configuration_answered(answer):
+            unanswered[s.host] = _clock()
             return Media(method=status.method)
-        self.unanswered.pop(s.host, None)
+        unanswered.pop(s.host, None)
         dpmm = {v: k for k, v in DOTS_PER_MM.items()}.get(identity.dpi, 0)
         return media(parse_configuration(answer), status, dpmm)
 

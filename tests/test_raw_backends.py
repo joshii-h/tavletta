@@ -1112,7 +1112,105 @@ def test_zpl_unanswered_configuration_is_not_asked_again_for_a_while(monkeypatch
     assert backend.query("other.invalid").pitch_mm == 52.8  # per printer
     now[0] += 2
     assert backend.query("zebra.invalid").pitch_mm == 52.8  # asked again
-    assert "zebra.invalid" not in backend.unanswered
+    assert "zebra.invalid" not in zpl.unanswered
+
+
+def test_zpl_unanswered_is_shared_with_copies_of_the_backend(monkeypatch):
+    """A dry run and the print server ask through a copy of the backend
+    (cli._isolated): what it learns of ^HH counts for the backend too."""
+    from tavletta import cli
+
+    backend = zpl.Zpl()
+    printer = _gx420d(monkeypatch, b"")
+    cli._isolated(backend).query("zebra.invalid")
+    assert "zebra.invalid" in zpl.unanswered
+    printer.requests.clear()
+    backend.query("zebra.invalid")
+    assert b"^XA^HH^XZ\n" not in printer.requests
+
+
+class _SlowLine:
+    """A printer on a slow line, on a fake clock: the answer to ^HH comes
+    in `pieces` chunks, `gap` seconds apart; the other answers at once."""
+
+    def __init__(self, monkeypatch, hh: bytes, pieces: int, gap: float):
+        from zebra_gx420d import GX420D_HI, GX420D_HQES, GX420D_HS
+
+        self.now = 100.0
+        self.answers = {b"~HI\n": GX420D_HI, b"~HS\n": GX420D_HS, b"~HQES\n": GX420D_HQES}
+        size = -(-len(hh) // pieces) if hh else 1
+        self.hh = [hh[i : i + size] for i in range(0, len(hh), size)]
+        self.gap, self.out, self.slow, self.wait = gap, b"", [], 1.0
+        self.asked_hh = 0
+        for module in (raw, zpl):
+            monkeypatch.setattr(module, "_clock", lambda: self.now)
+        monkeypatch.setattr(raw, "_connect", lambda host, port, wait=None: self)
+
+    def sendall(self, data: bytes) -> None:
+        if data == zpl.CONFIGURATION:
+            self.asked_hh += 1
+            self.slow = list(self.hh)
+        else:
+            self.out += self.answers.get(data, b"")
+
+    def recv(self, size: int) -> bytes:
+        if self.out:
+            chunk, self.out = self.out[:size], self.out[size:]
+            return chunk
+        if self.slow and self.gap <= self.wait:
+            self.now += self.gap
+            return self.slow.pop(0)
+        self.now += self.wait
+        raise TimeoutError("timed out")
+
+    def settimeout(self, timeout: float) -> None:
+        self.wait = timeout
+
+    def close(self) -> None:
+        pass
+
+
+def test_zpl_configuration_on_a_slow_line(monkeypatch):
+    """3.5 kB at 9600 baud take about 4 s: read while it keeps coming."""
+    from zebra_gx420d import GX420D_HH
+
+    line = _SlowLine(monkeypatch, GX420D_HH, pieces=40, gap=0.1)
+    info = zpl.Zpl().query("zebra.invalid")
+    assert (info.pitch_mm, info.media_type) == (52.8, "gap")
+    assert "zebra.invalid" not in zpl.unanswered
+    assert line.now - 100.0 < zpl.CONFIGURATION_LIMIT
+
+
+def test_zpl_configuration_cut_short_is_no_silence(monkeypatch):
+    """Half the answer, then nothing: the printer answers ^HH (read what
+    came, ask again next time), it is not one that stays silent."""
+    from zebra_gx420d import GX420D_HH
+
+    half = GX420D_HH[: GX420D_HH.index(b"CONTROL CHAR")]
+    line = _SlowLine(monkeypatch, half, pieces=4, gap=0.1)
+    backend = zpl.Zpl()
+    info = backend.query("zebra.invalid")
+    assert (info.pitch_mm, info.width_mm) == (52.8, 75.0)  # ~HI: 8 dots per mm
+    assert "zebra.invalid" not in zpl.unanswered
+    backend.query("zebra.invalid")
+    assert line.asked_hh == 2
+
+
+def test_zpl_configuration_in_another_language(monkeypatch):
+    """A whole frame of settings whose names Tavletta does not know (the
+    display language): answered at once, nothing read, not remembered as
+    unanswered, no wait for the timeout."""
+    from zebra_gx420d import GX420D_HH
+
+    foreign = GX420D_HH.replace(b"LABEL LENGTH", b"ETIKETTLAENG").replace(
+        b"RESOLUTION", b"AUFLOESUNG"
+    )
+    assert not zpl._CONFIG_NAMES.search(foreign) and zpl.configuration_done(foreign)
+    line = _SlowLine(monkeypatch, foreign, pieces=1, gap=0.0)
+    info = zpl.Zpl().query("zebra.invalid")
+    assert info.pitch_mm is None and info.print_method == "direct"
+    assert "zebra.invalid" not in zpl.unanswered
+    assert line.now == 100.0  # nothing waited for
 
 
 def test_zpl_configuration_not_asked_while_printing(monkeypatch):
@@ -1124,7 +1222,7 @@ def test_zpl_configuration_not_asked_while_printing(monkeypatch):
     info = zpl.Zpl().query("zebra.invalid")
     assert info.state == "PAUSED" and info.print_method == "direct"
     assert info.pitch_mm is None and b"^XA^HH^XZ\n" not in printer.requests
-    assert "zebra.invalid" not in zpl.Zpl().unanswered
+    assert "zebra.invalid" not in zpl.unanswered  # not asked: nothing to remember
 
 
 @pytest.mark.parametrize(
