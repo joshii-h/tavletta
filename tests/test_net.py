@@ -125,12 +125,21 @@ def test_finishing_waits_for_a_printer_that_stalls():
     printer.start()
     sock = _connect(printer.port)
     sock.setblocking(False)
-    try:
-        while True:  # fill the buffers: the data stays there
-            sock.send(b"x" * 4096)
-    except BlockingIOError:
-        pass
+    # fill the buffers until the printer has stopped reading and the kernel
+    # takes nothing more: the data stays there. One round is not enough, the
+    # send can stop short while the printer still reads, which then took it all
+    deadline = time.monotonic() + 5
+    while True:
+        sent = 0
+        with contextlib.suppress(BlockingIOError):
+            while True:
+                sent += sock.send(b"x" * 4096)
+        if not sent and len(printer.received) >= printer.stop_after:
+            break
+        assert time.monotonic() < deadline, "the buffers did not fill"
+        time.sleep(0.02)
     sock.setblocking(True)
+    assert net.unsent(sock) > 0
     with pytest.raises(PrinterStalled, match="not taken"):
         net.finish(sock, timeout=0.3)
     printer.done.set()
