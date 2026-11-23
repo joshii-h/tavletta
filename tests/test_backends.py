@@ -323,9 +323,87 @@ def test_host_memory_forgets_the_least_recently_used_printer():
 
     backend = cab.Cab()
     for n in range(HOSTS_REMEMBERED + 10):
-        backend._learn("10.0.%d.%d" % divmod(n, 256), 12.0)
+        backend._learn("192.0.2.%d" % n, 12.0)
     assert len(backend.reported) == HOSTS_REMEMBERED
     assert isinstance(cab._setups, HostMemory)
     assert isinstance(niimbot.Niimbot().models, HostMemory)
     assert isinstance(zpl.Zpl().reported, HostMemory)
     assert isinstance(brother_ql._found_models, HostMemory)
+
+
+def test_host_memory_methods_keep_the_limit_and_the_order():
+    from tavletta.backends.base import HostMemory
+
+    memory: HostMemory[int] = HostMemory(2)
+    assert memory.setdefault("a", 1) == 1 and memory.setdefault("a", 9) == 1
+    memory.update({"b": 2}, c=3)  # through __setitem__: the limit holds
+    assert list(memory.items()) == [("b", 2), ("c", 3)]
+    assert "b" in memory and "a" not in memory and 5 not in memory
+    del memory["b"]
+    assert memory.popitem() == ("c", 3) and len(memory) == 0
+    memory |= {"x": 1, "y": 2, "z": 3}
+    assert isinstance(memory, HostMemory) and list(memory) == ["y", "z"]
+    memory.clear()
+    assert memory == {}
+
+
+def test_host_memory_copies_and_pickles():
+    import copy
+    import pickle
+
+    from tavletta.backends.base import HostMemory
+
+    memory: HostMemory[int] = HostMemory(3)
+    memory.update(a=1, b=2)
+    for twin in (
+        copy.copy(memory),
+        memory.copy(),
+        copy.deepcopy(memory),
+        pickle.loads(pickle.dumps(memory)),
+    ):
+        assert isinstance(twin, HostMemory) and twin.size == 3
+        assert list(twin.items()) == [("a", 1), ("b", 2)]
+        assert twin._lock is not memory._lock
+        twin["c"] = 3
+        assert "c" not in memory  # a copy of its own
+    merged = memory | {"c": 3, "d": 4}
+    assert isinstance(merged, HostMemory) and merged.size == 3
+    assert list(merged) == ["b", "c", "d"] and list(memory) == ["a", "b"]
+    merged = {"z": 0} | memory
+    assert isinstance(merged, HostMemory) and list(merged.items()) == [
+        ("z", 0),
+        ("a", 1),
+        ("b", 2),
+    ]
+    assert memory.__or__(5) is NotImplemented and memory.__ror__(5) is NotImplemented
+
+
+def test_host_memory_from_many_threads():
+    """Threads writing, reading and dropping at once: no error, and never
+    more than the limit."""
+    import threading
+
+    from tavletta.backends.base import HostMemory
+
+    memory: HostMemory[int] = HostMemory(8)
+    errors: list[BaseException] = []
+
+    def work(offset: int) -> None:
+        try:
+            for n in range(2000):
+                host = "192.0.2.%d" % ((n + offset) % 20)
+                memory[host] = n
+                memory.get(host)
+                memory.setdefault(host, n)
+                if host in memory:
+                    memory.pop(host, None)
+                assert len(memory) <= 8
+        except BaseException as e:  # noqa: BLE001 - collected for the assertion
+            errors.append(e)
+
+    threads = [threading.Thread(target=work, args=(i,)) for i in range(4)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert errors == [] and len(memory) <= 8

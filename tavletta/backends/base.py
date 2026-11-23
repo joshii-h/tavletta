@@ -48,7 +48,10 @@ class HostMemory(OrderedDict[str, _V]):
     """What a backend learned about printers, by address, for the last
     `size` printers used (least recently used forgotten first): a print
     server whose --allow-printer pattern admits any address cannot make
-    it grow without bound. Safe to share between threads."""
+    it grow without bound. Safe to share between threads: every method
+    that reads or changes it takes the lock (iterating over it does not:
+    copy it first). A copy, a pickle and `memory | other` are HostMemory
+    of the same size again."""
 
     def __init__(self, size: int = HOSTS_REMEMBERED):
         super().__init__()
@@ -60,7 +63,7 @@ class HostMemory(OrderedDict[str, _V]):
             super().__setitem__(host, value)
             self.move_to_end(host)
             while len(self) > self.size:
-                self.popitem(last=False)
+                super().popitem(last=False)
 
     def __getitem__(self, host: str) -> _V:
         with self._lock:
@@ -68,12 +71,78 @@ class HostMemory(OrderedDict[str, _V]):
             self.move_to_end(host)
             return value
 
+    def __delitem__(self, host: str) -> None:
+        with self._lock:
+            super().__delitem__(host)
+
+    def __contains__(self, host: object) -> bool:
+        with self._lock:
+            return super().__contains__(host)
+
     def get(self, host: str, default=None):
         with self._lock:
             try:
                 return self[host]
             except KeyError:
                 return default
+
+    def pop(self, host: str, *default):
+        with self._lock:
+            return super().pop(host, *default)
+
+    def popitem(self, last: bool = True) -> tuple[str, _V]:
+        with self._lock:
+            return super().popitem(last)
+
+    def setdefault(self, host: str, default=None):
+        with self._lock:
+            if super().__contains__(host):
+                return self[host]
+            self[host] = default
+            return default
+
+    def clear(self) -> None:
+        with self._lock:
+            super().clear()
+
+    def update(self, *args, **values) -> None:
+        with self._lock:
+            super().update(*args, **values)
+
+    def _items(self) -> list[tuple[str, _V]]:
+        """The entries, least recently used first, without using them."""
+        with self._lock:
+            return list(super().items())
+
+    def __copy__(self) -> HostMemory[_V]:
+        new: HostMemory[_V] = HostMemory(self.size)
+        new.update(self._items())
+        return new
+
+    copy = __copy__
+
+    def __reduce__(self):
+        # a lock cannot be pickled: the size and the entries, the lock anew
+        return (type(self), (self.size,), None, None, iter(self._items()))
+
+    def __or__(self, other):
+        if not isinstance(other, Mapping):
+            return NotImplemented
+        new = self.__copy__()
+        new.update(other)
+        return new
+
+    def __ror__(self, other):
+        if not isinstance(other, Mapping):
+            return NotImplemented
+        new: HostMemory[_V] = HostMemory(self.size)
+        new.update(other)
+        new.update(self._items())
+        return new
+
+    def __ior__(self, other):
+        self.update(other)
+        return self
 
 
 @dataclass(frozen=True)
