@@ -77,8 +77,10 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   for 10 minutes (each question waits the whole answer timeout). The
   answer (about 3.5 kB) is read while it keeps coming, up to 10 s: on a
   serial adapter at 9600 baud it takes about 4 s. Part of it (the line
-  went silent) still counts as answered; so does a whole frame of
-  settings whose names Tavletta does not know (see below).
+  went silent) still counts as answered, and what came is used for a
+  minute without asking again (each try could take the 10 s); a whole
+  frame of settings whose names Tavletta does not know counts as
+  answered too (see below).
 - Each line of `^HH` is `  <value>   <NAME>`: the name is what follows
   the last run of two or more spaces (`39.0IN   989MM      MAXIMUM
   LENGTH`). The names are English only while the printer's display

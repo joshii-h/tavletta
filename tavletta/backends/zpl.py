@@ -67,6 +67,10 @@ CONFIGURATION_RETRY = 600.0
 # seconds the ^HH answer (about 3.5 kB) is read at most while it keeps
 # coming: about 4 s on a serial adapter at 9600 baud
 CONFIGURATION_LIMIT = 10.0
+# an answer cut short (a line slower still, or one that drops data): what
+# it told is used again for this long (seconds) instead of asking, which
+# would take up to CONFIGURATION_LIMIT on every status query
+TRUNCATED_RETRY = 60.0
 # lines of settings that make an answer the configuration, its names
 # known or not (a display language other than English): ~HQES has 3
 CONFIGURATION_LINES = 10
@@ -433,6 +437,8 @@ def media(config: Configuration, status: HostStatus | None, dots_per_mm: int) ->
 # when a printer left ^HH unanswered, by address; of the module, so that a
 # copy of the backend (a dry run, the print server) knows it too
 unanswered: HostMemory[float] = HostMemory()
+# when a printer's ^HH answer was cut short, and what it told, by address
+truncated: HostMemory[tuple[float, Media]] = HostMemory()
 
 
 class Zpl(RawBackend):
@@ -521,13 +527,21 @@ class Zpl(RawBackend):
         asked = unanswered.get(s.host)
         if status.busy or (asked is not None and 0 <= _clock() - asked < CONFIGURATION_RETRY):
             return Media(method=status.method)
+        cut = truncated.get(s.host)
+        if cut is not None and 0 <= _clock() - cut[0] < TRUNCATED_RETRY:
+            return cut[1]
         answer = s.ask(CONFIGURATION, configuration_done, limit=CONFIGURATION_LIMIT)
         if not configuration_answered(answer):
             unanswered[s.host] = _clock()
             return Media(method=status.method)
         unanswered.pop(s.host, None)
         dpmm = {v: k for k, v in DOTS_PER_MM.items()}.get(identity.dpi, 0)
-        return media(parse_configuration(answer), status, dpmm)
+        loaded = media(parse_configuration(answer), status, dpmm)
+        if configuration_done(answer):
+            truncated.pop(s.host, None)
+        else:  # part of it: what came, for TRUNCATED_RETRY
+            truncated[s.host] = (_clock(), loaded)
+        return loaded
 
     def problem(self, s: Session) -> PrinterError | None:
         return self._status(s)[1]

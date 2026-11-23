@@ -1183,7 +1183,9 @@ def test_zpl_configuration_on_a_slow_line(monkeypatch):
 
 def test_zpl_configuration_cut_short_is_no_silence(monkeypatch):
     """Half the answer, then nothing: the printer answers ^HH (read what
-    came, ask again next time), it is not one that stays silent."""
+    came), it is not one that stays silent. What came is used again for
+    TRUNCATED_RETRY seconds: such a line would cost up to
+    CONFIGURATION_LIMIT on every query."""
     from zebra_gx420d import GX420D_HH
 
     half = GX420D_HH[: GX420D_HH.index(b"CONTROL CHAR")]
@@ -1192,8 +1194,13 @@ def test_zpl_configuration_cut_short_is_no_silence(monkeypatch):
     info = backend.query("zebra.invalid")
     assert (info.pitch_mm, info.width_mm) == (52.8, 75.0)  # ~HI: 8 dots per mm
     assert "zebra.invalid" not in zpl.unanswered
-    backend.query("zebra.invalid")
-    assert line.asked_hh == 2
+    line.now += zpl.TRUNCATED_RETRY - 1
+    assert backend.query("zebra.invalid").pitch_mm == 52.8  # what came before
+    assert line.asked_hh == 1
+    line.now += 2
+    line.hh = [GX420D_HH]  # the whole answer this time
+    assert backend.query("zebra.invalid").pitch_mm == 52.8
+    assert line.asked_hh == 2 and "zebra.invalid" not in zpl.truncated
 
 
 def test_zpl_configuration_in_another_language(monkeypatch):
