@@ -42,7 +42,7 @@ Details and protocols: [docs/printers.md](docs/printers.md).
 
 - **Flatpak**: the bundle from the [latest release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/latest); Flathub is in preparation
 - **Print server**: `docker pull ghcr.io/joshii-h/tavletta:1.1` ([server installation](https://tavletta.joshuahirsig.xyz/server-install/))
-- **pip**: `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.0"`, or `./install.sh` from a clone
+- **pip**: `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.1"`, or `./install.sh` from a clone
 
 System packages, building the Flatpak and the first start: [docs/install.md](docs/install.md).
 

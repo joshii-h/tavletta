@@ -2,16 +2,16 @@
 
 Ways to install Tavletta 1.1:
 
-- **Flatpak bundle**: `Tavletta-v1.1.0-x86_64.flatpak` from the
-  [release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.1.0),
-  then `flatpak install --user Tavletta-v1.1.0-x86_64.flatpak`. Flathub is
+- **Flatpak bundle**: `Tavletta-v1.1.1-x86_64.flatpak` from the
+  [release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.1.1),
+  then `flatpak install --user Tavletta-v1.1.1-x86_64.flatpak`. Flathub is
   in preparation; to build the Flatpak yourself see
   [below](#flatpak-build-locally).
 - **Print server as a container**: `docker pull ghcr.io/joshii-h/tavletta:1.1`
   (amd64 and arm64), see [server.md](server.md#container) and the
   [server installation guide](https://tavletta.joshuahirsig.xyz/server-install/).
 - **pip** (the system packages below are needed too):
-  `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.0"`
+  `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.1"`
 - **install.sh**: per user, from a clone, as follows.
 
 ## install.sh

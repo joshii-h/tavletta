@@ -91,35 +91,35 @@
   <screenshots>
     <screenshot type="default" environment="gnome">
       <caption>A label with a QR code and text</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/main.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/main.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A label with a QR code and text</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/main-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/main-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/colour.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/colour.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/colour-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/colour-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/sticker.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/sticker.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/sticker-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/sticker-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/print.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/print.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.0/docs/screenshots/print-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/print-dark.png</image>
     </screenshot>
   </screenshots>
 
@@ -175,15 +175,16 @@
   </provides>
 
   <releases>
-    <release version="1.1.1" date="2026-11-17">
+    <release version="1.1.1" date="2026-11-23">
       <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.1.1</url>
       <description>
         <p>Bug fixes.</p>
         <ul>
           <li>Zebra (ZPL) printers report the loaded labels: a label distance other than the label's is pointed out before printing</li>
-          <li>A text line too long to be drawn now says so, instead of a general error</li>
+          <li>A text too long (one line) or too tall (many lines) to be drawn now says so, instead of a general error</li>
           <li>Print server: Arial, Calibri and other office fonts drawn by their metric-compatible stand-ins no longer count as missing</li>
           <li>Print server: the document pages of one preview or print job share a time limit, and per-printer memory is bounded</li>
+          <li>Setting a placeholder such as {Inventory} on the command line or through the print server says that it is a data column and how to send it</li>
         </ul>
       </description>
     </release>
