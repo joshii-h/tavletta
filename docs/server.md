@@ -290,12 +290,13 @@ The printer is asked anew in the background once that is older than 5 s
 knows nothing of yet, or whose answer is older than a minute, is waited
 for, after the label is rendered, up to a second; a printer that does not
 answer by then gives no warning, and one whose latest question ended in
-an error is not waited for again. When the job prints, the warning is replaced by what the printer
-reports then, if it tells of the loaded labels (a busy printer, or one
-that has not measured the labels, leaves it as it was); without
-`printers.toml` only the job warns. Not for a job that finds the labels
-otherwise than the printer reports (`job_media_type` is not `media_type`:
-a continuous job on a printer set to gap labels).
+an error is not waited for again. When the job prints, the warning is
+replaced by what the printer reports then, if it tells of the loaded
+labels (a busy printer, or one that has not measured the labels, leaves
+it as it was); without `printers.toml` only the job warns. Not for a
+job that finds the labels otherwise than the printer reports
+(`job_media_type` is not `media_type`: a continuous job on a printer set
+to gap labels).
 
 Example, with the example labels of `docs/examples` as the labels folder
 (`serial.tavletta` has the placeholders `{Code}`, `{Name}`, `{Shelf}` and
