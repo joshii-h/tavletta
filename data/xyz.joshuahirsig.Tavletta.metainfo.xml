@@ -91,35 +91,35 @@
   <screenshots>
     <screenshot type="default" environment="gnome">
       <caption>A label with a QR code and text</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/main.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/main.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A label with a QR code and text</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/main-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/main-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/colour.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/colour.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/colour-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/colour-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/sticker.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/sticker.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/sticker-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/sticker-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/print.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/print.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/docs/screenshots/print-dark.png</image>
+      <image>https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/docs/screenshots/print-dark.png</image>
     </screenshot>
   </screenshots>
 
@@ -175,6 +175,19 @@
   </provides>
 
   <releases>
+    <release version="1.1.2" date="2026-11-23">
+      <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.1.2</url>
+      <description>
+        <p>Bug fixes.</p>
+        <ul>
+          <li>Print server: other labels loaded than the label's (another size or label distance) are pointed out in the preview, the print request and the job, as in the window and on the command line; the label prints anyway</li>
+          <li>Print server: a printer's status tells the print method and label sensing the server's jobs use, beside the ones set on the printer</li>
+          <li>The command line also points out Brother QL DK labels of another size</li>
+          <li>A Brother QL with die-cut labels is now asked before printing, on the command line and in print server jobs, and its answer counts for the cut, mode and quality chosen; on the command line and in print server jobs without a printer list an unreachable printer waits up to 15 s before the print fails, and a dry run with an address contacts the printer (--no-query avoids it)</li>
+          <li>A damaged spreadsheet compressed with Zstandard gives the message about the data file instead of a general error</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.1" date="2026-11-23">
       <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.1.1</url>
       <description>

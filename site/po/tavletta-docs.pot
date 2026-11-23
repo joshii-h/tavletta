@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 15:42+0100\n"
+"POT-Creation-Date: 2026-11-23 15:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2889,7 +2889,7 @@ msgstr ""
 msgid ""
 "sudo git clone https://git.joshuahirsig.xyz/joshii/tavletta.git /opt/tavletta\n"
 "cd /opt/tavletta\n"
-"sudo git checkout v1.1.1      # the release to run: git tag lists them\n"
+"sudo git checkout v1.1.2      # the release to run: git tag lists them\n"
 "cd packaging/docker\n"
 "sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.1, for x86-64 and ARM64\n"
 msgstr ""
@@ -3107,7 +3107,7 @@ msgstr ""
 #. type: Fenced code block (text)
 #: docs/server-install.md
 #, no-wrap
-msgid "{\"status\": \"ok\", \"version\": \"1.1.1\"}\n"
+msgid "{\"status\": \"ok\", \"version\": \"1.1.2\"}\n"
 msgstr ""
 
 #. type: Bullet: '- '
@@ -3308,7 +3308,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo python3 -m venv --system-site-packages /opt/tavletta\n"
-"sudo /opt/tavletta/bin/pip install \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.1\"\n"
+"sudo /opt/tavletta/bin/pip install \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.2\"\n"
 "/opt/tavletta/bin/tavletta --version\n"
 msgstr ""
 
@@ -3376,7 +3376,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \\\n"
-"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.1/packaging/systemd/tavletta-server.service\n"
+"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/packaging/systemd/tavletta-server.service\n"
 "sudo systemctl daemon-reload\n"
 "sudo systemctl enable --now tavletta-server\n"
 "systemctl status tavletta-server\n"
@@ -4144,13 +4144,13 @@ msgstr ""
 #. type: Fenced code block (sh)
 #: docs/server.md
 #, no-wrap
-msgid "docker pull ghcr.io/joshii-h/tavletta:1.1.1\n"
+msgid "docker pull ghcr.io/joshii-h/tavletta:1.1.2\n"
 msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "`1.1.1` is a release, `1.1` the latest bug fix release of 1.1, `latest` the latest release. `edge` is the state of development, not a release."
+msgid "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` the latest release. `edge` is the state of development, not a release."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4181,8 +4181,8 @@ msgstr ""
 #: docs/server.md
 #, no-wrap
 msgid ""
-"gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.1.1 --repo joshii-h/tavletta\n"
-"cosign verify ghcr.io/joshii-h/tavletta:1.1.1 \\\n"
+"gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.1.2 --repo joshii-h/tavletta\n"
+"cosign verify ghcr.io/joshii-h/tavletta:1.1.2 \\\n"
 "    --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n"
 "    --certificate-identity-regexp '^https://github\\.com/joshii-h/tavletta/\\.github/workflows/docker\\.yml@refs/tags/v'\n"
 msgstr ""
