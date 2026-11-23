@@ -181,13 +181,23 @@ class PdfAnswers:
         if len(body) > self.max_bytes:
             return
         with self._lock:
-            self._drop(key)
+            # room in the process-wide budget first (an answer it replaces
+            # counts as room): what this block keeps is only dropped for an
+            # answer that is then kept
+            old = self._kept.get(key)
+            old_bytes = len(old[1]) if old is not None else 0
+            grow = len(body) - old_bytes
+            if grow > 0 and not self.shared.take(grow):
+                return  # the other blocks keep enough: not this one
+            if grow < 0:
+                self.shared.give_back(-grow)
+            if old is not None:
+                del self._kept[key]
+                self._bytes -= old_bytes
             while self._kept and (
                 len(self._kept) >= self.items or self._bytes + len(body) > self.max_bytes
             ):
                 self._drop(next(iter(self._kept)))
-            if not self.shared.take(len(body)):
-                return  # the other blocks keep enough: not this one
             self._kept[key] = (answer, body)
             self._bytes += len(body)
 

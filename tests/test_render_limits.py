@@ -568,9 +568,12 @@ def test_pdf_answers_share_one_budget_for_the_process():
     one.put(("a",), {}, b"x" * 8)
     other.put(("b",), {}, b"y" * 4)  # no room left
     assert other.get(("b",)) is None and shared.used == 8
-    one.put(("a",), {}, b"x" * 2)  # replaced: the 8 bytes given back first
+    other.put(("c",), {}, b"z")
+    other.put(("d",), {}, b"w" * 4)  # no room: what "other" keeps stays
+    assert other.get(("c",)) == ({}, b"z") and shared.used == 9
+    one.put(("a",), {}, b"x" * 2)  # replaced: the 8 bytes given back
     other.put(("b",), {}, b"y" * 4)
-    assert other.get(("b",)) is not None and shared.used == 6
+    assert other.get(("b",)) is not None and shared.used == 7
     one.close()
     other.close()
     assert shared.used == 0 and one.get(("a",)) is None
@@ -578,11 +581,12 @@ def test_pdf_answers_share_one_budget_for_the_process():
 
 def test_a_limited_block_gives_its_kept_drawings_back(monkeypatch):
     _SlowChild(monkeypatch, 0.1, drawing=True)
-    assert render_module._KEPT_BYTES.used == 0
+    shared = render_module.KeptBytes(render_module.PDF_KEPT_ALL_BYTES)
+    monkeypatch.setattr(render_module, "_KEPT_BYTES", shared)
     with limited(10**7):
         render(_pages(1), 100)
-        assert render_module._KEPT_BYTES.used > 0
-    assert render_module._KEPT_BYTES.used == 0
+        assert shared.used > 0
+    assert shared.used == 0
     assert render_module.PDF_KEPT_ALL_BYTES >= render_module.PDF_KEPT_BYTES
 
 
