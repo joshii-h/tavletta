@@ -1149,6 +1149,10 @@ def test_a_dry_runs_late_answer_changes_nothing(monkeypatch):
 
     zpl = get_backend("zpl")
     monkeypatch.setattr(zpl, "reported", {})
+    # monkeypatch.setattr(zpl, "query", ...) of another test leaves the
+    # original bound method in the instance when it undoes it: that would
+    # hide the class's query patched here (and ask the network)
+    monkeypatch.delitem(vars(zpl), "query", raising=False)
 
     def query(self, host):
         self.reported[host] = 600.0
