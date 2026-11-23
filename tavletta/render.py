@@ -135,11 +135,13 @@ class KeptBytes:
         self.used = 0
         self._lock = threading.Lock()
 
-    def take(self, count: int) -> bool:
+    def take(self, count: int, release: int = 0) -> bool:
+        """Take `count` bytes, giving `release` back at the same time (a
+        block's own answers it drops for them): all or nothing."""
         with self._lock:
-            if self.used + count > self.limit:
+            if self.used - release + count > self.limit:
                 return False
-            self.used += count
+            self.used += count - release
             return True
 
     def give_back(self, count: int) -> None:
@@ -187,19 +189,43 @@ class PdfAnswers:
             old = self._kept.get(key)
             old_bytes = len(old[1]) if old is not None else 0
             grow = len(body) - old_bytes
-            if grow > 0 and not self.shared.take(grow):
+            victims = self._victims(key, grow, len(body))
+            if victims is None:
                 return  # the other blocks keep enough: not this one
             if grow < 0:
                 self.shared.give_back(-grow)
             if old is not None:
                 del self._kept[key]
                 self._bytes -= old_bytes
-            while self._kept and (
-                len(self._kept) >= self.items or self._bytes + len(body) > self.max_bytes
-            ):
-                self._drop(next(iter(self._kept)))
+            for victim in victims:  # their bytes are given back already
+                self._bytes -= len(self._kept.pop(victim)[1])
             self._kept[key] = (answer, body)
             self._bytes += len(body)
+
+    def _victims(self, key: tuple, grow: int, size: int) -> list[tuple] | None:
+        """The block's own oldest answers to drop for one of `size` bytes
+        (`grow` more than the one it replaces, if any): those beyond its own
+        limits, and more where the process-wide budget needs their room.
+        With grow > 0 the bytes are taken (and theirs given back) at once;
+        None (nothing taken): no room even without them."""
+        others = [k for k in self._kept if k != key]  # least recently used first
+        bytes_kept = self._bytes - (len(self._kept[key][1]) if key in self._kept else 0)
+        count = 0
+        while count < len(others) and (
+            len(others) - count >= self.items or bytes_kept + size > self.max_bytes
+        ):
+            bytes_kept -= len(self._kept[others[count]][1])
+            count += 1
+        if grow <= 0:  # no more room needed: their bytes given back here
+            self.shared.give_back(sum(len(self._kept[k][1]) for k in others[:count]))
+            return others[:count]
+        while True:
+            release = sum(len(self._kept[k][1]) for k in others[:count])
+            if self.shared.take(grow, release):
+                return others[:count]
+            if count == len(others):
+                return None
+            count += 1
 
     def _drop(self, key: tuple) -> None:
         old = self._kept.pop(key, None)

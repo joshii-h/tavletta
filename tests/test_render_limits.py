@@ -579,6 +579,45 @@ def test_pdf_answers_share_one_budget_for_the_process():
     assert shared.used == 0 and one.get(("a",)) is None
 
 
+def test_a_job_makes_room_in_the_shared_budget_from_its_own_drawings():
+    """Two jobs fill the shared budget; one switches to another page
+    mid-series: its new drawing is kept by dropping its own oldest, never
+    the other job's."""
+    shared = render_module.KeptBytes(20)
+    series = render_module.PdfAnswers(shared=shared)
+    other = render_module.PdfAnswers(shared=shared)
+    other.put(("other",), {}, b"o" * 10)
+    series.put(("page 1",), {}, b"1" * 6)
+    series.put(("page 1 info",), {}, b"i" * 4)
+    assert shared.used == 20
+    series.get(("page 1 info",))  # used again: the newest
+    series.put(("page 2",), {}, b"2" * 6)  # room from "page 1" (6 bytes)
+    assert series.get(("page 1",)) is None and series.get(("page 2",)) is not None
+    assert series.get(("page 1 info",)) is not None and other.get(("other",)) is not None
+    assert shared.used == 20
+    series.put(("page 3",), {}, b"3" * 9)  # needs both of its own: dropped
+    assert series.get(("page 3",)) is not None and series.get(("page 2",)) is None
+    assert shared.used == 19
+    series.put(("page 4",), {}, b"4" * 11)  # not even with all of its own
+    assert series.get(("page 4",)) is None and series.get(("page 3",)) is not None
+    assert shared.used == 19 and other.get(("other",)) is not None
+    series.close()
+    other.close()
+    assert shared.used == 0
+
+
+def test_dropping_for_its_own_limits_gives_the_bytes_back():
+    shared = render_module.KeptBytes(100)
+    answers = render_module.PdfAnswers(items=2, max_bytes=50, shared=shared)
+    for n in range(5):
+        answers.put((n,), {}, b"x" * 10)
+    assert shared.used == 20  # two kept
+    answers.put((4,), {}, b"x")  # replaced by a smaller one
+    assert shared.used == 11
+    answers.close()
+    assert shared.used == 0
+
+
 def test_a_limited_block_gives_its_kept_drawings_back(monkeypatch):
     _SlowChild(monkeypatch, 0.1, drawing=True)
     shared = render_module.KeptBytes(render_module.PDF_KEPT_ALL_BYTES)
