@@ -17,7 +17,7 @@ import pytest
 from backend_contract import BackendContract
 from PIL import Image
 
-from tavletta.backends import cab, mdns, net, usb
+from tavletta.backends import cab, mdns, net, usb, zpl
 from tavletta.backends.base import (
     FoundPrinter,
     HeadOpen,
@@ -27,6 +27,7 @@ from tavletta.backends.base import (
     PortClosed,
     PrinterBusy,
     PrinterError,
+    PrinterInfo,
     PrinterNotFound,
     PrinterPaused,
     PrinterStalled,
@@ -932,3 +933,26 @@ def test_print_upside_down(backend, printer, value, sent):
     assert ("O R" in commands) is sent
     if sent:
         assert commands[commands.index("O R") - 1].startswith("S l1;")
+
+
+@pytest.mark.parametrize(
+    ("chosen", "reported", "expected"),
+    [
+        ({}, "direct", "direct"),  # "printer", the default: as set on the printer
+        ({"method": "printer"}, "transfer", "transfer"),
+        ({"method": "printer"}, "", ""),  # not told: unknown
+        ({"method": "transfer"}, "direct", "transfer"),  # sent with each job (H ...,T)
+        ({"method": "direct"}, "transfer", "direct"),
+        ({"method": "transfer"}, None, "transfer"),  # no answer: the job's own all the same
+        ({"method": "ribbon"}, "direct", "direct"),  # junk is the default
+    ],
+)
+def test_the_print_method_a_job_prints_with(chosen, reported, expected):
+    info = (
+        None
+        if reported is None
+        else PrinterInfo("", None, None, None, "IDLE", print_method=reported)
+    )
+    assert Cab().job_print_method(chosen, info) == expected
+    # ZPL leaves the method to the printer: as it reports it
+    assert zpl.Zpl().job_print_method(chosen, info) == (reported or "")

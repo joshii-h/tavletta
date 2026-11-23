@@ -269,8 +269,9 @@ SCHEMAS: dict[str, Any] = {
                 "told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the "
                 "label distance measured), width_mm (the print width set on a ZPL "
                 "printer: a setting, not the loaded labels), print_method (direct or "
-                "transfer, as set on the printer), media_type (gap, mark or continuous: "
-                "how the printer is set to find the labels), cassette.",
+                "transfer, as set on the printer), job_print_method (what this server's "
+                "jobs print with), media_type (gap, mark or continuous: how the printer "
+                "is set to find the labels), cassette.",
                 "properties": {
                     "tape_mm": {"type": ["number", "null"]},
                     "remaining_mm": {"type": ["integer", "null"]},
@@ -290,7 +291,16 @@ SCHEMAS: dict[str, Any] = {
                         "type": ["string", "null"],
                         "enum": ["direct", "transfer", None],
                         "description": "Thermal printers: the print method set on the "
-                        "printer, direct (thermal direct) or transfer (with a ribbon).",
+                        "printer, direct (thermal direct) or transfer (with a ribbon). A "
+                        "job may print with another one: see job_print_method.",
+                    },
+                    "job_print_method": {
+                        "type": ["string", "null"],
+                        "enum": ["direct", "transfer", None],
+                        "description": "Thermal printers: the print method this server's "
+                        "jobs print with. The printer's settings (method in printers.toml, "
+                        "else the app's) may set it for each job (cab), else it is the "
+                        "one set on the printer (print_method; ZPL always). null: unknown.",
                     },
                     "media_type": {
                         "type": ["string", "null"],

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 15:03+0100\n"
+"POT-Creation-Date: 2026-11-23 15:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1390,7 +1390,7 @@ msgid ""
 "| `dpi` | number |  |\n"
 "| `firmware` | string or null |  |\n"
 "| `modes` | array of string |  |\n"
-"| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), media_type (gap, mark or continuous: how the printer is set to find the labels), cassette. |\n"
+"| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), job_print_method (what this server's jobs print with), media_type (gap, mark or continuous: how the printer is set to find the labels), cassette. |\n"
 msgstr ""
 
 #. type: Title ###
@@ -3840,6 +3840,12 @@ msgstr ""
 #: docs/server.md
 #, markdown-text
 msgid "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), `upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "The printer's state tells the print method set on the printer (`media.print_method`) and the one its jobs print with (`media.job_print_method`): with `method = \"transfer\"` a cab set up for thermal direct prints the server's jobs with a ribbon."
 msgstr ""
 
 #. type: Bullet: '- '

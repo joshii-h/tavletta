@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 15:02+0100\n"
+"POT-Creation-Date: 2026-11-23 15:05+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1837,7 +1837,7 @@ msgid ""
 "| `dpi` | number |  |\n"
 "| `firmware` | string or null |  |\n"
 "| `modes` | array of string |  |\n"
-"| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), media_type (gap, mark or continuous: how the printer is set to find the labels), cassette. |\n"
+"| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), job_print_method (what this server's jobs print with), media_type (gap, mark or continuous: how the printer is set to find the labels), cassette. |\n"
 msgstr ""
 "| Feld | Typ | Bedeutung |\n"
 "|---|---|---|\n"
@@ -1850,7 +1850,7 @@ msgstr ""
 "| `dpi` | number |  |\n"
 "| `firmware` | string or null |  |\n"
 "| `modes` | array of string |  |\n"
-"| `media` | object | Was eingelegt ist, soweit der Drucker es sagt (null: nicht gesagt): tape_mm, remaining_mm, total_mm, pitch_mm (gestanzte Etiketten: der gemessene Etikettenabstand), width_mm (die an einem ZPL-Drucker eingestellte Druckbreite: eine Einstellung, nicht die eingelegten Etiketten), print_method (direct oder transfer, wie am Drucker eingestellt), media_type (gap, mark oder continuous: worauf der Drucker zum Erkennen der Etiketten eingestellt ist), cassette. |\n"
+"| `media` | object | Was eingelegt ist, soweit der Drucker es sagt (null: nicht gesagt): tape_mm, remaining_mm, total_mm, pitch_mm (gestanzte Etiketten: der gemessene Etikettenabstand), width_mm (die an einem ZPL-Drucker eingestellte Druckbreite: eine Einstellung, nicht die eingelegten Etiketten), print_method (direct oder transfer, wie am Drucker eingestellt), job_print_method (womit die Aufträge dieses Servers drucken), media_type (gap, mark oder continuous: worauf der Drucker zum Erkennen der Etiketten eingestellt ist), cassette. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -5314,6 +5314,19 @@ msgstr ""
 "`high_res`, `feed_mm`, `darkness`, `media` und `outlines`, siehe [docs/"
 "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid ""
+"The printer's state tells the print method set on the printer "
+"(`media.print_method`) and the one its jobs print with "
+"(`media.job_print_method`): with `method = \"transfer\"` a cab set up for "
+"thermal direct prints the server's jobs with a ribbon."
+msgstr ""
+"Der Zustand des Druckers nennt das am Drucker eingestellte Druckverfahren "
+"(`media.print_method`) und dasjenige, mit dem seine Aufträge drucken "
+"(`media.job_print_method`): Mit `method = \"transfer\"` druckt ein auf "
+"Thermodirekt eingerichteter cab die Aufträge des Servers mit Farbband."
 
 #. type: Bullet: '- '
 #: docs/server.md

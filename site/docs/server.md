@@ -60,6 +60,10 @@ tavletta serve --labels-dir ~/Labels
   `upside_down` [[ui:Print upside down]]; others are `quality`, `chain`,
   `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see
   [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers).
+- The printer's state tells the print method set on the printer
+  (`media.print_method`) and the one its jobs print with
+  (`media.job_print_method`): with `method = "transfer"` a cab set up for
+  thermal direct prints the server's jobs with a ribbon.
 - Mistakes in the file are named when the server starts.
 - The list of printers shows each printer with its state.
 - The server searches the network for printers only when started with

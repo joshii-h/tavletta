@@ -838,6 +838,19 @@ class Backend(ABC):
                 return setting.value(chosen.get("media")) in ("printer", info.media_type)
         return True
 
+    def job_print_method(self, chosen: Mapping[str, object], info: PrinterInfo | None) -> str:
+        """The print method a job prints with, "transfer" or "direct": its
+        "method" setting (`chosen`, PrintOptions.settings) if it sets one
+        for each job (cab: H ...,T), else as set on the printer
+        (info.print_method, as for a backend without that setting, which
+        leaves it to the printer); "" = unknown."""
+        for setting in self.settings(info):
+            if isinstance(setting, Choice) and setting.key == "method":
+                method = setting.value(chosen.get("method"))
+                if method != "printer":
+                    return method
+        return info.print_method if info else ""
+
     def modes(self, info: PrinterInfo | None) -> tuple[PrintMode, ...]:
         """Print modes of the connected printer, else the documented ones."""
         return (info.modes if info else ()) or self.capabilities.modes

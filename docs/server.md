@@ -132,7 +132,10 @@ upside_down = true                   # print turned by 180 degrees (cab: O R)
   the model has: anything else stops the server like an unknown key. A
   setting left out is the model's default (for `method`: as set on the
   printer). Every print to that printer uses them, through the REST API
-  and MCP alike.
+  and MCP alike. The printer's status tells both: `media.print_method` as
+  set on the printer, `media.job_print_method` as its jobs print (a cab
+  set to thermal direct, with `method = "transfer"`: `direct` and
+  `transfer`).
 - With the list, `printer` in a request is a name from it; the label is
   moved to that printer's model as in the app. Without `printer` the
   default printer is used, or the only one; else printing is refused
@@ -236,7 +239,7 @@ reference page `site/docs/api.md` are written from it by
 | `GET /openapi.json` | the OpenAPI description |
 | `GET /printers?status=false` | with `printers.toml`: its printers the token may use, with `name`, `printer` (model), `host`, `description`, `location`, `media`, `default`, `max_copies` and `status` |
 | `GET /printers?discover=false` | without it: printer models: id, name, kind (`tape`, `labels`, `pages`), resolution, tape widths or label sizes, the address set in the app (`configured_host`) and, with `--discover`, the printers found on the network (`found`; remembered for 30 s) |
-| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, print width, print method and media type set on the printer, cassette). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
+| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, print width, print method and media type set on the printer, cassette; `job_print_method`: the print method the server's jobs print with, which a printer's `method` setting may choose for each job, else the one set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
 | `GET /labels` | label files in the labels folder and below: `name`, `bytes`, `modified` |
 | `GET /labels/{name}` | elements with their names (what `set` fills in), `variables`, `builtin_variables`, `columns` of the placeholders, `data_file` (if usable), size, counter, features |
 | `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings and the PNG in base64; `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |

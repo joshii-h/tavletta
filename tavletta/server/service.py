@@ -616,6 +616,12 @@ class Service:
                 # settings on the printer, not the loaded labels (ZPL, cab)
                 "width_mm": info.width_mm,
                 "print_method": info.print_method or None,
+                # what this server's jobs print with: the printer's settings
+                # (printers.toml, else the app's) may set it for each job
+                "job_print_method": backend.job_print_method(
+                    settings.printer(backend).backend_settings(), info
+                )
+                or None,
                 "media_type": info.media_type or None,  # how the printer finds the labels
                 "cassette": (
                     {
