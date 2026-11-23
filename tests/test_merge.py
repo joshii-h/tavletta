@@ -15,7 +15,7 @@ import time
 import zipfile
 
 import pytest
-from hypothesis import HealthCheck, assume, given, settings
+from hypothesis import HealthCheck, assume, example, given, settings
 from hypothesis import strategies as st
 
 from tavletta.merge import (
@@ -1425,6 +1425,7 @@ def test_any_archive_gives_a_table_or_a_merge_error(tmp_path, members):
     max_examples=200, deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture]
 )
 @given(position=st.integers(0, 10_000), value=st.integers(0, 255))
+@example(position=3819, value=93)  # a compression method of 93: Zstandard (Python 3.14)
 def test_damaged_spreadsheets_give_a_table_or_a_merge_error(tmp_path, position, value):
     styles = '<cellXfs><xf numFmtId="0"/><xf numFmtId="14"/></cellXfs>'
     good = make_xlsx(
@@ -1436,6 +1437,31 @@ def test_damaged_spreadsheets_give_a_table_or_a_merge_error(tmp_path, position, 
     data = bytearray(good.read_bytes())
     data[position % len(data)] = value
     outcome(write(tmp_path, "broken.xlsx", bytes(data)))
+
+
+def _with_method(data: bytes, method: int) -> bytes:
+    """An archive whose members claim another compression method than the
+    one they were written with (the method field of each local header and
+    central directory entry)."""
+    out = bytearray(data)
+    for signature, offset in ((b"PK\x03\x04", 8), (b"PK\x01\x02", 10)):
+        at = out.find(signature)
+        while at != -1:
+            out[at + offset : at + offset + 2] = struct.pack("<H", method)
+            at = out.find(signature, at + 4)
+    return bytes(out)
+
+
+@pytest.mark.parametrize("method", [zipfile.ZIP_LZMA, 93])  # 93: Zstandard
+def test_members_that_do_not_decompress_are_a_damaged_file(tmp_path, method):
+    """Deflate data read as LZMA or Zstandard: the decompressor's own error
+    (lzma.LZMAError, compression.zstd.ZstdError on Python 3.14) is a damaged
+    file, as zlib's is; a Python without the method says so too."""
+    good = make_xlsx(tmp_path, xrow(inline("A1", "A")) + xrow(inline("A2", "x")))
+    broken = write(tmp_path, "broken.xlsx", _with_method(good.read_bytes(), method))
+    with pytest.raises(MergeError) as caught:
+        read_table(broken)
+    assert caught.value.code == "damaged"
 
 
 # --- placeholders -------------------------------------------------------------

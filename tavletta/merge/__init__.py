@@ -10,6 +10,7 @@ the module contains no third-party code.
 from __future__ import annotations
 
 import csv
+import importlib
 import io
 import os
 import re
@@ -51,8 +52,24 @@ _ZIP64_RECORD, _ZIP64_SIZE = b"PK\x06\x06", 56
 _ENTRY_BYTES = 1024  # a directory entry with a long name and extra fields
 _OLE = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"  # old Excel (.xls) and other Office 97 files
 _ODF_TYPE = b"application/vnd.oasis.opendocument"
+
+
+def _decompression_errors() -> tuple[type[Exception], ...]:
+    """What zipfile's optional decompressors raise for broken data, where
+    Python has them: LZMA (method 14) and, from Python 3.14, Zstandard
+    (method 93; compression.zstd). bzip2 raises OSError."""
+    errors: list[type[Exception]] = []
+    for module, name in (("lzma", "LZMAError"), ("compression.zstd", "ZstdError")):
+        try:
+            errors.append(getattr(importlib.import_module(module), name))
+        except ImportError:  # built without it, or an older Python
+            continue
+    return tuple(errors)
+
+
 # what the standard library raises for broken archives, XML and text
-_BROKEN = (
+_BROKEN: tuple[type[Exception], ...] = (
+    *_decompression_errors(),
     zipfile.BadZipFile,
     zipfile.LargeZipFile,
     zlib.error,
