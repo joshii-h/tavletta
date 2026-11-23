@@ -437,6 +437,7 @@ def session(
 
 class Cab(Backend):
     query_before_render = True  # the resolution (dots per mm) the printer reports
+    reports_labels = True  # the label distance it measured
     id = "cab"
     name = "cab EOS2, EOS5, SQUIX 4, MACH 4S"
     capabilities = Capabilities(

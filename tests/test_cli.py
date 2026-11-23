@@ -1394,16 +1394,34 @@ def test_a_roll_with_another_label_distance_gets_a_hint(cab_cli, capsys):
     assert "measured" not in err(capsys)
 
 
-def test_labels_of_another_size_get_a_hint(cab_cli, capsys):
-    """A printer that reports the size of the loaded labels: told before
-    the distance, as the window and the server do (job.other_labels())."""
-    cab_cli.info.label_mm = (75.0, 50.0)
-    assert run("print", cab_cli.path) == 0
+def test_ql_die_cut_labels_of_another_size_get_a_hint(mono, monkeypatch, tmp_path, capsys):
+    """A Brother QL tells the size of the DK labels loaded: asked before the
+    print for it (Backend.reports_labels), though its render does not depend
+    on the answer; told as the window and the server do."""
+    from tavletta.backends import get_backend
+
+    backend = get_backend("brother_ql_diecut")
+    assert backend.reports_labels and not backend.query_before_render
+    info = PrinterInfo("QL-820NWB", None, None, None, "IDLE", label_mm=(29, 90), pitch_mm=93)
+    printed: list = []
+    monkeypatch.setattr(backend, "query", lambda host: info)
+    monkeypatch.setattr(
+        backend, "print_label", lambda image, host, options, progress=None: printed.append(1)
+    )
+    label = Label(printer="brother_ql_diecut", auto_length=False, orientation="across")
+    label.set_media_size(62, 29)
+    label.elements = [TextElement(text="x")]
+    path = tmp_path / "ql.tavletta"
+    label.save(path)
+    assert run("print", path, "--host", "ql.example.com") == 0
     assert err(capsys) == (
-        "tavletta: The label is 50 × 25 mm, but labels of 75 × 50 mm are loaded. Check "
+        "tavletta: The label is 62 × 29 mm, but labels of 29 × 90 mm are loaded. Check "
         "the label size, or load the matching roll.\n"
     )
-    assert len(cab_cli.printed) == 1
+    assert printed == [1]
+    info.label_mm, info.pitch_mm = (62, 29), 32  # the matching roll: nothing said
+    assert run("print", path, "--host", "ql.example.com") == 0
+    assert err(capsys) == ""
 
 
 @pytest.fixture

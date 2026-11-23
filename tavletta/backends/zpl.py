@@ -471,6 +471,7 @@ class Zpl(RawBackend):
     # LABEL LENGTH is what the printer measured last, maybe on another roll
     # (MEDIA POWER UP NO MOTION, HEAD CLOSE FEED do not measure again)
     pitch_may_be_old = True
+    reports_labels = True  # LABEL LENGTH, the label distance measured
 
     def display_name(self, info: PrinterInfo | None) -> str:
         """The model the printer names in ~HI, e.g. "ZD621-203dpi"."""

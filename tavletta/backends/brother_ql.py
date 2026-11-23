@@ -1166,6 +1166,7 @@ class BrotherQLDieCut(_BrotherQL):
     id = "brother_ql_diecut"
     name = "Brother QL"
     die_cut = True
+    reports_labels = True  # the size of the DK labels loaded
     capabilities = Capabilities(
         tape_widths_mm=(),
         dpi=DPI,

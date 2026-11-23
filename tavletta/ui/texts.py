@@ -350,7 +350,8 @@ def other_labels_warning(other: OtherLabels, units: str | None) -> RenderWarning
 def warning_text(warning: RenderWarning) -> str:
     if warning.key == OTHER_LABELS:
         other, units = warning.params["other"], warning.params["units"]
-        assert isinstance(other, OtherLabels)
+        if not isinstance(other, OtherLabels):
+            raise TypeError("other_labels_loaded without OtherLabels: %r" % (other,))
         return other_labels_text(other, unit_for(units if isinstance(units, str) else None))
     texts = {
         "code_empty": _("Element %(n)d: the code is empty"),
@@ -498,6 +499,8 @@ def other_labels_text(other: OtherLabels, unit: Unit) -> str:
             "label size, or load the matching roll."
         )
         return text % {"size": size, "loaded": isolate(unit.size(*other.loaded_mm))}
+    if other.measured_mm is None:
+        raise ValueError("OtherLabels with neither a size nor a distance: %r" % (other,))
     if other.calibrate:
         text = _(
             "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -514,7 +517,7 @@ def other_labels_text(other: OtherLabels, unit: Unit) -> str:
         "size": size,
         "gap": isolate(unit.format(other.gap_mm)),
         "pitch": isolate(unit.format(other.pitch_mm)),
-        "measured": isolate(unit.format(other.measured_mm or 0.0)),
+        "measured": isolate(unit.format(other.measured_mm)),
     }
 
 

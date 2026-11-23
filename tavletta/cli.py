@@ -1165,7 +1165,9 @@ def ask_printer(
     backend: Backend, host: str, wait: float = QUERY_WAIT, finish: float = QUERY_FINISH
 ) -> PrinterInfo | None:
     """What the printer reports, for backends whose render depends on it
-    (Backend.query_before_render); None if they do not, or the printer does
+    (Backend.query_before_render) or that tell of the loaded labels
+    (Backend.reports_labels: the hint of other labels loaded); None for
+    others, or if the printer does
     not answer within `wait` seconds and the extra `finish` seconds a
     question still running gets (the user is told; an answer then is
     used); after that it is left to end by itself (the backend's timeouts
@@ -1173,7 +1175,7 @@ def ask_printer(
     stores in the backend later (a raw printer's resolution) counts for
     the print's render. With finish 0 (a dry run) it asks a copy of the
     backend, so a late answer changes nothing."""
-    if not backend.query_before_render:
+    if not (backend.query_before_render or backend.reports_labels):
         return None
     answer: list[PrinterInfo] = []
     # a question that may be left behind (finish 0: a dry run) asks through

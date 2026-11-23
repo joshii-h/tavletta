@@ -1272,3 +1272,23 @@ def test_zpl_reported_labels_count_only_for_a_job_that_senses_them_so(chosen, re
     assert zpl.Zpl().senses_as_reported(chosen, info) is expected
     # a printer without the setting: always
     assert escpos.EscPos().senses_as_reported({"media": "mark"}, info)
+
+
+@pytest.mark.parametrize(
+    ("backend", "chosen", "reported", "expected"),
+    [
+        ("zpl", {}, "gap", "gap"),  # "printer", the default: as set on the printer
+        ("zpl", {"media": "mark"}, "gap", "mark"),  # ^MN with each job
+        ("zpl", {"media": "printer"}, "", ""),  # not told: unknown
+        ("tspl", {"media": "continuous"}, "gap", "continuous"),
+        ("epl", {}, "mark", "mark"),
+        ("niimbot", {"media": "transparent"}, "", "transparent"),
+        ("niimbot", {}, "", "gap"),  # its first choice: no "printer" value
+        ("dymo", {"media": "mark"}, "gap", "gap"),  # no such setting: the printer's
+    ],
+)
+def test_how_a_job_finds_the_labels(backend, chosen, reported, expected):
+    from tavletta.backends import get_backend
+
+    info = PrinterInfo("", None, None, None, "IDLE", media_type=reported)
+    assert get_backend(backend).job_media_type(chosen, info) == expected

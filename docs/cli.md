@@ -56,10 +56,12 @@ setting (cab) for this print: `printer` (as set on the printer),
 `transfer` (with a ribbon) or `direct`; it applies with
 `--printer-defaults` too.
 A die-cut roll whose measured label distance (cab, ZPL) is not the label's
-height plus gap gets a hint on standard error, as the window warns.
+height plus gap, or whose label size (Brother QL with DK labels) is not
+the label's, gets a hint on standard error, as the window warns.
 Printers whose label depends on what they report are asked first, for at
 most 5 s (P-touch: model and tape; NIIMBOT: model, label types and density
-range; cab, ZPL, EPL2, TSPL, ESC/POS, DYMO and office printers: the resolution; a dry run waits
+range; cab, ZPL, EPL2, TSPL, ESC/POS, DYMO and office printers: the resolution;
+a Brother QL with die-cut labels: the labels loaded, for the hint; a dry run waits
 2 s); the label is then checked for that printer. A question still on its
 way after that gets up to 10 s more to end before printing (Tavletta says
 so; an answer in that time is used); what it brings later still sets the

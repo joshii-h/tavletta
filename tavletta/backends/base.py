@@ -802,6 +802,11 @@ def apply_color_model(image: Image.Image, model: ColorModel) -> Image.Image:
     return image
 
 
+# the job settings ("method", "media") the printer reports too, by the
+# PrinterInfo field it reports them in (Backend.job_setting())
+REPORTED_SETTINGS = {"method": "print_method", "media": "media_type"}
+
+
 class Backend(ABC):
     id: str = ""
     name: str = ""
@@ -809,6 +814,10 @@ class Backend(ABC):
     # the label distance the printer reports may be from an earlier roll
     # (it measured last, not now): the hint suggests calibrating it
     pitch_may_be_old: bool = False
+    # query() tells of the loaded die-cut labels (PrinterInfo.label_mm or
+    # pitch_mm): the command line and the server ask it before a job, for
+    # the warning of other labels loaded (job.other_labels())
+    reports_labels: bool = False
 
     def configured_host(self) -> str | None:
         """A host configured outside Tavletta (e.g. by a CLI tool), if any."""
@@ -833,23 +842,31 @@ class Backend(ABC):
         PrintOptions.settings) leaves the sensing to the printer or sets the
         kind it reports. A continuous job on a printer set to gap labels
         senses no labels at all: nothing to compare."""
+        return self.job_setting("media", chosen, info) == info.media_type
+
+    def job_setting(self, key: str, chosen: Mapping[str, object], info: PrinterInfo | None) -> str:
+        """What a job does of a setting the printer also reports
+        (REPORTED_SETTINGS: "method", "media"): the job's own choice
+        (`chosen`, PrintOptions.settings) if it sends one with each job (cab
+        H ...,T; ZPL ^MN), else as set on the printer, the value reported in
+        `info` (also for a backend without that setting, which leaves it
+        to the printer); "" = unknown."""
+        reported = str(getattr(info, REPORTED_SETTINGS[key])) if info else ""
         for setting in self.settings(info):
-            if setting.key == "media":
-                return setting.value(chosen.get("media")) in ("printer", info.media_type)
-        return True
+            if isinstance(setting, Choice) and setting.key == key:
+                value = setting.value(chosen.get(key))
+                return reported if value == "printer" else value
+        return reported
 
     def job_print_method(self, chosen: Mapping[str, object], info: PrinterInfo | None) -> str:
-        """The print method a job prints with, "transfer" or "direct": its
-        "method" setting (`chosen`, PrintOptions.settings) if it sets one
-        for each job (cab: H ...,T), else as set on the printer
-        (info.print_method, as for a backend without that setting, which
-        leaves it to the printer); "" = unknown."""
-        for setting in self.settings(info):
-            if isinstance(setting, Choice) and setting.key == "method":
-                method = setting.value(chosen.get("method"))
-                if method != "printer":
-                    return method
-        return info.print_method if info else ""
+        """The print method a job prints with, "transfer" or "direct"
+        (job_setting()); "" = unknown."""
+        return self.job_setting("method", chosen, info)
+
+    def job_media_type(self, chosen: Mapping[str, object], info: PrinterInfo | None) -> str:
+        """How a job finds the labels, "gap", "mark", "continuous" (NIIMBOT
+        also "transparent") (job_setting()); "" = unknown."""
+        return self.job_setting("media", chosen, info)
 
     def modes(self, info: PrinterInfo | None) -> tuple[PrintMode, ...]:
         """Print modes of the connected printer, else the documented ones."""

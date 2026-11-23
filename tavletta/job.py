@@ -119,6 +119,16 @@ def other_labels(
     )
 
 
+def labels_reported(backend: Backend, info: PrinterInfo, chosen: Mapping[str, object]) -> bool:
+    """Whether an answer of the printer tells of the labels a job prints
+    on: their size or measured distance, or that the job senses them
+    otherwise than the printer reports (nothing to compare: Backend.
+    senses_as_reported). A busy or unsynchronised printer tells neither."""
+    if info.label_mm or info.pitch_mm:
+        return True
+    return not backend.senses_as_reported(chosen, info)
+
+
 class PrepareFailed(Exception):
     """The label could not be rendered for printing; the cause is chained."""
 

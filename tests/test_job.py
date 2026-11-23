@@ -455,3 +455,28 @@ def test_no_other_labels_on_tape_and_page_printers():
     info = _info(pitch_mm=20.0, label_mm=(10, 10))
     assert other_labels(FakeMono(), Label(printer="fake-mono", tape_mm=12), info, {}) is None
     assert other_labels(get_backend("system"), _die_cut("system"), info, {}) is None
+
+
+def test_labels_reported_tells_whether_an_answer_is_of_the_loaded_labels():
+    from tavletta.backends import get_backend
+    from tavletta.job import labels_reported
+
+    zpl = get_backend("zpl")
+    assert labels_reported(zpl, _info(pitch_mm=20.0, media_type="gap"), {})
+    assert labels_reported(get_backend("brother_ql_diecut"), _info(label_mm=(29, 90)), {})
+    busy = _info(media_type="gap")  # busy, or not synchronised: no distance
+    assert not labels_reported(zpl, busy, {})
+    # a job that senses no labels: the answer says there is nothing to compare
+    assert labels_reported(zpl, busy, {"media": "continuous"})
+
+
+def test_the_text_of_other_labels_needs_a_difference():
+    from tavletta.job import OtherLabels
+    from tavletta.render import RenderWarning
+    from tavletta.ui.texts import OTHER_LABELS, other_labels_text, warning_text
+    from tavletta.units import unit_for
+
+    with pytest.raises(ValueError, match="neither a size nor a distance"):
+        other_labels_text(OtherLabels((50, 25), 3.0, 28.0, None, None), unit_for("mm"))
+    with pytest.raises(TypeError, match="without OtherLabels"):
+        warning_text(RenderWarning(OTHER_LABELS, {"other": None, "units": "mm"}))
