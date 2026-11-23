@@ -469,17 +469,29 @@ def test_host_memory_is_read_through_snapshots():
     assert errors == []
 
 
-def test_methods_set_on_a_backend_are_dropped_before_each_test(monkeypatch):
-    """conftest: what monkeypatch.setattr(backend, "query", ...) leaves in
-    a backend singleton (the bound method it restores) is dropped."""
+def test_methods_set_on_a_backend_are_dropped_before_each_test():
+    """conftest: a method left on a backend singleton's instance (what some
+    pytest versions' monkeypatch.undo() puts back: the bound method, which
+    hides any patch of the class) is dropped before each test; its data
+    stays."""
     from conftest import drop_instance_overrides
 
-    from tavletta.backends import get_backend
+    from tavletta.backends import backends, get_backend
 
+    # the autouse fixture ran before this test: no method on any instance
+    for backend in backends():
+        assert not [
+            name
+            for name, value in vars(backend).items()
+            if callable(value) and callable(getattr(type(backend), name, None))
+        ], backend.id
     zpl = get_backend("zpl")
-    assert "query" not in vars(zpl)  # dropped before this test
-    monkeypatch.setattr(zpl, "query", lambda host: None)
-    monkeypatch.undo()
-    assert "query" in vars(zpl)  # the bound method monkeypatch put back
-    assert drop_instance_overrides() == ["zpl.query"]
-    assert "query" not in vars(zpl) and "reported" in vars(zpl)  # data stays
+    reported = zpl.reported
+    try:
+        zpl.query = zpl.query  # the bound method, as an instance attribute
+        assert "query" in vars(zpl)
+        assert drop_instance_overrides() == ["zpl.query"]
+    finally:
+        vars(zpl).pop("query", None)
+    assert "query" not in vars(zpl) and zpl.reported is reported  # data stays
+    assert drop_instance_overrides() == []
