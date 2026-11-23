@@ -547,6 +547,7 @@ REFUSED = frozenset(
         "date_out_of_range",
         "element_failed",
         "text_too_long",  # left out, as an element that failed
+        "text_too_tall",
         "image_unreadable",
         "page_unreadable",
         "pdf_missing",  # a document page drawn without Poppler: an empty spot

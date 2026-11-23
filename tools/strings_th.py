@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "องค์ประกอบ %(n)d: ข้อความยาวเกินกว่าจะวาดในบรรทัดเดียว – แบ่งเป็นหลายบรรทัดหรือทำให้สั้นลง",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "ฉลากขนาด %(size)s ช่องว่าง %(gap)s ดังนั้นฉลากใหม่จะเริ่มทุก %(pitch)s แต่เครื่องพิมพ์วัดได้ฉลากทุก %(measured)s ตรวจสอบขนาดฉลากและช่องว่าง หรือปรับเทียบเครื่องพิมพ์",
     "Print width set on the printer": "ความกว้างการพิมพ์ที่ตั้งไว้บนเครื่องพิมพ์",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "องค์ประกอบ %(n)d: ข้อความสูงเกินกว่าจะวาดได้ – ใช้บรรทัดน้อยลงหรือขนาดที่เล็กลง",
 }

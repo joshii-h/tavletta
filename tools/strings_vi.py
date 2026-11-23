@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Phần tử %(n)d: văn bản quá dài để vẽ trên một dòng – hãy chia thành nhiều dòng hoặc rút ngắn",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Nhãn có kích thước %(size)s với khe hở %(gap)s, nên cứ %(pitch)s lại bắt đầu một nhãn mới. Máy in đo được cứ %(measured)s có một nhãn. Hãy kiểm tra kích thước nhãn và khe hở, hoặc hiệu chỉnh máy in.",
     "Print width set on the printer": "Chiều rộng in đặt trên máy in",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Phần tử %(n)d: văn bản quá cao để vẽ – hãy dùng ít dòng hơn hoặc cỡ chữ nhỏ hơn",
 }

@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Öge %(n)d: metin tek satırda çizilemeyecek kadar uzun – satırlara bölün ya da kısaltın",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Etiket boyutu %(size)s, boşluk %(gap)s; yani yeni bir etiket her %(pitch)s mesafede başlar. Yazıcı etiketler arasında %(measured)s ölçtü. Etiket boyutunu ve boşluğu kontrol edin ya da yazıcıyı kalibre edin.",
     "Print width set on the printer": "Yazıcıda ayarlanan baskı genişliği",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Öge %(n)d: metin çizilemeyecek kadar yüksek – daha az satır ya da daha küçük bir boyut kullanın",
 }

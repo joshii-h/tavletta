@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "要素 %(n)d: テキストが長すぎて 1 行に描画できません – 複数行に分けるか短くしてください",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "ラベルは %(size)s、間隔は %(gap)s なので、%(pitch)s ごとに新しいラベルが始まります。プリンターは %(measured)s ごとにラベルを検出しました。ラベルサイズと間隔を確認するか、プリンターをキャリブレーションしてください。",
     "Print width set on the printer": "プリンターで設定した印刷幅",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "要素 %(n)d: テキストが高すぎて描画できません – 行数を減らすか、サイズを小さくしてください",
 }

@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "العنصر %(n)d: النص أطول من أن يُرسم في سطر واحد – قسّمه إلى أسطر أو اختصره",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "حجم الملصق %(size)s مع فراغ %(gap)s، لذا يبدأ ملصق جديد كل %(pitch)s. قاست الطابعة ملصقًا كل %(measured)s. تحقق من حجم الملصق والفراغ، أو قم بمعايرة الطابعة.",
     "Print width set on the printer": "عرض الطباعة المضبوط على الطابعة",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "العنصر %(n)d: النص أطول ارتفاعًا من أن يُرسم – استخدم أسطرًا أقل أو حجمًا أصغر",
 }

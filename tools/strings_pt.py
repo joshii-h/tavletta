@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Elemento %(n)d: o texto é demasiado longo para ser desenhado numa linha – divida-o em linhas ou encurte-o",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "A etiqueta tem %(size)s com um espaço de %(gap)s, por isso começa uma nova a cada %(pitch)s. A impressora mediu uma etiqueta a cada %(measured)s. Verifique o tamanho da etiqueta e o espaço, ou calibre a impressora.",
     "Print width set on the printer": "Largura de impressão definida na impressora",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Elemento %(n)d: o texto é demasiado alto para ser desenhado – use menos linhas ou um tamanho menor",
 }

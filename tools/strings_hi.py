@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "तत्व %(n)d: टेक्स्ट एक पंक्ति में बनाने के लिए बहुत लंबा है – इसे पंक्तियों में बाँटें या छोटा करें",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "लेबल %(size)s का है और गैप %(gap)s है, इसलिए हर %(pitch)s पर नया लेबल शुरू होता है। प्रिंटर ने हर %(measured)s पर एक लेबल मापा। लेबल का आकार और गैप जाँचें, या प्रिंटर को कैलिब्रेट करें।",
     "Print width set on the printer": "प्रिंटर पर सेट प्रिंट चौड़ाई",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "तत्व %(n)d: टेक्स्ट बनाने के लिए बहुत ऊँचा है – कम पंक्तियाँ या छोटा आकार उपयोग करें",
 }

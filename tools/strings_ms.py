@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "Elemen %(n)d: teks terlalu panjang untuk dilukis dalam satu baris – pecahkan kepada beberapa baris atau pendekkan",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Label berukuran %(size)s dengan jurang %(gap)s, jadi label baharu bermula setiap %(pitch)s. Pencetak mengukur satu label setiap %(measured)s. Semak saiz label dan jurang, atau tentukur pencetak.",
     "Print width set on the printer": "Lebar cetakan yang ditetapkan pada pencetak",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Elemen %(n)d: teks terlalu tinggi untuk dilukis – gunakan lebih sedikit baris atau saiz yang lebih kecil",
 }

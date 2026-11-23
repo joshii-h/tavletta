@@ -798,4 +798,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too long to be drawn in one line – break it into lines or shorten it": "元素 %(n)d：文字太長，無法在一行中繪製 – 請分成多行或縮短",
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "標籤為 %(size)s，間隙為 %(gap)s，因此每 %(pitch)s 開始一張新標籤。印表機量測到每 %(measured)s 一張標籤。請檢查標籤尺寸和間隙，或校正印表機。",
     "Print width set on the printer": "印表機上設定的列印寬度",
+    "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "元素 %(n)d：文字太高，無法繪製 – 請減少行數或使用較小的字級",
 }

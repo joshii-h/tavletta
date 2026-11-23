@@ -404,6 +404,9 @@ def warning_text(warning: RenderWarning) -> str:
             "Element %(n)d: the text is too long to be drawn in one line – break it into "
             "lines or shorten it"
         ),
+        "text_too_tall": _(
+            "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size"
+        ),
         "font_missing": _(
             "Element %(n)d: the font %(font)s is not installed – another font is used"
         ),

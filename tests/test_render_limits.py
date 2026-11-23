@@ -511,3 +511,9 @@ def test_a_line_too_long_is_a_warning_within_limits_too(make_server):
     assert status == 200
     assert [w["code"] for w in answer["warnings"]] == ["text_too_long"]
     assert "one line" in answer["warnings"][0]["message"]
+    # 99 lines (the most) at 200 pt: too tall
+    text.update(text="\n".join(["x"] * 99), size_pt=200)
+    status, _response, answer = call(base, "POST", "/api/v1/preview", body=body)
+    assert status == 200
+    assert [w["code"] for w in answer["warnings"]] == ["text_too_tall"]
+    assert "fewer lines" in answer["warnings"][0]["message"]

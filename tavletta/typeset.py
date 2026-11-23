@@ -363,8 +363,11 @@ def block(
     height = max(1, logical.height) + 2 * extra.pad + extra.shadow
     from tavletta.render import ElementError, check_size  # render imports this module
 
-    if max(width, height) > CAIRO_MAX:  # a long line: cairo cannot make the image
-        raise ElementError("text_too_long", chars=len(element.text))
+    # cairo cannot make the image: a line too long, or too many lines
+    if width > CAIRO_MAX:
+        raise ElementError("text_too_long")
+    if height > CAIRO_MAX:
+        raise ElementError("text_too_tall")
     check_size(width, height)  # within limits (the print server)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
     ctx = cairo.Context(surface)
