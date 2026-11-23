@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 13:14+0100\n"
+"POT-Creation-Date: 2026-11-23 13:18+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4927,6 +4927,27 @@ msgstr ""
 "gezeichnet; die Vorschau und der Druckauftrag warnen dann mit `font_missing` "
 "(zum Beispiel `Element 2: the font Source Sans 3 is not installed – another "
 "font is used`)."
+
+#. type: Plain text
+#: docs/server-install.md
+msgid ""
+"A metric-compatible stand-in counts as installed: it has the same widths, so "
+"the text takes the room it was designed for. Liberation Sans stands in for "
+"Arial and Helvetica (Liberation Sans Narrow for Arial Narrow), Liberation "
+"Serif for Times New Roman, Liberation Mono for Courier New, Carlito for "
+"Calibri, Caladea for Cambria, Gelasio for Georgia, and the TeX Gyre fonts "
+"for Helvetica, Times and Courier; also for their styles named as a family "
+"(`Arial Bold`, `Calibri Light`). Only a stand-in that is installed counts: "
+"without one, Arial is warned about."
+msgstr ""
+"Ein metrisch kompatibler Ersatz zählt als installiert: Er hat dieselben "
+"Breiten, der Text braucht also den Platz, für den er gestaltet wurde. "
+"Liberation Sans steht für Arial und Helvetica (Liberation Sans Narrow für "
+"Arial Narrow), Liberation Serif für Times New Roman, Liberation Mono für "
+"Courier New, Carlito für Calibri, Caladea für Cambria, Gelasio für Georgia "
+"und die TeX-Gyre-Schriften für Helvetica, Times und Courier; auch für ihre "
+"als Familie benannten Schnitte (`Arial Bold`, `Calibri Light`). Nur ein "
+"installierter Ersatz zählt: Ohne ihn wird bei Arial gewarnt."
 
 #. type: Bullet: '- '
 #: docs/server-install.md

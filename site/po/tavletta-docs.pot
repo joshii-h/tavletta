@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-23 13:14+0100\n"
+"POT-Creation-Date: 2026-11-23 13:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3581,6 +3581,12 @@ msgstr ""
 #: docs/server-install.md
 #, markdown-text
 msgid "A label is drawn with the fonts of the computer that prints it. A text in a font the server does not have is drawn in another one; the preview and the print job then warn with `font_missing` (for example `Element 2: the font Source Sans 3 is not installed – another font is used`)."
+msgstr ""
+
+#. type: Plain text
+#: docs/server-install.md
+#, markdown-text
+msgid "A metric-compatible stand-in counts as installed: it has the same widths, so the text takes the room it was designed for. Liberation Sans stands in for Arial and Helvetica (Liberation Sans Narrow for Arial Narrow), Liberation Serif for Times New Roman, Liberation Mono for Courier New, Carlito for Calibri, Caladea for Cambria, Gelasio for Georgia, and the TeX Gyre fonts for Helvetica, Times and Courier; also for their styles named as a family (`Arial Bold`, `Calibri Light`). Only a stand-in that is installed counts: without one, Arial is warned about."
 msgstr ""
 
 #. type: Bullet: '- '

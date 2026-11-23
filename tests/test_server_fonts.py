@@ -74,6 +74,34 @@ def test_a_metric_alias_counts_as_installed():
     assert not typeset.resolves_to("Arial", "")
 
 
+@pytest.mark.parametrize(
+    ("asked", "loaded", "stands_for"),
+    [
+        ("Arial Narrow", "Liberation Sans Narrow", True),
+        ("Arial Narrow", "Liberation Sans", False),  # other widths
+        ("Georgia", "Gelasio", True),
+        ("Helvetica", "TeX Gyre Heros", True),
+        ("Helvetica", "Liberation Sans", True),
+        ("Times", "TeX Gyre Termes", True),
+        ("Times New Roman", "TeX Gyre Termes", True),
+        ("Times New Roman", "Liberation Serif", True),
+        ("Courier", "TeX Gyre Cursor", True),
+        ("Courier New", "TeX Gyre Cursor", True),
+        ("Courier New", "Liberation Mono", True),
+        # a style named as a family: the alias of the longest family in it
+        ("Arial Bold", "Liberation Sans", True),
+        ("Calibri Light", "Carlito", True),
+        ("Arial Narrow Bold", "Liberation Sans Narrow", True),
+        ("Arial Narrow Bold", "Liberation Sans", False),
+        ("Times New Roman Italic", "Liberation Serif", True),
+        ("Arialic", "Liberation Sans", False),  # a word of its own, not Arial
+        ("Georgia Pro", "Liberation Serif", False),
+    ],
+)
+def test_more_metric_aliases_and_styles(asked, loaded, stands_for):
+    assert typeset.resolves_to(asked, loaded) is stands_for
+
+
 def fontmap(loads: str):
     """A Pango font map without the asked family that loads `loads` for it."""
     font = SimpleNamespace(describe=lambda: SimpleNamespace(get_family=lambda: loads))

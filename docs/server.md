@@ -494,7 +494,9 @@ With the Flatpak: `"command": "flatpak"`, `"args": ["run",
   Poppler; a native install needs `gir1.2-poppler-0.18` / `poppler-glib`.
 - **Fonts**: a text whose font fontconfig does not have is drawn in another
   one and warned about (`font_missing`, in the preview and in the job);
-  generic names (`Sans`, `Serif`, `Monospace`) always count. See the
+  generic names (`Sans`, `Serif`, `Monospace`) always count, and so does
+  an installed metric-compatible stand-in (Liberation Sans for Arial,
+  Carlito for Calibri, Gelasio for Georgia: `typeset.METRIC_ALIASES`). See the
   installation guide (`site/docs/server-install.md`) for the fonts of the
   image and how to add more.
 - **Rendering**: a label of a request has at most 200 elements, 5000

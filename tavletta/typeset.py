@@ -140,13 +140,20 @@ GENERIC_FONTS = frozenset(
 # metric-compatible stand-ins fontconfig puts in for common office fonts
 # (its 30-metric-aliases.conf): the same widths, so a label drawn with one
 # looks as designed. A family resolved to one of these counts as installed.
+# Only what fontconfig loads counts: a stand-in that is not installed is
+# never loaded.
+_SANS = frozenset({"liberation sans", "arimo", "albany amt"})
+_SERIF = frozenset({"liberation serif", "tinos", "thorndale amt", "tex gyre termes"})
+_MONO = frozenset({"liberation mono", "cousine", "cumberland amt", "tex gyre cursor"})
 METRIC_ALIASES: dict[str, frozenset[str]] = {
-    "arial": frozenset({"liberation sans", "arimo", "albany amt"}),
-    "helvetica": frozenset({"liberation sans", "arimo", "nimbus sans", "nimbus sans l"}),
-    "times new roman": frozenset({"liberation serif", "tinos", "thorndale amt"}),
-    "times": frozenset({"liberation serif", "tinos", "nimbus roman", "nimbus roman no9 l"}),
-    "courier new": frozenset({"liberation mono", "cousine", "cumberland amt"}),
-    "courier": frozenset({"liberation mono", "cousine", "nimbus mono ps", "nimbus mono l"}),
+    "arial": _SANS,
+    "arial narrow": frozenset({"liberation sans narrow"}),
+    "helvetica": _SANS | {"nimbus sans", "nimbus sans l", "tex gyre heros"},
+    "times new roman": _SERIF,
+    "times": _SERIF | {"nimbus roman", "nimbus roman no9 l"},
+    "courier new": _MONO,
+    "courier": _MONO | {"nimbus mono ps", "nimbus mono l"},
+    "georgia": frozenset({"gelasio"}),
     "calibri": frozenset({"carlito"}),
     "cambria": frozenset({"caladea"}),
 }
@@ -191,13 +198,17 @@ def _look_up(name: str) -> bool:
 def resolves_to(asked: str, loaded: str) -> bool:
     """Whether the font fontconfig loaded for a family stands for it: the
     family itself, the family of a style named as a family, or a metric
-    alias (Liberation Sans for Arial, Carlito for Calibri)."""
+    alias (Liberation Sans for Arial, Carlito for Calibri), also of a style
+    named as a family ("Arial Bold", "Calibri Light"): the alias of the
+    longest family that begins the name ("Arial Narrow Bold": Arial
+    Narrow's, not Arial's)."""
     asked, loaded = asked.casefold(), loaded.casefold()
     if not loaded:
         return False
     if asked == loaded or asked.startswith(loaded + " "):
         return True
-    return loaded in METRIC_ALIASES.get(asked, frozenset())
+    families = [key for key in METRIC_ALIASES if asked == key or asked.startswith(key + " ")]
+    return bool(families) and loaded in METRIC_ALIASES[max(families, key=len)]
 
 
 # the weights Pango names; a font weight between them takes the nearest. By

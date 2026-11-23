@@ -448,6 +448,15 @@ and the print job then warn with `font_missing` (for example
 `Element 2: the font Source Sans 3 is not installed – another font is
 used`).
 
+A metric-compatible stand-in counts as installed: it has the same
+widths, so the text takes the room it was designed for. Liberation Sans
+stands in for Arial and Helvetica (Liberation Sans Narrow for Arial
+Narrow), Liberation Serif for Times New Roman, Liberation Mono for
+Courier New, Carlito for Calibri, Caladea for Cambria, Gelasio for
+Georgia, and the TeX Gyre fonts for Helvetica, Times and Courier; also
+for their styles named as a family (`Arial Bold`, `Calibri Light`). Only
+a stand-in that is installed counts: without one, Arial is warned about.
+
 - Docker: the image has DejaVu, Source Sans 3, Liberation and Carlito.
   Copy other fonts (`.ttf`, `.otf`, e.g. the corporate font) into
   `fonts/` and restart: `sudo docker compose restart`. More Debian font
