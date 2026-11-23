@@ -496,7 +496,7 @@ class Service:
             "id": backend.id,
             "name": backend_name(backend),
             "kind": kind,
-            "dpi": caps.dpi,
+            "dpi": api_dpi(caps.dpi),
             "color_model": caps.color_model,
             "tape_widths_mm": list(caps.tape_widths_mm),
             "label_sizes_mm": [[s.width_mm, s.height_mm] for s in caps.label_sizes],
@@ -575,7 +575,7 @@ class Service:
                 if info.error
                 else None
             ),
-            "dpi": backend.capabilities.dpi,
+            "dpi": api_dpi(backend.capabilities.dpi),
             "firmware": info.firmware or None,
             "modes": [m.id for m in backend.modes(info)],
             "media": {
@@ -1250,6 +1250,12 @@ def _detach(error: BaseException | None) -> None:
         error.__traceback__ = None
         error.__context__ = error.__cause__ = None
         error = inner if isinstance(inner, BaseException) else None
+
+
+def api_dpi(dpi: float) -> float:
+    """A resolution as the API shows it: 12 dots per mm is 304.8 dpi, not
+    the 304.79999999999995 of 12 * 25.4."""
+    return round(dpi, 2)
 
 
 def _printer_failed(error: Exception, settings: Settings) -> ApiError:

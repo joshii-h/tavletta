@@ -390,6 +390,8 @@ def test_printers(make_server, server_env):
     assert fake["kind"] == "tape" and fake["tape_widths_mm"] == [12, 24]
     ids = [p["id"] for p in body["printers"]]
     assert {"vc500w", "cab", "system", "fake-mono"} <= set(ids)
+    cab = next(p for p in body["printers"] if p["id"] == "cab")
+    assert cab["dpi"] == 304.8  # 12 dots per mm, without float noise
     status, _r, body = call(base, "GET", "/api/v1/printers?discover=false", headers=ASK)
     assert all(p["found"] == [] for p in body["printers"])
     _server, quiet = make_server()  # the server does not search unless told
@@ -428,6 +430,20 @@ def test_printer_status(api, server_env):
         api.base, "GET", "/api/v1/printers/fake-mono/status?host=other.local", headers=ASK
     )
     assert server_env.printer.queries[-1] == "other.local"
+
+
+def test_printer_status_dpi_without_float_noise(api, monkeypatch):
+    from tavletta.backends import get_backend
+    from tavletta.server.service import api_dpi
+
+    cab = get_backend("cab")
+    assert cab.capabilities.dpi != 304.8  # 12 * 25.4 in floating point
+    monkeypatch.setattr(
+        cab, "query", lambda host: PrinterInfo("EOS2/300", None, None, None, "IDLE")
+    )
+    status, _r, body = call(api.base, "GET", "/api/v1/printers/cab/status?host=h", headers=ASK)
+    assert status == 200 and body["dpi"] == 304.8
+    assert api_dpi(203) == 203 and api_dpi(8 * 25.4) == 203.2
 
 
 def test_printer_status_print_width_and_method(api, server_env):
