@@ -407,3 +407,50 @@ def test_host_memory_from_many_threads():
     for thread in threads:
         thread.join()
     assert errors == [] and len(memory) <= 8
+
+
+def test_host_memory_is_read_through_snapshots():
+    """Iterating, its views, len, ==, repr: under the lock, over a copy:
+    another thread may change it meanwhile without a RuntimeError."""
+    import threading
+
+    from tavletta.backends.base import HostMemory
+
+    memory: HostMemory[int] = HostMemory(3)
+    memory.update(a=1, b=2)
+    keys, values, items = memory.keys(), memory.values(), memory.items()
+    memory["c"] = 3  # the views are snapshots
+    assert list(keys) == ["a", "b"] and list(values) == [1, 2]
+    assert list(items) == [("a", 1), ("b", 2)]
+    for host in memory:  # changed while iterating
+        memory.pop(host)
+        memory["x" + host] = 0
+    assert len(memory) == 3 and list(reversed(memory)) == ["xc", "xb", "xa"]
+    memory.move_to_end("xa")
+    assert list(memory) == ["xb", "xc", "xa"]
+    assert memory == {"xb": 0, "xc": 0, "xa": 0}
+    twin: HostMemory[int] = HostMemory(3)
+    twin.update(xb=0, xc=0, xa=0)
+    assert memory == twin and memory != HostMemory(3)
+    assert repr(memory) == "HostMemory(3, {'xb': 0, 'xc': 0, 'xa': 0})"
+    errors: list[BaseException] = []
+
+    def writer() -> None:
+        for n in range(3000):
+            memory["192.0.2.%d" % (n % 50)] = n
+
+    def reader() -> None:
+        try:
+            for _ in range(300):
+                list(memory)
+                list(memory.items())
+                assert len(memory) <= 3
+        except BaseException as e:  # noqa: BLE001 - collected for the assertion
+            errors.append(e)
+
+    threads = [threading.Thread(target=writer), threading.Thread(target=reader)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert errors == []

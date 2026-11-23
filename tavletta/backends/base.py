@@ -13,7 +13,7 @@ import socket
 import threading
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from collections.abc import Callable, Iterator, Mapping, Sequence
+from collections.abc import Callable, ItemsView, Iterator, KeysView, Mapping, Sequence, ValuesView
 from contextlib import contextmanager
 from dataclasses import KW_ONLY, dataclass, field, replace
 from datetime import date
@@ -49,9 +49,10 @@ class HostMemory(OrderedDict[str, _V]):
     `size` printers used (least recently used forgotten first): a print
     server whose --allow-printer pattern admits any address cannot make
     it grow without bound. Safe to share between threads: every method
-    that reads or changes it takes the lock (iterating over it does not:
-    copy it first). A copy, a pickle and `memory | other` are HostMemory
-    of the same size again."""
+    that reads or changes it takes the lock, and iterating over it (keys,
+    values, items) goes over a snapshot, so another thread may change it
+    meanwhile. A copy, a pickle and `memory | other` are HostMemory of the
+    same size again."""
 
     def __init__(self, size: int = HOSTS_REMEMBERED):
         super().__init__()
@@ -108,6 +109,39 @@ class HostMemory(OrderedDict[str, _V]):
     def update(self, *args, **values) -> None:
         with self._lock:
             super().update(*args, **values)
+
+    def __len__(self) -> int:
+        with self._lock:
+            return super().__len__()
+
+    def __iter__(self) -> Iterator[str]:
+        return iter([host for host, _value in self._items()])
+
+    def __reversed__(self) -> Iterator[str]:
+        return iter([host for host, _value in reversed(self._items())])
+
+    def keys(self) -> KeysView[str]:  # type: ignore[override]  # a view of a snapshot
+        return OrderedDict(self._items()).keys()
+
+    def values(self) -> ValuesView[_V]:  # type: ignore[override]  # a view of a snapshot
+        return OrderedDict(self._items()).values()
+
+    def items(self) -> ItemsView[str, _V]:  # type: ignore[override]  # a view of a snapshot
+        return OrderedDict(self._items()).items()
+
+    def move_to_end(self, host: str, last: bool = True) -> None:
+        with self._lock:
+            super().move_to_end(host, last)
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, HostMemory):
+            other = OrderedDict(other._items())
+        return OrderedDict(self._items()) == other
+
+    __hash__ = None  # type: ignore[assignment]  # mutable, as dict
+
+    def __repr__(self) -> str:
+        return "HostMemory(%d, %r)" % (self.size, dict(self._items()))
 
     def _items(self) -> list[tuple[str, _V]]:
         """The entries, least recently used first, without using them."""
