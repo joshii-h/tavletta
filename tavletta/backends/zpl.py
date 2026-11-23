@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from PIL import Image
 
@@ -34,6 +34,8 @@ from tavletta.backends.base import (
     PrinterPaused,
     PrintMode,
     PrintOptions,
+    PrintResult,
+    ProgressCallback,
     RibbonError,
     Toggle,
 )
@@ -529,7 +531,7 @@ class Zpl(RawBackend):
             return Media(method=status.method)
         cut = truncated.get(s.host)
         if cut is not None and 0 <= _clock() - cut[0] < TRUNCATED_RETRY:
-            return cut[1]
+            return replace(cut[1], method=status.method or cut[1].method)
         answer = s.ask(CONFIGURATION, configuration_done, limit=CONFIGURATION_LIMIT)
         if not configuration_answered(answer):
             unanswered[s.host] = _clock()
@@ -545,6 +547,20 @@ class Zpl(RawBackend):
 
     def problem(self, s: Session) -> PrinterError | None:
         return self._status(s)[1]
+
+    def print_label(
+        self,
+        image: Image.Image,
+        host: str,
+        options: PrintOptions,
+        progress: ProgressCallback | None = None,
+    ) -> PrintResult | None:
+        """As RawBackend; a cut short ^HH answer kept for the printer is
+        forgotten after a job (it may have measured the labels anew)."""
+        try:
+            return super().print_label(image, host, options, progress)
+        finally:
+            truncated.pop(host, None)
 
     def build_job(self, image: Image.Image, dpi: float, options: PrintOptions, host: str) -> bytes:
         return build_job(

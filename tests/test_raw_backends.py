@@ -1203,6 +1203,29 @@ def test_zpl_configuration_cut_short_is_no_silence(monkeypatch):
     assert line.asked_hh == 2 and "zebra.invalid" not in zpl.truncated
 
 
+def test_zpl_configuration_cut_short_with_the_status_of_now(monkeypatch):
+    """What a cut short answer told is used again, with the print method
+    ~HS reports now; a job to the printer forgets it (it may measure the
+    labels anew)."""
+    from zebra_gx420d import GX420D_HH, GX420D_HS
+
+    half = GX420D_HH[: GX420D_HH.index(b"CONTROL CHAR")]
+    line = _SlowLine(monkeypatch, half, pieces=4, gap=0.1)
+    backend = zpl.Zpl()
+    assert backend.query("zebra.invalid").print_method == "direct"
+    # thermal transfer now (frame 2, field q)
+    line.answers[b"~HS\n"] = GX420D_HS.replace(b"000,0,0,0,0,2,4", b"000,0,0,0,1,2,4")
+    info = backend.query("zebra.invalid")
+    assert (info.pitch_mm, info.print_method) == (52.8, "transfer")
+    assert line.asked_hh == 1 and "zebra.invalid" in zpl.truncated
+    line.answers[b"~HS\n"] = GX420D_HS.replace(b"030,0,1,", b"030,0,0,")  # not paused
+    image = Image.new("1", (400, 200), 1)
+    backend.print_label(image, "zebra.invalid", PrintOptions(settings={"dpi": "203"}))
+    assert "zebra.invalid" not in zpl.truncated
+    backend.query("zebra.invalid")
+    assert line.asked_hh == 2  # asked again after the job
+
+
 def test_zpl_configuration_in_another_language(monkeypatch):
     """A whole frame of settings whose names Tavletta does not know (the
     display language): answered at once, nothing read, not remembered as

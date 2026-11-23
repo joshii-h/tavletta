@@ -78,7 +78,11 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   answer (about 3.5 kB) is read while it keeps coming, up to 10 s: on a
   serial adapter at 9600 baud it takes about 4 s. Part of it (the line
   went silent) still counts as answered, and what came is used for a
-  minute without asking again (each try could take the 10 s); a whole
+  minute without asking again (each try could take the 10 s), with the
+  print method `~HS` reports each time: a label distance changed on the
+  printer meanwhile then shows up to 60 s late, unless Tavletta printed a
+  job on it (that forgets what came, the printer may have measured the
+  labels anew); a whole
   frame of settings whose names Tavletta does not know counts as
   answered too (see below).
 - Each line of `^HH` is `  <value>   <NAME>`: the name is what follows
