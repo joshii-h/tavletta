@@ -454,3 +454,19 @@ def test_host_memory_is_read_through_snapshots():
     for thread in threads:
         thread.join()
     assert errors == []
+
+
+def test_methods_set_on_a_backend_are_dropped_before_each_test(monkeypatch):
+    """conftest: what monkeypatch.setattr(backend, "query", ...) leaves in
+    a backend singleton (the bound method it restores) is dropped."""
+    from conftest import drop_instance_overrides
+
+    from tavletta.backends import get_backend
+
+    zpl = get_backend("zpl")
+    assert "query" not in vars(zpl)  # dropped before this test
+    monkeypatch.setattr(zpl, "query", lambda host: None)
+    monkeypatch.undo()
+    assert "query" in vars(zpl)  # the bound method monkeypatch put back
+    assert drop_instance_overrides() == ["zpl.query"]
+    assert "query" not in vars(zpl) and "reported" in vars(zpl)  # data stays

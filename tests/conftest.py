@@ -88,6 +88,27 @@ def ink_bbox(image: Image.Image, background) -> tuple[int, int, int, int] | None
     return ImageChops.difference(image.convert(blank.mode), blank).getbbox()
 
 
+def drop_instance_overrides() -> list[str]:
+    """Remove methods set on the backend singletons' instances (what
+    monkeypatch.setattr(get_backend(x), "query", ...) leaves when it undoes
+    itself: the original bound method, which then hides any patch of the
+    class); returns what it removed, as "backend.name"."""
+    removed = []
+    for backend in backends():
+        for name, value in list(vars(backend).items()):
+            if callable(value) and callable(getattr(type(backend), name, None)):
+                del vars(backend)[name]
+                removed.append("%s.%s" % (backend.id, name))
+    return removed
+
+
+@pytest.fixture(autouse=True)
+def _fresh_backends():
+    """Every test starts with the backends' own methods: before it, not
+    after it, so the order of the fixtures' teardowns does not matter."""
+    drop_instance_overrides()
+
+
 @pytest.fixture(autouse=True)
 def _no_network(request, monkeypatch):
     """Safety net: no test may reach a real printer, CUPS or Avahi."""
