@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import cairo
 import pytest
-from conftest import gtk_available, pump, render_now, toast_titles
+from conftest import gtk_available, printed, pump, render_now, toast_titles
 
 pytestmark = pytest.mark.gui
 if not gtk_available():
@@ -376,7 +376,7 @@ def test_printing_a_sheet(office, system_env):
     assert dialog.get_body().endswith("Sheets: 2")
     one(dialog, Adw.SwitchRow, title="Print outlines").set_active(True)
     respond(dialog, "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     pages, host, options = system_env.pages[0]
     assert host == "HP_Office" and options.copies == 30
     assert [p.size for p in pages] == [(2480, 3508)] * 2 and pages[0].info["size_mm"] == (210, 297)
@@ -399,7 +399,7 @@ def test_printing_into_the_margin_asks_first(office, system_env, answer, prints)
     assert dialog.get_heading() == "Labels in the printer's margin"
     assert "labels \u20681, 2, 3, 4, 6, 7, 9," in dialog.get_body()
     respond(dialog, answer)
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert len(system_env.pages) == prints
 
 
@@ -408,7 +408,7 @@ def test_a_single_label_still_prints_as_one_page(office, system_env):
     win.print_flow.on_print()
     assert not find(win.last_dialog, Adw.SwitchRow, title="Print outlines")
     respond(win.last_dialog, "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert len(system_env.labels) == 1 and system_env.pages == []
 
 
@@ -440,7 +440,7 @@ def test_print_options_of_a_sheet_reach_the_backend(office, system_env):
     win = office
     _use_sheet(win, "Avery L7160")
     win.print_flow.start(PrintOptions(copies=2), win.print_flow.sheet_job({"copies": 2}))
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     pages, _host, options = system_env.pages[0]
     assert len(pages) == 1 and options.copies == 2
 
@@ -507,7 +507,7 @@ def test_codes_that_may_not_scan_ask_first(make_window, system_env, answer, prin
         "make the code larger"
     )
     respond(dialog, answer)
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert len(system_env.labels) == prints
 
 
@@ -530,7 +530,7 @@ def test_a_code_the_printer_cannot_fit_says_so(office, system_env, monkeypatch):
     monkeypatch.setattr(office.backend, "prepare", prepare)
     office.print_flow.on_print()
     respond(office.last_dialog, "print")
-    assert pump(lambda: not office.print_flow.busy)
+    assert printed(office)
     dialog = office.get_visible_dialog()
     assert dialog.get_body().startswith("A code does not fit on the label")
 
@@ -559,7 +559,7 @@ def test_serial_labels_on_label_sheets(office, system_env, tmp_path):
     assert titles[:4] == ["Copies of each label", "From row", "To row", "Print outlines"]
     one(dialog, Adw.SpinRow, title="Copies of each label").set_value(2)
     respond(dialog, "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     ((pages, _host, options),) = system_env.pages
     assert len(pages) == 1 and options.copies == 6  # 3 rows, 2 copies: 6 positions
     assert toast_titles(win)[-1] == "Printed rows 1 to 3"
@@ -649,7 +649,7 @@ def test_a_page_too_large_is_previewed_and_refused_when_printed(office, system_e
     win.print_flow.on_print()
     assert win.last_dialog.get_heading() == "Print label"
     respond(win.last_dialog, "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     dialog = win.get_visible_dialog()
     assert dialog.get_heading() == "Printing failed"
     assert dialog.get_body().startswith("The page is too large")

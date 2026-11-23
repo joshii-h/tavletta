@@ -912,7 +912,7 @@ def test_print_flow(ready, gui_env):
     assert ready.print_button.get_label() == "Printing…"
     assert Settings.load().data["printers"]["vc500w"] == {"cut": "half", "mode": "color"}
 
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert len(gui_env.prints) == 1
     image, host, options = gui_env.prints[0]
     assert host == "VC.local"
@@ -947,7 +947,7 @@ def test_print_without_host(window, gui_env):
 def test_print_error_dialog_with_details_and_report(ready, gui_env, launched):
     gui_env.print_error = PaperJam("print_state=ERROR print_job_error=JAM")
     ready.print_flow.start(PrintOptions(copies=2))
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert ready.print_button.get_label() == "Print"
     assert ready.toast_log == []  # a dialog, not a toast
     dialog = ready.get_visible_dialog()
@@ -1601,7 +1601,7 @@ def test_print_dialog_offers_the_printers_modes(detailed, gui_env):
     ]
     mode.set_selected(2)
     detailed.last_dialog.emit("response", "print")
-    assert pump(lambda: not detailed.print_flow.busy)
+    assert printed(detailed)
     assert gui_env.prints[0][2].mode == "bw"
 
 
@@ -1636,7 +1636,7 @@ def test_colour_adjustment(ready, gui_env):
     assert colour.get_subtitle() == "Adjusted" and reset.get_sensitive()
     assert not ready.dirty  # a printer setting, not part of the label
     ready.last_dialog.emit("response", "print")
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert gui_env.prints[0][2].color == ColorAdjust(2, 0, -3, 0)
 
     ready.print_flow.on_print()  # remembered; the reset button puts everything back
@@ -1664,7 +1664,7 @@ def test_data_format_setting(make_window, gui_env, setting, expected):
     win = make_window(settings={"printers": {"vc500w": printer}})
     win.print_flow.on_print()
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     image, _host, options = gui_env.prints[0]
     assert options.data_format == expected
     # rawrgb: rendered with bleed for the exact width (25 mm at 320 dpi: 333 px)
@@ -1674,7 +1674,7 @@ def test_data_format_setting(make_window, gui_env, setting, expected):
 def test_print_with_another_mode_is_reported(ready, gui_env):
     gui_env.print_result = PrintResult(mode="vivid")
     ready.print_flow.start(PrintOptions(mode="bw"))
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert toast_titles(ready) == [
         "Colour mode “Black and white (sharper)” is not available on this printer, "
         "printed with “Vivid”"
@@ -1684,21 +1684,21 @@ def test_print_with_another_mode_is_reported(ready, gui_env):
 def test_print_result_with_the_requested_mode_is_just_printed(ready, gui_env):
     gui_env.print_result = PrintResult(mode="color")
     ready.print_flow.start(PrintOptions(mode="color"))
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert toast_titles(ready) == ["Printed"]
 
 
 def test_a_queued_job_is_reported_as_sent(ready, gui_env):
     gui_env.print_result = PrintResult(queued=True)
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert toast_titles(ready) == ["Sent to the printer – it prints when its turn comes"]
 
 
 def test_a_job_the_printer_did_not_confirm_is_reported_as_sent(ready, gui_env):
     gui_env.print_result = PrintResult(unconfirmed=True)
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert toast_titles(ready) == ["Sent to the printer – it did not confirm printing"]
 
 
@@ -1757,7 +1757,7 @@ def test_printer_stages_in_a_banner(ready, gui_env):
 
     gui_env.stages = ["COOLDOWN"]
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert not banner.get_revealed()
     assert toast_titles(ready)[-1] == "Printed"
 
@@ -1768,7 +1768,7 @@ def test_print_prepare_failure(ready, gui_env, monkeypatch):
 
     monkeypatch.setattr(gui_env.backend, "prepare", broken)
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     dialog = ready.get_visible_dialog()
     assert dialog.get_body() == "The label cannot be prepared for printing."
     assert dialog.get_extra_child().get_child().get_label() == "RuntimeError: boom"
@@ -1779,7 +1779,7 @@ def test_print_prepare_failure(ready, gui_env, monkeypatch):
 def test_print_too_long(ready, gui_env):
     gui_env.print_error = LabelTooLong("17.5 in", max_mm=431.8)
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     dialog = ready.get_visible_dialog()
     assert dialog.get_body() == "The label is too long for this printer: at most 431.8 mm."
     assert dialog.get_extra_child().get_child().get_label() == "17.5 in"
@@ -1859,7 +1859,7 @@ def test_mono_printer(make_window, mono, gui_env):
     assert box.get_row_at_index(0).get_title() == "Copies"
     assert box.get_row_at_index(1) is None  # no cut, a single mode, no colour correction
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     image, host, options = mono.jobs[0]
     assert host == "mono.local"
     assert (options.cut, options.mode, options.data_format) == ("", "standard", "jpeg")
@@ -2027,7 +2027,7 @@ def test_cab_print(cab_window, cab_env):
     assert box.get_row_at_index(0).get_title() == "Copies"
     assert box.get_row_at_index(1) is None  # no cutter, one mode
     dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     image, host, options = cab_env.prints[0]
     assert host == "cab-eos2.local" and options.gap_mm == 3
     assert image.size == (600, 300)  # printer orientation, 12 dots per mm
@@ -2150,7 +2150,7 @@ def test_cab_print_method(cab_window, cab_env):
     assert Settings.load().data["printers"]["cab"]["method"] == "transfer"
     win.print_flow.on_print()
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert cab_env.prints[0][2].settings == {"method": "transfer"}
     upside_down = one(win.sidebar, Adw.SwitchRow, title="Print upside down")
     assert not upside_down.get_active()
@@ -2474,7 +2474,7 @@ def test_printing_moves_the_counter_on(ready, gui_env):
     ready.label.counter_next = 5
     ready.dirty = False
     ready.print_flow.start(PrintOptions(copies=3))
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert len(gui_env.prints) == 3  # a render per label
     assert [options.copies for _image, _host, options in gui_env.prints] == [1, 1, 1]
     assert ready.label.counter_next == 8
@@ -2497,7 +2497,7 @@ def test_a_failed_print_keeps_the_numbers_already_printed(ready, gui_env):
 
     gui_env.backend.print_label = second_fails
     ready.print_flow.start(PrintOptions(copies=3))
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert ready.label.counter_next == 2
     respond(ready.get_visible_dialog(), "close")
 
@@ -2508,7 +2508,7 @@ def test_a_label_opened_while_printing_keeps_its_counter(ready, gui_env):
     ready.print_flow.start(PrintOptions(copies=2))
     other = Label(tape_mm=25, elements=[TextElement(text="{=counter}")], counter_next=50)
     ready.set_label(other, None)
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert ready.label.counter_next == 50
 
 
@@ -2519,7 +2519,7 @@ def test_printing_goes_on_from_a_counter_the_command_line_moved_on(ready, gui_en
     ready.files.write(path)
     Label.store_counter(path, 20)  # `tavletta print` printed 5 to 19 meanwhile
     ready.print_flow.start(PrintOptions(copies=2))
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert ready.label.counter_next == 22
     ready.files.write(path)
     assert Label.load(path).counter_next == 22
@@ -2532,7 +2532,7 @@ def test_a_counter_set_back_on_purpose_stays(ready, gui_env, tmp_path):
     ready.files.write(path)
     ready.set_counter_next(1)  # the file did not change: the window's value counts
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert ready.label.counter_next == 2
     ready.files.write(path)
     assert Label.load(path).counter_next == 2
@@ -2573,7 +2573,7 @@ def test_a_next_number_typed_in_wins_over_the_file(ready, gui_env, tmp_path, mon
     assert ready.counter_edited
     Label.store_counter(path, 20)  # the command line printed meanwhile
     ready.print_flow.start(PrintOptions())
-    assert pump(lambda: not ready.print_flow.busy)
+    assert printed(ready)
     assert ready.label.counter_next == 4  # printed 3, as typed in
     ready.files.write(path)
     assert not ready.counter_edited and Label.load(path).counter_next == 4
@@ -2902,12 +2902,12 @@ def test_print_serial_labels(series, gui_env):
     dialog.emit("response", "print")
     assert series.banner.get_revealed()
     assert series.banner.get_button_label() == "Stop"
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert len(gui_env.prints) == 2
     assert {options.copies for _image, _host, options in gui_env.prints} == {2}
     assert toast_titles(series)[-1] == "Printed rows 2 to 3"
     series.print_flow.start_series(PrintOptions(), range(2, 3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert toast_titles(series)[-1] == "Printed row 3"
     assert not series.banner.get_revealed() and not series.banner.get_button_label()
     assert series.print_button.get_label() == "Print"
@@ -2936,7 +2936,7 @@ def test_each_row_is_printed_with_its_values(series, gui_env, monkeypatch):
         ),
     )
     series.print_flow.start_series(PrintOptions(), range(3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert prepared == ["Screws", "Washers", "Fuses"]
 
 
@@ -2949,7 +2949,7 @@ def test_stop_a_series(series, gui_env, monkeypatch):
 
     monkeypatch.setattr(gui_env.backend, "print_label", slow)
     series.print_flow.start_series(PrintOptions(), range(3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert len(gui_env.prints) == 1
     assert toast_titles(series)[-1] == "Stopped after row 1"
 
@@ -2991,7 +2991,7 @@ def test_series_printer_problem(series, gui_env, monkeypatch, fail_at):
 
     monkeypatch.setattr(gui_env.backend, "print_label", failing)
     series.print_flow.start_series(PrintOptions(), range(3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     dialog = series.get_visible_dialog()
     assert dialog.get_heading() == "Printing failed"
     assert dialog.get_body() == (
@@ -3007,7 +3007,7 @@ def test_series_label_that_cannot_be_prepared(series, gui_env, monkeypatch):
 
     monkeypatch.setattr(gui_env.backend, "prepare", broken)
     series.print_flow.start_series(PrintOptions(), range(3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     dialog = series.get_visible_dialog()
     assert dialog.get_body().startswith(
         "The label cannot be prepared for printing.\n\nPrinting stopped at row 1."
@@ -3018,7 +3018,7 @@ def test_series_label_that_cannot_be_prepared(series, gui_env, monkeypatch):
 def test_series_with_another_mode_is_reported(series, gui_env):
     gui_env.print_result = PrintResult(mode="color")
     series.print_flow.start_series(PrintOptions(mode="vivid"), range(2))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert toast_titles(series)[-1].startswith("Colour mode “Vivid” is not available")
 
 
@@ -3143,13 +3143,13 @@ def ean_series(ready, tmp_path):
 
 def test_rows_whose_codes_cannot_be_drawn_are_named_before_printing(ean_series, gui_env):
     ean_series.print_flow.start_series(PrintOptions(), range(4))
-    assert pump(lambda: not ean_series.print_flow.busy)
+    assert printed(ean_series)
     dialog = ean_series.get_visible_dialog()
     assert dialog.get_heading() == "Rows that cannot be printed"
     assert dialog.get_body().endswith("\n\nRows: 2, 3")
     assert gui_env.prints == []  # nothing printed
     respond(dialog, "skip")
-    assert pump(lambda: not ean_series.print_flow.busy)
+    assert printed(ean_series)
     assert len(gui_env.prints) == 2
     assert toast_titles(ean_series)[-1] == "Printed rows 1 to 4"
 
@@ -3159,7 +3159,7 @@ def test_only_unprintable_rows_offer_no_skipping(ean_series, gui_env, monkeypatc
 
     monkeypatch.setattr(printing, "ROWS_LISTED", 1)
     ean_series.print_flow.start_series(PrintOptions(), range(1, 3))
-    assert pump(lambda: not ean_series.print_flow.busy)
+    assert printed(ean_series)
     dialog = ean_series.get_visible_dialog()
     assert dialog.get_body().endswith("Rows: 2, …")
     assert not dialog.has_response("skip")
@@ -3221,7 +3221,7 @@ def test_agreed_data_files_are_not_asked_about_again(window, tmp_path):
 
 def test_rows_that_are_gone_are_not_printed(series, gui_env):
     series.print_flow.start_series(PrintOptions(), [1, 2, 7, -1])
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert len(gui_env.prints) == 2
     assert toast_titles(series)[-1] == "Printed rows 2 to 3"
 
@@ -3234,7 +3234,7 @@ def test_an_unexpected_error_ends_the_series(series, gui_env, monkeypatch):
 
     monkeypatch.setattr(printing, "print_series", broken)
     series.print_flow.start_series(PrintOptions(), range(3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert series.get_visible_dialog().get_heading() == "Printing failed"
     assert series.print_button.get_sensitive()
     respond(series.get_visible_dialog(), "close")
@@ -3270,7 +3270,7 @@ def test_a_series_moves_the_counter_on(series, gui_env):
     series.label.elements[0].text = "{=counter} {Name}"
     series.label.counter_next = 4
     series.print_flow.start_series(PrintOptions(copies=2), range(3))
-    assert pump(lambda: not series.print_flow.busy)
+    assert printed(series)
     assert len(gui_env.prints) == 6
     assert series.label.counter_next == 10
 
@@ -3390,7 +3390,7 @@ def test_raw_printer_settings_rows(make_window, raw_env):
     darkness.set_selected(3)
     win.print_flow.on_print()
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     options = raw_env.prints[0][2]
     assert options.settings == {"media": "mark", "darkness": 20}
     upside_down = one(win.sidebar, Adw.SwitchRow, title="Print upside down")
@@ -3481,7 +3481,7 @@ def test_a_print_is_rendered_again_for_another_resolution(make_window, raw_env, 
     monkeypatch.setattr(backend, "reported", {})
     win.print_flow.on_print()
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert prepares == ["zebra.local", "zebra.local"]
     (first, host), (second, _host) = calls
     assert host == "zebra.local" and second[0] == first[0] * 3 // 2  # 8 -> 12 dots per mm
@@ -3780,7 +3780,7 @@ def test_ptouch_printer(make_window, ptouch_env):
     rows[2].set_active(True)
     rows[4].set_value(5)
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     _image, host, options = ptouch_env.prints[0]
     assert host == "usb://Brother/PT-P710BT"
     assert options.info is ptouch_env.info  # rendered for the model as asked
@@ -3871,7 +3871,7 @@ def test_niimbot_density_and_label_type_are_printer_settings(niimbot_window, nii
     assert box.get_row_at_index(0).get_title() == "Copies"
     assert box.get_row_at_index(1) is None  # nothing of the printer's own here
     win.last_dialog.emit("response", "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     options = niimbot_env.prints[0][2]
     assert options.settings == {"media": "transparent", "density": 3}
     niimbot_env.info = PrinterInfo("B1", None, None, None, "IDLE")
@@ -4031,7 +4031,7 @@ def test_the_code_check_renders_with_the_dialogs_high_resolution(ptouch_window_1
     respond(win.last_dialog, "print")
     assert win.get_visible_dialog().get_heading() == "Codes may not scan"
     respond(win.get_visible_dialog(), "print")
-    assert pump(lambda: not win.print_flow.busy)
+    assert printed(win)
     assert len(ptouch_env.prints) == 1 and ptouch_env.prints[0][2].high_res
 
 

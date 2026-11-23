@@ -48,7 +48,10 @@ def test_check_sh_runs_what_the_ci_runs():
         assert command in check and command in ci, command
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dev = " ".join(project["dependency-groups"]["dev"])
-    assert "-n auto" in check and "--cov-report=term-missing -n auto" in ci  # pytest-xdist
+    # pytest-xdist: locally one worker per CPU unless PYTEST_WORKERS says
+    # otherwise, in the CI a fixed few
+    assert '"-n ${PYTEST_WORKERS:-auto}"' in check
+    assert "--cov-report=term-missing -n 4\n" in ci
     for tool in (
         "pytest",
         "pytest-xdist",

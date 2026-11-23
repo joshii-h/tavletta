@@ -94,8 +94,10 @@ jobs:
       - name: pytest
         working-directory: src
         # fail_under for the coverage comes from pyproject.toml
-        # in parallel (pytest-xdist, in the dev group), as tools/check.sh
-        run: xvfb-run -a .venv/bin/python -m pytest -q --cov=tavletta --cov-report=term-missing -n auto
+        # in parallel (pytest-xdist, in the dev group), as tools/check.sh;
+        # 4 workers, not one per CPU of a shared runner host (the GUI tests
+        # wait on the main loop, and the coverage gate needs them all)
+        run: xvfb-run -a .venv/bin/python -m pytest -q --cov=tavletta --cov-report=term-missing -n 4
 
       - name: Translations
         working-directory: src

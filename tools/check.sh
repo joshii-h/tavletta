@@ -14,9 +14,10 @@ echo "== tests"
 # none (or HEADLESS=1) they run in a headless Broadway session of their own,
 # on a D-Bus session of their own (no window and no message reaches the
 # desktop), else under xvfb-run, else the check stops here and says why.
-# in parallel (pytest-xdist, in the dev group) where it is installed
+# in parallel (pytest-xdist, in the dev group) where it is installed: one
+# worker per CPU, or PYTEST_WORKERS of them (the CI takes 4)
 XDIST=""
-if $PY/python -c "import xdist" 2> /dev/null; then XDIST="-n auto"; fi
+if $PY/python -c "import xdist" 2> /dev/null; then XDIST="-n ${PYTEST_WORKERS:-auto}"; fi
 PYTEST="$PY/python -m pytest -q --cov=tavletta --cov-report=term-missing $XDIST"
 if [ "${HEADLESS:-0}" != 1 ] && [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ]; then
   $PYTEST
