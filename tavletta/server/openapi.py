@@ -266,7 +266,8 @@ SCHEMAS: dict[str, Any] = {
                 "told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the "
                 "label distance measured), width_mm (the print width set on a ZPL "
                 "printer: a setting, not the loaded labels), print_method (direct or "
-                "transfer, as set on the printer), cassette.",
+                "transfer, as set on the printer), media_type (gap, mark or continuous: "
+                "how the printer is set to find the labels), cassette.",
                 "properties": {
                     "tape_mm": {"type": ["number", "null"]},
                     "remaining_mm": {"type": ["integer", "null"]},
@@ -287,6 +288,13 @@ SCHEMAS: dict[str, Any] = {
                         "enum": ["direct", "transfer", None],
                         "description": "Thermal printers: the print method set on the "
                         "printer, direct (thermal direct) or transfer (with a ribbon).",
+                    },
+                    "media_type": {
+                        "type": ["string", "null"],
+                        "enum": ["gap", "mark", "continuous", None],
+                        "description": "Die-cut printers: how the printer is set to find "
+                        "the labels (ZPL), gap between labels, black mark or continuous "
+                        "media.",
                     },
                     "cassette": {"type": ["object", "null"]},
                 },

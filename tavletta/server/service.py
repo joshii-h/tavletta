@@ -587,6 +587,7 @@ class Service:
                 # settings on the printer, not the loaded labels (ZPL, cab)
                 "width_mm": info.width_mm,
                 "print_method": info.print_method or None,
+                "media_type": info.media_type or None,  # how the printer finds the labels
                 "cassette": (
                     {
                         "lot": cassette.lot,
