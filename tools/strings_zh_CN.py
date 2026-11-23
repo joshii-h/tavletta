@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "标签为 %(size)s，间隙为 %(gap)s，因此每 %(pitch)s 开始一张新标签。打印机测得每 %(measured)s 一张标签。请检查标签尺寸和间隙，或校准打印机。",
     "Print width set on the printer": "打印机上设置的打印宽度",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "元素 %(n)d：文本太高，无法绘制 – 请减少行数或使用更小的字号",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s 是数据列 ({%(name)s}) – 请用 --data 指定数据文件",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s 是数据列 ({%(name)s}) – 请在 data_rows 中发送",
 }

@@ -41,6 +41,7 @@ from tavletta.cli import (
     QUERY_WAIT,
     REFUSED,
     CliError,
+    DataColumnSet,
     _check_rows,
     _options,
     _sheet_job,
@@ -735,6 +736,9 @@ class Service:
         table, indexes = self._rows(request, label, path, rows)
         try:
             overrides = apply_assignments(label, request.assignments, bool(table))
+        except DataColumnSet as e:
+            text = _("%(name)s is a data column ({%(name)s}) – send it in data_rows")
+            raise bad_request(text % {"name": e.name}, "data_column") from None
         except CliError as e:
             raise _cli_error(e) from None
         _check_limits(label, table)

@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Label berukuran %(size)s dengan jurang %(gap)s, jadi label baharu bermula setiap %(pitch)s. Pencetak mengukur satu label setiap %(measured)s. Semak saiz label dan jurang, atau tentukur pencetak.",
     "Print width set on the printer": "Lebar cetakan yang ditetapkan pada pencetak",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Elemen %(n)d: teks terlalu tinggi untuk dilukis – gunakan lebih sedikit baris atau saiz yang lebih kecil",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s ialah lajur data ({%(name)s}) – berikan fail data dengan --data",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s ialah lajur data ({%(name)s}) – hantar dalam data_rows",
 }

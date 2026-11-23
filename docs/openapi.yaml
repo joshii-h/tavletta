@@ -35,6 +35,9 @@ x-tavletta-error-codes:
   code: data_conflict
   meaning: Give data_rows or data_file, not both.
 - status: 400
+  code: data_column
+  meaning: 'set names a {placeholder}: a data column, send it in data_rows.'
+- status: 400
   code: no_rows
   meaning: rows selects no data row.
 - status: 400
@@ -866,6 +869,7 @@ paths:
           - unknown_field
           - no_label
           - data_conflict
+          - data_column
           - not_json
           - no_rows
           - no_data
@@ -1038,6 +1042,7 @@ paths:
           - unknown_field
           - no_label
           - data_conflict
+          - data_column
           - not_json
           - no_rows
           - no_data

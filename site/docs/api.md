@@ -62,6 +62,7 @@ Every error is JSON with a stable code and a message for people:
 | 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |
 | 400 | `no_label` | Give either label or label_content. |
 | 400 | `data_conflict` | Give data_rows or data_file, not both. |
+| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |
 | 400 | `no_rows` | rows selects no data row. |
 | 400 | `no_data` | sheet without a data file. |
 | 400 | `no_printer` | Several printers and no default: name one in printer. |
@@ -287,7 +288,7 @@ Body fields:
 | Status | Answer | Codes |
 |---|---|---|
 | 200 | PNG, or JSON with format=json. Warning codes also in the header X-Tavletta-Warnings (comma-separated). |  |
-| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `not_json`, `no_rows`, `no_data`, `no_printer`, `too_many_copies` |
+| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `too_many_copies` |
 | 404 | No such label, printer or data file | `label_not_found`, `printer_not_found`, `data_not_found` |
 | 413 | Too large: body, data rows or the label to render | `too_large`, `label_too_large` |
 | 422 | The label or its data cannot be used | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem`, `prepare_failed` |
@@ -329,7 +330,7 @@ Body fields:
 |---|---|---|
 | 200 | The job finished within 'wait' |  |
 | 202 | Queued or printing; follow it at Location |  |
-| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |
+| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |
 | 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |
 | 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |
 | 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |

@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Etiketten är %(size)s med ett mellanrum på %(gap)s, så en ny börjar var %(pitch)s. Skrivaren mätte en etikett var %(measured)s. Kontrollera etikettstorleken och mellanrummet, eller kalibrera skrivaren.",
     "Print width set on the printer": "Utskriftsbredd inställd på skrivaren",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Element %(n)d: texten är för hög för att ritas – använd färre rader eller en mindre storlek",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s är en datakolumn ({%(name)s}) – ange en datafil med --data",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s är en datakolumn ({%(name)s}) – skicka den i data_rows",
 }

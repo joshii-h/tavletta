@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Etiket boyutu %(size)s, boşluk %(gap)s; yani yeni bir etiket her %(pitch)s mesafede başlar. Yazıcı etiketler arasında %(measured)s ölçtü. Etiket boyutunu ve boşluğu kontrol edin ya da yazıcıyı kalibre edin.",
     "Print width set on the printer": "Yazıcıda ayarlanan baskı genişliği",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Öge %(n)d: metin çizilemeyecek kadar yüksek – daha az satır ya da daha küçük bir boyut kullanın",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s bir veri sütunu ({%(name)s}) – --data ile bir veri dosyası verin",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s bir veri sütunu ({%(name)s}) – bunu data_rows içinde gönderin",
 }

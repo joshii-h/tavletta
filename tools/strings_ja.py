@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "ラベルは %(size)s、間隔は %(gap)s なので、%(pitch)s ごとに新しいラベルが始まります。プリンターは %(measured)s ごとにラベルを検出しました。ラベルサイズと間隔を確認するか、プリンターをキャリブレーションしてください。",
     "Print width set on the printer": "プリンターで設定した印刷幅",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "要素 %(n)d: テキストが高すぎて描画できません – 行数を減らすか、サイズを小さくしてください",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s はデータ列です ({%(name)s}) – --data でデータファイルを指定してください",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s はデータ列です ({%(name)s}) – data_rows で送信してください",
 }

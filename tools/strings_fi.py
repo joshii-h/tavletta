@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Tarran koko on %(size)s ja rako %(gap)s, joten uusi tarra alkaa %(pitch)s välein. Tulostin mittasi tarran %(measured)s välein. Tarkista tarran koko ja rako tai kalibroi tulostin.",
     "Print width set on the printer": "Tulostimeen asetettu tulostusleveys",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Elementti %(n)d: teksti on liian korkea piirrettäväksi – käytä vähemmän rivejä tai pienempää kokoa",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s on datasarake ({%(name)s}) – anna datatiedosto valitsimella --data",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s on datasarake ({%(name)s}) – lähetä se kentässä data_rows",
 }

@@ -64,6 +64,7 @@ from tavletta.serial import (
     row_span,
     unknown_columns,
     unprintable_rows,
+    used_columns,
 )
 from tavletta.sheets import find as find_sheet
 from tavletta.sheets.layout import SheetJob
@@ -98,6 +99,19 @@ class CliError(Exception):
     def __init__(self, message: str, code: int):
         super().__init__(message)
         self.code = code
+
+
+class DataColumnSet(CliError):
+    """--set NAME=VALUE for a {NAME} placeholder: a data column, filled
+    from the rows of a data file (the print server: data_rows)."""
+
+    def __init__(self, name: str):
+        super().__init__(
+            _("%(name)s is a data column ({%(name)s}) – give a data file with --data")
+            % {"name": name},
+            EXIT_USAGE,
+        )
+        self.name = name
 
 
 # --- arguments --------------------------------------------------------------
@@ -508,6 +522,8 @@ def apply_assignments(
     rest = [a for a in assignments if not _set_element(label, a.name, _escaped(a, serial))]
     used = label_names(label)
     for name, value, _literal in rest:
+        if name not in used and name in used_columns(label):
+            raise DataColumnSet(name)
         _set_variable(overrides, used, name, value)
     return overrides
 

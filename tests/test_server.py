@@ -540,6 +540,23 @@ def test_preview_values_and_warnings(api, server_env, monkeypatch):
     assert status == 400 and "nothing" in body["error"]["message"]
 
 
+@pytest.mark.parametrize("path", ["/api/v1/preview", "/api/v1/print"])
+def test_set_of_a_data_column_points_to_data_rows(api, server_env, path):
+    """{Inventory} is a placeholder, filled from data rows: set cannot fill
+    it, and the error says where it goes."""
+    label_file(server_env.labels, "column.tavletta", TextElement(text="{Inventory}"))
+    body = {"label": "column", "set": {"Inventory": "300021"}}
+    status, _r, answer = call(api.base, "POST", path, body=body)
+    assert status == 400 and answer["error"]["code"] == "data_column"
+    assert answer["error"]["message"] == (
+        "Inventory is a data column ({Inventory}) – send it in data_rows"
+    )
+    assert server_env.printer.jobs == []
+    body = {"label": "column", "data_rows": [{"Inventory": "300021"}], "format": "json"}
+    status, _r, answer = call(api.base, "POST", "/api/v1/preview", body=body)
+    assert status == 200 and answer["warnings"] == []
+
+
 def test_preview_with_inline_label_content(api, server_env, tmp_path):
     secret = tmp_path / "secret.csv"
     secret.write_text("Name\nhidden\n")

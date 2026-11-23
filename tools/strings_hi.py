@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "लेबल %(size)s का है और गैप %(gap)s है, इसलिए हर %(pitch)s पर नया लेबल शुरू होता है। प्रिंटर ने हर %(measured)s पर एक लेबल मापा। लेबल का आकार और गैप जाँचें, या प्रिंटर को कैलिब्रेट करें।",
     "Print width set on the printer": "प्रिंटर पर सेट प्रिंट चौड़ाई",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "तत्व %(n)d: टेक्स्ट बनाने के लिए बहुत ऊँचा है – कम पंक्तियाँ या छोटा आकार उपयोग करें",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s एक डेटा कॉलम है ({%(name)s}) – --data के साथ डेटा फ़ाइल दें",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s एक डेटा कॉलम है ({%(name)s}) – इसे data_rows में भेजें",
 }

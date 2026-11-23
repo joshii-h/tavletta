@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Silt on %(size)s ja vahe %(gap)s, seega algab uus silt iga %(pitch)s järel. Printer mõõtis sildi iga %(measured)s järel. Kontrolli sildi suurust ja vahet või kalibreeri printer.",
     "Print width set on the printer": "Printeris seatud prindilaius",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Element %(n)d: tekst on joonistamiseks liiga kõrge – kasuta vähem ridu või väiksemat suurust",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s on andmeveerg ({%(name)s}) – anna andmefail võtmega --data",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s on andmeveerg ({%(name)s}) – saada see väljal data_rows",
 }

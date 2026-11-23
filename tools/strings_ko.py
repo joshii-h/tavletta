@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "라벨은 %(size)s이고 간격은 %(gap)s이므로 %(pitch)s마다 새 라벨이 시작됩니다. 프린터는 %(measured)s마다 라벨을 측정했습니다. 라벨 크기와 간격을 확인하거나 프린터를 보정하세요.",
     "Print width set on the printer": "프린터에 설정된 인쇄 폭",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "요소 %(n)d: 텍스트가 너무 높아 그릴 수 없습니다 – 줄 수를 줄이거나 크기를 작게 하세요",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – --data로 데이터 파일을 지정하세요",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – data_rows로 보내세요",
 }

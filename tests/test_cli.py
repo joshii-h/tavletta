@@ -317,6 +317,20 @@ def test_wrong_assignments(mono, label_file, capsys, assignment, message):
     assert mono.jobs == []
 
 
+def test_set_of_a_data_column_points_to_data(mono, label_file, capsys):
+    """--set for a {placeholder}: a data column, filled from --data."""
+    path = label_file(TextElement(text="No. {Inventory}"))
+    assert run("print", path, "--host", "h", "--set", "Inventory=300021") == cli.EXIT_USAGE
+    assert err(capsys) == (
+        "tavletta: Inventory is a data column ({Inventory}) – give a data file with --data\n"
+    )
+    assert mono.jobs == []
+    # an element of that name is set, as before
+    path = label_file(TextElement(text="{Inventory}", name="Inventory"))
+    assert run("print", path, "--host", "h", "--set", "Inventory=300021") == 0
+    assert contents(mono) == [["300021"]]
+
+
 def test_unknown_variables_are_refused(mono, label_file, capsys):
     path = label_file(TextElement(text="Lot {=lot}"))
     assert run("print", path, "--host", "h") == cli.EXIT_LABEL

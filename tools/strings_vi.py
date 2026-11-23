@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "Nhãn có kích thước %(size)s với khe hở %(gap)s, nên cứ %(pitch)s lại bắt đầu một nhãn mới. Máy in đo được cứ %(measured)s có một nhãn. Hãy kiểm tra kích thước nhãn và khe hở, hoặc hiệu chỉnh máy in.",
     "Print width set on the printer": "Chiều rộng in đặt trên máy in",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Phần tử %(n)d: văn bản quá cao để vẽ – hãy dùng ít dòng hơn hoặc cỡ chữ nhỏ hơn",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s là một cột dữ liệu ({%(name)s}) – hãy chỉ định tệp dữ liệu bằng --data",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s là một cột dữ liệu ({%(name)s}) – hãy gửi trong data_rows",
 }

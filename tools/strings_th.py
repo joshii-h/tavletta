@@ -799,4 +799,6 @@ TRANSLATIONS = {
     "The label is %(size)s with a gap of %(gap)s, so a new one starts every %(pitch)s. The printer measured a label every %(measured)s. Check the label size and the gap, or calibrate the printer.": "ฉลากขนาด %(size)s ช่องว่าง %(gap)s ดังนั้นฉลากใหม่จะเริ่มทุก %(pitch)s แต่เครื่องพิมพ์วัดได้ฉลากทุก %(measured)s ตรวจสอบขนาดฉลากและช่องว่าง หรือปรับเทียบเครื่องพิมพ์",
     "Print width set on the printer": "ความกว้างการพิมพ์ที่ตั้งไว้บนเครื่องพิมพ์",
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "องค์ประกอบ %(n)d: ข้อความสูงเกินกว่าจะวาดได้ – ใช้บรรทัดน้อยลงหรือขนาดที่เล็กลง",
+    "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ระบุไฟล์ข้อมูลด้วย --data",
+    "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ส่งใน data_rows",
 }
