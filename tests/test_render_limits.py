@@ -295,7 +295,8 @@ def test_pdf_pages_are_drawn_by_a_child_within_limits(pdf, monkeypatch):
     with limited(40_000_000):
         assert render(label, 300).image.tobytes() == plain.tobytes()
         mono = render(label, 300, mono=True)
-    assert asked == ["draw", "info", "draw"] and mono.warnings == []
+    # the second draw asks what the first did: kept within the block
+    assert asked == ["draw", "info"] and mono.warnings == []
     assert len(source._drawings) == 0
 
 
@@ -463,57 +464,99 @@ def test_picture_kind():
 
 class _SlowChild:
     """subprocess.run for the PDF child, on a fake clock: each child takes
-    `seconds`, or its timeout if that is shorter (then TimeoutExpired)."""
+    `seconds`, or its timeout if that is shorter (then TimeoutExpired).
+    Unreadable PDFs, or (drawing=True) a one-page PDF of 100 × 50 points
+    drawn grey."""
 
-    def __init__(self, monkeypatch, seconds: float):
+    def __init__(self, monkeypatch, seconds: float, drawing: bool = False):
         self.now = 1000.0
         self.seconds = seconds
+        self.drawing = drawing
         self.timeouts: list[float] = []
         monkeypatch.setattr(render_module, "_clock", lambda: self.now)
         monkeypatch.setattr(pdfchild.subprocess, "run", self.run)
 
-    def run(self, *_args, timeout, **_kwargs):
+    def run(self, *_args, timeout, input, **_kwargs):  # noqa: A002 - subprocess.run's name
         self.timeouts.append(timeout)
         if timeout < self.seconds:
             self.now += timeout
             raise subprocess.TimeoutExpired("child", timeout)
         self.now += self.seconds
-        return subprocess.CompletedProcess([], 0, b'{"error": "unreadable"}\n', b"")
+        if not self.drawing:
+            return subprocess.CompletedProcess([], 0, b'{"error": "unreadable"}\n', b"")
+        request = json.loads(input.partition(b"\n")[0])
+        if request["op"] == "info":
+            answer, body = {"width": 100.0, "height": 50.0, "pages": 1}, b""
+        else:
+            width, height = request["box"]
+            width = width or 2 * height  # endless tape: as wide as the page needs
+            answer, body = {"width": width, "height": height}, b"\x80" * (width * height * 3)
+        return subprocess.CompletedProcess([], 0, json.dumps(answer).encode() + b"\n" + body, b"")
 
 
-def _pages(count: int) -> Label:
-    pages = [PageElement(data=b64(b"%%PDF-1.4 page %d" % n)) for n in range(count)]
+def _pages(count: int, same: bool = False) -> Label:
+    pages = [
+        PageElement(data=b64(b"%%PDF-1.4 page %d" % (0 if same else n))) for n in range(count)
+    ]
     return Label(tape_mm=12, elements=pages)
 
 
-def test_pdf_pages_within_limits_share_a_time_budget(monkeypatch):
-    """Each page may take pdfchild.SECONDS, but all pages within one
-    limited() block together only its pdf_seconds: fifty slow pages must not
-    hold a render slot for minutes."""
-    child = _SlowChild(monkeypatch, 0.2)
-    with limited(10**7, pdf_seconds=0.5), pytest.raises(RenderTooLarge):
-        render(_pages(10), 100)
-    # 0.5 s: two pages of 0.2 s, the third cut short, the rest not started
-    assert child.timeouts == pytest.approx([0.5, 0.3, 0.1])
-    # the next block has a budget of its own
-    child.timeouts.clear()
-    with limited(10**7, pdf_seconds=0.5), pytest.raises(RenderTooLarge):
-        render(_pages(10), 100)
-    assert child.timeouts[0] == pytest.approx(0.5)
-
-
-def test_the_renders_of_one_print_job_share_the_budget(monkeypatch):
-    """A series renders once per row within one limited() block (the
-    server's print job): the rows share the budget, and the time between
-    them (printing) does not count."""
+def test_the_pdf_pages_of_one_render_share_a_time_budget(monkeypatch):
+    """Each page may take pdfchild.SECONDS, but all pages of one render
+    (one label) together only pdf_seconds: fifty slow pages must not hold
+    a render slot for minutes."""
     child = _SlowChild(monkeypatch, 0.2)
     with limited(10**7, pdf_seconds=0.5):
-        render(_pages(2), 100)  # 0.4 s
-        child.now += 60  # the printer prints the row
         with pytest.raises(RenderTooLarge):
-            render(_pages(2), 100)  # 0.1 s left: refused
-    assert child.timeouts == pytest.approx([0.5, 0.3, 0.1])
+            render(_pages(10), 100)
+        # 0.5 s: two pages of 0.2 s, the third cut short, the rest not started
+        assert child.timeouts == pytest.approx([0.5, 0.3, 0.1])
+        # the next render (the next row of a series) has a budget of its own
+        child.timeouts.clear()
+        with pytest.raises(RenderTooLarge):
+            render(
+                _pages(
+                    10,
+                ),
+                100,
+            )
+        assert child.timeouts[0] == pytest.approx(0.5)
     assert render_module.pdf_seconds_left() is None  # without limits: no budget
+
+
+def test_a_series_with_the_same_page_asks_the_child_once(monkeypatch):
+    """200 rows of a label with one PDF page, within one limited() block
+    (the server's print job): the page is drawn by a child once, the rows
+    take no time of their budgets."""
+    child = _SlowChild(monkeypatch, 0.25, drawing=True)
+    label = _pages(1)
+    with limited(10**7, pdf_seconds=0.5):
+        first = render(label, 100)
+        asked = len(child.timeouts)
+        assert asked >= 1 and first.warnings == []
+        for _row in range(200):
+            assert render(label, 100).image.tobytes() == first.image.tobytes()
+        assert len(child.timeouts) == asked
+    # a new block (another job) asks again
+    with limited(10**7, pdf_seconds=0.5):
+        render(label, 100)
+    assert len(child.timeouts) == 2 * asked
+
+
+def test_pdf_answers_are_bounded():
+    answers = render_module.PdfAnswers(items=2, max_bytes=10)
+    answers.put(("a",), {}, b"1234")
+    answers.put(("b",), {}, b"1234")
+    assert answers.get(("a",)) is not None  # used: kept
+    answers.put(("c",), {}, b"1234")  # three items: "b" goes
+    assert answers.get(("b",)) is None and answers.get(("c",)) is not None
+    answers.put(("d",), {}, b"12345678")  # over the bytes: the oldest go
+    assert answers.get(("a",)) is None and answers.get(("c",)) is None
+    assert answers.get(("d",)) == ({}, b"12345678")
+    answers.put(("e",), {}, b"x" * 11)  # larger than all: not kept
+    assert answers.get(("e",)) is None and answers.get(("d",)) is not None
+    answers.put(("d",), {"n": 1}, b"1")  # replaced
+    assert answers.get(("d",)) == ({"n": 1}, b"1")
 
 
 def test_without_limits_a_child_has_its_own_time(monkeypatch):
@@ -525,20 +568,21 @@ def test_without_limits_a_child_has_its_own_time(monkeypatch):
 
 def test_a_child_cut_short_by_the_budget_is_refused(monkeypatch):
     child = _SlowChild(monkeypatch, 10.0)
-    with limited(10**7, pdf_seconds=5):
-        assert pdfchild._seconds() == (5, True)  # what is left, below SECONDS
-        with pytest.raises(pdfchild.ChildLimit, match="their time"):
-            pdfchild.ask(b"", {})
-        assert child.timeouts == [5] and render_module.pdf_seconds_left() == 0
-        with pytest.raises(pdfchild.ChildLimit, match="their time"):
-            pdfchild.ask(b"", {})  # used up: not started
-        assert child.timeouts == [5]
+    monkeypatch.setattr(render_module, "_PDF_BUDGET", render_module.ContextVar("b"))
+    render_module._PDF_BUDGET.set(render_module.PdfBudget(5))
+    assert pdfchild._seconds() == (5, True)  # what is left, below SECONDS
+    with pytest.raises(pdfchild.ChildLimit, match="their time"):
+        pdfchild.ask(b"", {})
+    assert child.timeouts == [5] and render_module.pdf_seconds_left() == 0
+    with pytest.raises(pdfchild.ChildLimit, match="their time"):
+        pdfchild.ask(b"", {})  # used up: not started
+    assert child.timeouts == [5]
     # a budget larger than SECONDS: the child's own limit
     child.seconds = pdfchild.SECONDS + 1
-    with limited(10**7, pdf_seconds=100):
-        with pytest.raises(pdfchild.ChildLimit, match="more than"):
-            pdfchild.ask(b"", {})
-        assert child.timeouts[-1] == pdfchild.SECONDS
+    render_module._PDF_BUDGET.set(render_module.PdfBudget(100))
+    with pytest.raises(pdfchild.ChildLimit, match="more than"):
+        pdfchild.ask(b"", {})
+    assert child.timeouts[-1] == pdfchild.SECONDS
 
 
 def test_a_line_too_long_is_a_warning_within_limits_too(make_server):

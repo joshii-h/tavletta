@@ -43,8 +43,8 @@ def _memory(max_pixels: int) -> int:
 
 def _seconds() -> tuple[float, bool]:
     """The wall time this child may take, and whether that is what is left
-    of the budget for all PDF pages of the preview or print job
-    (render.pdf_seconds_left) rather than the limit of one child."""
+    of the budget for all PDF pages of the render (one label;
+    render.pdf_seconds_left) rather than the limit of one child."""
     from tavletta.render import pdf_seconds_left
 
     left = pdf_seconds_left()
@@ -55,9 +55,9 @@ def _seconds() -> tuple[float, bool]:
 
 def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
     """The child's answer to request (op "info" or "draw", see _answer())
-    about the PDF raw, and the pixels of a drawing. Within limits its time
-    is taken from the budget of all PDF pages of the preview or print job:
-    refused (ChildLimit) once that is used up."""
+    about the PDF raw, and the pixels of a drawing. Within limits the time
+    it runs is taken from the budget of all PDF pages of the render (one
+    label): refused (ChildLimit) once that is used up."""
     from tavletta.render import pdf_time
 
     seconds, budget = _seconds()

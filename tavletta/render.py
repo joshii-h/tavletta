@@ -13,6 +13,7 @@ import io
 import math
 import threading
 import time
+from collections import OrderedDict
 from collections.abc import Callable, Iterator, Mapping
 from contextvars import ContextVar
 from dataclasses import dataclass, field, fields, replace
@@ -66,10 +67,15 @@ class RenderTooLarge(ValueError):
 
 TEXT_CHARS = 5000  # characters of a text or code within limits (as the server's MAX_TEXT)
 TEXT_LINES = 100  # lines of a text within limits (MAX_LINES)
-# seconds the PDF children within one limited() block (a preview, a print
-# job with all its rows) may take together: one page may take
-# pdfchild.SECONDS, but fifty of them would hold a render slot for minutes
+# seconds the PDF children of one render (one label) may run together: one
+# page may take pdfchild.SECONDS, but fifty of them would hold a render
+# slot for minutes
 PDF_SECONDS = 30.0
+# the PDF pages drawn within one limited() block (a print job's rows), kept
+# so that the same page on every row starts no child again: at most this
+# many, and this many bytes of drawings
+PDF_KEPT = 32
+PDF_KEPT_BYTES = 32 * 1024 * 1024
 _clock = time.monotonic  # replaced in tests
 
 
@@ -85,6 +91,7 @@ class Limits:
     # text can grow a thousandfold)
     text_chars: int = TEXT_CHARS
     text_lines: int = TEXT_LINES
+    pdf_seconds: float = PDF_SECONDS  # of all PDF children of one render together
 
     @property
     def image_pixels(self) -> int:
@@ -100,9 +107,8 @@ _LIMITS: ContextVar[Limits | None] = ContextVar("render_limits", default=None)
 
 
 class PdfBudget:
-    """The seconds the PDF children of one limited() block may still take
-    together: the time they ran, not the time between them (a print job's
-    rows are printed in between)."""
+    """The seconds the PDF children of one render may still take together:
+    the time they ran, not the time it waited (for its slot)."""
 
     def __init__(self, seconds: float):
         self.left = seconds
@@ -116,6 +122,47 @@ class PdfBudget:
 _PDF_BUDGET: ContextVar[PdfBudget | None] = ContextVar("pdf_budget", default=None)
 
 
+class PdfAnswers:
+    """What the PDF children answered within one limited() block, by PDF
+    file and question: a series prints the same page on every row, and
+    each row would start a child again. The least recently used go first,
+    beyond PDF_KEPT answers or PDF_KEPT_BYTES of drawings."""
+
+    def __init__(self, items: int = PDF_KEPT, max_bytes: int = PDF_KEPT_BYTES):
+        self.items, self.max_bytes = items, max_bytes
+        self._kept: OrderedDict[tuple, tuple[dict, bytes]] = OrderedDict()
+        self._bytes = 0
+        self._lock = threading.Lock()
+
+    def get(self, key: tuple) -> tuple[dict, bytes] | None:
+        with self._lock:
+            found = self._kept.get(key)
+            if found is not None:
+                self._kept.move_to_end(key)
+            return found
+
+    def put(self, key: tuple, answer: dict, body: bytes) -> None:
+        if len(body) > self.max_bytes:
+            return
+        with self._lock:
+            old = self._kept.pop(key, None)
+            if old is not None:
+                self._bytes -= len(old[1])
+            self._kept[key] = (answer, body)
+            self._bytes += len(body)
+            while len(self._kept) > self.items or self._bytes > self.max_bytes:
+                _key, (_answer, dropped) = self._kept.popitem(last=False)
+                self._bytes -= len(dropped)
+
+
+_PDF_ANSWERS: ContextVar[PdfAnswers | None] = ContextVar("pdf_answers", default=None)
+
+
+def pdf_answers() -> PdfAnswers | None:
+    """The PDF children's answers kept within limits in this thread."""
+    return _PDF_ANSWERS.get()
+
+
 @contextlib.contextmanager
 def limited(
     pixels: int,
@@ -125,16 +172,17 @@ def limited(
 ) -> Iterator[None]:
     """Render within limits in this thread while the block runs; images
     are then decoded without the caches (they would keep large ones).
-    `slot()` is held by every render meanwhile; the PDF pages of all
-    renders in the block (a preview, a print job with all its rows) take
-    pdf_seconds (default PDF_SECONDS) together at most."""
+    `slot()` is held by every render meanwhile; the PDF children of each
+    render run pdf_seconds (default PDF_SECONDS) together at most, and
+    what they answered is kept for the block (PdfAnswers: a print job's
+    rows)."""
     seconds = PDF_SECONDS if pdf_seconds is None else pdf_seconds
-    token = _LIMITS.set(Limits(pixels, max_length_mm, slot))
-    budget = _PDF_BUDGET.set(PdfBudget(seconds))
+    token = _LIMITS.set(Limits(pixels, max_length_mm, slot, pdf_seconds=seconds))
+    answers = _PDF_ANSWERS.set(PdfAnswers())
     try:
         yield
     finally:
-        _PDF_BUDGET.reset(budget)
+        _PDF_ANSWERS.reset(answers)
         _LIMITS.reset(token)
 
 
@@ -146,8 +194,8 @@ def check_size(width: int, height: int) -> None:
 
 
 def pdf_seconds_left() -> float | None:
-    """Seconds the PDF pages rendered within limits in this thread may
-    still take (0 or less: none), None without limits."""
+    """Seconds the PDF children of the render running within limits in
+    this thread may still take (0 or less: none), None without limits."""
     budget = _PDF_BUDGET.get()
     return None if budget is None else budget.left
 
@@ -1593,8 +1641,12 @@ def render(
     limits = _LIMITS.get()
     token = _RENDER_CACHE.set({}) if limits else None
     slot = limits.slot() if limits and limits.slot else contextlib.nullcontext()
+    budget = None
     try:
         with slot:
+            # a render within a render (a sheet's labels) shares the outer one's
+            if limits and _PDF_BUDGET.get() is None:
+                budget = _PDF_BUDGET.set(PdfBudget(limits.pdf_seconds))
             return _render(
                 label,
                 dpi,
@@ -1605,6 +1657,8 @@ def render(
                 (along_step, across_step),
             )
     finally:
+        if budget is not None:
+            _PDF_BUDGET.reset(budget)
         if token is not None:
             _RENDER_CACHE.reset(token)
 

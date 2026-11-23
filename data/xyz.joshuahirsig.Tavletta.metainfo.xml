@@ -183,7 +183,7 @@
           <li>Zebra (ZPL) printers report the loaded labels: a label distance other than the label's is pointed out before printing</li>
           <li>A text too long (one line) or too tall (many lines) to be drawn now says so, instead of a general error</li>
           <li>Print server: Arial, Calibri and other office fonts drawn by their metric-compatible stand-ins no longer count as missing</li>
-          <li>Print server: the document pages of one preview or print job share a time limit, and per-printer memory is bounded</li>
+          <li>Print server: the document pages of one label share a time limit and are drawn once for a whole series, and per-printer memory is bounded</li>
           <li>Setting a placeholder such as {Inventory} on the command line or through the print server says that it is a data column and how to send it</li>
         </ul>
       </description>

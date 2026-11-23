@@ -14,7 +14,9 @@ from __future__ import annotations
 
 import base64
 import binascii
+import hashlib
 import io
+import json
 import math
 import threading
 from collections import OrderedDict
@@ -599,15 +601,25 @@ def _child_raw(data: str) -> bytes:
 
 
 def _child(raw: bytes, request: dict) -> tuple[dict, bytes]:
-    """pdfchild's answer to the request; its limits broken: RenderTooLarge."""
+    """pdfchild's answer to the request; its limits broken: RenderTooLarge.
+    Asked once per PDF and request within limits (render.PdfAnswers)."""
+    from tavletta.render import pdf_answers
     from tavletta.shipping import pdfchild
 
-    try:
-        answer, body = pdfchild.ask(raw, request)
-    except pdfchild.ChildLimit as e:
-        raise _too_large(str(e)) from None
-    except pdfchild.ChildFailed as e:
-        raise SourceError("unreadable", str(e)) from None
+    kept = pdf_answers()
+    key = (hashlib.sha256(raw).digest(), json.dumps(request, sort_keys=True))
+    found = kept.get(key) if kept is not None else None
+    if found is not None:
+        answer, body = found
+    else:
+        try:
+            answer, body = pdfchild.ask(raw, request)
+        except pdfchild.ChildLimit as e:
+            raise _too_large(str(e)) from None
+        except pdfchild.ChildFailed as e:
+            raise SourceError("unreadable", str(e)) from None
+        if kept is not None:
+            kept.put(key, answer, body)
     if "error" in answer:
         if answer["error"] == "too_large":
             raise _too_large(answer.get("detail", ""))
