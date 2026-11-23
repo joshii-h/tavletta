@@ -82,9 +82,8 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   print method `~HS` reports each time: a label distance changed on the
   printer meanwhile then shows up to 60 s late, unless Tavletta printed a
   job on it (that forgets what came, the printer may have measured the
-  labels anew); a whole
-  frame of settings whose names Tavletta does not know counts as
-  answered too (see below).
+  labels anew); a whole frame of settings whose names Tavletta does not
+  know counts as answered too (see below).
 - Each line of `^HH` is `  <value>   <NAME>`: the name is what follows
   the last run of two or more spaces (`39.0IN   989MM      MAXIMUM
   LENGTH`). The names are English only while the printer's display
