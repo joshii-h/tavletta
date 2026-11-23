@@ -182,7 +182,7 @@ def _installed(name: str) -> bool:
 
 def _look_up(name: str) -> bool:
     """A family of that name, or a font fontconfig finds for it whose family
-    begins the name (a style named as a family: "Source Code Pro Black") or
+    begins the name (a style named as a family: "Source Code Pro Bold") or
     is a metric-compatible stand-in for it (resolves_to)."""
     key = name.casefold()
     fontmap = PangoCairo.FontMap.get_default()
@@ -191,29 +191,32 @@ def _look_up(name: str) -> bool:
     desc = Pango.FontDescription()
     desc.set_family(name)
     font = fontmap.load_font(fontmap.create_context(), desc)
-    loaded = font.describe().get_family().casefold() if font is not None else ""
-    return resolves_to(key, loaded)
+    if font is None:
+        return False
+    found = font.describe()
+    return resolves_to(key, found.get_family() or "", int(found.get_weight()))
 
 
-def resolves_to(asked: str, loaded: str) -> bool:
+def resolves_to(asked: str, loaded: str, weight: int | None = None) -> bool:
     """Whether the font fontconfig loaded for a family stands for it: the
-    family itself, the family of a style named as a family, or a metric
-    alias (Liberation Sans for Arial, Carlito for Calibri), also of a style
-    named as a family ("Arial Bold", "Calibri Light", STYLE_WORDS only:
-    "Arial Black" is another family): the alias of the longest family that
-    begins the name ("Arial Narrow Bold": Arial Narrow's, not Arial's)."""
+    family itself, or a metric alias (Liberation Sans for Arial, Carlito
+    for Calibri); also for a style named as a family ("Source Code Pro
+    Bold", "Arial Bold", "Calibri Light"; _styled: "Arial Black" is
+    another family unless the font loaded is that heavy, `weight`): the
+    alias of the longest family that begins the name ("Arial Narrow
+    Bold": Arial Narrow's, not Arial's)."""
     asked, loaded = asked.casefold(), loaded.casefold()
     if not loaded:
         return False
-    if asked == loaded or asked.startswith(loaded + " "):
+    if _styled(asked, loaded, weight):
         return True
-    families = [key for key in METRIC_ALIASES if _styled(asked, key)]
+    families = [key for key in METRIC_ALIASES if _styled(asked, key, weight)]
     return bool(families) and loaded in METRIC_ALIASES[max(families, key=len)]
 
 
-# the words of a style named as part of a family ("Arial Bold Italic");
-# not Black, Heavy, Rounded, Neue, Unicode: those are families of their own
-# ("Arial Black"), with other widths than the stand-in
+# the words of a style named as part of a family ("Arial Bold Italic",
+# "Calibri Semi Bold"); not Rounded, Neue, Unicode, Condensed: those are
+# families of their own, of other widths
 STYLE_WORDS = frozenset(
     {
         "regular",
@@ -227,22 +230,42 @@ STYLE_WORDS = frozenset(
         "demibold",
         "medium",
         "light",
+        "semilight",
         "thin",
         "extralight",
         "ultralight",
     }
 )
+# heavier than bold: Black and Heavy name families of their own too ("Arial
+# Black"), so they count only when the font loaded is that heavy
+HEAVY_WORDS = {"extrabold": 800, "ultrabold": 800, "black": 900, "heavy": 900}
+_PREFIXES = ("semi", "demi", "extra", "ultra")  # "Semi Bold" is "SemiBold"
 
 
-def _styled(asked: str, family: str) -> bool:
-    """The (case folded) name is the family, or the family followed only
-    by style words ("calibri light", "times new roman bold italic")."""
+def _style_words(rest: str) -> list[str]:
+    words: list[str] = []
+    for word in rest.replace("-", " ").split():
+        if words and words[-1] in _PREFIXES:
+            words[-1] += word
+        else:
+            words.append(word)
+    return words
+
+
+def _styled(asked: str, family: str, weight: int | None = None) -> bool:
+    """The (case folded) name is the family, or the family followed (after
+    a space or a hyphen: "arial-bold") only by style words ("calibri
+    light", "times new roman bold italic"), heavy ones only if `weight` is."""
     if asked == family:
         return True
-    if not asked.startswith(family + " "):
+    if not asked.startswith(family) or asked[len(family)] not in " -":
         return False
-    words = asked[len(family) :].replace("-", "").split()  # "Semi-Bold" as "SemiBold"
-    return all(word in STYLE_WORDS for word in words)
+    for word in _style_words(asked[len(family) :]):
+        heavy = HEAVY_WORDS.get(word)
+        if word in STYLE_WORDS or (heavy and weight is not None and weight >= heavy - 50):
+            continue
+        return False
+    return True
 
 
 # the weights Pango names; a font weight between them takes the nearest. By

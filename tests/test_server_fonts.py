@@ -66,7 +66,8 @@ def test_a_metric_alias_counts_as_installed():
     assert typeset.resolves_to("Courier New", "Liberation Mono")
     assert typeset.resolves_to("Calibri", "Carlito")
     assert typeset.resolves_to("Cambria", "Caladea")
-    assert typeset.resolves_to("Source Code Pro Black", "Source Code Pro")
+    assert typeset.resolves_to("Source Code Pro Bold", "Source Code Pro")
+    assert typeset.resolves_to("Source Code Pro Black", "Source Code Pro", 900)
     # not a stand-in: another font of other widths, or none at all
     assert not typeset.resolves_to("Arial", "DejaVu Sans")
     assert not typeset.resolves_to("Calibri", "Liberation Sans")
@@ -112,9 +113,49 @@ def test_more_metric_aliases_and_styles(asked, loaded, stands_for):
     assert typeset.resolves_to(asked, loaded) is stands_for
 
 
-def fontmap(loads: str):
+@pytest.mark.parametrize(
+    ("asked", "loaded", "weight", "stands_for"),
+    [
+        # the family itself, followed by style words only
+        ("Arial Black", "Arial", 400, False),  # Arial loaded: not Arial Black
+        ("Arial Black", "Arial", 900, True),  # the font loaded is that heavy
+        ("Source Code Pro Black", "Source Code Pro", 900, True),
+        ("Source Code Pro Black", "Source Code Pro", 400, False),
+        ("Source Code Pro Heavy", "Source Code Pro", None, False),  # weight unknown
+        ("Helvetica Neue", "Helvetica", 400, False),
+        ("Arial Rounded MT Bold", "Arial", 700, False),
+        ("DejaVu Sans Condensed", "DejaVu Sans", 400, False),
+        # two words of one weight, a hyphen after the family
+        ("Calibri Semi Bold", "Carlito", 600, True),
+        ("Calibri Extra Light", "Carlito", 200, True),
+        ("Arial-Bold", "Liberation Sans", 700, True),
+        ("Arial-BoldItalic", "Liberation Sans", 700, False),  # one word: not known
+        ("Arial-Bold-Italic", "Liberation Sans", 700, True),
+        ("Source Code Pro ExtraBold", "Source Code Pro", 800, True),
+        ("Source Code Pro Ultra Bold", "Source Code Pro", 800, True),
+        ("Arial ExtraBold", "Liberation Sans", 700, False),
+        ("Arialbold", "Arial", 700, False),  # not after a space or hyphen
+    ],
+)
+def test_style_words_after_the_family(asked, loaded, weight, stands_for):
+    assert typeset.resolves_to(asked, loaded, weight) is stands_for
+
+
+def test_font_installed_passes_the_weight_loaded(monkeypatch):
+    """Arial Black where fontconfig loads regular Arial: missing."""
+    for weight, installed in ((400, False), (900, True)):
+        cairo_ns = SimpleNamespace(
+            FontMap=SimpleNamespace(get_default=lambda w=weight: fontmap("Arial", w))
+        )
+        monkeypatch.setattr(typeset, "PangoCairo", cairo_ns)
+        monkeypatch.setattr(typeset, "_fonts", {})
+        assert typeset.font_installed("Arial Black") is installed
+
+
+def fontmap(loads: str, weight: int = 400):
     """A Pango font map without the asked family that loads `loads` for it."""
-    font = SimpleNamespace(describe=lambda: SimpleNamespace(get_family=lambda: loads))
+    described = SimpleNamespace(get_family=lambda: loads, get_weight=lambda: weight)
+    font = SimpleNamespace(describe=lambda: described)
     return SimpleNamespace(
         list_families=lambda: [SimpleNamespace(get_name=lambda: "DejaVu Sans")],
         create_context=lambda: None,
