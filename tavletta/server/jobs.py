@@ -192,6 +192,15 @@ class JobQueue:
         self._load.pop(oldest, None)
         return True
 
+    def printing(self, key: str) -> bool:
+        """Whether a job prints on the printer of this key (PrintJob.key)
+        now, or waits for its label file to print."""
+        with self._lock:
+            return any(
+                job.state in (PRINTING, WAITING) and (job.key or job.host) == key
+                for job in self._jobs.values()
+            )
+
     def get(self, job_id: str) -> PrintJob | None:
         with self._lock:
             return self._jobs.get(job_id)

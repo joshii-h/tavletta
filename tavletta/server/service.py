@@ -48,7 +48,7 @@ from tavletta.cli import (
     apply_assignments,
     ask_printer,
 )
-from tavletta.job import Job, PrepareFailed, other_labels, preview_image
+from tavletta.job import Job, PrepareFailed, labels_reported, other_labels, preview_image
 from tavletta.merge import MergeError, read_book
 from tavletta.model import (
     CodeElement,
@@ -101,9 +101,11 @@ from tavletta.variables import BUILTIN, Values, label_names, uses_counter
 log = logging.getLogger(__name__)
 DISCOVERY_SECONDS = 30.0  # printers found are remembered this long
 STATUS_SECONDS = 5.0  # the state of printers in the list, as long
-# a preview or a print request waits this long for the state of its printer
-# (other labels loaded than the label's); one that answers later warns the
-# next request (STATUS_SECONDS), a print job when it prints
+# other labels loaded (_loaded_warnings()): the printer's last answer counts
+# this long, while it is asked anew in the background; a printer not known
+# yet is waited for this long by a preview or a print request (a later
+# answer counts for the next one, and for the job when it prints)
+KNOWN_SECONDS = 60.0
 STATE_WAIT = 1.0
 MAX_HOST = 512
 RENDERS = 2  # renders for previews and checks at once: a large label takes much memory
@@ -162,9 +164,6 @@ class Checked:
     warnings: list[RenderWarning]
     save: bool  # the next counter value goes into the label file
     total: int  # labels
-    # the question to its printer of printers.toml, asked while it is checked
-    # (_labels_question())
-    question: Future[PrinterInfo | Exception] | None = None
 
 
 @dataclass
@@ -366,6 +365,7 @@ class Service:
         allowed_hosts: tuple[str, ...] = (),
         settings: Callable[[], Settings] = Settings.load,
         clock: Callable[[], datetime] = datetime.now,
+        monotonic: Callable[[], float] = time.monotonic,
         printers: Mapping[str, NamedPrinter] | None = None,
         discover: bool = False,
         max_labels: int = 10_000,
@@ -382,12 +382,15 @@ class Service:
         self.allow_pdf_pages = allow_pdf_pages
         self._settings = settings
         self._clock = clock
+        self._monotonic = monotonic  # the ages of the printers' answers
         self.jobs = JobQueue(self._failed)
         self._found: dict[str, tuple[float, list[dict[str, str]]]] = {}
         self._found_lock = threading.Lock()
         self._label_locks: dict[str, threading.Lock] = {}
         self._searches: dict[str, threading.Lock] = {}
         self._states: dict[str, tuple[float, PrinterInfo | Exception]] = {}
+        # the last answer of each printer that was not an error, and when
+        self._answers: dict[str, tuple[float, PrinterInfo]] = {}
         # the question to a printer running now, by its name (_question())
         self._asking: dict[str, Future[PrinterInfo | Exception]] = {}
         self._renders = threading.BoundedSemaphore(RENDERS)
@@ -435,20 +438,29 @@ class Service:
             for p, state in zip(chosen, states, strict=True)
         ]
 
-    def _probe(self, printer: NamedPrinter) -> PrinterInfo | Exception:
+    def _probe(self, printer: NamedPrinter, errors: bool = True) -> PrinterInfo | Exception:
         """What the printer answered (or the error), remembered a few
         seconds and asked for once at a time per printer: a list asked for
         often must not keep every printer busy. Kept raw, so each answer is
-        in the language of its request."""
-        return self._question(printer).result()
+        in the language of its request. errors False: an error of the last
+        seconds is not taken, the printer is asked anew (a job: the printer
+        may have been busy with the job before it)."""
+        return self._question(printer, errors).result()
 
-    def _question(self, printer: NamedPrinter) -> Future[PrinterInfo | Exception]:
-        """The printer's answer of the last STATUS_SECONDS, else the
-        question to it running now, else a new one: in a thread of its own,
-        so a caller can stop waiting for it (_loaded_warnings())."""
+    def _question(
+        self, printer: NamedPrinter, errors: bool = True
+    ) -> Future[PrinterInfo | Exception]:
+        """The printer's answer of the last STATUS_SECONDS (an error only
+        with `errors`), else the question to it running now, else a new
+        one: in a thread of its own, so a caller can stop waiting for it
+        (_recent_info())."""
         with self._found_lock:
             cached = self._states.get(printer.name)
-            if cached and time.monotonic() - cached[0] < STATUS_SECONDS:
+            if (
+                cached
+                and self._monotonic() - cached[0] < STATUS_SECONDS
+                and (errors or not isinstance(cached[1], Exception))
+            ):
                 answered: Future[PrinterInfo | Exception] = Future()
                 answered.set_result(cached[1])
                 return answered
@@ -457,13 +469,20 @@ class Service:
                 return running
             question: Future[PrinterInfo | Exception] = Future()
             self._asking[printer.name] = question
-        threading.Thread(
+        thread = threading.Thread(
             target=self._ask, args=(printer, question), name="tavletta-probe", daemon=True
-        ).start()
+        )
+        try:
+            thread.start()
+        except RuntimeError as e:  # no thread to be had (TasksMax, memory): not asked
+            with self._found_lock:
+                del self._asking[printer.name]
+            question.set_result(e)
         return question
 
     def _ask(self, printer: NamedPrinter, question: Future[PrinterInfo | Exception]) -> None:
-        outcome: PrinterInfo | Exception = RuntimeError("the question ended without an answer")
+        # for bug reports only: the answer shows as a generic printer problem
+        outcome: PrinterInfo | Exception = PrinterError("the question ended without an answer")
         try:
             outcome = get_backend(printer.backend).query(printer.host)
         except Exception as e:  # noqa: BLE001 - the backend's errors, like in the window
@@ -471,7 +490,10 @@ class Service:
             outcome = e
         finally:  # answered in any case: no one waits for ever, the next one asks anew
             with self._found_lock:
-                self._states[printer.name] = (time.monotonic(), outcome)
+                now = self._monotonic()
+                self._states[printer.name] = (now, outcome)
+                if isinstance(outcome, PrinterInfo):
+                    self._answers[printer.name] = (now, outcome)
                 del self._asking[printer.name]
             question.set_result(outcome)
 
@@ -595,6 +617,7 @@ class Service:
     def _info(self, backend: Backend, host: str, info: PrinterInfo, settings: Settings) -> dict:
         unit = unit_for(settings.units)
         cassette = info.cassette
+        chosen = settings.printer(backend).backend_settings()  # its jobs' settings
         return {
             "printer": backend.id,
             "host": host,
@@ -616,13 +639,11 @@ class Service:
                 # settings on the printer, not the loaded labels (ZPL, cab)
                 "width_mm": info.width_mm,
                 "print_method": info.print_method or None,
-                # what this server's jobs print with: the printer's settings
+                # what this server's jobs do: the printer's settings
                 # (printers.toml, else the app's) may set it for each job
-                "job_print_method": backend.job_print_method(
-                    settings.printer(backend).backend_settings(), info
-                )
-                or None,
+                "job_print_method": backend.job_print_method(chosen, info) or None,
                 "media_type": info.media_type or None,  # how the printer finds the labels
+                "job_media_type": backend.job_media_type(chosen, info) or None,
                 "cassette": (
                     {
                         "lot": cassette.lot,
@@ -862,7 +883,6 @@ class Service:
         if prepared.rows and index >= len(prepared.rows):
             raise invalid_field("row")
         job = prepared.job(index=index if prepared.rows else None)
-        question = self._labels_question(prepared)  # answered while it renders
         with self._rendering(prepared):
             label, warnings = job.expanded(1)
             if request.view == "printer":
@@ -877,7 +897,9 @@ class Service:
             buffer = io.BytesIO()
             image.save(buffer, format="PNG")
         warnings += font_warnings(prepared.label)
-        warnings += self._loaded_warnings(prepared, question)
+        # after the render: an answer changes what the backend renders for
+        # this printer (a raw printer's resolution)
+        warnings += self._loaded_warnings(prepared)
         texts = [_warning(w.key, warning_text(w)) for w in warnings]
         if prepared.rows and (unknown := unknown_columns(prepared.label, list(prepared.rows[0]))):
             names = ", ".join("{%s}" % name for name in unknown)
@@ -1010,11 +1032,10 @@ class Service:
                 "too_many_labels",
                 _("At most %d labels in one print job") % self.max_labels,
             )
-        question = self._labels_question(prepared)  # answered while it is checked
         with self._rendering(prepared):
             warnings = self._check(prepared) + font_warnings(prepared.label)
         save = self._saves(prepared, request.no_save_counter)
-        return Checked(request, prepared, warnings, save, total, question)
+        return Checked(request, prepared, warnings, save, total)
 
     def queue_print(self, checked: Checked, caller: Caller = LOCAL) -> PrintJob:
         prepared, save = checked.prepared, checked.save
@@ -1024,7 +1045,7 @@ class Service:
         def run(job: PrintJob):
             return self._print(job, prepared, save)
 
-        warnings = checked.warnings + self._loaded_warnings(prepared, checked.question)
+        warnings = checked.warnings + self._loaded_warnings(prepared)
         job = PrintJob(prepared.backend.id, host, name, checked.total, run, warnings=warnings)
         job.owner = caller.name
         job.limited = caller.named
@@ -1048,34 +1069,45 @@ class Service:
         )
         return job
 
-    def _labels_question(self, prepared: Prepared) -> Future[PrinterInfo | Exception] | None:
-        """The question to the printer of printers.toml a request is for,
-        for what it reports of the loaded labels (_loaded_warnings()); None
-        without one, and for tape and page printers (nothing to compare)."""
-        caps = prepared.backend.capabilities
-        if prepared.named is None or caps.continuous or caps.pages:
-            return None
-        return self._question(prepared.named)
-
-    def _loaded_warnings(
-        self, prepared: Prepared, question: Future[PrinterInfo | Exception] | None
-    ) -> list[RenderWarning]:
-        """other_labels_loaded if the printer has other labels loaded than
-        the label's, as far as it answered by now or within STATE_WAIT
-        seconds more (waited for without a render slot); nothing if it does
-        not answer, or with an error. Printed anyway, as from the command
-        line."""
-        if question is None:
+    def _loaded_warnings(self, prepared: Prepared) -> list[RenderWarning]:
+        """other_labels_loaded if the printer of printers.toml a request is
+        for has other labels loaded than the label's (_recent_info());
+        nothing without one, for printers that do not report the labels
+        (Backend.reports_labels), and while nothing is known of them.
+        Printed anyway, as from the command line."""
+        named = prepared.named
+        if named is None or not prepared.backend.reports_labels:
             return []
+        info = self._recent_info(named)
+        return _other_labels(prepared, prepared.options.settings, info) if info else []
+
+    def _recent_info(self, printer: NamedPrinter) -> PrinterInfo | None:
+        """What the printer reported lately, for a request's warning: its
+        last answer of KNOWN_SECONDS (None after an error of that time and
+        no answer), asked anew in the background once it is older than
+        STATUS_SECONDS; with nothing known, its answer within STATE_WAIT
+        seconds (waited for without a render slot). Not asked while a job
+        of this server prints on it: the job asks it itself, and a USB
+        printer would keep the question waiting for it."""
+        now = self._monotonic()
+        printing = self.jobs.printing(queue_key(printer.host))
+        with self._found_lock:
+            state = self._states.get(printer.name)
+            answer = self._answers.get(printer.name)
+        question = None
+        if not printing and (state is None or now - state[0] >= STATUS_SECONDS):
+            question = self._question(printer)  # a refresh, or the first question
+        if state is not None and now - state[0] <= KNOWN_SECONDS:
+            return answer[1] if answer and now - answer[0] <= KNOWN_SECONDS else None
+        if question is None:
+            return None
         if not question.done():
             with self.slot_released(), contextlib.suppress(TimeoutError):
                 question.result(timeout=STATE_WAIT)
         if not question.done():
-            return []
+            return None
         outcome = question.result()
-        if isinstance(outcome, Exception):
-            return []
-        return _other_labels(prepared, prepared.options.settings, outcome)
+        return None if isinstance(outcome, Exception) else outcome
 
     def _saves(self, prepared: Prepared, no_save: bool) -> bool:
         """Whether the job saves the next counter value into the label
@@ -1163,9 +1195,10 @@ class Service:
         what is known of it."""
         info = None
         backend = prepared.backend
-        if backend.query_before_render:
+        if backend.query_before_render or backend.reports_labels:
             if prepared.named is not None:
-                outcome = self._probe(prepared.named)
+                # an error of the last seconds may be of the job before (busy)
+                outcome = self._probe(prepared.named, errors=False)
                 info = None if isinstance(outcome, Exception) else outcome
             else:
                 # waits as the command line does, all of it at once: a
@@ -1173,7 +1206,10 @@ class Service:
                 info = ask_printer(backend, job.host, QUERY_WAIT + QUERY_FINISH, 0.0)
         options = prepared.options
         options = prepared.printer.options(info, options.copies, options.gap_mm, host=job.host)
-        if info is not None:  # the labels loaded now: what the job prints on
+        if info is not None and labels_reported(backend, info, options.settings):
+            # the labels loaded now: what the job prints on (a printer that
+            # tells nothing of them now, busy or not synchronised, leaves
+            # the warning of the request as it is)
             loaded = _other_labels(prepared, options.settings, info)
             job.warnings = [w for w in job.warnings if w.key != OTHER_LABELS] + loaded
         return replace(prepared, options=options)

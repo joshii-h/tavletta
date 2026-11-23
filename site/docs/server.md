@@ -63,7 +63,8 @@ tavletta serve --labels-dir ~/Labels
 - The printer's state tells the print method set on the printer
   (`media.print_method`) and the one its jobs print with
   (`media.job_print_method`): with `method = "transfer"` a cab set up for
-  thermal direct prints the server's jobs with a ribbon.
+  thermal direct prints the server's jobs with a ribbon. The same for how
+  the labels are found: `media.media_type` and `media.job_media_type`.
 - Mistakes in the file are named when the server starts.
 - The list of printers shows each printer with its state.
 - The server searches the network for printers only when started with

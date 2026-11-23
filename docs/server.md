@@ -135,7 +135,9 @@ upside_down = true                   # print turned by 180 degrees (cab: O R)
   and MCP alike. The printer's status tells both: `media.print_method` as
   set on the printer, `media.job_print_method` as its jobs print (a cab
   set to thermal direct, with `method = "transfer"`: `direct` and
-  `transfer`).
+  `transfer`); the same for `media.media_type` and `media.job_media_type`
+  (a ZPL printer set to gap labels, with `media = "mark"`: `gap` and
+  `mark`).
 - With the list, `printer` in a request is a name from it; the label is
   moved to that printer's model as in the app. Without `printer` the
   default printer is used, or the only one; else printing is refused
@@ -147,7 +149,9 @@ upside_down = true                   # print turned by 180 degrees (cab: O R)
   does not answer; `?status=false` skips asking). `GET
   /printers/{name}/status` asks one. What a printer answered (or its
   error) is remembered for 5 s for both, one question at a time per
-  printer; messages are made for each request in its language.
+  printer; messages are made for each request in its language. Previews
+  and print requests ask a printer that tells of its labels too, for the
+  warning `other_labels_loaded` (below).
 - `packaging/docker/printers.example.toml` is a starting point.
 
 ## Access tokens and roles (tokens.toml)
@@ -239,7 +243,7 @@ reference page `site/docs/api.md` are written from it by
 | `GET /openapi.json` | the OpenAPI description |
 | `GET /printers?status=false` | with `printers.toml`: its printers the token may use, with `name`, `printer` (model), `host`, `description`, `location`, `media`, `default`, `max_copies` and `status` |
 | `GET /printers?discover=false` | without it: printer models: id, name, kind (`tape`, `labels`, `pages`), resolution, tape widths or label sizes, the address set in the app (`configured_host`) and, with `--discover`, the printers found on the network (`found`; remembered for 30 s) |
-| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, print width, print method and media type set on the printer, cassette; `job_print_method`: the print method the server's jobs print with, which a printer's `method` setting may choose for each job, else the one set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
+| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, print width, print method and media type set on the printer, cassette; from the server's settings for the printer: `job_print_method` and `job_media_type`, what the server's jobs print with and how they find the labels, which the printer's `method` and `media` settings may choose for each job, else as set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
 | `GET /labels` | label files in the labels folder and below: `name`, `bytes`, `modified` |
 | `GET /labels/{name}` | elements with their names (what `set` fills in), `variables`, `builtin_variables`, `columns` of the placeholders, `data_file` (if usable), size, counter, features |
 | `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings and the PNG in base64; `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |
@@ -276,14 +280,20 @@ Like the window and `tavletta print`, the server warns when the printer
 has other die-cut labels loaded than the label's: labels of another size,
 or another label distance measured (warning `other_labels_loaded`; a ZPL
 printer's hint suggests calibrating it, its distance may be from an
-earlier roll). The label prints anyway. A preview and a print request for
-a printer of `printers.toml` ask it (its answer of the last 5 seconds
-counts, as for the printer list) and wait at most a second: a printer that
-does not answer gives no warning and does not hold the request up. When
-the job prints, it is replaced by what the printer reports then, for every
-printer the job asks before it prints. Not for a job that senses the
-labels otherwise than the printer reports (a continuous job on a printer
-set to gap labels).
+earlier roll). The label prints anyway. Only printers that tell of their
+labels are asked for it: cab, ZPL and Brother QL with die-cut labels. A
+preview and a print request for a printer of `printers.toml` take the
+printer's answer of the last minute, a recent error as nothing known,
+without waiting, and ask it anew in the background once the answer is
+older than 5 s (not while a job of the server prints on it). Only a
+printer the server knows nothing of yet is waited for, after the label is
+rendered, up to a second; a printer that does not answer by then gives no
+warning. When the job prints, the warning is replaced by what the printer
+reports then, if it tells of the loaded labels (a busy printer, or one
+that has not measured the labels, leaves it as it was); without
+`printers.toml` only the job warns. Not for a job that finds the labels
+otherwise than the printer reports (`job_media_type` is not `media_type`:
+a continuous job on a printer set to gap labels).
 
 Example, with the example labels of `docs/examples` as the labels folder
 (`serial.tavletta` has the placeholders `{Code}`, `{Name}`, `{Shelf}` and

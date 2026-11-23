@@ -405,7 +405,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `cancel_requested` | boolean | DELETE was sent. |
 | `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |
 | `remark` | string or null | A note of the printer, for people. |
-| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); told by the printer of `printers.toml` when the job is queued, and replaced by what the printer reports when it prints (if it is asked then). |
+| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |
 | `created` | string | UTC. |
 | `started` | string or null |  |
 | `finished` | string or null |  |
@@ -457,7 +457,7 @@ A printer of printers.toml.
 | `dpi` | number |  |
 | `firmware` | string or null |  |
 | `modes` | array of string |  |
-| `media` | object | What is loaded, as far as the printer tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), job_print_method (what this server's jobs print with), media_type (gap, mark or continuous: how the printer is set to find the labels), cassette. |
+| `media` | object | What is loaded and how the printer is set up, as far as it tells (null: not told): tape_mm, remaining_mm, total_mm, pitch_mm (die-cut labels: the label distance measured), width_mm (the print width set on a ZPL printer: a setting, not the loaded labels), print_method (direct or transfer, as set on the printer), media_type (gap, mark or continuous: how the printer is set to find the labels), cassette. Not told by the printer but from the server's settings for it: job_print_method and job_media_type, what this server's jobs do. |
 
 ### Preview { #preview }
 
@@ -465,7 +465,7 @@ A printer of printers.toml.
 |---|---|---|
 | `width` | integer |  |
 | `height` | integer |  |
-| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured), if it answers within a second. |
+| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its answer of the last minute counts (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |
 | `png` | string |  |
 
 Example of a job:
