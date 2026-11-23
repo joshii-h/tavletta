@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "องค์ประกอบ %(n)d: ข้อความสูงเกินกว่าจะวาดได้ – ใช้บรรทัดน้อยลงหรือขนาดที่เล็กลง",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ระบุไฟล์ข้อมูลด้วย --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ส่งใน data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s ถูกเติมจากแถวข้อมูล ({%(name)s}) และตั้งค่าไม่ได้",
 }

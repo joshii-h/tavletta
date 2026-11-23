@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "요소 %(n)d: 텍스트가 너무 높아 그릴 수 없습니다 – 줄 수를 줄이거나 크기를 작게 하세요",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – --data로 데이터 파일을 지정하세요",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – data_rows로 보내세요",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s은(는) 데이터 행에서 채워지므로 ({%(name)s}) 설정할 수 없습니다",
 }

@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Element %(n)d: tekst jest za wysoki, by go narysować – użyj mniej wierszy albo mniejszego rozmiaru",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s to kolumna danych ({%(name)s}) – podaj plik danych przez --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s to kolumna danych ({%(name)s}) – wyślij ją w data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s jest wypełniane z wierszy danych ({%(name)s}) i nie można go ustawić",
 }

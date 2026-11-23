@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Element %(n)d: tekst on joonistamiseks liiga kõrge – kasuta vähem ridu või väiksemat suurust",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s on andmeveerg ({%(name)s}) – anna andmefail võtmega --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s on andmeveerg ({%(name)s}) – saada see väljal data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s täidetakse andmeridadest ({%(name)s}) ja seda ei saa määrata",
 }

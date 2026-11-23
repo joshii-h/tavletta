@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Elemen %(n)d: teks terlalu tinggi untuk digambar – gunakan lebih sedikit baris atau ukuran yang lebih kecil",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s adalah kolom data ({%(name)s}) – berikan file data dengan --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s adalah kolom data ({%(name)s}) – kirimkan dalam data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s diisi dari baris data ({%(name)s}) dan tidak dapat diatur",
 }

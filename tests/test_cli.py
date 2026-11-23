@@ -331,6 +331,34 @@ def test_set_of_a_data_column_points_to_data(mono, label_file, capsys):
     assert contents(mono) == [["300021"]]
 
 
+def test_set_of_a_data_column_with_data_given(mono, label_file, tmp_path, capsys):
+    """With --data the rows fill the column: it cannot be set."""
+    data = tmp_path / "rows.csv"
+    data.write_text("Inventory\n1\n", encoding="utf-8")
+    path = label_file(TextElement(text="No. {Inventory}"))
+    code = run("print", path, "--host", "h", "--data", data, "--set", "Inventory=2")
+    assert code == cli.EXIT_USAGE
+    assert err(capsys) == (
+        "tavletta: Inventory is filled from the data rows ({Inventory}) and cannot be set\n"
+    )
+    assert mono.jobs == []
+
+
+@pytest.mark.parametrize("column", ["date", "counter", "time"])
+def test_set_of_a_builtin_is_no_data_column(mono, label_file, capsys, column):
+    """{date} as a column of the label: --set date=... still sets the
+    moment, and the built-in variables keep their own message."""
+    path = label_file(TextElement(text="{%s} {=date}" % column))
+    code = run("print", path, "--host", "h", "--set", "%s=2026-12-24T08:30" % column)
+    if column == "date":
+        assert code == 0 and contents(mono) == [["{date} 24.12.2026"]]
+    else:
+        assert code == cli.EXIT_USAGE
+        assert err(capsys) == (
+            "tavletta: {=%s} is filled in when printing and cannot be set\n" % column
+        )
+
+
 def test_unknown_variables_are_refused(mono, label_file, capsys):
     path = label_file(TextElement(text="Lot {=lot}"))
     assert run("print", path, "--host", "h") == cli.EXIT_LABEL

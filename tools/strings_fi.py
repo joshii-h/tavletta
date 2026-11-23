@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Elementti %(n)d: teksti on liian korkea piirrettäväksi – käytä vähemmän rivejä tai pienempää kokoa",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s on datasarake ({%(name)s}) – anna datatiedosto valitsimella --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s on datasarake ({%(name)s}) – lähetä se kentässä data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s täytetään datariveiltä ({%(name)s}), eikä sitä voi asettaa",
 }

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-23 13:21+0100\n"
+"PO-Revision-Date: 2026-11-23 13:39+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: th\n"
 "Language: th\n"
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Box and frame"
 msgstr "กล่องและกรอบ"
 
-#: tavletta/app.py:221 tavletta/cli.py:184
+#: tavletta/app.py:221 tavletta/cli.py:186
 msgid "Design and print labels"
 msgstr "ออกแบบและพิมพ์ฉลาก"
 
@@ -44,70 +44,75 @@ msgid ""
 "code; see THIRD_PARTY_NOTICES.md"
 msgstr "จาก %(projects)s และคู่มือของผู้ผลิต เขียนขึ้นใหม่โดยไม่ใช้โค้ดของโครงการเหล่านั้น ดู THIRD_PARTY_NOTICES.md"
 
-#: tavletta/cli.py:110
+#: tavletta/cli.py:111
+#, python-format
+msgid "%(name)s is filled from the data rows ({%(name)s}) and cannot be set"
+msgstr "%(name)s ถูกเติมจากแถวข้อมูล ({%(name)s}) และตั้งค่าไม่ได้"
+
+#: tavletta/cli.py:113
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – give a data file with --data"
 msgstr "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ระบุไฟล์ข้อมูลด้วย --data"
 
-#: tavletta/cli.py:129
+#: tavletta/cli.py:131
 #, python-format
 msgid "expected NAME=VALUE: %s"
 msgstr "ต้องการ NAME=VALUE: %s"
 
-#: tavletta/cli.py:145
+#: tavletta/cli.py:147
 #, python-format
 msgid "expected a whole number from %(min)d to %(max)d: %(value)s"
 msgstr "ต้องการจำนวนเต็มตั้งแต่ %(min)d ถึง %(max)d: %(value)s"
 
-#: tavletta/cli.py:178
+#: tavletta/cli.py:180
 #, python-format
 msgid "expected rows such as 3-10, 5 or 7-: %s"
 msgstr "ต้องการแถว เช่น 3-10, 5 หรือ 7-: %s"
 
-#: tavletta/cli.py:185
+#: tavletta/cli.py:187
 msgid "Without a command the application starts; label files given open in it."
 msgstr "หากไม่มีคำสั่ง แอปจะเริ่มทำงาน และเปิดไฟล์ฉลากที่ระบุในแอป"
 
-#: tavletta/cli.py:191
+#: tavletta/cli.py:193
 msgid "print a label file without opening a window"
 msgstr "พิมพ์ไฟล์ฉลากโดยไม่เปิดหน้าต่าง"
 
-#: tavletta/cli.py:192
+#: tavletta/cli.py:194
 msgid "Print a label file without opening a window."
 msgstr "พิมพ์ไฟล์ฉลากโดยไม่เปิดหน้าต่าง"
 
-#: tavletta/cli.py:194
+#: tavletta/cli.py:196
 msgid "the label (.tavletta)"
 msgstr "ฉลาก (.tavletta)"
 
-#: tavletta/cli.py:197
+#: tavletta/cli.py:199
 #, python-format
 msgid "printer model, by default the label's: %s"
 msgstr "รุ่นเครื่องพิมพ์ ค่าเริ่มต้นคือรุ่นของฉลาก: %s"
 
-#: tavletta/cli.py:200
+#: tavletta/cli.py:202
 msgid "printer address, by default the one set in the app"
 msgstr "ที่อยู่เครื่องพิมพ์ ค่าเริ่มต้นคือที่ตั้งไว้ในแอป"
 
-#: tavletta/cli.py:203
+#: tavletta/cli.py:205
 msgid "number of copies"
 msgstr "จำนวนสำเนา"
 
-#: tavletta/cli.py:213
+#: tavletta/cli.py:215
 msgid ""
 "text of the element NAME, or value of the variable {=NAME}; variables in a "
 "text are filled in; repeatable"
 msgstr "ข้อความขององค์ประกอบ NAME หรือค่าของตัวแปร {=NAME} ตัวแปรในข้อความจะถูกเติมค่า ใช้ซ้ำได้"
 
-#: tavletta/cli.py:223
+#: tavletta/cli.py:225
 msgid "like --set, but the value is used as it is: braces are no variables"
 msgstr "เหมือน --set แต่ใช้ค่าตามที่ระบุ: วงเล็บปีกกาไม่ใช่ตัวแปร"
 
-#: tavletta/cli.py:229
+#: tavletta/cli.py:231
 msgid "counter of the first label, instead of the one saved in the label"
 msgstr "ตัวนับของฉลากแรก แทนค่าที่บันทึกไว้ในฉลาก"
 
-#: tavletta/cli.py:235
+#: tavletta/cli.py:237
 msgid ""
 "print with the printer model's defaults instead of the cut, colours, "
 "quality, extras (chain printing, high resolution, tape feed), printer "
@@ -115,7 +120,7 @@ msgid ""
 "the safety margin stay"
 msgstr "พิมพ์ด้วยค่าเริ่มต้นของรุ่นเครื่องพิมพ์ แทนการตัด สี คุณภาพ ตัวเลือกเพิ่มเติม (พิมพ์ต่อเนื่อง ความละเอียดสูง การป้อนเทป) การตั้งค่าเครื่องพิมพ์ และเส้นขอบแผ่นฉลากที่เลือกไว้ล่าสุดในแอป ที่อยู่และระยะขอบปลอดภัยยังคงเดิม"
 
-#: tavletta/cli.py:244
+#: tavletta/cli.py:246
 msgid ""
 "print method of a thermal printer that has the setting: printer (as set on "
 "the printer), transfer (with a ribbon) or direct (thermal direct, no "
@@ -123,326 +128,326 @@ msgid ""
 "one set on the printer"
 msgstr "วิธีพิมพ์ของเครื่องพิมพ์ความร้อนที่มีการตั้งค่านี้: printer (ตามที่ตั้งไว้ในเครื่องพิมพ์), transfer (ใช้ริบบอน) หรือ direct (ความร้อนโดยตรง ไม่ใช้ริบบอน) ค่าเริ่มต้นคือวิธีที่เลือกไว้ในแอป เมื่อใช้ --printer-defaults จะเป็นวิธีที่ตั้งไว้ในเครื่องพิมพ์"
 
-#: tavletta/cli.py:253
+#: tavletta/cli.py:255
 msgid ""
 "do not ask the printer before rendering (its model, tape and resolution)"
 msgstr "ไม่ต้องถามเครื่องพิมพ์ก่อนเรนเดอร์ (รุ่น เทป และความละเอียด)"
 
-#: tavletta/cli.py:259
+#: tavletta/cli.py:261
 msgid ""
 "do not save the next counter value in the label (a read-only file); the next "
 "print starts from the same number"
 msgstr "ไม่บันทึกค่าตัวนับถัดไปลงในฉลาก (ไฟล์อ่านอย่างเดียว) การพิมพ์ครั้งถัดไปจะเริ่มจากหมายเลขเดิม"
 
-#: tavletta/cli.py:268
+#: tavletta/cli.py:270
 msgid ""
 "serial labels: one label for each row of this CSV, ODS or XLSX file; by "
 "default the data file of the label"
 msgstr "ฉลากแบบชุด: หนึ่งฉลากต่อแต่ละแถวของไฟล์ CSV, ODS หรือ XLSX นี้ ค่าเริ่มต้นคือไฟล์ข้อมูลของฉลาก"
 
-#: tavletta/cli.py:273
+#: tavletta/cli.py:275
 msgid "the sheet of the data file, by default the first"
 msgstr "ชีตของไฟล์ข้อมูล ค่าเริ่มต้นคือชีตแรก"
 
-#: tavletta/cli.py:279
+#: tavletta/cli.py:281
 msgid "only these rows of the data file, e.g. 3-10, 5 or 7- (counted from 1)"
 msgstr "เฉพาะแถวเหล่านี้ของไฟล์ข้อมูล เช่น 3-10, 5 หรือ 7- (นับจาก 1)"
 
-#: tavletta/cli.py:282
+#: tavletta/cli.py:284
 msgid "check and render only, do not print"
 msgstr "ตรวจสอบและเรนเดอร์เท่านั้น ไม่พิมพ์"
 
-#: tavletta/cli.py:288
+#: tavletta/cli.py:290
 msgid ""
 "with --dry-run: save each label as PNG as the window exports it, at most 600 "
 "dpi (- for stdout: the first only)"
 msgstr "เมื่อใช้ --dry-run: บันทึกแต่ละฉลากเป็น PNG แบบที่หน้าต่างส่งออก สูงสุด 600 dpi (- สำหรับ stdout: เฉพาะฉลากแรก)"
 
-#: tavletta/cli.py:294
+#: tavletta/cli.py:296
 msgid "list the printers found on the network"
 msgstr "แสดงรายการเครื่องพิมพ์ที่พบในเครือข่าย"
 
-#: tavletta/cli.py:295
+#: tavletta/cli.py:297
 msgid "List the printers found on the network: model, address, name."
 msgstr "แสดงรายการเครื่องพิมพ์ที่พบในเครือข่าย: รุ่น ที่อยู่ ชื่อ"
 
-#: tavletta/cli.py:297
+#: tavletta/cli.py:299
 #, python-format
 msgid "only this printer model: %s"
 msgstr "เฉพาะเครื่องพิมพ์รุ่นนี้: %s"
 
-#: tavletta/cli.py:309
+#: tavletta/cli.py:311
 #, python-format
 msgid "expected an address or network such as 172.16.0.0/12: %s"
 msgstr "ต้องเป็นที่อยู่หรือเครือข่าย เช่น 172.16.0.0/12: %s"
 
-#: tavletta/cli.py:319
+#: tavletta/cli.py:321
 msgid "the folder with the label files the server may use"
 msgstr "โฟลเดอร์ที่มีไฟล์ฉลากที่เซิร์ฟเวอร์ใช้ได้"
 
-#: tavletta/cli.py:326
+#: tavletta/cli.py:328
 msgid "only print on this printer address (* matches anything); repeatable"
 msgstr "พิมพ์เฉพาะที่ที่อยู่เครื่องพิมพ์นี้ (* ตรงกับทุกค่า) ใช้ซ้ำได้"
 
-#: tavletta/cli.py:332
+#: tavletta/cli.py:334
 msgid "printers.toml: the printers clients may use, by name"
 msgstr "printers.toml: เครื่องพิมพ์ที่ไคลเอนต์ใช้ได้ ตามชื่อ"
 
-#: tavletta/cli.py:339
+#: tavletta/cli.py:341
 msgid "most labels in one print job, copies times rows (default 10000)"
 msgstr "จำนวนฉลากสูงสุดในงานพิมพ์หนึ่งงาน คือจำนวนสำเนาคูณจำนวนแถว (ค่าเริ่มต้น 10000)"
 
-#: tavletta/cli.py:344
+#: tavletta/cli.py:346
 msgid "search the network for printers (off by default)"
 msgstr "ค้นหาเครื่องพิมพ์ในเครือข่าย (ปิดเป็นค่าเริ่มต้น)"
 
-#: tavletta/cli.py:350
+#: tavletta/cli.py:352
 msgid ""
 "allow document pages (PDF, images) in labels sent with the request; PDFs are "
 "then drawn in a separate process with limits (off by default)"
 msgstr "อนุญาตหน้าเอกสาร (PDF, รูปภาพ) ในฉลากที่ส่งมากับคำขอ แล้ว PDF จะถูกวาดในโพรเซสแยกที่มีขีดจำกัด (ปิดโดยค่าเริ่มต้น)"
 
-#: tavletta/cli.py:359
+#: tavletta/cli.py:361
 msgid "run a print server with a REST API"
 msgstr "เรียกใช้เซิร์ฟเวอร์การพิมพ์พร้อม REST API"
 
-#: tavletta/cli.py:360
+#: tavletta/cli.py:362
 msgid "Run a print server: a REST API and, with --mcp, MCP for AI clients."
 msgstr "เรียกใช้เซิร์ฟเวอร์การพิมพ์: REST API และเมื่อใช้ --mcp จะมี MCP สำหรับไคลเอนต์ AI ด้วย"
 
-#: tavletta/cli.py:363
+#: tavletta/cli.py:365
 msgid "address to listen on (default 127.0.0.1)"
 msgstr "ที่อยู่ที่จะรับฟัง (ค่าเริ่มต้น 127.0.0.1)"
 
-#: tavletta/cli.py:369
+#: tavletta/cli.py:371
 #, python-format
 msgid "port to listen on (default %d)"
 msgstr "พอร์ตที่จะรับฟัง (ค่าเริ่มต้น %d)"
 
-#: tavletta/cli.py:375
+#: tavletta/cli.py:377
 msgid ""
 "file with the access token; else the environment variable TAVLETTA_TOKEN"
 msgstr "ไฟล์ที่มีโทเค็นการเข้าถึง หากไม่มีจะใช้ตัวแปรสภาพแวดล้อม TAVLETTA_TOKEN"
 
-#: tavletta/cli.py:381
+#: tavletta/cli.py:383
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml: โทเค็นการเข้าถึงที่มีชื่อพร้อมบทบาท"
 
-#: tavletta/cli.py:383
+#: tavletta/cli.py:385
 msgid "also serve MCP at /mcp"
 msgstr "ให้บริการ MCP ที่ /mcp ด้วย"
 
-#: tavletta/cli.py:389
+#: tavletta/cli.py:391
 msgid "largest request body in MB (default 4)"
 msgstr "ขนาดเนื้อหาคำขอสูงสุดเป็น MB (ค่าเริ่มต้น 4)"
 
-#: tavletta/cli.py:398
+#: tavletta/cli.py:400
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "พร็อกซีย้อนกลับที่ส่วนหัว X-Forwarded-For ระบุไคลเอนต์ เช่น 172.16.0.0/12 ใช้ซ้ำได้"
 
-#: tavletta/cli.py:407
+#: tavletta/cli.py:409
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "อนุญาตคำขอจากหน้าเว็บของต้นทางนี้ ใช้ซ้ำได้"
 
-#: tavletta/cli.py:412
+#: tavletta/cli.py:414
 msgid "serve MCP on standard input and output"
 msgstr "ให้บริการ MCP ผ่านอินพุตและเอาต์พุตมาตรฐาน"
 
-#: tavletta/cli.py:414
+#: tavletta/cli.py:416
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "ให้บริการ MCP ผ่านอินพุตและเอาต์พุตมาตรฐาน สำหรับไคลเอนต์ AI เช่น Claude Desktop"
 
-#: tavletta/cli.py:424
+#: tavletta/cli.py:426
 msgid "manage the access tokens of the print server"
 msgstr "จัดการโทเค็นการเข้าถึงของเซิร์ฟเวอร์การพิมพ์"
 
-#: tavletta/cli.py:425
+#: tavletta/cli.py:427
 msgid "Manage the access tokens of the print server."
 msgstr "จัดการโทเค็นการเข้าถึงของเซิร์ฟเวอร์การพิมพ์"
 
-#: tavletta/cli.py:430
+#: tavletta/cli.py:432
 msgid "make a token and add its hash to tokens.toml"
 msgstr "สร้างโทเค็นและเพิ่มแฮชของโทเค็นลงใน tokens.toml"
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:433
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "สร้างโทเค็น เพิ่มแฮชลงใน tokens.toml และแสดงโทเค็นเพียงครั้งเดียว"
 
-#: tavletta/cli.py:433
+#: tavletta/cli.py:435
 msgid "name of the token, e.g. the device"
 msgstr "ชื่อของโทเค็น เช่น ชื่ออุปกรณ์"
 
-#: tavletta/cli.py:438
+#: tavletta/cli.py:440
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview: ดูได้อย่างเดียว; print: พิมพ์ได้ด้วย; admin: จัดการงานทั้งหมดได้ด้วย"
 
-#: tavletta/cli.py:440
+#: tavletta/cli.py:442
 msgid "tokens.toml to add it to"
 msgstr "tokens.toml ที่จะเพิ่มโทเค็นลงไป"
 
-#: tavletta/cli.py:446
+#: tavletta/cli.py:448
 msgid "only this printer of printers.toml; repeatable"
 msgstr "เฉพาะเครื่องพิมพ์นี้จาก printers.toml ใช้ซ้ำได้"
 
-#: tavletta/cli.py:449
+#: tavletta/cli.py:451
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml สำหรับตรวจสอบ --printer"
 
-#: tavletta/cli.py:451
+#: tavletta/cli.py:453
 msgid "valid until, e.g. 2027-12-31"
 msgstr "ใช้ได้ถึง เช่น 2027-12-31"
 
-#: tavletta/cli.py:452
+#: tavletta/cli.py:454
 msgid "a note for people"
 msgstr "หมายเหตุสำหรับผู้ใช้"
 
-#: tavletta/cli.py:454
+#: tavletta/cli.py:456
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "จัดเก็บแฮชด้วย scrypt แทน SHA-256"
 
-#: tavletta/cli.py:460
+#: tavletta/cli.py:462
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "รับโทเค็นที่คุณเลือกเองจากอินพุตมาตรฐาน (จัดเก็บด้วย scrypt) แทนการสร้างใหม่"
 
-#: tavletta/cli.py:480 tavletta/server/config.py:219
+#: tavletta/cli.py:482 tavletta/server/config.py:219
 #: tavletta/server/service.py:539
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "ไม่รู้จักรุ่นเครื่องพิมพ์: %s"
 
-#: tavletta/cli.py:487 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/cli.py:489 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:318 tavletta/ui/texts.py:675
 #: tavletta/server/service.py:690
 #, python-format
 msgid "Cannot open %s"
 msgstr "เปิด %s ไม่ได้"
 
-#: tavletta/cli.py:509 tavletta/server/main.py:260
+#: tavletta/cli.py:511 tavletta/server/main.py:260
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s ไม่ใช่วันที่ ต้องการเช่น 2026-12-31 หรือ 2026-12-31T08:30"
 
-#: tavletta/cli.py:548
+#: tavletta/cli.py:559
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} จะถูกเติมเมื่อพิมพ์และตั้งค่าไม่ได้"
 
-#: tavletta/cli.py:552
+#: tavletta/cli.py:565
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "ฉลากไม่มีองค์ประกอบหรือตัวแปรชื่อ %s"
 
-#: tavletta/cli.py:580 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1025
+#: tavletta/cli.py:593 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1024
 msgid "The label is empty"
 msgstr "ฉลากว่างเปล่า"
 
-#: tavletta/cli.py:617
+#: tavletta/cli.py:630
 msgid "Cannot write the output"
 msgstr "เขียนเอาต์พุตไม่ได้"
 
-#: tavletta/cli.py:648
+#: tavletta/cli.py:661
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output เขียนภาพ PNG: ระบุชื่อที่ลงท้ายด้วย .png"
 
-#: tavletta/cli.py:673 tavletta/cli.py:882 tavletta/ui/printing.py:555
-#: tavletta/ui/printing.py:717 tavletta/server/service.py:930
-#: tavletta/server/service.py:953 tavletta/server/service.py:1202
-#: tavletta/server/service.py:1363
+#: tavletta/cli.py:686 tavletta/cli.py:895 tavletta/ui/printing.py:555
+#: tavletta/ui/printing.py:717 tavletta/server/service.py:929
+#: tavletta/server/service.py:952 tavletta/server/service.py:1201
+#: tavletta/server/service.py:1362
 msgid "The label cannot be prepared for printing."
 msgstr "เตรียมฉลากสำหรับพิมพ์ไม่ได้"
 
-#: tavletta/cli.py:760
+#: tavletta/cli.py:773
 msgid "No printer found – give its address with --host"
 msgstr "ไม่พบเครื่องพิมพ์ – ระบุที่อยู่ด้วย --host"
 
-#: tavletta/cli.py:762
+#: tavletta/cli.py:775
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "พบเครื่องพิมพ์หลายเครื่อง – เลือกหนึ่งเครื่องด้วย --host (tavletta list-printers)"
 
-#: tavletta/cli.py:773 tavletta/ui/texts.py:718 tavletta/server/service.py:1353
+#: tavletta/cli.py:786 tavletta/ui/texts.py:718 tavletta/server/service.py:1352
 #, python-format
 msgid "Cannot save %s"
 msgstr "บันทึก %s ไม่ได้"
 
-#: tavletta/cli.py:775 tavletta/server/service.py:1356
+#: tavletta/cli.py:788 tavletta/server/service.py:1355
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "พิมพ์ฉลากแล้ว แต่ไม่ได้บันทึกค่าตัวนับถัดไป"
 
-#: tavletta/cli.py:790 tavletta/server/service.py:1054
+#: tavletta/cli.py:803 tavletta/server/service.py:1053
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "ไม่ได้พิมพ์อะไรเลย: บันทึกค่าตัวนับถัดไปไม่ได้"
 
-#: tavletta/cli.py:850 tavletta/cli.py:877 tavletta/cli.py:1245
+#: tavletta/cli.py:863 tavletta/cli.py:890 tavletta/cli.py:1258
 msgid "Interrupted"
 msgstr "ถูกขัดจังหวะ"
 
-#: tavletta/cli.py:950
+#: tavletta/cli.py:963
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method: เครื่องพิมพ์รุ่นนี้ไม่มีการตั้งค่าวิธีพิมพ์: %s"
 
-#: tavletta/cli.py:992
+#: tavletta/cli.py:1005
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet และ --rows ต้องใช้ไฟล์ข้อมูล (--data)"
 
-#: tavletta/cli.py:1001 tavletta/ui/printing.py:587
-#: tavletta/server/service.py:793
+#: tavletta/cli.py:1014 tavletta/ui/printing.py:587
+#: tavletta/server/service.py:792
 msgid "No rows to print"
 msgstr "ไม่มีแถวที่จะพิมพ์"
 
-#: tavletta/cli.py:1011
+#: tavletta/cli.py:1024
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "ฉลากใช้ไฟล์ข้อมูลที่อยู่นอกโฟลเดอร์ของฉลาก: ระบุด้วย --data"
 
-#: tavletta/cli.py:1038 tavletta/ui/window.py:849
-#: tavletta/server/service.py:847
+#: tavletta/cli.py:1051 tavletta/ui/window.py:849
+#: tavletta/server/service.py:846
 #, python-format
 msgid "No such column: %s"
 msgstr "ไม่มีคอลัมน์นี้: %s"
 
-#: tavletta/cli.py:1043 tavletta/ui/printing.py:666
+#: tavletta/cli.py:1056 tavletta/ui/printing.py:666
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "ไม่สามารถสร้างบาร์โค้ดหรือคิวอาร์โค้ดของแถวเหล่านี้จากค่าของแถวได้ เช่น EAN-13 ที่มีตัวอักษร หรือเซลล์ว่าง แก้ไขไฟล์ข้อมูลแล้วอ่านอีกครั้ง หรือพิมพ์โดยไม่รวมแถวเหล่านี้"
 
-#: tavletta/cli.py:1048 tavletta/ui/printing.py:671
+#: tavletta/cli.py:1061 tavletta/ui/printing.py:671
 #, python-format
 msgid "Rows: %s"
 msgstr "แถว: %s"
 
-#: tavletta/cli.py:1056
+#: tavletta/cli.py:1069
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "กำลังรอให้การพิมพ์อื่นของ %s เสร็จ…"
 
-#: tavletta/cli.py:1063 tavletta/server/service.py:1196
+#: tavletta/cli.py:1076 tavletta/server/service.py:1195
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s ยังถูกล็อกโดยการพิมพ์อื่น – ลองใหม่ภายหลัง"
 
-#: tavletta/cli.py:1069
+#: tavletta/cli.py:1082
 msgid "--output needs --dry-run"
 msgstr "--output ต้องใช้ร่วมกับ --dry-run"
 
-#: tavletta/cli.py:1086
+#: tavletta/cli.py:1099
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "ไม่ได้บันทึกค่าตัวนับถัดไป: การพิมพ์ครั้งถัดไปจะใช้หมายเลขซ้ำ"
 
-#: tavletta/cli.py:1188
+#: tavletta/cli.py:1201
 msgid "Waiting for the printer's answer…"
 msgstr "กำลังรอคำตอบจากเครื่องพิมพ์…"
 
-#: tavletta/cli.py:1216 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1229 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "ไม่พบเครื่องพิมพ์"
 
@@ -3347,7 +3352,7 @@ msgstr "ค่าไม่ถูกต้องสำหรับ %s"
 msgid "The request took too long"
 msgstr "คำขอใช้เวลานานเกินไป"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1274
+#: tavletta/server/http.py:473 tavletta/server/service.py:1273
 msgid "The server is busy – try again later"
 msgstr "เซิร์ฟเวอร์ไม่ว่าง – โปรดลองอีกครั้งในภายหลัง"
 
@@ -3536,7 +3541,7 @@ msgstr "เซลล์มากเกินไป: ไม่เกิน %d"
 msgid "Choose a printer by its name"
 msgstr "เลือกเครื่องพิมพ์ตามชื่อ"
 
-#: tavletta/server/service.py:554 tavletta/server/service.py:1247
+#: tavletta/server/service.py:554 tavletta/server/service.py:1246
 msgid "This access token may not do this"
 msgstr "โทเค็นการเข้าถึงนี้ไม่ได้รับอนุญาตให้ทำสิ่งนี้"
 
@@ -3553,59 +3558,59 @@ msgstr "ไม่อนุญาตที่อยู่เครื่องพ
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "ไม่อนุญาตหน้าเอกสารใน label_content (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:741
+#: tavletta/server/service.py:742
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ส่งใน data_rows"
 
-#: tavletta/server/service.py:801
+#: tavletta/server/service.py:800
 msgid "A sheet needs a data file"
 msgstr "ชีตต้องใช้ไฟล์ข้อมูล"
 
-#: tavletta/server/service.py:807
+#: tavletta/server/service.py:806
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "ฉลากใช้ไฟล์ข้อมูลที่อยู่นอกโฟลเดอร์ฉลาก: ส่งแถวข้อมูลมาด้วย"
 
-#: tavletta/server/service.py:974
+#: tavletta/server/service.py:973
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "ไม่เกิน %d ฉลากในงานพิมพ์หนึ่งงาน"
 
-#: tavletta/server/service.py:1001
+#: tavletta/server/service.py:1000
 msgid "Too many print jobs are waiting – try again later"
 msgstr "งานพิมพ์รออยู่มากเกินไป – โปรดลองอีกครั้งในภายหลัง"
 
-#: tavletta/server/service.py:1218
+#: tavletta/server/service.py:1217
 #, python-format
 msgid "No such print job: %s"
 msgstr "ไม่มีงานพิมพ์นี้: %s"
 
-#: tavletta/server/service.py:1230
+#: tavletta/server/service.py:1229
 msgid "The print job has already finished"
 msgstr "งานพิมพ์เสร็จสิ้นแล้ว"
 
-#: tavletta/server/service.py:1278
+#: tavletta/server/service.py:1277
 msgid "The label is too large to render"
 msgstr "ฉลากมีขนาดใหญ่เกินกว่าจะเรนเดอร์ได้"
 
-#: tavletta/server/service.py:1292
+#: tavletta/server/service.py:1291
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "ฉลากมีขนาดใหญ่เกินไป: รูปภาพและโค้ดรวมกันไม่เกิน %d รายการ"
 
-#: tavletta/server/service.py:1315
+#: tavletta/server/service.py:1314
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "ฉลากมีขนาดใหญ่เกินไป: ไม่เกิน %(elements)d องค์ประกอบ และไม่เกิน %(chars)d อักขระต่อข้อความ"
 
-#: tavletta/server/service.py:1334
+#: tavletta/server/service.py:1333
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "ไม่เกิน %d สำเนาบนเครื่องพิมพ์นี้"
 
-#: tavletta/server/service.py:1339
+#: tavletta/server/service.py:1338
 msgid "Printers are chosen by name: leave out host"
 msgstr "เลือกเครื่องพิมพ์ตามชื่อ: ไม่ต้องระบุ host"

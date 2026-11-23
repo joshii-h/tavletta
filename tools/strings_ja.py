@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "要素 %(n)d: テキストが高すぎて描画できません – 行数を減らすか、サイズを小さくしてください",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s はデータ列です ({%(name)s}) – --data でデータファイルを指定してください",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s はデータ列です ({%(name)s}) – data_rows で送信してください",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s はデータ行から入力されるため ({%(name)s})、設定できません",
 }

@@ -737,6 +737,8 @@ class Service:
         try:
             overrides = apply_assignments(label, request.assignments, bool(table))
         except DataColumnSet as e:
+            if e.given:  # with data_rows or data_file: their rows fill it
+                raise bad_request(str(e), "data_column") from None
             text = _("%(name)s is a data column ({%(name)s}) – send it in data_rows")
             raise bad_request(text % {"name": e.name}, "data_column") from None
         except CliError as e:

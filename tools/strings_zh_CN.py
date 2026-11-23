@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "元素 %(n)d：文本太高，无法绘制 – 请减少行数或使用更小的字号",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s 是数据列 ({%(name)s}) – 请用 --data 指定数据文件",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s 是数据列 ({%(name)s}) – 请在 data_rows 中发送",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s 由数据行填充 ({%(name)s})，无法设置",
 }

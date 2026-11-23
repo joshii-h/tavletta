@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "तत्व %(n)d: टेक्स्ट बनाने के लिए बहुत ऊँचा है – कम पंक्तियाँ या छोटा आकार उपयोग करें",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s एक डेटा कॉलम है ({%(name)s}) – --data के साथ डेटा फ़ाइल दें",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s एक डेटा कॉलम है ({%(name)s}) – इसे data_rows में भेजें",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s डेटा पंक्तियों से भरा जाता है ({%(name)s}) और इसे सेट नहीं किया जा सकता",
 }

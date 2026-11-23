@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "العنصر %(n)d: النص أطول ارتفاعًا من أن يُرسم – استخدم أسطرًا أقل أو حجمًا أصغر",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s عمود بيانات ({%(name)s}) – حدد ملف بيانات باستخدام --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s عمود بيانات ({%(name)s}) – أرسله في data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "يُملأ %(name)s من صفوف البيانات ({%(name)s}) ولا يمكن تعيينه",
 }

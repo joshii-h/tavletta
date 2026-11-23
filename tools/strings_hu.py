@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "%(n)d. elem: a szöveg túl magas ahhoz, hogy meg legyen rajzolva – használjon kevesebb sort vagy kisebb méretet",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s egy adatoszlop ({%(name)s}) – adjon meg adatfájlt a --data kapcsolóval",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s egy adatoszlop ({%(name)s}) – küldje a data_rows mezőben",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s az adatsorokból töltődik ki ({%(name)s}), és nem állítható be",
 }

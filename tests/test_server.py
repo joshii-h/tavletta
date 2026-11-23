@@ -555,6 +555,21 @@ def test_set_of_a_data_column_points_to_data_rows(api, server_env, path):
     body = {"label": "column", "data_rows": [{"Inventory": "300021"}], "format": "json"}
     status, _r, answer = call(api.base, "POST", "/api/v1/preview", body=body)
     assert status == 200 and answer["warnings"] == []
+    # with data_rows the rows fill it: it cannot be set as well
+    body = {"label": "column", "data_rows": [{"Inventory": "3"}], "set": {"Inventory": "1"}}
+    status, _r, answer = call(api.base, "POST", path, body=body)
+    assert status == 400 and answer["error"]["code"] == "data_column"
+    assert answer["error"]["message"] == (
+        "Inventory is filled from the data rows ({Inventory}) and cannot be set"
+    )
+
+
+def test_set_date_with_a_date_column(api, server_env):
+    """A label with a {date} column: set date is still the moment."""
+    label_file(server_env.labels, "dated.tavletta", TextElement(text="{date} {=date}"))
+    body = {"label": "dated", "set": {"date": "2026-12-24T08:30"}, "format": "json"}
+    status, _r, answer = call(api.base, "POST", "/api/v1/preview", body=body)
+    assert status == 200, answer
 
 
 def test_preview_with_inline_label_content(api, server_env, tmp_path):

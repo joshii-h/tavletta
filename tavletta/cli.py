@@ -103,15 +103,17 @@ class CliError(Exception):
 
 class DataColumnSet(CliError):
     """--set NAME=VALUE for a {NAME} placeholder: a data column, filled
-    from the rows of a data file (the print server: data_rows)."""
+    from the rows of a data file (the print server: data_rows). given: the
+    data is given already, the column comes from its rows."""
 
-    def __init__(self, name: str):
-        super().__init__(
-            _("%(name)s is a data column ({%(name)s}) – give a data file with --data")
-            % {"name": name},
-            EXIT_USAGE,
-        )
+    def __init__(self, name: str, given: bool):
+        if given:
+            text = _("%(name)s is filled from the data rows ({%(name)s}) and cannot be set")
+        else:
+            text = _("%(name)s is a data column ({%(name)s}) – give a data file with --data")
+        super().__init__(text % {"name": name}, EXIT_USAGE)
         self.name = name
+        self.given = given
 
 
 # --- arguments --------------------------------------------------------------
@@ -517,14 +519,14 @@ def apply_assignments(
     """--set NAME=VALUE: the text of elements with that name, else the
     variable {=NAME}; "date" sets the moment {=date} and {=time} start from.
     The element texts are set first: a variable used only in a new text
-    (--set title="Lot {=lot}" --set lot=7) can be given too."""
+    (--set title="Lot {=lot}" --set lot=7) can be given too. `serial`: the
+    label is printed from data rows (a {placeholder} comes from them)."""
     overrides = Overrides()
     rest = [a for a in assignments if not _set_element(label, a.name, _escaped(a, serial))]
     used = label_names(label)
+    columns = set(used_columns(label))
     for name, value, _literal in rest:
-        if name not in used and name in used_columns(label):
-            raise DataColumnSet(name)
-        _set_variable(overrides, used, name, value)
+        _set_variable(overrides, used, name, value, columns, serial)
     return overrides
 
 
@@ -541,13 +543,24 @@ def _escaped(assignment: Assignment, serial: bool) -> str:
     return value
 
 
-def _set_variable(overrides: Overrides, used: set[str], name: str, value: str) -> None:
+def _set_variable(
+    overrides: Overrides,
+    used: set[str],
+    name: str,
+    value: str,
+    columns: set[str],
+    data_given: bool,
+) -> None:
+    """A variable of --set; a name only a {placeholder} uses is a data
+    column (DataColumnSet), "date" and the built-in ones never are."""
     if name == "date":
         _set_date(overrides, value)
     elif name in BUILTIN:
         raise CliError(_("{=%s} is filled in when printing and cannot be set") % name, EXIT_USAGE)
     elif name in used:
         overrides.custom[name] = value  # a value is never filled in itself
+    elif name in columns:
+        raise DataColumnSet(name, data_given)
     else:
         raise CliError(_("The label has no element or variable named %s") % name, EXIT_USAGE)
 

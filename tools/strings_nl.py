@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Element %(n)d: de tekst is te hoog om te tekenen – gebruik minder regels of een kleinere grootte",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s is een gegevenskolom ({%(name)s}) – geef een gegevensbestand op met --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s is een gegevenskolom ({%(name)s}) – stuur hem mee in data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s wordt gevuld uit de gegevensrijen ({%(name)s}) en kan niet worden ingesteld",
 }

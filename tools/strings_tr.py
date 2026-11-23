@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Öge %(n)d: metin çizilemeyecek kadar yüksek – daha az satır ya da daha küçük bir boyut kullanın",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s bir veri sütunu ({%(name)s}) – --data ile bir veri dosyası verin",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s bir veri sütunu ({%(name)s}) – bunu data_rows içinde gönderin",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s veri satırlarından doldurulur ({%(name)s}) ve ayarlanamaz",
 }

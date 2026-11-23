@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Елемент %(n)d: текст зависокий, щоб його намалювати – використайте менше рядків або менший розмір",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s — стовпець даних ({%(name)s}) – вкажіть файл даних через --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s — стовпець даних ({%(name)s}) – передайте його в data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s заповнюється з рядків даних ({%(name)s}), і задати його не можна",
 }

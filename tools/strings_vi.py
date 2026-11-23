@@ -801,4 +801,5 @@ TRANSLATIONS = {
     "Element %(n)d: the text is too tall to be drawn – use fewer lines or a smaller size": "Phần tử %(n)d: văn bản quá cao để vẽ – hãy dùng ít dòng hơn hoặc cỡ chữ nhỏ hơn",
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s là một cột dữ liệu ({%(name)s}) – hãy chỉ định tệp dữ liệu bằng --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s là một cột dữ liệu ({%(name)s}) – hãy gửi trong data_rows",
+    "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s được điền từ các hàng dữ liệu ({%(name)s}) và không thể đặt",
 }
