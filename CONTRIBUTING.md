@@ -542,7 +542,7 @@ Variables):
   host whose Docker socket the runner mounts (`.forgejo/workflows/docs.yml`
   writes the build into its `public/` folder, then restarts the container
   `tavletta-docs`). An absolute host path; without the variable the
-  workflow falls back to the folder of the current deploy.
+  workflow stops with an error before it builds anything.
 
 ## Reporting bugs
 

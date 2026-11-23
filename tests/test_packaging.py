@@ -114,10 +114,10 @@ def test_the_flatpak_ships_every_licence_once():
                 assert "x-checker-data" in source, (module["name"], source["url"])
 
 
-def _workflow(name: str) -> dict:
+def _workflow(name: str, forge: str = ".github") -> dict:
     import yaml
 
-    workflow = yaml.safe_load((ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8"))
+    workflow = yaml.safe_load((ROOT / forge / "workflows" / name).read_text(encoding="utf-8"))
     workflow["on"] = workflow.pop(True, workflow.get("on"))  # YAML 1.1 reads `on` as true
     return workflow
 
@@ -311,15 +311,24 @@ def test_the_container_workflow_takes_only_semver_tags():
     workflow = _workflow("docker.yml")
     check = next(s for s in workflow["jobs"]["check"]["steps"] if s.get("name") == "Check the tag")
     pattern = re.search(r"grep -Eq '([^']+)'", check["run"]).group(1)
-    accepted = ("v1.1.1", "v1.10.0", "v2.0.0-rc.1", "v1.1.1-beta2")
+    accepted = ("v1.1.1", "v1.2.3", "v1.10.0", "v0.1.0", "v2.0.0-rc.1", "v1.1.1-beta2")
+    accepted += ("v1.2.3-rc-1",)
     refused = ("v1.1", "v1", "v1.1.1.1", "1.1.1", "v1.1.1-", "v1.1.x")
+    refused += ("v01.2.3", "v1.02.3", "v1.2.03", "v1.2.3-rc..1", "v1.2.3-rc.", "v1.2.3-.rc")
     assert all(re.fullmatch(pattern, tag) for tag in accepted)
     assert not any(re.fullmatch(pattern, tag) for tag in refused)
 
 
 def test_the_docs_deploy_folder_is_a_repository_variable():
+    """No host path in the repository: without the variable the workflow
+    stops with a clear error, before it builds anything."""
     text = (ROOT / ".forgejo" / "workflows" / "docs.yml").read_text(encoding="utf-8")
-    assert "SITE_DIR: ${{ vars.DOCS_SITE_DIR ||" in text
+    assert "SITE_DIR: ${{ vars.DOCS_SITE_DIR }}\n" in text
+    steps = _workflow("docs.yml", ".forgejo")["jobs"]["docs"]["steps"]
+    first = steps[0]
+    assert first["name"] == "Check the deploy folder"
+    assert '[ -z "$SITE_DIR" ]' in first["run"] and "exit 1" in first["run"]
+    assert "DOCS_SITE_DIR" in first["run"]
     assert "`DOCS_SITE_DIR`" in (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
 
 
@@ -344,4 +353,5 @@ def test_pngs_carry_no_dates():
             if kind in (b"tEXt", b"zTXt", b"iTXt"):
                 assert not body.startswith(b"date:"), name
             at += 12 + size
-    assert "png:exclude-chunks=date,time" in (ROOT / "tools" / "screenshots.sh").read_text()
+    screenshots = (ROOT / "tools" / "screenshots.sh").read_text(encoding="utf-8")
+    assert "png:exclude-chunks=date,time" in screenshots
