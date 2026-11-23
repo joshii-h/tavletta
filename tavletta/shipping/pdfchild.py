@@ -43,8 +43,8 @@ def _memory(max_pixels: int) -> int:
 
 def _seconds() -> tuple[float, bool]:
     """The wall time this child may take, and whether that is what is left
-    of the render's budget for all its PDF pages (render.pdf_seconds_left)
-    rather than the limit of one child."""
+    of the budget for all PDF pages of the preview or print job
+    (render.pdf_seconds_left) rather than the limit of one child."""
     from tavletta.render import pdf_seconds_left
 
     left = pdf_seconds_left()
@@ -55,8 +55,11 @@ def _seconds() -> tuple[float, bool]:
 
 def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
     """The child's answer to request (op "info" or "draw", see _answer())
-    about the PDF raw, and the pixels of a drawing. Within the render's
-    time for all its PDF pages: refused (ChildLimit) once that is used up."""
+    about the PDF raw, and the pixels of a drawing. Within limits its time
+    is taken from the budget of all PDF pages of the preview or print job:
+    refused (ChildLimit) once that is used up."""
+    from tavletta.render import pdf_time
+
     seconds, budget = _seconds()
     if seconds <= 0:
         raise ChildLimit("the PDF pages took more than their time")
@@ -65,14 +68,15 @@ def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
     env["PYTHONPATH"] = os.pathsep.join(p for p in (root, env.get("PYTHONPATH", "")) if p)
     try:
         # this module only, a fixed command line, no shell
-        done = subprocess.run(  # nosec B603
-            [sys.executable, "-m", __name__],
-            input=json.dumps(request).encode() + b"\n" + raw,
-            capture_output=True,
-            timeout=seconds,
-            env=env,
-            check=False,
-        )
+        with pdf_time():
+            done = subprocess.run(  # nosec B603
+                [sys.executable, "-m", __name__],
+                input=json.dumps(request).encode() + b"\n" + raw,
+                capture_output=True,
+                timeout=seconds,
+                env=env,
+                check=False,
+            )
     except subprocess.TimeoutExpired:
         if budget:
             raise ChildLimit("the PDF pages took more than their time") from None

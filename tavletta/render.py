@@ -11,6 +11,7 @@ import base64
 import contextlib
 import io
 import math
+import threading
 import time
 from collections.abc import Callable, Iterator, Mapping
 from contextvars import ContextVar
@@ -65,10 +66,11 @@ class RenderTooLarge(ValueError):
 
 TEXT_CHARS = 5000  # characters of a text or code within limits (as the server's MAX_TEXT)
 TEXT_LINES = 100  # lines of a text within limits (MAX_LINES)
-# seconds the PDF children of one render may take together: one page may
-# take pdfchild.SECONDS, but fifty of them would hold a render slot for
-# many minutes
+# seconds the PDF children within one limited() block (a preview, a print
+# job with all its rows) may take together: one page may take
+# pdfchild.SECONDS, but fifty of them would hold a render slot for minutes
 PDF_SECONDS = 30.0
+_clock = time.monotonic  # replaced in tests
 
 
 @dataclass(frozen=True)
@@ -83,7 +85,6 @@ class Limits:
     # text can grow a thousandfold)
     text_chars: int = TEXT_CHARS
     text_lines: int = TEXT_LINES
-    pdf_seconds: float = PDF_SECONDS  # of all PDF pages of one render together
 
     @property
     def image_pixels(self) -> int:
@@ -96,9 +97,23 @@ class Limits:
 # thousands of lines or a tiny PNG that unpacks to gigapixels must fail,
 # not fill the memory. The window and the command line render without.
 _LIMITS: ContextVar[Limits | None] = ContextVar("render_limits", default=None)
-# within limits: when the PDF pages of the render running in this thread
-# have taken their time (time.monotonic(); Limits.pdf_seconds)
-_PDF_DEADLINE: ContextVar[float | None] = ContextVar("pdf_deadline", default=None)
+
+
+class PdfBudget:
+    """The seconds the PDF children of one limited() block may still take
+    together: the time they ran, not the time between them (a print job's
+    rows are printed in between)."""
+
+    def __init__(self, seconds: float):
+        self.left = seconds
+        self._lock = threading.Lock()
+
+    def spend(self, seconds: float) -> None:
+        with self._lock:
+            self.left -= max(0.0, seconds)
+
+
+_PDF_BUDGET: ContextVar[PdfBudget | None] = ContextVar("pdf_budget", default=None)
 
 
 @contextlib.contextmanager
@@ -110,13 +125,16 @@ def limited(
 ) -> Iterator[None]:
     """Render within limits in this thread while the block runs; images
     are then decoded without the caches (they would keep large ones).
-    `slot()` is held by every render meanwhile; the PDF pages of each
-    render take pdf_seconds (default PDF_SECONDS) together at most."""
+    `slot()` is held by every render meanwhile; the PDF pages of all
+    renders in the block (a preview, a print job with all its rows) take
+    pdf_seconds (default PDF_SECONDS) together at most."""
     seconds = PDF_SECONDS if pdf_seconds is None else pdf_seconds
-    token = _LIMITS.set(Limits(pixels, max_length_mm, slot, pdf_seconds=seconds))
+    token = _LIMITS.set(Limits(pixels, max_length_mm, slot))
+    budget = _PDF_BUDGET.set(PdfBudget(seconds))
     try:
         yield
     finally:
+        _PDF_BUDGET.reset(budget)
         _LIMITS.reset(token)
 
 
@@ -128,10 +146,22 @@ def check_size(width: int, height: int) -> None:
 
 
 def pdf_seconds_left() -> float | None:
-    """Seconds the PDF pages of the render running in this thread may
+    """Seconds the PDF pages rendered within limits in this thread may
     still take (0 or less: none), None without limits."""
-    deadline = _PDF_DEADLINE.get()
-    return None if deadline is None else deadline - time.monotonic()
+    budget = _PDF_BUDGET.get()
+    return None if budget is None else budget.left
+
+
+@contextlib.contextmanager
+def pdf_time() -> Iterator[None]:
+    """The block (a PDF child) runs on the budget of pdf_seconds_left()."""
+    start = _clock()
+    try:
+        yield
+    finally:
+        budget = _PDF_BUDGET.get()
+        if budget is not None:
+            budget.spend(_clock() - start)
 
 
 def active_limits() -> Limits | None:
@@ -1563,13 +1593,8 @@ def render(
     limits = _LIMITS.get()
     token = _RENDER_CACHE.set({}) if limits else None
     slot = limits.slot() if limits and limits.slot else contextlib.nullcontext()
-    deadline = None
     try:
         with slot:
-            # the time of its PDF pages counts from here, in the slot; a
-            # render within a render (a sheet's labels) shares the outer one's
-            if limits and _PDF_DEADLINE.get() is None:
-                deadline = _PDF_DEADLINE.set(time.monotonic() + limits.pdf_seconds)
             return _render(
                 label,
                 dpi,
@@ -1580,8 +1605,6 @@ def render(
                 (along_step, across_step),
             )
     finally:
-        if deadline is not None:
-            _PDF_DEADLINE.reset(deadline)
         if token is not None:
             _RENDER_CACHE.reset(token)
 

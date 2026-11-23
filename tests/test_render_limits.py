@@ -10,7 +10,6 @@ import json
 import signal
 import subprocess
 import sys
-import time
 
 import pytest
 from PIL import Image
@@ -462,43 +461,84 @@ def test_picture_kind():
     assert imagefx.picture_kind(gradient) == "photo"
 
 
-def test_pdf_pages_of_one_render_share_a_time_budget(monkeypatch):
-    """Each page may take pdfchild.SECONDS, but all pages of one render
-    together only Limits.pdf_seconds: fifty slow pages must not hold a
-    render slot for minutes."""
-    timeouts = []
+class _SlowChild:
+    """subprocess.run for the PDF child, on a fake clock: each child takes
+    `seconds`, or its timeout if that is shorter (then TimeoutExpired)."""
 
-    def slow(*_args, timeout, **_kwargs):
-        timeouts.append(timeout)
-        time.sleep(0.2)
+    def __init__(self, monkeypatch, seconds: float):
+        self.now = 1000.0
+        self.seconds = seconds
+        self.timeouts: list[float] = []
+        monkeypatch.setattr(render_module, "_clock", lambda: self.now)
+        monkeypatch.setattr(pdfchild.subprocess, "run", self.run)
+
+    def run(self, *_args, timeout, **_kwargs):
+        self.timeouts.append(timeout)
+        if timeout < self.seconds:
+            self.now += timeout
+            raise subprocess.TimeoutExpired("child", timeout)
+        self.now += self.seconds
         return subprocess.CompletedProcess([], 0, b'{"error": "unreadable"}\n', b"")
 
-    monkeypatch.setattr(pdfchild.subprocess, "run", slow)
-    pages = [PageElement(data=b64(b"%PDF-1.4 page")) for _ in range(10)]
-    label = Label(tape_mm=12, elements=pages)
+
+def _pages(count: int) -> Label:
+    pages = [PageElement(data=b64(b"%%PDF-1.4 page %d" % n)) for n in range(count)]
+    return Label(tape_mm=12, elements=pages)
+
+
+def test_pdf_pages_within_limits_share_a_time_budget(monkeypatch):
+    """Each page may take pdfchild.SECONDS, but all pages within one
+    limited() block together only its pdf_seconds: fifty slow pages must not
+    hold a render slot for minutes."""
+    child = _SlowChild(monkeypatch, 0.2)
     with limited(10**7, pdf_seconds=0.5), pytest.raises(RenderTooLarge):
-        render(label, 100)
-    assert 2 <= len(timeouts) <= 4  # not all ten: refused once the time is used up
-    assert timeouts[0] <= 0.5 and timeouts == sorted(timeouts, reverse=True)
-    # the next render has its own budget
-    timeouts.clear()
+        render(_pages(10), 100)
+    # 0.5 s: two pages of 0.2 s, the third cut short, the rest not started
+    assert child.timeouts == pytest.approx([0.5, 0.3, 0.1])
+    # the next block has a budget of its own
+    child.timeouts.clear()
     with limited(10**7, pdf_seconds=0.5), pytest.raises(RenderTooLarge):
-        render(label, 100)
-    assert timeouts and timeouts[0] > 0.4
+        render(_pages(10), 100)
+    assert child.timeouts[0] == pytest.approx(0.5)
+
+
+def test_the_renders_of_one_print_job_share_the_budget(monkeypatch):
+    """A series renders once per row within one limited() block (the
+    server's print job): the rows share the budget, and the time between
+    them (printing) does not count."""
+    child = _SlowChild(monkeypatch, 0.2)
+    with limited(10**7, pdf_seconds=0.5):
+        render(_pages(2), 100)  # 0.4 s
+        child.now += 60  # the printer prints the row
+        with pytest.raises(RenderTooLarge):
+            render(_pages(2), 100)  # 0.1 s left: refused
+    assert child.timeouts == pytest.approx([0.5, 0.3, 0.1])
+    assert render_module.pdf_seconds_left() is None  # without limits: no budget
+
+
+def test_without_limits_a_child_has_its_own_time(monkeypatch):
+    child = _SlowChild(monkeypatch, 0.2)
+    pdfchild.ask(b"", {})
+    assert child.timeouts == [pdfchild.SECONDS]
+    assert pdfchild._seconds() == (pdfchild.SECONDS, False)
 
 
 def test_a_child_cut_short_by_the_budget_is_refused(monkeypatch):
-    def timeout(*_args, **kwargs):
-        raise subprocess.TimeoutExpired("child", kwargs["timeout"])
-
-    monkeypatch.setattr(pdfchild.subprocess, "run", timeout)
-    monkeypatch.setattr(render_module, "_PDF_DEADLINE", render_module.ContextVar("d"))
-    render_module._PDF_DEADLINE.set(time.monotonic() + 5)
-    with pytest.raises(pdfchild.ChildLimit, match="their time"):
-        pdfchild.ask(b"", {})
-    assert pdfchild._seconds()[1]  # what is left of the budget, below SECONDS
-    render_module._PDF_DEADLINE.set(None)
-    assert pdfchild._seconds() == (pdfchild.SECONDS, False)
+    child = _SlowChild(monkeypatch, 10.0)
+    with limited(10**7, pdf_seconds=5):
+        assert pdfchild._seconds() == (5, True)  # what is left, below SECONDS
+        with pytest.raises(pdfchild.ChildLimit, match="their time"):
+            pdfchild.ask(b"", {})
+        assert child.timeouts == [5] and render_module.pdf_seconds_left() == 0
+        with pytest.raises(pdfchild.ChildLimit, match="their time"):
+            pdfchild.ask(b"", {})  # used up: not started
+        assert child.timeouts == [5]
+    # a budget larger than SECONDS: the child's own limit
+    child.seconds = pdfchild.SECONDS + 1
+    with limited(10**7, pdf_seconds=100):
+        with pytest.raises(pdfchild.ChildLimit, match="more than"):
+            pdfchild.ask(b"", {})
+        assert child.timeouts[-1] == pdfchild.SECONDS
 
 
 def test_a_line_too_long_is_a_warning_within_limits_too(make_server):
