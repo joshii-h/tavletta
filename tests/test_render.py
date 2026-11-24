@@ -985,8 +985,15 @@ def test_a_file_that_fails_only_when_drawn(make_label):
     assert [w.key for w in rendered.warnings] == ["image_unreadable"]
 
 
-def test_warm_up_draws_a_text():
+def test_warm_up_draws_a_text(monkeypatch):
+    drawn = []
+    real = render_module._text_block
+    monkeypatch.setattr(
+        render_module, "_text_block", lambda *args: drawn.append(real(*args)) or drawn[-1]
+    )
     render_module.warm_up()
+    (block,) = drawn
+    assert block.mode == "RGBA" and block.getchannel("A").getbbox() is not None  # some ink
 
 
 def test_warning_keys_are_documented():

@@ -219,16 +219,25 @@ def test_a_waiting_lock_follows_the_replaced_file(tmp_path, monkeypatch):
     assert len(calls) == 2  # locked again, the new file
 
 
+def _open_fds() -> int:
+    return len(os.listdir("/proc/self/fd"))
+
+
 def test_without_flock_it_goes_on(tmp_path, monkeypatch):
     path = tmp_path / "a.tavletta"
     Label().save(path)
+    tried, inside = [], []
 
-    def unsupported(*_args):
+    def unsupported(*args):
+        tried.append(args[1])
         raise OSError("not supported")
 
     monkeypatch.setattr(model.fcntl, "flock", unsupported)
+    before = _open_fds()
     with model.locked(path):
-        pass
+        inside.append(_open_fds())
+    assert tried and inside == [before]  # went on unlocked, the file closed at once
+    assert _open_fds() == before
 
 
 def test_a_read_only_file_is_not_replaced(tmp_path):
@@ -252,9 +261,18 @@ def test_a_lock_on_a_file_removed_meanwhile(tmp_path, monkeypatch):
         if path.exists():
             path.unlink()  # gone after the lock: try again, then go on without
 
-    monkeypatch.setattr(model.fcntl, "flock", flock)
+    locks = []
+
+    def counting(fd, operation):
+        locks.append(fd)
+        flock(fd, operation)
+
+    monkeypatch.setattr(model.fcntl, "flock", counting)
+    before = _open_fds()
     with model.locked(path):
-        pass
+        inside = _open_fds()
+    assert len(locks) == 1 and not path.exists()  # locked once, then the file was gone
+    assert inside == before and _open_fds() == before  # nothing left open
 
 
 def test_the_file_lists_the_features_it_needs(tmp_path):
