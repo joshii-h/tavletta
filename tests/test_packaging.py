@@ -893,3 +893,32 @@ def test_the_package_builds_run_the_tests_as_the_ci_does():
     assert " gir1.2-rsvg-2.0 <!nocheck>,\n" in control
     spec = (ROOT / "packaging" / "rpm" / "tavletta.spec").read_text(encoding="utf-8")
     assert "\nBuildRequires:  librsvg2\n" in spec
+
+
+def test_the_rpm_sources_are_pinned_as_the_debian_ones():
+    """packaging/rpm/SHA256SUMS: one line per downloaded source, at the
+    versions of the specs; zint-bindings and labelprinter with the
+    checksums Debian's build.sh pins."""
+    rpm = ROOT / "packaging" / "rpm"
+    sums = dict(
+        reversed(line.split("  ")) for line in (rpm / "SHA256SUMS").read_text().splitlines()
+    )
+    assert all(re.fullmatch(r"[0-9a-f]{64}", sha) for sha in sums.values())
+
+    def version(spec):
+        return re.search(r"^Version: +(\S+)$", (rpm / spec).read_text(), re.M).group(1)
+
+    labelprinter = (rpm / "python-labelprinter.spec").read_text()
+    commit = re.search(r"^%global commit ([0-9a-f]{40})$", labelprinter, re.M).group(1)
+    assert set(sums) == {
+        f"segno-{version('python-segno.spec')}.tar.gz",
+        f"python_barcode-{version('python-barcode.spec')}.tar.gz",
+        f"zint_bindings-{version('python-zint-bindings.spec')}.tar.gz",
+        f"labelprinter-vc500w-{commit[:7]}.tar.gz",
+    }
+    debian = (ROOT / "packaging" / "debian" / "build.sh").read_text()
+    pins = dict(re.findall(r"^(\w+)=(\S+)$", debian, re.M))
+    assert pins["LABELPRINTER_COMMIT"] == commit
+    assert sums[f"labelprinter-vc500w-{commit[:7]}.tar.gz"] == pins["LABELPRINTER_SHA256"]
+    assert sums[f"zint_bindings-{pins['ZINT_VERSION']}.tar.gz"] == pins["ZINT_SHA256"]
+    assert "sha256sum -c" in (rpm / "build.sh").read_text()

@@ -12,7 +12,8 @@
 # Order: python-segno, python-barcode, python-labelprinter,
 # python-zint-bindings, then tavletta; each package is installed after its
 # build so the next one's build requirements resolve. Sources of the
-# dependencies are downloaded (spectool), so this needs the network.
+# dependencies are downloaded (spectool) and checked against SHA256SUMS,
+# so this needs the network.
 # rpmlint checks every SRPM and RPM: an error fails the build, warnings are
 # shown. OUTDIR gets the SRPMs and RPMs.
 #
@@ -72,10 +73,27 @@ else
         -czf "$src" "$(basename "$ROOT")"
 fi
 
+# the dependencies' sources, each checked against packaging/rpm/SHA256SUMS
+# (a source without a line there fails, as does one that differs)
+fetch() {
+    local spec="$1" url name checked=0
+    spectool -g -C "$TOP/SOURCES" "$spec"
+    while read -r url; do
+        name="$(basename "${url##*#/}")"
+        if ! grep -q "  $name\$" "$HERE/SHA256SUMS"; then
+            echo "error: no checksum for $name in packaging/rpm/SHA256SUMS" >&2
+            return 1
+        fi
+        (cd "$TOP/SOURCES" && grep "  $name\$" "$HERE/SHA256SUMS" | sha256sum -c --quiet -)
+        checked=$((checked + 1))
+    done < <(spectool -l -S "$spec" | sed -n 's/^Source[0-9]*: *\(https\?:.*\)$/\1/p')
+    [ "$checked" -gt 0 ] || { echo "error: no source of $spec checked" >&2; return 1; }
+}
+
 build() {
     local spec="$TOP/SPECS/$1.spec" status
     echo "== $1"
-    [ "$1" = tavletta ] || spectool -g -C "$TOP/SOURCES" "$spec"
+    [ "$1" = tavletta ] || fetch "$spec"
     # the build requirements: the spec's own, then those %generate_buildrequires
     # finds (rpmbuild -br stops with 11 and writes them into a .buildreqs.nosrc.rpm)
     "${SUDO[@]}" dnf builddep -y -q "$spec"
