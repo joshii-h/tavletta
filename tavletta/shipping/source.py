@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import base64
 import binascii
-import hashlib
 import io
 import json
 import math
@@ -568,25 +567,29 @@ def _child_raw(data: str) -> bytes:
     return raw
 
 
-def _child(raw: bytes, request: dict) -> tuple[dict, bytes]:
-    """pdfchild's answer to the request; its limits broken: RenderTooLarge.
-    Asked once per PDF and request within limits (render.PdfAnswers)."""
+def _child(data: str, request: dict) -> tuple[dict, bytes]:
+    """pdfchild's answer to the request about the PDF (base64); its limits
+    broken: RenderTooLarge. Asked once per PDF and request within limits
+    (render.PdfAnswers); a kept answer needs the file neither decoded nor
+    hashed again."""
     from tavletta.render import pdf_answers
     from tavletta.shipping import pdfchild
 
     kept = pdf_answers()
-    key = (hashlib.sha256(raw).digest(), json.dumps(request, sort_keys=True))
-    found = kept.get(key) if kept is not None else None
+    key = None
+    if kept is not None:
+        key = (kept.digest(data), json.dumps(request, sort_keys=True))
+    found = kept.get(key) if kept is not None and key is not None else None
     if found is not None:
         answer, body = found
     else:
         try:
-            answer, body = pdfchild.ask(raw, request)
+            answer, body = pdfchild.ask(_child_raw(data), request)
         except pdfchild.ChildLimit as e:
             raise _too_large(str(e)) from None
         except pdfchild.ChildFailed as e:
             raise SourceError("unreadable", str(e)) from None
-        if kept is not None:
+        if kept is not None and key is not None:
             kept.put(key, answer, body)
     if "error" in answer:
         if answer["error"] == "too_large":
@@ -596,7 +599,7 @@ def _child(raw: bytes, request: dict) -> tuple[dict, bytes]:
 
 
 def _child_info(data: str, page: int) -> PageInfo:
-    answer, _body = _child(_child_raw(data), {"op": "info", "page": page})
+    answer, _body = _child(data, {"op": "info", "page": page})
     return PageInfo(float(answer["width"]), float(answer["height"]), int(answer["pages"]), True)
 
 
@@ -613,7 +616,7 @@ def _child_draw(data: str, page: int, how: tuple, max_pixels: int) -> Image.Imag
         "sharp": sharp,
         "max_pixels": min(max_pixels, MAX_PIXELS),
     }
-    answer, body = _child(_child_raw(data), request)
+    answer, body = _child(data, request)
     size = (int(answer["width"]), int(answer["height"]))
     if size[0] * size[1] * 3 != len(body):
         raise SourceError("unreadable", "a drawing of %d bytes for %d × %d" % (len(body), *size))

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import contextlib
+import hashlib
 import io
 import math
 import threading
@@ -171,7 +172,25 @@ class PdfAnswers:
         self.shared = _KEPT_BYTES if shared is None else shared
         self._kept: OrderedDict[tuple, tuple[dict, bytes]] = OrderedDict()
         self._bytes = 0
+        self._digests: OrderedDict[str, bytes] = OrderedDict()
         self._lock = threading.Lock()
+
+    def digest(self, data: str) -> bytes:
+        """The SHA-256 of a PDF file's base64 text, the key of its answers:
+        worked out once per text in the block (at most `items` of them), as
+        a series draws the same page on every row and hashing up to 13 MB
+        each time is not free."""
+        with self._lock:
+            found = self._digests.get(data)
+            if found is not None:
+                self._digests.move_to_end(data)
+                return found
+        digest = hashlib.sha256(data.encode("utf-8", "surrogatepass")).digest()
+        with self._lock:
+            self._digests[data] = digest
+            while len(self._digests) > self.items:
+                self._digests.popitem(last=False)
+        return digest
 
     def get(self, key: tuple) -> tuple[dict, bytes] | None:
         with self._lock:
@@ -239,6 +258,7 @@ class PdfAnswers:
         with self._lock:
             while self._kept:
                 self._drop(next(iter(self._kept)))
+            self._digests.clear()
 
 
 _PDF_ANSWERS: ContextVar[PdfAnswers | None] = ContextVar("pdf_answers", default=None)

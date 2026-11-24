@@ -302,6 +302,31 @@ def test_pdf_pages_are_drawn_by_a_child_within_limits(pdf, monkeypatch):
     assert len(source._drawings) == 0
 
 
+def test_a_kept_pdf_answer_needs_the_file_neither_decoded_nor_hashed_again(monkeypatch):
+    """A series draws the same page on every row: the answer is kept, and
+    the PDF (up to 10 MB) is decoded only to ask, hashed once per block."""
+    answer = json.dumps({"width": 2, "height": 1}).encode() + b"\n" + bytes(6)
+    asked, decoded, hashed = [], [], []
+    monkeypatch.setattr(
+        pdfchild, "ask", lambda raw, request: asked.append(request["op"]) or fake_answer(answer)
+    )
+    real_decoded, real_sha = source._decoded, render_module.hashlib.sha256
+    monkeypatch.setattr(source, "_decoded", lambda data: decoded.append(1) or real_decoded(data))
+    monkeypatch.setattr(
+        render_module.hashlib, "sha256", lambda data: hashed.append(1) or real_sha(data)
+    )
+    data = b64(b"%PDF-1.4 " + b"x" * 1000)
+    with limited(10**6):
+        for _row in range(5):
+            source.draw(data, 0, (0, 0, 1, 1), 0, (2, 1))
+    assert asked == ["draw"] and len(decoded) == 1 and len(hashed) == 1
+
+
+def fake_answer(stdout: bytes) -> tuple[dict, bytes]:
+    head, _newline, body = stdout.partition(b"\n")
+    return json.loads(head), body
+
+
 @needs_poppler
 def test_pdf_limits_within_the_child(pdf, monkeypatch):
     label = Label(printer="cab", tape_mm=50, elements=[PageElement(data=pdf)])
