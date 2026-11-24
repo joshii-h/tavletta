@@ -26,7 +26,7 @@ neither enabled nor started. Its files:
 
 Both TOML files belong to tavletta, mode 600. Make a token as that user:
 
-  sudo -u tavletta tavletta token new NAME --role print \
+  sudo -u tavletta /usr/bin/tavletta token new NAME --role print \
       --tokens /etc/tavletta/tokens.toml --printers /etc/tavletta/printers.toml
   sudo systemctl enable --now tavletta-server
 
