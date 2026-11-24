@@ -914,10 +914,11 @@ def test_print_the_labels_own_data_file(api, server_env):
         api.base, "POST", "/api/v1/print", body={"label": "items", "rows": "5-"}
     )
     assert status == 400 and body["error"]["code"] == "no_rows"
-    status, _r, body = call(
-        api.base, "POST", "/api/v1/print", body={"label": "items", "rows": "x"}
-    )
-    assert status == 400 and body["error"]["code"] == "invalid_field"
+    for bad in ("x", "1 2"):  # two numbers need a dash between them
+        status, _r, body = call(
+            api.base, "POST", "/api/v1/print", body={"label": "items", "rows": bad}
+        )
+        assert status == 400 and body["error"]["code"] == "invalid_field"
     status, _r, body = call(api.base, "POST", "/api/v1/print", body={"label": "items", "rows": 3})
     assert status == 400
     status, _r, body = call(

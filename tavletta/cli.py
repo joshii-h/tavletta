@@ -160,7 +160,8 @@ def _rows(text: str) -> tuple[int, int]:
     from 1, both included."""
     match = _ROWS.match(text)
     first, dash, last = match.groups() if match else ("", "", "")
-    if not (first or last) or (not dash and not first):  # also no match at all
+    # also no match at all; two numbers need a dash between them ("3 4")
+    if not (first or last) or (last and not dash):
         raise _rows_error(text)
     start = int(first) if first else 1
     end = _row_end(last, dash, start)

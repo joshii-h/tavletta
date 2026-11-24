@@ -869,7 +869,7 @@ def test_rows_argument():
     assert cli._rows("5") == (5, 5)
     assert cli._rows(" 7- ") == (7, cli.ALL_ROWS)
     assert cli._rows("-4") == (1, 4)
-    for bad in ("", "-", "0", "4-2", "a-b", "1-2-3"):
+    for bad in ("", "-", "0", "4-2", "a-b", "1-2-3", "3 4", " 3  4 "):
         with pytest.raises(Exception, match="expected rows"):
             cli._rows(bad)
 
