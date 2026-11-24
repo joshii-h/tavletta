@@ -118,14 +118,15 @@ def binds_loopback(host: str) -> bool:
     return is_loopback(resolve(host))
 
 
-_HOST_HEADER = re.compile(r"(?:\[([0-9A-Fa-f:.]+)\]|([A-Za-z0-9.-]+))(?::(\d{1,5}))?\Z")
+_HOST_HEADER = re.compile(r"(?:\[([0-9A-Fa-f:.]+)\]|([A-Za-z0-9.-]+))(?::([0-9]{1,5}))?\Z")
 
 
 def _host_name(header: str) -> str:
     """The name of a Host header, without the port: "[::1]:8790" -> "::1";
-    "" for anything else ("[::1]evil.com", "user@host", spaces)."""
+    "" for anything else ("[::1]evil.com", "user@host", spaces, a port
+    beyond 65535 or of other digits than 0 to 9)."""
     match = _HOST_HEADER.match(header)
-    if not match:
+    if not match or (match.group(3) and int(match.group(3)) > 65535):
         return ""
     return match.group(1) or match.group(2)
 
@@ -636,7 +637,10 @@ class Handler(BaseHTTPRequestHandler):
             host = _last(self.headers.get_all("X-Forwarded-Host")) or host
         if not _host_name(host):
             return scheme + "://"
-        return origin_of("%s://%s" % (scheme, host))
+        try:
+            return origin_of("%s://%s" % (scheme, host))
+        except ValueError:  # not an address after all: no site, as without Host
+            return scheme + "://"
 
     def _own_origin(self) -> str:
         login = self.server.config.login

@@ -778,3 +778,32 @@ def test_signed_out_page_loads_are_not_wrong_tokens(site):
     for _ in range(10):
         call(site.base, "GET", "/api/v1/me", token="w" * 20)
     assert call(site.base, "GET", "/api/v1/me", token="w" * 20)[0] == 429
+
+
+@pytest.mark.parametrize("host", ["a:99999", "a:\u0661\u0662", "a:65536"])
+def test_a_host_with_an_impossible_port_is_no_site(make_site, host, caplog):
+    """No 500 (and no logged exception) for a Host whose port cannot be one,
+    also behind a trusted proxy's X-Forwarded-Host."""
+    site = make_site()
+    host = host.encode()  # as sent: http.client takes no other text
+    with caplog.at_level("ERROR"):
+        status, _response, _body = call(site.base, "GET", "/api/v1/me", headers={"Host": host})
+        assert status in (401, 421)
+        site.server.config = replace(
+            site.server.config, trusted_proxies=(ipaddress.ip_network("127.0.0.1/32"),)
+        )
+        proxy = {"X-Forwarded-Proto": "https", "X-Forwarded-Host": host}
+        status, response, _ = call(site.base, "GET", "/oidc/login", headers=proxy)
+        assert status == 303 and response.getheader("Location") == "/#/signin-error/failed"
+        cookie = {"Cookie": "tavletta-session=x", **PAGE, **proxy}
+        assert call(site.base, "GET", "/api/v1/me", headers=cookie)[0] in (401, 403)
+    assert "request failed" not in caplog.text
+
+
+def test_host_names_and_ports():
+    from tavletta.server.http import _host_name
+
+    assert _host_name("labels.example.com:65535") == "labels.example.com"
+    assert _host_name("[::1]:8790") == "::1"
+    for bad in ("a:65536", "a:99999", "a:\u0661", "a:"):
+        assert _host_name(bad) == ""
