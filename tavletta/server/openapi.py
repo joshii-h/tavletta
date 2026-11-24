@@ -1019,9 +1019,10 @@ def _label_admin_paths() -> dict:
                     "not_json",
                 ),
                 "409": _error(
-                    "A label of that name exists (send replace=true), or a print of it "
-                    "holds the file",
+                    "A label of that name exists (send replace=true), jobs of it wait or "
+                    "print (label_in_use), or another program's print holds the file",
                     "label_exists",
+                    "label_in_use",
                     "label_locked",
                 ),
                 "413": _error(
@@ -1071,8 +1072,13 @@ def _label_admin_paths() -> dict:
                 "204": {"description": "Deleted"},
                 "400": _error("Not a name inside the labels folder", "invalid_field"),
                 "404": _error("No such label", "label_not_found"),
-                "409": _error("A print of it holds the file", "label_locked"),
-                "500": _error("Not deleted (logged)", "not_saved", "internal"),
+                "409": _error(
+                    "Jobs of it wait or print (label_in_use), or another program's print "
+                    "holds the file",
+                    "label_in_use",
+                    "label_locked",
+                ),
+                "500": _error("Not deleted (logged)", "not_deleted", "internal"),
             },
             parameters=[_LANGUAGE, _LABEL_NAME],
         ),
@@ -1330,6 +1336,7 @@ ERROR_CODES: tuple[tuple[int, str, str], ...] = (
     (409, "job_finished", "The job has finished: nothing to cancel."),
     (409, "counter_not_saved", "The label file is not writable: nothing was printed."),
     (409, "label_exists", "A label of that name exists: upload with replace=true."),
+    (409, "label_in_use", "Jobs of the label wait or print: retry when they are done."),
     (409, "label_locked", "A print of the label holds the file: retry when it has ended."),
     (411, "length_required", "No Content-Length (chunked bodies are not accepted)."),
     (413, "too_large", "Body over --max-body, or too many data rows, columns or cells."),
@@ -1358,6 +1365,7 @@ ERROR_CODES: tuple[tuple[int, str, str], ...] = (
     (429, "queue_full", "Too many jobs waiting: retry later."),
     (500, "internal", "An error of the server; it is logged."),
     (500, "not_saved", "The labels folder could not be written (507: it is full)."),
+    (500, "not_deleted", "The label file could not be deleted (a read-only folder)."),
     (502, "printer_<code>", "The printer is unreachable or reports a problem."),
     (503, "busy", "All request or render slots taken: retry after a moment."),
 )

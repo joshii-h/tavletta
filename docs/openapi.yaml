@@ -101,6 +101,9 @@ x-tavletta-error-codes:
   code: label_exists
   meaning: 'A label of that name exists: upload with replace=true.'
 - status: 409
+  code: label_in_use
+  meaning: 'Jobs of the label wait or print: retry when they are done.'
+- status: 409
   code: label_locked
   meaning: 'A print of the label holds the file: retry when it has ended.'
 - status: 411
@@ -160,6 +163,9 @@ x-tavletta-error-codes:
 - status: 500
   code: not_saved
   meaning: 'The labels folder could not be written (507: it is full).'
+- status: 500
+  code: not_deleted
+  meaning: The label file could not be deleted (a read-only folder).
 - status: 502
   code: printer_<code>
   meaning: The printer is unreachable or reports a problem.
@@ -1009,13 +1015,15 @@ paths:
           x-tavletta-codes:
           - timeout
         '409':
-          description: A label of that name exists (send replace=true), or a print of it holds the file
+          description: A label of that name exists (send replace=true), jobs of it wait or print (label_in_use),
+            or another program's print holds the file
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
           x-tavletta-codes:
           - label_exists
+          - label_in_use
           - label_locked
         '411':
           description: No Content-Length
@@ -1164,12 +1172,14 @@ paths:
           x-tavletta-codes:
           - timeout
         '409':
-          description: A print of it holds the file
+          description: Jobs of it wait or print (label_in_use), or another program's print holds the
+            file
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
           x-tavletta-codes:
+          - label_in_use
           - label_locked
         '421':
           description: Not a loopback Host on a loopback server
@@ -1194,7 +1204,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           x-tavletta-codes:
-          - not_saved
+          - not_deleted
           - internal
         '501':
           description: A method HTTP knows but the server does not

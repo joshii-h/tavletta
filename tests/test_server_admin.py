@@ -341,25 +341,101 @@ def test_a_link_out_of_the_folder_is_not_deleted(base, server_env, tmp_path):
 
 
 def test_a_label_being_printed_is_not_replaced_or_deleted(base, server_env, monkeypatch):
+    """Nor while a job of it waits: it would print a label deleted, or the
+    layout replaced and save its counter into the new file. 409 at once."""
     monkeypatch.setattr(service_module, "LABEL_FREE_SECONDS", 0.2)
     server_env.printer.gate = threading.Event()
-    status, _response, job = call(
-        base, "POST", "/api/v1/print", body={"label": "box"}, token=ADMIN
-    )
-    assert status == 202
+    jobs = []
+    for _ in range(2):  # the second waits behind the first
+        status, _response, job = call(
+            base, "POST", "/api/v1/print", body={"label": "box"}, token=ADMIN
+        )
+        assert status == 202
+        jobs.append(job)
     try:
         assert server_env.printer.started.wait(10)
         status, _response, body = put(base, "box", label_json(), query="?replace=true")
-        assert status == 409 and body["error"]["code"] == "label_locked"
+        assert status == 409 and body["error"]["code"] == "label_in_use"
         status, _response, body = call(base, "DELETE", "/api/v1/labels/box", token=ADMIN)
-        assert status == 409 and body["error"]["code"] == "label_locked"
+        assert status == 409 and body["error"]["code"] == "label_in_use"
+        assert "box.tavletta" in body["error"]["message"]
     finally:
         server_env.printer.gate.set()
 
-    wait_for(
-        lambda: call(base, "GET", "/api/v1/jobs/" + job["id"], token=ADMIN)[2]["state"] == "done"
-    )
+    for job in jobs:
+        wait_for(
+            lambda job=job: (
+                call(base, "GET", "/api/v1/jobs/" + job["id"], token=ADMIN)[2]["state"] == "done"
+            )
+        )
     assert call(base, "DELETE", "/api/v1/labels/box", token=ADMIN)[0] == 204
+
+
+def test_a_label_another_program_prints_is_locked(base, server_env, monkeypatch):
+    from tavletta.model import LockTimeout
+
+    def locked(path, waiting=None, timeout=60.0):
+        raise LockTimeout(11, "locked")
+
+    monkeypatch.setattr(service_module, "locked", locked)
+    status, _response, body = call(base, "DELETE", "/api/v1/labels/box", token=ADMIN)
+    assert status == 409 and body["error"]["code"] == "label_locked"
+
+
+def _service(server_env):
+    from tavletta.ui.settings import Settings
+
+    settings = {"printers": {"fake-mono": {"host": "mono.local"}}}
+    return service_module.Service(server_env.labels, settings=lambda: Settings(dict(settings)))
+
+
+def test_no_job_is_queued_for_a_label_deleted_after_its_check(server_env):
+    from tavletta.server.errors import ApiError
+    from tavletta.server.requests import PrintRequest
+
+    service = _service(server_env)
+    checked = service.check_print(PrintRequest(label="box"))
+    service.delete_label("box")
+    with pytest.raises(ApiError) as refused:
+        service.queue_print(checked)
+    assert refused.value.code == "label_not_found" and not service.jobs.uses_label("box.tavletta")
+
+
+def test_a_label_that_cannot_be_deleted_says_so(base, server_env, monkeypatch):
+    import errno
+    from pathlib import Path
+
+    def refuse(self, missing_ok=False):
+        raise OSError(errno.EROFS, "Read-only file system")
+
+    monkeypatch.setattr(Path, "unlink", refuse)
+    status, _response, body = call(base, "DELETE", "/api/v1/labels/box", token=ADMIN)
+    assert status == 500 and body["error"]["code"] == "not_deleted"
+    assert "deleted" in body["error"]["message"]
+
+
+def test_label_locks_are_dropped_once_unused(server_env):
+    from tavletta.server.requests import PrintRequest
+
+    service = _service(server_env)
+    job = service.submit(PrintRequest(label="box"))
+    assert job.done.wait(10)
+    service.save_label("other", (server_env.labels / "box.tavletta").read_bytes())
+    service.delete_label("other")
+    assert service._label_locks == {}
+
+
+def test_uploads_left_by_a_killed_server_are_removed_at_start(server_env):
+    import time
+
+    stale = server_env.labels / ".upload-0123456789abcdef.tavletta"
+    fresh = server_env.labels / ".upload-fedcba9876543210.tavletta"
+    for upload in (stale, fresh):
+        upload.write_text("{}")
+    old = time.time() - service_module.STALE_UPLOAD_SECONDS - 60
+    os.utime(stale, (old, old))
+    service_module.Service(server_env.labels)
+    assert not stale.exists() and fresh.exists()
 
 
 def test_a_full_disk_is_told(base, monkeypatch):

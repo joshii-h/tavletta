@@ -84,6 +84,7 @@ Every error is JSON with a stable code and a message for people:
 | 409 | `job_finished` | The job has finished: nothing to cancel. |
 | 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |
 | 409 | `label_exists` | A label of that name exists: upload with replace=true. |
+| 409 | `label_in_use` | Jobs of the label wait or print: retry when they are done. |
 | 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |
 | 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |
 | 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |
@@ -104,6 +105,7 @@ Every error is JSON with a stable code and a message for people:
 | 429 | `queue_full` | Too many jobs waiting: retry later. |
 | 500 | `internal` | An error of the server; it is logged. |
 | 500 | `not_saved` | The labels folder could not be written (507: it is full). |
+| 500 | `not_deleted` | The label file could not be deleted (a read-only folder). |
 | 502 | `printer_<code>` | The printer is unreachable or reports a problem. |
 | 503 | `busy` | All request or render slots taken: retry after a moment. |
 
@@ -302,7 +304,7 @@ Body: The content of a `.tavletta` file.
 | 200 | Replaced (replace=true) |  |
 | 201 | Added |  |
 | 400 | Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to 100), in the folder itself | `invalid_field`, `not_json` |
-| 409 | A label of that name exists (send replace=true), or a print of it holds the file | `label_exists`, `label_locked` |
+| 409 | A label of that name exists (send replace=true), jobs of it wait or print (label_in_use), or another program's print holds the file | `label_exists`, `label_in_use`, `label_locked` |
 | 413 | Over `--max-body`, or a label too large to render | `too_large`, `label_too_large` |
 | 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |
 | 507 | No space left in the labels folder | `not_saved` |
@@ -330,7 +332,7 @@ Delete a label file (admin); its data file stays.
 | 204 | Deleted |  |
 | 400 | Not a name inside the labels folder | `invalid_field` |
 | 404 | No such label | `label_not_found` |
-| 409 | A print of it holds the file | `label_locked` |
+| 409 | Jobs of it wait or print (label_in_use), or another program's print holds the file | `label_in_use`, `label_locked` |
 
 ```sh
 curl -H "Authorization: Bearer $TOKEN" \

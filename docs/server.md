@@ -639,10 +639,18 @@ keeps for devices (`con`, `nul`, `com1` …); anything else (`..`, `/`,
 `\`, NUL) is 400. An existing label is
 replaced only with `?replace=true`, and only if it is a file (not a
 folder or link). `DELETE /api/v1/labels/{name}` removes a label file of
-the folder (links leading out of it are not found). Neither happens
-while a job of this server, the window or the command line prints that
-label (its lock, and the file lock; 409 `label_locked` after 5 s): the
-job holds its counter. Both are logged with the token's name.
+the folder (links leading out of it are not found; a file that cannot be
+removed, a read-only folder, is 500 `not_deleted`). Neither happens
+while a job of this server waits or prints for that label (409
+`label_in_use` at once: it would print a label deleted, or print the
+layout replaced and then save its counter into the new file), nor while
+the window or the command line prints it (the file lock; 409
+`label_locked` after 5 s). A print request checked just before its label
+is deleted is not queued (404 `label_not_found`); one checked while the
+label is replaced prints the layout it was checked with. Both are logged
+with the token's name. Uploads a server left behind when it was killed
+while checking one (`.upload-…` in the folder) are removed at the next
+start once they are an hour old.
 
 The upload and `/data` are not MCP tools: an AI client fills in and
 prints the labels it is given; changing the labels everyone prints with

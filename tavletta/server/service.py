@@ -26,7 +26,7 @@ import threading
 import time
 from collections.abc import Callable, Iterator, Mapping
 from concurrent.futures import Future, ThreadPoolExecutor
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from types import EllipsisType
@@ -132,6 +132,9 @@ MAX_LINES = 100
 MAX_PIXELS = 40_000_000
 # an upload or delete waits this long for a print of the label to end
 LABEL_FREE_SECONDS = 5.0
+# an upload left in the labels folder by a server that was killed while it
+# checked it (_upload()) is removed at the next start once this old
+STALE_UPLOAD_SECONDS = 3600.0
 # cells of a data file read for the web page (POST /data): its rows come
 # back as JSON and go out again as data_rows, which --max-body limits
 MAX_DATA_CELLS = 500_000
@@ -405,7 +408,11 @@ class Service:
         self.jobs = JobQueue(self._failed)
         self._found: dict[str, tuple[float, list[dict[str, str]]]] = {}
         self._found_lock = threading.Lock()
-        self._label_locks: dict[str, threading.Lock] = {}
+        # a lock per label file while it is used (_label_lock())
+        self._label_locks: dict[str, _LabelLock] = {}
+        # held while a job is queued, and while a label file is replaced or
+        # deleted: a job is never queued for a label going away
+        self._submitting = threading.Lock()
         self._searches: dict[str, threading.Lock] = {}
         self._states: dict[str, tuple[float, PrinterInfo | Exception]] = {}
         # the question to a printer running now, by its name (_question())
@@ -414,6 +421,18 @@ class Service:
         self._held = threading.local()  # render slots this thread holds
         self._waiting = 0  # requests waiting for a render slot
         self._waiting_lock = threading.Lock()
+        self._remove_stale_uploads()
+
+    def _remove_stale_uploads(self) -> None:
+        """Uploads a killed server left behind (_upload()): never listed,
+        but they would stay for ever."""
+        now = time.time()
+        with contextlib.suppress(OSError):
+            for upload in self.labels.root.glob(".upload-*" + LABEL_SUFFIX):
+                with contextlib.suppress(OSError):
+                    if now - upload.lstat().st_mtime > STALE_UPLOAD_SECONDS:
+                        upload.unlink()
+                        log.info("removed %s, left by an upload that did not finish", upload.name)
 
     def close(self, timeout: float = 30.0) -> None:
         """Cancel the waiting jobs; printing ones stop after their label.
@@ -780,35 +799,63 @@ class Service:
         _check_limits(label, [])
 
     @contextlib.contextmanager
-    def _label_free(self, path: Path, shown: str) -> Iterator[None]:
-        """The label file while no job of this server prints it (and holds
-        its counter): a file is not replaced or deleted under a print; 409
-        label_locked if one does for more than a few seconds."""
+    def _label_lock(self, path: Path) -> Iterator[threading.Lock]:
+        """The lock of a label file of this server: one for each file while
+        someone uses it, gone once nobody does."""
         key = os.path.realpath(path)
         with self._found_lock:
-            lock = self._label_locks.setdefault(key, threading.Lock())
+            entry = self._label_locks.setdefault(key, _LabelLock())
+            entry.users += 1
+        try:
+            yield entry.lock
+        finally:
+            with self._found_lock:
+                entry.users -= 1
+                if not entry.users:
+                    del self._label_locks[key]
+
+    @contextlib.contextmanager
+    def _label_free(
+        self, path: Path, shown: str, problem: Callable[[OSError], ApiError] | None = None
+    ) -> Iterator[None]:
+        """The label file while no job of this server prints it or waits to
+        print it (409 label_in_use: it would print a label deleted, or the
+        layout replaced and then save its counter into the new file) and no
+        other program prints it (409 label_locked after a few seconds). No
+        job of it is queued meanwhile. An OSError becomes `problem`'s
+        answer (not saved, else)."""
         busy = ApiError(
             409, "label_locked", _("%s is still locked by another print – try again later") % shown
         )
-        if not lock.acquire(timeout=LABEL_FREE_SECONDS):
-            raise busy
-        try:
-            # and the file lock: a print of the window or the command line
-            with locked(path, timeout=LABEL_FREE_SECONDS):
-                yield
-        except LockTimeout:
-            raise busy from None
-        except OSError as e:
-            raise _not_saved(e) from None
-        finally:
-            lock.release()
+        in_use = ApiError(
+            409,
+            "label_in_use",
+            _("%s has print jobs waiting or printing – try again when they are done") % shown,
+        )
+        if self.jobs.uses_label(shown):  # at once, not after waiting for a print's lock
+            raise in_use
+        with self._label_lock(path) as lock:
+            if not lock.acquire(timeout=LABEL_FREE_SECONDS):
+                raise busy
+            try:
+                # and the file lock: a print of the window or the command line
+                with locked(path, timeout=LABEL_FREE_SECONDS), self._submitting:
+                    if self.jobs.uses_label(shown):
+                        raise in_use
+                    yield
+            except LockTimeout:
+                raise busy from None
+            except OSError as e:
+                raise (problem or _not_saved)(e) from None
+            finally:
+                lock.release()
 
     def delete_label(self, name: object, caller: Caller = LOCAL) -> None:
         """Remove a label file of the folder (admin only); its data file stays."""
         _require(caller, "admin")
         path = self.labels.label(name)
         shown = self.labels.name_of(path)
-        with self._label_free(path, shown):
+        with self._label_free(path, shown, _not_deleted):
             try:
                 path.unlink()
             except FileNotFoundError:
@@ -1213,7 +1260,11 @@ class Service:
         job.key = queue_key(host)
         job.cost = _cost(prepared)
         try:
-            self.jobs.submit(job)
+            # not for a label deleted since it was checked (_label_free())
+            with self._submitting:
+                if prepared.path is not None and not os.path.lexists(prepared.path):
+                    raise not_found("label_not_found", _("No such label: %s") % name)
+                self.jobs.submit(job)
         except QueueFull:
             raise ApiError(
                 429, "queue_full", _("Too many print jobs are waiting – try again later")
@@ -1325,10 +1376,7 @@ class Service:
         if path is None:
             yield
             return
-        key = os.path.realpath(path)
-        with self._found_lock:
-            lock = self._label_locks.setdefault(key, threading.Lock())
-        with lock, locked(path):
+        with self._label_lock(path) as lock, lock, locked(path):
             yield
 
     def _print(self, job: PrintJob, prepared: Prepared, save: bool):
@@ -1567,6 +1615,17 @@ def _link(upload: Path, path: Path) -> None:
 
 def _label_exists(name: str) -> ApiError:
     return ApiError(409, "label_exists", _("A label named %s exists already") % name)
+
+
+def _not_deleted(error: OSError) -> ApiError:
+    log.warning("cannot delete a label: %s", error)
+    return ApiError(500, "not_deleted", _("The label could not be deleted from the labels folder"))
+
+
+@dataclass
+class _LabelLock:
+    lock: threading.Lock = field(default_factory=threading.Lock)
+    users: int = 0
 
 
 def _not_saved(error: OSError) -> ApiError:

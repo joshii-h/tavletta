@@ -207,6 +207,14 @@ class JobQueue:
                 for job in self._jobs.values()
             )
 
+    def uses_label(self, name: str) -> bool:
+        """Whether a job of the label of this name (in the labels folder)
+        waits or prints."""
+        with self._lock:
+            return any(
+                job.label == name and job.state not in FINISHED for job in self._jobs.values()
+            )
+
     def get(self, job_id: str) -> PrintJob | None:
         with self._lock:
             return self._jobs.get(job_id)
