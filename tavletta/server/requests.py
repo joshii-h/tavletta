@@ -8,6 +8,8 @@ files (merge/limits.py).
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass, field
@@ -22,6 +24,7 @@ MAX_COPIES = 9999
 MAX_ASSIGNMENTS = 1000
 MAX_VALUE = 100_000  # characters of one value or cell
 MAX_WAIT = 300.0  # seconds a print request may wait for its job
+MAX_NAME = 255  # characters of a file name told in messages
 
 COMMON = frozenset(
     {
@@ -38,6 +41,7 @@ COMMON = frozenset(
 )
 PREVIEW = COMMON | {"row", "format", "view"}
 PRINT = COMMON | {"host", "copies", "rows", "no_save_counter", "wait"}
+DATA = frozenset({"name", "content", "sheet", "header"})
 
 
 @dataclass
@@ -70,6 +74,16 @@ class PrintRequest(LabelRequest):
     wait: float = 0.0
 
 
+@dataclass
+class DataRequest:
+    """A data file to read (POST /data): its rows for the web page's series."""
+
+    content: bytes
+    name: str = ""  # the file's name, for messages
+    sheet: str = ""
+    header: bool = True  # the first row names the columns
+
+
 def preview_request(body: object) -> PreviewRequest:
     data = _object(body, PREVIEW)
     request = PreviewRequest(**_common(data))
@@ -88,6 +102,24 @@ def print_request(body: object) -> PrintRequest:
     request.no_save_counter = _flag(data, "no_save_counter")
     request.wait = _number(data, "wait", 0.0, MAX_WAIT)
     return request
+
+
+def data_request(body: object) -> DataRequest:
+    data = _object(body, DATA)
+    content = data.get("content")
+    if not isinstance(content, str):
+        raise invalid_field("content")
+    try:
+        raw = base64.b64decode(content, validate=True)
+    except (binascii.Error, ValueError):
+        raise invalid_field("content") from None
+    header = data.get("header", True)
+    if not isinstance(header, bool):
+        raise invalid_field("header")
+    name = _text(data, "name") or ""
+    if len(name) > MAX_NAME:
+        raise invalid_field("name")
+    return DataRequest(raw, name, _text(data, "sheet") or "", header)
 
 
 def _object(body: object, allowed: frozenset[str]) -> dict:

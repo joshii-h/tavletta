@@ -11,7 +11,9 @@ in .tavletta, data files are tables (model.TABLE_SUFFIXES).
 from __future__ import annotations
 
 import os
+import re
 import stat
+import unicodedata
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
@@ -23,6 +25,10 @@ LABEL_SUFFIX = ".tavletta"
 MAX_NAME = 1024  # characters of a name in a request
 MAX_DEPTH = 8  # folders below the labels folder that are listed
 MAX_LISTED = 10_000  # files listed at most
+# the name of a label uploaded (PUT /labels/{name}): one file in the folder
+# itself, letters (of any script), digits, spaces and . _ - ( ) + , ; not
+# starting with a dot or a space, not ending with one
+NEW_NAME = re.compile(r"[^\W_](?:[\w .()+,-]{0,98}[\w)])?\Z")
 
 
 class LabelsDir:
@@ -38,6 +44,18 @@ class LabelsDir:
         if path is None:
             raise not_found("label_not_found", _("No such label: %s") % name)
         return path
+
+    def new_label(self, name: object) -> Path:
+        """Where a label uploaded under `name` goes (".tavletta" may be left
+        out): a file in the folder itself, with a name that is safe in any
+        file system and shell. 400 for any other name; the file may exist."""
+        if not isinstance(name, str) or len(name) > MAX_NAME:
+            raise invalid_field("name")
+        name = unicodedata.normalize("NFC", name)
+        stem = name[: -len(LABEL_SUFFIX)] if name.endswith(LABEL_SUFFIX) else name
+        if not NEW_NAME.match(stem):
+            raise invalid_field("name")
+        return self.root / (stem + LABEL_SUFFIX)
 
     def data(self, name: object) -> Path:
         """The data file `name`, a table in the folder."""

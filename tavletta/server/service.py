@@ -19,7 +19,9 @@ import ipaddress
 import logging
 import os
 import re
+import secrets
 import socket
+import stat
 import threading
 import time
 from collections.abc import Callable, Iterator, Mapping
@@ -48,8 +50,9 @@ from tavletta.cli import (
     apply_assignments,
     ask_printer,
 )
+from tavletta.editing import Geometry
 from tavletta.job import Job, PrepareFailed, labels_reported, other_labels, preview_image
-from tavletta.merge import MergeError, read_book
+from tavletta.merge import MergeError, limits, read_book, read_book_data, without_header
 from tavletta.model import (
     CodeElement,
     ImageElement,
@@ -76,8 +79,14 @@ from tavletta.serial import (
 from tavletta.server.config import LOCAL, Caller, NamedPrinter
 from tavletta.server.errors import ApiError, bad_request, invalid_field, not_found
 from tavletta.server.jobs import PRINTING, WAITING, Failure, JobQueue, PrintJob, QueueFull
-from tavletta.server.paths import LabelsDir
-from tavletta.server.requests import LabelRequest, PreviewRequest, PrintRequest
+from tavletta.server.paths import LABEL_SUFFIX, LabelsDir
+from tavletta.server.requests import (
+    MAX_COPIES,
+    DataRequest,
+    LabelRequest,
+    PreviewRequest,
+    PrintRequest,
+)
 from tavletta.sheets.layout import MAX_LABELS, SheetJob
 from tavletta.typeset import font_installed
 from tavletta.ui.i18n import _
@@ -121,6 +130,8 @@ MAX_LINES = 100
 # drawn together; the image files of a label, decoded, get half of it
 # together (render.Limits.image_pixels)
 MAX_PIXELS = 40_000_000
+# an upload or delete waits this long for a print of the label to end
+LABEL_FREE_SECONDS = 5.0
 
 
 @dataclass
@@ -172,6 +183,9 @@ class Preview:
     width: int
     height: int
     warnings: list[dict[str, str]]
+    # where the elements are in the image (editing.Geometry, in mm) and the
+    # image's resolution; None for the printer's view (turned, cut)
+    geometry: dict | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -179,6 +193,7 @@ class Preview:
             "height": self.height,
             "warnings": self.warnings,
             "png": base64.b64encode(self.png).decode(),
+            "geometry": self.geometry,
         }
 
 
@@ -639,6 +654,7 @@ class Service:
                 "remaining_mm": info.remaining_mm,
                 "total_mm": info.total_mm,
                 "pitch_mm": info.pitch_mm,
+                "label_mm": list(info.label_mm) if info.label_mm else None,
                 # settings on the printer, not the loaded labels (ZPL, cab)
                 "width_mm": info.width_mm,
                 "print_method": info.print_method or None,
@@ -694,22 +710,142 @@ class Service:
         result = []
         for path in self.labels.labels():
             with contextlib.suppress(OSError):
-                info = path.stat()
-                result.append(
-                    {
-                        "name": self.labels.name_of(path),
-                        "bytes": info.st_size,
-                        "modified": datetime.fromtimestamp(info.st_mtime, UTC).isoformat(
-                            timespec="seconds"
-                        ),
-                    }
-                )
+                result.append(self._label_file(path))
         return result
+
+    def _label_file(self, path: Path) -> dict:
+        info = path.stat()
+        return {
+            "name": self.labels.name_of(path),
+            "bytes": info.st_size,
+            "modified": datetime.fromtimestamp(info.st_mtime, UTC).isoformat(timespec="seconds"),
+        }
+
+    def save_label(
+        self, name: object, content: bytes, replace_it: bool = False, caller: Caller = LOCAL
+    ) -> tuple[dict, bool]:
+        """Put an uploaded label file into the folder (admin only): checked
+        as the app opens a file (Label.load() of the very bytes, in a
+        hidden file beside it), held to the limits of a label sent with a
+        request, then moved into place in one step. An existing file only
+        with `replace_it`. Returns the file as GET /labels lists it and
+        whether it is new."""
+        _require(caller, "admin")
+        path = self.labels.new_label(name)
+        shown = self.labels.name_of(path)
+        if not replace_it and os.path.lexists(path):
+            raise _label_exists(shown)
+        with self._upload(content) as upload:
+            self._check_upload(upload, shown)
+            with self._label_free(path, shown):
+                created = _place(upload, path, shown, replace_it)
+        log.info("label %s %s by %s", shown, "added" if created else "replaced", caller.name)
+        return self._label_file(path), created
+
+    @contextlib.contextmanager
+    def _upload(self, content: bytes) -> Iterator[Path]:
+        """The uploaded bytes in a hidden file of the folder (never listed,
+        never a name a request can give), removed afterwards if still there."""
+        name = ".upload-%s%s" % (secrets.token_hex(8), LABEL_SUFFIX)
+        upload = self.labels.root / name
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        try:
+            fd = os.open(upload, flags, 0o644)
+            with open(fd, "wb") as file:
+                file.write(content)
+                file.flush()
+                os.fsync(file.fileno())
+        except OSError as e:
+            with contextlib.suppress(OSError):
+                upload.unlink()
+            raise _not_saved(e) from None
+        try:
+            yield upload
+        finally:
+            with contextlib.suppress(FileNotFoundError):
+                upload.unlink()
+
+    def _check_upload(self, upload: Path, shown: str) -> None:
+        label = self._load(upload, shown)
+        if not self.allow_pdf_pages and any(isinstance(e, PageElement) for e in label.elements):
+            raise ApiError(
+                422,
+                "pages_not_allowed",
+                _("Document pages in label_content are not allowed (--allow-pdf-pages)"),
+            )
+        _check_limits(label, [])
+
+    @contextlib.contextmanager
+    def _label_free(self, path: Path, shown: str) -> Iterator[None]:
+        """The label file while no job of this server prints it (and holds
+        its counter): a file is not replaced or deleted under a print; 409
+        label_locked if one does for more than a few seconds."""
+        key = os.path.realpath(path)
+        with self._found_lock:
+            lock = self._label_locks.setdefault(key, threading.Lock())
+        if not lock.acquire(timeout=LABEL_FREE_SECONDS):
+            raise ApiError(
+                409,
+                "label_locked",
+                _("%s is still locked by another print – try again later") % shown,
+            )
+        try:
+            yield
+        except OSError as e:
+            raise _not_saved(e) from None
+        finally:
+            lock.release()
+
+    def delete_label(self, name: object, caller: Caller = LOCAL) -> None:
+        """Remove a label file of the folder (admin only); its data file stays."""
+        _require(caller, "admin")
+        path = self.labels.label(name)
+        shown = self.labels.name_of(path)
+        with self._label_free(path, shown):
+            try:
+                path.unlink()
+            except FileNotFoundError:
+                raise not_found("label_not_found", _("No such label: %s") % shown) from None
+        log.info("label %s deleted by %s", shown, caller.name)
+
+    def read_data(self, request: DataRequest) -> dict:
+        """The rows of a data file sent with the request (POST /data), as
+        the app reads one: every cell as the text it shows (leading zeros
+        and number formats kept). Parsed in a render slot: a large
+        spreadsheet takes as long and as much memory as a render."""
+        name = request.name or "data"
+        try:
+            with self.render_slot():
+                book = read_book_data(request.content, request.sheet)
+                table = book.table if request.header else without_header(book.table)
+        except MergeError as e:
+            raise ApiError(422, "data_problem", data_error_text(e, name)) from None
+        return {
+            "kind": book.kind,
+            "delimiter": table.delimiter or None,
+            "sheets": book.sheets,
+            "sheet": book.sheet or None,
+            "columns": table.columns,
+            "rows": table.rows,
+        }
+
+    def limits(self) -> dict:
+        """What a request may ask for at most, for the web page to tell
+        before it is refused."""
+        return {
+            "max_labels": self.max_labels,
+            "max_sheet_labels": min(self.max_labels, MAX_LABELS),
+            "max_copies": MAX_COPIES,
+            "max_rows": limits.MAX_ROWS,
+            "max_columns": limits.MAX_COLUMNS,
+            "max_cells": limits.MAX_CELLS,
+        }
 
     def describe(self, name: object) -> dict:
         path = self.labels.label(name)
         label = self._load(path)
         names = label_names(label)
+        backend = self._backend(label.printer)
         width, height = label.media_size()
         data_file = label.data_file
         own_data = (
@@ -717,7 +853,7 @@ class Service:
         )
         return {
             "name": self.labels.name_of(path),
-            "printer": {"id": label.printer, "name": backend_name(self._backend(label.printer))},
+            "printer": {"id": label.printer, "name": backend_name(backend)},
             "size": {
                 "tape_mm": label.tape_mm,
                 "length_mm": None if label.auto_length else label.length_mm,
@@ -740,10 +876,12 @@ class Service:
                 "step": label.counter_step,
             },
             "features": label.features(),
+            "on_sheet": _sheet_job(label, backend, self._settings().printer(backend), 1)
+            is not None,
         }
 
-    def _load(self, path: Path) -> Label:
-        name = self.labels.name_of(path)
+    def _load(self, path: Path, name: str | None = None) -> Label:
+        name = name or self.labels.name_of(path)
         try:
             return Label.load(path)
         except OSError:
@@ -886,6 +1024,7 @@ class Service:
         if prepared.rows and index >= len(prepared.rows):
             raise invalid_field("row")
         job = prepared.job(index=index if prepared.rows else None)
+        geometry = None
         with self._rendering(prepared):
             label, warnings = job.expanded(1)
             if request.view == "printer":
@@ -895,8 +1034,9 @@ class Service:
             else:
                 # as the window's preview: the one render path (mono inks,
                 # the printer's raster and reduction, the label sheet)
-                rendered, image = self._preview_image(prepared, job, label)
+                rendered, image, dpi = self._preview_image(prepared, job, label)
                 warnings = warnings + rendered.warnings
+                geometry = _geometry(label, rendered, dpi, prepared.sheet)
             buffer = io.BytesIO()
             image.save(buffer, format="PNG")
         warnings += font_warnings(prepared.label)
@@ -907,7 +1047,7 @@ class Service:
         if prepared.rows and (unknown := unknown_columns(prepared.label, list(prepared.rows[0]))):
             names = ", ".join("{%s}" % name for name in unknown)
             texts.append(_warning("unknown_column", _("No such column: %s") % names))
-        return Preview(buffer.getvalue(), image.width, image.height, texts)
+        return Preview(buffer.getvalue(), image.width, image.height, texts, geometry)
 
     @contextlib.contextmanager
     def _rendering(self, prepared: Prepared) -> Iterator[None]:
@@ -977,7 +1117,7 @@ class Service:
         """The label as the window's preview shows it (job.preview_image())."""
         sheet = prepared.sheet
         try:
-            rendered, image, _dpi = preview_image(
+            rendered, image, dpi = preview_image(
                 prepared.backend,
                 label,
                 job.options,
@@ -991,7 +1131,7 @@ class Service:
             raise ApiError(
                 422, "prepare_failed", _("The label cannot be prepared for printing.")
             ) from None
-        return rendered, image
+        return rendered, image, dpi
 
     @staticmethod
     def _print_warnings(job: Job, label: Label) -> list[RenderWarning]:
@@ -1345,6 +1485,62 @@ class Service:
             raise ApiError(409, "job_finished", _("The print job has already finished"))
         self.jobs.cancel(job)
         return job
+
+
+def _geometry(label: Label, rendered, dpi: float, sheet: SheetJob | None) -> dict | None:
+    """Where the elements are in the preview image (editing.Geometry, mm)
+    and its resolution (dots per inch: mm * dpi / 25.4 are its pixels).
+    None for a label turned onto its sheet: the image is turned then, the
+    boxes are not."""
+    if sheet is not None and sheet.rotated:
+        return None
+    try:
+        geometry = Geometry.of(label, rendered)
+    except ValueError:  # a backend whose render does not tell the boxes
+        return None
+    return dict(geometry.to_dict(), dpi=api_dpi(dpi))
+
+
+def _place(upload: Path, path: Path, shown: str, replace_it: bool) -> bool:
+    """Move the checked upload to its name; True if the name was free. A
+    name taken (also just now) is replaced only with `replace_it`, and only
+    if it is a file: a folder or a link of that name stays."""
+    try:
+        _link(upload, path)
+        return True
+    except FileExistsError:
+        pass
+    if not replace_it or not stat.S_ISREG(os.lstat(path).st_mode):
+        raise _label_exists(shown)
+    os.replace(upload, path)
+    return False
+
+
+def _link(upload: Path, path: Path) -> None:
+    """A second name for the upload, failing if the name exists: in one
+    step, so a label never shows half written. A file system without hard
+    links: the name is taken (an empty file, for a moment) and replaced."""
+    try:
+        os.link(upload, path)
+    except FileExistsError:
+        raise
+    except OSError as e:
+        if e.errno not in (errno.EPERM, errno.ENOTSUP, errno.EOPNOTSUPP, errno.EMLINK):
+            raise
+        os.close(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644))
+        os.replace(upload, path)
+
+
+def _label_exists(name: str) -> ApiError:
+    return ApiError(409, "label_exists", _("A label named %s exists already") % name)
+
+
+def _not_saved(error: OSError) -> ApiError:
+    log.warning("cannot save an uploaded label: %s", error)
+    problem = ApiError(500, "not_saved", _("The label could not be saved in the labels folder"))
+    if error.errno in (errno.ENOSPC, errno.EDQUOT):
+        problem.status = 507  # Insufficient Storage
+    return problem
 
 
 def font_warnings(label: Label) -> list[RenderWarning]:

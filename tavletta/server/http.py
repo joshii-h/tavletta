@@ -36,7 +36,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlsplit
 
 from tavletta.server import requests
 from tavletta.server.config import LOCAL, Caller, TokenStore
@@ -463,7 +463,7 @@ class Handler(BaseHTTPRequestHandler):
             self.close_connection = True
             self._error(ApiError(408, "timeout", _("The request took too long")))
             return
-        if method not in ("POST",) or self._path() == PREFIX + "/health":
+        if method not in ("POST", "PUT") or self._path() == PREFIX + "/health":
             self._request_in()  # no body to wait for
         with language(self.headers.get("Accept-Language")), self._admitted() as admitted:
             if admitted:
@@ -563,7 +563,7 @@ class Handler(BaseHTTPRequestHandler):
             204,
             None,
             {
-                "Access-Control-Allow-Methods": "GET, POST, DELETE",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
                 "Access-Control-Allow-Headers": CORS_HEADERS,
                 "Access-Control-Max-Age": "600",
             },
@@ -676,11 +676,49 @@ class Handler(BaseHTTPRequestHandler):
         host = self._query().get("host", [None])[-1]
         self._send(200, self.server.service.status(parts[1], host, self.caller))
 
+    def me(self, _parts: list[str]) -> None:
+        """Who the token is and what a request may ask for: the web page
+        shows what the role allows (the API refuses the rest anyway)."""
+        caller, config = self.caller, self.server.config
+        self._send(
+            200,
+            {
+                "name": caller.name,
+                "role": caller.role,
+                "printers": sorted(caller.printers) if caller.printers is not None else None,
+                "token_required": bool(config.token or config.tokens),
+                "limits": dict(self.server.service.limits(), max_body=config.max_body),
+            },
+        )
+
     def labels(self, _parts: list[str]) -> None:
         self._send(200, {"labels": self.server.service.list_labels()})
 
     def label(self, parts: list[str]) -> None:
         self._send(200, self.server.service.describe("/".join(parts[1:])))
+
+    def put_label(self, parts: list[str]) -> None:
+        """Upload a label file (admin): the body is the .tavletta file."""
+        service = self.server.service
+        if not self.caller.may("admin"):  # before the body is read and checked
+            raise ApiError(403, "forbidden", _("This access token may not do this"))
+        replace = self._query().get("replace", ["false"])[-1].lower() in ("true", "1", "yes")
+        body = self._raw_json()
+        with self._parsing(body):
+            entry, created = service.save_label("/".join(parts[1:]), body, replace, self.caller)
+        location = {"Location": "%s/labels/%s" % (PREFIX, quote(entry["name"]))}
+        self._send(201 if created else 200, entry, location)
+
+    def delete_label(self, parts: list[str]) -> None:
+        self.server.service.delete_label("/".join(parts[1:]), self.caller)
+        self._send(204, None)
+
+    def data(self, _parts: list[str]) -> None:
+        """The rows of a data file sent along (the web page's series)."""
+        body = self._raw_json()
+        with self._parsing(body):
+            request = requests.data_request(_parse(body))
+        self._send(200, self.server.service.read_data(request))
 
     def preview(self, _parts: list[str]) -> None:
         body = self._raw_json()
@@ -751,7 +789,7 @@ class Handler(BaseHTTPRequestHandler):
     def _error(self, error: ApiError) -> None:
         extra = {"WWW-Authenticate": "Bearer"} if error.status == 401 else {}
         if error.status == 405:
-            extra["Allow"] = "GET, POST, DELETE"
+            extra["Allow"] = "GET, POST, PUT, DELETE"
         self._send(error.status, {"error": error.to_dict()}, extra)
 
     def _send(self, status: int, body: object, headers: dict[str, str] | None = None) -> None:
@@ -829,10 +867,14 @@ def _matches(pattern: tuple[str, ...], parts: list[str]) -> bool:
 ROUTES: dict[tuple[str, tuple[str, ...]], Route] = {
     ("GET", ("health",)): Handler.health,
     ("GET", ("openapi.json",)): Handler.openapi,
+    ("GET", ("me",)): Handler.me,
     ("GET", ("printers",)): Handler.printers,
     ("GET", ("printers", "?", "status")): Handler.status,
     ("GET", ("labels",)): Handler.labels,
     ("GET", ("labels", "*")): Handler.label,
+    ("PUT", ("labels", "*")): Handler.put_label,
+    ("DELETE", ("labels", "*")): Handler.delete_label,
+    ("POST", ("data",)): Handler.data,
     ("POST", ("preview",)): Handler.preview,
     ("POST", ("print",)): Handler.print_job,
     ("GET", ("jobs", "?")): Handler.job,
