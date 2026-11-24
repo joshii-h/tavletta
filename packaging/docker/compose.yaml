@@ -45,6 +45,13 @@ services:
       - "/config/tokens.toml"
       # only programs print, no one from a browser: no web page at /
       # - "--no-web-ui"
+      # people sign in to the web page with OpenID Connect (Keycloak,
+      # Authentik, Entra ID …) instead of a token: cp oidc.example.toml
+      # config/oidc.toml, put the client secret alone into
+      # config/oidc-secret (mode 600, owned by the container's user), see
+      # site/docs/server-install.md#oidc. Needs HTTPS through the proxy.
+      # - "--oidc"
+      # - "/config/oidc.toml"
       # behind a reverse proxy in a Docker network: its X-Forwarded-For
       # names the clients (the rate limit and the log use them). Give the
       # proxy's own address (a fixed one in the network, /32), never a whole

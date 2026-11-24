@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 16:13+0100\n"
+"POT-Creation-Date: 2026-11-24 16:18+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -5444,10 +5444,12 @@ msgstr ""
 #: docs/server-install.md
 msgid ""
 "Put the secret into `config/oidc-secret` (the secret alone, mode 600)  and "
-"write `config/oidc.toml`:"
+"write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
+"commented start):"
 msgstr ""
 "Das Geheimnis in `config/oidc-secret` legen (nur das Geheimnis, Modus 600) "
-"und `config/oidc.toml` schreiben:"
+"und `config/oidc.toml` schreiben (`cp oidc.example.toml config/oidc.toml` "
+"liefert einen kommentierten Anfang):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md

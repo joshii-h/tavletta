@@ -509,7 +509,8 @@ Programs keep using tokens. It needs HTTPS through the reverse proxy
    token: in Keycloak a mapper *User Client Role* (or *User Realm Role*)
    on the client with *Add to ID token* on; Authentik sends `groups`.
 2. Put the secret into `config/oidc-secret` (the secret alone, mode 600)
-   and write `config/oidc.toml`:
+   and write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml`
+   gives a commented start):
 
    ```toml
    [oidc]

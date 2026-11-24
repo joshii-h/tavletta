@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 16:13+0100\n"
+"POT-Creation-Date: 2026-11-24 16:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3937,7 +3937,7 @@ msgstr ""
 #. type: Bullet: '2. '
 #: docs/server-install.md
 #, markdown-text
-msgid "Put the secret into `config/oidc-secret` (the secret alone, mode 600)  and write `config/oidc.toml`:"
+msgid "Put the secret into `config/oidc-secret` (the secret alone, mode 600)  and write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a commented start):"
 msgstr ""
 
 #. type: Fenced code block (toml)
