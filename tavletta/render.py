@@ -455,8 +455,13 @@ def _size_of(
     element: TextElement, size_px: float, dpi: float, antialias: bool, wrap_px: int | None
 ) -> tuple[int, int]:
     """typeset.size_of, kept: fitting a text asks for the same sizes on
-    every render while the label is edited (another element changes)."""
+    every render while the label is edited (another element changes);
+    within limits (the print server) only for the render running, so no
+    client's text stays beyond its request."""
     values = tuple(getattr(element, name) for name in _TEXT_FIELDS)
+    if _LIMITS.get():
+        key = (values, size_px, dpi, antialias, wrap_px)
+        return _per_render("measured", key, lambda: _measured.__wrapped__(*key))
     return _measured(values, size_px, dpi, antialias, wrap_px)
 
 

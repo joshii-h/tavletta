@@ -542,7 +542,9 @@ With the Flatpak: `"command": "flatpak"`, `"args": ["run",
     20 megapixels together, checked from their headers before any is
     decoded;
   - each image file is decoded once per render, nothing is kept between
-    renders (the window keeps a few in caches).
+    renders (the window keeps a few in caches); neither are codes,
+    symbol paths or text sizes: no client's content stays in the
+    process beyond its request.
 
   Elements are measured first and drawn at their final size (a text
   fitted to a page is not drawn large and scaled down). An element over

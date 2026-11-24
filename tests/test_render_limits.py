@@ -269,6 +269,32 @@ def test_nothing_of_a_page_is_kept_within_limits():
     assert len(source._pictures) == 1 and len(source._drawings) > 0
 
 
+def test_no_client_content_stays_in_the_process_caches_within_limits():
+    """Codes, symbol paths and text sizes of a request are kept for the
+    next renders only outside limits (the window), never in the server."""
+    from tavletta import codes, symbols
+    from tavletta.model import SymbolElement
+
+    caches = (codes._encode, codes._qr, symbols._parsed, render_module._measured)
+    for cache in caches:
+        cache.cache_clear()
+    label = Label(
+        tape_mm=24,
+        elements=[
+            TextElement(text="a client's text"),
+            CodeElement(data="client-1", symbology="qr"),
+            CodeElement(data="client-2", symbology="qr", error_correction="H"),
+            CodeElement(data="CLIENT-3", symbology="code128"),
+            SymbolElement(path="M2 2L22 2L22 22Z"),
+        ],
+    )
+    with limited(10**8):
+        assert not render(label, 300).warnings
+    assert [cache.cache_info().currsize for cache in caches] == [0, 0, 0, 0]
+    render(label, 300)  # the window keeps them
+    assert all(cache.cache_info().currsize for cache in caches)
+
+
 def test_background_brightness_is_not_cached_within_limits():
     render_module._image_brightness_cached.cache_clear()
     label = Label(tape_mm=12, background_image=ImageElement(data=png((20, 20))))

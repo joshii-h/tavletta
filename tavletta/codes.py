@@ -184,11 +184,21 @@ def verify(element: CodeElement) -> None:
 
 
 def encode(element: CodeElement) -> Symbol:
-    """The modules of the code; CodeError if its content cannot be encoded."""
+    """The modules of the code; CodeError if its content cannot be encoded.
+    Kept for the next renders, but not within render limits (the print
+    server): a client's content stays in no cache beyond its request."""
     check(element)
+    keep = _keeps()
     if element.symbology == "qr" and element.error_correction:
-        return _qr(element.data, element.error_correction)
-    return _encode(element.symbology, element.data)
+        qr = _qr if keep else _qr.__wrapped__
+        return qr(element.data, element.error_correction)
+    return (_encode if keep else _encode.__wrapped__)(element.symbology, element.data)
+
+
+def _keeps() -> bool:
+    from tavletta.render import active_limits  # render imports this module
+
+    return active_limits() is None
 
 
 @lru_cache(maxsize=64)
