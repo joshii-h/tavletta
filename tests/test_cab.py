@@ -11,6 +11,7 @@ import json
 import re
 import socket
 import threading
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
@@ -30,6 +31,7 @@ from tavletta.backends.base import (
     PrinterError,
     PrinterInfo,
     PrinterNotFound,
+    PrinterOutOfMemory,
     PrinterPaused,
     PrinterStalled,
     PrinterTimeout,
@@ -1310,6 +1312,39 @@ def test_a_series_job_stops_between_jobs(printer, labels_per_job):
     assert outcome.stopped and outcome.printed == list(range(1, labels_per_job + 1))
     assert len(printer.device.jobs) == 1 and printer.device.printed() == labels_per_job
 
+
+def test_a_series_job_out_of_memory_says_to_lower_labels_per_job(printer, monkeypatch):
+    """The printer reports out of memory (O) for the second job before it
+    printed any of its labels: rows 1 to 3 printed, row 4 to go on from;
+    the message names the setting. Printed again from row 4, rows 4 to 7
+    come out, each once."""
+    from tavletta.serial import SeriesError, print_series
+    from tavletta.ui.texts import printer_error_text
+    from tavletta.units import unit_for
+
+    real = FakeCab.status
+
+    def status(self):
+        if len(self.jobs) == 2 and self.pending == 3:
+            return b"YO000003N"
+        return real(self)
+
+    monkeypatch.setattr(FakeCab, "status", status)
+    with pytest.raises(SeriesError) as failed:
+        print_series(Cab(), "h", _series(7, labels_per_job=3))
+    error = failed.value
+    assert (error.row, error.printed, error.copies_printed) == (4, [1, 2, 3], 0)
+    assert error.outcome.labels == 3 and isinstance(error.error, PrinterOutOfMemory)
+    assert error.error.code == "out_of_memory" and printer.device.cancelled == 1
+    assert "“Labels per job”" in printer_error_text(error.error, unit_for("mm"))
+
+    monkeypatch.setattr(FakeCab, "status", real)
+    jobs = len(printer.device.jobs)
+    series = replace(_series(7, labels_per_job=3), indexes=list(range(error.row - 1, 7)))
+    outcome = print_series(Cab(), "h", series)
+    assert outcome.printed == [4, 5, 6, 7] and outcome.labels == 4
+    images = [i.tobytes() for job in printer.device.jobs[jobs:] for _n, i in _series_parts(job)[0]]
+    assert len(images) == 4 and len(set(images)) == 4
 
 
 def test_a_series_job_prints_the_rows_before_one_that_cannot_be_drawn(printer, monkeypatch):

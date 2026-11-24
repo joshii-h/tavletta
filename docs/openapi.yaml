@@ -183,6 +183,7 @@ x-tavletta-printer-codes:
 - port_closed
 - busy
 - paused
+- out_of_memory
 - cover_open
 - head_open
 - jam
@@ -683,6 +684,7 @@ paths:
           - printer_port_closed
           - printer_busy
           - printer_paused
+          - printer_out_of_memory
           - printer_cover_open
           - printer_head_open
           - printer_jam

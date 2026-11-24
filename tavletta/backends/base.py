@@ -642,6 +642,13 @@ class PrinterPaused(PrinterError):
     code = "paused"
 
 
+class PrinterOutOfMemory(PrinterError):
+    """The printer has no room left for the data of a job (cab: the
+    images of a series' job, see "labels_per_job")."""
+
+    code = "out_of_memory"
+
+
 class OutOfPaper(PrinterError):
     code = "out_of_paper"
 

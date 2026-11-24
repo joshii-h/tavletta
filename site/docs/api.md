@@ -107,7 +107,7 @@ Every error is JSON with a stable code and a message for people:
 | 502 | `printer_<code>` | The printer is unreachable or reports a problem. |
 | 503 | `busy` | All request or render slots taken: retry after a moment. |
 
-`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.
+`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.
 
 A job that fails tells why in its `error`, with these codes:
 

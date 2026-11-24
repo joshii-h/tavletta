@@ -607,6 +607,12 @@ def code_text(code: str, unit: Unit, max_mm: float = 0.0) -> str:
         )
         % _METHOD_NAMES,
         "paused": _("The printer is paused. Resume it on its display and try again."),
+        # translators: %s is the printer setting “Labels per job”
+        "out_of_memory": _(
+            "The printer ran out of memory for the job. Lower “%s” in the printer "
+            "settings, then try again."
+        )
+        % SETTING_TITLES["labels_per_job"],
         "out_of_paper": _("The printer is out of paper. Load paper and try again."),
         "media_jam": _(
             "The paper is jammed. Remove it as the printer's display shows and try again."

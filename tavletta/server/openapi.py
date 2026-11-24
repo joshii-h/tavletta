@@ -39,6 +39,7 @@ PRINTER_CODES = (
     "port_closed",
     "busy",
     "paused",
+    "out_of_memory",
     "cover_open",
     "head_open",
     "jam",
