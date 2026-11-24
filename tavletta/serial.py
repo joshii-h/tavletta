@@ -206,8 +206,8 @@ def unprintable_rows(
     one check per row does. `stop` set: no row after the first is
     checked (those found so far are returned), as a series prints its
     first row in any case."""
-    filled = [e for e in label.elements if isinstance(e, CodeElement) and column_names(e.data)]
-    if not filled:
+    varying = [e for e in label.elements if isinstance(e, CodeElement) and column_names(e.data)]
+    if not varying:
         return []
     first = values or Values(datetime.now())
     copies = range(1, first.copies + 1) if varies_per_copy(label) else range(1, 2)
@@ -221,7 +221,7 @@ def unprintable_rows(
                 replace(code, data=expand(code.data, row_values.for_copy(copy), rows[index])[0])
             )
             for copy in copies
-            for code in filled
+            for code in varying
         ):
             bad.append(index + 1)
     return bad

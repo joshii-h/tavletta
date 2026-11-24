@@ -185,8 +185,8 @@ def verify(element: CodeElement) -> None:
     meet them while drawing. This checks every row of a data file: a code
     check() covers in full (CHECKED_IN_FULL), or a 2D code whose content
     fits in any case (QR_BYTES, SURE_BYTES), is not made, that takes up to
-    milliseconds; a longer PDF417 is made once, with the
-    columns Zint chooses, not in every shape encode() compares."""
+    milliseconds; a longer PDF417 is made once, with the columns Zint
+    chooses, not in every shape encode() compares."""
     check(element)
     if element.symbology in CHECKED_IN_FULL:
         return
