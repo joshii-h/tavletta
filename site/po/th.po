@@ -443,18 +443,15 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"งานที่อยู่ในคิวจะถูกยกเลิกทันที งานที่กำลังพิมพ์จะหยุดหลังฉลากที่กำลังพิมพ์ ตอบ 409 "
-"`job_finished` หากงานเสร็จไปแล้ว"
+"งานที่อยู่ในคิวจะถูกยกเลิกทันที งานที่กำลังพิมพ์จะหยุดหลังฉลากที่กำลังพิมพ์ เครื่องพิมพ์ cab "
+"พิมพ์ชุดเป็นงานละไม่เกิน `labels_per_job` ฉลาก (ค่าเริ่มต้น 250) "
+"และจะหยุดหลังงานที่กำลังพิมพ์ ตอบ 409 `job_finished` หากงานเสร็จไปแล้ว"
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -894,57 +891,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1031,6 +978,10 @@ msgstr ""
 "| 408 | `timeout` | การส่งคำขอใช้เวลานานกว่า 30 วินาที |\n"
 "| 409 | `job_finished` | งานเสร็จสิ้นแล้ว: ไม่มีอะไรให้ยกเลิก |\n"
 "| 409 | `counter_not_saved` | เขียนไฟล์ฉลากไม่ได้: ไม่มีอะไรถูกพิมพ์ |\n"
+"| 409 | `label_exists` | มีฉลากชื่อนี้อยู่แล้ว: อัปโหลดด้วย replace=true |\n"
+"| 409 | `label_in_use` | งานของฉลากกำลังรอหรือกำลังพิมพ์: ลองใหม่เมื่องานเสร็จ |\n"
+"| 409 | `label_changed` | ไฟล์ฉลากถูกแทนที่ขณะตรวจสอบคำขอ |\n"
+"| 409 | `label_locked` | งานพิมพ์ของฉลากกำลังถือไฟล์อยู่: ลองใหม่เมื่อเสร็จสิ้น |\n"
 "| 411 | `length_required` | ไม่มี Content-Length (ไม่รับเนื้อหาแบบ chunked) |\n"
 "| 413 | `too_large` | เนื้อหาเกิน `--max-body` หรือมีแถวข้อมูล คอลัมน์ หรือเซลล์มากเกินไป |\n"
 "| 413 | `too_many_labels` | สำเนาคูณแถวเกิน `--max-labels` (ค่าเริ่มต้น 10000) บนแผ่นฉลากเกิน 999 |\n"
@@ -1049,15 +1000,16 @@ msgstr ""
 "| 429 | `too_many_requests` | โทเค็นผิดสิบครั้งจากที่อยู่นี้: รอหนึ่งนาที |\n"
 "| 429 | `queue_full` | มีงานรออยู่มากเกินไป: ลองใหม่ภายหลัง |\n"
 "| 500 | `internal` | ข้อผิดพลาดของเซิร์ฟเวอร์ มีการบันทึกไว้ |\n"
+"| 500 | `not_saved` | เขียนลงโฟลเดอร์ฉลากไม่ได้ (507: เต็ม) |\n"
+"| 500 | `not_deleted` | ลบไฟล์ฉลากไม่ได้ (โฟลเดอร์แบบอ่านอย่างเดียว) |\n"
 "| 502 | `printer_<code>` | เข้าถึงเครื่องพิมพ์ไม่ได้หรือเครื่องพิมพ์รายงานปัญหา |\n"
 "| 503 | `busy` | ช่องคำขอหรือช่องเรนเดอร์ถูกใช้หมด: ลองใหม่ในอีกครู่ |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: ปัญหาของเครื่องพิมพ์ เป็นหนึ่งใน `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: ปัญหาของเครื่องพิมพ์ เป็นหนึ่งใน `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1140,20 +1092,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1176,14 +1115,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | ไม่มี | เซิร์ฟเวอร์ทำงานอยู่หรือไม่ ไม่ต้องใช้โทเค็น (สำหรับการตรวจสอบสถานะ) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | คำอธิบายนี้ (OpenAPI 3.1) ใช้โทเค็นบทบาทใดก็ได้ |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | ชื่อ บทบาท และเครื่องพิมพ์ของโทเค็น รวมถึงขีดจำกัดของคำขอ (สำหรับหน้าเว็บ) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | เครื่องพิมพ์ใน `printers.toml` ที่โทเค็นใช้ได้ พร้อมสถานะ หากไม่มีโทเค็นจะได้รุ่นเครื่องพิมพ์ ที่อยู่ที่ตั้งไว้ของแต่ละเครื่อง และเครื่องพิมพ์ที่พบ (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | สอบถามสถานะเครื่องพิมพ์: สื่อพิมพ์ ปัญหา ความละเอียด |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | ไฟล์ฉลากในโฟลเดอร์ฉลากและโฟลเดอร์ย่อย |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | สิ่งที่กรอกลงในฉลากได้: องค์ประกอบ ตัวแปร คอลัมน์ข้อมูล ขนาด ตัวนับ |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | อัปโหลดไฟล์ฉลาก (admin): ตรวจสอบเหมือนที่แอปเปิดไฟล์ แล้ววางลงโฟลเดอร์ฉลากในขั้นตอนเดียว |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | ลบไฟล์ฉลาก (admin); ไฟล์ข้อมูลของฉลากยังอยู่ |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | อ่านไฟล์ข้อมูลที่ส่งมา (CSV, ODS, XLSX) อย่างที่แอปอ่าน: ได้แถวสำหรับ data_rows; ไม่มีการเก็บอะไรไว้ |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | ฉลากที่กรอกข้อมูลแล้วเป็นภาพ ไม่มีการพิมพ์ |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | พิมพ์: ตรวจสอบคำขอแล้วจัดคิว เครื่องพิมพ์แต่ละเครื่องพิมพ์ทีละงาน |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | สถานะของงานพิมพ์ (โทเค็น print: งานของตัวเอง admin: ทั้งหมด) เก็บไว้ 24 ชั่วโมงหลังเสร็จสิ้น |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | ยกเลิกงาน: ทันทีขณะรอคิว หรือหลังฉลากปัจจุบันขณะกำลังพิมพ์ |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | ยกเลิกงาน: ทันทีขณะรอคิว หลังฉลากที่ส่งไปยังเครื่องพิมพ์แล้วขณะกำลังพิมพ์ (cab: งานที่มีไม่เกิน labels_per_job ฉลาก) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1257,25 +1200,20 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
 msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
-msgstr ""
+msgstr "ชื่อ บทบาท และเครื่องพิมพ์ของโทเค็น รวมถึงขีดจำกัดของคำขอ (สำหรับหน้าเว็บ)"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1283,7 +1221,7 @@ msgid ""
 msgstr ""
 "| Status | คำตอบ | โค้ด |\n"
 "|---|---|---|\n"
-"| 200 | ฉลาก |  |\n"
+"| 200 | ใคร |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1482,10 +1420,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1493,21 +1430,16 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"อัปโหลดไฟล์ฉลาก (admin): ตรวจสอบเหมือนที่แอปเปิดไฟล์ แล้ววางลงโฟลเดอร์ฉลากในขั้นตอนเดียว"
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "บทบาท: `print`"
+msgstr "บทบาท: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1516,12 +1448,13 @@ msgid ""
 msgstr ""
 "| พารามิเตอร์ | ใน | ความหมาย |\n"
 "|---|---|---|\n"
-"| `name` | path | อาจมีเครื่องหมายทับสำหรับโฟลเดอร์ย่อย เว้น '`.tavletta`' ได้ |\n"
+"| `name` | path | ชื่อไฟล์ ไม่มีโฟลเดอร์; เว้น '`.tavletta`' ได้ |\n"
+"| `replace` | query | แทนที่ฉลากชื่อนั้น ค่าเริ่มต้น `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "เนื้อหา: เนื้อหาของไฟล์ `.tavletta`"
 
 #. type: Plain text
 #: docs/api.md
@@ -1537,6 +1470,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | คำตอบ | โค้ด |\n"
+"|---|---|---|\n"
+"| 200 | แทนที่แล้ว (replace=true) |  |\n"
+"| 201 | เพิ่มแล้ว |  |\n"
+"| 400 | ไม่ใช่ชื่อสำหรับฉลากใหม่: ตัวอักษร ตัวเลข ช่องว่าง และ . _ - ( ) + , (ไม่เกิน 100) ในโฟลเดอร์นั้นเอง | `invalid_field`, `not_json` |\n"
+"| 409 | มีฉลากชื่อนี้อยู่แล้ว (ส่ง replace=true) งานของฉลากกำลังรอหรือกำลังพิมพ์ (label_in_use) หรืองานพิมพ์ของโปรแกรมอื่นถือไฟล์อยู่ | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | เกิน `--max-body` หรือฉลากใหญ่เกินกว่าจะเรนเดอร์ | `too_large`, `label_too_large` |\n"
+"| 422 | ไม่ใช่ฉลากที่ Tavletta เปิดได้ | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | โฟลเดอร์ฉลากไม่มีที่ว่างเหลือ | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1551,26 +1493,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "ลบไฟล์ฉลาก (admin); ไฟล์ข้อมูลของฉลากยังอยู่"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1581,10 +1515,10 @@ msgid ""
 msgstr ""
 "| Status | คำตอบ | โค้ด |\n"
 "|---|---|---|\n"
-"| 200 | ฉลาก |  |\n"
+"| 204 | ลบแล้ว |  |\n"
 "| 400 | ไม่ใช่ชื่อภายในโฟลเดอร์ฉลาก | `invalid_field` |\n"
 "| 404 | ไม่มีฉลากนี้ | `label_not_found` |\n"
-"| 422 | ไฟล์ไม่ใช่ฉลากหรือเสียหาย | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | งานของฉลากกำลังรอหรือกำลังพิมพ์ (label_in_use) หรืองานพิมพ์ของโปรแกรมอื่นถือไฟล์อยู่ | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1597,10 +1531,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1608,6 +1541,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"อ่านไฟล์ข้อมูลที่ส่งมา (CSV, ODS, XLSX) อย่างที่แอปอ่าน: ได้แถวสำหรับ data_rows; "
+"ไม่มีการเก็บอะไรไว้"
 
 #. type: Plain text
 #: docs/api.md
@@ -1625,17 +1560,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| ฟิลด์ | ชนิด | ความหมาย |\n"
+"|---|---|---|\n"
+"| `content` | string | ไฟล์: CSV (ตัวคั่นใดก็ได้, UTF-8, UTF-16 หรือ Windows-1252), ODS หรือ XLSX แยกประเภทจากเนื้อหา ข้อความที่วางคือไฟล์ CSV |\n"
+"| `name` | string | ชื่อไฟล์ สำหรับข้อความแจ้ง |\n"
+"| `sheet` | string | ODS, XLSX: ชีต (ค่าเริ่มต้นคือชีตแรก) |\n"
+"| `header` | boolean | false: แถวแรกก็เป็นข้อมูลด้วย คอลัมน์ชื่อ A, B, C … ค่าเริ่มต้น `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1645,10 +1579,9 @@ msgid ""
 msgstr ""
 "| Status | คำตอบ | โค้ด |\n"
 "|---|---|---|\n"
-"| 200 | ฉลาก |  |\n"
-"| 400 | ไม่ใช่ชื่อภายในโฟลเดอร์ฉลาก | `invalid_field` |\n"
-"| 404 | ไม่มีฉลากนี้ | `label_not_found` |\n"
-"| 422 | ไฟล์ไม่ใช่ฉลากหรือเสียหาย | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | แถว |  |\n"
+"| 400 | คำขอไม่ถูกต้อง | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | ไม่ใช่ตาราง เสียหาย หรือว่างเปล่า | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1794,18 +1727,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1824,7 +1746,7 @@ msgstr ""
 "| 202 | อยู่ในคิวหรือกำลังพิมพ์ ติดตามได้ที่ Location |  |\n"
 "| 400 | คำขอไม่ถูกต้อง | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | ไม่มีฉลาก เครื่องพิมพ์ หรือไฟล์ข้อมูลนี้ หรือเป็นเครื่องพิมพ์ที่โทเค็นใช้ไม่ได้ | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | เขียนไฟล์ฉลากไม่ได้: บันทึกค่าตัวนับถัดไปไม่ได้ ไม่มีอะไรถูกพิมพ์ | `counter_not_saved` |\n"
+"| 409 | ไฟล์ฉลากเขียนไม่ได้: บันทึกค่าตัวนับถัดไปไม่ได้ จึงไม่ได้พิมพ์อะไร; หรือถูกแทนที่ขณะตรวจสอบคำขอ (label_changed): ส่งใหม่ | `counter_not_saved`, `label_changed` |\n"
 "| 413 | ใหญ่เกินไป: เนื้อหา แถวข้อมูล ฉลากในหนึ่งงาน หรือฉลากที่จะเรนเดอร์ | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | ฉลากจะพิมพ์ผิดพลาด | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | โทเค็นผิดมากเกินไป หรือมีงานรออยู่มากเกินไป (รวม 100 โดยไม่เกิน 20 ต่อโทเค็นที่มีชื่อ) | `too_many_requests`, `queue_full` |\n"
@@ -1895,24 +1817,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
-msgstr "ยกเลิกงาน: ทันทีขณะรอคิว หรือหลังฉลากปัจจุบันขณะกำลังพิมพ์"
+msgstr ""
+"ยกเลิกงาน: ทันทีขณะรอคิว หลังฉลากที่ส่งไปยังเครื่องพิมพ์แล้วขณะกำลังพิมพ์ (cab: งานที่มีไม่เกิน "
+"labels_per_job ฉลาก)"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1922,7 +1836,7 @@ msgid ""
 msgstr ""
 "| Status | คำตอบ | โค้ด |\n"
 "|---|---|---|\n"
-"| 202 | ยกเลิกแล้ว หรือกำลังหยุดหลังฉลากปัจจุบัน |  |\n"
+"| 202 | ยกเลิกแล้ว หรือกำลังหยุดหลังฉลากที่ส่งไปแล้ว |  |\n"
 "| 404 | ไม่มีงานนี้ | `job_not_found` |\n"
 "| 409 | เสร็จสิ้นแล้ว | `job_finished` |\n"
 
@@ -1949,27 +1863,7 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2001,7 +1895,8 @@ msgstr ""
 "| `host` | string | ที่อยู่ของเครื่องพิมพ์ |\n"
 "| `owner` | string or null | ชื่อของโทเค็น |\n"
 "| `label` | string or null | ชื่อในโฟลเดอร์ฉลาก null สำหรับ label_content |\n"
-"| `printed` | integer | จำนวนฉลากที่พิมพ์แล้วจนถึงตอนนี้ |\n"
+"| `printed` | integer | ฉลากที่พิมพ์แล้วแน่นอนจนถึงตอนนี้ เพิ่มขึ้นทีละฉลากขณะงานพิมพ์ เท่าที่เครื่องพิมพ์รายงาน |\n"
+"| `printed_max` | integer or null | หลังข้อผิดพลาดที่เครื่องพิมพ์รายงานผลไม่ได้ (การเชื่อมต่อขาดขณะพิมพ์): อาจพิมพ์ไปได้ไม่เกินจำนวนฉลากนี้ ตัวนับเดินต่อหลังจากฉลากเหล่านั้น; rows_printed นับแถวที่พิมพ์แล้วแน่นอน ดังนั้นการพิมพ์ใหม่ตั้งแต่แถวถัดไปอาจพิมพ์ฉลากซ้ำสองครั้ง มิฉะนั้นเป็น null |\n"
 "| `total` | integer | ฉลากที่จะพิมพ์: สำเนา x แถว |\n"
 "| `rows_printed` | integer | แถวข้อมูลที่พิมพ์ครบ: หลังล้มเหลว ให้พิมพ์ใหม่โดยตั้ง rows เป็นแถวถัดไป (rows_printed + แถวแรก) |\n"
 "| `cancel_requested` | boolean | ส่ง DELETE แล้ว |\n"
@@ -2020,22 +1915,7 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2065,9 +1945,11 @@ msgstr ""
 "| `columns` | array of string | ตัวแทนค่า `{Column}`: คีย์ของ data_rows |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file ไม่อยู่แล้ว: ส่งแถวมาใน data_rows |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (ฉลากมี `{=counter}`), next, step |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | พิมพ์บนแผ่นฉลาก: ไม่เกิน 999 ฉลากต่องาน |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2154,14 +2036,7 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2177,12 +2052,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | สิ่งที่จะพิมพ์ผิดพลาด other_labels_loaded: เครื่องพิมพ์ใน `printers.toml` รายงานว่าใส่ฉลากอื่นที่ไม่ตรงกับฉลาก (ขนาด หรือระยะห่างฉลากที่วัดได้) ระบบใช้คำตอบล่าสุดหากเป็นภายในหนึ่งนาที ข้อผิดพลาดถือว่าไม่ทราบสถานะ (สอบถามใหม่ในเบื้องหลัง) สำหรับเครื่องพิมพ์ที่ยังไม่รู้จัก จะรอได้นานสูงสุดหนึ่งวินาทีหลังเรนเดอร์ฉลาก |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | ตำแหน่งขององค์ประกอบในภาพ; null เมื่อ view=printer และสำหรับฉลากที่หมุนไปวางบนแผ่นของมัน |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2191,6 +2067,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"กรอบขององค์ประกอบในภาพตัวอย่าง หน่วยมม. นับจากมุมซ้ายบนของภาพ (tavletta/editing.py, "
+"docs/editing.md) หนึ่งพิกเซลของภาพคือ mm * dpi / 25.4"
 
 #. type: Plain text
 #: docs/api.md
@@ -2204,13 +2082,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| ฟิลด์ | ชนิด | ความหมาย |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | ตามแนวเทป: ความยาว |\n"
+"| `height_mm` | number | ขวางเทป: ความสูงของเทปหรือฉลาก |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | ความละเอียดของภาพ |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "รูปภาพ { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2226,13 +2110,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| ฟิลด์ | ชนิด | ความหมาย |\n"
+"|---|---|---|\n"
+"| `name` | string | ชื่อของโทเค็นใน tokens.toml; 'token' สำหรับโทเค็นเดียวของ `--token-file`, 'local' เมื่อไม่มีโทเค็น; 'oidc:<user>' สำหรับผู้ที่ลงชื่อเข้าใช้หน้าเว็บด้วย OpenID Connect |\n"
+"| `display_name` | string | ชื่อของบุคคลจากผู้ให้บริการ; มิฉะนั้นเหมือน name |\n"
+"| `session` | boolean | true: ลงชื่อเข้าใช้หน้าเว็บด้วย OpenID Connect (คุกกี้เซสชัน) ไม่ใช่ด้วยโทเค็น |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | เครื่องพิมพ์ที่โทเค็นใช้ได้; null: ทุกเครื่อง |\n"
+"| `token_required` | boolean | false: เซิร์ฟเวอร์ไม่มีโทเค็นและไม่มี `--oidc` (เฉพาะ loopback) |\n"
+"| `limits` | object | สิ่งที่คำขอหนึ่งครั้งขอได้มากที่สุด: ฉลากต่องาน (`--max-labels`; บนแผ่นฉลากไม่เกิน 999), สำเนา, แถวข้อมูล, คอลัมน์และเซลล์ และเนื้อหาเป็นไบต์ (`--max-body`; รวมถึงไฟล์ฉลากที่ใหญ่ที่สุดที่อัปโหลดได้) |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "เริ่มต้น { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2247,6 +2139,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| ฟิลด์ | ชนิด | ความหมาย |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: ตัวคั่นที่พบ; null เมื่อมีคอลัมน์เดียวและสำหรับสเปรดชีต |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | ชีตที่อ่าน |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | ทุกเซลล์เป็นข้อความที่เซลล์แสดง: เลขศูนย์นำหน้าและรูปแบบตัวเลขคงเดิม (00300 ยังเป็น 00300) แถวที่ไม่มีเซลล์ที่กรอกจะถูกตัดออก |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2533,18 +2433,14 @@ msgstr "ฉลากแรก"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"เปิดเครื่องพิมพ์แล้วเลือกใน [[ui:Printer model]] Tavletta จะค้นหาเครื่องพิมพ์ในเครือข่าย "
-"(Bonjour) และอ่านสิ่งที่ใส่อยู่: ความกว้างเทปหรือระยะห่างระหว่างฉลาก"
+"เปิดเครื่องพิมพ์แล้วเลือกใน [[ui:Printer model]]: เครื่องพิมพ์ที่พบผ่าน USB หรือในเครือข่าย "
+"(Bonjour) จะอยู่บนสุดของรายการ Tavletta อ่านสิ่งที่ใส่อยู่: "
+"ความกว้างเทปหรือระยะห่างระหว่างฉลาก"
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2586,6 +2482,11 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"เลือกเครื่องพิมพ์ใน [[ui:Printer model]]; แต่ละเครื่องมีส่วนของตัวเองด้านล่าง เครื่องพิมพ์ที่ "
+"Tavletta พบผ่าน USB และในเครือข่ายจะอยู่ต้นรายการนั้นภายใต้ [[ui:Found]] "
+"พร้อมรุ่นของเครื่อง: การเลือกเครื่องหนึ่งจะรับรุ่นและที่อยู่ของเครื่องนั้นมา ส่วนรุ่นต่าง ๆ "
+"ตามมาภายใต้ [[ui:All models]] Tavletta ค้นหาเครื่องเหล่านี้เมื่อหน้าต่างเปิดและด้วย "
+"[[ui:Search for printers]] ทุกรุ่นพร้อมกัน ในเบื้องหลัง"
 
 #. type: Title ##
 #: docs/printer.md
@@ -2683,6 +2584,13 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (ฉลากไดคัต): เครื่องพิมพ์รายงานฉลากขนาดอื่น "
+"หรือวัดระยะจากฉลากหนึ่งถึงฉลากถัดไปได้ต่างจากความสูงบวก [[ui:Gap]] ของฉลากของคุณ "
+"[[ui:Use loaded labels]] เปลี่ยนฉลากโดยยังไม่พิมพ์อะไร: จะรับขนาดที่เครื่องพิมพ์รายงาน "
+"(Brother QL) หรือตั้งความสูงตามแนวม้วนให้ความสูงบวกช่องว่างได้ระยะที่วัดมา (cab, Zebra) "
+"ช่องว่างและความกว้างคงเดิม; ความกว้างการพิมพ์ของ Zebra คือค่าที่งานพิมพ์ครั้งล่าสุดตั้งไว้ "
+"ไม่ใช่ความกว้างของฉลาก หากความสูงนั้นจะน้อยกว่า 5 มม. จะเปลี่ยนช่องว่างแทน; "
+"หากทั้งสองอย่างไม่ได้ฉลาก จะเสนอเพียง [[ui:Print anyway]]"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2691,6 +2599,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"หลัง [[ui:Use loaded labels]] ให้ตรวจสอบฉลากในตัวอย่าง แล้วจึงพิมพ์ [[ui:Undo]] "
+"ในข้อความแจ้งจะยกเลิกการเปลี่ยนแปลง; "
+"ข้อความแจ้งจะบอกหากตอนนี้มีองค์ประกอบล้ำเลยขอบของฉลาก"
 
 #. type: Title ##
 #: docs/printer.md
@@ -3184,6 +3095,11 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: เครื่องพิมพ์ที่พิมพ์เลยจากตำแหน่งของฉลาก "
+"(งานพิมพ์บนทุกฉลากสูงหรือต่ำกว่าที่ตัวอย่างแสดงเล็กน้อย) ชดเชยได้ที่นี่: "
+"วัดบนฉลากที่พิมพ์ว่างานพิมพ์คลาดไปเท่าใด แล้วใส่ค่านั้น ค่าบวกเลื่อนงานพิมพ์ลงบนฉลากที่ขวางม้วน "
+"ค่าลบเลื่อนขึ้น ตัวอย่างยังแสดงฉลากอย่างที่ควรออกมา; เฉพาะสิ่งที่ส่งไปยังเครื่องพิมพ์เท่านั้นที่เลื่อน "
+"เนื้อหาที่อยู่ใกล้ขอบด้านที่งานพิมพ์เลื่อนไปมากกว่าระยะนี้จะถูกตัดออก"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3195,6 +3111,10 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: ฉลากของชุดจะไปที่เครื่องพิมพ์ด้วยกัน ไม่เกินจำนวนนี้ (ค่าเริ่มต้น 250, "
+"1 ถึง 1000) ในงานเดียว และพิมพ์ต่อเนื่องโดยไม่หยุดระหว่างกัน [[ui:Stop]] "
+"มีผลระหว่างสองงาน: งานที่เริ่มแล้วจะพิมพ์จนครบ 1 ส่งแต่ละฉลากเป็นงานของตัวเอง "
+"อย่างที่เครื่องพิมพ์อื่นได้รับ ฉลากที่เนื้อหาเปลี่ยนไปในแต่ละชุดจะไปทีละฉลากเสมอ"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3209,12 +3129,6 @@ msgstr "ปัญหา { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3225,7 +3139,8 @@ msgstr ""
 "[[ui:Different labels loaded]]: "
 "เครื่องพิมพ์วัดระยะห่างระหว่างฉลากได้ต่างจากความสูงบวกช่องว่างของฉลากของคุณ ตรวจสอบ "
 "[[ui:Label size]] และ [[ui:Gap]] หรือใส่ม้วนที่ถูกต้อง กด Feed "
-"บนเครื่องพิมพ์หนึ่งครั้งหลังเปลี่ยนม้วนเพื่อให้วัดใหม่"
+"บนเครื่องพิมพ์หนึ่งครั้งหลังเปลี่ยนม้วนเพื่อให้วัดใหม่ จากนั้น [[ui:Use loaded labels]] "
+"จะปรับฉลากให้ตรงกับค่านั้น ([เครื่องพิมพ์ทั้งหมด](#common))"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3235,6 +3150,9 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"ทุกอย่างพิมพ์สูงหรือต่ำไปเล็กน้อย เหมือนกันทุกฉลาก ขณะที่ตัวอย่างแสดงอยู่ในตำแหน่งที่ถูกต้อง: ตั้ง "
+"[[ui:Print offset]] ฉลากที่จัดวางในโปรแกรมอื่นเพื่อชดเชยเรื่องนี้จะคลาดตำแหน่งในตัวอย่าง; "
+"ย้ายเนื้อหากลับเข้าที่ แล้วตั้งค่าชดเชยแทน"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3279,6 +3197,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"หน่วยความจำเต็ม: เครื่องพิมพ์ไม่มีที่พอสำหรับฉลากของงาน ลด [[ui:Labels per job]] "
+"แล้วพิมพ์ใหม่ตั้งแต่แถวที่ข้อความแจ้งระบุ"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3292,6 +3212,12 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"“ส่งงานแล้ว แต่ไม่ทราบผลลัพธ์”: การเชื่อมต่อกับเครื่องพิมพ์ขาดขณะพิมพ์ "
+"(หรือเครื่องพิมพ์รายงานไม่ได้ว่าทำไปถึงไหน) Tavletta นับฉลากที่รู้ว่าพิมพ์แล้ว; "
+"เครื่องพิมพ์อาจพิมพ์ไปมากกว่านั้น ตรวจสอบฉลากที่ออกมา: "
+"การพิมพ์ใหม่ตั้งแต่แถวที่ข้อความแจ้งระบุอาจพิมพ์บางฉลากซ้ำสองครั้ง แต่จะไม่ตกหล่นฉลากใดเลย  "
+"หากเข้าถึงเว็บอินเทอร์เฟซของเครื่องพิมพ์ได้ในเครือข่าย (ค่าเริ่มต้น) Tavletta "
+"จะตรวจสอบจำนวนกับตัวนับฉลากของเครื่องพิมพ์ด้วย; หากทั้งสองต่างกัน ข้อความแจ้งจะระบุช่วง"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3878,6 +3804,9 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): เครื่องพิมพ์รายงานระยะที่วัดไว้ล่าสุด "
+"ซึ่งอาจเป็นของม้วนก่อนหน้า หลังเปลี่ยนม้วนให้เครื่องวัดฉลากใหม่ (เครื่องพิมพ์ส่วนใหญ่ทำได้ด้วยการกด "
+"Feed ค้าง) ก่อนใช้ [[ui:Use loaded labels]] ([เครื่องพิมพ์ทั้งหมด](#common))"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4188,18 +4117,19 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"แต่ละฉลากเป็นงานพิมพ์ของตัวเอง ดังนั้นใช้ได้กับทุกเครื่องพิมพ์  เครื่องพิมพ์ cab ได้รับฉลากไม่เกิน "
+"[[ui:Labels per job]] เป็นงานเดียว ซึ่งพิมพ์โดยไม่หยุดระหว่างกัน ([cab]"
+"(printer.md#cab))"
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
-msgstr "[[ui:Stop]] ในแถบเหนือหน้าต่างจะจบชุดหลังฉลากที่กำลังพิมพ์ ฉลากแรกจะถูกพิมพ์เสมอ"
+msgstr ""
+"[[ui:Stop]] ในแถบเหนือหน้าต่างจะจบชุดหลังฉลากที่กำลังพิมพ์ (บนเครื่องพิมพ์ cab: "
+"หลังงานที่กำลังพิมพ์) ฉลากแรกจะถูกพิมพ์เสมอ"
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4268,18 +4198,13 @@ msgstr "ภาพรวม { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
 "บริการเล็ก ๆ หนึ่งตัว: REST API (และ MCP สำหรับผู้ช่วย AI) ที่พอร์ต 8790  "
-"เรนเดอร์ฉลากเองและส่งไปยังเครื่องพิมพ์ทางเครือข่าย ไม่ต้องใช้เดสก์ท็อป เบราว์เซอร์ หรือฐานข้อมูล"
+"เรนเดอร์ฉลากเองและส่งไปยังเครื่องพิมพ์ทางเครือข่าย ไม่ต้องใช้เดสก์ท็อปหรือฐานข้อมูล"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4289,6 +4214,9 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"หน้าเว็บที่ที่อยู่เดียวกันสำหรับผู้ใช้: ลงชื่อเข้าใช้ด้วยโทเค็น ดูเครื่องพิมพ์ พิมพ์แม่แบบหรือชุด (จากไฟล์ "
+"CSV, XLSX หรือ ODS รายการที่วางมา หรือช่วงตัวเลขอย่าง 3000–5685) "
+"อัปโหลดและลบแม่แบบด้วยโทเค็น admin `--no-web-ui` ปิดหน้านี้"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4737,6 +4665,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  เครื่องพิมพ์แต่ละเครื่องแสดงพร้อมสถานะ; `UNREACHABLE` พร้อมข้อความ หาก\n"
+"  เซิร์ฟเวอร์เข้าถึงไม่ได้\n"
+"- เปิด `http://127.0.0.1:8790/` ในเบราว์เซอร์บนเซิร์ฟเวอร์ (คนอื่นใช้\n"
+"  ที่อยู่ของพร็อกซี ดู [Reverse proxy](#proxy)) แล้วลงชื่อเข้าใช้ด้วย\n"
+"  โทเค็น: หน้าเว็บแสดงสิ่งที่บทบาทของโทเค็นทำได้ หน้านี้เก็บโทเค็นไว้ในแท็บเบราว์เซอร์เท่านั้น\n"
+"  จนกว่าจะปิดแท็บหรือกด “ออกจากระบบ”\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5341,7 +5275,7 @@ msgstr "อย่าให้เข้าถึงเซิร์ฟเวอร
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "การลงชื่อเข้าใช้ด้วย OpenID Connect { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5352,6 +5286,10 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"ผู้ใช้ลงชื่อเข้าใช้หน้าเว็บด้วยผู้ให้บริการข้อมูลประจำตัวขององค์กรของคุณ (Keycloak, Authentik, "
+"Microsoft Entra ID, Okta …) แทนโทเค็นเข้าถึงได้ "
+"บทบาทของผู้ใช้ที่ผู้ให้บริการจะกลายเป็นบทบาทใน Tavletta  โปรแกรมยังคงใช้โทเค็น ต้องใช้ "
+"HTTPS ผ่าน reverse proxy (ถ้าไม่มี ใช้ได้เฉพาะ `http://localhost` สำหรับทดสอบ)"
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5363,6 +5301,11 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"ลงทะเบียนไคลเอนต์ที่ผู้ให้บริการ: แบบลับ (มี secret) ใช้ authorization code flow เท่านั้น, "
+"PKCE S256, redirect URI `https://labels.example.com/oidc/callback`, post-"
+"logout redirect URI `https://labels.example.com/` ทำให้บทบาทหรือกลุ่มไปถึง ID "
+"token: ใน Keycloak ใช้ mapper *User Client Role* (หรือ *User Realm Role*)  "
+"บนไคลเอนต์ โดยเปิด *Add to ID token*; Authentik ส่ง `groups`"
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5371,6 +5314,8 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"ใส่ secret ใน `config/oidc-secret` (เฉพาะ secret โหมด 600)  และเขียน `config/"
+"oidc.toml` (`cp oidc.example.toml config/oidc.toml` ให้จุดเริ่มต้นที่มีคำอธิบาย):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5398,6 +5343,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"เพิ่ม `\"--oidc\"` และ `\"/config/oidc.toml\"` ใน `command:` ของ "
+"`compose.yaml` (แบบเนทีฟ: ใน `ExecStart` โดยใช้ `/etc/tavletta/...`) คง `--"
+"trusted-proxy` ไว้ แล้วรีสตาร์ต เมื่อใช้ `--trusted-proxy` เซิร์ฟเวอร์ต้องมี "
+"`public_url` และจะไม่เริ่มทำงานหากไม่มี"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5406,6 +5355,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"การลงชื่อเข้าใช้ต้องมี PyJWT ซึ่งอิมเมจคอนเทนเนอร์และแพ็กเกจ deb และ rpm มีอยู่แล้ว; "
+"Flatpak ไม่มี และติดตั้งอะไรเพิ่มลงไปไม่ได้: สำหรับ `--oidc` "
+"ให้รันเซิร์ฟเวอร์จากอย่างใดอย่างหนึ่งของที่เหลือ"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5420,6 +5372,14 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"หน้าเว็บจะแสดง “เข้าสู่ระบบด้วย Example ID” ผู้ที่ไม่มีบทบาทใดเลยจะได้ “ไม่มีสิทธิ์เข้าถึง” "
+"เซสชันอยู่ได้ 8 ชั่วโมง หรือ 60 นาทีหากไม่ได้ใช้งาน (`session_hours`, `idle_minutes`); "
+"บทบาทที่ถูกถอนหรือบัญชีที่ถูกปิดที่ผู้ให้บริการจะมีผลตั้งแต่การลงชื่อเข้าใช้ครั้งถัดไป "
+"จึงควรให้เซสชันสั้นในที่ที่ผู้ดูแลลงชื่อเข้าใช้ `token_login = false` ซ่อนช่องโทเค็นบนหน้า "
+"จำกัดเครื่องพิมพ์ได้ตามบทบาท (`[oidc.printers]`) หรือด้วย claim (`printers_claim`) "
+"ทุกคีย์และรายละเอียดด้านความปลอดภัย: [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#signing-in-with-openid-"
+"connect-oidctoml)"
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5559,6 +5519,8 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"เมื่อใช้ `--oidc`: ตั้ง `public_url` แล้ว ไคลเอนต์เป็นแบบลับพร้อม PKCE "
+"มีเฉพาะบทบาทที่ผู้ใช้ต้องการ เซสชันสั้นในที่ที่ผู้ดูแลลงชื่อเข้าใช้ `oidc-secret` โหมด 600"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5566,6 +5528,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"ไม่มีใครพิมพ์จากเบราว์เซอร์: `--no-web-ui` (หน้าเว็บไม่ต้องใช้โทเค็นเพื่อโหลด "
+"แต่ไม่แสดงอะไรเลยหากไม่มีโทเค็น)"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5600,24 +5564,7 @@ msgstr "การแก้ไขปัญหา { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5641,7 +5588,7 @@ msgstr ""
 "|---|---|\n"
 "| เครื่องพิมพ์เป็น `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | เซิร์ฟเวอร์เข้าถึงไม่ได้: ทดสอบจากเซิร์ฟเวอร์ด้วย `nc -vz <printer> 9100` (631 สำหรับ IPP) ตรวจสอบที่อยู่ ไฟร์วอลล์ และว่าเครื่องพิมพ์เปิดอยู่ ใน Docker คอนเทนเนอร์ต้องเข้าถึงเครือข่ายของเครื่องพิมพ์ได้ |\n"
 "| `401 unauthorized` | โทเค็นหายไป พิมพ์ผิด หมดอายุ หรือถูกลบออกจาก `tokens.toml` ส่วนหัวคือ `Authorization: Bearer <token>` |\n"
-"| `429 too_many_requests` | โทเค็นผิดสิบครั้งจากที่อยู่นี้ภายในหนึ่งนาที: แก้ไขโทเค็นแล้วรอหนึ่งนาที |\n"
+"| `429 too_many_requests` | โทเค็นผิดสิบครั้งจากที่อยู่นี้ภายในหนึ่งนาที: แก้โทเค็น แล้วรอหนึ่งนาที หลัง reverse proxy ที่ไม่ได้ระบุด้วย `--trusted-proxy` ทุกคนใช้ที่อยู่ของพร็อกซีร่วมกัน |\n"
 "| `429 queue_full` | มีงานรออยู่ 100 งาน (20 ต่อโทเค็น): เครื่องพิมพ์ช้าหรือหยุด ตรวจสอบเครื่อง แล้วลองใหม่ภายหลัง |\n"
 "| `503 busy` | ช่องคำขอหรือช่องเรนเดอร์ถูกใช้หมดชั่วครู่: ลองใหม่ในอีกหนึ่งหรือสองวินาที |\n"
 "| `404 printer_not_found` | ไม่อยู่ใน `printers.toml` หรือโทเค็นใช้ไม่ได้ (`--printer`) |\n"
@@ -5651,6 +5598,7 @@ msgstr ""
 "| `other_labels_loaded` ในคำเตือน | เครื่องพิมพ์ใส่ฉลากอื่นที่ไม่ตรงกับฉลาก: ใส่ม้วนที่ตรงกัน หรือตรวจสอบขนาดและช่องว่างของฉลาก เครื่องพิมพ์ ZPL อาจรายงานระยะที่วัดจากม้วนก่อนหน้า: ปรับเทียบ |\n"
 "| `409 counter_not_saved` | ไฟล์ฉลากเขียนไม่ได้สำหรับผู้ใช้ของเซิร์ฟเวอร์: `chown` ให้เป็นของผู้ใช้นั้น (Docker: 1000, เนทีฟ: `tavletta`) |\n"
 "| วันที่หรือเวลาบนฉลากคลาดไปหนึ่งหรือสองชั่วโมง | คอนเทนเนอร์ทำงานใน UTC: ตั้ง `TAVLETTA_TZ=Europe/Zurich` ใน `.env` แล้ว `docker compose up -d` |\n"
+"| “การลงชื่อเข้าใช้ไม่สำเร็จ” บนหน้าเว็บ | บันทึกบอกสาเหตุ: เข้าถึงผู้ให้บริการไม่ได้ redirect URI หรือ secret ไม่ถูกต้องที่ผู้ให้บริการ หรือเข้าหน้านี้ผ่าน HTTP ธรรมดา (ตั้ง `public_url`, `--trusted-proxy`) “ไม่มีสิทธิ์เข้าถึง”: บทบาทไม่ไปถึง ID token (ขาด mapper) หรือไม่มีบทบาทใดถูกแมปไว้ใน `[oidc.roles]` |\n"
 "| เซิร์ฟเวอร์ไม่เริ่มทำงาน | `docker compose logs` หรือ `journalctl -u tavletta-server`: ข้อผิดพลาดใน `printers.toml` หรือ `tokens.toml` จะระบุพร้อมคีย์ |\n"
 "| ไม่มีสิทธิ์ในโฟลเดอร์ (Fedora, RHEL ที่ใช้ SELinux และ Podman) | เพิ่ม `:Z` ให้กับ volume ใน `compose.yaml` |\n"
 
@@ -5662,20 +5610,15 @@ msgstr "เซิร์ฟเวอร์พิมพ์"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"โปรแกรมอื่นและผู้ช่วย AI พิมพ์ฉลากผ่าน Tavletta ได้โดยไม่ต้องเปิดหน้าต่าง: `tavletta "
-"serve` มีเว็บอินเทอร์เฟซสำหรับโปรแกรม (REST API) ส่วน `tavletta mcp` เชื่อมต่อผู้ช่วย AI "
-"อย่าง Claude"
+"โปรแกรมอื่น ผู้ช่วย AI และผู้ใช้ในเบราว์เซอร์พิมพ์ฉลากผ่าน Tavletta ได้โดยไม่ต้องเปิดหน้าต่าง: "
+"`tavletta serve` มีหน้าเว็บสำหรับผู้ใช้และเว็บอินเทอร์เฟซสำหรับโปรแกรม (REST API) ส่วน "
+"`tavletta mcp` เชื่อมต่อผู้ช่วย AI อย่าง Claude"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5735,7 +5678,7 @@ msgstr "ที่อยู่เครื่องพิมพ์ ระยะ�
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "เปิด `http://127.0.0.1:8790/` ในเบราว์เซอร์: [หน้าเว็บ](#web-page)"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5806,13 +5749,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -5822,10 +5758,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` คือ [[ui:Print method]] (`printer`, `transfer`, `direct`) "
-"`upside_down` คือ [[ui:Print upside down]] อื่น ๆ ได้แก่ `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` และ `outlines` ดู [docs/server.md]"
-"(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)"
+"`upside_down` คือ [[ui:Print upside down]] `offset_mm` คือ [[ui:Print offset]] "
+"(−5 ถึง 5) `labels_per_job` คือ [[ui:Labels per job]] (1 ถึง 1000 ค่าเริ่มต้น 250) "
+"อื่น ๆ ได้แก่ `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` และ "
+"`outlines` ดู [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"src/branch/main/docs/server.md#printers)"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5928,17 +5865,13 @@ msgstr "โทเค็นแสดงเพียงครั้งเดีย
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
 "`preview` แสดงรายการและตัวอย่างก่อนพิมพ์เท่านั้น `print` พิมพ์และติดตามงานของตัวเองได้ด้วย "
-"`admin` ดูและยกเลิกทุกงาน"
+"`admin` ดูและยกเลิกทุกงาน รวมถึงอัปโหลดและลบแม่แบบ"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5959,10 +5892,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "รูปภาพ { #images }"
+msgstr "หน้าเว็บ { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -5970,6 +5902,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"หน้าของเซิร์ฟเวอร์เอง ที่ที่อยู่ของเซิร์ฟเวอร์ (`http://127.0.0.1:8790/` หรือที่อยู่ของ "
+"[reverse proxy](server-install.md#proxy)):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5979,12 +5913,16 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**ลงชื่อเข้าใช้** ด้วยโทเค็นเข้าถึง (หากเซิร์ฟเวอร์ไม่มีโทเค็นก็ไม่มีอะไรให้ลงชื่อเข้าใช้) "
+"เบราว์เซอร์เก็บโทเค็นไว้ในแท็บนี้เท่านั้น; “ออกจากระบบ” จะลืมโทเค็น ในที่ที่เซิร์ฟเวอร์ตั้งค่าไว้ "
+"“เข้าสู่ระบบด้วย …” จะใช้บัญชีขององค์กรของคุณแทน ([OpenID Connect](server-"
+"install.md#oidc))"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
-msgstr ""
+msgstr "**เครื่องพิมพ์**: สถานะ ฉลากหรือเทปที่ใส่อยู่ และปัญหา เป็นคำอธิบาย"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5996,11 +5934,16 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**แม่แบบ**: ไฟล์ฉลากในโฟลเดอร์ฉลากพร้อมตัวอย่าง  "
+"ช่องข้อมูลแสดงแถวแรกของไฟล์ข้อมูลของแม่แบบ หรือค่าตัวอย่างหากไม่มีไฟล์หรือไฟล์หายไป “พิมพ์” "
+"กรอกช่องของหนึ่งฉลากและแสดงตัวอย่างขณะพิมพ์ข้อความ; "
+"องค์ประกอบที่ช่องหนึ่งกรอกจะมีเส้นขอบล้อมไว้ ด้วยโทเค็น `admin` อัปโหลดแม่แบบ (ไฟล์ "
+"`.tavletta`) และลบแม่แบบได้ที่นี่"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**ชุด** ทีละขั้น:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6008,6 +5951,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"ข้อมูล: ไฟล์ CSV, XLSX หรือ ODS รายการที่วางมาจากสเปรดชีต หรือไม่มีข้อมูลเลย "
+"เลขศูนย์นำหน้าคงอยู่ (`00300`)"
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6017,6 +5962,9 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"กำหนด: คอลัมน์ใดกรอกช่องใดของแม่แบบ (ชื่อเหมือนกันถูกกำหนดให้แล้ว "
+"โดยไม่สนตัวพิมพ์ใหญ่เล็กและช่องว่าง) ตัวอย่างของฉลากแรกข้าง ๆ ล้อมช่องที่ใช้อยู่ด้วยเส้นขอบ; "
+"แต่ละช่องแสดงค่าของมัน แต่ละคอลัมน์แสดงค่าแรก ๆ"
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6026,13 +5974,16 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"เลือก: ทุกแถว บางแถว (`1-20, 25, 30-`) หรือตามช่วงของช่อง หากไม่มีข้อมูล ช่วงจะสร้างค่า: "
+"หมายเลขครุภัณฑ์จาก `3000` ถึง `5685` ได้ 2686 ฉลาก `00300` ถึง `00450` คงเลขศูนย์ "
+"ขั้นข้ามจะเลือกทุกเลขที่สองหรือสิบ; พิมพ์หรือวาง `3000-5685` ทีเดียวก็ได้"
 
 #. type: Bullet: '  4. '
 #: docs/server.md
 msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
-msgstr ""
+msgstr "ตรวจสอบ: จำนวนฉลาก ฉลากแรกและฉลากสุดท้าย ขีดจำกัดของเซิร์ฟเวอร์และเครื่องพิมพ์"
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6042,6 +5993,9 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"พิมพ์: ตั้งแต่ 100 ฉลากขึ้นไป หน้าเว็บจะถามก่อน ความคืบหน้าแสดงว่าพิมพ์ไปแล้วกี่ฉลาก; "
+"ยกเลิกจะหยุดหลังฉลากปัจจุบัน (เครื่องพิมพ์ cab: หลังงานปัจจุบันที่มีไม่เกิน [[ui:Labels per "
+"job]] ฉลาก) หลังการยกเลิกหรือปัญหาของเครื่องพิมพ์ “ดำเนินการต่อจาก …” จะพิมพ์ส่วนที่เหลือ"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6050,11 +6004,13 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"หน้านี้ใช้ภาษาของเบราว์เซอร์หรือภาษาที่เลือกไว้ด้านบน: ทุกภาษาของแอป อารบิกจากขวาไปซ้าย "
+"เวลาแสดงแบบ 24 ชั่วโมง"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
-msgstr ""
+msgstr "`--no-web-ui` ปิดหน้านี้ สำหรับเซิร์ฟเวอร์ที่ใช้เฉพาะโปรแกรม"
 
 #. type: Title ##
 #: docs/server.md
@@ -6088,17 +6044,13 @@ msgstr "`POST /api/v1/preview` ส่งฉลากกลับมาเป็�
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` จัดคิวงานพิมพ์ `GET /api/v1/jobs/<id>` แสดงสถานะ `DELETE` "
-"ยกเลิกงานระหว่างสองฉลาก"
+"ยกเลิกงานระหว่างสองฉลาก (เครื่องพิมพ์ cab: ระหว่างสองงานของชุด)"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6303,15 +6255,11 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` คือรุ่นที่ออก `1.1` คือรุ่นแก้ไขข้อบกพร่องล่าสุดของ 1.1 `latest` คือรุ่นล่าสุด `edge` "
+"`1.2.1` คือรุ่นที่ออก `1.2` คือรุ่นแก้ไขข้อบกพร่องล่าสุดของ 1.2 `latest` คือรุ่นล่าสุด `edge` "
 "คือสถานะการพัฒนา ไม่ใช่รุ่นที่ออก"
 
 #. type: Bullet: '- '
@@ -6969,14 +6917,14 @@ msgstr "ฉลากในเลย์เอาต์อิสระเปิด
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "การจัดวางในตัวอย่าง { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
 msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
-msgstr ""
+msgstr "ในการจัดวางอิสระ จัดวางองค์ประกอบในตัวอย่างได้ด้วยเมาส์ นิ้ว หรือปากกา:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6987,6 +6935,10 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"คลิกองค์ประกอบเพื่อเลือก; แถวของมันใน [[ui:Content]] จะเปิดออก คลิกพร้อมกด Shift หรือ "
+"Ctrl เพื่อเพิ่มองค์ประกอบเข้าในการเลือกหรือเอาออก  "
+"ลากผ่านส่วนที่ว่างเพื่อเลือกทุกองค์ประกอบที่กรอบเลือกแตะ (กด Alt ค้าง: เฉพาะที่อยู่ภายในกรอบ) "
+"การคลิกส่วนที่ว่างไม่เลือกอะไร การเปิดแถวขององค์ประกอบก็เลือกองค์ประกอบนั้นด้วย"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6997,6 +6949,10 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"ลากส่วนที่เลือกเพื่อย้าย มันจะเกาะขอบและกึ่งกลางของฉลาก และขอบกับกึ่งกลางขององค์ประกอบอื่น; "
+"เส้นสีแดงแสดงตำแหน่ง กด Alt หรือ Ctrl ค้างเพื่อวางอย่างอิสระ "
+"(เดสก์ท็อปบางแบบย้ายหน้าต่างเมื่อกด Alt ค้างขณะลาก: ให้ใช้ Ctrl) กด Shift "
+"ค้างเพื่อย้ายตามแกนเดียวเท่านั้น กด Escape ขณะลากจะวางกลับที่เดิม"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7007,6 +6963,10 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"องค์ประกอบที่เลือกเพียงชิ้นเดียวมีจุดจับที่มุมและขอบ: ลากจุดจับเพื่อปรับขนาด "
+"เส้นหรือรูปทรงเปลี่ยนความกว้างและความสูงแยกกัน (กด Shift เพื่อคงสัดส่วน); ข้อความ รูปภาพ "
+"สัญลักษณ์ และคิวอาร์โค้ดคงสัดส่วนไว้; บาร์โค้ดได้แท่งที่ยาวขึ้นหรือโมดูลที่กว้างขึ้น "
+"ฉลากจัดส่งย้ายได้อย่างเดียว"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7016,6 +6976,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] ในแถบหัวเรื่องจัดแนวองค์ประกอบที่เลือก: "
+"องค์ประกอบเดียวกับขอบหรือกึ่งกลางของฉลาก หลายองค์ประกอบกับกันและกัน "
+"จัดกระจายสามองค์ประกอบขึ้นไปให้เท่ากัน ([[ui:Distribute]]) เปิดและปิดการเกาะ "
+"([[ui:Snap to guides]]) และเพิ่มตารางกริดให้เกาะ"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7025,6 +6989,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"เมื่อตัวอย่างอยู่ในโฟกัส (คลิกที่ตัวอย่างหรือกด Tab ไปที่ตัวอย่าง) ปุ่มลูกศรย้ายส่วนที่เลือกทีละ 0.1 "
+"มม. เมื่อกด Shift ทีละ 1 มม.; Delete ลบส่วนที่เลือก; Ctrl+A เลือกทุกองค์ประกอบ "
+"Shift+Ctrl+A และ Escape ไม่เลือกเลย ตั้งขนาดได้ที่แถวขององค์ประกอบและที่หน้า "
+"[[ui:Position and size]] ของมัน"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7032,6 +7000,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"การลากทุกครั้ง การปรับขนาดทุกครั้ง และการกดปุ่มลูกศรต่อเนื่องนับเป็นหนึ่งขั้นของ [[ui:Undo]] "
+"สลับกับการเปลี่ยนแปลงในแถบด้านข้าง"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7039,6 +7009,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"ในการจัดวาง [[ui:One after another]] เลือกองค์ประกอบได้แต่ย้ายไม่ได้: "
+"การลากองค์ประกอบจะเสนอ [[ui:Use free layout]]"
 
 #. type: Title ##
 #: docs/use.md
@@ -7182,6 +7154,8 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"เมื่อตัวอย่างอยู่ในโฟกัส: ปุ่มลูกศรย้ายองค์ประกอบที่เลือก (Shift: ทีละ 1 มม.) Delete ลบ "
+"Ctrl+A และ Shift+Ctrl+A เลือกทั้งหมดหรือไม่เลือกเลย ([ดูด้านบน](#arrange))"
 
 #. type: Bullet: '- '
 #: docs/use.md

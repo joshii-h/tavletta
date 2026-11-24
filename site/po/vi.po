@@ -469,10 +469,6 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
@@ -480,7 +476,9 @@ msgid ""
 "`job_finished` if it had finished already."
 msgstr ""
 "Tác vụ đang chờ được hủy ngay; tác vụ đang in dừng sau nhãn đang được in. "
-"Trả 409 `job_finished` nếu tác vụ đã xong."
+"Máy in cab in một loạt theo các tác vụ tối đa `labels_per_job` nhãn (mặc "
+"định 250): nó dừng sau tác vụ đang được in. Trả 409 `job_finished` nếu tác "
+"vụ đã xong."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -928,57 +926,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1065,6 +1013,10 @@ msgstr ""
 "| 408 | `timeout` | Việc gửi yêu cầu mất hơn 30 giây. |\n"
 "| 409 | `job_finished` | Tác vụ đã xong: không còn gì để hủy. |\n"
 "| 409 | `counter_not_saved` | Tệp nhãn không ghi được: chưa in gì. |\n"
+"| 409 | `label_exists` | Đã có nhãn trùng tên: tải lên với replace=true. |\n"
+"| 409 | `label_in_use` | Các tác vụ của nhãn đang chờ hoặc đang in: thử lại khi chúng xong. |\n"
+"| 409 | `label_changed` | Tệp nhãn đã bị thay trong lúc yêu cầu được kiểm tra. |\n"
+"| 409 | `label_locked` | Một lần in của nhãn đang giữ tệp: thử lại khi nó kết thúc. |\n"
 "| 411 | `length_required` | Không có Content-Length (không chấp nhận phần thân chunked). |\n"
 "| 413 | `too_large` | Phần thân vượt `--max-body`, hoặc quá nhiều dòng, cột hoặc ô dữ liệu. |\n"
 "| 413 | `too_many_labels` | Số bản nhân số dòng vượt `--max-labels` (mặc định 10000); trên tờ nhãn là vượt 999. |\n"
@@ -1083,15 +1035,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Mười token sai từ địa chỉ này: hãy chờ một phút. |\n"
 "| 429 | `queue_full` | Quá nhiều tác vụ đang chờ: hãy thử lại sau. |\n"
 "| 500 | `internal` | Lỗi của máy chủ; được ghi vào nhật ký. |\n"
+"| 500 | `not_saved` | Không ghi được vào thư mục nhãn (507: đã đầy). |\n"
+"| 500 | `not_deleted` | Không xóa được tệp nhãn (thư mục chỉ đọc). |\n"
 "| 502 | `printer_<code>` | Không truy cập được máy in hoặc máy in báo có sự cố. |\n"
 "| 503 | `busy` | Tất cả khe xử lý yêu cầu hoặc dựng hình đang bận: hãy thử lại sau một lát. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: sự cố của máy in, một trong `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: sự cố của máy in, một trong `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1175,20 +1128,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1211,14 +1151,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | không có | Máy chủ có đang chạy không; không cần token (cho kiểm tra tình trạng) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | Mô tả này (OpenAPI 3.1); token của bất kỳ vai trò nào |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | Tên, vai trò và máy in của token cùng các giới hạn của một yêu cầu (cho trang web) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | Các máy in trong `printers.toml` mà token được phép dùng, kèm trạng thái; nếu không có tệp này thì là các kiểu máy in, địa chỉ đã đặt cho từng máy và các máy in tìm thấy (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Hỏi một máy in về trạng thái: giấy nhãn, sự cố, độ phân giải |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | Các tệp nhãn trong thư mục nhãn và các thư mục con của nó |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Có thể điền gì vào một nhãn: phần tử, biến, cột dữ liệu, kích thước, bộ đếm |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Tải lên một tệp nhãn (admin): được kiểm tra như khi ứng dụng mở tệp, rồi đặt vào thư mục nhãn trong một bước |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Xóa một tệp nhãn (admin); tệp dữ liệu của nó vẫn còn |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Đọc một tệp dữ liệu gửi kèm (CSV, ODS, XLSX) như ứng dụng đọc: các dòng của nó cho data_rows; không lưu gì |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | Nhãn đã được điền dữ liệu, dưới dạng ảnh; không in gì cả |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | In: yêu cầu được kiểm tra rồi xếp vào hàng đợi; mỗi máy in in một tác vụ tại một thời điểm |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Trạng thái của một tác vụ in (token print: các tác vụ của chính nó; admin: tất cả). Được giữ 24 giờ sau khi xong |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Hủy một tác vụ: ngay lập tức khi đang chờ, sau nhãn hiện tại khi đang in |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Hủy một tác vụ: ngay lập tức khi đang chờ, sau các nhãn đã gửi đến máy in khi đang in (cab: tác vụ gồm tối đa labels_per_job nhãn) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1293,10 +1237,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1304,14 +1247,12 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"Tên, vai trò và máy in của token cùng các giới hạn của một yêu cầu (cho "
+"trang web)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1319,7 +1260,7 @@ msgid ""
 msgstr ""
 "| Status | Phản hồi | Mã |\n"
 "|---|---|---|\n"
-"| 200 | Nhãn |  |\n"
+"| 200 | Ai |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1520,10 +1461,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1531,21 +1471,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Tải lên một tệp nhãn (admin): được kiểm tra như khi ứng dụng mở tệp, rồi đặt "
+"vào thư mục nhãn trong một bước."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Vai trò: `print`"
+msgstr "Vai trò: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1554,12 +1490,13 @@ msgid ""
 msgstr ""
 "| Tham số | Ở | Ý nghĩa |\n"
 "|---|---|---|\n"
-"| `name` | path | Có thể chứa dấu gạch chéo cho thư mục con; có thể bỏ '`.tavletta`'. |\n"
+"| `name` | path | Tên tệp, không kèm thư mục; có thể bỏ '`.tavletta`'. |\n"
+"| `replace` | query | Thay nhãn trùng tên. Mặc định `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Nội dung: nội dung của một tệp `.tavletta`."
 
 #. type: Plain text
 #: docs/api.md
@@ -1575,6 +1512,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | Phản hồi | Mã |\n"
+"|---|---|---|\n"
+"| 200 | Đã thay (replace=true) |  |\n"
+"| 201 | Đã thêm |  |\n"
+"| 400 | Không phải tên hợp lệ cho nhãn mới: chữ cái, chữ số, dấu cách và . _ - ( ) + , (tối đa 100), trong chính thư mục | `invalid_field`, `not_json` |\n"
+"| 409 | Đã có nhãn trùng tên (gửi replace=true), các tác vụ của nó đang chờ hoặc đang in (label_in_use), hoặc lần in của chương trình khác đang giữ tệp | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Vượt `--max-body`, hoặc nhãn quá lớn để dựng | `too_large`, `label_too_large` |\n"
+"| 422 | Không phải nhãn mà Tavletta có thể mở | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | Hết chỗ trong thư mục nhãn | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1589,26 +1535,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Xóa một tệp nhãn (admin); tệp dữ liệu của nó vẫn còn."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1619,10 +1557,10 @@ msgid ""
 msgstr ""
 "| Status | Phản hồi | Mã |\n"
 "|---|---|---|\n"
-"| 200 | Nhãn |  |\n"
+"| 204 | Đã xóa |  |\n"
 "| 400 | Không phải tên bên trong thư mục nhãn | `invalid_field` |\n"
 "| 404 | Không có nhãn như vậy | `label_not_found` |\n"
-"| 422 | Tệp không phải nhãn hoặc bị hỏng | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | Các tác vụ của nó đang chờ hoặc đang in (label_in_use), hoặc lần in của chương trình khác đang giữ tệp | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1635,10 +1573,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1646,6 +1583,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"Đọc một tệp dữ liệu gửi kèm (CSV, ODS, XLSX) như ứng dụng đọc: các dòng của "
+"nó cho data_rows; không lưu gì."
 
 #. type: Plain text
 #: docs/api.md
@@ -1663,17 +1602,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Trường | Kiểu | Ý nghĩa |\n"
+"|---|---|---|\n"
+"| `content` | string | Tệp: CSV (dấu phân cách bất kỳ, UTF-8, UTF-16 hoặc Windows-1252), ODS hoặc XLSX, phân biệt theo nội dung. Văn bản dán vào là một tệp CSV. |\n"
+"| `name` | string | Tên tệp, dùng cho thông báo. |\n"
+"| `sheet` | string | ODS, XLSX: trang tính (mặc định là trang đầu). |\n"
+"| `header` | boolean | false: dòng đầu cũng là dữ liệu; các cột được đặt tên A, B, C … Mặc định `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1683,10 +1621,9 @@ msgid ""
 msgstr ""
 "| Status | Phản hồi | Mã |\n"
 "|---|---|---|\n"
-"| 200 | Nhãn |  |\n"
-"| 400 | Không phải tên bên trong thư mục nhãn | `invalid_field` |\n"
-"| 404 | Không có nhãn như vậy | `label_not_found` |\n"
-"| 422 | Tệp không phải nhãn hoặc bị hỏng | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | Các dòng |  |\n"
+"| 400 | Yêu cầu không hợp lệ | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Không phải bảng, bị hỏng hoặc trống | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1834,18 +1771,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1864,7 +1790,7 @@ msgstr ""
 "| 202 | Đang chờ hoặc đang in; theo dõi tại Location |  |\n"
 "| 400 | Yêu cầu không hợp lệ | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Không có nhãn, máy in hoặc tệp dữ liệu như vậy, hoặc máy in mà token không được dùng | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | Tệp nhãn không ghi được: không lưu được giá trị bộ đếm tiếp theo, chưa in gì | `counter_not_saved` |\n"
+"| 409 | Tệp nhãn không ghi được: không lưu được giá trị bộ đếm kế tiếp, chưa in gì; hoặc nó đã bị thay trong lúc yêu cầu được kiểm tra (label_changed): hãy gửi lại | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Quá lớn: phần thân, số dòng dữ liệu, số nhãn trong một tác vụ hoặc nhãn cần dựng hình | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | Nhãn sẽ in sai | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Quá nhiều token sai, hoặc quá nhiều tác vụ đang chờ (tổng 100, 20 cho mỗi token có tên) | `too_many_requests`, `queue_full` |\n"
@@ -1936,25 +1862,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Hủy một tác vụ: ngay lập tức khi đang chờ, sau nhãn hiện tại khi đang in."
+"Hủy một tác vụ: ngay lập tức khi đang chờ, sau các nhãn đã gửi đến máy in "
+"khi đang in (cab: tác vụ gồm tối đa labels_per_job nhãn)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1964,7 +1881,7 @@ msgid ""
 msgstr ""
 "| Status | Phản hồi | Mã |\n"
 "|---|---|---|\n"
-"| 202 | Đã hủy, hoặc đang dừng sau nhãn hiện tại |  |\n"
+"| 202 | Đã hủy, hoặc đang dừng sau các nhãn đã gửi |  |\n"
 "| 404 | Không có tác vụ như vậy | `job_not_found` |\n"
 "| 409 | Đã xong | `job_finished` |\n"
 
@@ -1991,27 +1908,7 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2043,7 +1940,8 @@ msgstr ""
 "| `host` | string | Địa chỉ của máy in. |\n"
 "| `owner` | string or null | Tên của token. |\n"
 "| `label` | string or null | Tên trong thư mục nhãn; null với label_content. |\n"
-"| `printed` | integer | Số nhãn đã in cho đến nay. |\n"
+"| `printed` | integer | Số nhãn đã in chắc chắn cho đến nay; tăng từng nhãn một khi tác vụ đang in, trong chừng mực máy in báo. |\n"
+"| `printed_max` | integer or null | Sau một lỗi mà máy in không báo được kết quả (kết nối bị mất khi đang in): có thể đã in tối đa chừng này nhãn. Bộ đếm tiếp tục sau chúng; rows_printed đếm các dòng đã in chắc chắn, nên in lại từ dòng kế tiếp có thể in nhãn hai lần. Nếu không thì là null. |\n"
 "| `total` | integer | Số nhãn cần in: số bản x số dòng. |\n"
 "| `rows_printed` | integer | Số dòng dữ liệu đã in đầy đủ: sau khi thất bại, hãy in lại với rows đặt thành dòng tiếp theo (rows_printed + dòng đầu). |\n"
 "| `cancel_requested` | boolean | DELETE đã được gửi. |\n"
@@ -2062,22 +1960,7 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2107,9 +1990,11 @@ msgstr ""
 "| `columns` | array of string | Chỗ giữ chỗ `{Column}`: các khóa của data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file không còn nữa: hãy gửi các dòng trong data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (nhãn có `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | In trên tờ nhãn: tối đa 999 nhãn trong một tác vụ. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2196,14 +2081,7 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2219,12 +2097,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Điều sẽ in sai. other_labels_loaded: máy in trong `printers.toml` báo đang nạp loại nhãn khác với nhãn của bạn (kích thước, hoặc khoảng cách nhãn đo được). Phản hồi mới nhất của nó được tính nếu nằm trong phút gần nhất, một lỗi được coi là chưa biết gì (hỏi lại ở chế độ nền); với máy in chưa biết, máy chủ chờ tối đa một giây sau khi dựng nhãn. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Vị trí các phần tử trong ảnh; null với view=printer và với nhãn đã xoay lên tờ của nó. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2233,6 +2112,9 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"Khung của các phần tử trong ảnh xem trước, tính bằng mm từ góc trên bên trái "
+"của ảnh (tavletta/editing.py, docs/editing.md); một điểm ảnh của ảnh là mm * "
+"dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2246,13 +2128,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Trường | Kiểu | Ý nghĩa |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Dọc theo băng: chiều dài. |\n"
+"| `height_mm` | number | Ngang: chiều cao của băng hoặc nhãn. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | Độ phân giải của ảnh. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Hình ảnh { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2268,13 +2156,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Trường | Kiểu | Ý nghĩa |\n"
+"|---|---|---|\n"
+"| `name` | string | Tên của token trong tokens.toml; 'token' cho token duy nhất của `--token-file`, 'local' khi không có token; 'oidc:<user>' cho người đã đăng nhập trang web bằng OpenID Connect. |\n"
+"| `display_name` | string | Tên của một người từ nhà cung cấp; nếu không thì giống name. |\n"
+"| `session` | boolean | true: đã đăng nhập trang web bằng OpenID Connect (cookie phiên của nó), không phải bằng token. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | Các máy in mà token được dùng; null: tất cả. |\n"
+"| `token_required` | boolean | false: máy chủ không có token và không có `--oidc` (chỉ loopback). |\n"
+"| `limits` | object | Một yêu cầu được hỏi tối đa những gì: số nhãn trong một tác vụ (`--max-labels`; trên tờ nhãn tối đa 999), số bản sao, dòng dữ liệu, cột và ô, và nội dung tính bằng byte (`--max-body`; cũng là tệp nhãn lớn nhất được tải lên). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Khởi động { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2289,6 +2185,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Trường | Kiểu | Ý nghĩa |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: dấu phân cách tìm thấy; null với một cột và với bảng tính. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | Trang tính đã đọc. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Mỗi ô là văn bản mà nó hiển thị: số 0 đứng đầu và định dạng số được giữ nguyên (00300 vẫn là 00300). Các dòng không có ô nào được điền sẽ bị bỏ qua. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2586,19 +2490,14 @@ msgstr "Nhãn đầu tiên"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Bật máy in và chọn nó trong [[ui:Printer model]]. Tavletta tìm thấy máy "
-"trong mạng (Bonjour) và đọc loại giấy đang nạp: khổ băng hoặc khoảng cách "
-"giữa các nhãn."
+"Bật máy in và chọn nó trong [[ui:Printer model]]: máy in tìm thấy qua USB "
+"hoặc trong mạng (Bonjour) nằm đầu danh sách. Tavletta đọc loại giấy đang "
+"nạp: khổ băng hoặc khoảng cách giữa các nhãn."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2641,6 +2540,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Chọn máy in trong [[ui:Printer model]]; mỗi máy có một phần riêng bên dưới. "
+"Các máy in Tavletta tìm thấy qua USB và trong mạng nằm đầu danh sách đó, "
+"dưới [[ui:Found]], kèm model của chúng: chọn một máy sẽ lấy model và địa chỉ "
+"của nó. Các model theo sau dưới [[ui:All models]]. Tavletta tìm chúng khi "
+"cửa sổ mở và bằng [[ui:Search for printers]], tất cả model cùng lúc, ở chế "
+"độ nền."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2740,6 +2645,15 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (nhãn cắt sẵn): máy in báo nhãn có kích thước "
+"khác, hoặc đo được khoảng cách từ nhãn này đến nhãn kế tiếp khác với chiều "
+"cao cộng [[ui:Gap]] của nhãn bạn. [[ui:Use loaded labels]] đổi nhãn và chưa "
+"in gì: nó lấy kích thước máy in báo (Brother QL), hoặc đặt chiều cao dọc "
+"theo cuộn sao cho chiều cao cộng khe hở bằng khoảng cách đã đo (cab, Zebra). "
+"Khe hở và chiều rộng được giữ; chiều rộng in của Zebra là giá trị lần in gần "
+"nhất đã đặt, không phải chiều rộng của nhãn. Nếu chiều cao đó nhỏ hơn 5 mm, "
+"khe hở được đổi thay vào đó; nếu cả hai đều không tạo ra nhãn, chỉ có "
+"[[ui:Print anyway]] được đề nghị."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2748,6 +2662,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"Sau [[ui:Use loaded labels]], hãy kiểm tra nhãn trong phần xem trước rồi in. "
+"[[ui:Undo]] trong thông báo hoàn tác thay đổi; thông báo cho biết nếu giờ có "
+"phần tử vượt ra ngoài mép nhãn."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3268,6 +3185,12 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: máy in in lệch khỏi vị trí của nhãn (bản in trên mỗi "
+"nhãn cao hơn hoặc thấp hơn một chút so với phần xem trước) được bù ở đây: đo "
+"trên một nhãn đã in xem bản in lệch bao nhiêu và nhập vào, dương để dịch bản "
+"in xuống trên nhãn ngang cuộn, âm để dịch lên. Phần xem trước vẫn hiển thị "
+"nhãn như nó phải ra; chỉ phần gửi đến máy in bị dịch. Nội dung nằm gần mép "
+"mà bản in dịch về phía đó hơn khoảng cách này sẽ bị cắt."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3279,6 +3202,12 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: các nhãn của một loạt được gửi đến máy in cùng nhau, "
+"tối đa chừng này (mặc định 250, từ 1 đến 1000) trong một tác vụ, và chạy "
+"liền không dừng giữa chúng. [[ui:Stop]] có tác dụng giữa hai tác vụ: tác vụ "
+"đã bắt đầu được in trọn vẹn. 1 gửi mỗi nhãn thành một tác vụ riêng, như các "
+"máy in khác nhận chúng. Các nhãn có nội dung đổi từ bản này sang bản khác "
+"luôn đi từng cái một."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3293,12 +3222,6 @@ msgstr "Sự cố { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3309,7 +3232,8 @@ msgstr ""
 "[[ui:Different labels loaded]]: máy in đo được khoảng cách giữa các nhãn "
 "khác với chiều cao cộng khe hở của nhãn bạn. Hãy kiểm tra [[ui:Label size]] "
 "và [[ui:Gap]], hoặc nạp đúng cuộn. Sau khi đổi cuộn, hãy nhấn Feed trên máy "
-"in một lần để nó đo lại."
+"in một lần để nó đo lại; sau đó [[ui:Use loaded labels]] điều chỉnh nhãn "
+"theo đó ([Tất cả máy in](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3319,6 +3243,10 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Mọi thứ in cao hoặc thấp hơn một chút, giống nhau trên mọi nhãn, trong khi "
+"phần xem trước hiển thị đúng vị trí: hãy đặt [[ui:Print offset]]. Một nhãn "
+"được bố trí trong chương trình khác để bù điều này sẽ lệch trong phần xem "
+"trước; hãy dời nội dung của nó về chỗ cũ và đặt độ lệch thay vào đó."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3364,6 +3292,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Hết bộ nhớ: máy in không còn chỗ cho các nhãn của một tác vụ. Hãy giảm "
+"[[ui:Labels per job]], rồi in lại từ dòng mà thông báo nêu."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3377,6 +3307,13 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"“Tác vụ đã được gửi, nhưng kết quả không rõ”: kết nối với máy in bị mất khi "
+"đang in (hoặc máy in không báo được đã in đến đâu). Tavletta đếm các nhãn mà "
+"nó biết đã được in; máy in có thể đã in nhiều hơn. Hãy kiểm tra các nhãn đã "
+"ra: in lại từ dòng mà thông báo nêu có thể in một số nhãn hai lần, nhưng "
+"không bỏ sót nhãn nào.  Nếu giao diện web của máy in truy cập được trong "
+"mạng (mặc định), Tavletta còn đối chiếu con số với bộ đếm nhãn của máy in; "
+"nếu hai bên khác nhau, thông báo nêu khoảng."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3990,6 +3927,10 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): máy in báo khoảng cách nó đo gần "
+"nhất, có thể là trên cuộn trước. Sau khi đổi cuộn, hãy để nó đo lại các nhãn "
+"(hầu hết máy in làm vậy bằng cách nhấn giữ Feed) trước khi dùng [[ui:Use "
+"loaded labels]] ([Tất cả máy in](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4315,20 +4256,19 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Mỗi nhãn là một lệnh in riêng, nên cách này dùng được trên mọi máy in.  Máy "
+"in cab nhận tối đa [[ui:Labels per job]] nhãn thành một tác vụ, và in chúng "
+"liền không dừng giữa chừng ([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
 "[[ui:Stop]] trong thanh phía trên cửa sổ kết thúc loạt in sau nhãn đang được "
-"in; nhãn đầu tiên luôn được in."
+"in (trên máy in cab: sau tác vụ đang được in); nhãn đầu tiên luôn được in."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4399,19 +4339,14 @@ msgstr "Tổng quan { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
 "Một dịch vụ nhỏ: API REST (và MCP cho trợ lý AI) trên cổng 8790. Nó tự dựng "
-"nhãn và gửi đến máy in qua mạng; không cần giao diện desktop, trình duyệt "
-"hay cơ sở dữ liệu."
+"nhãn và gửi đến máy in qua mạng; không cần giao diện desktop hay cơ sở dữ "
+"liệu."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4421,6 +4356,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Một trang web tại cùng địa chỉ dành cho người dùng: đăng nhập bằng token, "
+"xem các máy in, in một mẫu hoặc một loạt (từ tệp CSV, XLSX hoặc ODS, một "
+"danh sách dán vào hoặc các dải số như 3000–5685), tải lên và xóa mẫu bằng "
+"token admin. `--no-web-ui` tắt nó."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4885,6 +4824,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Mỗi máy in được liệt kê cùng trạng thái; `UNREACHABLE` kèm thông báo nếu\n"
+"  máy chủ không kết nối được với nó.\n"
+"- Mở `http://127.0.0.1:8790/` trong trình duyệt trên máy chủ (người khác dùng\n"
+"  địa chỉ của proxy, xem [Reverse proxy](#proxy)) và đăng nhập bằng một\n"
+"  token: trang web cho thấy vai trò của nó được làm gì. Trang chỉ giữ token\n"
+"  trong thẻ trình duyệt, cho đến khi đóng thẻ hoặc chọn “Đăng xuất”.\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5510,7 +5455,7 @@ msgstr "Không bao giờ để máy chủ truy cập được từ internet."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Đăng nhập bằng OpenID Connect { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5521,6 +5466,11 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Mọi người có thể đăng nhập trang web bằng nhà cung cấp danh tính của tổ chức "
+"bạn (Keycloak, Authentik, Microsoft Entra ID, Okta …) thay vì token truy "
+"cập; vai trò của họ ở nhà cung cấp trở thành vai trò của Tavletta.  Các "
+"chương trình vẫn dùng token. Cần HTTPS qua reverse proxy (chỉ `http://"
+"localhost` chạy được khi không có, để thử nghiệm)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5532,6 +5482,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Đăng ký một client ở nhà cung cấp: loại bí mật (có secret), chỉ "
+"authorization code flow, PKCE S256, redirect URI `https://labels.example.com/"
+"oidc/callback`, post-logout redirect URI `https://labels.example.com/`. Hãy "
+"bảo đảm các vai trò hoặc nhóm đến được ID token: trong Keycloak là một "
+"mapper *User Client Role* (hoặc *User Realm Role*)  trên client với *Add to "
+"ID token* bật; Authentik gửi `groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5540,6 +5496,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Đặt secret vào `config/oidc-secret` (chỉ secret, chế độ 600)  và viết "
+"`config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` cho một bản khởi "
+"đầu có chú thích):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5567,6 +5526,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Thêm `\"--oidc\"` và `\"/config/oidc.toml\"` vào `command:` trong "
+"`compose.yaml` (bản cài trực tiếp: vào `ExecStart`, với `/etc/"
+"tavletta/...`), giữ `--trusted-proxy` và khởi động lại. Với `--trusted-"
+"proxy` máy chủ cần `public_url` và không khởi động nếu thiếu."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5575,6 +5538,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"Đăng nhập cần PyJWT, mà image container và các gói deb và rpm đều có; "
+"Flatpak thì không, và không cài thêm được gì vào đó: với `--oidc`, hãy chạy "
+"máy chủ từ một trong các bản còn lại."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5589,6 +5555,15 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"Khi đó trang hiển thị “Đăng nhập bằng Example ID”. Ai không có vai trò nào "
+"sẽ nhận “không có quyền truy cập”. Một phiên kéo dài 8 giờ, hoặc 60 phút nếu "
+"không dùng (`session_hours`, `idle_minutes`); một vai trò bị gỡ hay một tài "
+"khoản bị vô hiệu hóa ở nhà cung cấp chỉ có hiệu lực từ lần đăng nhập kế "
+"tiếp, vì vậy hãy giữ phiên ngắn ở nơi quản trị viên đăng nhập. `token_login "
+"= false` ẩn ô token trên trang. Có thể giới hạn máy in theo vai trò "
+"(`[oidc.printers]`) hoặc bằng một claim (`printers_claim`). Mọi khóa và chi "
+"tiết bảo mật: [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"src/branch/main/docs/server.md#signing-in-with-openid-connect-oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5736,6 +5711,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"Với `--oidc`: đã đặt `public_url`, client loại bí mật với PKCE, chỉ những "
+"vai trò mọi người cần, phiên ngắn ở nơi quản trị viên đăng nhập, `oidc-"
+"secret` ở chế độ 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5743,6 +5721,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Không ai in từ trình duyệt: `--no-web-ui` (trang web không cần token để tải, "
+"nhưng không hiển thị gì nếu thiếu token)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5778,24 +5758,7 @@ msgstr "Khắc phục sự cố { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5819,7 +5782,7 @@ msgstr ""
 "|---|---|\n"
 "| Một máy in là `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | Máy chủ không truy cập được nó: hãy thử từ máy chủ bằng `nc -vz <printer> 9100` (631 cho IPP); kiểm tra địa chỉ, tường lửa, máy in đã bật chưa. Trong Docker, container phải truy cập được mạng của máy in. |\n"
 "| `401 unauthorized` | Token thiếu, gõ sai, hết hạn hoặc bị xóa khỏi `tokens.toml`. Tiêu đề là `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Mười token sai từ địa chỉ này trong một phút: hãy sửa token, chờ một phút. |\n"
+"| `429 too_many_requests` | Mười token sai từ địa chỉ này trong một phút: sửa token, đợi một phút. Phía sau một reverse proxy không được nêu bằng `--trusted-proxy`, mọi người dùng chung địa chỉ của proxy. |\n"
 "| `429 queue_full` | 100 tác vụ (20 cho mỗi token) đang chờ: máy in chậm hoặc đã dừng; hãy kiểm tra nó, thử lại sau. |\n"
 "| `503 busy` | Tất cả khe xử lý yêu cầu hoặc dựng hình đang bận trong chốc lát: hãy thử lại sau một hai giây. |\n"
 "| `404 printer_not_found` | Không có trong `printers.toml`, hoặc token không được dùng nó (`--printer`). |\n"
@@ -5829,6 +5792,7 @@ msgstr ""
 "| `other_labels_loaded` trong các cảnh báo | Máy in đang nạp loại nhãn khác với nhãn của bạn: hãy nạp đúng cuộn, hoặc kiểm tra kích thước và khe hở của nhãn. Máy in ZPL có thể báo một khoảng cách đo được trên cuộn trước: hãy hiệu chuẩn nó. |\n"
 "| `409 counter_not_saved` | Tệp nhãn không ghi được bởi người dùng của máy chủ: `chown` nó cho người dùng đó (Docker: 1000, gốc: `tavletta`). |\n"
 "| Ngày hoặc giờ trên nhãn lệch một hai tiếng | Container chạy theo UTC: hãy đặt `TAVLETTA_TZ=Europe/Zurich` trong `.env`, rồi `docker compose up -d`. |\n"
+"| “Đăng nhập không thành công” trên trang web | Nhật ký cho biết lý do: không kết nối được nhà cung cấp, redirect URI hoặc secret sai ở nhà cung cấp, hoặc trang được truy cập qua HTTP thường (đặt `public_url`, `--trusted-proxy`). “Không có quyền truy cập”: các vai trò không đến được ID token (thiếu mapper) hoặc không vai trò nào được ánh xạ trong `[oidc.roles]`. |\n"
 "| Máy chủ không khởi động | `docker compose logs` hoặc `journalctl -u tavletta-server`: lỗi trong `printers.toml` hoặc `tokens.toml` được nêu cùng khóa của nó. |\n"
 "| Permission denied trên các thư mục (Fedora, RHEL với SELinux và Podman) | Thêm `:Z` vào các volume trong `compose.yaml`. |\n"
 
@@ -5840,20 +5804,16 @@ msgstr "Máy chủ in"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Các chương trình khác và trợ lý AI có thể in nhãn qua Tavletta mà không cần "
-"mở cửa sổ: `tavletta serve` cung cấp một giao diện web cho chương trình (API "
-"REST), `tavletta mcp` kết nối các trợ lý AI như Claude."
+"Các chương trình khác, trợ lý AI và mọi người trong trình duyệt có thể in "
+"nhãn qua Tavletta mà không cần mở cửa sổ: `tavletta serve` cung cấp một "
+"trang web cho mọi người và một giao diện web cho chương trình (API REST), "
+"`tavletta mcp` kết nối các trợ lý AI như Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5915,7 +5875,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "Mở `http://127.0.0.1:8790/` trong trình duyệt: [trang web](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5990,13 +5950,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6006,9 +5959,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` là [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` là [[ui:Print upside down]]; các cài đặt khác là `quality`, "
-"`chain`, `high_res`, `feed_mm`, `darkness`, `media` và `outlines`, xem [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"`upside_down` là [[ui:Print upside down]], `offset_mm` là [[ui:Print "
+"offset]] (−5 đến 5), `labels_per_job` là [[ui:Labels per job]] (1 đến 1000, "
+"mặc định 250); các cài đặt khác là `quality`, `chain`, `high_res`, "
+"`feed_mm`, `darkness`, `media` và `outlines`, xem [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
 
 #. type: Bullet: '- '
@@ -6116,17 +6071,13 @@ msgstr "Token chỉ hiển thị một lần; tệp chỉ giữ dấu vân tay (
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
 "`preview` chỉ liệt kê và xem trước, `print` còn in và theo dõi các tác vụ "
-"của chính nó, `admin` xem và hủy mọi tác vụ."
+"của chính nó, `admin` xem và hủy mọi tác vụ, tải lên và xóa mẫu."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6148,10 +6099,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Hình ảnh { #images }"
+msgstr "Trang web { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6159,6 +6109,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"Trang riêng của máy chủ, tại địa chỉ của nó (`http://127.0.0.1:8790/`, hoặc "
+"địa chỉ của [reverse proxy](server-install.md#proxy)):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6168,12 +6120,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Đăng nhập** bằng token truy cập (nếu máy chủ không có token thì không có "
+"gì để đăng nhập). Trình duyệt chỉ giữ nó trong thẻ này; “Đăng xuất” sẽ quên "
+"nó. Nơi máy chủ được thiết lập cho việc đó, “Đăng nhập bằng …” dùng tài "
+"khoản của tổ chức bạn thay thế ([OpenID Connect](server-install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Máy in**: trạng thái của chúng, nhãn hoặc băng đang nạp và các sự cố, bằng "
+"lời."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6185,11 +6143,16 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Mẫu**: các tệp nhãn trong thư mục nhãn kèm phần xem trước.  Các trường dữ "
+"liệu hiển thị dòng đầu của tệp dữ liệu của mẫu, hoặc giá trị mẫu nếu nó "
+"không có hoặc bị thiếu. “In” điền các trường của một nhãn và hiển thị phần "
+"xem trước ngay khi gõ; các phần tử mà một trường điền được viền khung trong "
+"đó. Với token `admin`, mẫu được tải lên (tệp `.tavletta`) và xóa tại đây."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Loạt**, từng bước:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6197,6 +6160,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Dữ liệu: một tệp CSV, XLSX hoặc ODS, một danh sách dán từ bảng tính, hoặc "
+"không có dữ liệu nào. Số 0 đứng đầu được giữ nguyên (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6206,6 +6171,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Gán: cột nào điền trường nào của mẫu (các tên giống nhau đã được gán sẵn, "
+"không phân biệt hoa thường và dấu cách). Phần xem trước nhãn đầu tiên bên "
+"cạnh viền khung trường đang dùng; mỗi trường hiển thị giá trị của nó, mỗi "
+"cột hiển thị các giá trị đầu của nó."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6215,6 +6184,10 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Chọn: mọi dòng, một số dòng (`1-20, 25, 30-`), hoặc theo dải của một trường. "
+"Khi không có dữ liệu, các dải tạo ra các giá trị: Số kiểm kê từ `3000` đến "
+"`5685` cho 2686 nhãn, `00300` đến `00450` giữ các số 0, một bước nhảy lấy "
+"cách số thứ hai hoặc thứ mười; có thể gõ hoặc dán `3000-5685` một lần."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6222,6 +6195,7 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Kiểm tra: số nhãn, nhãn đầu và nhãn cuối, các giới hạn của máy chủ và máy in."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6231,6 +6205,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"In: từ 100 nhãn trở lên, trang sẽ hỏi trước. Tiến độ cho biết đã in bao "
+"nhiêu; Hủy dừng sau nhãn hiện tại (máy in cab: sau tác vụ hiện tại gồm tối "
+"đa [[ui:Labels per job]] nhãn). Sau khi hủy hoặc gặp sự cố máy in, “Tiếp tục "
+"từ …” in phần còn lại."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6239,11 +6217,15 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"Trang dùng ngôn ngữ của trình duyệt, hoặc ngôn ngữ chọn ở trên cùng: mọi "
+"ngôn ngữ của ứng dụng, tiếng Ả Rập từ phải sang trái. Giờ hiển thị theo đồng "
+"hồ 24 giờ."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` tắt trang, dành cho các máy chủ chỉ có chương trình dùng."
 
 #. type: Title ##
 #: docs/server.md
@@ -6278,17 +6260,14 @@ msgstr "`POST /api/v1/preview` trả về nhãn dưới dạng ảnh PNG."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` xếp một lệnh in vào hàng đợi; `GET /api/v1/jobs/<id>` "
-"cho biết trạng thái, `DELETE` hủy giữa hai nhãn."
+"cho biết trạng thái, `DELETE` hủy giữa hai nhãn (máy in cab: giữa hai tác vụ "
+"của một loạt)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6498,15 +6477,11 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` là một bản phát hành, `1.1` là bản vá lỗi mới nhất của 1.1, `latest` "
+"`1.2.1` là một bản phát hành, `1.2` là bản vá lỗi mới nhất của 1.2, `latest` "
 "là bản phát hành mới nhất. `edge` là trạng thái đang phát triển, không phải "
 "bản phát hành."
 
@@ -7192,7 +7167,7 @@ msgstr ""
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Sắp xếp trong phần xem trước { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7200,6 +7175,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"Trong bố cục tự do, có thể sắp xếp các phần tử trong phần xem trước bằng "
+"chuột, ngón tay hoặc bút:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7210,6 +7187,11 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Nhấp vào một phần tử để chọn nó; dòng của nó trong [[ui:Content]] mở ra. "
+"Nhấp kèm Shift hoặc Ctrl để thêm một phần tử vào vùng chọn hoặc bỏ nó ra.  "
+"Kéo qua một vùng trống để chọn mọi phần tử mà khung chọn chạm vào (giữ Alt: "
+"chỉ những phần tử nằm trong khung). Nhấp vào vùng trống không chọn gì. Mở "
+"dòng của một phần tử cũng chọn nó."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7220,6 +7202,11 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Kéo vùng chọn để di chuyển. Nó bám vào các mép và giữa của nhãn và vào các "
+"mép và giữa của các phần tử khác; một đường đỏ cho thấy vị trí. Giữ Alt hoặc "
+"Ctrl để đặt tự do (một số môi trường desktop di chuyển cửa sổ khi giữ Alt "
+"lúc kéo: khi đó hãy dùng Ctrl). Giữ Shift để chỉ di chuyển theo một trục. "
+"Nhấn Escape khi đang kéo sẽ đặt nó về chỗ cũ."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7230,6 +7217,10 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Một phần tử được chọn đơn lẻ có các tay nắm ở góc và mép: kéo một tay nắm để "
+"đổi kích thước. Một đường hoặc hình đổi chiều rộng và chiều cao độc lập (giữ "
+"Shift để giữ tỷ lệ); văn bản, hình ảnh, ký hiệu và mã QR giữ tỷ lệ; mã vạch "
+"có vạch dài hơn hoặc mô-đun rộng hơn. Nhãn vận chuyển chỉ được di chuyển."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7239,6 +7230,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] trong thanh tiêu đề căn chỉnh các phần tử đã chọn: một phần "
+"tử theo mép hoặc giữa của nhãn, nhiều phần tử theo nhau. Nó phân bố đều ba "
+"phần tử trở lên ([[ui:Distribute]]), bật và tắt việc bám ([[ui:Snap to "
+"guides]]) và thêm một lưới để bám vào."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7248,6 +7243,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Khi phần xem trước đang được tiêu điểm (nhấp vào nó, hoặc dùng Tab để tới), "
+"các phím mũi tên di chuyển vùng chọn 0.1 mm, kèm Shift là 1 mm; Delete xóa "
+"nó; Ctrl+A chọn mọi phần tử, Shift+Ctrl+A và Escape bỏ chọn. Kích thước được "
+"đặt trong dòng của phần tử và trên trang [[ui:Position and size]] của nó."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7255,6 +7254,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Mỗi lần kéo, mỗi lần đổi kích thước và một chuỗi phím mũi tên là một bước "
+"của [[ui:Undo]], xen kẽ với các thay đổi thực hiện trong thanh bên."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7262,6 +7263,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"Trong bố cục [[ui:One after another]], có thể chọn các phần tử nhưng không "
+"di chuyển được: kéo một phần tử sẽ đề nghị [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7418,6 +7421,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Khi phần xem trước đang được tiêu điểm: các phím mũi tên di chuyển các phần "
+"tử đã chọn (Shift: 1 mm), Delete xóa chúng, Ctrl+A và Shift+Ctrl+A chọn tất "
+"cả hoặc không chọn gì ([xem ở trên](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

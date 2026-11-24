@@ -442,18 +442,15 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"排队中的任务会立即取消；正在打印的任务会在当前标签打印完后停止。如果任务已经"
-"结束，则返回 409 `job_finished`。"
+"排队中的任务会立即取消；正在打印的任务会在当前标签打印完后停止。cab 打印机以"
+"每个任务最多 `labels_per_job` 个标签（默认 250）的方式打印一批：它会在当前正"
+"在打印的任务结束后停止。如果任务已经结束，则返回 409 `job_finished`。"
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -894,57 +891,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1031,6 +978,10 @@ msgstr ""
 "| 408 | `timeout` | 请求的发送耗时超过 30 s。 |\n"
 "| 409 | `job_finished` | 任务已结束：没有可取消的内容。 |\n"
 "| 409 | `counter_not_saved` | 标签文件不可写：未打印任何内容。 |\n"
+"| 409 | `label_exists` | 已存在同名标签：请使用 replace=true 上传。 |\n"
+"| 409 | `label_in_use` | 该标签的任务正在等待或打印：待其结束后重试。 |\n"
+"| 409 | `label_changed` | 在检查请求期间，标签文件被替换。 |\n"
+"| 409 | `label_locked` | 该标签的某次打印占用着文件：待其结束后重试。 |\n"
 "| 411 | `length_required` | 没有 Content-Length（不接受分块的请求体）。 |\n"
 "| 413 | `too_large` | 请求体超过 `--max-body`，或数据行、列或单元格过多。 |\n"
 "| 413 | `too_many_labels` | 份数乘以行数超过 `--max-labels`（默认 10000）；在标签纸上超过 999。 |\n"
@@ -1049,15 +1000,16 @@ msgstr ""
 "| 429 | `too_many_requests` | 来自此地址的十次错误令牌：请等待一分钟。 |\n"
 "| 429 | `queue_full` | 等待的任务过多：请稍后重试。 |\n"
 "| 500 | `internal` | 服务器错误；已记入日志。 |\n"
+"| 500 | `not_saved` | 无法写入标签文件夹（507：已满）。 |\n"
+"| 500 | `not_deleted` | 无法删除标签文件（只读文件夹）。 |\n"
 "| 502 | `printer_<code>` | 打印机无法连接或报告了问题。 |\n"
 "| 503 | `busy` | 所有请求或渲染名额已满：请稍后片刻再重试。 |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`：打印机的问题，取值之一为 `generic`、`not_found`、`timeout`、`stalled`、`port_closed`、`busy`、`paused`、`cover_open`、`head_open`、`jam`、`media_jam`、`out_of_labels`、`out_of_paper`、`label_not_found`、`wrong_media`、`paper_size`、`page_too_large`、`too_long`、`too_wide`、`code_too_large`、`ribbon`、`ribbon_out`、`ribbon_direct`、`no_cassette`、`bad_cassette`、`supplies`、`format`、`resolution`、`queue_paused`、`job_held`、`job_canceled`、`usb_not_found`、`usb_permission`、`serial_permission`、`battery`、`overheat`、`unsupported_model`、`unknown_model`、`editor_lite`。\n"
+msgstr "`printer_<code>`：打印机的问题，取值之一为 `generic`、`not_found`、`timeout`、`stalled`、`port_closed`、`busy`、`paused`、`out_of_memory`、`cover_open`、`head_open`、`jam`、`media_jam`、`out_of_labels`、`out_of_paper`、`label_not_found`、`wrong_media`、`paper_size`、`page_too_large`、`too_long`、`too_wide`、`code_too_large`、`ribbon`、`ribbon_out`、`ribbon_direct`、`no_cassette`、`bad_cassette`、`supplies`、`format`、`resolution`、`queue_paused`、`job_held`、`job_canceled`、`usb_not_found`、`usb_permission`、`serial_permission`、`battery`、`overheat`、`unsupported_model`、`unknown_model`、`editor_lite`。\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1140,20 +1092,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1176,14 +1115,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | 无 | 服务器是否在运行；不需要令牌（用于健康检查） |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | 此描述（OpenAPI 3.1）；任何角色的令牌均可 |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | 令牌的名称、角色和打印机，以及一次请求的限制（供网页使用） |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | 令牌可使用的 `printers.toml` 中的打印机及其状态；若不带令牌，则为打印机型号、为每台设置的地址以及发现的打印机（`--discover`） |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | 查询打印机的状态：纸张、问题、分辨率 |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | 标签文件夹及其子文件夹中的标签文件 |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | 标签可以填入的内容：元素、变量、数据列、尺寸、计数器 |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | 上传标签文件（admin）：按应用打开文件的方式检查，然后一步放入标签文件夹 |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | 删除标签文件（admin）；其数据文件会保留 |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | 按应用读取数据文件的方式读取随请求发送的数据文件（CSV、ODS、XLSX）：得到可用于 data_rows 的行；不保存任何内容 |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | 填充数据后的标签，以图像形式返回；不会打印任何内容 |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | 打印：请求先被检查，然后排队；每台打印机一次打印一个任务 |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | 打印任务的状态（`print` 令牌：自己的任务；admin：所有任务）。完成后保留 24 小时 |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | 取消任务：等待时立即取消，打印时在当前标签打印完后取消 |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | 取消任务：等待时立即取消，打印时在已发送给打印机的标签打印完后取消（cab：最多 labels_per_job 个标签的任务） |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1257,25 +1200,20 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
 msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
-msgstr ""
+msgstr "令牌的名称、角色和打印机，以及一次请求的限制（供网页使用）。"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1283,7 +1221,7 @@ msgid ""
 msgstr ""
 "| Status | 响应 | 代码 |\n"
 "|---|---|---|\n"
-"| 200 | 标签 |  |\n"
+"| 200 | 身份 |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1482,10 +1420,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1493,21 +1430,16 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"上传标签文件（admin）：按应用打开文件的方式检查，然后一步放入标签文件夹。"
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "角色：`print`"
+msgstr "角色：`admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1516,12 +1448,13 @@ msgid ""
 msgstr ""
 "| 参数 | 位置 | 含义 |\n"
 "|---|---|---|\n"
-"| `name` | path | 可以包含斜杠以表示子文件夹；'`.tavletta`' 可以省略。 |\n"
+"| `name` | path | 文件名，不含文件夹；可省略\"`.tavletta`\"。 |\n"
+"| `replace` | query | 替换同名标签。默认 `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "正文：`.tavletta` 文件的内容。"
 
 #. type: Plain text
 #: docs/api.md
@@ -1537,6 +1470,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | 响应 | 代码 |\n"
+"|---|---|---|\n"
+"| 200 | 已替换（replace=true） |  |\n"
+"| 201 | 已添加 |  |\n"
+"| 400 | 不是新标签的有效名称：字母、数字、空格以及 . _ - ( ) + ,（最多 100 个字符），且在文件夹本身内 | `invalid_field`, `not_json` |\n"
+"| 409 | 已存在同名标签（请发送 replace=true），该标签的任务正在等待或打印（label_in_use），或其他程序的打印占用着文件 | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | 超过 `--max-body`，或标签太大无法渲染 | `too_large`, `label_too_large` |\n"
+"| 422 | 不是 Tavletta 能打开的标签 | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | 标签文件夹已无剩余空间 | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1551,26 +1493,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "删除标签文件（admin）；其数据文件会保留。"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1581,10 +1515,10 @@ msgid ""
 msgstr ""
 "| Status | 响应 | 代码 |\n"
 "|---|---|---|\n"
-"| 200 | 标签 |  |\n"
+"| 204 | 已删除 |  |\n"
 "| 400 | 不是标签文件夹内的名称 | `invalid_field` |\n"
 "| 404 | 没有此标签 | `label_not_found` |\n"
-"| 422 | 该文件不是标签或已损坏 | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | 该标签的任务正在等待或打印（label_in_use），或其他程序的打印占用着文件 | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1597,10 +1531,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1608,6 +1541,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"按应用读取数据文件的方式读取随请求发送的数据文件（CSV、ODS、XLSX）：得到可用"
+"于 data_rows 的行；不保存任何内容。"
 
 #. type: Plain text
 #: docs/api.md
@@ -1625,17 +1560,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| 字段 | 类型 | 含义 |\n"
+"|---|---|---|\n"
+"| `content` | string | 文件：CSV（任意分隔符，UTF-8、UTF-16 或 Windows-1252）、ODS 或 XLSX，按内容区分。粘贴的文本即为 CSV 文件。 |\n"
+"| `name` | string | 文件名，用于消息。 |\n"
+"| `sheet` | string | ODS、XLSX：工作表（默认第一个）。 |\n"
+"| `header` | boolean | false：第一行也是数据；各列依次命名为 A、B、C …… 默认 `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1645,10 +1579,9 @@ msgid ""
 msgstr ""
 "| Status | 响应 | 代码 |\n"
 "|---|---|---|\n"
-"| 200 | 标签 |  |\n"
-"| 400 | 不是标签文件夹内的名称 | `invalid_field` |\n"
-"| 404 | 没有此标签 | `label_not_found` |\n"
-"| 422 | 该文件不是标签或已损坏 | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | 各行 |  |\n"
+"| 400 | 请求无效 | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | 不是表格、已损坏或为空 | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1794,18 +1727,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1824,7 +1746,7 @@ msgstr ""
 "| 202 | 已排队或正在打印；请在 Location 处跟踪 |  |\n"
 "| 400 | 无效的请求 | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | 没有此标签、打印机或数据文件，或令牌不能使用的打印机 | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | 标签文件不可写：无法保存下一个计数器值，未打印任何内容 | `counter_not_saved` |\n"
+"| 409 | 标签文件不可写：无法保存下一个计数器值，未打印任何内容；或在检查请求期间被替换（label_changed）：请重新发送 | `counter_not_saved`, `label_changed` |\n"
 "| 413 | 过大：请求体、数据行、一个任务中的标签或要渲染的标签 | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | 标签的打印结果会有误 | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | 错误令牌过多，或等待的任务过多（共 100 个，每个具名令牌 20 个） | `too_many_requests`, `queue_full` |\n"
@@ -1896,24 +1818,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
-msgstr "取消任务：等待时立即取消，打印时在当前标签打印完后取消。"
+msgstr ""
+"取消任务：等待时立即取消，打印时在已发送给打印机的标签打印完后取消（cab：最"
+"多 labels_per_job 个标签的任务）。"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1923,7 +1837,7 @@ msgid ""
 msgstr ""
 "| Status | 响应 | 代码 |\n"
 "|---|---|---|\n"
-"| 202 | 已取消，或在当前标签之后停止 |  |\n"
+"| 202 | 已取消，或在已发送的标签打印完后停止 |  |\n"
 "| 404 | 没有此任务 | `job_not_found` |\n"
 "| 409 | 已经结束 | `job_finished` |\n"
 
@@ -1950,27 +1864,7 @@ msgstr "任务 { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2002,7 +1896,8 @@ msgstr ""
 "| `host` | string | 打印机的地址。 |\n"
 "| `owner` | string or null | 令牌的名称。 |\n"
 "| `label` | string or null | 标签文件夹中的名称；label_content 时为 null。 |\n"
-"| `printed` | integer | 到目前为止已打印的标签。 |\n"
+"| `printed` | integer | 迄今确定已打印的标签；任务打印时逐个标签增加，以打印机所报告的为限。 |\n"
+"| `printed_max` | integer or null | 在打印机无法报告结果的故障之后（打印时连接中断）：最多可能已打印这么多标签。计数器在它们之后继续；rows_printed 统计确定已打印的行，因此从下一行重新打印可能会让标签重复打印。否则为 null。 |\n"
 "| `total` | integer | 要打印的标签：份数 x 行数。 |\n"
 "| `rows_printed` | integer | 已完整打印的数据行：失败后，请把 rows 设为下一行再次打印（rows_printed + 第一行）。 |\n"
 "| `cancel_requested` | boolean | 已发送 DELETE。 |\n"
@@ -2021,22 +1916,7 @@ msgstr "标签 { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2066,9 +1946,11 @@ msgstr ""
 "| `columns` | array of string | 占位符 `{Column}`：data_rows 的键。 |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file 已不存在：请在 data_rows 中发送各行。 |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used（色带有 `{=counter}`）、next、step。 |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | 在标签纸上打印：一个任务最多 999 个标签。 |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2155,14 +2037,7 @@ msgstr "预览 { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2178,12 +2053,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | 打印结果会有误的情况。other_labels_loaded：`printers.toml` 中的打印机报告装入的标签与该标签不同（其尺寸，或其测得的标签间距）。其最新应答在最近一分钟之内时有效，出错则视为一无所知（在后台重新询问）；对于尚不了解的打印机，在标签渲染完成后最多等待一秒。 |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | 各元素在图像中的位置；view=printer 时以及标签被转到其标签纸上时为 null。 |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2192,6 +2068,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"各元素在预览图像中的边框，单位为 mm，自图像左上角起算（tavletta/editing.py、"
+"docs/editing.md）；图像的一个像素为 mm * dpi / 25.4。"
 
 #. type: Plain text
 #: docs/api.md
@@ -2205,13 +2083,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| 字段 | 类型 | 含义 |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | 沿色带方向：长度。 |\n"
+"| `height_mm` | number | 垂直方向：色带或标签的高度。 |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | 图像的分辨率。 |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "图像 { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2227,13 +2111,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| 字段 | 类型 | 含义 |\n"
+"|---|---|---|\n"
+"| `name` | string | 令牌在 tokens.toml 中的名称；`--token-file` 的唯一令牌为 'token'，没有令牌时为 'local'；通过 OpenID Connect 登录网页的人为 'oidc:<user>'。 |\n"
+"| `display_name` | string | 提供方处的人名；否则与 name 相同。 |\n"
+"| `session` | boolean | true：通过 OpenID Connect（其会话 Cookie）登录网页，而不是通过令牌。 |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | 该令牌可使用的打印机；null：全部。 |\n"
+"| `token_required` | boolean | false：服务器没有令牌，也没有 `--oidc`（仅限回环）。 |\n"
+"| `limits` | object | 一次请求最多可要求的内容：一个任务中的标签数（`--max-labels`；标签纸上最多 999）、份数、数据行、列和单元格，以及以字节计的正文（`--max-body`；也是可上传的最大标签文件）。 |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "启动 { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2248,6 +2140,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| 字段 | 类型 | 含义 |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV：检测到的分隔符；单列和电子表格时为 null。 |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | 读取的工作表。 |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | 每个单元格按其显示的文本：前导零和数字格式保持不变（00300 仍为 00300）。没有填写任何单元格的行会被省略。 |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2531,18 +2431,14 @@ msgstr "第一个标签"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"打开打印机并在 [[ui:Printer model]] 下选择它。Tavletta 会在网络中找到它"
-"（Bonjour）并读取所装入的内容：色带宽度或标签之间的间距。"
+"打开打印机并在 [[ui:Printer model]] 下选择它：通过 USB 或在网络中（Bonjour）"
+"找到的打印机位于列表顶部。Tavletta 会读取所装入的内容：色带宽度或标签之间的间"
+"距。"
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2585,6 +2481,11 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"在 [[ui:Printer model]] 下选择打印机；每台打印机在下方都有自己的章节。"
+"Tavletta 通过 USB 和在网络中找到的打印机排在该列表最前面，位于 [[ui:Found]] "
+"下，并显示其型号：选择其中一台会采用它的型号和地址。各型号位于 [[ui:All "
+"models]] 下。Tavletta 会在窗口打开时以及通过 [[ui:Search for printers]] 在后"
+"台同时搜索所有型号。"
 
 #. type: Title ##
 #: docs/printer.md
@@ -2683,6 +2584,13 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]]（模切标签）：打印机报告了其他尺寸的标签，或测"
+"得相邻标签之间的间距与你的标签的高度加 [[ui:Gap]] 不同。[[ui:Use loaded "
+"labels]] 会更改标签，但暂不打印：它采用打印机报告的尺寸（Brother QL），或沿标"
+"签卷方向设置高度，使高度加间隙等于测得的间距（cab、Zebra）。间隙和宽度保持不"
+"变；Zebra 的打印宽度是上一次打印所设置的宽度，而不是标签的宽度。如果该高度会"
+"小于 5 mm，则改为更改间隙；如果两者都无法得到标签，则只提供 [[ui:Print "
+"anyway]]。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2691,6 +2599,8 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"使用 [[ui:Use loaded labels]] 之后，请在预览中检查标签，然后打印。消息中的 "
+"[[ui:Undo]] 会撤销这一更改；如果现在有元素超出标签边缘，消息会说明。"
 
 #. type: Title ##
 #: docs/printer.md
@@ -3188,6 +3098,11 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]：打印位置偏离标签位置的打印机（每个标签上的打印内容比预览"
+"所示略高或略低）可在此补偿：在已打印的标签上量出打印内容偏离了多少，然后输入"
+"该值，正值使横向于卷方向的标签上的打印内容下移，负值使其上移。预览仍显示标签"
+"应有的样子；只有发送给打印机的内容会移动。距离打印内容移向的那一边的边缘比此"
+"距离更近的内容会被裁掉。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3199,6 +3114,10 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]：一批标签会一起发送给打印机，一个任务最多包含这么多个"
+"（默认 250，1 到 1000），并且在它们之间不停顿地连续打印。[[ui:Stop]] 在两个任"
+"务之间生效：已开始的任务会完整打印。1 表示把每个标签作为独立任务发送，就像其"
+"他打印机那样接收。内容逐份变化的标签总是逐个发送。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3213,12 +3132,6 @@ msgstr "问题 { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3228,7 +3141,8 @@ msgid ""
 msgstr ""
 "[[ui:Different labels loaded]]：打印机测得的标签间距与你的标签的高度加间隙不"
 "同。请检查 [[ui:Label size]] 和 [[ui:Gap]]，或装入正确的标签卷。更换标签卷"
-"后，请在打印机上按一次 Feed，使其重新测量。"
+"后，请在打印机上按一次 Feed，使其重新测量；之后 [[ui:Use loaded labels]] 会让"
+"标签适应该间距（[所有打印机](#common)）。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3238,6 +3152,9 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"所有内容都打印得略高或略低，每个标签都一样，而预览显示它在正确的位置：请设置 "
+"[[ui:Print offset]]。在其他程序中为补偿这一偏差而排版的标签，在预览中会偏离位"
+"置；请把其内容移回原位，改为设置偏移。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3282,6 +3199,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"内存已满：打印机没有足够空间容纳一个任务的标签。请调低 [[ui:Labels per "
+"job]]，然后从消息所指出的行起重新打印。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3295,6 +3214,11 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"\"任务已发送，但结果未知\"：打印时与打印机的连接中断（或打印机无法报告进行到"
+"了哪里）。Tavletta 会统计它确知已打印的标签；打印机可能打印得更多。请检查已出"
+"来的标签：从消息所指出的行起重新打印，可能会使一些标签重复打印，但不会漏掉任"
+"何标签。  如果能在网络中访问打印机的网页界面（默认如此），Tavletta 还会用打印"
+"机的标签计数器核对该数字；两者不一致时，消息会给出范围。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3887,6 +3811,10 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]]（Zebra ZPL）：打印机报告的是它最近一次测得的间"
+"距，可能是在之前的标签卷上测得的。更换标签卷后，请先让它重新测量标签（大多数"
+"打印机长按 Feed 即可），再使用 [[ui:Use loaded labels]]（[所有打印机]"
+"(#common)）。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4196,20 +4124,19 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"每个标签都是独立的打印任务，因此这适用于所有打印机。  cab 打印机会把最多 "
+"[[ui:Labels per job]] 个标签作为一个任务接收，并在它们之间不停顿地打印（[cab]"
+"(printer.md#cab)）。"
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"窗口上方栏中的 [[ui:Stop]] 会在当前标签打印完后结束这一批；第一个标签总会被打"
-"印。"
+"窗口上方栏中的 [[ui:Stop]] 会在当前标签打印完后结束这一批（在 cab 打印机上："
+"在当前任务打印完后）；第一个标签总会被打印。"
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4277,18 +4204,13 @@ msgstr "概览 { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
 "一个小服务：端口 8790 上的 REST API（以及供 AI 助手使用的 MCP）。它自己渲染标"
-"签，并通过网络把标签发送给打印机；不需要桌面、浏览器和数据库。"
+"签，并通过网络把标签发送给打印机；不需要桌面和数据库。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4298,6 +4220,9 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"同一地址上供人使用的网页：用令牌登录，查看打印机，打印模板或一批标签（来自 "
+"CSV、XLSX 或 ODS 文件、粘贴的列表，或 3000–5685 这样的数字范围），用 admin 令"
+"牌上传和删除模板。`--no-web-ui` 可将其关闭。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4747,6 +4672,10 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  每台打印机都会连同其状态一起列出；如果服务器无法连接它，则显示 `UNREACHABLE` 和一条消息。\n"
+"- 在服务器上的浏览器中打开 `http://127.0.0.1:8790/`（其他人使用代理的地址，\n"
+"  参见[反向代理](#proxy)）并用令牌登录：网页会显示其角色可以做什么。该页面只在浏览器标签页中\n"
+"  保留令牌，直到关闭标签页或点击\"退出登录\"。\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5355,7 +5284,7 @@ msgstr "切勿让服务器可从互联网访问。"
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "使用 OpenID Connect 登录 { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5366,6 +5295,10 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"人们可以用你所在组织的身份提供方（Keycloak、Authentik、Microsoft Entra ID、"
+"Okta ……）代替访问令牌登录网页；他们在提供方处的角色会成为 Tavletta 的角色。  "
+"程序继续使用令牌。这需要通过反向代理使用 HTTPS（没有它时只有 `http://"
+"localhost` 可用，用于测试）。"
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5377,6 +5310,11 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"在提供方处注册一个客户端：机密客户端（带密钥），仅使用 authorization code "
+"flow，PKCE S256，重定向 URI 为 `https://labels.example.com/oidc/callback`，登"
+"出后重定向 URI 为 `https://labels.example.com/`。确保角色或组出现在 ID 令牌"
+"中：在 Keycloak 中，为该客户端添加一个 *User Client Role*（或 *User Realm "
+"Role*）映射器，并开启 *Add to ID token*；Authentik 会发送 `groups`。"
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5385,6 +5323,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"把密钥放入 `config/oidc-secret`（仅密钥，权限模式 600）  并编写 `config/"
+"oidc.toml`（`cp oidc.example.toml config/oidc.toml` 会给出一个带注释的开"
+"头）："
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5412,6 +5353,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"在 `compose.yaml` 的 `command:` 中添加 `\"--oidc\"` 和 `\"/config/"
+"oidc.toml\"`（原生安装：添加到 `ExecStart`，使用 `/etc/tavletta/...`），保留 "
+"`--trusted-proxy`，然后重启。使用 `--trusted-proxy` 时，服务器需要 "
+"`public_url`，没有它就无法启动。"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5420,6 +5365,8 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"登录需要 PyJWT，容器镜像以及 deb 和 rpm 软件包中都有；Flatpak 中没有，也无法"
+"向其中安装任何东西：要使用 `--oidc`，请从其他几种方式之一运行服务器。"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5434,6 +5381,14 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"此时页面会显示\"使用 Example ID 登录\"。没有任何一个角色的人会得到\"无权访问"
+"\"。会话持续 8 小时，或在无操作 60 分钟后结束（`session_hours`、"
+"`idle_minutes`）；在提供方处被移除的角色或被停用的账户，从下次登录起才生效，"
+"因此在管理员登录的地方请保持会话较短。`token_login = false` 会隐藏页面上的令"
+"牌输入框。可以按角色（`[oidc.printers]`）或按声明（`printers_claim`）限制打印"
+"机。所有键和安全细节：[docs/server.md](https://git.joshuahirsig.xyz/joshii/"
+"tavletta/src/branch/main/docs/server.md#signing-in-with-openid-connect-"
+"oidctoml)。"
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5572,6 +5527,8 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"使用 `--oidc` 时：已设置 `public_url`，客户端为带 PKCE 的机密客户端，只授予人"
+"们需要的角色，管理员登录的地方使用较短的会话，`oidc-secret` 权限模式为 600。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5579,6 +5536,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"没有人从浏览器打印：`--no-web-ui`（网页加载不需要令牌，但没有令牌时不显示任何"
+"内容）。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5613,24 +5572,7 @@ msgstr "故障排除 { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5654,7 +5596,7 @@ msgstr ""
 "|---|---|\n"
 "| 打印机为 `UNREACHABLE`（`printer_timeout`、`printer_not_found`） | 服务器无法连接它：在服务器上用 `nc -vz <printer> 9100` 测试（IPP 用 631）；检查地址、防火墙以及打印机是否已开机。在 Docker 中，容器必须能够访问打印机所在的网络。 |\n"
 "| `401 unauthorized` | 令牌缺失、输入有误、已过期，或已从 `tokens.toml` 中移除。头为 `Authorization: Bearer <token>`。 |\n"
-"| `429 too_many_requests` | 一分钟内来自此地址的十次错误令牌：请修正令牌，等待一分钟。 |\n"
+"| `429 too_many_requests` | 一分钟内来自此地址的错误令牌达十个：请更正令牌，等待一分钟。在未用 `--trusted-proxy` 指定的反向代理之后，所有人共用代理的地址。 |\n"
 "| `429 queue_full` | 100 个任务（每个令牌 20 个）正在等待：打印机很慢或已停止；请检查它，稍后重试。 |\n"
 "| `503 busy` | 所有请求或渲染名额暂时已满：请在一两秒后重试。 |\n"
 "| `404 printer_not_found` | 不在 `printers.toml` 中，或令牌不能使用它（`--printer`）。 |\n"
@@ -5664,6 +5606,7 @@ msgstr ""
 "| 警告中出现 `other_labels_loaded` | 打印机装入的标签与该标签不同：请装入匹配的标签卷，或检查标签的尺寸和间隙。ZPL 打印机可能会报告它在先前的标签卷上测得的间距：请校准它。 |\n"
 "| `409 counter_not_saved` | 标签文件对服务器的用户不可写：请用 `chown` 把它交给该用户（Docker：1000，原生：`tavletta`）。 |\n"
 "| 标签上的日期或时间差了一两个小时 | 容器以 UTC 运行：请在 `.env` 中设置 `TAVLETTA_TZ=Europe/Zurich`，然后执行 `docker compose up -d`。 |\n"
+"| 网页上的\"登录失败\" | 日志会说明原因：无法连接提供方，提供方处的重定向 URI 或密钥有误，或者页面是通过普通 HTTP 访问的（请设置 `public_url`、`--trusted-proxy`）。\"无权访问\"：角色没有出现在 ID 令牌中（缺少映射器），或 `[oidc.roles]` 中没有映射任何角色。 |\n"
 "| 服务器无法启动 | `docker compose logs` 或 `journalctl -u tavletta-server`：`printers.toml` 或 `tokens.toml` 中的错误会连同其键一并指出。 |\n"
 "| 文件夹权限被拒绝（带 SELinux 和 Podman 的 Fedora、RHEL） | 请在 `compose.yaml` 的卷中添加 `:Z`。 |\n"
 
@@ -5675,19 +5618,15 @@ msgstr "打印服务器"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"其他程序和 AI 助手无需打开窗口就能通过 Tavletta 打印标签：`tavletta serve` 为"
-"程序提供网页接口（REST API），`tavletta mcp` 连接 Claude 等 AI 助手。"
+"其他程序、AI 助手和浏览器中的人无需打开窗口就能通过 Tavletta 打印标签："
+"`tavletta serve` 为人提供网页，并为程序提供网页接口（REST API），`tavletta "
+"mcp` 连接 Claude 等 AI 助手。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5746,7 +5685,7 @@ msgstr "打印机地址、安全边距和打印设置取自应用中的设置。
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "在浏览器中打开 `http://127.0.0.1:8790/`：[网页](#web-page)。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5819,13 +5758,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -5835,10 +5767,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` 是 [[ui:Print method]]（`printer`、`transfer`、`direct`），"
-"`upside_down` 是 [[ui:Print upside down]]；其他还有 `quality`、`chain`、"
-"`high_res`、`feed_mm`、`darkness`、`media` 和 `outlines`，参见 [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)。"
+"`upside_down` 是 [[ui:Print upside down]]，`offset_mm` 是 [[ui:Print offset]]"
+"（−5 到 5），`labels_per_job` 是 [[ui:Labels per job]]（1 到 1000，默认 "
+"250）；其他还有 `quality`、`chain`、`high_res`、`feed_mm`、`darkness`、"
+"`media` 和 `outlines`，参见 [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#printers)。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5941,17 +5874,13 @@ msgstr "令牌只显示一次；文件只保存其指纹（哈希）。"
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
 "`preview` 只能列出和显示预览，`print` 还能打印并跟踪自己的任务，`admin` 可以"
-"查看并取消所有任务。"
+"查看并取消所有任务，并上传和删除模板。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5971,10 +5900,9 @@ msgstr "要收回令牌，请删除其在 `tokens.toml` 中的条目。服务器
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "图像 { #images }"
+msgstr "网页 { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -5982,6 +5910,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"服务器自带的页面，位于其地址（`http://127.0.0.1:8790/`，或[反向代理](server-"
+"install.md#proxy)的地址）："
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5991,12 +5921,15 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"用访问令牌**登录**（服务器上没有令牌时无需登录）。浏览器只在此标签页中保留"
+"它；\"退出登录\"会清除它。在服务器已为此设置的地方，\"使用 … 登录\"会改用你所"
+"在组织的账户（[OpenID Connect](server-install.md#oidc)）。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
-msgstr ""
+msgstr "**打印机**：它们的状态、所装入的标签或色带，以及问题，均以文字显示。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6008,11 +5941,15 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**模板**：标签文件夹中的标签文件，附带预览。  数据字段显示模板数据文件的第一"
+"行；如果它没有数据文件或文件缺失，则显示示例值。\"打印\"会填写一个标签的各字"
+"段，并在输入时即显示预览；字段所填充的元素会在其中用轮廓标出。使用 `admin` 令"
+"牌时，可在此上传（`.tavletta` 文件）和删除模板。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**一批标签**，一步一步来："
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6020,6 +5957,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"数据：CSV、XLSX 或 ODS 文件，从电子表格粘贴的列表，或完全没有数据。前导零会保"
+"留（`00300`）。"
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6029,6 +5968,9 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"分配：哪一列填充模板的哪个字段（名称相同的已自动分配，忽略大小写和空格）。旁"
+"边第一个标签的预览会用轮廓标出正在使用的字段；每个字段显示它的值，每一列显示"
+"它的前几个值。"
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6038,13 +5980,17 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"选择：所有行、部分行（`1-20, 25, 30-`），或按字段的范围。没有数据时，范围会生"
+"成各个值：库存编号从 `3000` 到 `5685` 得到 2686 个标签，`00300` 到 `00450` 会"
+"保留前导零，步长表示每隔一个或每隔十个取一个数；也可以一次性输入或粘贴 "
+"`3000-5685`。"
 
 #. type: Bullet: '  4. '
 #: docs/server.md
 msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
-msgstr ""
+msgstr "检查：标签数量、第一个和最后一个标签、服务器和打印机的限制。"
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6054,6 +6000,9 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"打印：从 100 个标签起，页面会先询问。进度显示已打印多少；\"取消\"会在当前标签"
+"打印完后停止（cab 打印机：在当前最多 [[ui:Labels per job]] 个标签的任务结束"
+"后）。取消或打印机出现问题后，\"从 … 继续\"会打印其余部分。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6062,11 +6011,13 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"页面使用浏览器的语言，或顶部所选的语言：应用的每种语言，阿拉伯语从右向左显"
+"示。时间使用 24 小时制。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
-msgstr ""
+msgstr "`--no-web-ui` 可关闭该页面，适用于只供程序使用的服务器。"
 
 #. type: Title ##
 #: docs/server.md
@@ -6100,17 +6051,13 @@ msgstr "`POST /api/v1/preview` 以 PNG 图像返回标签。"
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` 将打印任务加入队列；`GET /api/v1/jobs/<id>` 显示其状态，"
-"`DELETE` 在两个标签之间取消它。"
+"`DELETE` 在两个标签之间取消它（cab 打印机：在一批标签的两个任务之间）。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6316,15 +6263,11 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` 是一个发行版本，`1.1` 是 1.1 的最新缺陷修复版本，`latest` 是最新的发"
+"`1.2.1` 是一个发行版本，`1.2` 是 1.2 的最新缺陷修复版本，`latest` 是最新的发"
 "行版本。`edge` 是开发状态，不是发行版本。"
 
 #. type: Bullet: '- '
@@ -6975,14 +6918,14 @@ msgstr "自由布局的标签在 Tavletta 的早期版本中无法打开。"
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "在预览中排列 { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
 msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
-msgstr ""
+msgstr "在自由布局中，可以用鼠标、手指或笔在预览中排列元素："
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6993,6 +6936,10 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"点击一个元素即可选中它；它在 [[ui:Content]] 中的行会展开。按住 Shift 或 Ctrl "
+"点击，可把元素加入选择或从中移除。  在空白处拖动，可选中选框碰到的每个元素"
+"（按住 Alt：只选完全在框内的）。点击空白处不选任何元素。展开某个元素的行也会"
+"选中它。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7003,6 +6950,10 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"拖动所选内容即可移动。它会吸附到标签的边缘和中线，以及其他元素的边缘和中线；"
+"红线显示吸附的位置。按住 Alt 或 Ctrl 可自由放置（有些桌面在拖动时按住 Alt 会"
+"移动窗口：此时请使用 Ctrl）。按住 Shift 可只沿一个轴移动。拖动时按 Escape 会"
+"将其放回原处。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7013,6 +6964,9 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"选中单个元素时，其角和边上会出现控制点：拖动控制点即可调整大小。线条或形状可"
+"分别更改宽度和高度（按住 Shift 保持比例）；文字、图像、符号和二维码保持比例；"
+"条码会变长条或变宽模块。快递标签只能移动。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7022,6 +6976,9 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"标题栏中的 [[ui:Arrange]] 用于对齐选中的元素：单个元素对齐到标签的边缘或中"
+"线，多个元素彼此对齐。它可以均匀分布三个或更多元素（[[ui:Distribute]]），开启"
+"和关闭吸附（[[ui:Snap to guides]]），并添加一个可供吸附的网格。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7031,6 +6988,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"预览获得焦点时（点击它，或用 Tab 键切换到它），方向键将所选内容移动 0.1 mm，"
+"按住 Shift 时移动 1 mm；Delete 删除所选内容；Ctrl+A 选中所有元素，"
+"Shift+Ctrl+A 和 Escape 则取消选择。大小在元素的行中以及它的 [[ui:Position "
+"and size]] 页面中设置。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7038,6 +6999,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"每次拖动、每次调整大小以及一连串方向键操作都是 [[ui:Undo]] 的一步，与侧边栏中"
+"所做的更改交替计算。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7045,6 +7008,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"在 [[ui:One after another]] 布局中，元素可以选中，但不能移动：拖动元素时会提"
+"示 [[ui:Use free layout]]。"
 
 #. type: Title ##
 #: docs/use.md
@@ -7191,6 +7156,8 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"预览获得焦点时：方向键移动所选元素（Shift：1 mm），Delete 删除它们，Ctrl+A "
+"和 Shift+Ctrl+A 全选或取消选择（[见上文](#arrange)）。"
 
 #. type: Bullet: '- '
 #: docs/use.md

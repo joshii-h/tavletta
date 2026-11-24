@@ -476,10 +476,6 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
@@ -487,7 +483,9 @@ msgid ""
 "`job_finished` if it had finished already."
 msgstr ""
 "Завдання в черзі скасовується одразу; те, що друкується, зупиняється після "
-"етикетки, яка друкується. 409 `job_finished`, якщо воно вже завершилося."
+"етикетки, яка друкується. Принтер cab друкує серію завданнями до "
+"`labels_per_job` етикеток (за замовчуванням 250): він зупиняється після "
+"завдання, що друкується. 409 `job_finished`, якщо воно вже завершилося."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -936,57 +934,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1073,6 +1021,10 @@ msgstr ""
 "| 408 | `timeout` | Надсилання запиту тривало понад 30 с. |\n"
 "| 409 | `job_finished` | Завдання завершено: скасовувати нічого. |\n"
 "| 409 | `counter_not_saved` | Файл етикетки недоступний для запису: нічого не надруковано. |\n"
+"| 409 | `label_exists` | Етикетка з такою назвою вже є: завантажте з replace=true. |\n"
+"| 409 | `label_in_use` | Завдання етикетки очікують або друкуються: повторіть, коли вони завершаться. |\n"
+"| 409 | `label_changed` | Файл етикетки було замінено під час перевірки запиту. |\n"
+"| 409 | `label_locked` | Друк етикетки утримує файл: повторіть після його завершення. |\n"
 "| 411 | `length_required` | Немає Content-Length (тіла, що передаються частинами, не приймаються). |\n"
 "| 413 | `too_large` | Тіло більше за `--max-body` або забагато рядків даних, стовпців чи комірок. |\n"
 "| 413 | `too_many_labels` | Копії на рядки перевищують `--max-labels` (за замовчуванням 10000); на аркушах етикеток - 999. |\n"
@@ -1091,15 +1043,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Десять хибних токенів із цієї адреси: зачекайте хвилину. |\n"
 "| 429 | `queue_full` | Забагато завдань очікує: повторіть пізніше. |\n"
 "| 500 | `internal` | Помилка сервера; її записано в журнал. |\n"
+"| 500 | `not_saved` | У теку етикеток не вдалося записати (507: вона заповнена). |\n"
+"| 500 | `not_deleted` | Файл етикетки не вдалося видалити (тека лише для читання). |\n"
 "| 502 | `printer_<code>` | Принтер недоступний або повідомляє про проблему. |\n"
 "| 503 | `busy` | Усі слоти запитів чи відтворення зайняті: повторіть за мить. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: проблема принтера, одне зі значень `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: проблема принтера, одне зі значень `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1183,20 +1136,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1219,14 +1159,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | немає | Чи працює сервер; токен не потрібен (для перевірок працездатності) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | Цей опис (OpenAPI 3.1); токен будь-якої ролі |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | Ім'я, роль і принтери токена та обмеження запиту (для вебсторінки) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | Принтери з `printers.toml`, які може використовувати токен, з їхнім станом; без нього - моделі принтерів, задана для кожного адреса та знайдені принтери (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Запит стану принтера: носій, проблеми, роздільність |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | Файли етикеток у теці етикеток та її підтеках |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Чим можна заповнити етикетку: елементи, змінні, стовпці даних, розмір, лічильник |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Завантажити файл етикетки (admin): перевіряється так, як застосунок відкриває файл, потім одним кроком кладеться в теку етикеток |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Видалити файл етикетки (admin); її файл даних залишається |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Прочитати надісланий файл даних (CSV, ODS, XLSX) так, як його читає застосунок: його рядки для data_rows; нічого не зберігається |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | Заповнена етикетка як зображення; нічого не друкується |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Друк: запит перевіряється, потім ставиться в чергу; кожен принтер друкує одне завдання за раз |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Стан завдання друку (токен `print`: власні завдання; admin: усі). Зберігається 24 години після завершення |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Скасування завдання: одразу, поки воно очікує; після поточної етикетки, поки друкується |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Скасувати завдання: одразу, поки воно очікує; після етикеток, уже надісланих на принтер, поки друкується (cab: завдання до labels_per_job етикеток) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1300,25 +1244,20 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
 msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
-msgstr ""
+msgstr "Ім'я, роль і принтери токена та обмеження запиту (для вебсторінки)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1326,7 +1265,7 @@ msgid ""
 msgstr ""
 "| Status | Відповідь | Коди |\n"
 "|---|---|---|\n"
-"| 200 | Етикетки |  |\n"
+"| 200 | Хто |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1528,10 +1467,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1539,21 +1477,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Завантажити файл етикетки (admin): перевіряється так, як застосунок "
+"відкриває файл, потім одним кроком кладеться в теку етикеток."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Роль: `print`"
+msgstr "Роль: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1562,12 +1496,13 @@ msgid ""
 msgstr ""
 "| Параметр | Де | Значення |\n"
 "|---|---|---|\n"
-"| `name` | path | Може містити похилі риски для підтек; '`.tavletta`' можна пропустити. |\n"
+"| `name` | path | Назва файла без теки; '`.tavletta`' можна пропустити. |\n"
+"| `replace` | query | Замінити етикетку з такою назвою. За замовчуванням `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Тіло: вміст файла `.tavletta`."
 
 #. type: Plain text
 #: docs/api.md
@@ -1583,6 +1518,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | Відповідь | Коди |\n"
+"|---|---|---|\n"
+"| 200 | Замінена (replace=true) |  |\n"
+"| 201 | Додана |  |\n"
+"| 400 | Недопустима назва для нової етикетки: літери, цифри, пробіли та . _ - ( ) + , (до 100), у самій теці | `invalid_field`, `not_json` |\n"
+"| 409 | Етикетка з такою назвою вже є (надішліть replace=true), її завдання очікують або друкуються (label_in_use) чи друк іншої програми утримує файл | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Понад `--max-body` або етикетка, надто велика для відтворення | `too_large`, `label_too_large` |\n"
+"| 422 | Не етикетка, яку Tavletta може відкрити | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | У теці етикеток немає місця | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1597,26 +1541,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Видалити файл етикетки (admin); її файл даних залишається."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1627,10 +1563,10 @@ msgid ""
 msgstr ""
 "| Status | Відповідь | Коди |\n"
 "|---|---|---|\n"
-"| 200 | Етикетка |  |\n"
+"| 204 | Видалена |  |\n"
 "| 400 | Це не назва всередині теки етикеток | `invalid_field` |\n"
 "| 404 | Такої етикетки немає | `label_not_found` |\n"
-"| 422 | Файл не є етикеткою або пошкоджений | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | Її завдання очікують або друкуються (label_in_use) чи друк іншої програми утримує файл | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1643,10 +1579,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1654,6 +1589,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"Прочитати надісланий файл даних (CSV, ODS, XLSX) так, як його читає "
+"застосунок: його рядки для data_rows; нічого не зберігається."
 
 #. type: Plain text
 #: docs/api.md
@@ -1671,17 +1608,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Поле | Тип | Значення |\n"
+"|---|---|---|\n"
+"| `content` | string | Файл: CSV (будь-який роздільник, UTF-8, UTF-16 або Windows-1252), ODS або XLSX, тип визначається за вмістом. Вставлений текст - це файл CSV. |\n"
+"| `name` | string | Назва файла для повідомлень. |\n"
+"| `sheet` | string | ODS, XLSX: аркуш (за замовчуванням перший). |\n"
+"| `header` | boolean | false: перший рядок - теж дані; стовпці називаються A, B, C … За замовчуванням `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1691,10 +1627,9 @@ msgid ""
 msgstr ""
 "| Status | Відповідь | Коди |\n"
 "|---|---|---|\n"
-"| 200 | Етикетка |  |\n"
-"| 400 | Це не назва всередині теки етикеток | `invalid_field` |\n"
-"| 404 | Такої етикетки немає | `label_not_found` |\n"
-"| 422 | Файл не є етикеткою або пошкоджений | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | Рядки |  |\n"
+"| 400 | Недійсний запит | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Не таблиця, пошкоджена або порожня | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1842,18 +1777,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1872,7 +1796,7 @@ msgstr ""
 "| 202 | У черзі або друкується; стежте за Location |  |\n"
 "| 400 | Недопустимий запит | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Такої етикетки, принтера чи файла даних немає, або принтер, який токен не може використовувати | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | Файл етикетки недоступний для запису: наступне значення лічильника зберегти не вдалося, нічого не надруковано | `counter_not_saved` |\n"
+"| 409 | Файл етикетки недоступний для запису: наступне значення лічильника не вдалося зберегти, нічого не надруковано; або його було замінено під час перевірки запиту (label_changed): надішліть його знову | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Завелике: тіло, рядки даних, етикетки в одному завданні або етикетка для відтворення | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | Етикетка надрукувалася б хибно | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Забагато хибних токенів або забагато завдань очікує (усього 100, по 20 на іменований токен) | `too_many_requests`, `queue_full` |\n"
@@ -1944,26 +1868,17 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Скасування завдання: одразу, поки воно очікує; після поточної етикетки, поки "
-"друкується."
+"Скасування завдання: одразу, поки воно очікує; після етикеток, уже "
+"надісланих на принтер, поки друкується (cab: завдання до labels_per_job "
+"етикеток)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1973,7 +1888,7 @@ msgid ""
 msgstr ""
 "| Status | Відповідь | Коди |\n"
 "|---|---|---|\n"
-"| 202 | Скасовано або зупиняється після поточної етикетки |  |\n"
+"| 202 | Скасовано або зупиняється після вже надісланих етикеток |  |\n"
 "| 404 | Такого завдання немає | `job_not_found` |\n"
 "| 409 | Уже завершено | `job_finished` |\n"
 
@@ -2000,27 +1915,7 @@ msgstr "Завдання { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2052,7 +1947,8 @@ msgstr ""
 "| `host` | string | Адреса принтера. |\n"
 "| `owner` | string or null | Назва токена. |\n"
 "| `label` | string or null | Назва в теці етикеток; null для label_content. |\n"
-"| `printed` | integer | Надруковано етикеток на цей момент. |\n"
+"| `printed` | integer | Достовірно надруковані досі етикетки; зростає етикетка за етикеткою, поки завдання друкується, наскільки це повідомляє принтер. |\n"
+"| `printed_max` | integer or null | Після збою, наслідок якого принтер не зміг повідомити (з'єднання обірвалося під час друку): надруковано могло бути до стількох етикеток. Лічильник триває після них; rows_printed рахує достовірно надруковані рядки, тож повторний друк із наступного може надрукувати етикетки двічі. Інакше null. |\n"
 "| `total` | integer | Етикеток для друку: копії x рядки. |\n"
 "| `rows_printed` | integer | Повністю надруковані рядки даних: після збою надрукуйте знову, указавши в rows наступний (rows_printed + перший рядок). |\n"
 "| `cancel_requested` | boolean | DELETE надіслано. |\n"
@@ -2071,22 +1967,7 @@ msgstr "Етикетка { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2116,9 +1997,11 @@ msgstr ""
 "| `columns` | array of string | Заповнювачі `{Column}`: ключі data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file більше немає: надішліть рядки в data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | використовується (в етикетки є `{=counter}`), наступний, крок. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Друкується на аркушах етикеток: щонайбільше 999 етикеток в одному завданні. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2205,14 +2088,7 @@ msgstr "Попередній перегляд { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2228,12 +2104,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Що надрукувалося б хибно. other_labels_loaded: принтер з `printers.toml` повідомляє, що завантажено не ті етикетки, що в етикетки (їхній розмір або виміряна ним відстань між етикетками). Береться до уваги його остання відповідь, якщо вона надійшла протягом останньої хвилини, помилка - як \"нічого не відомо\" (запитується знову у фоні); принтер, ще не відомий, чекають до секунди після відтворення етикетки. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Де на зображенні містяться елементи; null за view=printer і для етикетки, повернутої на свій аркуш. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2242,6 +2119,9 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"Рамки елементів на зображенні попереднього перегляду, у мм від його лівого "
+"верхнього кута (tavletta/editing.py, docs/editing.md); піксель зображення - "
+"це мм * dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2255,13 +2135,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Поле | Тип | Значення |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Уздовж стрічки: довжина. |\n"
+"| `height_mm` | number | Упоперек: висота стрічки або етикетки. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | Роздільність зображення. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Зображення { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2277,13 +2163,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Поле | Тип | Значення |\n"
+"|---|---|---|\n"
+"| `name` | string | Назва токена в tokens.toml; 'token' для єдиного токена з `--token-file`, 'local' без токена; 'oidc:<user>' для того, хто ввійшов на вебсторінку через OpenID Connect. |\n"
+"| `display_name` | string | Ім'я людини в постачальника; інакше те саме, що name. |\n"
+"| `session` | boolean | true: вхід на вебсторінку виконано через OpenID Connect (її cookie сеансу), а не токеном. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | Принтери, які токен може використовувати; null: усі. |\n"
+"| `token_required` | boolean | false: сервер не має токена й `--oidc` (лише loopback). |\n"
+"| `limits` | object | Що один запит може вимагати щонайбільше: етикеток в одному завданні (`--max-labels`; на аркушах етикеток щонайбільше 999), копій, рядків даних, стовпців і комірок, а також тіло в байтах (`--max-body`; також найбільший файл етикетки для завантаження). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Запуск { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2298,6 +2192,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Поле | Тип | Значення |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: знайдений роздільник; null для одного стовпця й електронних таблиць. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | Прочитаний аркуш. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Кожна комірка як текст, який вона показує: початкові нулі й формати чисел зберігаються (00300 лишається 00300). Рядки без заповненої комірки пропускаються. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2597,19 +2499,14 @@ msgstr "Перша етикетка"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Увімкніть принтер і виберіть його в розділі [[ui:Printer model]]. Tavletta "
-"знаходить його в мережі (Bonjour) і зчитує, що завантажено: ширину стрічки "
-"або відстань між етикетками."
+"Увімкніть принтер і виберіть його в розділі [[ui:Printer model]]: принтер, "
+"знайдений через USB або в мережі (Bonjour), стоїть на початку списку. "
+"Tavletta зчитує, що завантажено: ширину стрічки або відстань між етикетками."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2652,6 +2549,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Виберіть принтер у розділі [[ui:Printer model]]; у кожного нижче є власний "
+"розділ. Принтери, які Tavletta знаходить через USB і в мережі, стоять у "
+"цьому списку першими, під [[ui:Found]], з їхньою моделлю: вибір одного з них "
+"приймає його модель і адресу. Моделі йдуть нижче, під [[ui:All models]]. "
+"Tavletta шукає їх, коли відкривається вікно, і через [[ui:Search for "
+"printers]], усі моделі одночасно, у фоні."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2755,6 +2658,16 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (висічені етикетки): принтер повідомляє про "
+"етикетки іншого розміру або виміряв від однієї етикетки до наступної іншу "
+"відстань, ніж висота плюс [[ui:Gap]] вашої етикетки. [[ui:Use loaded "
+"labels]] змінює етикетку й поки нічого не друкує: приймає розмір, який "
+"повідомляє принтер (Brother QL), або задає висоту вздовж рулона так, щоб "
+"висота плюс проміжок давали виміряну відстань (cab, Zebra). Проміжок і "
+"ширина лишаються; ширина друку в Zebra - та, що задав останній друк, а не "
+"ширина етикеток. Якщо ця висота була б меншою за 5 мм, замість неї "
+"змінюється проміжок; якщо жодне з двох не дає етикетки, пропонується лише "
+"[[ui:Print anyway]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2763,6 +2676,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"Після [[ui:Use loaded labels]] перевірте етикетку в попередньому перегляді, "
+"потім друкуйте. [[ui:Undo]] у повідомленні скасовує зміну; повідомлення каже "
+"про це, якщо елементи тепер виходять за край етикетки."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3293,6 +3209,14 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: принтер, який друкує повз місце етикетки (друк на "
+"кожній етикетці трохи вище або нижче, ніж показує попередній перегляд), "
+"коригується тут: виміряйте на надрукованій етикетці, наскільки друк "
+"зміщений, і введіть це значення, додатне - щоб посунути друк вниз на "
+"етикетках упоперек рулона, від'ємне - щоб посунути його вгору. Попередній "
+"перегляд і далі показує етикетку такою, якою вона має вийти; зсувається лише "
+"те, що надсилається на принтер. Вміст, який ближче за цю відстань до краю, "
+"до якого зсувається друк, обрізається."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3304,6 +3228,12 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: етикетки серії йдуть на принтер разом, до цієї "
+"кількості (за замовчуванням 250, від 1 до 1000) в одному завданні, і "
+"проходять без зупинки між собою. [[ui:Stop]] діє між двома завданнями: "
+"розпочате завдання друкується повністю. 1 надсилає кожну етикетку окремим "
+"завданням, як її отримують інші принтери. Етикетки, вміст яких змінюється "
+"від примірника до примірника, завжди йдуть по одній."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3318,12 +3248,6 @@ msgstr "Проблеми { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3334,7 +3258,8 @@ msgstr ""
 "[[ui:Different labels loaded]]: принтер виміряв іншу відстань між "
 "етикетками, ніж висота плюс проміжок вашої етикетки. Перевірте [[ui:Label "
 "size]] і [[ui:Gap]] або завантажте правильний рулон. Після зміни рулона один "
-"раз натисніть Feed на принтері, щоб він виміряв заново."
+"раз натисніть Feed на принтері, щоб він виміряв заново; тоді [[ui:Use loaded "
+"labels]] підлаштує етикетку під цю відстань ([Усі принтери](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3344,6 +3269,10 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Усе надруковано трохи вище або нижче, на кожній етикетці однаково, тоді як "
+"попередній перегляд показує це на своєму місці: задайте [[ui:Print offset]]. "
+"Етикетка, складена в іншій програмі так, щоб це компенсувати, у попередньому "
+"перегляді лежить повз; поверніть її вміст на місце й натомість задайте зсув."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3393,6 +3322,9 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Пам'ять заповнена: принтер не мав місця для етикеток завдання. Зменште "
+"[[ui:Labels per job]], потім друкуйте знову з рядка, який називає "
+"повідомлення."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3406,6 +3338,14 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"«Завдання надіслано, але його наслідок невідомий»: з'єднання з принтером "
+"обірвалося під час друку (або принтер не зміг повідомити, як далеко дійшов). "
+"Tavletta рахує етикетки, про які знає, що вони надруковані; принтер міг "
+"надрукувати більше. Перевірте етикетки, що вийшли: повторний друк із рядка, "
+"який називає повідомлення, може надрукувати деякі двічі, але жодної не "
+"пропустить.  Якщо вебінтерфейс принтера доступний у мережі (за "
+"замовчуванням), Tavletta додатково звіряє число з лічильником етикеток "
+"принтера; де вони розходяться, повідомлення вказує діапазон."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4033,6 +3973,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): принтер повідомляє відстань, яку "
+"виміряв останньою, можливо, на попередньому рулоні. Після зміни рулона дайте "
+"йому знову виміряти етикетки (більшість принтерів робить це довгим "
+"натисканням Feed), перш ніж використовувати [[ui:Use loaded labels]] ([Усі "
+"принтери](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4360,20 +4305,20 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Кожна етикетка - окреме завдання друку, тому це працює на будь-якому "
+"принтері.  Принтер cab отримує до [[ui:Labels per job]] етикеток одним "
+"завданням, яке друкує без зупинки між ними ([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
 "[[ui:Stop]] на панелі над вікном завершує серію після етикетки, що "
-"друкується; перша етикетка друкується завжди."
+"друкується (на принтері cab: після завдання, що друкується); перша етикетка "
+"друкується завжди."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4445,11 +4390,6 @@ msgstr "Огляд { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
@@ -4457,7 +4397,7 @@ msgid ""
 msgstr ""
 "Одна невелика служба: REST API (і MCP для ШІ-асистентів) на порту 8790.  "
 "Вона сама відтворює етикетки й надсилає їх на принтери мережею; ні робочого "
-"стола, ні браузера, ні бази даних не потрібно."
+"стола, ні бази даних не потрібно."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4467,6 +4407,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Вебсторінка за тією самою адресою для людей: вхід за токеном, перегляд "
+"принтерів, друк шаблону або серії (з файла CSV, XLSX чи ODS, вставленого "
+"списку або діапазонів номерів, як-от 3000–5685), завантаження й видалення "
+"шаблонів з токеном admin. `--no-web-ui` вимикає її."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4931,6 +4875,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Кожен принтер указано з його станом; `UNREACHABLE` з повідомленням, якщо\n"
+"  сервер не може до нього дістатися.\n"
+"- Відкрийте `http://127.0.0.1:8790/` у браузері на сервері (інші користуються\n"
+"  адресою проксі, див. [Зворотний проксі](#proxy)) і ввійдіть із токеном:\n"
+"  вебсторінка показує, що дозволяє його роль. Сторінка зберігає токен лише у вкладці\n"
+"  браузера, доки вкладку не закрито або не натиснуто «Вийти».\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5555,7 +5505,7 @@ msgstr "Ніколи не робіть сервер доступним з інт
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Вхід через OpenID Connect { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5566,6 +5516,11 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Люди можуть входити на вебсторінку через постачальника ідентифікації вашої "
+"організації (Keycloak, Authentik, Microsoft Entra ID, Okta …) замість токена "
+"доступу; їхні ролі в постачальника стають ролями Tavletta.  Програми й далі "
+"використовують токени. Потрібен HTTPS через зворотний проксі (без нього "
+"працює лише `http://localhost`, для тестування)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5577,6 +5532,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Зареєструйте в постачальника клієнт: конфіденційний (із секретом), лише "
+"authorization code flow, PKCE S256, redirect URI `https://labels.example.com/"
+"oidc/callback`, post-logout redirect URI `https://labels.example.com/`. "
+"Подбайте, щоб ролі або групи потрапляли в ID-токен: у Keycloak - mapper "
+"*User Client Role* (або *User Realm Role*)  у клієнта з увімкненим *Add to "
+"ID token*; Authentik передає `groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5585,6 +5546,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Покладіть секрет у `config/oidc-secret` (лише секрет, режим 600)  і напишіть "
+"`config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` дає "
+"прокоментовану заготовку):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5612,6 +5576,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Додайте `\"--oidc\"` і `\"/config/oidc.toml\"` до `command:` у "
+"`compose.yaml` (нативно: до `ExecStart`, з `/etc/tavletta/...`), залиште `--"
+"trusted-proxy` і перезапустіть. З `--trusted-proxy` серверові потрібен "
+"`public_url`, без нього він не запускається."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5620,6 +5588,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"Для входу потрібен PyJWT, який є в образі контейнера та в пакетах deb і rpm; "
+"у Flatpak його немає, і нічого в нього доінсталювати не можна: для `--oidc` "
+"запускайте сервер з одного з інших."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5634,6 +5605,15 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"Сторінка тоді показує «Увійти через Example ID». Хто не має жодної з ролей, "
+"отримує «немає доступу». Сеанс триває 8 годин або 60 хвилин без використання "
+"(`session_hours`, `idle_minutes`); роль, зняту в постачальника, або "
+"вимкнений обліковий запис враховано лише від наступного входу, тому робіть "
+"сеанси короткими там, де входять адміністратори. `token_login = false` ховає "
+"поле токена на сторінці. Принтери можна обмежити за ролями "
+"(`[oidc.printers]`) або за claim (`printers_claim`). Усі ключі та подробиці "
+"безпеки: [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/"
+"branch/main/docs/server.md#signing-in-with-openid-connect-oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5780,6 +5760,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"З `--oidc`: заданий `public_url`, клієнт конфіденційний із PKCE, лише "
+"потрібні людям ролі, короткі сеанси там, де входять адміністратори, `oidc-"
+"secret` з режимом 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5787,6 +5770,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Ніхто не друкує з браузера: `--no-web-ui` (вебсторінці не потрібен токен для "
+"завантаження, але без нього вона нічого не показує)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5822,24 +5807,7 @@ msgstr "Усунення несправностей { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5863,7 +5831,7 @@ msgstr ""
 "|---|---|\n"
 "| Принтер `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | Сервер не може до нього дістатися: перевірте із сервера командою `nc -vz <printer> 9100` (631 для IPP); перевірте адресу, брандмауер, чи увімкнений принтер. У Docker контейнер має мати доступ до мережі принтера. |\n"
 "| `401 unauthorized` | Токен відсутній, введений із помилкою, прострочений або видалений із `tokens.toml`. Заголовок - `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Десять хибних токенів із цієї адреси за хвилину: виправте токен, зачекайте хвилину. |\n"
+"| `429 too_many_requests` | Десять хибних токенів із цієї адреси за хвилину: виправте токен, зачекайте хвилину. За зворотним проксі, не вказаним у `--trusted-proxy`, усі ділять адресу проксі. |\n"
 "| `429 queue_full` | Очікують 100 завдань (по 20 на токен): принтер повільний або зупинений; перевірте його, повторіть пізніше. |\n"
 "| `503 busy` | Усі слоти запитів чи відтворення на мить зайняті: повторіть за секунду-дві. |\n"
 "| `404 printer_not_found` | Немає в `printers.toml`, або токен не може його використовувати (`--printer`). |\n"
@@ -5873,6 +5841,7 @@ msgstr ""
 "| `other_labels_loaded` у попередженнях | У принтер завантажено не ті етикетки, що в етикетки: завантажте відповідний рулон або перевірте розмір і проміжок етикетки. Принтер ZPL може повідомляти відстань, виміряну на попередньому рулоні: відкалібруйте його. |\n"
 "| `409 counter_not_saved` | Файл етикетки недоступний для запису користувачу сервера: виконайте для нього `chown` (Docker: 1000, нативно: `tavletta`). |\n"
 "| Дата чи час на етикетках зсунуті на годину-дві | Контейнер працює в UTC: задайте `TAVLETTA_TZ=Europe/Zurich` у `.env`, потім `docker compose up -d`. |\n"
+"| «Не вдалося ввійти» на вебсторінці | Журнал каже чому: постачальник недоступний, redirect URI або секрет у постачальника хибні, чи сторінку відкрито за звичайним HTTP (задайте `public_url`, `--trusted-proxy`). «Немає доступу»: ролі не потрапляють в ID-токен (бракує mapper) або жодну не зіставлено в `[oidc.roles]`. |\n"
 "| Сервер не запускається | `docker compose logs` або `journalctl -u tavletta-server`: помилка в `printers.toml` чи `tokens.toml` називається разом зі своїм ключем. |\n"
 "| Відмовлено в доступі до тек (Fedora, RHEL із SELinux і Podman) | Додайте `:Z` до томів у `compose.yaml`. |\n"
 
@@ -5884,20 +5853,16 @@ msgstr "Сервер друку"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Інші програми й ШІ-асистенти можуть друкувати етикетки через Tavletta, не "
-"відкриваючи вікна: `tavletta serve` надає вебінтерфейс для програм (REST "
-"API), `tavletta mcp` підключає ШІ-асистентів, як-от Claude."
+"Інші програми, ШІ-асистенти та люди в браузері можуть друкувати етикетки "
+"через Tavletta, не відкриваючи вікна: `tavletta serve` надає вебсторінку для "
+"людей і вебінтерфейс для програм (REST API), `tavletta mcp` підключає ШІ-"
+"асистентів, як-от Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5960,6 +5925,7 @@ msgstr ""
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
+"Відкрийте `http://127.0.0.1:8790/` у браузері: [вебсторінка](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6034,13 +6000,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6050,9 +6009,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` - це [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` - [[ui:Print upside down]]; інші: `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` і `outlines`, див. [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"`upside_down` - [[ui:Print upside down]], `offset_mm` - [[ui:Print offset]] "
+"(від −5 до 5), `labels_per_job` - [[ui:Labels per job]] (від 1 до 1000, за "
+"замовчуванням 250); інші: `quality`, `chain`, `high_res`, `feed_mm`, "
+"`darkness`, `media` і `outlines`, див. [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
 
 #. type: Bullet: '- '
@@ -6162,17 +6123,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
 "`preview` лише перелічує й показує попередні перегляди, `print` також друкує "
-"та стежить за власними завданнями, `admin` бачить і скасовує всі завдання."
+"та стежить за власними завданнями, `admin` бачить і скасовує всі завдання, "
+"завантажує й видаляє шаблони."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6194,10 +6152,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Зображення { #images }"
+msgstr "Вебсторінка { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6205,6 +6162,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"Власна сторінка сервера за його адресою (`http://127.0.0.1:8790/` або адреса "
+"[зворотного проксі](server-install.md#proxy)):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6214,12 +6173,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Вхід** із токеном доступу (без токена на сервері входити немає куди). "
+"Браузер зберігає його лише в цій вкладці; «Вийти» його забуває. Там, де "
+"сервер для цього налаштований, «Увійти через …» натомість використовує "
+"обліковий запис вашої організації ([OpenID Connect](server-install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Принтери**: їхній стан, завантажені етикетки або стрічка й проблеми - "
+"словами."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6231,11 +6196,17 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Шаблони**: файли етикеток із теки етикеток із попереднім переглядом.  Поля "
+"даних показують перший рядок файла даних шаблону або приклади значень, якщо "
+"його немає чи він відсутній. «Друкувати» заповнює поля однієї етикетки й "
+"показує попередній перегляд просто під час введення; елементи, які заповнює "
+"поле, у ньому обведено. З токеном `admin` тут завантажують (файли "
+"`.tavletta`) і видаляють шаблони."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Серія**, крок за кроком:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6243,6 +6214,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Дані: файл CSV, XLSX або ODS, список, вставлений з електронної таблиці, або "
+"взагалі без даних. Початкові нулі зберігаються (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6252,6 +6225,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Зіставлення: який стовпець заповнює яке поле шаблону (однакові назви вже "
+"зіставлено, без урахування регістру й пробілів). Попередній перегляд першої "
+"етикетки поруч обводить поле, що використовується; кожне поле показує своє "
+"значення, кожен стовпець - свої перші значення."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6261,6 +6238,10 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Вибір: усі рядки, окремі рядки (`1-20, 25, 30-`) або за діапазонами поля. "
+"Без даних діапазони створюють значення: Інвентарний номер від `3000` до "
+"`5685` дає 2686 етикеток, `00300` до `00450` зберігає нулі, крок бере кожен "
+"другий або десятий номер; `3000-5685` можна ввести чи вставити одразу."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6268,6 +6249,8 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Перевірка: кількість етикеток, перша й остання, обмеження сервера та "
+"принтера."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6277,6 +6260,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"Друк: від 100 етикеток сторінка спершу питає. Перебіг показує, скільки "
+"надруковано; «Скасувати» зупиняє після поточної етикетки (принтер cab: після "
+"поточного завдання до [[ui:Labels per job]] етикеток). Після скасування або "
+"проблеми принтера «Продовжити з …» друкує решту."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6285,11 +6272,15 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"Сторінка говорить мовою браузера або обраною вгорі: будь-якою мовою "
+"застосунку, арабською справа наліво. Час подано в 24-годинному форматі."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` вимикає сторінку для серверів, якими користуються лише "
+"програми."
 
 #. type: Title ##
 #: docs/server.md
@@ -6324,17 +6315,14 @@ msgstr "`POST /api/v1/preview` повертає етикетку як зобра
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` ставить завдання друку в чергу; `GET /api/v1/jobs/<id>` "
-"показує його стан, `DELETE` скасовує його між двома етикетками."
+"показує його стан, `DELETE` скасовує його між двома етикетками (принтер cab: "
+"між двома завданнями серії)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6545,16 +6533,12 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` - це випуск, `1.1` - останній випуск з виправленнями помилок гілки "
-"1.1, `latest` - останній випуск. `edge` - стан розробки, не випуск."
+"`1.2.1` - це випуск, `1.2` - останній випуск з виправленнями помилок гілки "
+"1.2, `latest` - останній випуск. `edge` - стан розробки, не випуск."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -7247,7 +7231,7 @@ msgstr ""
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Розташування в попередньому перегляді { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7255,6 +7239,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"За вільного розташування елементи можна розташовувати в попередньому "
+"перегляді мишею, пальцем або пером:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7265,6 +7251,12 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Клацніть елемент, щоб вибрати його; його рядок у [[ui:Content]] "
+"розгорнеться. Клацніть із Shift або Ctrl, щоб додати елемент до вибору або "
+"прибрати його.  Протягніть по порожньому місці, щоб вибрати кожен елемент, "
+"якого торкається рамка вибору (із затиснутим Alt: лише ті, що всередині "
+"неї). Клацання по порожньому місці нічого не вибирає. Відкриття рядка "
+"елемента теж вибирає його."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7275,6 +7267,12 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Перетягніть вибране, щоб перемістити. Воно прилипає до країв і середини "
+"етикетки та до країв і середин інших елементів; червона лінія показує де. "
+"Утримуйте Alt або Ctrl, щоб розмістити вільно (деякі робочі столи "
+"переміщують вікно, коли під час перетягування затиснуто Alt: тоді "
+"користуйтеся Ctrl). Утримуйте Shift, щоб рухати лише вздовж однієї осі. "
+"Escape під час перетягування повертає на місце."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7285,6 +7283,11 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Один вибраний елемент має маркери на кутах і краях: потягніть за маркер, щоб "
+"змінити розмір. Лінія чи фігура змінює ширину й висоту незалежно (з Shift "
+"зберігаються пропорції); текст, зображення, символ і QR-код зберігають "
+"пропорції; штрихкод отримує довші штрихи або ширші модулі. Транспортну "
+"етикетку лише переміщують."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7294,6 +7297,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] на панелі заголовка вирівнює вибрані елементи: один елемент - "
+"за краєм або серединою етикетки, кілька - один за одним. Вона рівномірно "
+"розподіляє три й більше ([[ui:Distribute]]), вмикає й вимикає прилипання "
+"([[ui:Snap to guides]]) і додає сітку для прилипання."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7303,6 +7310,11 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Коли попередній перегляд у фокусі (клацніть його або перейдіть до нього "
+"клавішею Tab), клавіші зі стрілками зсувають вибране на 0.1 мм, із Shift на "
+"1 мм; Delete видаляє його; Ctrl+A вибирає всі елементи, Shift+Ctrl+A і "
+"Escape - жодного. Розміри задаються в рядку елемента й на його сторінці "
+"[[ui:Position and size]]."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7310,6 +7322,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Кожне перетягування, кожна зміна розміру й серія натискань клавіш зі "
+"стрілками - це один крок [[ui:Undo]], упереміж зі змінами на бічній панелі."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7317,6 +7331,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"У розкладці [[ui:One after another]] елементи можна вибирати, але не "
+"переміщувати: перетягування одного з них пропонує [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7476,6 +7492,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Коли попередній перегляд у фокусі: клавіші зі стрілками зсувають вибрані "
+"елементи (Shift: на 1 мм), Delete видаляє їх, Ctrl+A і Shift+Ctrl+A "
+"вибирають усі або жодного ([див. вище](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md
