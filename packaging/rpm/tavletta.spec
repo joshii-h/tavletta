@@ -76,7 +76,7 @@ Requires:       %{name} = %{version}-%{release}
 
 %description    server
 The print server of Tavletta, with a REST API and MCP, as the system service
-tavletta-server: as a user of its own (made by this package), sandboxed, on
+tavletta-server: as a user of its own (made by this package), in a sandbox, on
 the local address 127.0.0.1, port 8790, with its printers, access tokens
 and labels in folders of its own. It is installed but not enabled; an
 upgrade restarts it if it runs.
