@@ -30,6 +30,9 @@ BuildRequires:  pango
 BuildRequires:  gtk4
 BuildRequires:  libadwaita
 BuildRequires:  dejavu-sans-fonts
+# the print server's unit, user and the udev rule
+BuildRequires:  systemd-rpm-macros
+%{?systemd_requires}
 
 # PyGObject with GTK 4, libadwaita, Pango and PangoCairo (typelibs), pycairo
 Requires:       python3-gobject
@@ -59,6 +62,12 @@ office printers through CUPS or IPP, one label per page or on label sheets.
 It also prints label files from the command line and runs a print server
 with a REST API and MCP.
 
+The print server comes as tavletta-server.service, installed but not
+enabled: it runs as the user tavletta with printers.toml and tokens.toml
+in /etc/tavletta and the labels in /var/lib/tavletta/labels. A udev rule
+lets the user at the computer use label printers on USB (/dev/usb/lp*,
+NIIMBOT on /dev/ttyACM*) without joining the group lp or dialout.
+
 
 %prep
 %autosetup -p1 -n %{name}
@@ -81,6 +90,14 @@ grep -q '"labelprinter"' pyproject.toml
 %pyproject_save_files -l tavletta
 %find_lang %{name}
 install -Dpm 0644 data/tavletta.1 %{buildroot}%{_mandir}/man1/tavletta.1
+# the print server as a system service, with the package's program
+install -Dpm 0644 packaging/systemd/tavletta-server.service %{buildroot}%{_unitdir}/tavletta-server.service
+sed -i 's|^ExecStart=/opt/tavletta/bin/tavletta |ExecStart=%{_bindir}/tavletta |' \
+    %{buildroot}%{_unitdir}/tavletta-server.service
+grep -q '^ExecStart=%{_bindir}/tavletta serve ' %{buildroot}%{_unitdir}/tavletta-server.service
+install -Dpm 0644 packaging/systemd/tavletta.sysusers.conf %{buildroot}%{_sysusersdir}/tavletta.conf
+install -dm 0750 %{buildroot}%{_sysconfdir}/tavletta %{buildroot}%{_sharedstatedir}/tavletta/labels
+install -Dpm 0644 packaging/udev/70-tavletta.rules %{buildroot}%{_udevrulesdir}/70-tavletta.rules
 
 
 %check
@@ -95,6 +112,17 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 %pytest -m 'not gui' -p no:cacheprovider --ignore=tests/test_packaging.py
 
 
+%post
+# not enabled: the preset disables it unless the system's presets say otherwise
+%systemd_post tavletta-server.service
+
+%preun
+%systemd_preun tavletta-server.service
+
+%postun
+%systemd_postun_with_restart tavletta-server.service
+
+
 %files -f %{pyproject_files} -f %{name}.lang
 # LICENSE, THIRD_PARTY_NOTICES.md, CREDITS.md and the data licences are
 # the package's license files (pyproject.toml), %%license through -l above
@@ -107,6 +135,12 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 %{_datadir}/icons/hicolor/symbolic/apps/%{app_id}-symbolic.svg
 %{_datadir}/icons/hicolor/*x*/apps/%{app_id}.svg
 %{_datadir}/mime/packages/%{app_id}.xml
+%{_unitdir}/tavletta-server.service
+%{_sysusersdir}/tavletta.conf
+%{_udevrulesdir}/70-tavletta.rules
+%dir %attr(0750,tavletta,tavletta) %{_sysconfdir}/tavletta
+%dir %attr(0750,tavletta,tavletta) %{_sharedstatedir}/tavletta
+%dir %attr(0750,tavletta,tavletta) %{_sharedstatedir}/tavletta/labels
 
 
 %changelog

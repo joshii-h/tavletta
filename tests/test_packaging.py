@@ -537,3 +537,57 @@ def test_the_manual_page_names_every_command_and_printer():
         assert re.search(rf"^\.B tavletta {roff}\b", page, re.M), name
     ids = ", ".join(b.id for b in backends())
     assert ids in " ".join(page.split()), ids
+
+
+def test_the_packages_install_the_print_server_disabled():
+    """tavletta-server.service in the Debian and RPM packages: the
+    package's /usr/bin/tavletta instead of a manual installation's, the user
+    tavletta and the folders site/docs/server-install.md names, installed
+    but not enabled; the udev rule for USB label printers."""
+    unit = (ROOT / "packaging" / "systemd" / "tavletta-server.service").read_text(encoding="utf-8")
+    execstart = re.findall(r"^ExecStart=(\S+) serve (.*)$", unit, re.M)
+    assert execstart and execstart[0][0] == "/opt/tavletta/bin/tavletta", execstart
+    for path in (
+        "/etc/tavletta/printers.toml",
+        "/etc/tavletta/tokens.toml",
+        "/var/lib/tavletta/labels",
+    ):
+        assert path in execstart[0][1], path
+    assert re.search(r"^User=tavletta$", unit, re.M)
+    rules = (ROOT / "packaging" / "debian" / "rules").read_text(encoding="utf-8")
+    spec = (ROOT / "packaging" / "rpm" / "tavletta.spec").read_text(encoding="utf-8")
+    for text, bindir in ((rules, "/usr/bin"), (spec, "%{_bindir}")):
+        assert f"s|^ExecStart=/opt/tavletta/bin/tavletta |ExecStart={bindir}/tavletta |" in text
+        assert f"grep -q '^ExecStart={bindir}/tavletta serve '" in text
+        for source in ("tavletta.sysusers.conf", "70-tavletta.rules"):
+            assert source in text, source
+    assert "dh_installsystemd --no-enable --no-start" in rules
+    assert "%systemd_post tavletta-server.service" in spec
+    sysusers = (ROOT / "packaging" / "systemd" / "tavletta.sysusers.conf").read_text(
+        encoding="utf-8"
+    )
+    assert re.search(r'^u tavletta - "[^"]+" /var/lib/tavletta$', sysusers, re.M)
+    tmpfiles = (ROOT / "packaging" / "systemd" / "tavletta.tmpfiles.conf").read_text(
+        encoding="utf-8"
+    )
+    folders = re.findall(r"^d (\S+) 0750 tavletta tavletta -$", tmpfiles, re.M)
+    assert folders == ["/etc/tavletta", "/var/lib/tavletta", "/var/lib/tavletta/labels"]
+    for folder in folders:  # the RPM owns them itself
+        rpm = folder.replace("/etc", "%{_sysconfdir}").replace("/var/lib", "%{_sharedstatedir}")
+        assert f"%dir %attr(0750,tavletta,tavletta) {rpm}\n" in spec, rpm
+    guide = (ROOT / "site" / "docs" / "server-install.md").read_text(encoding="utf-8")
+    for path in (
+        "/etc/tavletta/printers.toml",
+        "/etc/tavletta/tokens.toml",
+        "/var/lib/tavletta/labels/",
+    ):
+        assert f"`{path}`" in guide, path
+    udev = (ROOT / "packaging" / "udev" / "70-tavletta.rules").read_text(encoding="utf-8")
+    rules_lines = [line for line in udev.splitlines() if line and not line.startswith("#")]
+    assert all(line.endswith('TAG+="uaccess"') for line in rules_lines), rules_lines
+    assert 'SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*"' in udev
+    from tavletta.backends.niimbot import VENDOR_IDS
+
+    for vendor in VENDOR_IDS:  # the only serial devices
+        assert f'ATTRS{{idVendor}}=="{vendor:04x}"' in udev
+    assert sum('SUBSYSTEM=="tty"' in line for line in rules_lines) == len(VENDOR_IDS)

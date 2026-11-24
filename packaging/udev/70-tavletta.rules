@@ -1,0 +1,13 @@
+# Label printers on USB for the user at the computer (an active local
+# session, as for sound or a webcam), without joining the group lp or
+# dialout. Installed by the Debian and RPM packages; by hand: copy to
+# /etc/udev/rules.d/, then `sudo udevadm trigger` (or plug the printer in
+# again). Before 73-seat-late.rules, which turns the tag into access.
+
+# USB printers on the kernel's printer class driver (usblp): the device files
+# Tavletta prints through, /dev/usb/lp*; not the libusb devices CUPS uses
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", TAG+="uaccess"
+
+# NIIMBOT printers: a USB serial port (CDC ACM) of vendor 3513, no other
+# serial device (tavletta/backends/niimbot.py, VENDOR_IDS)
+SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", ATTRS{idVendor}=="3513", TAG+="uaccess"

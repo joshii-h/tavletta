@@ -10,6 +10,14 @@ Ways to install Tavletta 1.1:
 - **Print server as a container**: `docker pull ghcr.io/joshii-h/tavletta:1.1`
   (amd64 and arm64), see [server.md](server.md#container) and the
   [server installation guide](https://tavletta.joshuahirsig.xyz/server-install/).
+- **Debian 13 and Fedora 44 packages**: the `.deb` and `.rpm` files of the
+  [latest release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/latest),
+  with the Python packages Tavletta needs that the distribution does not
+  have; `sudo apt install ./*.deb` or `sudo dnf install ./*.rpm`. They
+  also bring the print server as the system service `tavletta-server`
+  (installed, not enabled; [server installation guide](https://tavletta.joshuahirsig.xyz/server-install/#package))
+  and a udev rule that lets the user at the computer use USB label
+  printers without the groups `lp` or `dialout`.
 - **pip** (the system packages below are needed too):
   `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.2"`
 - **install.sh**: per user, from a clone, as follows.

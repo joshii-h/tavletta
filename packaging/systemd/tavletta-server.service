@@ -1,11 +1,17 @@
 # Tavletta print server as a system service, for a server (site/docs/server-install.md).
 #
+# The Debian and RPM packages install it with ExecStart=/usr/bin/tavletta,
+# disabled, with the user tavletta and the folders below. By hand:
+#
 #   python3 -m venv --system-site-packages /opt/tavletta
 #   /opt/tavletta/bin/pip install <the Tavletta source or wheel>
 #   useradd --system --home-dir /var/lib/tavletta --create-home --shell /usr/sbin/nologin tavletta
 #   install -d -o tavletta -g tavletta -m 0750 /etc/tavletta /var/lib/tavletta/labels
-#   # printers.toml and tokens.toml into /etc/tavletta, owned by tavletta, mode 600
 #   cp packaging/systemd/tavletta-server.service /etc/systemd/system/
+#
+# Then, either way:
+#
+#   # printers.toml and tokens.toml into /etc/tavletta, owned by tavletta, mode 600
 #   systemctl daemon-reload && systemctl enable --now tavletta-server
 #   journalctl -u tavletta-server -f
 #
