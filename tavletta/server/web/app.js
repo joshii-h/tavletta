@@ -5,10 +5,10 @@
 // not do.
 
 import { api, labelPath, token, whenUnauthorized } from "./api.js";
-import { batchView } from "./batch.js";
+import { batchView, forgetBatches } from "./batch.js";
 import { h, icon } from "./dom.js";
 import { chooseLanguage, lang, languageName, languages, loadMessages, mm, num, t } from "./i18n.js";
-import { printView } from "./print.js";
+import { forgetDrafts, printView } from "./print.js";
 import {
   confirm,
   describe,
@@ -84,9 +84,12 @@ function header() {
   skip.textContent = t("Skip to content");
 }
 
+// signing out forgets the token and everything entered or shown
 function signOut() {
   token.clear();
   session.clear();
+  forgetDrafts();
+  forgetBatches();
   current.dispose();
   main().replaceChildren();
   location.hash = "#/";
@@ -115,7 +118,12 @@ async function render() {
     return;
   }
   const [, view, ...rest] = location.hash.split("/");
-  const argument = rest.map(decodeURIComponent).join("/");
+  let argument = "";
+  try {
+    argument = rest.map(decodeURIComponent).join("/");
+  } catch {
+    // a broken %-escape in the address: as if none were given
+  }
   const views = {
     templates: templatesView,
     printers: printersView,
@@ -409,7 +417,7 @@ function uploadForm(loaded) {
       loaded();
     } catch (error) {
       const text = error.code === "label_exists"
-        ? t("A template of this name exists. Choose \"Replace\" to replace it.")
+        ? t("A template of this name exists. Choose \"Replace a template of the same name\" to replace it.")
         : error.code === "invalid_field"
           ? t("The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.")
           : errorText(error);
@@ -478,7 +486,7 @@ async function start() {
   } catch (error) {
     if (error.status !== 401) {
       header();
-      mount(t("Tavletta"), errorBanner(error, () => location.reload()));
+      mount("Tavletta", errorBanner(error, () => location.reload()));
       return;
     }
     if (location.hash.length > 2) afterSignIn = location.hash;

@@ -225,7 +225,9 @@ export function confirm({ title, lines, action, danger = false }) {
       h("div", { class: "actions" }, cancel, ok),
     );
     dialog.setAttribute("aria-labelledby", titleId);
+    const listening = new AbortController(); // Esc of this dialog only
     const close = (result) => {
+      listening.abort();
       dialog.close();
       dialog.replaceChildren();
       opener?.focus?.();
@@ -236,7 +238,7 @@ export function confirm({ title, lines, action, danger = false }) {
     dialog.addEventListener("cancel", (event) => {
       event.preventDefault();
       close(false);
-    }, { once: true });
+    }, { signal: listening.signal });
     dialog.showModal();
     cancel.focus();
   });

@@ -1,7 +1,8 @@
 // The page's texts from the app's gettext catalogs (/ui/messages.json):
-// t("English text {name}", {name}) gives the translation with the values
-// filled in. Only t("…") with a plain string is found by xgettext and the
-// server (tests/test_server_webui.py checks it).
+// the function t takes an English text and its values, {name} in the text,
+// and gives the translation with the values filled in. Only a plain string
+// as its first argument is found by xgettext and the server
+// (tests/test_server_webui.py checks it).
 
 let messages = {};
 export let lang = "en";

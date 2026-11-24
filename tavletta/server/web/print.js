@@ -22,6 +22,14 @@ import {
   warningsBox,
 } from "./ui.js";
 
+// what was entered for each template, kept while the tab is open: also
+// after signing in again (a token expired) or going elsewhere and back
+const drafts = new Map();
+
+export function forgetDrafts() {
+  drafts.clear();
+}
+
 export function title(name) {
   return name.replace(/\.tavletta$/, "");
 }
@@ -108,13 +116,17 @@ export async function printView(name, ctx) {
   done();
   if (!ctx.live()) return;
 
+  if (!drafts.has(name)) drafts.set(name, {});
+  const draft = drafts.get(name);
   const pane = previewPane(label, t("Preview"));
   ctx.onDispose(() => pane.dispose());
   const refresh = debounce(() => showPreview(), 400);
   const picker = printerPicker(printers, label, refresh);
   const summary = summaryBox();
   const inputs = labelFields(label).map((spec) => {
-    const input = h("input", { type: "text", value: spec.value, autocomplete: "off" });
+    const key = `${spec.kind}:${spec.name}`;
+    const input = h("input", { type: "text", value: draft[key] ?? spec.value, autocomplete: "off" });
+    input.addEventListener("input", () => (draft[key] = input.value));
     const one = field({ label: spec.name, hint: spec.hint, input, optional: spec.optional });
     const indexes = elementsOf(label, spec.kind, spec.name);
     const light = () => pane.highlight(indexes);
@@ -128,11 +140,13 @@ export async function printView(name, ctx) {
   });
   let counter = null;
   if (label.counter.used) {
-    const input = h("input", { type: "text", inputmode: "numeric", value: String(label.counter.next), autocomplete: "off" });
+    const input = h("input", { type: "text", inputmode: "numeric", value: draft.counter ?? String(label.counter.next), autocomplete: "off" });
+    input.addEventListener("input", () => (draft.counter = input.value));
     counter = field({ label: t("Start number"), hint: t("The counter {placeholder} starts here; next number saved in the template: {next}", { placeholder: "{=counter}", next: num(label.counter.next) }), input });
     input.addEventListener("input", refresh);
   }
-  const copiesInput = h("input", { type: "text", inputmode: "numeric", value: "1", autocomplete: "off" });
+  const copiesInput = h("input", { type: "text", inputmode: "numeric", value: draft.copies ?? "1", autocomplete: "off" });
+  copiesInput.addEventListener("input", () => (draft.copies = copiesInput.value));
   const copies = field({ label: t("Copies"), hint: t("At most {max}", { max: num(picker.maxCopies()) }), input: copiesInput });
   const printButton = h("button", { type: "submit", class: "primary" }, t("Print"));
   const reason = h("p", { class: "hint", id: "print-reason" });

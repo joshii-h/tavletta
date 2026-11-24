@@ -39,6 +39,10 @@ import {
 } from "./ui.js";
 
 const batches = new Map(); // label name -> what was entered, for this tab
+
+export function forgetBatches() {
+  batches.clear();
+}
 const PAGE = 50; // rows of the table at once
 const SAMPLE = 5; // rows shown after reading
 
@@ -281,7 +285,7 @@ export async function batchView(name, ctx) {
       one = field({ label: t("Data file"), hint: t("At most {size} MB. Every cell is read as the text it shows: leading zeros stay.", { size: num(Math.floor((session.me.limits.max_body * 3) / 4 / 1048576)) }), input });
       header.checked = st.header;
       form.append(one.node, h("div", { class: "check" }, header, h("label", { for: header.id }, t("The first row holds the column names"))));
-      if (st.file) form.append(h("p", { class: "hint" }, t("Read before: {name}", { name: st.file.name })));
+      if (st.file) form.append(h("p", { class: "hint" }, t("Last file read: {name}", { name: st.file.name })));
     } else if (st.source === "paste") {
       input = h("textarea", { rows: 8, spellcheck: "false" });
       input.value = st.pasted;

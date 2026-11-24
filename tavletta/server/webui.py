@@ -65,19 +65,22 @@ def _etag(data: bytes) -> str:
     return '"%s"' % hashlib.sha256(data).hexdigest()[:32]
 
 
-@cache
 def asset(name: str) -> Asset | None:
     """A file of the page by its name in web/ ("app.js"); None for anything
-    else. Only the files there, by a name without a folder: nothing a
-    request names can lead elsewhere."""
-    if "/" in name or "\\" in name or name.startswith("."):
-        return None
-    kind = TYPES.get(Path(name).suffix)
-    path = WEB_DIR / name
-    if kind is None or not path.is_file():
-        return None
-    data = path.read_bytes()
-    return Asset(data, kind, _etag(data))
+    else. Only the files there, looked up by name in a table made once:
+    nothing a request names can lead elsewhere, or grow a cache."""
+    return _assets().get(name)
+
+
+@cache
+def _assets() -> dict[str, Asset]:
+    found = {}
+    for path in sorted(WEB_DIR.iterdir()):
+        kind = TYPES.get(path.suffix)
+        if kind and path.is_file() and not path.name.startswith("."):
+            data = path.read_bytes()
+            found[path.name] = Asset(data, kind, _etag(data))
+    return found
 
 
 @cache

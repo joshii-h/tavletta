@@ -132,6 +132,9 @@ MAX_LINES = 100
 MAX_PIXELS = 40_000_000
 # an upload or delete waits this long for a print of the label to end
 LABEL_FREE_SECONDS = 5.0
+# cells of a data file read for the web page (POST /data): its rows come
+# back as JSON and go out again as data_rows, which --max-body limits
+MAX_DATA_CELLS = 500_000
 
 
 @dataclass
@@ -820,6 +823,9 @@ class Service:
                 table = book.table if request.header else without_header(book.table)
         except MergeError as e:
             raise ApiError(422, "data_problem", data_error_text(e, name)) from None
+        # the rows go back as JSON: no more than a print request could send
+        if len(table.rows) * max(1, len(table.columns)) > MAX_DATA_CELLS:
+            raise ApiError(413, "too_large", _("Too many cells: at most %d") % MAX_DATA_CELLS)
         return {
             "kind": book.kind,
             "delimiter": table.delimiter or None,

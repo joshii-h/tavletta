@@ -419,3 +419,10 @@ def test_geometry_is_none_when_the_render_has_no_boxes():
 
     label = Label(printer="fake-mono", tape_mm=12, elements=[TextElement(text="x")])
     assert service_module._geometry(label, Rendered(), 300, None) is None
+
+
+def test_data_answers_no_more_cells_than_a_print_could_send(base, monkeypatch):
+    monkeypatch.setattr(service_module, "MAX_DATA_CELLS", 3)
+    status, _response, body = data(base, b"A;B\n1;2\n3;4\n")
+    assert status == 413 and body["error"]["code"] == "too_large"
+    assert data(base, b"A\n1\n2\n3\n")[0] == 200
