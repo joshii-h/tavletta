@@ -1394,8 +1394,11 @@ class Service:
     def _print_one(self, job: PrintJob, prepared: Prepared, values: Values, save: bool):
         print_job = prepared.job(values)
 
-        def progress(_event) -> None:
-            job.printed = print_job.printed
+        def progress(event) -> None:
+            # the copy printing: those before it are out (on sheets it
+            # counts sheets, printed counts once a sheet is done)
+            done = event.copy - 1 if print_job.sheet is None else 0
+            job.printed = max(job.printed, print_job.printed, done)
 
         printed = False
         try:
@@ -1423,8 +1426,10 @@ class Service:
             prepared.sheet,
         )
 
-        def progress(_event: SeriesProgress) -> None:
-            job.printed = outcome.labels
+        def progress(event: SeriesProgress) -> None:
+            # label by label, also within a row's copies and a job of
+            # several labels (a cab printer's job of up to labels_per_job)
+            job.printed = max(job.printed, outcome.labels, event.printed)
             job.rows_printed = len(outcome.printed)
 
         printed = False

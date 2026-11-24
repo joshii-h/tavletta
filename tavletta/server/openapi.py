@@ -677,7 +677,8 @@ SCHEMAS: dict[str, Any] = {
             },
             "printed": {
                 "type": "integer",
-                "description": "Labels printed so far, for certain.",
+                "description": "Labels printed so far, for certain; rises label by label "
+                "while the job prints, as far as the printer tells.",
             },
             "printed_max": {
                 "type": ["integer", "null"],

@@ -17,7 +17,7 @@ import pytest
 from PIL import Image
 
 from tavletta import cli
-from tavletta.backends.base import PaperJam, PrinterInfo, PrinterNotFound
+from tavletta.backends.base import PaperJam, PrinterInfo, PrinterNotFound, Progress
 from tavletta.model import CodeElement, Label, TextElement
 from tavletta.server import http as server_http
 from tavletta.server import jobs as jobs_module
@@ -954,6 +954,38 @@ def test_serial_rows_that_cannot_print_are_refused(api, server_env):
     status, _r, answer = call(api.base, "POST", "/api/v1/print", body=body)
     assert status == 422 and answer["error"]["code"] == "label_unprintable"
     assert "2" in answer["error"]["message"]
+
+
+@pytest.mark.parametrize("rows", [None, [{"Name": "a"}, {"Name": "b"}]])
+def test_printed_rises_label_by_label_while_a_job_prints(api, server_env, monkeypatch, rows):
+    """A job of copies (or a row's copies, a cab printer's job of a
+    series' labels) tells its labels printed while it prints, not only
+    when it is done."""
+    import threading
+
+    label_file(server_env.labels, "named.tavletta", TextElement(text="{Name}"))
+    reached, go_on = threading.Event(), threading.Event()
+
+    def print_label(image, host, options, progress=None):
+        for copy in range(1, options.copies + 1):
+            progress(Progress(copy, options.copies))
+            if copy == 3 and not reached.is_set():
+                reached.set()
+                go_on.wait(10)
+
+    monkeypatch.setattr(server_env.printer, "print_label", print_label)
+    body = {"label": "named", "copies": 4}
+    if rows:
+        body["data_rows"] = rows
+    _status, _r, job = call(api.base, "POST", "/api/v1/print", body=body)
+    assert reached.wait(10)
+    _status, _r, running = call(api.base, "GET", "/api/v1/jobs/" + job["id"])
+    go_on.set()
+    assert running["state"] == "printing" and running["printed"] == 2
+    url = "/api/v1/jobs/" + job["id"]
+    wait_for(lambda: call(api.base, "GET", url)[2]["state"] == "done")
+    done = call(api.base, "GET", url)[2]
+    assert done["printed"] == done["total"] == 4 * len(rows or [1])
 
 
 def test_serial_printer_failure_of_unknown_outcome(api, server_env, monkeypatch):

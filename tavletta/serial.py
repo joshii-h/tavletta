@@ -144,6 +144,9 @@ class SeriesProgress:
     labels: int  # labels (rows) in the series
     row: int  # the row being printed, counted from 1
     event: Progress
+    # labels of the series printed so far, as far as the backend told:
+    # rises within a row's copies and within a job of several labels
+    printed: int = 0
 
 
 @dataclass
@@ -312,7 +315,8 @@ def print_series(
 
         def report(event: Progress, position=position, row=row) -> None:
             if progress:
-                progress(SeriesProgress(position, total, row, event))
+                done = outcome.labels + max(0, event.copy - 1)
+                progress(SeriesProgress(position, total, row, event, done))
 
         # the counter goes on from the labels before; UUID and ID are new
         start = replace(values, counter=values.counter + values.step * outcome.labels)
@@ -355,7 +359,8 @@ def _print_in_batches(
         def report(event: Progress, start=start, sent=sent) -> None:
             if progress:
                 n = min(len(sent), (event.copy - 1) // copies + 1)
-                progress(SeriesProgress(start + n, total, sent[n - 1] + 1, event))
+                done = outcome.labels + max(0, event.copy - 1)
+                progress(SeriesProgress(start + n, total, sent[n - 1] + 1, event, done))
 
         try:
             if images:
@@ -511,7 +516,8 @@ def _print_on_sheets(
         if progress:
             page = min(max(0, event.copy - 1), len(slots) - 1)
             row = rows[min(starts[page] // copies, len(rows) - 1)]
-            progress(SeriesProgress(event.copy, event.copies, row, event))
+            done = outcome.labels + starts[page]  # the labels on the sheets before
+            progress(SeriesProgress(event.copy, event.copies, row, event, done))
 
     def count(done: int) -> None:
         outcome.labels += done

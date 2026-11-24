@@ -1861,3 +1861,14 @@ def test_a_series_job_counted_in_full_need_not_wait_for_the_interpreter(printer,
     backend.print_batch([image] * 3, "h", PrintOptions())
     assert ("h" in backend._ended) == (counter is not None)
     assert printer.device.printed() == 3
+
+
+def test_a_series_job_tells_its_labels_printed_while_it_prints(printer):
+    """SeriesProgress.printed rises label by label within a job of
+    several labels (the server's job tells it), not only per job."""
+    from tavletta.serial import print_series
+
+    events = []
+    print_series(Cab(), "h", _series(12, labels_per_job=5), events.append)
+    printed = [e.printed for e in events]
+    assert printed == sorted(printed) and set(printed) >= {1, 2, 3, 4, 6, 7, 11}
