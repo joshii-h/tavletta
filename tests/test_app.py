@@ -1952,6 +1952,26 @@ def _selected(row):
     return _items(row)[row.get_selected()]
 
 
+def test_the_print_checks_codes_at_the_resolution_this_printer_reported(
+    cab_window, cab_env, monkeypatch
+):
+    """The code check of the print dialog renders for the printer at its
+    address (a /200 reported 8 dots per mm), not for the default."""
+    win = cab_window
+    monkeypatch.setattr(cab_env.backend, "reported", {win.printer.host: 8.0})
+    checked = []
+    real = win.render_for
+    monkeypatch.setattr(
+        win, "render_for", lambda options: checked.append(options) or real(options)
+    )
+    win.print_flow.on_print()
+    respond(win.last_dialog, "print")
+    assert printed(win)
+    (options,) = checked
+    assert options.host == win.printer.host
+    assert cab_env.backend.raster(25, options).dpi == pytest.approx(8.0 * 25.4)
+
+
 def test_cab_printer(cab_window, cab_env):
     win = cab_window
     assert win.label.printer == "cab" and win.dirty

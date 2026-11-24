@@ -433,6 +433,9 @@ class PrintFlow:
             window.printer.info,
             choices["copies"],
             window.label.gap_mm,
+            # the code check renders for this printer (what it reported,
+            # by its address), as the preview does (window.render_options)
+            host=window.printer.host or "",
             **{key: choices[key] for key in chosen if key in choices},
         )
         job = self.sheet_job(choices)
