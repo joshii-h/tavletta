@@ -88,7 +88,9 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
   on the EOS2/300; Tavletta renders at exactly 12 dots per mm (8 for /200,
   23.6 for /600 models), so a 100 mm label is 1200 dots. Each print asks
   `qv` first and scales the image if it was rendered for another
-  resolution. [confirmed for the /300]
+  resolution. [confirmed for the /300] Before `qv` it asks `ESC s`: a
+  printer with a problem may not answer text commands, its status tells
+  the problem (out of labels, head open) instead of a timeout. [assumed]
 
 ## A print job
 

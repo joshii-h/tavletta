@@ -430,17 +430,20 @@ def test_print_waits_for_a_running_job(backend, printer):
     backend.print_label(Image.new("RGB", (600, 300), "white"), "h", PrintOptions())
     assert printer.device.printed() == 1
     sent = printer.device.requests.index(printer.device.jobs[0])
-    assert printer.device.requests[:sent] == [b"qv\r\n"] + [b"\x1bs"] * 4
+    # the status before qv (another job: no problem), then waiting for it
+    assert printer.device.requests[:sent] == [b"\x1bs", b"qv\r\n"] + [b"\x1bs"] * 3
 
 
 def test_print_waits_while_the_interpreter_is_still_active(backend, printer, monkeypatch):
     """After a text command (qv) the printer reports "interpreter active" with
     no labels pending for about a second (EOS2/300, firmware 5.47.7)."""
-    states = iter([b"Y-000000Y", b"Y-000000Y", b"Y-000000N", b"Y-000001Y", b"Y-000000N"])
+    states = iter(
+        [b"Y-000000N", b"Y-000000Y", b"Y-000000Y", b"Y-000000N", b"Y-000001Y", b"Y-000000N"]
+    )
     monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
     backend.print_label(Image.new("RGB", (600, 300), "white"), "h", PrintOptions())
     sent = printer.device.requests.index(printer.device.jobs[0])
-    assert sent == 4  # after qv and three status requests
+    assert sent == 5  # after the status, qv and three status requests
 
 
 def test_print_gives_up_on_a_printer_that_stays_busy(backend, printer):
@@ -469,7 +472,7 @@ def test_print_stuck_job_times_out(backend, printer, monkeypatch):
 
 
 def test_print_error_while_printing(backend, printer, monkeypatch):
-    states = iter([b"Y-000000N", b"Y-000002Y", b"YP000001N"])
+    states = iter([b"Y-000000N", b"Y-000000N", b"Y-000002Y", b"YP000001N"])
     monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
     with pytest.raises(OutOfLabels):
         backend.print_label(Image.new("RGB", (600, 300), "white"), "h", PrintOptions(copies=2))
@@ -480,8 +483,8 @@ def test_print_job_not_done_while_the_image_is_read(backend, printer, monkeypatc
     """Interpreter active, nothing pending, idle once: the job has not run
     yet; it is done only after its labels were counted down."""
     states = iter(
-        [b"Y-000000N", b"Y-000000Y", b"Y-000000N", b"Y-000000Y", b"Y-000002Y", b"Y-000001Y"]
-        + [b"Y-000000N"]
+        [b"Y-000000N", b"Y-000000N", b"Y-000000Y", b"Y-000000N", b"Y-000000Y", b"Y-000002Y"]
+        + [b"Y-000001Y", b"Y-000000N"]
     )
     monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
     events = []
@@ -493,7 +496,7 @@ def test_print_job_not_done_while_the_image_is_read(backend, printer, monkeypatc
 
 
 def test_print_cancel_survives_a_closed_connection(backend, printer, monkeypatch):
-    states = iter([b"Y-000000N", b"YP000001N"])
+    states = iter([b"Y-000000N", b"Y-000000N", b"YP000001N"])
     monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
     real = FakeSocket.sendall
 
@@ -587,11 +590,21 @@ def test_query_keeps_the_status_if_text_commands_time_out(backend, printer, monk
     assert backend.dots_per_mm == 12.0
 
 
-def test_print_refused_while_head_is_open(backend, printer):
-    printer.device.error = "D"
-    with pytest.raises(HeadOpen):
+@pytest.mark.parametrize(("error", "cls"), [("D", HeadOpen), ("P", OutOfLabels)])
+def test_print_refused_with_the_problem_the_status_tells(
+    backend, printer, monkeypatch, error, cls
+):
+    """A printer with a problem may not answer qv: the status is asked
+    first, so the problem is told, not a timeout after 10 s."""
+
+    def version(self):
+        raise PrinterTimeout("timed out")
+
+    monkeypatch.setattr(cab._Session, "version", version)
+    printer.device.error = error
+    with pytest.raises(cls):
         backend.print_label(Image.new("RGB", (600, 300), "white"), "h", PrintOptions())
-    assert printer.device.jobs == []
+    assert printer.device.jobs == [] and printer.device.requests == [b"\x1bs"]
 
 
 def test_print_refuses_labels_wider_than_the_head(backend, printer):
@@ -888,7 +901,7 @@ def test_print_as_set_on_the_printer_asks_no_web_interface(backend, printer):
 def test_ribbon_errors_while_printing(backend, printer, monkeypatch, error, cls, code):
     """Thermal transfer without a ribbon, or thermal direct with one: the
     printer stops, the job is cancelled, the error names the problem."""
-    states = iter([b"Y-000000N", b"Y%s000001N" % error.encode()])
+    states = iter([b"Y-000000N", b"Y-000000N", b"Y%s000001N" % error.encode()])
     monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
     options = PrintOptions(settings={"method": "transfer"})
     with pytest.raises(cls) as raised:

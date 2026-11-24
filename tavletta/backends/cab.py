@@ -568,6 +568,10 @@ class Cab(Backend):
         speed = (web_setup(host).speed if method in METHOD_CODES else None) or DEFAULT_SPEED
         with session(host, self.port, usb.PRINT_WAIT) as s:
             report_progress(progress, 1, copies)
+            # a printer with a problem may not answer text commands (see
+            # query()): its status first, so that it tells the problem
+            # (out of labels, head open) instead of timing out on qv
+            _checked(s)
             # the printer may not have been asked yet (switched on later)
             version = s.version()
             dots = version.dots_per_mm if version.model else rendered
