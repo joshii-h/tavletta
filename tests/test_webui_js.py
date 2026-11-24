@@ -1,4 +1,5 @@
-"""The web page's JavaScript logic (number ranges, row lists) with Node's
+"""The web page's JavaScript logic (number ranges, row lists, sample values,
+the assignment of columns, times and locales) with Node's
 own test runner (tests/js/*.test.mjs): no package, no build step. Without
 Node the tests are skipped, except in the CI (it installs nodejs)."""
 

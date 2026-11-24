@@ -524,6 +524,11 @@ legend {
   border-radius: 8px;
 }
 
+.card-note {
+  margin: var(--sp-2) 0 0;
+  font-size: 0.875rem;
+}
+
 .thumb img {
   max-width: 100%;
   max-height: 10rem;

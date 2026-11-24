@@ -883,6 +883,7 @@ class Service:
             "columns": used_columns(label),
             "data_file": self.labels.name_of(data_file) if own_data else None,
             "data_file_unusable": bool(data_file) and not own_data,
+            "data_file_missing": own_data and not Path(data_file).is_file(),
             "data_sheet": label.data_sheet or None,
             "counter": {
                 "used": uses_counter(label),

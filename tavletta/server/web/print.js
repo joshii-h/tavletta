@@ -4,11 +4,11 @@
 import { api, labelPath } from "./api.js";
 import { debounce, h } from "./dom.js";
 import { num, t } from "./i18n.js";
+import { elementsOf } from "./samples.js";
 import {
   CONFIRM_FROM,
   confirm,
   describe,
-  elementsOf,
   errorBanner,
   errorSummary,
   errorText,
