@@ -79,7 +79,7 @@ from tavletta.ui.texts import (
     series_stop_text,
     warning_text,
 )
-from tavletta.units import unit_for
+from tavletta.units import Unit, unit_for
 from tavletta.variables import BUILTIN, Values, label_names
 
 COMMANDS = ("print", "list-printers", "serve", "mcp", "token", "--version", "--help", "-h")
@@ -586,15 +586,16 @@ REFUSED = frozenset(
 )
 
 
-def _check(job: Job) -> None:
-    """Refuse what would print wrongly; other problems become warnings."""
+def _check(job: Job, unit: Unit) -> None:
+    """Refuse what would print wrongly; other problems become warnings.
+    Sizes in a message are in `unit`, the one chosen in the app."""
     label = job.label
     if not label.elements and not label.background_image:
         raise CliError(_("The label is empty"), EXIT_LABEL)
     try:
         warnings = job.check()
     except PrinterError as e:  # a page too large for the printer's resolution
-        raise CliError(printer_error_text(e, unit_for("mm")), EXIT_LABEL) from None
+        raise CliError(printer_error_text(e, unit), EXIT_LABEL) from None
     for warning in warnings:
         if warning.key in REFUSED:
             raise CliError(warning_text(warning), EXIT_LABEL)
@@ -975,10 +976,10 @@ def _flagged(args, options: PrintOptions) -> PrintOptions:
     return replace(options, settings={**options.settings, "method": args.print_method})
 
 
-def _checked(job: Job, series: Series | None) -> None:
+def _checked(job: Job, series: Series | None, unit: Unit) -> None:
     """The job's problems, after the printer was asked: the warnings are
     those of the render for that printer (its resolution, tape)."""
-    _check(job)
+    _check(job, unit)
     if series:
         _check_rows(series)
 
@@ -1090,8 +1091,8 @@ def print_command(args, settings: Settings | None = None, now: datetime | None =
         # waits for it only briefly (DRY_RUN_WAIT): it prints nothing
         host = args.host or printer.host or ""
         series = _for_the_printer(args, job, series, host, settings, DRY_RUN_WAIT, 0.0)
-        _checked(job, series)
         unit = unit_for(settings.units)
+        _checked(job, series, unit)
         if series:
             return _dry_run_series(series, args.output, unit)
         return _dry_run(job, args.output, unit)
@@ -1110,7 +1111,7 @@ def print_command(args, settings: Settings | None = None, now: datetime | None =
 def _print(args, job: Job, series: Series | None, host: str, settings: Settings) -> int:
     unit = unit_for(settings.units)
     series = _for_the_printer(args, job, series, host, settings)
-    _checked(job, series)
+    _checked(job, series, unit)
     return _send_series(args, series, host, unit) if series else _send(args, job, host, unit)
 
 

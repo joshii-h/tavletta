@@ -1086,7 +1086,9 @@ def test_the_check_runs_for_the_printer_that_answered(mono, label_file, monkeypa
     monkeypatch.setattr(mono, "query_before_render", True, raising=False)
     checked = []
     real = cli._check
-    monkeypatch.setattr(cli, "_check", lambda job: checked.append(job.options.info) or real(job))
+    monkeypatch.setattr(
+        cli, "_check", lambda job, unit: checked.append(job.options.info) or real(job, unit)
+    )
     assert run("print", path, "--host", "h") == 0
     assert checked == [mono.info]
     assert run("print", path, "--host", "h", "--dry-run") == 0
@@ -1146,12 +1148,36 @@ def test_the_command_line_prints_with_the_extras_last_chosen(tmp_path, monkeypat
     assert (plain.chain, plain.high_res, plain.feed_mm) == (False, False, None)
 
 
+def test_a_size_in_a_refusal_is_in_the_unit_chosen_in_the_app(
+    mono, label_file, tmp_path, monkeypatch, capsys
+):
+    """The check's printer errors name sizes as the app shows them, not
+    always in millimetres."""
+    import json
+
+    from tavletta.backends.base import LabelTooWide
+
+    def too_wide(*args, **kwargs):
+        raise LabelTooWide("wide", max_mm=50.8)
+
+    monkeypatch.setattr(mono, "render_label", too_wide)
+    path = label_file(TextElement(text="x"))
+    settings = tmp_path / "config" / "settings.json"
+    settings.parent.mkdir(parents=True, exist_ok=True)
+    for units, shown in (("in", "2.00 in"), ("mm", "50.8 mm")):
+        settings.write_text(json.dumps({"units": units}))
+        assert run("print", path, "--dry-run") == cli.EXIT_LABEL
+        assert shown in err(capsys)
+
+
 def test_a_dry_run_asks_the_printer_too(mono, label_file, monkeypatch, capsys):
     path = label_file(TextElement(text="x"))
     monkeypatch.setattr(mono, "query_before_render", True, raising=False)
     checked = []
     real = cli._check
-    monkeypatch.setattr(cli, "_check", lambda job: checked.append(job.options.info) or real(job))
+    monkeypatch.setattr(
+        cli, "_check", lambda job, unit: checked.append(job.options.info) or real(job, unit)
+    )
     assert run("print", path, "--dry-run", "--host", "h") == 0
     assert checked == [mono.info]  # asked (through a copy of the backend)
     assert run("print", path, "--dry-run", "--host", "h", "--no-query") == 0
