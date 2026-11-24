@@ -73,7 +73,7 @@ tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
 | `--token-file` | one access token for everything (role admin); else the variable `TAVLETTA_TOKEN`; at least 16 characters |
 | `--labels-dir` | the only folder label and data files are read from; `~/.local/share/tavletta/labels` by default (made if missing) |
 | `--mcp` | MCP (Streamable HTTP) at `/mcp` as well |
-| `--oidc` | `oidc.toml`: people sign in to the web page with an OpenID Connect provider ([below](#signing-in-with-openid-connect-oidctoml)); tokens keep working for programs. Not with `--no-web-ui`; needs PyJWT with cryptography |
+| `--oidc` | `oidc.toml`: people sign in to the web page with an OpenID Connect provider ([below](#signing-in-with-openid-connect-oidctoml)); tokens keep working for programs. Not with `--no-web-ui`; needs PyJWT with cryptography (not in the Flatpak); with `--trusted-proxy` it needs `public_url` |
 | `--no-web-ui` | no web page at `/` (and `/ui/`): those paths answer 404, as before there was one; for servers that only serve programs |
 | `--allow-origin` | web origin whose pages may call the server (`https://app.example`): CORS preflights are answered and the answers carry `Access-Control-Allow-Origin`; repeatable |
 | `--allow-printer` | without a printer list: only these printers, compared with the host of the address (never the whole address). A pattern of only digits, dots and `*` is an address pattern: four IPv4 parts, `*` standing for whole parts (`192.168.1.*`, `10.*`, `*.5`, `*.*`); a network as Python's ipaddress reads it (`192.168.1.0/24`, `2001:db8::/32`) is one too. Address patterns match IP addresses only, a host name if every address it resolves to matches one of them (so `192.168.1.evil.example` is not in `192.168.1.*`, and `*.*` matches `printer.local` only by the addresses it resolves to, not by its name). Any other pattern is a name pattern (`*.local`, `cups.example.com`) and matches host names. The server then prints on the first address the resolver gives (only that one; there is no trying the others), not on the name (a name looked up again could point elsewhere; an `ipps` printer must then accept its IP address). `*` alone allows everything without a lookup. A pattern that can never match is refused at startup: a network that is none (`10.0.0.0/33`), an address pattern with a part over 255 or a leading zero (`010.1.1.1`), a `*` within a part (`10*`), more than four parts, or fewer than four without a `*` (`1.2.3`, `10`); repeatable |
@@ -263,7 +263,7 @@ admin = ["tavletta-admin"]
 | `issuer` | the provider's issuer, exactly as its `/.well-known/openid-configuration` names it; `https://` (`http://` only for an address of this computer, for testing) |
 | `client_id`, `client_secret_file` | the client registered at the provider (confidential); the file holds the secret only (read at startup, a file others can read is warned about) |
 | `token_auth` | how the secret is sent to the token endpoint: `client_secret_basic` (default) or `client_secret_post`. `private_key_jwt` is not supported |
-| `public_url` | the page's origin as the browser sees it (`https://host[:port]`, no path). Recommended behind every reverse proxy; without it the origin comes from `Host`, or from `X-Forwarded-Proto` and `X-Forwarded-Host` of a `--trusted-proxy` |
+| `public_url` | the page's origin as the browser sees it (`https://host[:port]`, no path). Required with `--trusted-proxy` (the server does not start without it), recommended behind every reverse proxy; without it the origin comes from `Host`, or from the last value of `X-Forwarded-Proto` and `X-Forwarded-Host` of a `--trusted-proxy` (the one it appended), lower case and without the scheme's own port (`:443`) |
 | `provider_name` | the button's text: "Sign in with …" (default `OpenID Connect`) |
 | `scopes` | `["openid", "profile", "email"]` by default; must contain `openid` |
 | `roles_claim` | required: the claim with the role or group names, a path through nested objects: `realm_access.roles`, `resource_access.tavletta.roles`, `groups`, `roles`. For a name with a dot: a list (`["resource_access", "my.client", "roles"]`). The claim is a text, a list of texts, or an object whose keys are the names |
@@ -282,9 +282,15 @@ type, a printer that is not in `printers.toml` stops the server with the
 file and key. Changes need a restart (sessions are in memory and end
 with it). PyJWT with cryptography must be installed (`pip install
 tavletta[oidc]`; Debian and Fedora: `python3-jwt`, `python3-cryptography`;
-the container image and the server packages have them; the Flatpak does
-not). A server with `--oidc` may listen beyond loopback without a token:
-every request then needs a session or a token.
+the container image and the server packages have them). The Flatpak has
+not, and nothing can be installed into it: for `--oidc` run the server
+from the deb or rpm package, the container image or pip; `tavletta serve
+--oidc` in the Flatpak says so. A server with `--oidc` may listen beyond
+loopback without a token: every request then needs a session or a
+token. Behind a reverse proxy give it with `--trusted-proxy` (and
+`public_url`): without, every sign in comes from the proxy's address and
+shares its limits, which the server warns about at startup when it
+listens beyond loopback.
 
 **How it works.** The page shows "Sign in with <provider_name>"; that is
 `GET /oidc/login?return=#/…`, which redirects to the provider with the
@@ -318,11 +324,18 @@ first (once). The provider redirects back to `/oidc/callback`, which
 The provider's settings (discovery) and keys are fetched when first
 needed (and at startup, in the background: a provider that is away does
 not stop the server) and kept for an hour; a key id not seen before
-fetches the keys again, at most every 30 s (keys rotate). Failed sign
-ins (not cancellations) count like wrong tokens: ten in a minute from one
-address are 429 for a minute. With `--oidc`, a request with neither a
-token nor a session (the page loading while signed out) is 401 but not
-counted, so people behind one address do not block each other.
+fetches the keys again, at most every 30 s (keys rotate). An address
+may start 30 sign ins a minute (`/oidc/login`; a callback for no sign in
+under way counts as one), else 429 for a minute; this is counted apart
+from wrong tokens, and a sign in the provider fails (away, an answer that
+does not check out) is not counted at all, so people behind one address
+do not lock each other out while it is away. At most 100 sign ins of one
+address are under way at once (10 minutes each); more are refused
+(429), none of another browser is dropped for them, and a browser that
+starts again replaces its own sign in under way. With `--oidc`, a
+request with neither a token nor a session (the page loading while
+signed out) is 401 but not counted, so people behind one address do not
+block each other.
 
 **The session.** The cookie `__Host-tavletta-session` is `Secure`,
 `HttpOnly`, `SameSite=Lax`, `Path=/`, no `Domain` (the `__Host-` prefix

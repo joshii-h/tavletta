@@ -35,6 +35,7 @@ from tavletta.server.oidc import (
     Provider,
     caller_for,
     local_url,
+    origin_of,
     user_name,
 )
 from tavletta.server.sessions import Logins, Session, Sessions
@@ -57,7 +58,10 @@ class Answer:
     headers: dict[str, str] = field(default_factory=dict)
     cookies: list[str] = field(default_factory=list)
     body: object | None = None
-    failed: bool = False  # a sign in that failed: counted like a wrong token
+    # a callback for no sign in under way (forged, replayed, too late):
+    # counted for the address (http.py). Not a provider's failure: people
+    # behind one address would block each other while it is away
+    failed: bool = False
 
 
 def cookies(lines: Iterable[str]) -> dict[str, str | None]:
@@ -130,14 +134,17 @@ class WebLogin:
             "token_login": self.settings.token_login,
         }
 
-    def start(self, site: str, asked: str | None, client: str, moved: bool = False) -> Answer:
+    def start(
+        self, site: str, asked: str | None, client: str, jar: Mapping, moved: bool = False
+    ) -> Answer:
         """GET /oidc/login: to the provider. Started at another address
         than public_url: there first, where the callback comes to (once:
         a proxy that hides the address the browser sees must not make it
-        go round in circles)."""
+        go round in circles). A sign in this browser started before (its
+        login cookie) is replaced; TooManyLogins (sessions.py)."""
         back = after(asked)
         public = self.settings.public_url
-        if public and not moved and urlsplit(site).netloc.lower() != urlsplit(public).netloc:
+        if public and not moved and origin_of(site) != public:
             query = urlencode({"return": back, "moved": "1"})
             return _redirect(public + "/oidc/login?" + query)
         origin = self.origin(site)
@@ -148,7 +155,8 @@ class WebLogin:
                 origin,
             )
             return _failed("failed")
-        login, browser = self.logins.start(client, back)
+        login_cookie = self.names(origin)[1]
+        login, browser = self.logins.start(client, back, jar.get(login_cookie))
         try:
             url = self.provider.authorization_url(
                 origin + CALLBACK, login.state, login.nonce, login.verifier
@@ -156,7 +164,6 @@ class WebLogin:
         except OidcError as e:
             log.warning("OIDC sign in cannot start: %s", e)
             return _failed(e.code)
-        login_cookie = self.names(origin)[1]
         answer = _redirect(url)
         answer.cookies.append(self._cookie(origin, login_cookie, browser, LOGIN_COOKIE_SECONDS))
         return answer
@@ -172,6 +179,7 @@ class WebLogin:
         except OidcError as e:
             log.warning("OIDC sign in failed: %s", e)
             answer = _failed(e.code)
+            answer.failed = login is None  # no sign in under way: the request's doing
         answer.cookies.append(self._cookie(origin, login_cookie, "", 0))
         return answer
 
@@ -180,7 +188,8 @@ class WebLogin:
         if error is not None:  # canceled at the provider, or refused there
             if login is None:
                 raise OidcError("expired", "an error answer without a sign in under way")
-            raise OidcError("denied" if error == "access_denied" else "failed", "error " + error)
+            # its text goes to the log as a quoted value (no line breaks)
+            raise OidcError("denied" if error == "access_denied" else "failed", "error %r" % error)
         if login is None:
             raise OidcError("expired", "no sign in under way for this state and browser")
         issuer = _one(query, "iss")
@@ -246,6 +255,4 @@ def _redirect(location: str) -> Answer:
 
 
 def _failed(code: str) -> Answer:
-    answer = _redirect("/#/signin-error/" + (code if code in ERRORS else "failed"))
-    answer.failed = code == "failed"
-    return answer
+    return _redirect("/#/signin-error/" + (code if code in ERRORS else "failed"))

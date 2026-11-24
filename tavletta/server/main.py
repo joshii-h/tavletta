@@ -161,6 +161,14 @@ def _web_login(args, printers):
     try:
         import jwt  # noqa: F401 - only whether it is there
     except ImportError:
+        if _in_flatpak():  # no PyJWT in it, and nothing can be installed into it
+            raise CliError(
+                _(
+                    "--oidc is not available in the Flatpak: install Tavletta from the deb "
+                    "or rpm package, the container image or with pip for it"
+                ),
+                EXIT_USAGE,
+            ) from None
         raise CliError(
             _("--oidc needs PyJWT with cryptography (python3-jwt, pip install tavletta[oidc])"),
             EXIT_USAGE,
@@ -173,6 +181,7 @@ def _web_login(args, printers):
         login = WebLogin(load_oidc(path, printers), printers=printers)
     except ConfigError as e:
         raise CliError(str(e), EXIT_FILE) from None
+    _check_proxy(args, login.settings.public_url)
 
     def discover() -> None:
         try:
@@ -182,6 +191,33 @@ def _web_login(args, printers):
 
     threading.Thread(target=discover, daemon=True, name="oidc-discovery").start()
     return login
+
+
+def _in_flatpak() -> bool:
+    return bool(os.environ.get("FLATPAK_ID")) or os.path.exists("/.flatpak-info")
+
+
+def _check_proxy(args, public_url: str | None) -> None:
+    """--oidc behind a reverse proxy: the page's address from public_url,
+    not from what the proxy forwards (X-Forwarded-Host may carry a port or
+    a client's own value); without --trusted-proxy every sign in comes
+    from the proxy's address and shares its limits."""
+    from tavletta.server.http import binds_loopback
+
+    if getattr(args, "trusted_proxy", []) and not public_url:
+        raise CliError(
+            _(
+                "--oidc with --trusted-proxy needs public_url in the OIDC settings: "
+                "the address people open the web page at"
+            ),
+            EXIT_USAGE,
+        )
+    if not getattr(args, "trusted_proxy", []) and not binds_loopback(args.host):
+        log.warning(
+            "--oidc without --trusted-proxy: behind a reverse proxy every sign in comes "
+            "from the proxy's address and shares its limits; give the proxy with "
+            "--trusted-proxy"
+        )
 
 
 def _warn(args, printers, tokens) -> None:

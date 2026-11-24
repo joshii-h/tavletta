@@ -22,6 +22,7 @@ from tavletta.server.sessions import (  # noqa: E402
     SESSIONS_PER_USER,
     Logins,
     Sessions,
+    TooManyLogins,
 )
 from tavletta.server.weblogin import after, cookies  # noqa: E402
 
@@ -231,6 +232,52 @@ def test_serve_says_when_pyjwt_is_missing(tmp_path, secret, capsys, monkeypatch)
     assert code == cli.EXIT_USAGE and "PyJWT" in capsys.readouterr().err
 
 
+def test_the_flatpak_says_oidc_needs_another_installation(tmp_path, secret, capsys, monkeypatch):
+    """The Flatpak has no PyJWT and nothing can be installed into it: no
+    pip advice there."""
+    import sys
+
+    monkeypatch.setitem(sys.modules, "jwt", None)
+    monkeypatch.setenv("FLATPAK_ID", "io.example.Tavletta")
+    path = oidc_file(tmp_path, secret)
+    code = cli.main(["serve", "--labels-dir", str(tmp_path), "--oidc", str(path)])
+    err = capsys.readouterr().err
+    assert code == cli.EXIT_USAGE and "Flatpak" in err and "pip install" not in err
+
+
+def test_oidc_behind_a_trusted_proxy_needs_public_url(
+    tmp_path, secret, started, server_env, capsys
+):
+    """The page's address is public_url there, never what the proxy
+    forwards."""
+    labels = tmp_path / "labels"
+    labels.mkdir(exist_ok=True)
+    base = ["serve", "--port", "0", "--labels-dir", str(labels), "--trusted-proxy", "127.0.0.1"]
+    path = oidc_file(tmp_path, secret)
+    assert cli.main([*base, "--oidc", str(path)]) == cli.EXIT_USAGE
+    assert "public_url" in capsys.readouterr().err
+    path = oidc_file(tmp_path, secret, extra='public_url = "https://labels.example.com"')
+    assert cli.main([*base, "--oidc", str(path)]) == cli.EXIT_OK
+
+
+def test_oidc_without_a_trusted_proxy_beyond_loopback_warns(
+    tmp_path, secret, started, server_env, monkeypatch, caplog
+):
+    from tavletta.server import http as server_http
+
+    labels = tmp_path / "labels"
+    labels.mkdir(exist_ok=True)
+    path = oidc_file(tmp_path, secret)
+    base = ["serve", "--port", "0", "--labels-dir", str(labels), "--oidc", str(path)]
+    with caplog.at_level("WARNING"):
+        assert cli.main(base) == cli.EXIT_OK
+    assert "--trusted-proxy" not in caplog.text  # on this computer only: no proxy
+    monkeypatch.setattr(server_http, "binds_loopback", lambda host: False)
+    with caplog.at_level("WARNING"):
+        assert cli.main(base) == cli.EXIT_OK
+    assert "without --trusted-proxy" in caplog.text
+
+
 # --- claims to a caller ------------------------------------------------------------------
 
 
@@ -284,19 +331,36 @@ class Clock:
 
 
 def test_sign_ins_are_bounded():
+    """An address with LOGINS_PER_CLIENT under way gets no more: none of
+    another browser behind it is dropped for one (a client could else
+    drop everybody's with a few requests)."""
     clock = Clock()
     logins = Logins(clock)
     first, browser = logins.start("192.0.2.1", "#/")
-    for _ in range(LOGINS_PER_CLIENT):
+    for _ in range(LOGINS_PER_CLIENT - 1):
         logins.start("192.0.2.1", "#/")
     assert len(logins) == LOGINS_PER_CLIENT
-    assert logins.take(first.state, browser) is None  # its own oldest made room
+    with pytest.raises(TooManyLogins):
+        logins.start("192.0.2.1", "#/")
+    assert logins.take(first.state, browser) == first  # still there
     for n in range(MAX_LOGINS + 5):
         logins.start("198.51.100.%d" % (n % 250) + str(n), "#/")
     assert len(logins) == MAX_LOGINS
     clock.now += 601
     logins.start("192.0.2.9", "#/")
     assert len(logins) == 1  # the others expired
+
+
+def test_a_browser_has_one_sign_in_under_way():
+    """Its next sign in (its login cookie sent) replaces the one before,
+    which takes no place of the address."""
+    logins = Logins()
+    first, browser = logins.start("192.0.2.1", "#/")
+    second, again = logins.start("192.0.2.1", "#/", browser)
+    assert len(logins) == 1 and logins.take(first.state, browser) is None
+    assert logins.take(second.state, again) == second
+    logins.start("192.0.2.1", "#/", "a cookie of no sign in")
+    assert len(logins) == 1
 
 
 def test_a_sign_in_is_taken_once_by_its_browser():

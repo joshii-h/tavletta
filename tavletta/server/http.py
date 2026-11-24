@@ -46,8 +46,10 @@ from tavletta.server import requests, webui
 from tavletta.server.config import LOCAL, Caller, TokenStore
 from tavletta.server.errors import ApiError, bad_request
 from tavletta.server.mcp import HttpTransport, Mcp
+from tavletta.server.oidc import origin_of
 from tavletta.server.openapi import spec
 from tavletta.server.service import Service
+from tavletta.server.sessions import TooManyLogins
 from tavletta.server.weblogin import PREFIX as LOGIN_PREFIX
 from tavletta.server.weblogin import Answer, WebLogin, cookies
 from tavletta.ui.i18n import _, language
@@ -79,6 +81,10 @@ CORS_HEADERS = (
 )
 CORS_EXPOSED = "Location, X-Tavletta-Warnings, Mcp-Session-Id"
 AUTH_FAILURES = 10  # wrong tokens per address and minute before it is blocked
+# sign ins with OpenID Connect an address may start in a minute (and
+# callbacks for no sign in under way, counted alike); its own count, apart
+# from wrong tokens: people behind one address must not block each other
+LOGIN_STARTS = 30
 LOOPBACK_NAMES = frozenset({"localhost", "localhost.localdomain", "ip6-localhost"})
 
 
@@ -237,7 +243,8 @@ class Server(ThreadingHTTPServer):
         self.loopback = is_loopback(address)
         self.mcp = HttpTransport(Mcp(service)) if config.mcp else None
         self.web_ui = config.web_ui
-        self.rate_limit = RateLimit()
+        self.rate_limit = RateLimit()  # wrong tokens
+        self.login_limit = RateLimit(LOGIN_STARTS)  # sign ins started (weblogin.py)
         self.parses = threading.BoundedSemaphore(PARSES)
         self.reaper = Reaper()
         # a few more connections than requests: /health is answered even
@@ -615,14 +622,18 @@ class Handler(BaseHTTPRequestHandler):
     # --- the web page's session (weblogin.py) ------------------------------------------
 
     def _site(self) -> str:
-        """The origin the browser sees: Host, or behind a trusted proxy its
-        X-Forwarded-Proto and X-Forwarded-Host (the first of each)."""
+        """The origin the browser sees (oidc.origin_of(): lower case, no
+        port 443 or 80 of its scheme): Host, or behind a trusted proxy its
+        X-Forwarded-Proto and X-Forwarded-Host. Of a header a proxy appends
+        to, the last value is its own: those before came with the request."""
         scheme, host = "http", self.headers.get("Host", "")
         if self.server.trusted(self.client_address[0]):
-            proto = self.headers.get("X-Forwarded-Proto", "").split(",")[0].strip().lower()
+            proto = _last(self.headers.get_all("X-Forwarded-Proto")).lower()
             scheme = proto if proto in ("http", "https") else scheme
-            host = self.headers.get("X-Forwarded-Host", "").split(",")[0].strip() or host
-        return "%s://%s" % (scheme, host if _host_name(host) else "")
+            host = _last(self.headers.get_all("X-Forwarded-Host")) or host
+        if not _host_name(host):
+            return scheme + "://"
+        return origin_of("%s://%s" % (scheme, host))
 
     def _own_origin(self) -> str:
         login = self.server.config.login
@@ -683,6 +694,7 @@ class Handler(BaseHTTPRequestHandler):
         if method != expected:
             raise ApiError(405, "method_not_allowed", _("Method not allowed"))
         client = rate_key(self.client())
+        limit = self.server.login_limit
         if route == "info":
             self._send(200, login.info())
             return
@@ -690,16 +702,24 @@ class Handler(BaseHTTPRequestHandler):
             self._same_page()
             self._raw_json()  # read (and JSON, as every POST): the connection goes on
             answer = login.logout(self._site(), self._jar())
-        elif self.server.rate_limit.blocked(client):
+        elif limit.blocked(client):
             raise ApiError(429, "too_many_requests", _("Too many requests – try again later"))
         elif route == "login":
+            limit.failed(client)  # each start counts: LOGIN_STARTS a minute
             query = self._query()
             asked = query.get("return", [None])[-1]
-            answer = login.start(self._site(), asked, client, moved="moved" in query)
+            try:
+                answer = login.start(
+                    self._site(), asked, client, self._jar(), moved="moved" in query
+                )
+            except TooManyLogins:
+                raise ApiError(
+                    429, "too_many_requests", _("Too many requests – try again later")
+                ) from None
         else:
             answer = login.finish(self._site(), self._query(), self._jar())
         if answer.failed:
-            self.server.rate_limit.failed(client)
+            limit.failed(client)
         self._send_answer(answer)
 
     def _send_answer(self, answer: Answer) -> None:
@@ -1011,6 +1031,13 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args) -> None:  # noqa: A002 - http.server's name
         client = self.client() if hasattr(self, "headers") else _peer(self.client_address[0])
         log.debug("%s " + format, client, *args)
+
+
+def _last(lines: list[str] | None) -> str:
+    """The last value of a header that may be sent several times, each a
+    list separated by commas (X-Forwarded-*)."""
+    values = [v.strip() for line in lines or () for v in line.split(",")]
+    return values[-1] if values else ""
 
 
 def _etags(header: str) -> set[str]:

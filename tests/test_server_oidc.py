@@ -341,6 +341,17 @@ def test_an_error_from_the_provider(site):
     assert failure(site, tamper=other) == "failed"
 
 
+def test_the_providers_error_text_cannot_add_lines_to_the_log(site, caplog):
+    def forged(query, cookie):
+        error = "x\n2026-11-24 WARNING signed in: admin"
+        return {"error": error, "state": query["state"]}, cookie
+
+    with caplog.at_level("WARNING"):
+        assert failure(site, tamper=forged) == "failed"
+    assert [r.getMessage().count("\n") for r in caplog.records] == [0]
+    assert "\\n2026" in caplog.text
+
+
 def test_another_issuer_in_the_answer_fails(site):  # RFC 9207
     def mixed_up(query, cookie):
         return dict(query, iss="https://evil.example"), cookie
@@ -375,11 +386,37 @@ def test_a_provider_that_cannot_be_reached(make_site):
     assert status == 303 and response.getheader("Location") == "/#/signin-error/failed"
 
 
-def test_failed_sign_ins_are_rate_limited(site):
-    for _ in range(10):
-        failure(site, claims={"nonce": "other"})
+def test_sign_ins_started_are_limited_apart_from_tokens(site):
+    """LOGIN_STARTS a minute per address, counted apart from wrong tokens:
+    people behind one address do not lock each other out of either."""
+    from tavletta.server.http import AUTH_FAILURES, LOGIN_STARTS
+
+    for _ in range(AUTH_FAILURES):  # wrong tokens: tokens blocked, sign ins not
+        call(site.base, "GET", "/api/v1/labels", token="wrong")
+    assert call(site.base, "GET", "/oidc/login")[0] == 303
+    for _ in range(LOGIN_STARTS - 1):
+        assert call(site.base, "GET", "/oidc/login")[0] == 303
     status, _response, body = call(site.base, "GET", "/oidc/login")
     assert status == 429 and body["error"]["code"] == "too_many_requests"
+
+
+def test_a_provider_failing_is_no_wrong_credential(make_site):
+    """Sign ins the provider fails (away, an answer that does not check
+    out) are not counted against the address; callbacks for no sign in
+    under way are."""
+    from tavletta.server.http import LOGIN_STARTS
+
+    site = make_site()
+    for _ in range(LOGIN_STARTS // 2):
+        failure(site, claims={"nonce": "other"})
+    assert site.server.login_limit._failures["127.0.0.1"].maxlen == LOGIN_STARTS
+    assert len(site.server.login_limit._failures["127.0.0.1"]) == LOGIN_STARTS // 2
+    assert call(site.base, "GET", "/oidc/login")[0] == 303
+    site = make_site()
+    for _ in range(LOGIN_STARTS):
+        call(site.base, "GET", "/oidc/callback?state=%s&code=x" % ("x" * 43))
+    status, _response, body = call(site.base, "GET", "/oidc/login")
+    assert status == 429
 
 
 # --- roles and printers ------------------------------------------------------------------
@@ -625,6 +662,28 @@ def test_behind_a_trusted_proxy(make_site):
     assert call(site.base, "GET", "/api/v1/me", headers=good)[0] == 200
     bad = dict(good, Origin=site.origin)
     assert call(site.base, "GET", "/api/v1/me", headers=bad)[0] == 403
+
+
+def test_forwarded_headers_normalised_and_the_proxys_own_value(make_site):
+    """X-Forwarded-Host with the scheme's port is the same origin; of
+    values appended by the proxy the last is its own, those before came
+    from the client."""
+    site = make_site(public_url="https://labels.example.com")
+    site.server.config = replace(
+        site.server.config, trusted_proxies=(ipaddress.ip_network("127.0.0.1/32"),)
+    )
+    proxy = {"X-Forwarded-Proto": "https", "X-Forwarded-Host": "Labels.Example.com:443"}
+    status, response, _ = call(site.base, "GET", "/oidc/login", headers=proxy)
+    assert status == 303 and response.getheader("Location").startswith(site.fake.issuer)
+    appended = {
+        "X-Forwarded-Proto": "http, https",
+        "X-Forwarded-Host": "evil.example, labels.example.com",
+    }
+    status, response, _ = call(site.base, "GET", "/oidc/login", headers=appended)
+    assert response.getheader("Location").startswith(site.fake.issuer)
+    forged = {"X-Forwarded-Proto": "https", "X-Forwarded-Host": "labels.example.com, evil.example"}
+    status, response, _ = call(site.base, "GET", "/oidc/login", headers=forged)
+    assert response.getheader("Location").startswith("https://labels.example.com/oidc/login")
 
 
 def test_proxy_headers_of_others_are_ignored(site):

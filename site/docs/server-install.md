@@ -529,7 +529,12 @@ Programs keep using tokens. It needs HTTPS through the reverse proxy
 
 3. Add `"--oidc"` and `"/config/oidc.toml"` to `command:` in
    `compose.yaml` (native: to `ExecStart`, with `/etc/tavletta/...`),
-   keep `--trusted-proxy`, and restart.
+   keep `--trusted-proxy`, and restart. With `--trusted-proxy` the server
+   needs `public_url` and does not start without it.
+
+Signing in needs PyJWT, which the container image and the deb and rpm
+packages have; the Flatpak has not, and nothing can be installed into
+it: run the server from one of the others for `--oidc`.
 
 The page then shows "Sign in with Example ID". Someone without one of
 the roles gets "no access". A session lasts 8 hours, or 60 minutes
@@ -603,7 +608,7 @@ pages): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch
 |---|---|
 | A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |
 | `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |
-| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |
+| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. On `/oidc/login`: 30 sign ins started from this address within a minute, counted apart from wrong tokens; behind a reverse proxy not given with `--trusted-proxy` everyone shares the proxy's address. |
 | `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |
 | `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |
 | `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |
