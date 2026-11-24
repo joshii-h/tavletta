@@ -222,10 +222,15 @@ class Job:
         for copy, label in self.labels():
             yield copy, self.image(label)
 
-    def image(self, label: Label) -> Image.Image:
-        """The image the printer gets for one label of the job (labels())."""
+    def image(self, label: Label, reported: bool = False) -> Image.Image:
+        """The image the printer gets for one label of the job (labels()).
+        `reported`: rendered for what the backend learned from the printer
+        just now, not for the answer the job was given (options.info),
+        which may be older (RenderAgain)."""
         one_each = self.per_copy or self.positions is not None
         options = replace(self.options, copies=1) if one_each else self.options
+        if reported:
+            options = replace(options, info=None)
         try:
             return self.backend.prepare(label, options, self.safe_mm)
         except Exception as e:  # noqa: BLE001 - whatever went wrong while drawing
@@ -309,12 +314,14 @@ class Job:
         return result
 
     def _print_label(self, image, label: Label, host: str, options, progress):
-        """Print; once more, rendered anew, if the printer reported another
-        resolution than the image was made for (RenderAgain)."""
+        """Print; once more, rendered anew for what the printer reported
+        now, if that is another resolution than the image was made for
+        (RenderAgain)."""
         try:
             return self.backend.print_label(image, host, options, progress)
         except RenderAgain:
-            return self.backend.print_label(self.image(label), host, options, progress)
+            again = self.image(label, reported=True)
+            return self.backend.print_label(again, host, options, progress)
 
     def _run_sheets(
         self, sheet: SheetJob, host: str, progress: ProgressCallback | None

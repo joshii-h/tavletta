@@ -1190,6 +1190,30 @@ def test_an_image_made_for_another_resolution_is_rendered_again(fake):
     assert fake.sent(0x13)[0][:2] == niimbot.u16(round(15 / 25.4 * 300))  # rows at 300 dpi
 
 
+@pytest.mark.parametrize("model", ["", "9999", "B1"])
+def test_rendered_again_for_the_model_reported_not_an_older_answer(fake, model):
+    """The job's answer (options.info) names no model, an unknown one or a
+    203 dpi B1; the printer is a 300 dpi model: the second render is for
+    what it reported now, not for the old answer (which failed twice)."""
+    from tavletta.backends.base import PrinterInfo
+    from tavletta.job import Job
+    from tavletta.model import Label, TextElement
+
+    fake.model_id = 4097  # 300 dpi
+    fake.feeds = False
+    label = Label(printer="niimbot", auto_length=False, elements=[TextElement(text="x")])
+    label.set_media_size(30, 15)
+    old = PrinterInfo(model, None, None, None, "IDLE")
+    job = Job(Niimbot(), label, PrintOptions(info=old))
+    job.run("printer")
+    assert job.printed == 1 and len(fake.sent(0x13)) == 1
+    assert fake.sent(0x13)[0][:2] == niimbot.u16(round(15 / 25.4 * 300))
+    # an answer without a model known by name: the model this printer reported
+    options = PrintOptions(host="printer", info=old)
+    expected = niimbot.DPI_300 if model != "B1" else job.backend.capabilities.dpi
+    assert job.backend.raster(15, options).dpi == expected
+
+
 def test_print_cuts_a_wide_label_to_the_head(fake):
     Niimbot().print_label(_image(400, 80), "printer", PrintOptions())  # 50 mm on a B1
     assert fake.sent(0x13)[0][2:4] == niimbot.u16(384)

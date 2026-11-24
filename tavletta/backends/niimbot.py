@@ -923,11 +923,10 @@ class Niimbot(Backend):
         self.models: HostMemory[Model] = HostMemory()
 
     def _model(self, info: PrinterInfo | None, host: str = "") -> Model | None:
-        """The model of the answer; else the one this printer reported;
-        None without either."""
-        if info:
-            return BY_NAME.get(info.model)
-        return self.models.get(host) if host else None
+        """The model of the answer; else (none, or one not known by name)
+        the one this printer reported; None without either."""
+        known = BY_NAME.get(info.model) if info else None
+        return known or (self.models.get(host) if host else None)
 
     def _learn(self, host: str, model: Model) -> None:
         self.models[host] = model

@@ -638,7 +638,8 @@ class ResolutionUnknown(PrinterError):
 class RenderAgain(PrinterError):
     """The printer reported another resolution than the image was made
     for, by a ratio that scaling would spoil: prepare() the label again
-    (it now renders for the reported resolution) and print once more."""
+    without options.info (the backend now renders for what the printer
+    reported; the job's answer may be older) and print once more."""
 
 
 def for_resolution(image: Image.Image, rendered: float, printer: float) -> Image.Image:

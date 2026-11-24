@@ -532,6 +532,21 @@ def test_print_learns_the_resolution_and_renders_again(backend, printer):
     assert len(printer.device.jobs) == 1 and job.printed == 1
 
 
+def test_rendered_again_for_the_resolution_reported_not_an_older_answer(printer):
+    """The job's answer (options.info) says 12 dots/mm, the printer now
+    says /200: the second render is for 8 dots/mm (it failed twice)."""
+    from tavletta.backends.base import PrinterInfo
+    from tavletta.job import Job
+
+    printer.device.version = "5.40 (MACH 4S/200)"
+    old = PrinterInfo("EOS2/300", None, None, None, "IDLE", dpi=cab.dpi_for(12.0))
+    label = _label(50, 25, elements=[TextElement(text="x")])
+    job = Job(Cab(), label, PrintOptions(info=old))
+    job.run("h")
+    png, _commands = _job_parts(printer.device.jobs[0])
+    assert png.size == (400, 200) and len(printer.device.jobs) == 1 and job.printed == 1
+
+
 def test_print_renders_again_for_nearly_twice_the_resolution(backend, printer):
     """Rendered for 12 dots/mm on a /600 (23.6 dots/mm): about twice, not
     exactly, which would make lines uneven; rendered again."""
