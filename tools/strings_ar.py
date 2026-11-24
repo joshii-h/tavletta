@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "تعذّر تسجيل الدخول. حاول مرة أخرى أو اسأل المسؤول.",
     "Sign in with {provider}": "تسجيل الدخول عبر {provider}",
     "Or with an access token": "أو برمز وصول",
+    "Labels per job": "الملصقات في كل مهمة",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "ملصقات السلسلة التي تُرسل إلى الطابعة كمهمة واحدة وتُطبع دون توقف بينها. يسري الإيقاف والإلغاء بين المهام: المهمة التي بدأت تُطبع كاملة. خفّض القيمة إذا نفدت ذاكرة الطابعة.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "نفدت ذاكرة الطابعة لهذه المهمة. خفّض «%s» في إعدادات الطابعة، ثم حاول مرة أخرى.",
 }

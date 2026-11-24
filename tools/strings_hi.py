@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "साइन इन नहीं हो सका। फिर से कोशिश करें या व्यवस्थापक से पूछें।",
     "Sign in with {provider}": "{provider} से साइन इन करें",
     "Or with an access token": "या एक्सेस टोकन से",
+    "Labels per job": "प्रति जॉब लेबल",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "किसी सीरीज़ के लेबल जो प्रिंटर को एक ही जॉब के रूप में भेजे जाते हैं और बीच में रुके बिना प्रिंट होते हैं। रोकना और रद्द करना जॉब के बीच लागू होता है: शुरू हो चुका जॉब पूरा प्रिंट होता है। प्रिंटर की मेमोरी कम पड़े तो यह मान घटाएँ।",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "इस जॉब के लिए प्रिंटर की मेमोरी कम पड़ गई। प्रिंटर सेटिंग्स में “%s” घटाएँ, फिर दोबारा कोशिश करें।",
 }

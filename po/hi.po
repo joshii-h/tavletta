@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 16:22+0100\n"
+"PO-Revision-Date: 2026-11-24 18:36+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: hi\n"
 "Language: hi\n"
@@ -323,14 +323,14 @@ msgid ""
 "making one"
 msgstr "नया टोकन बनाने के बजाय मानक इनपुट से अपना चुना हुआ टोकन लें (scrypt से सहेजा जाता है)"
 
-#: tavletta/cli.py:493 tavletta/server/config.py:220
+#: tavletta/cli.py:493 tavletta/server/config.py:221
 #: tavletta/server/service.py:612
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "अज्ञात प्रिंटर मॉडल: %s"
 
 #: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
-#: tavletta/ui/texts.py:347 tavletta/ui/texts.py:729
+#: tavletta/ui/texts.py:351 tavletta/ui/texts.py:739
 #: tavletta/server/service.py:903
 #, python-format
 msgid "Cannot open %s"
@@ -380,7 +380,7 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "कई प्रिंटर मिले – --host से एक चुनें (tavletta list-printers)"
 
-#: tavletta/cli.py:798 tavletta/ui/texts.py:772 tavletta/server/service.py:1698
+#: tavletta/cli.py:798 tavletta/ui/texts.py:782 tavletta/server/service.py:1698
 #, python-format
 msgid "Cannot save %s"
 msgstr "%s सहेजा नहीं जा सकता"
@@ -462,7 +462,7 @@ msgstr "अगला काउंटर मान सहेजा नहीं �
 msgid "Waiting for the printer's answer…"
 msgstr "प्रिंटर के उत्तर की प्रतीक्षा…"
 
-#: tavletta/cli.py:1237 tavletta/ui/printer.py:343
+#: tavletta/cli.py:1237 tavletta/ui/printer.py:356
 msgid "No printer found"
 msgstr "कोई प्रिंटर नहीं मिला"
 
@@ -475,7 +475,7 @@ msgid "Choose data file"
 msgstr "डेटा फ़ाइल चुनें"
 
 #: tavletta/ui/data.py:108 tavletta/ui/files.py:104 tavletta/ui/files.py:126
-#: tavletta/ui/files.py:207 tavletta/ui/texts.py:220
+#: tavletta/ui/files.py:207 tavletta/ui/texts.py:224
 msgid "Only local files can be used"
 msgstr "केवल स्थानीय फ़ाइलें इस्तेमाल की जा सकती हैं"
 
@@ -606,28 +606,28 @@ msgid "Align, distribute and snap the selected elements"
 msgstr "चुने गए तत्वों को संरेखित करें, बाँटें और चिपकाएँ"
 
 #: tavletta/ui/editor.py:900 tavletta/ui/image_crop.py:82
-#: tavletta/ui/texts.py:120
+#: tavletta/ui/texts.py:124
 msgid "Left"
 msgstr "बायाँ"
 
-#: tavletta/ui/editor.py:901 tavletta/ui/texts.py:76 tavletta/ui/texts.py:120
+#: tavletta/ui/editor.py:901 tavletta/ui/texts.py:76 tavletta/ui/texts.py:124
 msgid "Centre"
 msgstr "मध्य"
 
-#: tavletta/ui/editor.py:902 tavletta/ui/texts.py:120
+#: tavletta/ui/editor.py:902 tavletta/ui/texts.py:124
 msgid "Right"
 msgstr "दायाँ"
 
 #: tavletta/ui/editor.py:903 tavletta/ui/image_crop.py:82
-#: tavletta/ui/texts.py:171
+#: tavletta/ui/texts.py:175
 msgid "Top"
 msgstr "ऊपर"
 
-#: tavletta/ui/editor.py:904 tavletta/ui/texts.py:171
+#: tavletta/ui/editor.py:904 tavletta/ui/texts.py:175
 msgid "Middle"
 msgstr "मध्य"
 
-#: tavletta/ui/editor.py:905 tavletta/ui/texts.py:171
+#: tavletta/ui/editor.py:905 tavletta/ui/texts.py:175
 msgid "Bottom"
 msgstr "नीचे"
 
@@ -676,7 +676,7 @@ msgstr "अभी कोई सामग्री नहीं"
 msgid "Add text, an image, a symbol or a code"
 msgstr "पाठ, छवि, प्रतीक या कोड जोड़ें"
 
-#: tavletta/ui/elements.py:105 tavletta/ui/texts.py:287
+#: tavletta/ui/elements.py:105 tavletta/ui/texts.py:291
 #: tavletta/ui/window.py:1040 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "पाठ"
@@ -771,7 +771,7 @@ msgstr "क्षेत्र"
 msgid "Scale"
 msgstr "स्केल"
 
-#: tavletta/ui/elements.py:383 tavletta/ui/texts.py:291
+#: tavletta/ui/elements.py:383 tavletta/ui/texts.py:295
 msgid "Symbol"
 msgstr "प्रतीक"
 
@@ -1070,7 +1070,7 @@ msgstr "छवि क्रॉप करें"
 msgid "Drag to choose the part of the image to keep"
 msgstr "छवि का रखा जाने वाला भाग चुनने के लिए खींचें"
 
-#: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:377
+#: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:390
 #: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
 #: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
 #: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
@@ -1261,207 +1261,207 @@ msgstr "अंतिम पंक्ति"
 msgid "Row %(n)d of %(total)d"
 msgstr "पंक्ति %(n)d / %(total)d"
 
-#: tavletta/ui/printer.py:115 tavletta/server/web/print.js:71
+#: tavletta/ui/printer.py:117 tavletta/server/web/print.js:71
 msgid "Printer"
 msgstr "प्रिंटर"
 
-#: tavletta/ui/printer.py:120
+#: tavletta/ui/printer.py:122
 msgid "Host name or IP address"
 msgstr "होस्ट नाम या IP पता"
 
-#: tavletta/ui/printer.py:134
+#: tavletta/ui/printer.py:136
 msgid "Safety margin"
 msgstr "सुरक्षा हाशिया"
 
-#: tavletta/ui/printer.py:141
+#: tavletta/ui/printer.py:143
 #, python-format
 msgid ""
 "%(unit)s kept free for content and border; the background is printed edge to "
 "edge"
 msgstr "सामग्री और बॉर्डर के लिए खाली जगह (%(unit)s); पृष्ठभूमि किनारे तक प्रिंट होती है"
 
-#: tavletta/ui/printer.py:146 tavletta/ui/printer.py:152
+#: tavletta/ui/printer.py:148 tavletta/ui/printer.py:154
 msgid "Millimetres"
 msgstr "मिलीमीटर"
 
-#: tavletta/ui/printer.py:146 tavletta/ui/printer.py:153
+#: tavletta/ui/printer.py:148 tavletta/ui/printer.py:155
 msgid "Inches"
 msgstr "इंच"
 
-#: tavletta/ui/printer.py:149
+#: tavletta/ui/printer.py:151
 msgid "Units"
 msgstr "इकाइयाँ"
 
-#: tavletta/ui/printer.py:151
+#: tavletta/ui/printer.py:153
 #, python-format
 msgid "Automatic (%s)"
 msgstr "स्वचालित (%s)"
 
-#: tavletta/ui/printer.py:164
+#: tavletta/ui/printer.py:166
 msgid "Printer model"
 msgstr "प्रिंटर मॉडल"
 
-#: tavletta/ui/printer.py:180
+#: tavletta/ui/printer.py:182
 msgid "Found"
 msgstr "मिले"
 
-#: tavletta/ui/printer.py:180
+#: tavletta/ui/printer.py:182
 msgid "All models"
 msgstr "सभी मॉडल"
 
-#: tavletta/ui/printer.py:285 tavletta/ui/printer.py:517
+#: tavletta/ui/printer.py:298 tavletta/ui/printer.py:530
 msgid "Searching…"
 msgstr "खोजा जा रहा है…"
 
-#: tavletta/ui/printer.py:288 tavletta/ui/printer.py:624
+#: tavletta/ui/printer.py:301 tavletta/ui/printer.py:637
 msgid "Printer details"
 msgstr "प्रिंटर विवरण"
 
-#: tavletta/ui/printer.py:291
+#: tavletta/ui/printer.py:304
 msgid "Refresh"
 msgstr "ताज़ा करें"
 
-#: tavletta/ui/printer.py:295
+#: tavletta/ui/printer.py:308
 msgid "Search for printers"
 msgstr "प्रिंटर खोजें"
 
-#: tavletta/ui/printer.py:328
+#: tavletta/ui/printer.py:341
 msgid "Searching for printers…"
 msgstr "प्रिंटर खोजे जा रहे हैं…"
 
-#: tavletta/ui/printer.py:345
+#: tavletta/ui/printer.py:358
 msgid ""
 "Make sure the printer is switched on and in the same network, or enter its "
 "address below"
 msgstr "जाँचें कि प्रिंटर चालू है और उसी नेटवर्क में है, या नीचे उसका पता दर्ज करें"
 
-#: tavletta/ui/printer.py:351
+#: tavletta/ui/printer.py:364
 #, python-format
 msgid "Found %s"
 msgstr "%s मिला"
 
-#: tavletta/ui/printer.py:359 tavletta/ui/printer.py:373
+#: tavletta/ui/printer.py:372 tavletta/ui/printer.py:386
 msgid "Choose a printer"
 msgstr "प्रिंटर चुनें"
 
-#: tavletta/ui/printer.py:411
+#: tavletta/ui/printer.py:424
 msgid "Connecting…"
 msgstr "कनेक्ट हो रहा है…"
 
-#: tavletta/ui/printer.py:472
+#: tavletta/ui/printer.py:485
 #, python-format
 msgid "The loaded roll is for “%s”"
 msgstr "लगाया गया रोल “%s” के लिए है"
 
-#: tavletta/ui/printer.py:473
+#: tavletta/ui/printer.py:486
 msgid "Switch"
 msgstr "बदलें"
 
-#: tavletta/ui/printer.py:499
+#: tavletta/ui/printer.py:512
 msgid "Printer not reachable"
 msgstr "प्रिंटर तक पहुँच नहीं"
 
-#: tavletta/ui/printer.py:501 tavletta/ui/printer.py:515
+#: tavletta/ui/printer.py:514 tavletta/ui/printer.py:528
 msgid "Printer needs attention"
 msgstr "प्रिंटर पर ध्यान देना ज़रूरी है"
 
-#: tavletta/ui/printer.py:530
+#: tavletta/ui/printer.py:543
 #, python-format
 msgid "%(left)s of %(total)s left"
 msgstr "%(total)s में से %(left)s बाकी"
 
-#: tavletta/ui/printer.py:541
+#: tavletta/ui/printer.py:554
 msgid "Reachable · the printer reports no status"
 msgstr "पहुँच योग्य · प्रिंटर कोई स्थिति नहीं बताता"
 
-#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:385
+#: tavletta/ui/printer.py:557 tavletta/server/web/ui.js:385
 msgid "Printing"
 msgstr "प्रिंट हो रहा है"
 
-#: tavletta/ui/printer.py:546
+#: tavletta/ui/printer.py:559
 #, python-format
 msgid "Ready · a label every %s"
 msgstr "तैयार · हर %s पर एक लेबल"
 
-#: tavletta/ui/printer.py:547 tavletta/server/web/ui.js:47
+#: tavletta/ui/printer.py:560 tavletta/server/web/ui.js:47
 msgid "Ready"
 msgstr "तैयार"
 
-#: tavletta/ui/printer.py:550
+#: tavletta/ui/printer.py:563
 msgid "No roll loaded"
 msgstr "कोई रोल नहीं लगा है"
 
-#: tavletta/ui/printer.py:550
+#: tavletta/ui/printer.py:563
 msgid "No cassette inserted"
 msgstr "कोई कैसेट नहीं लगी है"
 
-#: tavletta/ui/printer.py:552
+#: tavletta/ui/printer.py:565
 #, python-format
 msgid "%s roll"
 msgstr "%s रोल"
 
-#: tavletta/ui/printer.py:552
+#: tavletta/ui/printer.py:565
 #, python-format
 msgid "%s cassette"
 msgstr "%s कैसेट"
 
-#: tavletta/ui/printer.py:571
+#: tavletta/ui/printer.py:584
 msgid "Model"
 msgstr "मॉडल"
 
-#: tavletta/ui/printer.py:572
+#: tavletta/ui/printer.py:585
 msgid "Address"
 msgstr "पता"
 
-#: tavletta/ui/printer.py:573
+#: tavletta/ui/printer.py:586
 msgid "Firmware"
 msgstr "फ़र्मवेयर"
 
-#: tavletta/ui/printer.py:575
+#: tavletta/ui/printer.py:588
 msgid "Label distance"
 msgstr "लेबल की दूरी"
 
-#: tavletta/ui/printer.py:578
+#: tavletta/ui/printer.py:591
 msgid "Print width set on the printer"
 msgstr "प्रिंटर पर सेट प्रिंट चौड़ाई"
 
-#: tavletta/ui/printer.py:583
+#: tavletta/ui/printer.py:596
 msgid "Print method set on the printer"
 msgstr "प्रिंटर पर सेट प्रिंट विधि"
 
-#: tavletta/ui/printer.py:586
+#: tavletta/ui/printer.py:599
 msgid "Remaining tape"
 msgstr "बचा हुआ टेप"
 
-#: tavletta/ui/printer.py:593 tavletta/ui/printer.py:596
+#: tavletta/ui/printer.py:606 tavletta/ui/printer.py:609
 msgid "Roll"
 msgstr "रोल"
 
-#: tavletta/ui/printer.py:597
+#: tavletta/ui/printer.py:610
 msgid "Cassette"
 msgstr "कैसेट"
 
-#: tavletta/ui/printer.py:606
+#: tavletta/ui/printer.py:619
 msgid "Tape type"
 msgstr "टेप का प्रकार"
 
-#: tavletta/ui/printer.py:607
+#: tavletta/ui/printer.py:620
 msgid "Printable width"
 msgstr "प्रिंट योग्य चौड़ाई"
 
-#: tavletta/ui/printer.py:608
+#: tavletta/ui/printer.py:621
 msgid "Lot number"
 msgstr "लॉट नंबर"
 
-#: tavletta/ui/printer.py:609
+#: tavletta/ui/printer.py:622
 msgid "Serial number"
 msgstr "सीरियल नंबर"
 
-#: tavletta/ui/printer.py:611
+#: tavletta/ui/printer.py:624
 msgid "Probably made"
 msgstr "संभावित निर्माण"
 
-#: tavletta/ui/printer.py:625 tavletta/ui/printing.py:802
+#: tavletta/ui/printer.py:638 tavletta/ui/printing.py:802
 msgid "Close"
 msgstr "बंद करें"
 
@@ -1753,7 +1753,7 @@ msgstr "किसी लेबल को छोड़ने या उस पर
 msgid "Labels %s reach into the margin the printer cannot print on"
 msgstr "लेबल %s उस हाशिये में जाते हैं जिस पर प्रिंटर प्रिंट नहीं कर सकता"
 
-#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:304
+#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:308
 msgid "Shipping label"
 msgstr "शिपिंग लेबल"
 
@@ -2342,608 +2342,619 @@ msgstr "प्रिंट विधि"
 msgid "Print offset"
 msgstr "प्रिंट ऑफ़सेट"
 
-#: tavletta/ui/texts.py:95
+#: tavletta/ui/texts.py:91
+msgid "Labels per job"
+msgstr "प्रति जॉब लेबल"
+
+#: tavletta/ui/texts.py:96
 #, python-format
 msgid ""
 "%(unit)s the print is moved along the feed, for a printer that prints off "
 "the label's place; positive moves it down on labels across the roll"
 msgstr "%(unit)s जितना प्रिंट फ़ीड की दिशा में खिसकाया जाता है, उस प्रिंटर के लिए जो लेबल की जगह से हटकर प्रिंट करता है; धनात्मक मान रोल के आर-पार लगे लेबल पर इसे नीचे ले जाता है"
 
-#: tavletta/ui/texts.py:100
+#: tavletta/ui/texts.py:99
+msgid ""
+"Labels of a series sent to the printer as one job, which it prints without "
+"stopping between them. Stop and cancel take effect between jobs: a job that "
+"has started is printed in full. Lower it if the printer runs out of memory."
+msgstr "किसी सीरीज़ के लेबल जो प्रिंटर को एक ही जॉब के रूप में भेजे जाते हैं और बीच में रुके बिना प्रिंट होते हैं। रोकना और रद्द करना जॉब के बीच लागू होता है: शुरू हो चुका जॉब पूरा प्रिंट होता है। प्रिंटर की मेमोरी कम पड़े तो यह मान घटाएँ।"
+
+#: tavletta/ui/texts.py:104
 msgid "As reported by the printer"
 msgstr "जैसा प्रिंटर बताता है"
 
-#: tavletta/ui/texts.py:101
+#: tavletta/ui/texts.py:105
 msgid "As set on the printer"
 msgstr "जैसा प्रिंटर पर सेट है"
 
-#: tavletta/ui/texts.py:102
+#: tavletta/ui/texts.py:106
 msgid "Gap between labels"
 msgstr "लेबलों के बीच गैप"
 
-#: tavletta/ui/texts.py:103
+#: tavletta/ui/texts.py:107
 msgid "Black mark"
 msgstr "काला निशान"
 
-#: tavletta/ui/texts.py:104
+#: tavletta/ui/texts.py:108
 msgid "Continuous media"
 msgstr "लगातार मीडिया"
 
-#: tavletta/ui/texts.py:105
+#: tavletta/ui/texts.py:109
 msgid "Transparent labels"
 msgstr "पारदर्शी लेबल"
 
-#: tavletta/ui/texts.py:106
+#: tavletta/ui/texts.py:110
 msgid "Tear off"
 msgstr "फाड़ना"
 
-#: tavletta/ui/texts.py:107
+#: tavletta/ui/texts.py:111
 msgid "Peel off"
 msgstr "छीलना"
 
-#: tavletta/ui/texts.py:108
+#: tavletta/ui/texts.py:112
 msgid "Cut off"
 msgstr "काटना"
 
-#: tavletta/ui/texts.py:109
+#: tavletta/ui/texts.py:113
 msgid "Thermal transfer (ribbon)"
 msgstr "थर्मल ट्रांसफ़र (रिबन)"
 
-#: tavletta/ui/texts.py:110
+#: tavletta/ui/texts.py:114
 msgid "Thermal direct"
 msgstr "डायरेक्ट थर्मल"
 
-#: tavletta/ui/texts.py:125
+#: tavletta/ui/texts.py:129
 msgid "2D codes"
 msgstr "2D कोड"
 
-#: tavletta/ui/texts.py:127
+#: tavletta/ui/texts.py:131
 msgid "QR code"
 msgstr "QR कोड"
 
-#: tavletta/ui/texts.py:134
+#: tavletta/ui/texts.py:138
 msgid "Linear barcodes"
 msgstr "रेखीय बारकोड"
 
-#: tavletta/ui/texts.py:149
+#: tavletta/ui/texts.py:153
 msgid ""
 "Application identifiers in brackets, e.g. "
 "(01)09501101530003(17)261231(10)AB12"
 msgstr "कोष्ठक में एप्लिकेशन आइडेंटिफ़ायर, जैसे (01)09501101530003(17)261231(10)AB12"
 
-#: tavletta/ui/texts.py:152
+#: tavletta/ui/texts.py:156
 msgid "Links, text, Wi-Fi access; phones read it"
 msgstr "लिंक, पाठ, Wi-Fi एक्सेस; फ़ोन इसे पढ़ते हैं"
 
-#: tavletta/ui/texts.py:153
+#: tavletta/ui/texts.py:157
 msgid "Text or numbers in little space, e.g. on small parts"
 msgstr "कम जगह में पाठ या संख्याएँ, जैसे छोटे पुर्ज़ों पर"
 
-#: tavletta/ui/texts.py:154
+#: tavletta/ui/texts.py:158
 msgid "Much text, e.g. an address or a document number"
 msgstr "बहुत सारा पाठ, जैसे पता या दस्तावेज़ संख्या"
 
-#: tavletta/ui/texts.py:155
+#: tavletta/ui/texts.py:159
 msgid "Text or numbers; needs no blank margin, e.g. on tickets"
 msgstr "पाठ या संख्याएँ; खाली हाशिया नहीं चाहिए, जैसे टिकटों पर"
 
-#: tavletta/ui/texts.py:156
+#: tavletta/ui/texts.py:160
 msgid "Latin letters, digits and punctuation"
 msgstr "लैटिन अक्षर, अंक और विराम चिह्न"
 
-#: tavletta/ui/texts.py:157
+#: tavletta/ui/texts.py:161
 msgid "Capital letters, digits, spaces and - . $ / + %"
 msgstr "बड़े अक्षर, अंक, स्पेस और - . $ / + %"
 
-#: tavletta/ui/texts.py:158
+#: tavletta/ui/texts.py:162
 msgid "Latin letters, digits and punctuation; shorter than Code 39"
 msgstr "लैटिन अक्षर, अंक और विराम चिह्न; Code 39 से छोटा"
 
-#: tavletta/ui/texts.py:159
+#: tavletta/ui/texts.py:163
 msgid "12 digits, the check digit is added (or 13 with it)"
 msgstr "12 अंक, चेक अंक जोड़ा जाता है (या उसके साथ 13)"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:164
 msgid "7 digits, the check digit is added (or 8 with it)"
 msgstr "7 अंक, चेक अंक जोड़ा जाता है (या उसके साथ 8)"
 
-#: tavletta/ui/texts.py:161
+#: tavletta/ui/texts.py:165
 msgid "11 digits, the check digit is added (or 12 with it)"
 msgstr "11 अंक, चेक अंक जोड़ा जाता है (या उसके साथ 12)"
 
-#: tavletta/ui/texts.py:162
+#: tavletta/ui/texts.py:166
 msgid "7 digits starting with 0 or 1, the check digit is added (or 8 with it)"
 msgstr "0 या 1 से शुरू होने वाले 7 अंक, चेक अंक जोड़ा जाता है (या उसके साथ 8)"
 
-#: tavletta/ui/texts.py:163
+#: tavletta/ui/texts.py:167
 msgid ""
 "13 digits of a shipping carton's GTIN, the check digit is added (or 14 with "
 "it)"
 msgstr "शिपिंग कार्टन के GTIN के 13 अंक, चेक अंक जोड़ा जाता है (या उसके साथ 14)"
 
-#: tavletta/ui/texts.py:169
+#: tavletta/ui/texts.py:173
 msgid "Whole area, centred"
 msgstr "पूरा क्षेत्र, बीच में"
 
-#: tavletta/ui/texts.py:169
+#: tavletta/ui/texts.py:173
 msgid "Fill the label, edges cut off"
 msgstr "लेबल भरें, किनारे कट जाते हैं"
 
-#: tavletta/ui/texts.py:173
+#: tavletta/ui/texts.py:177
 msgid "Automatic"
 msgstr "स्वचालित"
 
-#: tavletta/ui/texts.py:174
+#: tavletta/ui/texts.py:178
 msgid "Threshold (drawings, logos)"
 msgstr "सीमा मान (चित्र, लोगो)"
 
-#: tavletta/ui/texts.py:175
+#: tavletta/ui/texts.py:179
 msgid "Dithering (photos)"
 msgstr "डिथरिंग (फ़ोटो)"
 
-#: tavletta/ui/texts.py:176
+#: tavletta/ui/texts.py:180
 msgid "Ordered pattern"
 msgstr "क्रमबद्ध पैटर्न"
 
-#: tavletta/ui/texts.py:179
+#: tavletta/ui/texts.py:183
 msgctxt "line style"
 msgid "Solid"
 msgstr "ठोस"
 
-#: tavletta/ui/texts.py:180
+#: tavletta/ui/texts.py:184
 msgid "Dashed"
 msgstr "डैश वाली"
 
-#: tavletta/ui/texts.py:181 tavletta/ui/texts.py:206
+#: tavletta/ui/texts.py:185 tavletta/ui/texts.py:210
 msgid "Dotted"
 msgstr "बिंदीदार"
 
-#: tavletta/ui/texts.py:183
+#: tavletta/ui/texts.py:187
 msgid "Double"
 msgstr "दोहरी"
 
-#: tavletta/ui/texts.py:185
+#: tavletta/ui/texts.py:189
 msgid "Line"
 msgstr "रेखा"
 
-#: tavletta/ui/texts.py:186
+#: tavletta/ui/texts.py:190
 msgid "Rectangle"
 msgstr "आयत"
 
-#: tavletta/ui/texts.py:187
+#: tavletta/ui/texts.py:191
 msgid "Ellipse"
 msgstr "दीर्घवृत्त"
 
-#: tavletta/ui/texts.py:188
+#: tavletta/ui/texts.py:192
 msgid "Separator"
 msgstr "विभाजक"
 
-#: tavletta/ui/texts.py:191
+#: tavletta/ui/texts.py:195
 msgid "Horizontal"
 msgstr "क्षैतिज"
 
-#: tavletta/ui/texts.py:192
+#: tavletta/ui/texts.py:196
 msgid "Vertical"
 msgstr "लंबवत"
 
-#: tavletta/ui/texts.py:193
+#: tavletta/ui/texts.py:197
 msgid "Diagonal, rising"
 msgstr "विकर्ण, ऊपर की ओर"
 
-#: tavletta/ui/texts.py:194
+#: tavletta/ui/texts.py:198
 msgid "Diagonal, falling"
 msgstr "विकर्ण, नीचे की ओर"
 
-#: tavletta/ui/texts.py:197
+#: tavletta/ui/texts.py:201
 msgctxt "arrows"
 msgid "None"
 msgstr "कोई नहीं"
 
-#: tavletta/ui/texts.py:198
+#: tavletta/ui/texts.py:202
 msgid "At the start"
 msgstr "शुरुआत में"
 
-#: tavletta/ui/texts.py:199
+#: tavletta/ui/texts.py:203
 msgid "At the end"
 msgstr "अंत में"
 
-#: tavletta/ui/texts.py:200
+#: tavletta/ui/texts.py:204
 msgid "At both ends"
 msgstr "दोनों सिरों पर"
 
-#: tavletta/ui/texts.py:203
+#: tavletta/ui/texts.py:207
 msgctxt "fill"
 msgid "None"
 msgstr "कोई नहीं"
 
-#: tavletta/ui/texts.py:204
+#: tavletta/ui/texts.py:208
 msgctxt "fill"
 msgid "Solid"
 msgstr "ठोस"
 
-#: tavletta/ui/texts.py:205
+#: tavletta/ui/texts.py:209
 msgid "Hatched"
 msgstr "तिरछी धारियाँ"
 
-#: tavletta/ui/texts.py:207
+#: tavletta/ui/texts.py:211
 msgid "Grid"
 msgstr "ग्रिड"
 
-#: tavletta/ui/texts.py:239
+#: tavletta/ui/texts.py:243
 #, python-format
 msgid "%(name)s is too large to put on a label: at most %(size)d MB."
 msgstr "%(name)s लेबल पर रखने के लिए बहुत बड़ी है: अधिकतम %(size)d MB."
 
 #. translators: %(formats)s is a list of file formats: PNG, JPEG, …
-#: tavletta/ui/texts.py:247
+#: tavletta/ui/texts.py:251
 #, python-format
 msgid ""
 "%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
 msgstr "%(name)s ऐसी छवि नहीं है जिसे Tavletta उपयोग कर सके। %(formats)s में छवियाँ उपयोग की जा सकती हैं।"
 
-#: tavletta/ui/texts.py:255
+#: tavletta/ui/texts.py:259
 #, python-format
 msgid "%(name)s is not a label, an image or a data file"
 msgstr "%(name)s न लेबल है, न छवि, न डेटा फ़ाइल"
 
 #. translators: the print density a NIIMBOT model uses by default
-#: tavletta/ui/texts.py:273
+#: tavletta/ui/texts.py:277
 msgctxt "print density"
 msgid "Default"
 msgstr "डिफ़ॉल्ट"
 
-#: tavletta/ui/texts.py:277
+#: tavletta/ui/texts.py:281
 #, python-format
 msgid "%d %%"
 msgstr "%d%%"
 
 #. translators: print speed in inches per second, as label printers state it
-#: tavletta/ui/texts.py:280
+#: tavletta/ui/texts.py:284
 #, python-format
 msgid "%d in/s"
 msgstr "%d इंच/से"
 
-#: tavletta/ui/texts.py:289 tavletta/server/web/ui.js:66
+#: tavletta/ui/texts.py:293 tavletta/server/web/ui.js:66
 msgid "Image"
 msgstr "छवि"
 
-#: tavletta/ui/texts.py:324
+#: tavletta/ui/texts.py:328
 #, python-format
 msgid "Endless, %(width)s wide"
 msgstr "निरंतर, %(width)s चौड़ा"
 
-#: tavletta/ui/texts.py:334
+#: tavletta/ui/texts.py:338
 msgid ""
 "Check that all of the label is inside the selection. Drag to move it or its "
 "edges, or draw a new one."
 msgstr "जाँचें कि पूरा लेबल चयन के अंदर है। चयन या उसके किनारों को खिसकाने के लिए खींचें, या नया बनाएँ।"
 
-#: tavletta/ui/texts.py:338
+#: tavletta/ui/texts.py:342
 msgid ""
 "Several areas could be the label. Check the selection or try the next one."
 msgstr "कई क्षेत्र लेबल हो सकते हैं। चयन जाँचें या अगला आज़माएँ।"
 
-#: tavletta/ui/texts.py:340
+#: tavletta/ui/texts.py:344
 msgid "Everything printed on the page is selected. Drag to choose the label."
 msgstr "पृष्ठ पर छपा सब कुछ चुना गया है। लेबल चुनने के लिए खींचें।"
 
-#: tavletta/ui/texts.py:341
+#: tavletta/ui/texts.py:345
 msgid "Nothing is printed on this page."
 msgstr "इस पृष्ठ पर कुछ भी छपा नहीं है।"
 
-#: tavletta/ui/texts.py:346
+#: tavletta/ui/texts.py:350
 msgid "PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "PDF फ़ाइलों के लिए Poppler (poppler-glib) चाहिए, जो इंस्टॉल नहीं है"
 
-#: tavletta/ui/texts.py:357
+#: tavletta/ui/texts.py:361
 msgid "System printer (CUPS, IPP)"
 msgstr "सिस्टम प्रिंटर (CUPS, IPP)"
 
-#: tavletta/ui/texts.py:358
+#: tavletta/ui/texts.py:362
 msgid "Receipt printer (ESC/POS)"
 msgstr "रसीद प्रिंटर (ESC/POS)"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:360
+#: tavletta/ui/texts.py:364
 #, python-format
 msgid "%s, continuous rolls"
 msgstr "%s, लगातार रोल"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:362
+#: tavletta/ui/texts.py:366
 #, python-format
 msgid "%s, die-cut labels"
 msgstr "%s, पहले से कटे लेबल"
 
-#: tavletta/ui/texts.py:385
+#: tavletta/ui/texts.py:389
 #, python-format
 msgid "Element %(n)d: the code is empty"
 msgstr "तत्व %(n)d: कोड खाली है"
 
-#: tavletta/ui/texts.py:386
+#: tavletta/ui/texts.py:390
 #, python-format
 msgid "Element %(n)d: EAN-13 needs exactly 12 digits"
 msgstr "तत्व %(n)d: EAN-13 के लिए ठीक 12 अंक चाहिए"
 
-#: tavletta/ui/texts.py:387
+#: tavletta/ui/texts.py:391
 #, python-format
 msgid "Element %(n)d: the EAN-13 check digit is wrong"
 msgstr "तत्व %(n)d: EAN-13 का चेक अंक गलत है"
 
-#: tavletta/ui/texts.py:388
+#: tavletta/ui/texts.py:392
 #, python-format
 msgid "Element %(n)d: Code 128 holds at most %(max)d characters"
 msgstr "तत्व %(n)d: Code 128 में अधिकतम %(max)d वर्ण हो सकते हैं"
 
-#: tavletta/ui/texts.py:390
+#: tavletta/ui/texts.py:394
 #, python-format
 msgid ""
 "Element %(n)d: the bars are too thin to scan reliably – use a longer or "
 "larger label, or shorter content"
 msgstr "तत्व %(n)d: बार भरोसेमंद ढंग से स्कैन होने के लिए बहुत पतले हैं – लंबा या बड़ा लेबल इस्तेमाल करें, या छोटी सामग्री"
 
-#: tavletta/ui/texts.py:394
+#: tavletta/ui/texts.py:398
 #, python-format
 msgid ""
 "Element %(n)d: Code 128 only accepts Latin letters, digits and punctuation"
 msgstr "तत्व %(n)d: Code 128 केवल लैटिन अक्षर, अंक और विराम चिह्न स्वीकार करता है"
 
-#: tavletta/ui/texts.py:396
+#: tavletta/ui/texts.py:400
 #, python-format
 msgid "Element %(n)d: EAN-8 needs 7 digits, or 8 with the check digit"
 msgstr "तत्व %(n)d: EAN-8 के लिए 7 अंक चाहिए, या चेक अंक सहित 8"
 
-#: tavletta/ui/texts.py:397
+#: tavletta/ui/texts.py:401
 #, python-format
 msgid "Element %(n)d: UPC-A needs 11 digits, or 12 with the check digit"
 msgstr "तत्व %(n)d: UPC-A के लिए 11 अंक चाहिए, या चेक अंक सहित 12"
 
-#: tavletta/ui/texts.py:399
+#: tavletta/ui/texts.py:403
 #, python-format
 msgid ""
 "Element %(n)d: UPC-E needs 7 digits starting with 0 or 1, or 8 with the "
 "check digit"
 msgstr "तत्व %(n)d: UPC-E के लिए 0 या 1 से शुरू होने वाले 7 अंक चाहिए, या चेक अंक सहित 8"
 
-#: tavletta/ui/texts.py:401
+#: tavletta/ui/texts.py:405
 #, python-format
 msgid "Element %(n)d: ITF-14 needs 13 digits, or 14 with the check digit"
 msgstr "तत्व %(n)d: ITF-14 के लिए 13 अंक चाहिए, या चेक अंक सहित 14"
 
-#: tavletta/ui/texts.py:402
+#: tavletta/ui/texts.py:406
 #, python-format
 msgid "Element %(n)d: the check digit is wrong"
 msgstr "तत्व %(n)d: चेक अंक गलत है"
 
-#: tavletta/ui/texts.py:404
+#: tavletta/ui/texts.py:408
 #, python-format
 msgid ""
 "Element %(n)d: Code 39 only accepts capital letters, digits, spaces and - . "
 "$ / + %%"
 msgstr "तत्व %(n)d: Code 39 केवल बड़े अक्षर, अंक, स्पेस और - . $ / + %% स्वीकार करता है"
 
-#: tavletta/ui/texts.py:407
+#: tavletta/ui/texts.py:411
 #, python-format
 msgid ""
 "Element %(n)d: Code 93 only accepts Latin letters, digits and punctuation"
 msgstr "तत्व %(n)d: Code 93 केवल लैटिन अक्षर, अंक और विराम चिह्न स्वीकार करता है"
 
-#: tavletta/ui/texts.py:410
+#: tavletta/ui/texts.py:414
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data only accepts Latin letters, digits and punctuation"
 msgstr "तत्व %(n)d: GS1 डेटा केवल लैटिन अक्षर, अंक और विराम चिह्न स्वीकार करता है"
 
-#: tavletta/ui/texts.py:413
+#: tavletta/ui/texts.py:417
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data must be application identifiers in brackets, each "
 "followed by its value, e.g. (01)09501101530003(10)AB12"
 msgstr "तत्व %(n)d: GS1 डेटा कोष्ठक में एप्लिकेशन आइडेंटिफ़ायर होने चाहिए, हर एक के बाद उसका मान, जैसे (01)09501101530003(10)AB12"
 
-#: tavletta/ui/texts.py:416
+#: tavletta/ui/texts.py:420
 #, python-format
 msgid "Element %(n)d: (%(ai)s) is not a GS1 application identifier"
 msgstr "तत्व %(n)d: (%(ai)s) कोई GS1 एप्लिकेशन आइडेंटिफ़ायर नहीं है"
 
-#: tavletta/ui/texts.py:418
+#: tavletta/ui/texts.py:422
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) has the wrong "
 "length"
 msgstr "तत्व %(n)d: एप्लिकेशन आइडेंटिफ़ायर (%(ai)s) के मान की लंबाई गलत है"
 
-#: tavletta/ui/texts.py:421
+#: tavletta/ui/texts.py:425
 #, python-format
 msgid ""
 "Element %(n)d: the check digit of application identifier (%(ai)s) is wrong"
 msgstr "तत्व %(n)d: एप्लिकेशन आइडेंटिफ़ायर (%(ai)s) का चेक अंक गलत है"
 
-#: tavletta/ui/texts.py:424
+#: tavletta/ui/texts.py:428
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) is not valid: a "
 "date, number or character it does not allow"
 msgstr "तत्व %(n)d: एप्लिकेशन आइडेंटिफ़ायर (%(ai)s) का मान मान्य नहीं है: ऐसी तारीख, संख्या या वर्ण जिसकी यह अनुमति नहीं देता"
 
-#: tavletta/ui/texts.py:428
+#: tavletta/ui/texts.py:432
 #, python-format
 msgid ""
 "Element %(n)d: no UPC-A number shortens to these UPC-E digits – check them "
 "or use UPC-A"
 msgstr "तत्व %(n)d: कोई UPC-A संख्या इन UPC-E अंकों में छोटी नहीं होती – इन्हें जाँचें या UPC-A का उपयोग करें"
 
-#: tavletta/ui/texts.py:432
+#: tavletta/ui/texts.py:436
 #, python-format
 msgid ""
 "Element %(n)d: scanners set to Full ASCII read a $, /, + or %% before a "
 "capital letter as another character"
 msgstr "तत्व %(n)d: Full ASCII पर सेट स्कैनर बड़े अक्षर से पहले $, /, + या %% को किसी दूसरे वर्ण के रूप में पढ़ते हैं"
 
-#: tavletta/ui/texts.py:435
+#: tavletta/ui/texts.py:439
 #, python-format
 msgid "Element %(n)d: the content is too long for this type of code"
 msgstr "तत्व %(n)d: इस प्रकार के कोड के लिए सामग्री बहुत लंबी है"
 
-#: tavletta/ui/texts.py:436
+#: tavletta/ui/texts.py:440
 #, python-format
 msgid "Element %(n)d: the content cannot be encoded in this type of code"
 msgstr "तत्व %(n)d: सामग्री को इस प्रकार के कोड में एन्कोड नहीं किया जा सकता"
 
-#: tavletta/ui/texts.py:438
+#: tavletta/ui/texts.py:442
 #, python-format
 msgid ""
 "Element %(n)d: this type of code needs the Zint library (zint-bindings), "
 "which is not installed"
 msgstr "तत्व %(n)d: इस प्रकार के कोड के लिए Zint लाइब्रेरी (zint-bindings) चाहिए, जो इंस्टॉल नहीं है"
 
-#: tavletta/ui/texts.py:441
+#: tavletta/ui/texts.py:445
 #, python-format
 msgid "Element %(n)d: the image cannot be read"
 msgstr "तत्व %(n)d: छवि पढ़ी नहीं जा सकती"
 
-#: tavletta/ui/texts.py:442
+#: tavletta/ui/texts.py:446
 #, python-format
 msgid "Element %(n)d: this symbol is not in the symbol library"
 msgstr "तत्व %(n)d: यह प्रतीक प्रतीक लाइब्रेरी में नहीं है"
 
-#: tavletta/ui/texts.py:443
+#: tavletta/ui/texts.py:447
 #, python-format
 msgid "Element %(n)d: the document cannot be read"
 msgstr "तत्व %(n)d: दस्तावेज़ पढ़ा नहीं जा सकता"
 
-#: tavletta/ui/texts.py:445
+#: tavletta/ui/texts.py:449
 #, python-format
 msgid ""
 "Element %(n)d: PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "तत्व %(n)d: PDF फ़ाइलों के लिए Poppler (poppler-glib) चाहिए, जो इंस्टॉल नहीं है"
 
-#: tavletta/ui/texts.py:447
+#: tavletta/ui/texts.py:451
 #, python-format
 msgid "Element %(n)d cannot be drawn"
 msgstr "तत्व %(n)d नहीं बनाया जा सकता"
 
-#: tavletta/ui/texts.py:449
+#: tavletta/ui/texts.py:453
 #, python-format
 msgid ""
 "Element %(n)d: the text is too long to be drawn in one line – break it into "
 "lines or shorten it"
 msgstr "तत्व %(n)d: टेक्स्ट एक पंक्ति में बनाने के लिए बहुत लंबा है – इसे पंक्तियों में बाँटें या छोटा करें"
 
-#: tavletta/ui/texts.py:453
+#: tavletta/ui/texts.py:457
 #, python-format
 msgid ""
 "Element %(n)d: the text is too tall to be drawn – use fewer lines or a "
 "smaller size"
 msgstr "तत्व %(n)d: टेक्स्ट बनाने के लिए बहुत ऊँचा है – कम पंक्तियाँ या छोटा आकार उपयोग करें"
 
-#: tavletta/ui/texts.py:456
+#: tavletta/ui/texts.py:460
 #, python-format
 msgid ""
 "Element %(n)d: the font %(font)s is not installed – another font is used"
 msgstr "तत्व %(n)d: फ़ॉन्ट %(font)s इंस्टॉल नहीं है – कोई दूसरा फ़ॉन्ट उपयोग होगा"
 
-#: tavletta/ui/texts.py:459
+#: tavletta/ui/texts.py:463
 msgid ""
 "Safety margin, border, its inset and edge spacing leave no room – reduce them"
 msgstr "सुरक्षा हाशिया, बॉर्डर, उसकी भीतरी दूरी और किनारे का अंतराल कोई जगह नहीं छोड़ते – इन्हें कम करें"
 
-#: tavletta/ui/texts.py:461
+#: tavletta/ui/texts.py:465
 msgid "The fixed length is shorter than the spacing – increase it"
 msgstr "निश्चित लंबाई अंतराल से छोटी है – इसे बढ़ाएँ"
 
-#: tavletta/ui/texts.py:462
+#: tavletta/ui/texts.py:466
 msgid "The background image cannot be read"
 msgstr "पृष्ठभूमि छवि पढ़ी नहीं जा सकती"
 
-#: tavletta/ui/texts.py:464
+#: tavletta/ui/texts.py:468
 #, python-format
 msgid ""
 "Element %(n)d: the code's modules are only one printer dot wide and may not "
 "scan – make the code larger"
 msgstr "तत्व %(n)d: कोड के मॉड्यूल केवल एक प्रिंट बिंदु चौड़े हैं और शायद स्कैन न हों – कोड बड़ा करें"
 
-#: tavletta/ui/texts.py:468
+#: tavletta/ui/texts.py:472
 #, python-format
 msgid ""
 "Element %(n)d: the blank space the code needs around it does not fit – make "
 "the code larger"
 msgstr "तत्व %(n)d: कोड के चारों ओर ज़रूरी खाली जगह नहीं समाती – कोड बड़ा करें"
 
-#: tavletta/ui/texts.py:472
+#: tavletta/ui/texts.py:476
 #, python-format
 msgid ""
 "Element %(n)d: the code does not fit in its space, even at one printer dot "
 "per module – make the label larger or the content shorter"
 msgstr "तत्व %(n)d: प्रति मॉड्यूल एक प्रिंट बिंदु पर भी कोड अपनी जगह में नहीं समाता – लेबल बड़ा करें या सामग्री छोटी करें"
 
-#: tavletta/ui/texts.py:475
+#: tavletta/ui/texts.py:479
 #, python-format
 msgid "Element %(n)d: %(name)s is not a known variable"
 msgstr "तत्व %(n)d: %(name)s कोई ज्ञात चर नहीं है"
 
-#: tavletta/ui/texts.py:477
+#: tavletta/ui/texts.py:481
 #, python-format
 msgid "Element %(n)d: the date of %(name)s is before the year 1 or after 9999"
 msgstr "तत्व %(n)d: %(name)s की तारीख वर्ष 1 से पहले या 9999 के बाद है"
 
-#: tavletta/ui/texts.py:480
+#: tavletta/ui/texts.py:484
 #, python-format
 msgid "Element %(n)d: the variable %(name)s… is not closed – end it with }"
 msgstr "तत्व %(n)d: चर %(name)s… बंद नहीं है – इसे } से समाप्त करें"
 
-#: tavletta/ui/texts.py:483
+#: tavletta/ui/texts.py:487
 #, python-format
 msgid ""
 "Element %(n)d: on a black-and-white printer it hardly stands out from what "
 "lies behind it, as a whole or in part – choose another colour or move it"
 msgstr "तत्व %(n)d: श्वेत-श्याम प्रिंटर पर यह पूरी तरह या आंशिक रूप से अपने पीछे की चीज़ों से मुश्किल से अलग दिखता है – कोई दूसरा रंग चुनें या इसे खिसकाएँ"
 
-#: tavletta/ui/texts.py:486
+#: tavletta/ui/texts.py:490
 #, python-format
 msgid "Element %(n)d: the shape has neither a line nor a fill"
 msgstr "तत्व %(n)d: आकृति में न रेखा है न भराव"
 
-#: tavletta/ui/texts.py:488
+#: tavletta/ui/texts.py:492
 #, python-format
 msgid ""
 "Element %(n)d reaches beyond the edge of the label and is cut off there – "
 "move it or make it smaller"
 msgstr "तत्व %(n)d लेबल के किनारे से बाहर जाता है और वहाँ कट जाता है – इसे खिसकाएँ या छोटा करें"
 
-#: tavletta/ui/texts.py:492
+#: tavletta/ui/texts.py:496
 #, python-format
 msgid ""
 "Element %(n)d: the padding, frame, outline or shadow leave no room for the "
 "text – make them smaller"
 msgstr "तत्व %(n)d: पैडिंग, फ़्रेम, आउटलाइन या छाया पाठ के लिए कोई जगह नहीं छोड़ते – इन्हें छोटा करें"
 
-#: tavletta/ui/texts.py:507
+#: tavletta/ui/texts.py:511
 #, python-format
 msgid "Sheets already printed: %(n)d of %(total)d."
 msgstr "पहले ही प्रिंट हो चुकी शीटें: %(total)d में से %(n)d।"
 
-#: tavletta/ui/texts.py:509
+#: tavletta/ui/texts.py:513
 #, python-format
 msgid "Labels already printed: %(n)d of %(total)d."
 msgstr "पहले ही प्रिंट हो चुके लेबल: %(total)d में से %(n)d।"
 
-#: tavletta/ui/texts.py:513
+#: tavletta/ui/texts.py:517
 msgid "The sheets still waiting in the queue were canceled."
 msgstr "कतार में अभी भी प्रतीक्षा कर रही शीटें रद्द कर दी गईं।"
 
-#: tavletta/ui/texts.py:515
+#: tavletta/ui/texts.py:519
 msgid "The labels still waiting in the queue were canceled."
 msgstr "कतार में अभी भी प्रतीक्षा कर रहे लेबल रद्द कर दिए गए।"
 
-#: tavletta/ui/texts.py:526
+#: tavletta/ui/texts.py:530
 #, python-format
 msgid ""
 "The label is %(size)s, but labels of %(loaded)s are loaded. Check the label "
 "size, or load the matching roll."
 msgstr "लेबल %(size)s का है, पर %(loaded)s के लेबल लगे हैं। लेबल का आकार जाँचें, या सही रोल लगाएँ।"
 
-#: tavletta/ui/texts.py:534
+#: tavletta/ui/texts.py:538
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2951,7 +2962,7 @@ msgid ""
 "size and the gap, or calibrate the printer."
 msgstr "लेबल %(size)s का है और गैप %(gap)s है, इसलिए हर %(pitch)s पर नया लेबल शुरू होता है। प्रिंटर ने हर %(measured)s पर एक लेबल मापा। लेबल का आकार और गैप जाँचें, या प्रिंटर को कैलिब्रेट करें।"
 
-#: tavletta/ui/texts.py:540
+#: tavletta/ui/texts.py:544
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2959,92 +2970,92 @@ msgid ""
 "size and the gap."
 msgstr "लेबल %(size)s का है और गैप %(gap)s है, इसलिए हर %(pitch)s पर नया लेबल शुरू होता है। प्रिंटर ने हर %(measured)s पर एक लेबल मापा। लेबल का आकार और गैप जाँचें।"
 
-#: tavletta/ui/texts.py:557
+#: tavletta/ui/texts.py:561
 msgid ""
 "The printer cannot be found. Check that it is switched on and in the same "
 "network, or enter its IP address."
 msgstr "प्रिंटर नहीं मिला। जाँचें कि वह चालू है और उसी नेटवर्क में है, या उसका IP पता दर्ज करें।"
 
-#: tavletta/ui/texts.py:561
+#: tavletta/ui/texts.py:565
 msgid ""
 "The printer cannot be found on USB. Check the cable and that the printer is "
 "switched on and awake, then search again."
 msgstr "USB पर प्रिंटर नहीं मिल रहा। केबल जाँचें और देखें कि प्रिंटर चालू है और स्लीप मोड में नहीं है, फिर दोबारा खोजें।"
 
-#: tavletta/ui/texts.py:564
+#: tavletta/ui/texts.py:568
 msgid "The printer does not answer. Check that it is switched on and awake."
 msgstr "प्रिंटर जवाब नहीं दे रहा। जाँचें कि वह चालू है और स्लीप मोड में नहीं है।"
 
-#: tavletta/ui/texts.py:566
+#: tavletta/ui/texts.py:570
 msgid ""
 "The printer stopped taking data. Check whether it shows a problem, such as "
 "no labels or an open cover, then try again."
 msgstr "प्रिंटर ने डेटा लेना बंद कर दिया है। जाँचें कि क्या वह कोई समस्या दिखा रहा है, जैसे लेबल खत्म होना या कवर खुला होना, फिर दोबारा प्रयास करें।"
 
-#: tavletta/ui/texts.py:570
+#: tavletta/ui/texts.py:574
 msgid ""
 "The printer refuses the connection. Switch it off and on again. If its web "
 "interface offers a “Port 9100” option, turn it on."
 msgstr "प्रिंटर कनेक्शन अस्वीकार कर रहा है। उसे बंद करके फिर चालू करें। यदि उसके वेब इंटरफ़ेस में “Port 9100” विकल्प है, तो उसे चालू करें।"
 
-#: tavletta/ui/texts.py:573
+#: tavletta/ui/texts.py:577
 msgid "No cassette is inserted. Insert one and try again."
 msgstr "कोई कैसेट नहीं लगी है। कैसेट लगाएँ और फिर से प्रयास करें।"
 
-#: tavletta/ui/texts.py:574
+#: tavletta/ui/texts.py:578
 msgid "The printer's cover is open. Close it and try again."
 msgstr "प्रिंटर का ढक्कन खुला है। उसे बंद करें और फिर से प्रयास करें।"
 
-#: tavletta/ui/texts.py:575
+#: tavletta/ui/texts.py:579
 msgid "The label is jammed. Open the cover, remove it and try again."
 msgstr "लेबल अटक गया है। ढक्कन खोलें, लेबल निकालें और फिर से प्रयास करें।"
 
-#: tavletta/ui/texts.py:576
+#: tavletta/ui/texts.py:580
 msgid "The cassette is not recognised. Insert it again or try another one."
 msgstr "कैसेट पहचानी नहीं गई। उसे फिर से लगाएँ या कोई दूसरी कैसेट आज़माएँ।"
 
-#: tavletta/ui/texts.py:577
+#: tavletta/ui/texts.py:581
 msgid "The printer is busy. Wait a moment and try again."
 msgstr "प्रिंटर व्यस्त है। थोड़ा रुकें और फिर से प्रयास करें।"
 
-#: tavletta/ui/texts.py:578
+#: tavletta/ui/texts.py:582
 #, python-format
 msgid "The label is too long for this printer: at most %(max)s."
 msgstr "लेबल इस प्रिंटर के लिए बहुत लंबा है: अधिकतम %(max)s।"
 
-#: tavletta/ui/texts.py:579
+#: tavletta/ui/texts.py:583
 #, python-format
 msgid "The label is too wide for this printer: at most %(max)s."
 msgstr "यह लेबल इस प्रिंटर के लिए बहुत चौड़ा है: अधिकतम %(max)s।"
 
-#: tavletta/ui/texts.py:580
+#: tavletta/ui/texts.py:584
 msgid "The printer is out of labels. Load a new roll and try again."
 msgstr "प्रिंटर में लेबल खत्म हो गए हैं। नया रोल लगाएँ और फिर कोशिश करें।"
 
-#: tavletta/ui/texts.py:581
+#: tavletta/ui/texts.py:585
 msgid "The print head is open. Close it and try again."
 msgstr "प्रिंट हेड खुला है। उसे बंद करें और फिर कोशिश करें।"
 
-#: tavletta/ui/texts.py:583
+#: tavletta/ui/texts.py:587
 msgid ""
 "The printer cannot find the next label. Check that the labels are loaded "
 "correctly and run through the label sensor."
 msgstr "प्रिंटर को अगला लेबल नहीं मिल रहा। जाँचें कि लेबल सही ढंग से लगे हैं और लेबल सेंसर से होकर गुज़रते हैं।"
 
-#: tavletta/ui/texts.py:587
+#: tavletta/ui/texts.py:591
 msgid ""
 "There is a problem with the ribbon. Check that it is inserted correctly and "
 "matches the print method set on the printer."
 msgstr "रिबन में समस्या है। जाँचें कि वह सही ढंग से लगा है और प्रिंटर पर सेट प्रिंट विधि से मेल खाता है।"
 
-#: tavletta/ui/texts.py:593
+#: tavletta/ui/texts.py:597
 #, python-format
 msgid ""
 "The printer finds no ribbon. Load a ribbon and try again. Labels that print "
 "without one need “%(direct)s” under “%(method)s”."
 msgstr "प्रिंटर को रिबन नहीं मिल रहा। रिबन लगाएँ और फिर से कोशिश करें। बिना रिबन के छपने वाले लेबल के लिए “%(method)s” में “%(direct)s” चाहिए।"
 
-#: tavletta/ui/texts.py:600
+#: tavletta/ui/texts.py:604
 #, python-format
 msgid ""
 "A ribbon is loaded, but the printer prints without it (thermal direct). For "
@@ -3052,239 +3063,246 @@ msgid ""
 "remove the ribbon."
 msgstr "रिबन लगा है, पर प्रिंटर उसके बिना प्रिंट करता है (डायरेक्ट थर्मल)। रिबन की ज़रूरत वाले लेबल के लिए “%(method)s” में “%(transfer)s” चुनें, या रिबन निकाल दें।"
 
-#: tavletta/ui/texts.py:605
+#: tavletta/ui/texts.py:609
 msgid "The printer is paused. Resume it on its display and try again."
 msgstr "प्रिंटर रुका हुआ है। उसकी डिस्प्ले पर फिर से शुरू करें और दोबारा कोशिश करें।"
 
-#: tavletta/ui/texts.py:606
+#: tavletta/ui/texts.py:612
+#, python-format
+msgid ""
+"The printer ran out of memory for the job. Lower “%s” in the printer "
+"settings, then try again."
+msgstr "इस जॉब के लिए प्रिंटर की मेमोरी कम पड़ गई। प्रिंटर सेटिंग्स में “%s” घटाएँ, फिर दोबारा कोशिश करें।"
+
+#: tavletta/ui/texts.py:616
 msgid "The printer is out of paper. Load paper and try again."
 msgstr "प्रिंटर में कागज़ खत्म हो गया है। कागज़ डालें और दोबारा कोशिश करें।"
 
-#: tavletta/ui/texts.py:608
+#: tavletta/ui/texts.py:618
 msgid ""
 "The paper is jammed. Remove it as the printer's display shows and try again."
 msgstr "कागज़ फँस गया है। प्रिंटर की डिस्प्ले पर दिखाए अनुसार उसे निकालें और दोबारा कोशिश करें।"
 
-#: tavletta/ui/texts.py:610
+#: tavletta/ui/texts.py:620
 msgid "The printer is out of toner or ink. Replace it and try again."
 msgstr "प्रिंटर में टोनर या स्याही खत्म हो गई है। उसे बदलें और दोबारा कोशिश करें।"
 
-#: tavletta/ui/texts.py:611
+#: tavletta/ui/texts.py:621
 msgid "The printer cannot print this size. Choose a paper size it offers."
 msgstr "प्रिंटर इस आकार में प्रिंट नहीं कर सकता। प्रिंटर द्वारा समर्थित कागज़ का आकार चुनें।"
 
-#: tavletta/ui/texts.py:613
+#: tavletta/ui/texts.py:623
 msgid ""
 "The printer takes none of the formats Tavletta can send (PDF, PWG Raster, "
 "JPEG)."
 msgstr "प्रिंटर Tavletta द्वारा भेजे जा सकने वाले किसी भी फ़ॉर्मैट (PDF, PWG Raster, JPEG) को स्वीकार नहीं करता।"
 
-#: tavletta/ui/texts.py:616
+#: tavletta/ui/texts.py:626
 msgid ""
 "The printer's queue is paused. Resume it in the system's printer settings "
 "and try again."
 msgstr "प्रिंटर की कतार रुकी हुई है। सिस्टम की प्रिंटर सेटिंग में उसे फिर से शुरू करें और दोबारा कोशिश करें।"
 
-#: tavletta/ui/texts.py:620
+#: tavletta/ui/texts.py:630
 msgid ""
 "The print job was held in the queue, for example until it is released or a "
 "password is entered. Check the queue in the system's printer settings and "
 "try again."
 msgstr "प्रिंट जॉब कतार में रोक दिया गया, उदाहरण के लिए जब तक उसे जारी न किया जाए या पासवर्ड न डाला जाए। सिस्टम की प्रिंटर सेटिंग में कतार जाँचें और दोबारा कोशिश करें।"
 
-#: tavletta/ui/texts.py:624
+#: tavletta/ui/texts.py:634
 msgid "The print job was canceled at the printer or in the queue."
 msgstr "प्रिंट जॉब प्रिंटर पर या कतार में रद्द कर दिया गया।"
 
-#: tavletta/ui/texts.py:625
+#: tavletta/ui/texts.py:635
 #, python-format
 msgid ""
 "The printer did not report its resolution in time. Choose it under “%s”."
 msgstr "प्रिंटर ने समय पर अपना रिज़ॉल्यूशन नहीं बताया। इसे “%s” में चुनें।"
 
-#: tavletta/ui/texts.py:628
+#: tavletta/ui/texts.py:638
 msgid ""
 "The loaded roll does not match the label. Load a matching roll, or choose "
 "the label size or printer model of the roll that is loaded."
 msgstr "लगाया गया रोल लेबल से मेल नहीं खाता। सही रोल लगाएँ, या लगाए गए रोल के अनुसार लेबल का आकार या प्रिंटर मॉडल चुनें।"
 
-#: tavletta/ui/texts.py:631
+#: tavletta/ui/texts.py:641
 msgid "The printer's battery is low – charge it or connect the power adapter."
 msgstr "प्रिंटर की बैटरी कम है – इसे चार्ज करें या पावर एडॉप्टर लगाएँ।"
 
-#: tavletta/ui/texts.py:632
+#: tavletta/ui/texts.py:642
 msgid ""
 "The print head is too hot. Wait until it has cooled down, then try again."
 msgstr "प्रिंट हेड बहुत गर्म है। ठंडा होने तक प्रतीक्षा करें, फिर से कोशिश करें।"
 
-#: tavletta/ui/texts.py:634
+#: tavletta/ui/texts.py:644
 msgid ""
 "Tavletta cannot print on this printer model: it does not take the raster "
 "images Tavletta sends."
 msgstr "Tavletta इस प्रिंटर मॉडल पर प्रिंट नहीं कर सकता: यह Tavletta की भेजी रैस्टर छवियाँ स्वीकार नहीं करता।"
 
-#: tavletta/ui/texts.py:638
+#: tavletta/ui/texts.py:648
 msgid "Tavletta does not know this printer model and cannot print on it yet."
 msgstr "Tavletta इस प्रिंटर मॉडल को नहीं जानता और अभी इस पर प्रिंट नहीं कर सकता।"
 
-#: tavletta/ui/texts.py:641
+#: tavletta/ui/texts.py:651
 msgid ""
 "The printer is in Editor Lite mode and shows up as a USB drive. Switch "
 "Editor Lite off on the printer (its lamp goes out), then search again."
 msgstr "प्रिंटर Editor Lite मोड में है और USB ड्राइव के रूप में दिखता है। प्रिंटर पर Editor Lite बंद करें (उसकी लाइट बुझ जाती है), फिर से खोजें।"
 
-#: tavletta/ui/texts.py:645
+#: tavletta/ui/texts.py:655
 msgid ""
 "Tavletta is not allowed to use the printer's USB port. Add your user to the "
 "group “lp” (sudo usermod -aG lp $USER), then log out and in again."
 msgstr "Tavletta को प्रिंटर का USB पोर्ट इस्तेमाल करने की अनुमति नहीं है। अपने उपयोगकर्ता को समूह “lp” में जोड़ें (sudo usermod -aG lp $USER), फिर लॉग आउट करके दोबारा लॉग इन करें।"
 
-#: tavletta/ui/texts.py:649
+#: tavletta/ui/texts.py:659
 msgid ""
 "The page is too large to make at the resolution the printer takes. Choose a "
 "smaller paper size, or print on a printer that takes PDF."
 msgstr "प्रिंटर जिस रिज़ॉल्यूशन को स्वीकार करता है, उस पर यह पेज बनाने के लिए बहुत बड़ा है। छोटा काग़ज़ आकार चुनें, या ऐसे प्रिंटर पर प्रिंट करें जो PDF स्वीकार करता हो।"
 
-#: tavletta/ui/texts.py:653
+#: tavletta/ui/texts.py:663
 msgid ""
 "A code does not fit on the label at this printer's resolution and would be "
 "cut off. Make the label larger or the code's content shorter."
 msgstr "इस प्रिंटर के रिज़ॉल्यूशन पर कोड लेबल पर नहीं समाता और कट जाएगा। लेबल बड़ा करें या कोड की सामग्री छोटी करें।"
 
-#: tavletta/ui/texts.py:657
+#: tavletta/ui/texts.py:667
 msgid ""
 "Tavletta is not allowed to use the printer's serial port. Add your user to "
 "the group “dialout” (sudo usermod -aG dialout $USER; on Arch Linux the group "
 "is “uucp”), then log out and in again."
 msgstr "Tavletta को प्रिंटर का सीरियल पोर्ट इस्तेमाल करने की अनुमति नहीं है। अपने उपयोगकर्ता को समूह “dialout” में जोड़ें (sudo usermod -aG dialout $USER; Arch Linux पर समूह का नाम “uucp” है), फिर लॉग आउट करके दोबारा लॉग इन करें।"
 
-#: tavletta/ui/texts.py:662
+#: tavletta/ui/texts.py:672
 msgid ""
 "The printer reported a problem. Switch it off and on again, then try once "
 "more."
 msgstr "प्रिंटर ने एक समस्या बताई। उसे बंद करके फिर चालू करें, फिर एक बार और प्रयास करें।"
 
-#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:452
+#: tavletta/ui/texts.py:683 tavletta/server/web/ui.js:452
 msgid "Printed"
 msgstr "प्रिंट हो गया"
 
-#: tavletta/ui/texts.py:679
+#: tavletta/ui/texts.py:689
 msgid "Sent to the printer – it prints when its turn comes"
 msgstr "प्रिंटर को भेज दिया गया – बारी आने पर प्रिंट होगा"
 
-#: tavletta/ui/texts.py:681
+#: tavletta/ui/texts.py:691
 msgid "Sent to the printer – it did not confirm printing"
 msgstr "प्रिंटर को भेजा गया – उसने प्रिंट होने की पुष्टि नहीं की"
 
-#: tavletta/ui/texts.py:685
+#: tavletta/ui/texts.py:695
 #, python-format
 msgid "Printed with “%(used)s”, as the loaded roll needs it"
 msgstr "“%(used)s” से प्रिंट किया गया, क्योंकि लगाए गए रोल को इसकी ज़रूरत है"
 
-#: tavletta/ui/texts.py:689
+#: tavletta/ui/texts.py:699
 #, python-format
 msgid ""
 "Colour mode “%(wanted)s” is not available on this printer, printed with "
 "“%(used)s”"
 msgstr "रंग मोड “%(wanted)s” इस प्रिंटर पर उपलब्ध नहीं है, “%(used)s” से प्रिंट किया गया"
 
-#: tavletta/ui/texts.py:699
+#: tavletta/ui/texts.py:709
 msgid "Warming up…"
 msgstr "गर्म हो रहा है…"
 
-#: tavletta/ui/texts.py:700
+#: tavletta/ui/texts.py:710
 msgid "Cooling down…"
 msgstr "ठंडा हो रहा है…"
 
-#: tavletta/ui/texts.py:701
+#: tavletta/ui/texts.py:711
 msgid "Cleaning…"
 msgstr "सफ़ाई हो रही है…"
 
-#: tavletta/ui/texts.py:702
+#: tavletta/ui/texts.py:712
 msgid "Swipe the printer's panel to cut the label"
 msgstr "लेबल काटने के लिए प्रिंटर के पैनल पर स्वाइप करें"
 
-#: tavletta/ui/texts.py:704
+#: tavletta/ui/texts.py:714
 msgid "Out of paper – load paper to continue"
 msgstr "कागज़ खत्म – जारी रखने के लिए कागज़ डालें"
 
-#: tavletta/ui/texts.py:705
+#: tavletta/ui/texts.py:715
 msgid "Cover open – close it to continue"
 msgstr "ढक्कन खुला है – जारी रखने के लिए उसे बंद करें"
 
-#: tavletta/ui/texts.py:706
+#: tavletta/ui/texts.py:716
 msgid "Paper jammed – remove it to continue"
 msgstr "कागज़ फँस गया – जारी रखने के लिए उसे निकालें"
 
-#: tavletta/ui/texts.py:717
+#: tavletta/ui/texts.py:727
 msgid "This label needs a newer version of Tavletta"
 msgstr "इस लेबल के लिए Tavletta का नया संस्करण चाहिए"
 
-#: tavletta/ui/texts.py:719
+#: tavletta/ui/texts.py:729
 #, python-format
 msgid "%s is not a Tavletta label"
 msgstr "%s कोई Tavletta लेबल नहीं है"
 
-#: tavletta/ui/texts.py:720 tavletta/ui/texts.py:740
+#: tavletta/ui/texts.py:730 tavletta/ui/texts.py:750
 #: tavletta/server/service.py:914
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "फ़ाइल खराब है: %s"
 
-#: tavletta/ui/texts.py:727
+#: tavletta/ui/texts.py:737
 #, python-format
 msgid "The data file %s is not there any more. Choose it again or remove it."
 msgstr "डेटा फ़ाइल %s अब मौजूद नहीं है। उसे फिर से चुनें या हटाएँ।"
 
-#: tavletta/ui/texts.py:731
+#: tavletta/ui/texts.py:741
 #, python-format
 msgid "%(file)s has no sheet named %(sheet)s"
 msgstr "%(file)s में %(sheet)s नाम की कोई शीट नहीं है"
 
-#: tavletta/ui/texts.py:733
+#: tavletta/ui/texts.py:743
 #, python-format
 msgid "%s is not a table. Use a CSV, ODS or XLSX file."
 msgstr "%s तालिका नहीं है। CSV, ODS या XLSX फ़ाइल इस्तेमाल करें।"
 
-#: tavletta/ui/texts.py:735
+#: tavletta/ui/texts.py:745
 #, python-format
 msgid ""
 "%s is too large for serial labels. Split it into smaller files or remove "
 "rows and columns that are not needed."
 msgstr "%s सीरियल लेबल के लिए बहुत बड़ी है। इसे छोटी फ़ाइलों में बाँटें या अनावश्यक पंक्तियाँ और स्तंभ हटाएँ।"
 
-#: tavletta/ui/texts.py:738
+#: tavletta/ui/texts.py:748
 #, python-format
 msgid "%s contains no data."
 msgstr "%s में कोई डेटा नहीं है।"
 
-#: tavletta/ui/texts.py:749
+#: tavletta/ui/texts.py:759
 #, python-format
 msgid ""
 "Printing stopped at row %(row)d. To continue, print again from row %(row)d."
 msgstr "प्रिंटिंग पंक्ति %(row)d पर रुक गई। जारी रखने के लिए पंक्ति %(row)d से फिर से प्रिंट करें।"
 
-#: tavletta/ui/texts.py:753
+#: tavletta/ui/texts.py:763
 #, python-format
 msgid "Copies of row %(row)d already printed: %(copies)d."
 msgstr "पंक्ति %(row)d की पहले से प्रिंट हुई प्रतियाँ: %(copies)d।"
 
-#: tavletta/ui/texts.py:758
+#: tavletta/ui/texts.py:768
 #, python-format
 msgid "Row %(row)d goes at position %(position)d of sheet %(sheet)d."
 msgstr "पंक्ति %(row)d शीट %(sheet)d की स्थिति %(position)d पर आती है।"
 
-#: tavletta/ui/texts.py:769
+#: tavletta/ui/texts.py:779
 #, python-format
 msgid "Cannot save %s: no permission to write there"
 msgstr "%s सहेजा नहीं जा सकता: वहाँ लिखने की अनुमति नहीं है"
 
-#: tavletta/ui/texts.py:771
+#: tavletta/ui/texts.py:781
 #, python-format
 msgid "Cannot save %s: the disk is full"
 msgstr "%s सहेजा नहीं जा सकता: डिस्क भरी हुई है"
 
-#: tavletta/ui/texts.py:781
+#: tavletta/ui/texts.py:791
 #, python-format
 msgid ""
 "This cassette seems to be from %(month)s %(year)d. Old ZINK paper prints "
@@ -3418,104 +3436,104 @@ msgstr "केवल स्थानीय फ़ाइलें छोड़ी
 msgid "Please wait until printing has finished"
 msgstr "कृपया प्रिंटिंग पूरी होने तक प्रतीक्षा करें"
 
-#: tavletta/server/config.py:79
+#: tavletta/server/config.py:80
 #, python-format
 msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
-#: tavletta/server/config.py:89 tavletta/server/config.py:93
-#: tavletta/server/config.py:99 tavletta/server/main.py:383
+#: tavletta/server/config.py:90 tavletta/server/config.py:94
+#: tavletta/server/config.py:100 tavletta/server/main.py:383
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "%(file)s पढ़ी नहीं जा सकती: %(reason)s"
 
-#: tavletta/server/config.py:109
+#: tavletta/server/config.py:110
 msgid "expected a table"
 msgstr "तालिका अपेक्षित है"
 
-#: tavletta/server/config.py:119 tavletta/server/config.py:455
+#: tavletta/server/config.py:120 tavletta/server/config.py:457
 #: tavletta/server/oidc.py:226 tavletta/server/oidc.py:318
 msgid "missing"
 msgstr "अनुपस्थित"
 
-#: tavletta/server/config.py:122
+#: tavletta/server/config.py:123
 msgid "expected text"
 msgstr "पाठ अपेक्षित है"
 
-#: tavletta/server/config.py:124
+#: tavletta/server/config.py:125
 msgid "control characters are not allowed"
 msgstr "नियंत्रण वर्णों की अनुमति नहीं है"
 
-#: tavletta/server/config.py:130
+#: tavletta/server/config.py:131
 msgid "expected true or false"
 msgstr "true या false अपेक्षित है"
 
-#: tavletta/server/config.py:141
+#: tavletta/server/config.py:142
 #, python-format
 msgid "expected a number from %(min)s to %(max)s"
 msgstr "%(min)s से %(max)s तक की संख्या अपेक्षित है"
 
-#: tavletta/server/config.py:148
+#: tavletta/server/config.py:149
 #, python-format
 msgid "expected one of: %s"
 msgstr "इनमें से एक अपेक्षित है: %s"
 
-#: tavletta/server/config.py:153 tavletta/server/config.py:159
+#: tavletta/server/config.py:154 tavletta/server/config.py:160
 #: tavletta/server/oidc.py:287
 msgid "unknown key"
 msgstr "अज्ञात कुंजी"
 
-#: tavletta/server/config.py:162
+#: tavletta/server/config.py:163
 msgid "nothing defined"
 msgstr "कुछ भी परिभाषित नहीं"
 
-#: tavletta/server/config.py:168
+#: tavletta/server/config.py:169
 msgid "not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "मान्य नाम नहीं: अक्षर, अंक, . _ - (अधिकतम 64)"
 
-#: tavletta/server/config.py:209
+#: tavletta/server/config.py:210
 msgid "only one printer can be the default"
 msgstr "केवल एक प्रिंटर डिफ़ॉल्ट हो सकता है"
 
-#: tavletta/server/config.py:223
+#: tavletta/server/config.py:224
 msgid "not a valid printer address"
 msgstr "मान्य प्रिंटर पता नहीं"
 
-#: tavletta/server/config.py:245
+#: tavletta/server/config.py:246
 msgid "this printer model does not cut"
 msgstr "यह प्रिंटर मॉडल कट नहीं करता"
 
-#: tavletta/server/config.py:247
+#: tavletta/server/config.py:248
 msgid "this printer model has no colour settings"
 msgstr "इस प्रिंटर मॉडल में रंग सेटिंग नहीं हैं"
 
-#: tavletta/server/config.py:410
+#: tavletta/server/config.py:412
 msgid "expected a date such as 2027-12-31"
 msgstr "2027-12-31 जैसी तारीख़ अपेक्षित है"
 
-#: tavletta/server/config.py:429
+#: tavletta/server/config.py:431
 msgid "the same token twice"
 msgstr "एक ही टोकन दो बार"
 
-#: tavletta/server/config.py:442
+#: tavletta/server/config.py:444
 #, python-format
 msgid "%s can be changed by every user of this computer: chmod 600 it"
 msgstr "%s को इस कंप्यूटर का हर उपयोगकर्ता बदल सकता है: उस पर chmod 600 चलाएँ"
 
-#: tavletta/server/config.py:452
+#: tavletta/server/config.py:454
 msgid "not a token hash: expected sha256:… or scrypt:…"
 msgstr "टोकन हैश नहीं: sha256:… या scrypt:… अपेक्षित है"
 
-#: tavletta/server/config.py:478
+#: tavletta/server/config.py:480
 msgid "expected a list of printer names"
 msgstr "प्रिंटर नामों की सूची अपेक्षित है"
 
-#: tavletta/server/config.py:482 tavletta/server/main.py:409
+#: tavletta/server/config.py:484 tavletta/server/main.py:409
 #: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "प्रिंटर केवल --printers से सीमित किए जा सकते हैं"
 
-#: tavletta/server/config.py:484 tavletta/server/oidc.py:251
+#: tavletta/server/config.py:486 tavletta/server/oidc.py:251
 #: tavletta/server/service.py:551
 #, python-format
 msgid "Unknown printer: %s"

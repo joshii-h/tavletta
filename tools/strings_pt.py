@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Não foi possível iniciar sessão. Tente novamente ou pergunte ao administrador.",
     "Sign in with {provider}": "Iniciar sessão com {provider}",
     "Or with an access token": "Ou com um token de acesso",
+    "Labels per job": "Etiquetas por trabalho",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiquetas de uma série enviadas à impressora como um só trabalho, que as imprime sem parar entre elas. Parar e cancelar têm efeito entre trabalhos: um trabalho já iniciado é impresso por completo. Reduza o valor se a impressora ficar sem memória.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "A impressora ficou sem memória para o trabalho. Reduza “%s” nas definições da impressora e tente novamente.",
 }

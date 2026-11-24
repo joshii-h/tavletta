@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Kirjautuminen ei onnistunut. Yritä uudelleen tai kysy ylläpitäjältä.",
     "Sign in with {provider}": "Kirjaudu palvelulla {provider}",
     "Or with an access token": "Tai pääsytunnuksella",
+    "Labels per job": "Tarroja työtä kohden",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Sarjan tarrat, jotka lähetetään tulostimelle yhtenä työnä ja tulostetaan pysähtymättä niiden välillä. Pysäytys ja peruutus tulevat voimaan töiden välillä: aloitettu työ tulostetaan kokonaan. Pienennä arvoa, jos tulostimen muisti loppuu.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Tulostimen muisti loppui työn aikana. Pienennä kohtaa ”%s” tulostimen asetuksissa ja yritä uudelleen.",
 }

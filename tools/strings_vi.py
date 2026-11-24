@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Đăng nhập không thành công. Hãy thử lại hoặc hỏi quản trị viên.",
     "Sign in with {provider}": "Đăng nhập bằng {provider}",
     "Or with an access token": "Hoặc bằng mã truy cập",
+    "Labels per job": "Số nhãn mỗi lệnh in",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Các nhãn của một loạt được gửi đến máy in thành một lệnh in và in liên tục không dừng giữa chúng. Dừng và hủy có hiệu lực giữa các lệnh in: lệnh in đã bắt đầu sẽ được in hết. Hãy giảm giá trị này nếu máy in hết bộ nhớ.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Máy in không đủ bộ nhớ cho lệnh in. Hãy giảm “%s” trong cài đặt máy in rồi thử lại.",
 }

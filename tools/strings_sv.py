@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Inloggningen misslyckades. Försök igen eller fråga administratören.",
     "Sign in with {provider}": "Logga in med {provider}",
     "Or with an access token": "Eller med en åtkomsttoken",
+    "Labels per job": "Etiketter per jobb",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiketter i en serie som skickas till skrivaren som ett jobb och skrivs ut utan uppehåll mellan dem. Stoppa och avbryt verkar mellan jobben: ett påbörjat jobb skrivs ut helt. Sänk värdet om skrivarens minne tar slut.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Skrivarens minne räckte inte till jobbet. Sänk ”%s” i skrivarinställningarna och försök igen.",
 }

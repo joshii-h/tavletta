@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "로그인하지 못했습니다. 다시 시도하거나 관리자에게 문의하세요.",
     "Sign in with {provider}": "{provider}(으)로 로그인",
     "Or with an access token": "또는 액세스 토큰으로",
+    "Labels per job": "작업당 라벨 수",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "한 시리즈의 라벨을 하나의 작업으로 프린터에 보내며, 프린터는 그 사이에 멈추지 않고 인쇄합니다. 중지와 취소는 작업 사이에 적용됩니다. 이미 시작된 작업은 끝까지 인쇄됩니다. 프린터 메모리가 부족하면 값을 줄이십시오.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "작업에 필요한 프린터 메모리가 부족합니다. 프린터 설정에서 “%s”을(를) 줄인 다음 다시 시도하십시오.",
 }

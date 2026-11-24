@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "サインインできませんでした。もう一度試すか、管理者にお問い合わせください。",
     "Sign in with {provider}": "{provider} でサインイン",
     "Or with an access token": "またはアクセストークンで",
+    "Labels per job": "ジョブあたりのラベル数",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "シリーズのラベルを 1 つのジョブとしてプリンターに送り、途中で止まらずに印刷します。停止とキャンセルはジョブの間で有効になり、始まったジョブは最後まで印刷されます。プリンターのメモリが足りない場合は値を下げてください。",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "ジョブに必要なプリンターのメモリが足りません。プリンター設定で「%s」を下げてから、もう一度お試しください。",
 }

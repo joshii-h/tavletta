@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Die Anmeldung hat nicht geklappt. Versuchen Sie es erneut oder fragen Sie die Administration.",
     "Sign in with {provider}": "Mit {provider} anmelden",
     "Or with an access token": "Oder mit einem Zugangs-Token",
+    "Labels per job": "Etiketten pro Auftrag",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiketten einer Serie, die als ein Auftrag an den Drucker gehen und ohne Halt dazwischen gedruckt werden. Anhalten und Abbrechen wirken zwischen den Aufträgen: Ein begonnener Auftrag wird vollständig gedruckt. Verringern Sie den Wert, wenn der Speicher des Druckers nicht reicht.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Der Speicher des Druckers reicht für den Auftrag nicht aus. Verringern Sie „%s“ in den Druckereinstellungen und versuchen Sie es erneut.",
 }

@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Het aanmelden is niet gelukt. Probeer het opnieuw of vraag het de beheerder.",
     "Sign in with {provider}": "Aanmelden met {provider}",
     "Or with an access token": "Of met een toegangstoken",
+    "Labels per job": "Etiketten per taak",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiketten van een reeks die als één taak naar de printer gaan en zonder te stoppen worden afgedrukt. Stoppen en annuleren werken tussen taken: een begonnen taak wordt volledig afgedrukt. Verlaag de waarde als het geheugen van de printer vol raakt.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Het geheugen van de printer is vol voor deze taak. Verlaag „%s” in de printerinstellingen en probeer het opnieuw.",
 }

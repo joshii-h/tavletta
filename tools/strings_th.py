@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "เข้าสู่ระบบไม่สำเร็จ โปรดลองอีกครั้งหรือสอบถามผู้ดูแลระบบ",
     "Sign in with {provider}": "เข้าสู่ระบบด้วย {provider}",
     "Or with an access token": "หรือใช้โทเค็นการเข้าถึง",
+    "Labels per job": "จำนวนฉลากต่องาน",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "ฉลากของชุดที่ส่งไปยังเครื่องพิมพ์เป็นงานเดียวและพิมพ์ต่อเนื่องโดยไม่หยุดระหว่างกัน การหยุดและการยกเลิกมีผลระหว่างงาน งานที่เริ่มแล้วจะพิมพ์จนครบ ลดค่านี้ลงหากหน่วยความจำของเครื่องพิมพ์ไม่พอ",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "หน่วยความจำของเครื่องพิมพ์ไม่พอสำหรับงานนี้ ลด “%s” ในการตั้งค่าเครื่องพิมพ์ แล้วลองอีกครั้ง",
 }

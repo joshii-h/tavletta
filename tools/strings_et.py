@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Sisselogimine ei õnnestunud. Proovi uuesti või küsi administraatorilt.",
     "Sign in with {provider}": "Logi sisse teenusega {provider}",
     "Or with an access token": "Või pääsuloaga",
+    "Labels per job": "Silte töö kohta",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Seeria sildid, mis saadetakse printerile ühe tööna ja prinditakse vahepeal peatumata. Peatamine ja tühistamine mõjuvad tööde vahel: alustatud töö prinditakse lõpuni. Vähenda väärtust, kui printeri mälu saab otsa.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Printeri mälu sai töö jaoks otsa. Vähenda printeri seadetes väärtust „%s“ ja proovi uuesti.",
 }

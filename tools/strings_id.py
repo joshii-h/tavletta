@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Gagal masuk. Coba lagi, atau tanyakan kepada administrator.",
     "Sign in with {provider}": "Masuk dengan {provider}",
     "Or with an access token": "Atau dengan token akses",
+    "Labels per job": "Label per tugas",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Label dari satu seri yang dikirim ke printer sebagai satu tugas dan dicetak tanpa berhenti di antaranya. Hentikan dan batalkan berlaku di antara tugas: tugas yang sudah dimulai dicetak sampai selesai. Turunkan nilainya jika memori printer habis.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Memori printer tidak cukup untuk tugas ini. Turunkan “%s” di pengaturan printer, lalu coba lagi.",
 }

@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "A bejelentkezés nem sikerült. Próbálja újra, vagy kérdezze a rendszergazdát.",
     "Sign in with {provider}": "Bejelentkezés ezzel: {provider}",
     "Or with an access token": "Vagy hozzáférési tokennel",
+    "Labels per job": "Címke feladatonként",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Egy sorozat címkéi, amelyeket egyetlen feladatként kap a nyomtató, és megállás nélkül nyomtat ki. A leállítás és a megszakítás a feladatok között lép életbe: a megkezdett feladat teljesen kinyomtatódik. Csökkentse az értéket, ha elfogy a nyomtató memóriája.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "A nyomtató memóriája nem elég a feladathoz. Csökkentse ezt a nyomtató beállításaiban: „%s”, majd próbálja újra.",
 }

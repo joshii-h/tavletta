@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Oturum açılamadı. Yeniden deneyin veya yöneticiye sorun.",
     "Sign in with {provider}": "{provider} ile oturum aç",
     "Or with an access token": "Veya bir erişim belirteciyle",
+    "Labels per job": "İş başına etiket",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Bir serinin yazıcıya tek iş olarak gönderilen ve aralarında durmadan basılan etiketleri. Durdurma ve iptal işler arasında geçerli olur: başlamış bir iş tamamen basılır. Yazıcının belleği yetmezse değeri düşürün.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Yazıcının belleği bu iş için yetmedi. Yazıcı ayarlarında “%s” değerini düşürüp yeniden deneyin.",
 }

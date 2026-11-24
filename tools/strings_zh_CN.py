@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "登录失败。请重试，或询问管理员。",
     "Sign in with {provider}": "使用 {provider} 登录",
     "Or with an access token": "或使用访问令牌",
+    "Labels per job": "每个作业的标签数",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "一个系列中作为一个作业发送到打印机的标签，打印机在它们之间不停顿地连续打印。停止和取消在作业之间生效：已开始的作业会完整打印。如果打印机内存不足，请降低此值。",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "打印机内存不足，无法完成此作业。请在打印机设置中降低“%s”，然后重试。",
 }

@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "La connexion n’a pas abouti. Réessayez ou demandez à l’administrateur.",
     "Sign in with {provider}": "Se connecter avec {provider}",
     "Or with an access token": "Ou avec un jeton d’accès",
+    "Labels per job": "Étiquettes par tâche",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Étiquettes d’une série envoyées à l’imprimante en une seule tâche, imprimées sans arrêt entre elles. Arrêter et annuler prennent effet entre deux tâches : une tâche commencée est imprimée entièrement. Diminuez la valeur si la mémoire de l’imprimante est insuffisante.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "La mémoire de l’imprimante est insuffisante pour la tâche. Diminuez « %s » dans les réglages de l’imprimante, puis réessayez.",
 }

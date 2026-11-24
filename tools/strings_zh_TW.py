@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "登入失敗。請再試一次，或詢問管理員。",
     "Sign in with {provider}": "以 {provider} 登入",
     "Or with an access token": "或使用存取權杖",
+    "Labels per job": "每個工作的標籤數",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "一個系列中作為一個工作傳送到印表機的標籤，印表機在它們之間不停頓地連續列印。停止和取消在工作之間生效：已開始的工作會完整列印。如果印表機記憶體不足，請降低此值。",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "印表機記憶體不足，無法完成此工作。請在印表機設定中降低「%s」，然後再試一次。",
 }

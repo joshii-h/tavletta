@@ -1056,4 +1056,7 @@ TRANSLATIONS = {
     "Signing in did not work. Try again, or ask the administrator.": "Войти не удалось. Попробуйте ещё раз или обратитесь к администратору.",
     "Sign in with {provider}": "Войти через {provider}",
     "Or with an access token": "Или с токеном доступа",
+    "Labels per job": "Этикеток в задании",
+    "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Этикетки серии, отправляемые на принтер одним заданием и печатаемые без остановки между ними. Остановка и отмена срабатывают между заданиями: начатое задание печатается полностью. Уменьшите значение, если у принтера не хватает памяти.",
+    "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Принтеру не хватило памяти для задания. Уменьшите «%s» в настройках принтера и попробуйте снова.",
 }
