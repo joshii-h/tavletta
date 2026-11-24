@@ -1169,10 +1169,18 @@ def _element_from_dict(item) -> Element:
         raise LabelError("newer", "unknown element type %r" % kind)
     cls = ELEMENT_TYPES[kind]
     element = cls(**_known_fields(cls, item))
-    _validate_placed(element)
-    _VALIDATORS[cls](element)
-    _validate_free(element)
+    validate_element(element)
     return element
+
+
+def validate_element(element: Element) -> None:
+    """Check an element's fields as a label file's are, in place: numbers
+    clamped to their ranges, a wrong type or choice a LabelError. Whatever
+    changes an element outside the interface's rows (tavletta.editing)
+    makes it valid this way."""
+    _validate_placed(element)
+    _VALIDATORS[type(element)](element)
+    _validate_free(element)
 
 
 def _validate_placed(element: Placed) -> None:

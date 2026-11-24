@@ -16,6 +16,8 @@ from tavletta.model import (
     SheetChoice,
     SymbolElement,
     TextElement,
+    element_id,
+    validate_element,
 )
 
 
@@ -703,3 +705,14 @@ def test_shipping_labels_and_label_sheets_are_features_too(tmp_path):
     with pytest.raises(LabelError) as info:  # one that does not know it refuses
         Label.from_dict({**data, "features": ["sheets", "holograms"]})
     assert info.value.code == "newer"
+
+
+def test_validate_element_clamps_in_place_and_refuses_wrong_types():
+    text = TextElement(x_mm=-3.0, y_mm=2000.0, size_pt=900.0)
+    before = element_id(text)
+    validate_element(text)
+    assert (text.x_mm, text.y_mm, text.size_pt) == (0.0, 1000.0, 300.0)
+    assert element_id(text) == before  # the same element, not a new one
+    code = CodeElement(rotation=45)
+    with pytest.raises(LabelError):
+        validate_element(code)
