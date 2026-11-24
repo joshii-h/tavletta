@@ -112,7 +112,7 @@ LIMITS = """\
 | Data rows, columns, cells | 100 000, 1000, 2 000 000 |
 | One value or cell | 100 000 characters |
 | Copies | 9999, or the printer's `max_copies` |
-| Labels in one job (copies times rows) | 10 000 (`--max-labels`) |
+| Labels in one job (copies times rows) | 10 000 (`--max-labels`), on label sheets 999 |
 | Elements of a label | 200, of them 50 images and codes; 5000 characters and 100 lines a text |
 | Jobs waiting or printing | 100 in all, 20 per named token |
 | Finished jobs kept | 24 hours, at most 1000 |

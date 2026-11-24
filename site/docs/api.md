@@ -85,7 +85,7 @@ Every error is JSON with a stable code and a message for people:
 | 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |
 | 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |
 | 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |
-| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default). |
+| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |
 | 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |
 | 415 | `not_json` | Send Content-Type: application/json. |
 | 421 | `wrong_host` | A loopback server asked for another host name. |
@@ -123,7 +123,7 @@ A job that fails tells why in its `error`, with these codes:
 | Data rows, columns, cells | 100 000, 1000, 2 000 000 |
 | One value or cell | 100 000 characters |
 | Copies | 9999, or the printer's `max_copies` |
-| Labels in one job (copies times rows) | 10 000 (`--max-labels`) |
+| Labels in one job (copies times rows) | 10 000 (`--max-labels`), on label sheets 999 |
 | Elements of a label | 200, of them 50 images and codes; 5000 characters and 100 lines a text |
 | Jobs waiting or printing | 100 in all, 20 per named token |
 | Finished jobs kept | 24 hours, at most 1000 |
@@ -321,7 +321,7 @@ Body fields:
 | `data_file` | string | Or a CSV, TSV, ODS or XLSX file in the labels folder. Without data_rows and data_file, the label's own data file is used if it lies beside the label in the labels folder. |
 | `sheet` | string | Sheet of the data file, the first by default. |
 | `host` | string | Printer address, only without `printers.toml` (default: the one set in the app, else with `--discover` the only printer found). Refused (host_given) with `printers.toml`. |
-| `copies` | integer | Copies of each label (each row); at most the printer's max_copies. Copies times rows: at most `--max-labels` (10000 by default). 1 to 9999; default `1` |
+| `copies` | integer | Copies of each label (each row); at most the printer's max_copies. Copies times rows: at most `--max-labels` (10000 by default), on label sheets at most 999. 1 to 9999; default `1` |
 | `rows` | string | The data rows to print, from 1: '3-10', '5', '7-' (to the last) or '-4'. To print again from where a job stopped. |
 | `no_save_counter` | boolean | Do not save the next `{=counter}` value into the label file. default `false` |
 | `wait` | number | Seconds to wait for the job to finish before answering: 200 if it did, else 202. 0 to 300.0; default `0` |

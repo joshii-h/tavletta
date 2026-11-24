@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s ialah lajur data ({%(name)s}) – berikan fail data dengan --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s ialah lajur data ({%(name)s}) – hantar dalam data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s diisi daripada baris data ({%(name)s}) dan tidak boleh ditetapkan",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s terlalu besar untuk diletakkan pada label: paling banyak %(size)d MB.",
 }

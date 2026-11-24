@@ -174,3 +174,29 @@ def test_a_label_sheet_is_printed_as_in_the_app(server_env, tmp_path):
     assert prepared.sheet is not None and prepared.sheet.outlines
     assert prepared.sheet.count == 6 and prepared.sheet.positions == (2,)
     assert prepared.job().sheet is prepared.sheet
+
+
+def test_a_label_sheet_job_takes_at_most_the_labels_a_job_of_sheets_takes(server_env, tmp_path):
+    """The server's --max-labels may allow more than one job of sheets
+    takes (sheets.layout.MAX_LABELS): refused, not cut short."""
+    from tavletta.model import SheetChoice
+    from tavletta.server.errors import ApiError
+    from tavletta.server.requests import PrintRequest
+    from tavletta.server.service import Service
+    from tavletta.sheets.layout import MAX_LABELS
+    from tavletta.ui.settings import Settings
+
+    text = '[printers.office]\nbackend = "system"\nhost = "ipp://office.local/ipp/print"\n'
+    printers = load_printers(write(tmp_path / "printers.toml", text))
+    service = Service(server_env.labels, (), settings=lambda: Settings({}), printers=printers)
+    assert service.max_labels > MAX_LABELS
+    label = Label(printer="system", orientation="across", elements=[TextElement(text="{N}")])
+    label.sheet = SheetChoice("Avery L7160")
+    rows = [{"N": str(n)} for n in range(MAX_LABELS + 1)]
+    request = PrintRequest(content=label.to_dict(), printer="office", data_rows=rows)
+    with pytest.raises(ApiError) as caught:
+        service.check_print(request)
+    assert (caught.value.status, caught.value.code) == (413, "too_many_labels")
+    assert str(MAX_LABELS) in str(caught.value)
+    request = PrintRequest(content=label.to_dict(), printer="office", data_rows=rows[1:])
+    assert service.check_print(request).total == MAX_LABELS

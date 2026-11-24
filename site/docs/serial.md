@@ -19,7 +19,9 @@ printed label shows the values of its row.
 - XLSX: numbers with their decimals, leading zeros and percent signs,
   dates as `2026-11-11`. Thousands separators and text in the number
   format, such as a currency, are left out. Dates in the East Asian
-  built-in formats come out as numbers.
+  built-in formats come out as numbers. Leading zeros fill up to 30
+  digits; a number format longer than the 255 characters Excel takes is
+  ignored.
 - Empty rows are left out. The hidden cells of merged cells are empty.
 - Several sheets: choose one under [[ui:Sheet]]. If the sheet saved with
   the label is no longer there, nothing is printed until another one is
@@ -63,8 +65,10 @@ data file instead of printing the placeholders.
 - A placeholder without a column of that name is printed as it is; the
   line under the preview names it.
 - Before printing, the codes of every row are checked: an EAN-13 needs
-  12 or 13 digits, an empty cell gives no code. Rows that fail are named;
-  print without them or correct the data file.
+  12 or 13 digits, an empty cell gives no code, a code holds only so much
+  (a QR code less with a higher error correction), GS1 data needs the
+  lengths of its application identifiers. Rows that fail are named; print
+  without them or correct the data file.
 
 - Variables such as `{=counter}` or `{=date}` work together with the
   placeholders; the counter goes on from row to row.

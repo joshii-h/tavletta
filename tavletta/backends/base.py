@@ -216,7 +216,10 @@ class Choice:
 @dataclass(frozen=True)
 class Level:
     """A printer setting in steps, e.g. darkness in per cent. None, the
-    default, keeps what is set on the printer."""
+    default, keeps what is set on the printer. The steps are what the
+    window offers; a value between them (settings.json or printers.toml
+    edited by hand) is kept as it is, within the range, and the window
+    shows it too: the printers take every value of the range."""
 
     key: str
     lower: int
@@ -429,10 +432,9 @@ class ColorAdjust:
             return cls()
         values = {}
         for name in cls.FIELDS:
-            value = data.get(name, 0)
-            if isinstance(value, bool) or not isinstance(value, (int, float)):
-                value = 0
-            values[name] = int(max(-cls.STEPS, min(cls.STEPS, round(value))))
+            # as a Level: NaN, infinity and other junk is 0
+            value = Level(name, -cls.STEPS, cls.STEPS).value(data.get(name, 0))
+            values[name] = value or 0
         return cls(**values)
 
     def to_dict(self) -> dict[str, int]:
@@ -460,8 +462,8 @@ class PrintOptions:
     chain: bool = False
     high_res: bool = False
     feed_mm: float | None = None  # None: the backend's default
-    # the printer as last asked, for backends whose models render differently;
-    # not part of the request itself
+    # this job's printer as it answered, for backends whose models render
+    # differently; not part of the request itself
     info: PrinterInfo | None = field(default=None, compare=False)
 
 
@@ -636,7 +638,25 @@ class ResolutionUnknown(PrinterError):
 class RenderAgain(PrinterError):
     """The printer reported another resolution than the image was made
     for, by a ratio that scaling would spoil: prepare() the label again
-    (it now renders for the reported resolution) and print once more."""
+    without options.info (the backend now renders for what the printer
+    reported; the job's answer may be older) and print once more."""
+
+
+def for_resolution(image: Image.Image, rendered: float, printer: float) -> Image.Image:
+    """A black and white image made at the resolution `rendered`, for a
+    printer of the resolution `printer` (dpi or dots per mm, both alike):
+    as it is if they agree; scaled up dot by dot by a whole ratio (2, 3:
+    every dot a block of dots); else RenderAgain. Scaling down drops dots
+    and spoils thin lines and the bars of codes, 1.5 makes them uneven."""
+    if math.isclose(printer, rendered):
+        return image
+    factor = printer / rendered
+    if factor < 1 or not math.isclose(factor, round(factor), abs_tol=0.01):
+        raise RenderAgain("rendered at %g, the printer has %g" % (rendered, printer))
+    size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
+    resized = image.resize(size, Image.Resampling.NEAREST)
+    resized.info.update(image.info)
+    return resized
 
 
 class WrongMedia(PrinterError):

@@ -74,7 +74,7 @@ tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
 | `--allow-origin` | web origin whose pages may call the server (`https://app.example`): CORS preflights are answered and the answers carry `Access-Control-Allow-Origin`; repeatable |
 | `--allow-printer` | without a printer list: only these printers, compared with the host of the address (never the whole address). A pattern of only digits, dots and `*` is an address pattern: four IPv4 parts, `*` standing for whole parts (`192.168.1.*`, `10.*`, `*.5`, `*.*`); a network as Python's ipaddress reads it (`192.168.1.0/24`, `2001:db8::/32`) is one too. Address patterns match IP addresses only, a host name if every address it resolves to matches one of them (so `192.168.1.evil.example` is not in `192.168.1.*`, and `*.*` matches `printer.local` only by the addresses it resolves to, not by its name). Any other pattern is a name pattern (`*.local`, `cups.example.com`) and matches host names. The server then prints on the first address the resolver gives (only that one; there is no trying the others), not on the name (a name looked up again could point elsewhere; an `ipps` printer must then accept its IP address). `*` alone allows everything without a lookup. A pattern that can never match is refused at startup: a network that is none (`10.0.0.0/33`), an address pattern with a part over 255 or a leading zero (`010.1.1.1`), a `*` within a part (`10*`), more than four parts, or fewer than four without a `*` (`1.2.3`, `10`); repeatable |
 | `--max-body` | largest request body in MB, 4 by default (parsed JSON takes many times its size) |
-| `--max-labels` | most labels in one print job, copies times rows; 10 000 by default (413 `too_many_labels`) |
+| `--max-labels` | most labels in one print job, copies times rows; 10 000 by default, on label sheets at most 999 (413 `too_many_labels`) |
 | `--trusted-proxy` | a reverse proxy, best its own address (`172.30.0.10/32`), whose `X-Forwarded-For` names the client: the rate limit, the 8 requests per client and the log use that address (all header lines together, ports taken off; anything that is no address stops the search at the proxy), the proxy itself is not held to 8 connections. `0.0.0.0/0` or `::/0` (everyone) is warned about. With a proxy, publish the server's port nowhere else; repeatable |
 
 Without `printers.toml`, printer settings (address, safety margin, cut,
@@ -542,7 +542,9 @@ With the Flatpak: `"command": "flatpak"`, `"args": ["run",
     20 megapixels together, checked from their headers before any is
     decoded;
   - each image file is decoded once per render, nothing is kept between
-    renders (the window keeps a few in caches).
+    renders (the window keeps a few in caches); neither are codes,
+    symbol paths or text sizes: no client's content stays in the
+    process beyond its request.
 
   Elements are measured first and drawn at their final size (a text
   fitted to a page is not drawn large and scaled down). An element over
@@ -621,8 +623,12 @@ images towards the 50 images and codes; within the render limits:
 - a PDF of at most 10 MB is read and drawn by Poppler in a child process
   (`tavletta/shipping/pdfchild.py`) limited to 10 s of processor time,
   20 s in all and an address space of 512 MB plus 24 bytes per pixel of
-  the drawing; one that breaks these limits refuses the label (413), a
-  damaged one or a crash of the child is a warning (`page_unreadable`).
+  the drawing, without core files and with 256 files open at most; one
+  that breaks these limits refuses the label (413), also when Poppler or
+  GLib abort because the memory limit stopped an allocation; a damaged
+  one or another crash of the child is a warning (`page_unreadable`).
+  The child gets only the environment that finds Python, its libraries
+  and fonts, not the server's token (`TAVLETTA_TOKEN`) or anything else.
   Poppler never runs in the server's process; only the drawings the
   children send back are kept, for the preview or print job they belong
   to (see below);

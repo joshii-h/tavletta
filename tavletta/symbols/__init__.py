@@ -142,9 +142,12 @@ def _parsed(path: str) -> tuple[Segment, ...] | PathError:
 
 def segments(path: str) -> tuple[Segment, ...]:
     """The parsed path, cached (also a failure): the chooser draws hundreds
-    of symbols, the preview the same ones again and again. PathError if it
-    is invalid."""
-    result = _parsed(path)
+    of symbols, the preview the same ones again and again; not within
+    render limits (the print server), where a client's path stays in no
+    cache beyond its request. PathError if it is invalid."""
+    from tavletta.render import active_limits  # render imports this module
+
+    result = (_parsed if active_limits() is None else _parsed.__wrapped__)(path)
     if isinstance(result, PathError):
         raise PathError(str(result))
     return result

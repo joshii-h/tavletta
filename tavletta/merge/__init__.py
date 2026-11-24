@@ -12,9 +12,7 @@ from __future__ import annotations
 import csv
 import importlib
 import io
-import os
 import re
-import stat
 import struct
 import threading
 import zipfile
@@ -29,6 +27,7 @@ from xml.etree import ElementTree as ET
 from tavletta.merge import csvfile, limits, ods, xlsx
 from tavletta.merge.fill import fill, placeholders
 from tavletta.merge.table import MergeError, Table, cancellable, damaged, too_large
+from tavletta.readfile import FileTooLarge, NotRegularFile, read_limited
 
 __all__ = [
     "Book",
@@ -233,14 +232,15 @@ def _check_counts(entries: int, size: int) -> None:
 
 
 def _read(path: str | Path) -> bytes:
-    # a named pipe or a device would block or never end: only plain files
-    if not stat.S_ISREG(os.stat(path).st_mode):
-        raise MergeError("not_table", "not a regular file")
-    with open(path, "rb") as file:  # no more than the limit, however large the file is
-        data = file.read(limits.MAX_FILE_BYTES + 1)
-    if len(data) > limits.MAX_FILE_BYTES:
-        raise too_large("file larger than %d MB" % (limits.MAX_FILE_BYTES // 2**20))
-    return data
+    """A named pipe or a device would block or never end: only plain
+    files, checked as opened, and no more than the limit, however large
+    the file is (readfile.read_limited)."""
+    try:
+        return read_limited(path, limits.MAX_FILE_BYTES)
+    except NotRegularFile as e:
+        raise MergeError("not_table", str(e)) from None
+    except FileTooLarge as e:
+        raise too_large(str(e)) from None
 
 
 def _safely(action: Callable[[], T], cancel: threading.Event | None = None) -> T:

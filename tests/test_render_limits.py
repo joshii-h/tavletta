@@ -7,9 +7,11 @@ from __future__ import annotations
 import base64
 import io
 import json
+import os
 import signal
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 from PIL import Image
@@ -267,6 +269,96 @@ def test_nothing_of_a_page_is_kept_within_limits():
     assert len(source._pictures) == 1 and len(source._drawings) > 0
 
 
+def test_a_label_may_be_a_millimetre_longer_than_the_printer_takes():
+    """The printer's longest length, plus a millimetre of rounding."""
+    dpi = 254.0  # 10 pixels a millimetre
+    with limited(10**8, max_length_mm=100.0):
+        render_module.check_label(1010, 10, dpi)  # 101 mm
+        with pytest.raises(RenderTooLarge):
+            render_module.check_label(1011, 10, dpi)
+    render_module.check_label(10**5, 10, dpi)  # no limits: no check
+
+
+def test_an_image_file_of_as_many_pixels_as_allowed_is_decoded():
+    """Exactly as many pixels as allowed are taken, one more not."""
+    raw = encode_png((4, 5))
+    assert source._decode_frame(raw, 0, max_pixels=20)[0].size == (4, 5)
+    with pytest.raises(SourceError) as info:
+        source._decode_frame(raw, 0, max_pixels=19)
+    assert info.value.code == "too_large"
+
+
+def test_a_pdf_of_the_limit_is_sent_to_the_child(monkeypatch):
+    monkeypatch.setattr(source, "LIMITED_PDF_BYTES", 12)
+    assert source._child_raw(b64(b"%PDF-1.4 abc")) == b"%PDF-1.4 abc"  # 12 bytes
+    with pytest.raises(RenderTooLarge):
+        source._child_raw(b64(b"%PDF-1.4 abcd"))
+
+
+def encode_png(size: tuple[int, int]) -> bytes:
+    buffer = io.BytesIO()
+    Image.new("RGB", size, "white").save(buffer, "PNG")
+    return buffer.getvalue()
+
+
+def test_no_client_content_stays_in_the_process_caches_within_limits():
+    """Codes, symbol paths and text sizes of a request are kept for the
+    next renders only outside limits (the window), never in the server."""
+    from tavletta import codes, symbols
+    from tavletta.model import SymbolElement
+
+    caches = (codes._encode, codes._qr, symbols._parsed, render_module._measured)
+    for cache in caches:
+        cache.cache_clear()
+    label = Label(
+        tape_mm=24,
+        elements=[
+            TextElement(text="a client's text"),
+            CodeElement(data="client-1", symbology="qr"),
+            CodeElement(data="client-2", symbology="qr", error_correction="H"),
+            CodeElement(data="CLIENT-3", symbology="code128"),
+            SymbolElement(path="M2 2L22 2L22 22Z"),
+        ],
+    )
+    with limited(10**8):
+        assert not render(label, 300).warnings
+    assert [cache.cache_info().currsize for cache in caches] == [0, 0, 0, 0]
+    render(label, 300)  # the window keeps them
+    assert all(cache.cache_info().currsize for cache in caches)
+
+
+def test_within_limits_a_code_is_encoded_once_per_render(monkeypatch):
+    """A die-cut label is rendered, then fitted to its length (each part
+    drawn again at its size): a code encoded once for both, though nothing
+    is kept beyond the render."""
+    from tavletta import codes
+    from tavletta.backends import get_backend
+    from tavletta.backends.base import PrintOptions
+
+    made = []
+    real_encode, real_qr = codes._encode.__wrapped__, codes._qr.__wrapped__
+    monkeypatch.setattr(
+        codes._encode, "__wrapped__", lambda *key: made.append(key) or real_encode(*key)
+    )
+    monkeypatch.setattr(codes._qr, "__wrapped__", lambda *key: made.append(key) or real_qr(*key))
+    label = Label(
+        printer="cab",
+        auto_length=False,
+        elements=[
+            TextElement(text="Asset"),
+            CodeElement(data="once", symbology="qr"),
+            CodeElement(data="level", symbology="qr", error_correction="H"),
+            CodeElement(data="ONCE", symbology="code128"),
+        ],
+    )
+    cab = get_backend("cab")
+    with limited(10**8):
+        cab.render_label(label, PrintOptions())
+        assert sorted(made) == [("code128", "ONCE"), ("level", "H"), ("qr", "once")]
+        cab.render_label(label, PrintOptions())  # the next render encodes again
+    assert len(made) == 6
+
+
 def test_background_brightness_is_not_cached_within_limits():
     render_module._image_brightness_cached.cache_clear()
     label = Label(tape_mm=12, background_image=ImageElement(data=png((20, 20))))
@@ -300,6 +392,31 @@ def test_pdf_pages_are_drawn_by_a_child_within_limits(pdf, monkeypatch):
     assert len(source._drawings) == 0
 
 
+def test_a_kept_pdf_answer_needs_the_file_neither_decoded_nor_hashed_again(monkeypatch):
+    """A series draws the same page on every row: the answer is kept, and
+    the PDF (up to 10 MB) is decoded only to ask, hashed once per block."""
+    answer = json.dumps({"width": 2, "height": 1}).encode() + b"\n" + bytes(6)
+    asked, decoded, hashed = [], [], []
+    monkeypatch.setattr(
+        pdfchild, "ask", lambda raw, request: asked.append(request["op"]) or fake_answer(answer)
+    )
+    real_decoded, real_sha = source._decoded, render_module.hashlib.sha256
+    monkeypatch.setattr(source, "_decoded", lambda data: decoded.append(1) or real_decoded(data))
+    monkeypatch.setattr(
+        render_module.hashlib, "sha256", lambda data: hashed.append(1) or real_sha(data)
+    )
+    data = b64(b"%PDF-1.4 " + b"x" * 1000)
+    with limited(10**6):
+        for _row in range(5):
+            source.draw(data, 0, (0, 0, 1, 1), 0, (2, 1))
+    assert asked == ["draw"] and len(decoded) == 1 and len(hashed) == 1
+
+
+def fake_answer(stdout: bytes) -> tuple[dict, bytes]:
+    head, _newline, body = stdout.partition(b"\n")
+    return json.loads(head), body
+
+
 @needs_poppler
 def test_pdf_limits_within_the_child(pdf, monkeypatch):
     label = Label(printer="cab", tape_mm=50, elements=[PageElement(data=pdf)])
@@ -316,11 +433,59 @@ def test_pdf_limits_within_the_child(pdf, monkeypatch):
             source.page_info(damaged)
 
 
-def fake_run(returncode, stdout=b""):
+def fake_run(returncode, stdout=b"", stderr=b""):
     def run(*_args, **_kwargs):
-        return subprocess.CompletedProcess([], returncode, stdout, b"")
+        return subprocess.CompletedProcess([], returncode, stdout, stderr)
 
     return run
+
+
+@pytest.mark.parametrize(
+    "said",
+    [
+        b"Out of memory\n",
+        b"GLib-ERROR **: failed to allocate 4294967296 bytes",
+        b"terminate called after throwing an instance of 'std::bad_alloc'\n  what():  std::bad_alloc",
+    ],
+)
+def test_a_child_aborted_by_its_memory_limit_is_too_large(monkeypatch, said):
+    """Poppler's and GLib's allocators abort when the memory limit stops
+    them: the PDF is too large for its limits, not damaged."""
+    monkeypatch.setattr(pdfchild.subprocess, "run", fake_run(-signal.SIGABRT, stderr=said))
+    with pytest.raises(pdfchild.ChildLimit):
+        pdfchild.ask(b"", {})
+    with limited(10**6), pytest.raises(RenderTooLarge):
+        source.page_info(b64(b"%PDF-1.4"))
+    # another abort (an assertion in Poppler): unreadable
+    monkeypatch.setattr(pdfchild.subprocess, "run", fake_run(-signal.SIGABRT, stderr=b"assert"))
+    with pytest.raises(pdfchild.ChildFailed):
+        pdfchild.ask(b"", {})
+
+
+def test_the_child_gets_no_secrets_of_the_server(monkeypatch):
+    """Only what finds Python, the libraries and fonts: not the server's
+    token or anything else of its environment."""
+    seen = {}
+
+    def run(*_args, env, **_kwargs):
+        seen.update(env)
+        return subprocess.CompletedProcess([], 0, b"{}\n", b"")
+
+    monkeypatch.setenv("TAVLETTA_TOKEN", "secret-token-of-the-server")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "elsewhere")
+    monkeypatch.setenv("FONTCONFIG_FILE", "/fonts.conf")
+    monkeypatch.setenv("PYTHONPATH", "/extra")
+    for kept in ("PYTHONNOUSERSITE", "PYTHONSAFEPATH", "PYTHONDONTWRITEBYTECODE"):
+        monkeypatch.setenv(kept, "1")  # as the server was set up
+    monkeypatch.setenv("PYTHONPYCACHEPREFIX", "/cache")
+    monkeypatch.setattr(pdfchild.subprocess, "run", run)
+    pdfchild.ask(b"", {})
+    assert "TAVLETTA_TOKEN" not in seen and "AWS_SECRET_ACCESS_KEY" not in seen
+    assert set(seen) <= {*pdfchild.KEPT_ENVIRONMENT, "PYTHONPATH"}
+    assert seen["FONTCONFIG_FILE"] == "/fonts.conf" and seen["PYTHONPYCACHEPREFIX"] == "/cache"
+    assert seen["PYTHONNOUSERSITE"] == seen["PYTHONSAFEPATH"] == "1"
+    root = str(Path(pdfchild.__file__).resolve().parent.parent.parent)
+    assert seen["PYTHONPATH"] == os.pathsep.join((root, "/extra"))
 
 
 def test_child_outcomes(monkeypatch):
@@ -400,9 +565,11 @@ def test_child_limits_its_own_memory_and_time():
         "import resource; from tavletta.shipping import pdfchild; pdfchild._limit(1000);"
         "print(resource.getrlimit(resource.RLIMIT_AS)[0], resource.getrlimit(resource.RLIMIT_CPU)[0])"
     )
+    code += ";print(resource.getrlimit(resource.RLIMIT_CORE)[0], resource.getrlimit(resource.RLIMIT_NOFILE)[0])"
     done = subprocess.run([sys.executable, "-c", code], capture_output=True, check=True, text=True)
-    memory, cpu = map(int, done.stdout.split())
+    memory, cpu, core, files = map(int, done.stdout.split())
     assert memory == pdfchild._memory(1000) and cpu == pdfchild.CPU_SECONDS
+    assert core == 0 and files <= pdfchild.OPEN_FILES
 
 
 def test_pdfchild_memory():

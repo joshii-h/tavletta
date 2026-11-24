@@ -1,10 +1,13 @@
 """Symbologies: what they encode (read back with a decoder), drawn in whole
 printer dots with their quiet zones, and what they refuse."""
 
+import itertools
 import sys
 
 import pytest
 from conftest import ink_bbox
+from hypothesis import given, settings
+from hypothesis import strategies as st
 from PIL import Image
 
 from tavletta import codes
@@ -449,6 +452,121 @@ def test_a_qr_code_too_long_warns():
     with pytest.raises(codes.CodeError) as info:
         codes.encode(CodeElement("x" * 8000))
     assert info.value.key == "code_too_long"
+
+
+@pytest.mark.parametrize(
+    ("data", "symbology", "key"),
+    [
+        ("(01)123", "gs1_128", "gs1_length"),
+        ("(99)" + "A" * 500, "gs1_128", "code_too_long"),
+        ("x" * 5000, "datamatrix", "code_too_long"),
+        ("x" * 5000, "pdf417", "code_too_long"),
+    ],
+)
+def test_verify_meets_the_encoders_own_limits(data, symbology, key):
+    """check() alone lets these through; drawing them fails."""
+    codes.check(CodeElement(data, symbology))
+    with pytest.raises(codes.CodeError) as info:
+        codes.verify(CodeElement(data, symbology))
+    assert info.value.key == key
+
+
+@settings(max_examples=200, deadline=None)
+@given(
+    text=st.text(
+        alphabet=st.characters(min_codepoint=32, max_codepoint=126), min_size=1, max_size=200
+    ),
+    digits=st.text(alphabet="0123456789", min_size=12, max_size=12),
+)
+def test_what_check_lets_through_for_code128_and_ean13_encodes(text, digits):
+    """verify() makes no Code 128 or EAN-13: check() is all they need."""
+    codes.encode(CodeElement(text, "code128"))
+    codes.encode(CodeElement(digits + str(codes.gs1_check_digit(digits)), "ean13"))
+    assert {"code128", "ean13"} == codes.CHECKED_IN_FULL
+
+
+@pytest.mark.parametrize("symbology", sorted(codes.SURE_BYTES))
+def test_2d_codes_within_their_sure_bytes_always_fit(symbology):
+    """However the content mixes characters (each switch of the encoder's
+    mode costs), what SURE_BYTES lets through without making the code
+    can be made."""
+    import random
+
+    alphabet = ["a", "A", "1", "0", " ", "~", "\x01", "\x7f", "\u00e9", "\u00ff", "\u9519"]
+    alphabet.append("\U0001f600")
+    bound = codes.SURE_BYTES[symbology]
+    samples = [(a * r1, b * r2) for a in alphabet for b in alphabet for r1, r2 in ((1, 1), (1, 3))]
+    samples += [(c, "") for c in random.Random(1).choices(alphabet, k=40)]
+    for first, second in samples:
+        data = ""
+        for piece in itertools.cycle([first, second] if second else [first]):
+            if len((data + piece).encode()) > bound:
+                break
+            data += piece
+        codes.encode(CodeElement(data, symbology))  # no CodeError
+
+
+@pytest.mark.parametrize("symbology", ["datamatrix", "pdf417", "aztec"])
+@pytest.mark.parametrize("char", ["x", "\u00e9"])
+def test_verify_of_a_long_2d_code_agrees_with_encoding_it(symbology, char, monkeypatch):
+    """Around the capacity verify() and encode() say the same (a PDF417
+    made once, in Zint's columns); within SURE_BYTES nothing is made."""
+    from tavletta.model import CodeElement as Code
+
+    def largest(fits):
+        low, high = 1, 4000
+        while low < high:
+            middle = (low + high + 1) // 2
+            low, high = (middle, high) if fits(middle) else (low, middle - 1)
+        return low
+
+    def encodes(n):
+        try:
+            codes.encode(Code(char * n, symbology))
+        except codes.CodeError:
+            return False
+        return True
+
+    top = largest(encodes)
+    for n in (top - 1, top, top + 1):
+        if encodes(n):
+            codes.verify(Code(char * n, symbology))
+        else:
+            with pytest.raises(codes.CodeError):
+                codes.verify(Code(char * n, symbology))
+    made = []
+    monkeypatch.setattr(codes, "encode", made.append)
+    monkeypatch.setattr(codes, "_zint_symbol", lambda *args: made.append(args))
+    size = len(char.encode())
+    codes.verify(Code(char * (codes.SURE_BYTES[symbology] // size), symbology))
+    assert made == []
+
+
+@pytest.mark.parametrize("level", ["", "L", "M", "Q", "H"])
+@pytest.mark.parametrize("char", ["x", "\u00e9"])
+def test_verify_of_a_qr_code_agrees_with_encoding_it(level, char, monkeypatch):
+    """A QR code whose bytes surely fit is not made; around the capacity
+    (with the UTF-8 ECI in front of content beyond ASCII) it is."""
+    room = codes.QR_BYTES[level or "M"]
+    seen = set()
+    for size in range(room - 4, room + 2):
+        element = CodeElement(char * (size // len(char.encode())), "qr", error_correction=level)
+        try:
+            codes.encode(element)
+        except codes.CodeError:
+            seen.add(False)
+            with pytest.raises(codes.CodeError):
+                codes.verify(element)
+        else:
+            seen.add(True)
+            codes.verify(element)
+    assert seen == {True, False}  # both sides of the capacity
+    made = []
+    monkeypatch.setattr(codes, "encode", made.append)
+    codes.verify(
+        CodeElement(char * ((room - 2) // len(char.encode())), "qr", error_correction=level)
+    )
+    assert made == []
 
 
 @pytest.mark.parametrize("symbology", SYMBOLOGIES)

@@ -60,6 +60,9 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
 
 [manual] [confirmed]
 
+- An answer has 10 s in all (not 10 s for each byte), and one up to CR
+  at most 256 bytes: something else on port 9100 that talks without end
+  does not hold the connection. [decided]
 - Error characters of `ESC s` that Tavletta names: `P` out of paper,
   `D` print head or pinch roller open, `E` synchronisation error (no label
   found), `F` out of ribbon, `R` ribbon in thermal direct mode (see "Print
@@ -84,8 +87,14 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
 - The print head reports itself in the web interface as "106 mm 12 dots/mm"
   on the EOS2/300; Tavletta renders at exactly 12 dots per mm (8 for /200,
   23.6 for /600 models), so a 100 mm label is 1200 dots. Each print asks
-  `qv` first and scales the image if it was rendered for another
-  resolution. [confirmed for the /300]
+  `qv` first. [confirmed for the /300]
+- An image rendered for another resolution than `qv` reports is scaled
+  dot by dot if the ratio is a whole one upwards, else the label is
+  rendered again for the printer's resolution (as for ZPL: scaling down
+  or by 1.5 spoils bars and thin lines). [decided]
+- Before `qv` each print asks `ESC s`: a printer with a problem may not
+  answer text commands, its status tells the problem (out of labels, head
+  open) instead of a timeout. [assumed]
 
 ## A print job
 
@@ -178,8 +187,11 @@ Setting "Print method" (`method` in settings.json, per printer model):
 
 - Speed: `H` cannot leave it out. Tavletta sends the speed set on the
   printer, read from the web interface's setup
-  (`GET /cgi-bin/get?cmd=1`, entry `ID_PRINT_SPEED`, e.g. `"50 mm/s"`)
-  just before the job. If the web interface does not answer within 2 s
+  (`GET /cgi-bin/get?cmd=1`, entry `ID_PRINT_SPEED`, e.g. `"50 mm/s"`).
+  The setup is kept for 30 s per printer (a series of labels, each a job
+  of its own, asks once); asking for the printer's state reads it anew,
+  so a speed changed on the printer counts from then on, or after 30 s.
+  If the web interface does not answer within 2 s
   (switched off, behind a password, USB) or shows inch/s, it sends 50 mm/s,
   the default of cab's setup and the slowest common speed (slower prints
   cleaner, guide 4.2.4). Trade-off: then a printer set to a faster

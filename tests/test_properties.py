@@ -7,17 +7,19 @@ loading must turn every malformed one into a LabelError and nothing else.
 from __future__ import annotations
 
 import json
+import math
 
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from tavletta.model import Label, LabelError
+from tavletta.backends import backends
+from tavletta.model import ELEMENT_TYPES, Label, LabelError
 from tavletta.units import INCHES, MILLIMETRES
 
-# JSON as json.loads() can return it
+# JSON as json.loads() can return it: Python's json reads NaN and Infinity too
 json_values = st.recursive(
-    st.none() | st.booleans() | st.integers() | st.floats(allow_nan=False) | st.text(max_size=20),
+    st.none() | st.booleans() | st.integers() | st.floats() | st.text(max_size=20),
     lambda children: (
         st.lists(children, max_size=4)
         | st.dictionaries(st.text(max_size=12), children, max_size=4)
@@ -25,25 +27,27 @@ json_values = st.recursive(
     max_leaves=20,
 )
 FIELDS = list(Label.__dataclass_fields__) + ["version", "features"]
-ELEMENT_FIELDS = [
-    *("kind", "text", "font", "bold", "italic", "size_pt", "color", "align"),
-    *("data", "name", "symbology"),
-]
+# the fields of every kind of element, and the kinds themselves
+ELEMENT_FIELDS = sorted(
+    {name for kind in ELEMENT_TYPES.values() for name in kind.__dataclass_fields__}
+)
+KINDS = sorted(ELEMENT_TYPES)
+PRINTERS = sorted(backend.id for backend in backends())
 # elements with known fields set to arbitrary values, a real kind now and then
 elements = st.lists(
     st.dictionaries(
         st.sampled_from(ELEMENT_FIELDS),
-        json_values | st.sampled_from(["text", "image", "code"]),
-        max_size=6,
+        json_values | st.sampled_from(KINDS),
+        max_size=8,
     ),
     max_size=3,
 )
-# a label object with some known fields set to arbitrary values
-label_like = st.dictionaries(st.sampled_from(FIELDS), json_values, max_size=8) | st.builds(
-    lambda data, items: dict(data, elements=items),
-    st.dictionaries(st.sampled_from(FIELDS), json_values, max_size=4),
-    elements,
+# known fields set to arbitrary values, for any printer model now and then
+fields = st.dictionaries(
+    st.sampled_from(FIELDS), json_values | st.sampled_from(PRINTERS), max_size=8
 )
+# a label object with some known fields set to arbitrary values
+label_like = fields | st.builds(lambda data, items: dict(data, elements=items), fields, elements)
 
 
 @settings(max_examples=300, deadline=None)  # the first call imports the backends
@@ -61,8 +65,22 @@ def test_loading_any_json_gives_a_label_or_a_label_error(data):
         assert e.code in ("not_label", "newer", "damaged")
         return
     # what was accepted is valid and survives saving and loading again
-    again = Label.from_dict(json.loads(json.dumps(label.to_dict())))
+    saved = label.to_dict()
+    assert all(math.isfinite(number) for number in _numbers(saved))  # no NaN, no infinity
+    again = Label.from_dict(json.loads(json.dumps(saved)))
     assert again == label
+
+
+def _numbers(value):
+    """The floats of a JSON value, at any depth."""
+    if isinstance(value, float):
+        yield value
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from _numbers(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _numbers(item)
 
 
 @given(

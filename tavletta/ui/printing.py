@@ -433,6 +433,9 @@ class PrintFlow:
             window.printer.info,
             choices["copies"],
             window.label.gap_mm,
+            # the code check renders for this printer (what it reported,
+            # by its address), as the preview does (window.render_options)
+            host=window.printer.host or "",
             **{key: choices[key] for key in chosen if key in choices},
         )
         job = self.sheet_job(choices)
@@ -440,6 +443,9 @@ class PrintFlow:
             indexes = row_span(choices["first"], choices["last"], len(window.data.rows))
             if job:  # a position for each label of each row
                 job = replace(job, count=len(indexes) * options.copies)
+                if job.count > MAX_LABELS:  # one job of sheets takes no more
+                    window.toast(_("At most %d labels in one print job") % MAX_LABELS)
+                    return
 
             def series(sheet: SheetJob | None = None) -> None:
                 self.start_series(options, indexes, sheet)

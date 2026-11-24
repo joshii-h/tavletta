@@ -936,6 +936,30 @@ def test_within_limits_nothing_is_kept_in_the_caches(png_b64):
     assert render_module._scaled_cached.cache_info().currsize == 1
 
 
+def test_decoded_images_are_kept_within_their_memory(png_b64, monkeypatch):
+    """Eight photos of 80 megapixels would be 2.5 GB: the decoded images
+    are kept by their memory, not only by their count."""
+    cached = render_module._decoded_cached
+    cached.cache_clear()
+    first, second, third = (png_b64((100, 100), c) for c in ("red", "green", "blue"))
+    # each: the pixels, and the file's text as the key
+    size = {data: 100 * 100 * 4 + len(data) for data in (first, second, third)}
+    monkeypatch.setattr(cached.kept, "max_bytes", size[second] + size[third])
+    for data in (first, second, third):
+        render_module._decoded(data)
+    assert cached.cache_info().currsize == 2 and cached.kept.bytes == size[second] + size[third]
+    assert render_module._decoded(third) is render_module._decoded(third)  # kept
+    misses = cached.cache_info().misses
+    render_module._decoded(first)  # the oldest went
+    assert cached.cache_info().misses == misses + 1
+    large = png_b64((300, 300), "white")  # larger than all of it: not kept
+    assert render_module._decoded(large) is not render_module._decoded(large)
+    cached.cache_clear()
+    assert cached.cache_info() == (0, 0, 8, 0)
+    for limited in (render_module._scaled_cached, render_module._cut_cached):
+        assert limited.kept.max_bytes and limited.kept.items
+
+
 def test_image_files_together_are_within_the_budget(make_label, png_b64):
     files = [ImageElement(data=png_b64((100, 100), c)) for c in ("red", "green", "blue")]
     with render_module.limited(25_000), pytest.raises(render_module.RenderTooLarge):
@@ -963,8 +987,15 @@ def test_a_file_that_fails_only_when_drawn(make_label):
     assert [w.key for w in rendered.warnings] == ["image_unreadable"]
 
 
-def test_warm_up_draws_a_text():
+def test_warm_up_draws_a_text(monkeypatch):
+    drawn = []
+    real = render_module._text_block
+    monkeypatch.setattr(
+        render_module, "_text_block", lambda *args: drawn.append(real(*args)) or drawn[-1]
+    )
     render_module.warm_up()
+    (block,) = drawn
+    assert block.mode == "RGBA" and block.getchannel("A").getbbox() is not None  # some ink
 
 
 def test_warning_keys_are_documented():

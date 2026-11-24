@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s bir veri sütunu ({%(name)s}) – --data ile bir veri dosyası verin",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s bir veri sütunu ({%(name)s}) – bunu data_rows içinde gönderin",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s veri satırlarından doldurulur ({%(name)s}) ve ayarlanamaz",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s bir etikete koymak için çok büyük: en fazla %(size)d MB.",
 }

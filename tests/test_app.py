@@ -11,6 +11,7 @@ import errno
 import html
 import io
 import json
+import os
 import threading
 import time
 from dataclasses import replace
@@ -250,6 +251,41 @@ def test_image_from_path(tmp_path):
     (tmp_path / "notes.txt").write_text("hello")
     with pytest.raises(ValueError, match="notes.txt\u2069 is not an image Tavletta can use"):
         texts.image_from_path(str(tmp_path / "notes.txt"))
+
+
+def test_an_image_file_is_read_once_and_only_a_regular_one(tmp_path, monkeypatch):
+    """A FIFO named like an image does not block the window; a file too
+    large to embed says so, not that it is no image."""
+    from tavletta import imageformats, model
+
+    fifo = tmp_path / "pipe.png"
+    os.mkfifo(fifo)  # nobody writes: an open that waits would hang
+    with pytest.raises(ValueError, match="is not an image"):
+        texts.image_from_path(str(fifo))
+    assert not imageformats.is_image(fifo)
+    path = png_file(tmp_path / "big.png")
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 2**20)
+    path.write_bytes(path.read_bytes() + bytes(2**20))  # a PNG with junk after it
+    with pytest.raises(
+        ValueError, match="big.png\u2069 is too large to put on a label: at most 1 MB"
+    ):
+        texts.image_from_path(str(path))
+    opened = []
+    real = model.read_limited
+    monkeypatch.setattr(model, "read_limited", lambda *a: opened.append(a) or real(*a))
+    monkeypatch.setattr(texts.Image, "open", _only_bytes(texts.Image.open))
+    assert texts.image_from_path(str(png_file(tmp_path / "a.png"))).name == "a.png"
+    assert len(opened) == 1  # read once, and Pillow gets what was read
+
+
+def _only_bytes(real_open):
+    """Image.open that refuses a file name: only what was read already."""
+
+    def opener(source, *args, **kwargs):
+        assert not isinstance(source, (str, os.PathLike)), "opened by its name again"
+        return real_open(source, *args, **kwargs)
+
+    return opener
 
 
 @pytest.mark.parametrize("suffix", ["ico", "ppm", "tga", "eps"])
@@ -1950,6 +1986,26 @@ def _items(row):
 
 def _selected(row):
     return _items(row)[row.get_selected()]
+
+
+def test_the_print_checks_codes_at_the_resolution_this_printer_reported(
+    cab_window, cab_env, monkeypatch
+):
+    """The code check of the print dialog renders for the printer at its
+    address (a /200 reported 8 dots per mm), not for the default."""
+    win = cab_window
+    monkeypatch.setattr(cab_env.backend, "reported", {win.printer.host: 8.0})
+    checked = []
+    real = win.render_for
+    monkeypatch.setattr(
+        win, "render_for", lambda options: checked.append(options) or real(options)
+    )
+    win.print_flow.on_print()
+    respond(win.last_dialog, "print")
+    assert printed(win)
+    (options,) = checked
+    assert options.host == win.printer.host
+    assert cab_env.backend.raster(25, options).dpi == pytest.approx(8.0 * 25.4)
 
 
 def test_cab_printer(cab_window, cab_env):

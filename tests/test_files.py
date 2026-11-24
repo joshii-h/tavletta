@@ -3,6 +3,7 @@ links or losing permissions, read with a size limit, locked while printing."""
 
 from __future__ import annotations
 
+import base64
 import fcntl
 import json
 import os
@@ -12,7 +13,15 @@ import pytest
 from conftest import read_only
 
 from tavletta import model
-from tavletta.model import FORMAT_VERSION, CodeElement, Label, LabelError, TextElement
+from tavletta.model import (
+    FORMAT_VERSION,
+    CodeElement,
+    ImageElement,
+    Label,
+    LabelError,
+    PageElement,
+    TextElement,
+)
 
 
 def test_save_through_a_symbolic_link_replaces_the_file_it_points_to(tmp_path):
@@ -119,6 +128,45 @@ def test_reading_stops_at_the_size_limit(tmp_path, monkeypatch):
     assert e.value.code == "damaged"
 
 
+@pytest.mark.parametrize("element", [ImageElement, PageElement])
+def test_a_file_to_embed_is_read_within_its_limit(tmp_path, monkeypatch, element):
+    """Embedded in base64 it takes 4/3: no larger than a label file can
+    hold and open again; and only a regular file, checked as opened."""
+    assert model.MAX_EMBEDDED_BYTES * 4 // 3 < model.MAX_FILE_BYTES
+    path = tmp_path / "file.png"
+    path.write_bytes(b"x" * 11)
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 11)
+    assert base64.b64decode(element.from_file(path).data) == b"x" * 11
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 10)
+    with pytest.raises(LabelError) as info:
+        element.from_file(path)
+    assert info.value.code == "damaged"
+    fifo = tmp_path / "fifo"
+    os.mkfifo(fifo)  # nobody writes: an open that waits would hang
+    with pytest.raises(LabelError) as info:
+        element.from_file(fifo)
+    assert info.value.code == "not_label"
+
+
+def test_a_data_file_is_checked_as_opened(tmp_path, monkeypatch):
+    """Not by its name before opening it: swapped for a FIFO in between,
+    the read would block."""
+    from tavletta import readfile
+    from tavletta.merge import MergeError, read_book
+
+    fifo = tmp_path / "rows.csv"
+    os.mkfifo(fifo)
+    with pytest.raises(MergeError) as info:
+        read_book(fifo)
+    assert info.value.code == "not_table"
+    opened = []
+    real = readfile.os.open
+    monkeypatch.setattr(readfile.os, "open", lambda *a: opened.append(a) or real(*a))
+    with pytest.raises(MergeError):
+        read_book(fifo)
+    assert opened and opened[0][1] & os.O_NONBLOCK
+
+
 @pytest.mark.parametrize("special", ["/dev/zero", "fifo", "dir"])
 def test_only_regular_files_are_read(tmp_path, special):
     if special == "fifo":
@@ -171,16 +219,46 @@ def test_a_waiting_lock_follows_the_replaced_file(tmp_path, monkeypatch):
     assert len(calls) == 2  # locked again, the new file
 
 
+def _opened_for_lock(monkeypatch) -> list[tuple[int, tuple[int, int]]]:
+    """The descriptors locked() opens, each with its file (device, inode)."""
+    opened = []
+    real = model._open_for_lock
+
+    def recording(target):
+        fd = real(target)
+        if fd is not None:
+            info = os.fstat(fd)
+            opened.append((fd, (info.st_dev, info.st_ino)))
+        return fd
+
+    monkeypatch.setattr(model, "_open_for_lock", recording)
+    return opened
+
+
+def _still_open(fd: int, file: tuple[int, int]) -> bool:
+    """Whether the descriptor still refers to that file (a closed number
+    may have been given to another file meanwhile)."""
+    try:
+        info = os.fstat(fd)
+    except OSError:
+        return False
+    return (info.st_dev, info.st_ino) == file
+
+
 def test_without_flock_it_goes_on(tmp_path, monkeypatch):
     path = tmp_path / "a.tavletta"
     Label().save(path)
+    tried, inside = [], []
 
-    def unsupported(*_args):
+    def unsupported(*args):
+        tried.append(args[1])
         raise OSError("not supported")
 
     monkeypatch.setattr(model.fcntl, "flock", unsupported)
+    opened = _opened_for_lock(monkeypatch)
     with model.locked(path):
-        pass
+        inside.extend(_still_open(*each) for each in opened)
+    assert tried and len(opened) == 1 and inside == [False]  # went on unlocked, closed at once
 
 
 def test_a_read_only_file_is_not_replaced(tmp_path):
@@ -204,9 +282,19 @@ def test_a_lock_on_a_file_removed_meanwhile(tmp_path, monkeypatch):
         if path.exists():
             path.unlink()  # gone after the lock: try again, then go on without
 
-    monkeypatch.setattr(model.fcntl, "flock", flock)
+    locks = []
+
+    def counting(fd, operation):
+        locks.append(fd)
+        flock(fd, operation)
+
+    monkeypatch.setattr(model.fcntl, "flock", counting)
+    opened = _opened_for_lock(monkeypatch)
     with model.locked(path):
-        pass
+        inside = [_still_open(*each) for each in opened]
+    assert len(locks) == 1 and not path.exists()  # locked once, then the file was gone
+    assert len(opened) == 1 and inside == [False]  # nothing left open
+    assert not _still_open(*opened[0])
 
 
 def test_the_file_lists_the_features_it_needs(tmp_path):

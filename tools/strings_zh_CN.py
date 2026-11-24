@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s 是数据列 ({%(name)s}) – 请用 --data 指定数据文件",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s 是数据列 ({%(name)s}) – 请在 data_rows 中发送",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s 由数据行填充 ({%(name)s})，无法设置",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s 太大，无法放入标签：最多 %(size)d MB。",
 }

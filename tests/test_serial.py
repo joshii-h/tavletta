@@ -274,6 +274,56 @@ def test_unprintable_rows_are_found_before_the_first_label():
     assert info.value.rows == [2, 3, 4] and backend.prepared == [] and backend.jobs == []
 
 
+def test_rows_whose_codes_the_encoder_refuses_are_unprintable():
+    """Content the quick check passes but no code holds: GS1 data of the
+    wrong length, more than a DataMatrix or PDF417 code holds, a QR code
+    over the room of its error correction level. Printed, each would be a
+    crossed-out box."""
+    for symbology, good, bad, level in (
+        ("gs1_128", "(01)09501101530003", "(01)123", ""),
+        ("datamatrix", "ok", "x" * 5000, ""),
+        ("pdf417", "ok", "x" * 5000, ""),
+        ("qr", "x" * 1271, "x" * 1500, "H"),  # fits at M, not at H
+    ):
+        label = Label(
+            tape_mm=12,
+            printer="fake-mono",
+            elements=[CodeElement(data="{C}", symbology=symbology, error_correction=level)],
+        )
+        rows = [{"C": good}, {"C": bad}]
+        assert unprintable_rows(label, rows, range(2)) == [2], symbology
+
+
+def test_stopped_while_the_rows_are_checked(monkeypatch):
+    """The check of many rows takes a while: Stop ends it after the first
+    row, which is printed as always; the rows not checked are not."""
+    from tavletta import serial as serial_module
+
+    label = Label(
+        tape_mm=12, printer="fake-mono", elements=[CodeElement(data="{C}", symbology="qr")]
+    )
+    rows = [{"C": "ok"}] * 10 + [{"C": "x" * 3000}] + [{"C": "ok"}] * 40
+    stop = threading.Event()
+    checked = []
+    real = serial_module._code_fails
+
+    def code_fails(element):
+        checked.append(element.data)
+        if len(checked) == 3:
+            stop.set()  # the user stops on the third row
+        return real(element)
+
+    monkeypatch.setattr(serial_module, "_code_fails", code_fails)
+    backend = Recorder()
+    series = Series(label, rows, range(51), PrintOptions())
+    outcome = print_series(backend, "host", series, stop=stop)
+    assert outcome.stopped and outcome.printed == [1] and len(backend.jobs) == 1
+    assert len(checked) == 3  # no row checked after the stop
+    # set before: the first row only (row 11 is not looked at)
+    assert unprintable_rows(label, rows, range(51), stop=stop) == []
+    assert unprintable_rows(label, rows, range(10, 51), stop=stop) == [11]
+
+
 def test_a_counter_that_overflows_a_code_on_a_later_copy():
     """The second copy's counter makes the EAN-13 13 digits with a wrong
     check digit: found before printing, not halfway through the row."""
@@ -342,6 +392,9 @@ def test_codes_are_checked_with_the_counter_of_each_row():
     rows = [{"Prefix": "4006381333"}] * 3
     values = Values(datetime(2026, 1, 1), counter=98, copies=1)
     assert unprintable_rows(label, rows, range(3), values) == [3]  # 100: 13 digits
+    # each row starts after the copies of the rows before: 97 98 | 99 100 | 101 102
+    values = Values(datetime(2026, 1, 1), counter=97, copies=2)
+    assert unprintable_rows(label, rows, range(3), values) == [2, 3]
 
 
 # --- serial labels on label sheets -----------------------------------------------------
@@ -391,6 +444,33 @@ def test_serial_labels_fill_the_positions_of_label_sheets():
     assert [(e.label, e.labels, e.row) for e in events] == [(1, 1, 1)]
 
 
+def test_serial_labels_on_sheets_over_the_job_limit_print_nothing():
+    """Rows times copies over what one job of sheets takes: refused before
+    the first sheet, the counter where it was (no rows cut off silently
+    and counted as printed)."""
+    from tavletta.sheets.layout import MAX_LABELS, TooManyLabels
+
+    backend = SheetPrinter()
+    rows = [{"Name": "R%d" % n, "Code": "C", "Shelf": "S"} for n in range(MAX_LABELS + 1)]
+    label = Label(tape_mm=12, printer="fake-mono", elements=[TextElement(text="{=counter}")])
+    series = replace(sheet_series(label=label), rows=rows, indexes=range(len(rows)))
+    outcome = SeriesResult()
+    with pytest.raises(TooManyLabels):
+        print_series(backend, "office", series, outcome=outcome)
+    assert backend.pages == [] and outcome.labels == 0 and outcome.printed == []
+    assert outcome.counter == 1
+
+    class Counting(SheetPrinter):  # the sheets counted, not composed
+        def print_pages(self, pages, host, options, progress=None):
+            self.pages = [None] * len(pages)
+
+    # at the limit all of them, and the counter goes on by each label printed
+    backend = Counting()
+    outcome = print_series(backend, "office", replace(series, indexes=range(MAX_LABELS)))
+    assert outcome.labels == MAX_LABELS and len(outcome.printed) == MAX_LABELS
+    assert outcome.counter == MAX_LABELS + 1 and len(backend.pages) == 48  # 21 a sheet
+
+
 def test_serial_labels_on_sheets_count_per_position():
     """Variables that change per label: each position its own counter."""
     label = Label(
@@ -423,6 +503,24 @@ def test_serial_labels_on_sheets_fail_with_where_to_go_on():
     assert error.printed == [1, 2] and error.row == 3 and error.copies_printed == 1
     assert error.position == (1, 2)  # its second copy: the first position of sheet 2
     assert error.outcome.labels == 5
+
+
+def test_serial_labels_on_sheets_fail_after_every_sheet_came_out():
+    """A backend may fail after the last sheet is out (a job state asked
+    afterwards): the last row stops with all its copies printed, no
+    position left, every label counted; not an IndexError."""
+    label = Label(tape_mm=12, printer="fake-mono", elements=[TextElement(text="{=counter}")])
+
+    class FailsAtTheEnd(SheetPrinter):
+        def print_pages(self, pages, host, options, progress=None):
+            raise PaperJam("jam", printed=len(pages), copies=len(pages), pages=True)
+
+    with pytest.raises(SeriesError) as info:
+        print_series(FailsAtTheEnd(), "office", sheet_series(copies=2, label=label))
+    error = info.value
+    assert (error.row, error.copies_printed, error.position) == (3, 2, None)
+    assert error.printed == [1, 2] and isinstance(error.error, PaperJam)
+    assert error.outcome.labels == 6 and error.outcome.counter == 7
 
 
 def test_serial_labels_on_sheets_that_cannot_be_drawn():

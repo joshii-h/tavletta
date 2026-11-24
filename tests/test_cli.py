@@ -869,7 +869,7 @@ def test_rows_argument():
     assert cli._rows("5") == (5, 5)
     assert cli._rows(" 7- ") == (7, cli.ALL_ROWS)
     assert cli._rows("-4") == (1, 4)
-    for bad in ("", "-", "0", "4-2", "a-b", "1-2-3"):
+    for bad in ("", "-", "0", "4-2", "a-b", "1-2-3", "3 4", " 3  4 "):
         with pytest.raises(Exception, match="expected rows"):
             cli._rows(bad)
 
@@ -1086,7 +1086,9 @@ def test_the_check_runs_for_the_printer_that_answered(mono, label_file, monkeypa
     monkeypatch.setattr(mono, "query_before_render", True, raising=False)
     checked = []
     real = cli._check
-    monkeypatch.setattr(cli, "_check", lambda job: checked.append(job.options.info) or real(job))
+    monkeypatch.setattr(
+        cli, "_check", lambda job, unit: checked.append(job.options.info) or real(job, unit)
+    )
     assert run("print", path, "--host", "h") == 0
     assert checked == [mono.info]
     assert run("print", path, "--host", "h", "--dry-run") == 0
@@ -1146,12 +1148,36 @@ def test_the_command_line_prints_with_the_extras_last_chosen(tmp_path, monkeypat
     assert (plain.chain, plain.high_res, plain.feed_mm) == (False, False, None)
 
 
+def test_a_size_in_a_refusal_is_in_the_unit_chosen_in_the_app(
+    mono, label_file, tmp_path, monkeypatch, capsys
+):
+    """The check's printer errors name sizes as the app shows them, not
+    always in millimetres."""
+    import json
+
+    from tavletta.backends.base import LabelTooWide
+
+    def too_wide(*args, **kwargs):
+        raise LabelTooWide("wide", max_mm=50.8)
+
+    monkeypatch.setattr(mono, "render_label", too_wide)
+    path = label_file(TextElement(text="x"))
+    settings = tmp_path / "config" / "settings.json"
+    settings.parent.mkdir(parents=True, exist_ok=True)
+    for units, shown in (("in", "2.00 in"), ("mm", "50.8 mm")):
+        settings.write_text(json.dumps({"units": units}))
+        assert run("print", path, "--dry-run") == cli.EXIT_LABEL
+        assert shown in err(capsys)
+
+
 def test_a_dry_run_asks_the_printer_too(mono, label_file, monkeypatch, capsys):
     path = label_file(TextElement(text="x"))
     monkeypatch.setattr(mono, "query_before_render", True, raising=False)
     checked = []
     real = cli._check
-    monkeypatch.setattr(cli, "_check", lambda job: checked.append(job.options.info) or real(job))
+    monkeypatch.setattr(
+        cli, "_check", lambda job, unit: checked.append(job.options.info) or real(job, unit)
+    )
     assert run("print", path, "--dry-run", "--host", "h") == 0
     assert checked == [mono.info]  # asked (through a copy of the backend)
     assert run("print", path, "--dry-run", "--host", "h", "--no-query") == 0
@@ -1235,6 +1261,27 @@ def test_printer_defaults_also_reset_the_sheet_outlines(tmp_path):
     job, printer, _settings, _series = cli._job(args, settings, NOW)
     assert job.sheet is not None and not job.sheet.outlines
     assert printer.host == "office"  # the address stays
+
+
+def test_more_labels_on_sheets_than_a_job_takes_are_refused(tmp_path, rows_csv, capsys):
+    """Copies times rows over what one job of sheets takes: refused before
+    anything is printed, not cut short with all of them counted."""
+    from tavletta.model import SheetChoice
+    from tavletta.sheets.layout import MAX_LABELS
+
+    label = Label(printer="system", orientation="across", elements=[TextElement(text="x")])
+    label.sheet = SheetChoice("Avery L7160", [1])
+    path = tmp_path / "sheet.tavletta"
+    label.save(path)
+    settings = Settings({"printers": {"system": {"host": "office"}}})
+    args = cli.parser().parse_args(["print", str(path), "--copies", str(MAX_LABELS)])
+    assert cli._job(args, settings, NOW)[0].sheet.count == MAX_LABELS
+    for more in (["--copies", str(MAX_LABELS + 1)], ["--copies", "500", "--data", str(rows_csv)]):
+        args = cli.parser().parse_args(["print", str(path), *more])
+        with pytest.raises(cli.CliError) as caught:
+            cli._job(args, settings, NOW)
+        assert caught.value.code == cli.EXIT_USAGE
+        assert str(caught.value) == "At most %d labels in one print job" % MAX_LABELS
 
 
 def test_a_dry_run_output_renders_each_label_once(mono, label_file, tmp_path, monkeypatch):

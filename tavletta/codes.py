@@ -159,15 +159,69 @@ def _check_digits(data: str, symbology: str) -> None:
         raise CodeError("ean13_check" if symbology == "ean13" else "code_check")
 
 
+# a QR code's bytes at version 40 for each error correction level (ISO/IEC
+# 18004, byte mode); without a level the code has at least M
+QR_BYTES = {"L": 2953, "M": 2331, "Q": 1663, "H": 1273}
+QR_ECI_BYTES = 2  # the UTF-8 ECI in front of content beyond ASCII (12 bits)
+
+
+# 2D codes whose content of at most this many bytes (UTF-8) fits whatever
+# the encoder makes of it: no character costs more than two codewords (an
+# upper or byte shift in front of it; Aztec 18 bits, a binary shift of one
+# byte), the ECI included. A square DataMatrix holds 1558 codewords, a
+# PDF417 code 928 with Zint's error correction for that size, an Aztec code
+# about 15 000 data bits at Zint's default error correction (23 %).
+SURE_BYTES = {"datamatrix": 700, "pdf417": 400, "aztec": 800}
+# codes whose encoder (python-barcode) takes all that check() lets through:
+# Code 128 any printable ASCII up to CODE128_MAX, EAN-13 any 12 digits and
+# the right check digit
+CHECKED_IN_FULL = frozenset({"code128", "ean13"})
+
+
+def verify(element: CodeElement) -> None:
+    """Raise CodeError (or another encoder error) if the code cannot be
+    made: check(), then the encoder's own limits (the length a code
+    holds, the syntax of GS1 data, the forms of UPC-E), as encode() would
+    meet them while drawing. This checks every row of a data file: a code
+    check() covers in full (CHECKED_IN_FULL), or a 2D code whose content
+    fits in any case (QR_BYTES, SURE_BYTES), is not made, that takes up to
+    milliseconds; a longer PDF417 is made once, with the columns Zint
+    chooses, not in every shape encode() compares."""
+    check(element)
+    if element.symbology in CHECKED_IN_FULL:
+        return
+    size = len(element.data.encode())
+    if element.symbology == "qr":
+        if size <= QR_BYTES[element.error_correction or "M"] - QR_ECI_BYTES:
+            return
+    elif size <= SURE_BYTES.get(element.symbology, -1):
+        return
+    if element.symbology == "pdf417":
+        _zint_symbol(_zint_module(), "pdf417", element.data)
+        return
+    encode(element)
+
+
 # --- encoding ---------------------------------------------------------------
 
 
 def encode(element: CodeElement) -> Symbol:
-    """The modules of the code; CodeError if its content cannot be encoded."""
+    """The modules of the code; CodeError if its content cannot be encoded.
+    Kept for the next renders; within render limits (the print server)
+    only for the render running: a client's content stays in no cache
+    beyond its request, and a render measures a code before it draws it."""
     check(element)
     if element.symbology == "qr" and element.error_correction:
-        return _qr(element.data, element.error_correction)
-    return _encode(element.symbology, element.data)
+        return _kept("qr", (element.data, element.error_correction), _qr)
+    return _kept("code", (element.symbology, element.data), _encode)
+
+
+def _kept(kind: str, key: tuple[str, str], cached) -> Symbol:
+    from tavletta import render  # render imports this module
+
+    if render.active_limits() is None:
+        return cached(*key)
+    return render._per_render(kind, key, lambda: cached.__wrapped__(*key))
 
 
 @lru_cache(maxsize=64)
@@ -234,11 +288,16 @@ ZINT_AI = re.compile(r"AI \((\d+)\)")
 ZINT_ROW_BYTES = 144
 
 
-def _zint(symbology: str, data: str) -> Symbol:
+def _zint_module():
     try:
         import zint
     except ImportError:
         raise CodeError("code_unavailable") from None
+    return zint
+
+
+def _zint(symbology: str, data: str) -> Symbol:
+    zint = _zint_module()
     if symbology == "pdf417":
         return _pdf417(zint, data)
     symbol = _zint_symbol(zint, symbology, data)

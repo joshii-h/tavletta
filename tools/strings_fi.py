@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s on datasarake ({%(name)s}) – anna datatiedosto valitsimella --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s on datasarake ({%(name)s}) – lähetä se kentässä data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s täytetään datariveiltä ({%(name)s}), eikä sitä voi asettaa",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s on liian suuri tarraan: enintään %(size)d Mt.",
 }

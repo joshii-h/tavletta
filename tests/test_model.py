@@ -255,6 +255,56 @@ def test_old_version_accepted_and_booleans_normalised():
     assert label.elements[0].bold is False and label.elements[0].italic is True
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [("false", False), ("False", False), ("no", False), ("0", False), ("", False), (0.0, False)]
+    + [(None, False), ("n", False), ("off", False), ("nein", False)]
+    + [("true", True), (" Yes ", True), ("1", True), (2, True), (True, True)]
+    + [("ja", True), ("y", True), ("x", True)],
+)
+def test_loose_booleans_read_false_as_false(value, expected):
+    """bool("false") is True: a word that says no is read as no; others,
+    null and numbers as the first versions read them."""
+    data = {"tape_mm": 50, "auto_length": value, "elements": [{"kind": "text", "bold": value}]}
+    label = Label.from_dict(data)
+    assert label.auto_length is expected and label.elements[0].bold is expected
+
+
+@pytest.mark.parametrize("value", [[], [1], {}, {"a": 1}, float("nan")])
+def test_loose_booleans_refuse_junk(value):
+    for data in ({"auto_length": value}, {"elements": [{"kind": "text", "italic": value}]}):
+        with pytest.raises(LabelError) as info:
+            Label.from_dict({"tape_mm": 50, **data})
+        assert info.value.code == "damaged"
+
+
+@pytest.mark.parametrize("number", [float("nan"), float("inf"), float("-inf")])
+def test_numbers_that_are_not_finite_are_damaged(number):
+    """NaN came out as the lower bound only because max() keeps its first
+    argument; infinity is no size either."""
+    for data in (
+        {"tape_mm": 50, "length_mm": number},
+        {"tape_mm": 50, "elements": [{"kind": "text", "size_pt": number}]},
+        {"tape_mm": 50, "elements": [{"kind": "image", "crop": [number, 0, 1, 1]}]},
+    ):
+        with pytest.raises(LabelError) as info:
+            Label.from_dict(data)
+        assert info.value.code == "damaged"
+    assert Label.from_dict({"tape_mm": 50, "length_mm": 10**400}).length_mm == 1000
+
+
+def test_a_measure_differs_only_beyond_its_tolerance():
+    """1 mm, or 1 % of a long label: exactly that much is still the same."""
+    assert not model.measured_differs(51.0, 50.0) and model.measured_differs(51.01, 50.0)
+    assert not model.measured_differs(198.0, 200.0) and model.measured_differs(197.9, 200.0)
+
+
+def test_sheet_positions_beyond_the_largest_are_left_out():
+    top = model.MAX_SHEET_POSITIONS
+    choice = model.SheetChoice.from_dict({"id": "Avery L7160", "positions": [-1, top - 1, top]})
+    assert choice.positions == [top - 1]
+
+
 def test_from_dict_does_not_modify_input():
     data = {"version": 1, "elements": [], "tape_mm": 12}
     Label.from_dict(data)

@@ -558,6 +558,24 @@ def test_dymo_4xl_on_the_network(monkeypatch):
     backend.print_label(Image.new("RGB", (1200, 40), "white"), "lw.local", PrintOptions())
 
 
+def test_dymo_4xl_entered_by_its_address(monkeypatch):
+    """A printer entered by IP address is found by its address in the
+    announcement; the model from usb_MDL, whatever the service is named."""
+    from tavletta.backends import mdns
+
+    fake = install(monkeypatch, FakePrinter())
+    txt = {"usb_mfg": "DYMO", "usb_mdl": "LabelWriter 4XL"}
+    service = mdns.Service("Shipping desk", "lw.local", "192.0.2.5", 9100, txt)
+    monkeypatch.setattr(raw, "_browse", lambda service_type, match, timeout: [service])
+    backend = dymo.Dymo()
+    assert backend.query("192.0.2.5").model == "LabelWriter 4XL"
+    assert backend.model("lw.local") == "LabelWriter 4XL"
+    # the 104 mm of a 4XL label fit its head: not refused, nor cut to 672 dots
+    image = Image.new("RGB", (1200, 40), "white")
+    backend.print_label(image, "192.0.2.5", PrintOptions())
+    assert b"\x1bD\x96" in fake.printer.jobs[-1]  # 150 bytes per row
+
+
 def test_dymo_wide_labels(monkeypatch):
     backend = dymo.Dymo()
     fake = install(monkeypatch, FakePrinter())
@@ -686,14 +704,21 @@ def test_zpl_auto_resolution_per_printer(monkeypatch):
     assert None in asked  # status questions: the usual timeout
 
 
-def test_whole_ratios():
-    assert [raw.whole_ratio(f) for f in (2.0, 0.5, 3.0, 1.5, 304.8 / 203.2)] == [
-        True,
-        False,
-        True,
-        False,
-        False,
-    ]
+def test_an_image_for_another_resolution_scales_by_whole_ratios_only():
+    """One rule for raw printers, cab and NIIMBOT: 2 and 3 times every dot
+    a block of dots; scaling down or by 1.5 spoils thin lines and bars,
+    the label is rendered again."""
+    from tavletta.backends.base import for_resolution
+
+    image = Image.new("1", (8, 4), 1)
+    image.info["kept"] = True
+    assert for_resolution(image, 203.2, 203.2) is image
+    for rendered, printer, size in ((101.6, 203.2, (16, 8)), (4.0, 12.0, (24, 12))):
+        scaled = for_resolution(image, rendered, printer)
+        assert scaled.size == size and scaled.info["kept"]
+    for rendered, printer in ((406.4, 203.2), (203.2, 304.8), (12.0, 8.0), (203.0, 300.0)):
+        with pytest.raises(RenderAgain):
+            for_resolution(image, rendered, printer)
 
 
 def test_zpl_print_uses_settings(monkeypatch):

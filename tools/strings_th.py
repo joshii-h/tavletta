@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ระบุไฟล์ข้อมูลด้วย --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s เป็นคอลัมน์ข้อมูล ({%(name)s}) – ส่งใน data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s ถูกเติมจากแถวข้อมูล ({%(name)s}) และตั้งค่าไม่ได้",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s ใหญ่เกินกว่าจะใส่ในฉลาก: ไม่เกิน %(size)d MB",
 }

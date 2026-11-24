@@ -16,6 +16,8 @@ from pathlib import Path
 
 from PIL import Image
 
+from tavletta.readfile import open_regular
+
 # Pillow's names of the formats (Image.open(formats=...))
 FORMATS = ("PNG", "JPEG", "GIF", "BMP", "WEBP", "TIFF")
 # what the user reads (texts listing the formats)
@@ -32,9 +34,10 @@ def has_image_suffix(path: str | Path) -> bool:
 
 def is_image(path: str | Path) -> bool:
     """Whether the file is an image in one of the formats (its header,
-    nothing is decoded), whatever its name."""
+    nothing is decoded), whatever its name. Only a regular file: a FIFO
+    would block the window."""
     try:
-        with Image.open(path, formats=FORMATS):
+        with open_regular(path) as file, Image.open(file, formats=FORMATS):
             return True
     except Exception:  # noqa: BLE001 - PIL raises many kinds
         return False

@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s عمود بيانات ({%(name)s}) – حدد ملف بيانات باستخدام --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s عمود بيانات ({%(name)s}) – أرسله في data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "يُملأ %(name)s من صفوف البيانات ({%(name)s}) ولا يمكن تعيينه",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s كبير جدًا لوضعه على ملصق: %(size)d ميغابايت على الأكثر.",
 }

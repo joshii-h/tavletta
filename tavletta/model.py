@@ -9,6 +9,7 @@ import errno
 import fcntl
 import itertools
 import json
+import math
 import os
 import secrets
 import stat
@@ -17,6 +18,8 @@ from collections.abc import Callable, Iterator
 from dataclasses import MISSING, asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
+
+from tavletta.readfile import FileTooLarge, NotRegularFile, read_limited
 
 # Version 1: every label. Version 2: the file lists "features" it needs; an
 # Tavletta that does not know one of them refuses the file ("newer") instead
@@ -80,6 +83,11 @@ MAX_COUNTER_STEP = 10**6
 # a label file is read whole before it is parsed: refuse absurd sizes (the
 # json documentation advises a limit for data from untrusted sources)
 MAX_FILE_BYTES = 200 * 1024 * 1024
+# an image or PDF file a label embeds: in base64 it takes 4/3 of its size,
+# so a label of one such file stays within MAX_FILE_BYTES and opens again;
+# a label of several large ones can grow beyond that (each is checked on
+# its own when it is added, not the label as a whole)
+MAX_EMBEDDED_BYTES = MAX_FILE_BYTES // 2
 # what a printer model decides about a label: kept per model when switching
 GEOMETRY_FIELDS = ("tape_mm", "auto_length", "length_mm", "orientation", "gap_mm", "sheet")
 MAX_SHEET_POSITIONS = 10000  # far more than any sheet has
@@ -212,8 +220,11 @@ class ImageElement(Placed):
 
     @classmethod
     def from_file(cls, path: str | Path) -> ImageElement:
+        """OSError if unreadable, LabelError if no regular file or too large
+        to embed (MAX_EMBEDDED_BYTES)."""
         path = Path(path)
-        return cls(data=base64.b64encode(path.read_bytes()).decode(), name=path.name)
+        raw = read_file(path, MAX_EMBEDDED_BYTES)
+        return cls(data=base64.b64encode(raw).decode(), name=path.name)
 
     def raw(self) -> bytes:
         return base64.b64decode(self.data)
@@ -302,11 +313,11 @@ class PageElement(Placed):
 
     @classmethod
     def from_file(cls, path: str | Path) -> PageElement:
-        """OSError if unreadable, LabelError if absurdly large."""
+        """OSError if unreadable, LabelError if no regular file or too large
+        to embed (MAX_EMBEDDED_BYTES)."""
         path = Path(path)
-        if path.stat().st_size > MAX_FILE_BYTES:
-            raise _damaged("file larger than %d MB" % (MAX_FILE_BYTES // 2**20))
-        return cls(data=base64.b64encode(path.read_bytes()).decode(), name=path.name)
+        raw = read_file(path, MAX_EMBEDDED_BYTES)
+        return cls(data=base64.b64encode(raw).decode(), name=path.name)
 
 
 SHAPES = ("line", "rectangle", "ellipse", "separator")
@@ -730,7 +741,7 @@ class Label:
         else:
             self.tape_mm = _clamp(self.tape_mm, MIN_SIZE_MM, MAX_SIZE_MM, "tape_mm")
         # a die-cut label has its size, it does not grow with the content
-        self.auto_length = bool(self.auto_length) and continuous
+        self.auto_length = _loose_flag(self.auto_length, "auto_length") and continuous
         lower = MIN_TAPE_LENGTH_MM if continuous else MIN_SIZE_MM
         self.length_mm = _clamp(self.length_mm, lower, MAX_SIZE_MM, "length_mm")
         self.gap_mm = _clamp(self.gap_mm, 0, MAX_GAP_MM, "gap_mm")
@@ -853,24 +864,18 @@ def resolved_data_path(data_file: str, directory: Path) -> str:
 # --- files ------------------------------------------------------------------
 
 
-def read_file(path: str | Path) -> bytes:
-    """The content of a label file, read only up to MAX_FILE_BYTES. Only a
-    regular file: a device like /dev/zero never ends, a FIFO would block
-    (opened without blocking to find out)."""
-    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+def read_file(path: str | Path, limit: int | None = None) -> bytes:
+    """The content of a label file (or, with its `limit`, of a file to
+    embed), read only up to MAX_FILE_BYTES or the limit (readfile.
+    read_limited). OSError if it cannot be read; LabelError: not a
+    regular file ("not_label", a device like /dev/zero never ends, a FIFO
+    would block), or larger than the limit ("damaged")."""
     try:
-        regular = stat.S_ISREG(os.fstat(fd).st_mode)
-    except BaseException:
-        os.close(fd)
-        raise
-    if not regular:  # also a folder: closed here, open() would leave it open
-        os.close(fd)
-        raise LabelError("not_label", "not a regular file")
-    with open(fd, "rb") as f:  # owns fd from here on
-        raw = f.read(MAX_FILE_BYTES + 1)
-    if len(raw) > MAX_FILE_BYTES:
-        raise _damaged("file larger than %d MB" % (MAX_FILE_BYTES // 2**20))
-    return raw
+        return read_limited(path, MAX_FILE_BYTES if limit is None else limit)
+    except NotRegularFile as e:  # the cause stays: a caller may tell it apart
+        raise LabelError("not_label", str(e)) from e
+    except FileTooLarge as e:
+        raise _damaged(str(e)) from e
 
 
 def write_file(path: str | Path, data: bytes) -> None:
@@ -1088,7 +1093,11 @@ def _known_fields(cls, data: dict, skip: frozenset[str] = frozenset()) -> dict:
 
 
 def _clamp(value, lower: float, upper: float, name: str) -> float:
+    """A number within the bounds; NaN and infinity (Python's json reads
+    them) are none."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise _damaged("%s must be a number" % name)
+    if isinstance(value, float) and not math.isfinite(value):
         raise _damaged("%s must be a number" % name)
     return float(min(upper, max(lower, value)))
 
@@ -1115,6 +1124,24 @@ def _flag(value, name: str) -> bool:
     if not isinstance(value, bool):  # bool("false") would be True
         raise _damaged("%s must be true or false" % name)
     return value
+
+
+# words that say no; every other word says yes, as bool() read them before
+_FALSE = frozenset({"false", "no", "n", "off", "0", "", "none", "null", "nein", "non"})
+
+
+def _loose_flag(value, name: str) -> bool:
+    """A flag that the first versions did not check (auto_length, bold,
+    italic), read as they read it (bool()), with what bool() got wrong
+    put right: "false" and other words that say no are false, NaN is no
+    flag. None (null) is false; a list or an object is damaged."""
+    if value is None or isinstance(value, bool):
+        return bool(value)
+    if isinstance(value, (int, float)) and not (isinstance(value, float) and math.isnan(value)):
+        return value != 0
+    if isinstance(value, str):
+        return value.strip().lower() not in _FALSE
+    raise _damaged("%s must be true or false" % name)
 
 
 def _rotation(value) -> int:
@@ -1179,7 +1206,8 @@ def _validate_text(element: TextElement) -> None:
     element.text = _str(element.text, "text")
     element.font = _str(element.font, "font")
     element.color = _str(element.color, "color")
-    element.bold, element.italic = bool(element.bold), bool(element.italic)
+    element.bold = _loose_flag(element.bold, "bold")
+    element.italic = _loose_flag(element.italic, "italic")
     element.size_pt = _clamp(element.size_pt, 0, 300, "size_pt")
     element.align = _choice(element.align, ("left", "center", "right"), "align")
     element.name = _str(element.name, "name")

@@ -88,6 +88,22 @@ def test_issue_url_long_problem_is_truncated(root):
     assert "- Printer: not connected" in body  # system info survives
 
 
+@pytest.mark.parametrize("char", ["\u9519", "\U0001f600"])
+def test_issue_url_with_long_text_taking_much_room_encoded(root, char):
+    """500 characters of Chinese or emoji still exceed MAX_URL encoded:
+    fewer are kept, no endless recursion."""
+    url = report.issue_url(char * 600, "\u6253\u5370\u673a" * 30, "GTK 4", str(root))
+    assert len(url) <= report.MAX_URL
+    _title, body = _parse(url)
+    assert char * 100 in body and "- Printer: " in body
+
+
+def test_issue_url_without_room_for_the_error_text(root, monkeypatch):
+    monkeypatch.setattr(report, "MAX_URL", len(report.issue_url(None, None, "GTK", str(root))))
+    _title, body = _parse(report.issue_url("x" * 3000, None, "GTK", str(root)))
+    assert "**Error message**" not in body and "- Printer: not connected" in body
+
+
 def test_issue_url_error_text_capped_at_2000(root, monkeypatch):
     monkeypatch.setattr(report, "MAX_URL", 100_000)
     _title, body = _parse(report.issue_url("a" * 3000, None, "GTK", str(root)))

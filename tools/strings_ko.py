@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – --data로 데이터 파일을 지정하세요",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – data_rows로 보내세요",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s은(는) 데이터 행에서 채워지므로 ({%(name)s}) 설정할 수 없습니다",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s은(는) 라벨에 넣기에 너무 큽니다: 최대 %(size)d MB입니다.",
 }

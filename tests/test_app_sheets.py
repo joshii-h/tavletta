@@ -565,6 +565,28 @@ def test_serial_labels_on_label_sheets(office, system_env, tmp_path):
     assert toast_titles(win)[-1] == "Printed rows 1 to 3"
 
 
+def test_serial_labels_over_what_a_job_of_sheets_takes(office, system_env, tmp_path):
+    """Rows times copies over sheets.layout.MAX_LABELS: refused with a
+    message, nothing printed (cut short, the rest was counted printed)."""
+    from tavletta.sheets.layout import MAX_LABELS
+
+    win = office
+    label = Label(printer="system", orientation="across", elements=[TextElement(text="{Name}")])
+    label.sheet = SheetChoice("Avery L7160", list(range(21)))
+    win.set_label(label, None)
+    rows = tmp_path / "rows.csv"
+    rows.write_text("Name\n" + "".join("R%d\n" % n for n in range(500)), encoding="utf-8")
+    win.data.attach(rows)
+    assert pump(lambda: win.data.state != "loading") and win.data.active
+    render_now(win)
+    win.print_flow.on_print()
+    dialog = win.last_dialog
+    one(dialog, Adw.SpinRow, title="Copies of each label").set_value(2)
+    respond(dialog, "print")
+    assert toast_titles(win)[-1] == "At most %d labels in one print job" % MAX_LABELS
+    assert not win.print_flow.busy and system_env.pages == []
+
+
 def test_where_a_series_on_sheets_goes_on():
     from tavletta.ui.texts import series_stop_text
 

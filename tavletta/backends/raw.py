@@ -12,7 +12,6 @@ language notes; the byte sequences follow LPrint by Michael R Sweet
 
 from __future__ import annotations
 
-import math
 import socket
 import time
 from abc import abstractmethod
@@ -36,10 +35,10 @@ from tavletta.backends.base import (
     PrintResult,
     ProgressCallback,
     Raster,
-    RenderAgain,
     ResolutionUnknown,
     check_length,
     check_width,
+    for_resolution,
     map_error,
     open_session,
     report_progress,
@@ -53,6 +52,10 @@ SOCKET_TIMEOUT = 10.0  # connecting; sending: without progress (net.send_all)
 # printing pace (a receipt printer at 25 mm/s takes about 15 kB/s)
 MIN_RATE = 8_000
 ANSWER_TIMEOUT = 1.0  # a status answer: silence after this means "unknown"
+# an answer is a few bytes, the longest (ZPL's ^HH) about 3.5 kB: more is
+# not a printer of this language, and is not read on (nor looked through
+# for its end again and again)
+ANSWER_MAX = 64 * 1024
 SERVICE = "_pdl-datastream._tcp"  # raw printing on port 9100, announced by mDNS
 DPI_INFO = "tavletta_dpi"  # image.info: the resolution prepare() rendered for
 # PrintOptions.settings: the resolution prepare() chose, so that the render
@@ -189,12 +192,13 @@ class Session:
         timeout: float | None = None,
         limit: float | None = None,
     ) -> bytes:
-        """Send a question, read the answer until done(answer) or the
-        timeout (ANSWER_TIMEOUT). What came by then is returned, b"" if
-        nothing: many of these printers do not answer every question, which
-        is no error. With `limit` the timeout counts from the last data
-        received, up to `limit` seconds in all: a long answer on a slow
-        line (a serial adapter at 9600 baud) is read while it keeps coming.
+        """Send a question, read the answer until done(answer), the
+        timeout (ANSWER_TIMEOUT) or ANSWER_MAX bytes. What came by then is
+        returned, b"" if nothing: many of these printers do not answer
+        every question, which is no error. With `limit` the timeout
+        counts from the last data received, up to `limit` seconds in all:
+        a long answer on a slow line (a serial adapter at 9600 baud) is
+        read while it keeps coming.
         On USB a late answer could come before the next one; each session
         starts by dropping what is left (usb.connect)."""
         self.send(request)
@@ -212,6 +216,8 @@ class Session:
                 if not chunk:  # TCP: the printer closed the connection
                     break
                 answer += chunk
+                if len(answer) >= ANSWER_MAX:
+                    break
                 if limit is not None:  # data came: wait again, within the limit
                     deadline = min(start + limit, _clock() + wait)
         except (TimeoutError, PrinterTimeout):
@@ -245,22 +251,6 @@ def state(answered: bool, error: PrinterError | None, busy: bool = False) -> str
     if error:
         return "PAUSED" if isinstance(error, PrinterPaused) else "ERROR"
     return "BUSY" if busy else "IDLE"
-
-
-def whole_ratio(factor: float) -> bool:
-    """2, 3: scaling up by it keeps every dot (each becomes a block of
-    dots). Scaling down (1/2) would drop every second dot and spoil thin
-    lines and bars, 1.5 would make lines uneven: both are rendered again."""
-    return factor >= 1 and math.isclose(factor, round(factor), abs_tol=0.01)
-
-
-def rescale(image: Image.Image, factor: float) -> Image.Image:
-    """Made for another resolution by a whole ratio: scale the black and
-    white image dot by dot (see whole_ratio)."""
-    size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
-    resized = image.resize(size, Image.Resampling.NEAREST)
-    resized.info.update(image.info)
-    return resized
 
 
 def usb_model(host: str) -> str:
@@ -317,11 +307,16 @@ class RawBackend(Backend):
             for p in usb.printers()
             if self.speaks(p.manufacturer, p.model, p.commands)
         ]
-        return plugged + [
-            FoundPrinter(s.name, s.host, s.address)
-            for s in _browse(SERVICE, lambda _name: True, timeout)
-            if self._announced(s.name, s.txt)
-        ]
+        announced = []
+        for service in _browse(SERVICE, lambda _name: True, timeout):
+            if self._announced(service.name, service.txt):
+                self.seen(service)
+                announced.append(FoundPrinter(service.name, service.host, service.address))
+        return plugged + announced
+
+    def seen(self, service: mdns.Service) -> None:
+        """A printer of this language announced on the network: what a
+        backend learns from the announcement (DYMO: the model)."""
 
     def _announced(self, name: str, txt: dict[str, str]) -> bool:
         commands = tuple(c.strip().upper() for c in txt.get("usb_cmd", "").split(",") if c.strip())
@@ -444,12 +439,7 @@ class RawBackend(Backend):
             if problem:
                 raise problem
             dpi = self.job_dpi(s, options, rendered)
-            if not math.isclose(dpi, rendered):
-                if not whole_ratio(dpi / rendered):
-                    raise RenderAgain(
-                        "rendered at %g dpi, the printer has %g dpi" % (rendered, dpi)
-                    )
-                image = rescale(image, dpi / rendered)
+            image = for_resolution(image, rendered, dpi)
             s.send(self.build_job(image, dpi, options, host))
             s.finish()
             report_progress(progress, copies, copies)

@@ -14,6 +14,7 @@ from tavletta.backends.base import (
     Backend,
     ColorAdjust,
     LabelTooLong,
+    Level,
     PrinterError,
     PrinterInfo,
     PrintMode,
@@ -144,10 +145,33 @@ def test_every_backend_has_a_contract_test():
         ({"brightness": 2, "red": -1}, ColorAdjust(2, -1, 0, 0)),
         ({"brightness": 9, "green": -7.4, "blue": 1.6}, ColorAdjust(3, 0, -3, 2)),
         ({"red": True, "green": "2", "blue": None}, ColorAdjust()),
+        # settings.json read by Python's json: NaN and Infinity are numbers
+        ({"brightness": float("nan"), "red": float("inf")}, ColorAdjust()),
+        ({"green": float("-inf"), "blue": 10**400}, ColorAdjust(0, 0, 0, 0)),
+        ({"brightness": 2.5, "red": -2.5}, ColorAdjust(2, -2, 0, 0)),  # rounded half to even
+        ({"brightness": 3, "red": -3}, ColorAdjust(3, -3, 0, 0)),
     ],
 )
 def test_color_adjust_from_dict(data, expected):
     assert ColorAdjust.from_dict(data) == expected
+
+
+def test_limits_have_a_slack_for_rounding_only():
+    """A label as long or wide as allowed, give or take rounding, prints;
+    a hundredth of a millimetre more than the slack does not."""
+    from tavletta.backends.base import LIMIT_SLACK_MM, Capabilities
+
+    caps = Capabilities((), 300, (), max_length_mm=100.0, max_width_mm=50.0)
+    assert not caps.too_long(100.0 + LIMIT_SLACK_MM) and not caps.too_wide(50.0 + LIMIT_SLACK_MM)
+    assert caps.too_long(100.0 + 2 * LIMIT_SLACK_MM) and caps.too_wide(50.0 + 2 * LIMIT_SLACK_MM)
+    assert not Capabilities((), 300, ()).too_long(10**6)  # no limit
+
+
+def test_a_level_between_its_steps_is_kept():
+    """The steps are the window's offer, not a grid every value snaps to."""
+    level = Level("darkness", 0, 100, 10)
+    assert [level.value(v) for v in (55, 54.6, 100, 130, -5)] == [55, 55, 100, 100, 0]
+    assert list(level.steps())[:3] == [0, 10, 20] and 55 not in level.steps()
 
 
 def test_color_adjust_round_trip_and_neutral():
@@ -323,7 +347,7 @@ def test_host_memory_forgets_the_least_recently_used_printer():
 
     backend = cab.Cab()
     for n in range(HOSTS_REMEMBERED + 10):
-        backend._learn("192.0.2.%d" % n, 12.0)
+        backend.reported["192.0.2.%d" % n] = 12.0
     assert len(backend.reported) == HOSTS_REMEMBERED
     assert isinstance(cab._setups, HostMemory)
     assert isinstance(niimbot.Niimbot().models, HostMemory)

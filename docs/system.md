@@ -38,6 +38,16 @@ CUPS classes are addressed as CUPS lists them (`/classes/<name>`).
 
 ## Printing
 
+- Every request goes over HTTP with a timeout of 10 s that counts from the
+  last byte the printer took, as for the raw printers (`net.py`): a
+  document of many megabytes on a slow connection goes on as long as the
+  printer keeps taking it (at least 8000 bytes a second), and the answer
+  is waited for while the printer still takes the end of the request from
+  the send queue (also over `ipps`, where TLS 1.3 makes the connection
+  readable before the answer). The answer, also to `Print-Job`, must
+  begin within 10 s of the last byte of the request the printer took; all
+  of it has 10 s plus a second for every 8000 bytes, and at most 8 MB.
+  [decided]
 - `Get-Printer-Attributes` first: state, `printer-state-reasons`, the
   formats, `print-scaling-supported`, `media-size-supported`,
   `printer-resolution-default` and `-supported`, `copies-supported`,
@@ -316,7 +326,10 @@ the gLabels template database says (`tavletta/sheets`, see below).
   every position another row; printing copies is the source that always
   returns the same label.
 - The positions to fill: the chosen ones on the first sheet (partly used
-  sheets), every position on the sheets after it. Up to 999 labels a job.
+  sheets), every position on the sheets after it. Up to 999 labels a job:
+  more (copies times rows of a serial label) are refused before the first
+  sheet, by the window, the command line and the server alike, not cut
+  short (`TooManyLabels`).
 - The pages go in `Print-Job`s of up to 10 pages each, every page once (no
   `copies`): a PDF with a page each, or PWG Raster or Apple Raster with
   the page count set; 23 sheets are jobs of 10, 10 and 3 pages. A job also

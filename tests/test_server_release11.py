@@ -187,12 +187,13 @@ def test_a_printer_that_does_not_answer_prints_with_what_is_known(
 
 def test_cab_resolutions_are_kept_per_printer():
     backend = cab.Cab()
-    backend._learn("a", 23.6)
-    backend._learn("b", 8.0)
+    backend.reported["a"] = 23.6
+    backend.reported["b"] = 8.0
     assert backend.raster(25, PrintOptions(host="a")).dpi == pytest.approx(cab.dpi_for(23.6))
     assert backend.raster(25, PrintOptions(host="b")).dpi == pytest.approx(cab.dpi_for(8.0))
     assert backend.raster(25, PrintOptions(host="c")).dpi == pytest.approx(cab.dpi_for(12.0))
-    assert backend.raster(25, PrintOptions()).dpi == pytest.approx(cab.dpi_for(8.0))  # last
+    # no printer: the default, not the one last asked (another client's)
+    assert backend.raster(25, PrintOptions()).dpi == pytest.approx(cab.dpi_for(12.0))
 
 
 def test_niimbot_models_are_kept_per_printer():
@@ -204,7 +205,9 @@ def test_niimbot_models_are_kept_per_printer():
     assert backend.raster(12, PrintOptions(host="a")).dpi == first.dpi
     assert backend.raster(12, PrintOptions(host="b")).dpi == models[-1].dpi
     assert backend.raster(12, PrintOptions(host="c")).dpi == backend.capabilities.dpi
-    assert backend.raster(12, PrintOptions()).dpi == models[-1].dpi  # the last asked
+    # no printer: the default, not the one last asked (another client's)
+    assert backend.raster(12, PrintOptions()).dpi == backend.capabilities.dpi
+    assert backend.settings(None) == backend.capabilities.settings
 
 
 # --- M5: a page that cannot be drawn is not printed ----------------------------------

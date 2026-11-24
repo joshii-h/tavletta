@@ -70,7 +70,10 @@ def test_conversion():
     assert MILLIMETRES.from_display(7.5) == 7.5
 
 
-@pytest.mark.parametrize("mm_step, expected", [(0.1, 0.01), (0.5, 0.01), (1, 0.05), (5, 0.1)])
+@pytest.mark.parametrize(
+    "mm_step, expected",
+    [(0.1, 0.01), (0.5, 0.01), (0.99, 0.01), (1, 0.05), (4, 0.05), (4.99, 0.05), (5, 0.1)],
+)
 def test_step(mm_step, expected):
     assert INCHES.step(mm_step) == expected
     assert MILLIMETRES.step(mm_step) == mm_step

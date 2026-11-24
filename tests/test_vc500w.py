@@ -122,6 +122,22 @@ def test_parse_config_unknown_type_uses_width_and_no_cassette():
     assert missing.tape_mm == 19 and not missing.no_cassette
 
 
+def test_numbers_that_are_not_finite_are_none():
+    """Python's float() reads "nan", "inf" and "1e999": as missing, not
+    a ValueError or OverflowError later."""
+    for junk in ("nan", "inf", "-inf", "1e999", "Infinity"):
+        config = vc500w.parse_config(
+            "<cassette_type>1</cassette_type><crossweb_dpi>%s</crossweb_dpi>"
+            "<media_length_initial>%s</media_length_initial>"
+            "<width_inches_media>%s</width_inches_media>" % (junk, junk, junk)
+        )
+        assert (config.crossweb_dpi, config.length_in, config.printable_in) == (320, None, None)
+        status = vc500w.parse_status("<print_state>IDLE</print_state><remain>%s</remain>" % junk)
+        assert status.remain_in is None
+        info = vc500w.VC500W.info(vc500w.parse_config("<cassette_type>1</cassette_type>"), status)
+        assert info.remaining_mm is None
+
+
 def test_parse_config_defaults_for_missing_or_broken_values():
     config = vc500w.parse_config(
         "<crossweb_dpi>abc</crossweb_dpi><media_length_initial>0</media_length_initial>"
@@ -521,6 +537,14 @@ def test_print_mode_not_offered_by_the_printer(printer, backend):
 def test_print_default_mode_is_no_fallback(printer, backend):
     assert backend.print_label(_label_image(), "p", PrintOptions()) is None
     assert backend.print_label(_label_image(), "p", PrintOptions(mode="color")) is None
+
+
+@pytest.mark.parametrize("copies", [0, -3])
+def test_no_copies_prints_one_as_every_backend(printer, backend, copies):
+    """copies 0 printed nothing and reported success."""
+    events = []
+    backend.print_label(_label_image(), "p", PrintOptions(copies=copies), events.append)
+    assert len(printer.device.prints()) == 1 and events[0] == Progress(1, 1)
 
 
 def test_print_copies_progress_and_stages(printer, backend):

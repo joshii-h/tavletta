@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s é uma coluna de dados ({%(name)s}) – informe um arquivo de dados com --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s é uma coluna de dados ({%(name)s}) – envie-a em data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s é preenchido a partir das linhas de dados ({%(name)s}) e não pode ser definido",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s é grande demais para uma etiqueta: no máximo %(size)d MB.",
 }

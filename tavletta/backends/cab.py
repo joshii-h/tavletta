@@ -19,7 +19,6 @@ import base64
 import http.client
 import io
 import json
-import math
 import re
 import socket
 import threading
@@ -54,6 +53,7 @@ from tavletta.backends.base import (
     RibbonOut,
     Toggle,
     check_width,
+    for_resolution,
     map_error,
     open_session,
     report_progress,
@@ -66,6 +66,9 @@ DEFAULT_PORT = 9100
 # sending a job (net.send_all, usb.Connection.sendall)
 SOCKET_TIMEOUT = 10.0
 CANCEL_TIMEOUT = 1.0  # seconds for ESC c after a problem, and for closing then
+# an answer up to a carriage return (qv's is about 40 characters): longer is
+# not a cab printer answering, and is not read on
+MAX_ANSWER = 256
 MIN_RATE = 8_000  # bytes a second: a job that trickles in slower counts as stalled
 PRINT_TIMEOUT = 180.0  # seconds without progress while waiting or printing
 POLL_INTERVAL = 0.5  # the manual: status requests not more often than every 0.5 s
@@ -383,17 +386,30 @@ class _Session:
         self.sock = sock
 
     def _read(self, length: int | None = None) -> str:
-        """An answer: `length` bytes, or up to a carriage return."""
+        """An answer: `length` bytes, or up to a carriage return (at most
+        MAX_ANSWER bytes). All of it within SOCKET_TIMEOUT: a timeout for
+        each read alone would let something that sends a byte now and then
+        hold the session (and on USB the printer) for ever."""
         data = b""
-        while True:
-            chunk = self.sock.recv(1 if length is None else length - len(data))
-            if not chunk:
-                raise PrinterTimeout("connection closed after %r" % data)
-            data += chunk
-            if length is not None and len(data) >= length:
-                return data.decode("ascii", "replace")
-            if length is None and data.endswith(b"\r"):
-                return data.decode("ascii", "replace")
+        deadline = _clock() + SOCKET_TIMEOUT
+        try:
+            while True:
+                remaining = deadline - _clock()
+                if remaining <= 0:
+                    raise PrinterTimeout("answer not complete in time: %r" % data[:40])
+                self.sock.settimeout(remaining)
+                chunk = self.sock.recv(1 if length is None else length - len(data))
+                if not chunk:
+                    raise PrinterTimeout("connection closed after %r" % data[:40])
+                data += chunk
+                if length is not None and len(data) >= length:
+                    return data.decode("ascii", "replace")
+                if length is None and data.endswith(b"\r"):
+                    return data.decode("ascii", "replace")
+                if len(data) >= MAX_ANSWER:
+                    raise PrinterError("unexpected answer: %r" % data[:40])
+        finally:
+            self.sock.settimeout(SOCKET_TIMEOUT)
 
     def status(self) -> Status:
         self.sock.sendall(ESC + b"s")
@@ -457,20 +473,14 @@ class Cab(Backend):
         self.port = port
         # the resolutions the printers reported, by address: prepare()
         # renders for the job's printer (PrintOptions.host); one backend
-        # serves every cab printer of a print server
+        # serves every cab printer of a print server, so nothing of one
+        # printer stands in for another (or for none)
         self.reported: HostMemory[float] = HostMemory()
-        # the printer last asked: for a job whose printer is not known
-        self.dots_per_mm = DEFAULT_DOTS_PER_MM
-
-    def _learn(self, host: str, dots_per_mm: float) -> None:
-        self.reported[host] = self.dots_per_mm = dots_per_mm
 
     def _dots(self, host: str) -> float:
-        """The resolution of this printer as reported, else the default;
-        without an address the one of the printer last asked."""
-        if not host:
-            return self.dots_per_mm
-        return self.reported.get(host, DEFAULT_DOTS_PER_MM)
+        """The resolution this printer reported, else the default (also
+        without an address)."""
+        return self.reported.get(host, DEFAULT_DOTS_PER_MM) if host else DEFAULT_DOTS_PER_MM
 
     def display_name(self, info: PrinterInfo | None) -> str:
         """ "cab EOS2/300": the printer names its model and resolution."""
@@ -501,8 +511,7 @@ class Cab(Backend):
                 version, pitch = Version(), None
         dots = self._dots(host)
         if version.model:
-            dots = version.dots_per_mm
-            self._learn(host, dots)
+            dots = self.reported[host] = version.dots_per_mm
         error = status_error(status)
         return PrinterInfo(
             model=version.model or "cab",
@@ -519,7 +528,7 @@ class Cab(Backend):
         )
 
     def raster(self, tape_mm: float, options: PrintOptions) -> Raster:
-        info = options.info  # this job's answer, else the printer as last asked
+        info = options.info  # this job's answer, else what this printer reported
         return Raster(info.dpi if info and info.dpi else dpi_for(self._dots(options.host)))
 
     def prepare(
@@ -552,13 +561,17 @@ class Cab(Backend):
         speed = (web_setup(host).speed if method in METHOD_CODES else None) or DEFAULT_SPEED
         with session(host, self.port, usb.PRINT_WAIT) as s:
             report_progress(progress, 1, copies)
+            # a printer with a problem may not answer text commands (see
+            # query()): its status first, so that it tells the problem
+            # (out of labels, head open) instead of timing out on qv
+            _checked(s)
             # the printer may not have been asked yet (switched on later)
             version = s.version()
-            dots = version.dots_per_mm if version.model else rendered
-            self._learn(host, dots)
+            dots = rendered  # a printer that does not tell: as rendered, nothing learned
+            if version.model:
+                dots = self.reported[host] = version.dots_per_mm
             size_mm = image.info.get("size_mm")
-            if not math.isclose(dots, rendered):
-                image = _rescale(image, dots / rendered)
+            image = for_resolution(image, rendered, dots)  # else rendered again (RenderAgain)
             upside_down = self.setting(options, "upside_down") is True
             job = build_job(
                 image, dots, options.gap_mm, copies, method, speed, upside_down, size_mm
@@ -573,13 +586,6 @@ class Cab(Backend):
                 s.cancel()
                 raise
         return None
-
-
-def _rescale(image: Image.Image, factor: float) -> Image.Image:
-    """Made for another resolution: scale the (already black and white)
-    image instead of failing; prepare() renders right the next time."""
-    size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
-    return image.resize(size, Image.Resampling.NEAREST)
 
 
 def _cab_name(model: str) -> str:

@@ -16,11 +16,12 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from datetime import datetime
 
+from tavletta import codes
 from tavletta.backends.base import Backend, PrintOptions, PrintResult, Progress
 from tavletta.job import Job, PrepareFailed, merge_results
 from tavletta.merge.fill import VARIABLE
 from tavletta.model import CodeElement, Label, TextElement
-from tavletta.render import DEFAULT_SAFE_MM, check_code
+from tavletta.render import DEFAULT_SAFE_MM
 from tavletta.sheets.layout import SheetJob
 from tavletta.variables import (
     Values,
@@ -30,9 +31,6 @@ from tavletta.variables import (
     uses_counter,
     varies_per_copy,
 )
-
-# what a QR code takes in any case: bytes, error correction M, the largest size
-QR_BYTES = 2331
 
 
 def filled(label: Label, row: Mapping[str, str], values: Values | None = None) -> Label:
@@ -182,13 +180,11 @@ class UnprintableRows(Exception):
 
 
 def _code_fails(element: CodeElement) -> bool:
+    """Whether the code cannot be made: the renderer would draw a
+    crossed-out box instead (any error, as it does)."""
     try:
-        check_code(element)
-        if element.symbology == "qr" and len(element.data.encode()) > QR_BYTES:
-            import segno
-
-            segno.make(element.data, error="m")
-    except Exception:  # noqa: BLE001 - CodeError, segno's DataOverflowError
+        codes.verify(element)
+    except Exception:  # noqa: BLE001 - CodeError, or an encoder's own error
         return True
     return False
 
@@ -198,6 +194,7 @@ def unprintable_rows(
     rows: Sequence[Mapping[str, str]],
     indexes: Sequence[int],
     values: Values | None = None,
+    stop: threading.Event | None = None,
 ) -> list[int]:
     """The rows (counted from 1) whose filled codes cannot be drawn: the
     renderer would print a crossed-out box instead. Only codes with column
@@ -206,21 +203,25 @@ def unprintable_rows(
     `values` (those of the first label), the counter as it will be on each
     copy of each row: a counter can overflow a code's digits on a later
     copy (an EAN-13 at 99999 + 1). Without variables that change per copy
-    one check per row does."""
-    codes = [e for e in label.elements if isinstance(e, CodeElement) and column_names(e.data)]
-    if not codes:
+    one check per row does. `stop` set: no row after the first is
+    checked (those found so far are returned), as a series prints its
+    first row in any case."""
+    varying = [e for e in label.elements if isinstance(e, CodeElement) and column_names(e.data)]
+    if not varying:
         return []
     first = values or Values(datetime.now())
     copies = range(1, first.copies + 1) if varies_per_copy(label) else range(1, 2)
     bad = []
     for position, index in enumerate(indexes):
+        if position and stop is not None and stop.is_set():
+            break
         row_values = replace(first, counter=first.counter + first.step * first.copies * position)
         if any(
             _code_fails(
                 replace(code, data=expand(code.data, row_values.for_copy(copy), rows[index])[0])
             )
             for copy in copies
-            for code in codes
+            for code in varying
         ):
             bad.append(index + 1)
     return bad
@@ -262,9 +263,15 @@ def print_series(
     label fails. `outcome` (returned) is kept up to date while printing.
     `check` False: the caller has run unprintable_rows() already."""
     values = series.first_values()
-    if check and (bad := unprintable_rows(series.label, series.rows, series.indexes, values)):
-        raise UnprintableRows(bad)
     outcome = outcome if outcome is not None else SeriesResult()
+    if check:
+        # stopped while the rows are checked: the check ends after the
+        # first row, which is printed, then the series stops (below); a
+        # job of sheets cannot stop, all its rows are checked
+        checking_stop = stop if series.sheet is None else None
+        bad = unprintable_rows(series.label, series.rows, series.indexes, values, checking_stop)
+        if bad:
+            raise UnprintableRows(bad)
     counting = uses_counter(series.label)
     outcome.counter = values.counter if counting else None
     if series.sheet is not None:
@@ -322,10 +329,11 @@ def _print_on_sheets(
     """One job of label sheets (job.Job with a label for each position):
     the rows in order, each `copies` times on consecutive positions, from
     the chosen positions of the first sheet on, each position with its own
-    counter, copy number, UUID and ID. It cannot be stopped between rows. A
-    failure names the row to go on from, the copies of it printed and where
-    on the sheets it goes; the labels that came out count (also on Ctrl+C,
-    see Job.run)."""
+    counter, copy number, UUID and ID. It cannot be stopped between rows.
+    More labels than one job of sheets takes (sheets.layout.MAX_LABELS)
+    are refused before the first (TooManyLabels). A failure names the row
+    to go on from, the copies of it printed and where on the sheets it
+    goes; the labels that came out count (also on Ctrl+C, see Job.run)."""
     assert series.sheet is not None
     copies = max(1, series.options.copies)
     total = len(series.indexes) * copies
@@ -352,13 +360,20 @@ def _print_on_sheets(
             outcome.counter = values.counter + values.step * outcome.labels
 
     def stopped_at(done: int, error: Exception, preparing: bool) -> SeriesError:
-        """The SeriesError after `done` labels came out (whole sheets)."""
+        """The SeriesError after `done` labels came out (whole sheets). A
+        backend that fails after every sheet came out stops at the last
+        row with all its copies printed, as a row's own job that fails
+        after its last copy (_print_row); there is no position left."""
         count(done)
         at = min(done // copies, len(rows) - 1)
-        page = next((i for i, first in enumerate(starts) if first + len(slots[i]) > done), 0)
-        where = (slots[page][done - starts[page]] + 1, page + 1)
+        where = None
+        if done < total:
+            page = next(i for i, first in enumerate(starts) if first + len(slots[i]) > done)
+            where = (slots[page][done - starts[page]] + 1, page + 1)
+        else:
+            outcome.printed = rows[:at]
         printed = list(outcome.printed)
-        return SeriesError(rows[at], printed, error, preparing, outcome, done % copies, where)
+        return SeriesError(rows[at], printed, error, preparing, outcome, done - at * copies, where)
 
     options = replace(series.options, copies=total)
     job = Job(backend, series.label, options, series.safe_mm, values, None, sheet, position)
@@ -374,5 +389,5 @@ def _print_on_sheets(
     except BaseException:  # Ctrl+C: the labels that came out used their numbers
         count(job.printed)
         raise
-    count(total)
+    count(job.printed)
     return outcome

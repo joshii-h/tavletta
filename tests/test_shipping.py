@@ -36,6 +36,7 @@ from shipping_samples import (
 
 from tavletta.backends import get_backend
 from tavletta.backends.base import PrintOptions
+from tavletta.caches import Kept, image_bytes
 from tavletta.model import Label, LabelError, PageElement, TextElement
 from tavletta.render import Inks, mm_to_px, render
 from tavletta.shipping import crop as cropping
@@ -107,6 +108,27 @@ def test_is_pdf():
     # an image whose comment holds the PDF header stays an image
     assert not source.is_pdf(b"\xff\xd8\xff\xfe\x00\x10%PDF-1.4 hello")
     assert not source.is_pdf(b"x" * 1024 + b"%PDF-1.4")
+
+
+@pytest.mark.parametrize("wrap", ["\n", "\r\n", " "])
+def test_base64_with_line_breaks_is_known_as_pdf(wrap):
+    """base64 as mail and many tools write it, in lines of 76 (or 64)
+    characters: still a PDF, not an image that cannot be read."""
+    import base64
+
+    raw = b"%PDF-1.4\n" + bytes(range(256)) * 12
+    plain = base64.b64encode(raw).decode()
+    for width in (76, 64):
+        wrapped = wrap.join(plain[i : i + width] for i in range(0, len(plain), width))
+        assert source.starts_as_pdf(wrapped) and source._decoded(wrapped) == raw
+    assert source.starts_as_pdf(plain)
+    assert not source.starts_as_pdf(b64(encode(square_image())))
+
+
+@needs_poppler
+def test_a_wrapped_pdf_is_read_as_a_pdf(pdf):
+    wrapped = "\n".join(pdf[i : i + 76] for i in range(0, len(pdf), 76))
+    assert source.page_info(wrapped, 1) == source.page_info(pdf, 1)
 
 
 def test_image_with_pdf_header_in_its_comment():
@@ -353,12 +375,31 @@ def test_only_small_drawings_are_kept(monkeypatch):
 
 
 def test_cache_is_bounded_by_bytes():
-    cache = source._Cache(10, max_bytes=10)
+    """Values and the texts of their keys count (a key of 1 byte here)."""
+    cache = Kept(10, max_bytes=10)
     for key in "abc":
         cache.put(key, b"xxxx")
     assert len(cache) == 2 and cache.get("a") is None and cache.get("c") == b"xxxx"
+    cache.put("c", b"x")  # replaced: its bytes counted once
+    assert cache.bytes == 5 + 2
+    cache.put("big", b"x" * 8)  # 11 bytes with its key: not kept, nothing dropped
+    assert cache.get("big") is None and len(cache) == 2
+    cache.put("c", b"x" * 10)  # a value too large replaces the old one: not kept either
+    assert cache.get("c") is None and len(cache) == 1 and cache.bytes == 5
     cache.clear()
-    assert len(cache) == 0
+    assert len(cache) == 0 and cache.bytes == 0
+
+
+def test_the_texts_of_a_key_count_toward_the_bytes():
+    """An image file's base64 text as the key of its drawing: held as long
+    as the drawing, so counted with it."""
+    from tavletta.caches import key_bytes
+
+    assert key_bytes(("x" * 100, 3, (b"ab", "c"), None)) == 103
+    cache = Kept(10, max_bytes=1000, size=lambda _value: 0)
+    for n in range(5):
+        cache.put(("%d" % n + "x" * 299, 0), 1.0)
+    assert len(cache) == 3 and cache.bytes == 900
 
 
 def tiff_pages() -> bytes:
@@ -629,10 +670,10 @@ def test_a_label_at_600_dpi_is_kept():
     data = b64(encode(square_image()))
     box = (2400, 3600)
     drawn = source.draw(data, 0, detect.FULL, 0, box)
-    assert source._image_bytes(drawn) == 2400 * 3600 * 4  # RGB takes 4 bytes a pixel
+    assert image_bytes(drawn) == 2400 * 3600 * 4  # RGB takes 4 bytes a pixel
     assert source.draw(data, 0, detect.FULL, 0, box) is drawn
     grey = source.draw(b64(encode(square_image("L"))), 0, detect.FULL, 0, (20, 30))
-    assert source._image_bytes(grey) == 600
+    assert image_bytes(grey) == 600
 
 
 def test_image_without_turning_is_not_copied(monkeypatch):
@@ -1297,9 +1338,10 @@ def test_page_element_from_file(tmp_path, monkeypatch):
     assert (element.name, base64.b64decode(element.data)) == ("label.pdf", b"%PDF-1.4")
     import tavletta.model as model
 
-    monkeypatch.setattr(model, "MAX_FILE_BYTES", 3)
-    with pytest.raises(LabelError):
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 3)
+    with pytest.raises(LabelError) as info:
         PageElement.from_file(path)
+    assert info.value.code == "damaged"
 
 
 def test_render_draws_the_area_at_the_label_size():

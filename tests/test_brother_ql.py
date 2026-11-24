@@ -1540,6 +1540,19 @@ def test_high_quality_keeps_2d_code_modules_whole_on_the_300_dpi_head(backend_id
         assert sum(histogram[1:255]) == 0, high_res
 
 
+def test_an_image_of_no_roll_names_its_dots_across_the_head():
+    """In high quality the image has two pixels for each dot of the head:
+    the message names the dots, not the pixels."""
+    backend = ql.BrotherQL()
+    image = Image.new("1", (100, 2 * 555))
+    image.info["quality"] = "high"
+    with pytest.raises(UnsupportedSize, match="no roll is 555 dots wide"):
+        backend.label_media(image)
+    image.info["quality"] = ""
+    with pytest.raises(UnsupportedSize, match="no roll is 1110 dots wide"):
+        backend.label_media(image)
+
+
 @pytest.mark.parametrize("length", [20.1, 33.3, 50.0])
 def test_a_fixed_length_in_high_quality_is_the_users(length):
     """High quality renders whole pixel pairs along the label (20.1 mm:

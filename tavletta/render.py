@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import contextlib
+import hashlib
 import io
 import math
 import threading
@@ -24,6 +25,7 @@ from typing import NamedTuple
 from PIL import Image, ImageChops, ImageDraw, ImageOps, ImageStat
 
 from tavletta import codes, imageformats, imagefx, shapes, typeset
+from tavletta.caches import kept_images, kept_small
 from tavletta.codes import CodeError
 from tavletta.model import (
     CodeElement,
@@ -170,7 +172,25 @@ class PdfAnswers:
         self.shared = _KEPT_BYTES if shared is None else shared
         self._kept: OrderedDict[tuple, tuple[dict, bytes]] = OrderedDict()
         self._bytes = 0
+        self._digests: OrderedDict[str, bytes] = OrderedDict()
         self._lock = threading.Lock()
+
+    def digest(self, data: str) -> bytes:
+        """The SHA-256 of a PDF file's base64 text, the key of its answers:
+        worked out once per text in the block (at most `items` of them), as
+        a series draws the same page on every row and hashing up to 13 MB
+        each time is not free."""
+        with self._lock:
+            found = self._digests.get(data)
+            if found is not None:
+                self._digests.move_to_end(data)
+                return found
+        digest = hashlib.sha256(data.encode("utf-8", "surrogatepass")).digest()
+        with self._lock:
+            self._digests[data] = digest
+            while len(self._digests) > self.items:
+                self._digests.popitem(last=False)
+        return digest
 
     def get(self, key: tuple) -> tuple[dict, bytes] | None:
         with self._lock:
@@ -238,6 +258,7 @@ class PdfAnswers:
         with self._lock:
             while self._kept:
                 self._drop(next(iter(self._kept)))
+            self._digests.clear()
 
 
 _PDF_ANSWERS: ContextVar[PdfAnswers | None] = ContextVar("pdf_answers", default=None)
@@ -434,8 +455,13 @@ def _size_of(
     element: TextElement, size_px: float, dpi: float, antialias: bool, wrap_px: int | None
 ) -> tuple[int, int]:
     """typeset.size_of, kept: fitting a text asks for the same sizes on
-    every render while the label is edited (another element changes)."""
+    every render while the label is edited (another element changes);
+    within limits (the print server) only for the render running, so no
+    client's text stays beyond its request."""
     values = tuple(getattr(element, name) for name in _TEXT_FIELDS)
+    if _LIMITS.get():
+        key = (values, size_px, dpi, antialias, wrap_px)
+        return _per_render("measured", key, lambda: _measured.__wrapped__(*key))
     return _measured(values, size_px, dpi, antialias, wrap_px)
 
 
@@ -633,10 +659,13 @@ def _scale_cut(data: str, cut: tuple, height: int) -> Image.Image:
     return img.resize((width, height), Image.Resampling.LANCZOS)
 
 
-_decoded_cached = lru_cache(maxsize=8)(_decode)
-_scaled_cached = lru_cache(maxsize=16)(_scale)
-_cut_cached = lru_cache(maxsize=2)(_cut_image)
-_scaled_cut_cached = lru_cache(maxsize=2)(_scale_cut)
+# kept by count and by memory: eight decoded photos of 80 megapixels would
+# be 2.5 GB. A decoded photo of that size (320 MB) and one cut of it are
+# kept; the images at the label's size are small.
+_decoded_cached = kept_images(8, 512 * 2**20)(_decode)
+_scaled_cached = kept_images(16, 128 * 2**20)(_scale)
+_cut_cached = kept_images(2, 384 * 2**20)(_cut_image)
+_scaled_cut_cached = kept_images(2, 128 * 2**20)(_scale_cut)
 
 
 def _per_render(kind: str, key, make):
@@ -1582,7 +1611,8 @@ def _image_brightness(data: str, colour: tuple[int, int, int]) -> float:
     return imagefx.luma(ImageStat.Stat(flat.convert("RGB")).mean)  # type: ignore[arg-type]
 
 
-_image_brightness_cached = lru_cache(maxsize=4)(_image_brightness)
+# a number for each background image, kept by the memory of the image files
+_image_brightness_cached = kept_small(4, 256 * 2**20)(_image_brightness)
 
 
 def _local_inks(area: Image.Image, mask: Image.Image | None, inks: Inks) -> Inks:

@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import contextlib
+import socket
 import struct
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
 
 from tavletta.backends import ipp, mdns
+from tavletta.backends.base import PrinterStalled
 
 
 def response(status: int = 0, groups: list[tuple[int, list[ipp.Attribute]]] = ()) -> bytes:
@@ -219,6 +223,169 @@ def test_send_refuses_http_errors_and_huge_answers(fake_printer, monkeypatch):
     )
     with pytest.raises(ipp.IppError, match="larger than 10 bytes"):
         ipp.send("ipp://p:%d/" % big.port, b"", timeout=5)
+
+
+class SlowPrinter:
+    """A printer on 127.0.0.1 that takes a request in small bites (`pause`
+    seconds apart), or stops taking it after `stop_after` bytes; then
+    answers, unless `answer` is None."""
+
+    def __init__(self, pause=0.0, stop_after=None, answer=b"", trickle=0.0, head=b"", tls=None):
+        self.pause, self.stop_after, self.answer = pause, stop_after, answer
+        self.trickle, self.head = trickle, head  # the answer a byte at a time; more headers
+        self.tls = tls  # an ssl.SSLContext: ipps
+        self.taken = 0
+        self.listener = socket.create_server(("127.0.0.1", 0))
+        self.port = self.listener.getsockname()[1]
+        self.done = threading.Event()
+        threading.Thread(target=self._serve, daemon=True).start()
+
+    def _serve(self):
+        conn, _address = self.listener.accept()
+        conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 16384)
+        if self.tls is not None:
+            conn = self.tls.wrap_socket(conn, server_side=True)
+        with conn:
+            head = b""
+            while b"\r\n\r\n" not in head:
+                head += conn.recv(1)
+            length = int(head.split(b"Content-Length: ")[1].split(b"\r\n")[0])
+            while self.taken < length:
+                if self.stop_after is not None and self.taken >= self.stop_after:
+                    self.done.wait(10)
+                    return
+                self.taken += len(conn.recv(16384))
+                time.sleep(self.pause)
+            if self.answer is not None:
+                answer = (
+                    b"HTTP/1.1 200 OK\r\nContent-Type: application/ipp\r\n%s"
+                    b"Content-Length: %d\r\n\r\n%s" % (self.head, len(self.answer), self.answer)
+                )
+                if self.trickle:
+                    for n in range(len(answer)):
+                        if self.done.wait(self.trickle):
+                            return
+                        conn.sendall(answer[n : n + 1])
+                else:
+                    with contextlib.suppress(OSError):  # closed after reading enough
+                        conn.sendall(answer)
+            self.done.wait(10)
+
+    def close(self):
+        self.done.set()
+        self.listener.close()
+
+
+@pytest.fixture
+def slow_printer(monkeypatch):
+    monkeypatch.setattr(mdns, "resolve_host", lambda host, family=0: "127.0.0.1")
+    printers = []
+
+    def make(**kwargs):
+        printers.append(SlowPrinter(**kwargs))
+        return printers[-1]
+
+    yield make
+    for printer in printers:
+        printer.close()
+
+
+@pytest.mark.real_ipp
+def test_a_document_sent_longer_than_the_timeout_is_not_cut_off(slow_printer):
+    """The printer takes the request steadily, but all of it takes longer
+    than the timeout: as long as it keeps taking, the request goes on (a
+    socket timeout would cap the whole send), and its answer is waited
+    for while it takes the end of the request from the send queue."""
+    printer = slow_printer(pause=0.01, answer=response())
+    body = bytes(256 << 10)
+    start = time.monotonic()
+    answer = ipp.send("ipp://p:%d/" % printer.port, body, timeout=0.3)
+    assert answer.ok and printer.taken == len(body)
+    assert time.monotonic() - start > 0.3  # longer than the timeout in all
+
+
+@pytest.fixture(scope="module")
+def tls13(tmp_path_factory):
+    """A server context of TLS 1.3 with a certificate of its own (as a
+    printer brings): TLS 1.3 sends session tickets after the handshake,
+    so the socket is readable before the answer comes."""
+    import shutil
+    import ssl
+    import subprocess
+
+    openssl = shutil.which("openssl")
+    if openssl is None:
+        pytest.skip("openssl is not installed")
+    folder = tmp_path_factory.mktemp("tls")
+    cert, key = folder / "cert.pem", folder / "key.pem"
+    subprocess.run(  # nosec - a fixed command line
+        [openssl, "req", "-x509", "-newkey", "ec", "-pkeyopt", "ec_paramgen_curve:P-256"]
+        + ["-nodes", "-keyout", str(key), "-out", str(cert), "-days", "1"]
+        + ["-subj", "/CN=printer.local"],
+        check=True,
+        capture_output=True,
+    )
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.minimum_version = ssl.TLSVersion.TLSv1_3
+    context.load_cert_chain(cert, key)
+    return context
+
+
+@pytest.mark.real_ipp
+def test_a_document_sent_over_tls_13_is_not_cut_off(slow_printer, tls13):
+    """ipps: the session tickets make the socket readable at once; the
+    answer is still waited for while the printer takes the request."""
+    printer = slow_printer(pause=0.01, answer=response(), tls=tls13)
+    body = bytes(256 << 10)
+    answer = ipp.send("ipps://p:%d/" % printer.port, body, timeout=0.3)
+    assert answer.ok and printer.taken == len(body)
+
+
+@pytest.mark.real_ipp
+def test_a_printer_that_stops_taking_the_request_stalls(slow_printer):
+    printer = slow_printer(stop_after=64 << 10)
+    with pytest.raises(PrinterStalled):
+        ipp.send("ipp://p:%d/" % printer.port, bytes(8 << 20), timeout=0.5)
+
+
+@pytest.mark.real_ipp
+def test_a_printer_that_takes_everything_but_never_answers_times_out(slow_printer):
+    printer = slow_printer(answer=None)
+    start = time.monotonic()
+    with pytest.raises(TimeoutError, match="no answer within 0.5 s"):
+        ipp.send("ipp://p:%d/" % printer.port, bytes(100), timeout=0.5)
+    assert time.monotonic() - start < 5
+
+
+@pytest.mark.real_ipp
+def test_an_answer_that_trickles_in_ends_in_time(slow_printer):
+    """Each read has the timeout, but the answer as a whole too: a printer
+    that sends a byte now and then cannot hold the request."""
+    printer = slow_printer(answer=response(), trickle=0.05)
+    start = time.monotonic()
+    with pytest.raises(TimeoutError, match="did not come in time"):
+        ipp.send("ipp://p:%d/" % printer.port, b"request", timeout=0.3)
+    assert time.monotonic() - start < 2
+
+
+@pytest.mark.real_ipp
+def test_an_answer_with_a_huge_head_is_refused(slow_printer, monkeypatch):
+    monkeypatch.setattr(ipp, "MAX_RESPONSE", 1000)
+    monkeypatch.setattr(ipp, "HEAD_BYTES", 1000)
+    head = b"".join(b"X-Filler-%d: %s\r\n" % (n, b"y" * 1000) for n in range(50))
+    printer = slow_printer(answer=response(), head=head)
+    with pytest.raises(ipp.IppError, match="larger than 1000 bytes"):
+        ipp.send("ipp://p:%d/" % printer.port, b"request", timeout=5)
+    small = slow_printer(answer=response(), head=b"X-Small: 1\r\n")
+    assert ipp.send("ipp://p:%d/" % small.port, b"request", timeout=5).ok
+
+
+def test_an_additional_value_does_not_reach_into_the_group_before():
+    data = struct.pack(">BBHi", 2, 0, 0, 1) + bytes([ipp.OPERATION_GROUP])
+    data += ipp._field(ipp.KEYWORD, b"a", b"x") + bytes([ipp.PRINTER_GROUP])
+    data += ipp._field(ipp.KEYWORD, b"", b"y") + bytes([ipp.END_OF_ATTRIBUTES])
+    with pytest.raises(ipp.IppError, match="additional value without an attribute"):
+        ipp.decode(data)
 
 
 def test_host_header():
