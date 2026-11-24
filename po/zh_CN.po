@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 16:14+0100\n"
+"PO-Revision-Date: 2026-11-24 16:17+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: zh_CN\n"
 "Language: zh_CN\n"
@@ -327,7 +327,7 @@ msgstr "未知的打印机型号：%s"
 
 #: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:347 tavletta/ui/texts.py:729
-#: tavletta/server/service.py:902
+#: tavletta/server/service.py:903
 #, python-format
 msgid "Cannot open %s"
 msgstr "无法打开 %s"
@@ -348,7 +348,7 @@ msgid "The label has no element or variable named %s"
 msgstr "标签中没有名为 %s 的元素或变量"
 
 #: tavletta/cli.py:599 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1287
+#: tavletta/server/service.py:1288
 msgid "The label is empty"
 msgstr "标签为空"
 
@@ -361,9 +361,9 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output 写入 PNG 图像：请给出以 .png 结尾的名称"
 
 #: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:746 tavletta/server/service.py:1146
-#: tavletta/server/service.py:1169 tavletta/server/service.py:1471
-#: tavletta/server/service.py:1707
+#: tavletta/ui/printing.py:746 tavletta/server/service.py:1147
+#: tavletta/server/service.py:1170 tavletta/server/service.py:1472
+#: tavletta/server/service.py:1708
 msgid "The label cannot be prepared for printing."
 msgstr "无法准备标签以供打印。"
 
@@ -376,16 +376,16 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "找到多台打印机，请用 --host 选择一台（tavletta list-printers）"
 
-#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1697
+#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1698
 #, python-format
 msgid "Cannot save %s"
 msgstr "无法保存 %s"
 
-#: tavletta/cli.py:794 tavletta/server/service.py:1700
+#: tavletta/cli.py:794 tavletta/server/service.py:1701
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "标签已打印，但下一个计数器值未能保存"
 
-#: tavletta/cli.py:809 tavletta/server/service.py:1316
+#: tavletta/cli.py:809 tavletta/server/service.py:1317
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "未打印任何内容：下一个计数器值无法保存"
 
@@ -394,7 +394,7 @@ msgid "Interrupted"
 msgstr "已中断"
 
 #: tavletta/cli.py:952 tavletta/ui/printing.py:488
-#: tavletta/server/service.py:1192
+#: tavletta/server/service.py:1193
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "一个打印作业中最多 %d 个标签"
@@ -409,7 +409,7 @@ msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet 和 --rows 需要数据文件（--data）"
 
 #: tavletta/cli.py:1022 tavletta/ui/printing.py:615
-#: tavletta/server/service.py:1004
+#: tavletta/server/service.py:1005
 msgid "No rows to print"
 msgstr "没有要打印的行"
 
@@ -418,7 +418,7 @@ msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "此标签使用其文件夹之外的数据文件：请用 --data 指定"
 
 #: tavletta/cli.py:1059 tavletta/ui/window.py:922
-#: tavletta/server/service.py:1063
+#: tavletta/server/service.py:1064
 #, python-format
 msgid "No such column: %s"
 msgstr "没有此列：%s"
@@ -441,7 +441,7 @@ msgid "Waiting for another print of %s to finish…"
 msgstr "正在等待 %s 的另一个打印任务完成…"
 
 #: tavletta/cli.py:1084 tavletta/server/service.py:791
-#: tavletta/server/service.py:1465
+#: tavletta/server/service.py:1466
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s 仍被另一个打印任务锁定 – 请稍后再试"
@@ -553,7 +553,7 @@ msgstr "选择其他文件"
 msgid "Remove data file"
 msgstr "移除数据文件"
 
-#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:401
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:404
 msgid "Sheet"
 msgstr "工作表"
 
@@ -1070,7 +1070,7 @@ msgstr "拖动以选择要保留的图像部分"
 #: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
 #: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
 #: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
-#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:220
+#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:223
 msgid "Cancel"
 msgstr "取消"
 
@@ -1370,7 +1370,7 @@ msgstr "剩余 %(left)s／%(total)s"
 msgid "Reachable · the printer reports no status"
 msgstr "可连接 · 打印机未报告状态"
 
-#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:389
+#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:385
 msgid "Printing"
 msgstr "正在打印"
 
@@ -1471,7 +1471,7 @@ msgstr "仍在读取数据文件。请稍后再试。"
 
 #: tavletta/ui/printing.py:148 tavletta/ui/printing.py:188
 #: tavletta/ui/printing.py:525 tavletta/ui/printing.py:550
-#: tavletta/server/web/ui.js:262
+#: tavletta/server/web/ui.js:265
 msgid "Print anyway"
 msgstr "仍然打印"
 
@@ -1531,7 +1531,7 @@ msgstr "用于在普通纸上测试"
 msgid "Sheets: %d"
 msgstr "纸张数：%d"
 
-#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:724
+#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:789
 msgid "Copies of each label"
 msgstr "每张标签的份数"
 
@@ -1594,8 +1594,8 @@ msgstr "打印标签"
 
 #: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
-#: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
-#: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
+#: tavletta/server/web/app.js:338 tavletta/server/web/batch.js:56
+#: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "打印"
@@ -3160,7 +3160,7 @@ msgid ""
 "more."
 msgstr "打印机报告了问题。请关机后重新开机，然后再试一次。"
 
-#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:456
+#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:452
 msgid "Printed"
 msgstr "已打印"
 
@@ -3222,7 +3222,7 @@ msgid "%s is not a Tavletta label"
 msgstr "%s 不是 Tavletta 标签"
 
 #: tavletta/ui/texts.py:720 tavletta/ui/texts.py:740
-#: tavletta/server/service.py:913
+#: tavletta/server/service.py:914
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "文件已损坏：%s"
@@ -3342,12 +3342,12 @@ msgstr "每打印一张标签按步长递增"
 msgid "Next number"
 msgstr "下一个编号"
 
-#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:563
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:628
 msgid "Step"
 msgstr "步长"
 
-#: tavletta/ui/window.py:176 tavletta/server/web/app.js:45
-#: tavletta/server/web/app.js:288
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:47
+#: tavletta/server/web/app.js:296
 msgid "Templates"
 msgstr "模板"
 
@@ -3522,7 +3522,7 @@ msgstr "%s 的值无效"
 msgid "The request took too long"
 msgstr "请求耗时过长"
 
-#: tavletta/server/http.py:478 tavletta/server/service.py:1618
+#: tavletta/server/http.py:478 tavletta/server/service.py:1619
 msgid "The server is busy – try again later"
 msgstr "服务器繁忙，请稍后重试"
 
@@ -3581,7 +3581,7 @@ msgid "Send the header %s with this request"
 msgstr "请随此请求发送标头 %s"
 
 #: tavletta/server/http.py:721 tavletta/server/service.py:627
-#: tavletta/server/service.py:1591
+#: tavletta/server/service.py:1592
 msgid "This access token may not do this"
 msgstr "此访问令牌无权执行此操作"
 
@@ -3726,651 +3726,699 @@ msgstr "没有打印机地址：请以 host 提供"
 msgid "This printer address is not allowed: %s"
 msgstr "不允许此打印机地址：%s"
 
-#: tavletta/server/service.py:778 tavletta/server/service.py:921
+#: tavletta/server/service.py:778 tavletta/server/service.py:922
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content 中不允许文档页面（--allow-pdf-pages）"
 
-#: tavletta/server/service.py:954
+#: tavletta/server/service.py:955
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s 是数据列 ({%(name)s}) – 请在 data_rows 中发送"
 
-#: tavletta/server/service.py:1012
+#: tavletta/server/service.py:1013
 msgid "A sheet needs a data file"
 msgstr "工作表需要数据文件"
 
-#: tavletta/server/service.py:1018
+#: tavletta/server/service.py:1019
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "标签使用了标签文件夹之外的数据文件：请随请求一起发送其数据行"
 
-#: tavletta/server/service.py:1218
+#: tavletta/server/service.py:1219
 msgid "Too many print jobs are waiting – try again later"
 msgstr "等待中的打印作业过多，请稍后重试"
 
-#: tavletta/server/service.py:1487
+#: tavletta/server/service.py:1488
 #, python-format
 msgid "No such print job: %s"
 msgstr "没有此打印作业：%s"
 
-#: tavletta/server/service.py:1499
+#: tavletta/server/service.py:1500
 msgid "The print job has already finished"
 msgstr "打印作业已完成"
 
-#: tavletta/server/service.py:1559
+#: tavletta/server/service.py:1560
 #, python-format
 msgid "A label named %s exists already"
 msgstr "名为 %s 的标签已存在"
 
-#: tavletta/server/service.py:1564
+#: tavletta/server/service.py:1565
 msgid "The label could not be saved in the labels folder"
 msgstr "无法将标签保存到标签文件夹"
 
-#: tavletta/server/service.py:1622
+#: tavletta/server/service.py:1623
 msgid "The label is too large to render"
 msgstr "标签过大，无法渲染"
 
-#: tavletta/server/service.py:1636
+#: tavletta/server/service.py:1637
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "标签过大：图像和二维码／条形码最多 %d 个"
 
-#: tavletta/server/service.py:1659
+#: tavletta/server/service.py:1660
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "标签过大：最多 %(elements)d 个元素，每段文本最多 %(chars)d 个字符"
 
-#: tavletta/server/service.py:1678
+#: tavletta/server/service.py:1679
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "此打印机最多 %d 份"
 
-#: tavletta/server/service.py:1683
+#: tavletta/server/service.py:1684
 msgid "Printers are chosen by name: leave out host"
 msgstr "打印机按名称选择：请省略 host"
 
-#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:482
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:515
 msgid "No connection to the server. Your input is kept."
 msgstr "无法连接服务器。您的输入已保留。"
 
-#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:210
+#: tavletta/server/web/app.js:48 tavletta/server/web/app.js:214
 msgid "Printers"
 msgstr "打印机"
 
-#: tavletta/server/web/app.js:51
+#: tavletta/server/web/app.js:53
 msgid "Main"
 msgstr "主导航"
 
-#: tavletta/server/web/app.js:74
+#: tavletta/server/web/app.js:78
 msgid "Language"
 msgstr "语言"
 
-#: tavletta/server/web/app.js:81
+#: tavletta/server/web/app.js:83
 msgid "Sign out"
 msgstr "退出登录"
 
-#: tavletta/server/web/app.js:84
+#: tavletta/server/web/app.js:88
 msgid "Skip to content"
 msgstr "跳到内容"
 
-#: tavletta/server/web/app.js:160
+#: tavletta/server/web/app.js:164
 msgid "Access token"
 msgstr "访问令牌"
 
-#: tavletta/server/web/app.js:161
+#: tavletta/server/web/app.js:165
 msgid ""
 "The administrator gives it to you. It is kept in this tab only and forgotten "
 "when the tab is closed."
 msgstr "由管理员提供。令牌只保存在此标签页中，关闭标签页后即被清除。"
 
-#: tavletta/server/web/app.js:166 tavletta/server/web/app.js:202
+#: tavletta/server/web/app.js:170 tavletta/server/web/app.js:206
 msgid "Sign in"
 msgstr "登录"
 
-#: tavletta/server/web/app.js:172
+#: tavletta/server/web/app.js:176
 msgid "Show token"
 msgstr "显示令牌"
 
-#: tavletta/server/web/app.js:180
+#: tavletta/server/web/app.js:184
 msgid "Enter the access token."
 msgstr "请输入访问令牌。"
 
-#: tavletta/server/web/app.js:195
+#: tavletta/server/web/app.js:199
 msgid ""
 "The token was not accepted. Check it, or ask the administrator for a new one."
 msgstr "令牌未被接受。请检查令牌，或向管理员索取新令牌。"
 
-#: tavletta/server/web/app.js:209
+#: tavletta/server/web/app.js:213
 msgid "Check again"
 msgstr "重新检查"
 
-#: tavletta/server/web/app.js:221 tavletta/server/web/print.js:74
+#: tavletta/server/web/app.js:225 tavletta/server/web/print.js:74
 msgid "No printer this token may use. Ask the administrator."
 msgstr "此令牌没有可用的打印机。请联系管理员。"
 
-#: tavletta/server/web/app.js:234
+#: tavletta/server/web/app.js:238
 msgid "Location: {place}"
 msgstr "位置：{place}"
 
-#: tavletta/server/web/app.js:235
+#: tavletta/server/web/app.js:239
 msgid "Meant for: {media}"
 msgstr "适用于：{media}"
 
-#: tavletta/server/web/app.js:236
+#: tavletta/server/web/app.js:240
 msgid "Model: {model}"
 msgstr "型号：{model}"
 
-#: tavletta/server/web/app.js:242
+#: tavletta/server/web/app.js:246
 msgid "Default"
 msgstr "默认"
 
-#: tavletta/server/web/app.js:256
+#: tavletta/server/web/app.js:260
 msgid "Asking the printer…"
 msgstr "正在询问打印机…"
 
-#: tavletta/server/web/app.js:267
+#: tavletta/server/web/app.js:271
 msgid "Ask for its state"
 msgstr "查询状态"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:277
 msgid "Address: {host}"
 msgstr "地址：{host}"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:277
 msgid "No address set"
 msgstr "未设置地址"
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:312
 msgid "No templates yet. Upload one above."
 msgstr "还没有模板。请在上方上传。"
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:312
 msgid "No templates yet. Ask the administrator."
 msgstr "还没有模板。请联系管理员。"
 
-#: tavletta/server/web/app.js:331
+#: tavletta/server/web/app.js:339
 msgid "Series"
 msgstr "数据合并"
 
-#: tavletta/server/web/app.js:332
+#: tavletta/server/web/app.js:340
 msgid "Delete"
 msgstr "删除"
 
-#: tavletta/server/web/app.js:340
+#: tavletta/server/web/app.js:348
 msgid "Size: {width} × {height} mm"
 msgstr "尺寸：{width} × {height} mm"
 
-#: tavletta/server/web/app.js:341
+#: tavletta/server/web/app.js:349
 msgid "Fields: {count}"
 msgstr "字段：{count}"
 
-#: tavletta/server/web/app.js:342
+#: tavletta/server/web/app.js:350
 msgid "Printer model: {model}"
 msgstr "打印机型号：{model}"
 
-#: tavletta/server/web/app.js:348 tavletta/server/web/print.js:188
+#: tavletta/server/web/app.js:356
+msgid "Preview of {name} with sample values"
+msgstr "以示例值预览 {name}"
+
+#: tavletta/server/web/app.js:356 tavletta/server/web/print.js:188
 msgid "Preview of {name}"
 msgstr "{name} 的预览"
 
-#: tavletta/server/web/app.js:359
+#: tavletta/server/web/app.js:358
+msgid "The preview shows sample values; a series can read another data file."
+msgstr "预览显示示例值；系列可以读取其他数据文件。"
+
+#: tavletta/server/web/app.js:375
+msgid "The data file {name} is missing."
+msgstr "缺少数据文件 {name}。"
+
+#: tavletta/server/web/app.js:384
+msgid "The template's data file is not in the labels folder."
+msgstr "模板的数据文件不在标签文件夹中。"
+
+#: tavletta/server/web/app.js:392
 msgid "Delete template?"
 msgstr "删除模板？"
 
-#: tavletta/server/web/app.js:360
+#: tavletta/server/web/app.js:393
 msgid "The template {name} is deleted from the server. Its data file stays."
 msgstr "模板 {name} 将从服务器删除。其数据文件会保留。"
 
-#: tavletta/server/web/app.js:361
+#: tavletta/server/web/app.js:394
 msgid "Delete {name}"
 msgstr "删除 {name}"
 
-#: tavletta/server/web/app.js:368
+#: tavletta/server/web/app.js:401
 msgid "{name} deleted."
 msgstr "已删除 {name}。"
 
-#: tavletta/server/web/app.js:381
+#: tavletta/server/web/app.js:414
 msgid "Template file"
 msgstr "模板文件"
 
-#: tavletta/server/web/app.js:382
+#: tavletta/server/web/app.js:415
 msgid "A .tavletta file saved by Tavletta, at most {size} MB."
 msgstr "由 Tavletta 保存的 .tavletta 文件，最大 {size} MB。"
 
-#: tavletta/server/web/app.js:386
+#: tavletta/server/web/app.js:419
 msgid "Upload"
 msgstr "上传"
 
-#: tavletta/server/web/app.js:390
+#: tavletta/server/web/app.js:423
 msgid "Upload a template"
 msgstr "上传模板"
 
-#: tavletta/server/web/app.js:392
+#: tavletta/server/web/app.js:425
 msgid "Replace a template of the same name"
 msgstr "替换同名模板"
 
-#: tavletta/server/web/app.js:400
+#: tavletta/server/web/app.js:433
 msgid "Choose a template file."
 msgstr "请选择模板文件。"
 
-#: tavletta/server/web/app.js:405
+#: tavletta/server/web/app.js:438
 msgid "The file is too large: at most {size} MB."
 msgstr "文件过大：最大 {size} MB。"
 
-#: tavletta/server/web/app.js:416
+#: tavletta/server/web/app.js:449
 msgid "{name} uploaded."
 msgstr "已上传 {name}。"
 
-#: tavletta/server/web/app.js:420
+#: tavletta/server/web/app.js:453
 msgid ""
 "A template of this name exists. Choose \"Replace a template of the same "
 "name\" to replace it."
 msgstr "已存在同名模板。要替换它，请选择“替换同名模板”。"
 
-#: tavletta/server/web/app.js:422
+#: tavletta/server/web/app.js:455
 msgid ""
 "The file name can have letters, digits, spaces and . _ - ( ) + , and must "
 "not start with a dot. Rename the file."
 msgstr "文件名可包含字母、数字、空格及 . _ - ( ) + ,，且不能以点开头。请重命名文件。"
 
-#: tavletta/server/web/app.js:437
+#: tavletta/server/web/app.js:470
 msgid "Print job"
 msgstr "打印作业"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:843
+#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:908
 #: tavletta/server/web/print.js:243
 msgid "Template: {name}"
 msgstr "模板：{name}"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:844
+#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:909
 #: tavletta/server/web/print.js:243
 msgid "Printer: {name}"
 msgstr "打印机：{name}"
 
-#: tavletta/server/web/app.js:449 tavletta/server/web/batch.js:886
+#: tavletta/server/web/app.js:482 tavletta/server/web/batch.js:951
 msgid "Print job ended: {printed} of {total} labels printed."
 msgstr "打印作业已结束：已打印 {printed} / {total} 张标签。"
 
-#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:272
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:275
 msgid "Data"
 msgstr "数据"
 
-#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:398
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:401
 msgid "Assign"
 msgstr "分配"
 
-#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:465
+#: tavletta/server/web/batch.js:54 tavletta/server/web/batch.js:530
 msgid "Choose"
 msgstr "选择"
 
-#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:706
+#: tavletta/server/web/batch.js:55 tavletta/server/web/batch.js:771
 msgid "Check"
 msgstr "检查"
 
-#: tavletta/server/web/batch.js:85
+#: tavletta/server/web/batch.js:88
 msgid "From needs a number."
 msgstr "“起始”需要一个数字。"
 
-#: tavletta/server/web/batch.js:86
+#: tavletta/server/web/batch.js:89
 msgid "To needs a number."
 msgstr "“结束”需要一个数字。"
 
-#: tavletta/server/web/batch.js:87
+#: tavletta/server/web/batch.js:90
 msgid "Step must be a whole number from 1."
 msgstr "“步长”必须是从 1 起的整数。"
 
-#: tavletta/server/web/batch.js:88
+#: tavletta/server/web/batch.js:91
 msgid "From and To must be the same apart from the number ({from}, {to})."
 msgstr "“起始”和“结束”除数字外必须相同（{from}，{to}）。"
 
-#: tavletta/server/web/batch.js:89
+#: tavletta/server/web/batch.js:92
 msgid ""
 "From has {from} digits, To {to}. Enter both with the same number of digits."
 msgstr "“起始”有 {from} 位数字，“结束”有 {to} 位。请以相同位数输入两者。"
 
-#: tavletta/server/web/batch.js:90
+#: tavletta/server/web/batch.js:93
 msgid "To must be greater than or equal to From ({from})."
 msgstr "“结束”必须大于或等于“起始”（{from}）。"
 
-#: tavletta/server/web/batch.js:91
+#: tavletta/server/web/batch.js:94
 msgid ""
 "The ranges make different numbers of labels: {counts}. Make them the same "
 "length."
 msgstr "各范围生成的标签数量不同：{counts}。请使它们长度相同。"
 
-#: tavletta/server/web/batch.js:100
+#: tavletta/server/web/batch.js:103
 msgid "Series of {name}"
 msgstr "{name} 的数据合并"
 
-#: tavletta/server/web/batch.js:117
+#: tavletta/server/web/batch.js:120
 msgid ""
 "This template has no data fields ({placeholder}). For many equal labels, set "
 "the copies when printing."
 msgstr "此模板没有数据字段（{placeholder}）。如需打印多张相同标签，请在打印时设置份数。"
 
-#: tavletta/server/web/batch.js:127
+#: tavletta/server/web/batch.js:130
 msgid "Steps"
 msgstr "步骤"
 
-#: tavletta/server/web/batch.js:162 tavletta/server/web/batch.js:181
+#: tavletta/server/web/batch.js:165 tavletta/server/web/batch.js:184
 msgid "Enter a range for at least one field."
 msgstr "请至少为一个字段输入范围。"
 
-#: tavletta/server/web/batch.js:191 tavletta/server/web/batch.js:641
+#: tavletta/server/web/batch.js:194 tavletta/server/web/batch.js:706
 msgid "Row {n}"
 msgstr "第 {n} 行"
 
-#: tavletta/server/web/batch.js:207 tavletta/server/web/batch.js:518
-#: tavletta/server/web/batch.js:708
+#: tavletta/server/web/batch.js:210 tavletta/server/web/batch.js:583
+#: tavletta/server/web/batch.js:773
 msgid "No row selected."
 msgstr "未选择行。"
 
-#: tavletta/server/web/batch.js:211
+#: tavletta/server/web/batch.js:214
 msgid "{count} labels ({span})"
 msgstr "{count} 张标签（{span}）"
 
-#: tavletta/server/web/batch.js:226
+#: tavletta/server/web/batch.js:229
 msgid "not needed"
 msgstr "不需要"
 
-#: tavletta/server/web/batch.js:248 tavletta/server/web/batch.js:302
+#: tavletta/server/web/batch.js:251 tavletta/server/web/batch.js:305
 msgid "Next"
 msgstr "下一步"
 
-#: tavletta/server/web/batch.js:252 tavletta/server/web/batch.js:759
+#: tavletta/server/web/batch.js:255 tavletta/server/web/batch.js:824
 msgid "Back"
 msgstr "返回"
 
-#: tavletta/server/web/batch.js:276
+#: tavletta/server/web/batch.js:279
 msgid "Where do the values come from?"
 msgstr "值从哪里来？"
 
-#: tavletta/server/web/batch.js:277
+#: tavletta/server/web/batch.js:280
 msgid "A file (CSV, XLSX, ODS)"
 msgstr "文件（CSV、XLSX、ODS）"
 
-#: tavletta/server/web/batch.js:278
+#: tavletta/server/web/batch.js:281
 msgid "A pasted list"
 msgstr "粘贴的列表"
 
-#: tavletta/server/web/batch.js:279
+#: tavletta/server/web/batch.js:282
 msgid "No data: make numbers from ranges"
 msgstr "无数据：从范围生成编号"
 
-#: tavletta/server/web/batch.js:287
+#: tavletta/server/web/batch.js:290
 msgid "Data file"
 msgstr "数据文件"
 
-#: tavletta/server/web/batch.js:287
+#: tavletta/server/web/batch.js:290
 msgid ""
 "At most {size} MB. Every cell is read as the text it shows: leading zeros "
 "stay."
 msgstr "最大 {size} MB。每个单元格都按其显示的文本读取：前导零会保留。"
 
-#: tavletta/server/web/batch.js:289 tavletta/server/web/batch.js:296
+#: tavletta/server/web/batch.js:292 tavletta/server/web/batch.js:299
 msgid "The first row holds the column names"
 msgstr "第一行为列名"
 
-#: tavletta/server/web/batch.js:290
+#: tavletta/server/web/batch.js:293
 msgid "Last file read: {name}"
 msgstr "最后读取的文件：{name}"
 
-#: tavletta/server/web/batch.js:294 tavletta/server/web/batch.js:343
+#: tavletta/server/web/batch.js:297 tavletta/server/web/batch.js:346
 msgid "List"
 msgstr "列表"
 
-#: tavletta/server/web/batch.js:294
+#: tavletta/server/web/batch.js:297
 msgid ""
 "One label per line; columns separated by tab, semicolon or comma (as copied "
 "from a spreadsheet)."
 msgstr "每行一张标签；各列用制表符、分号或逗号分隔（与从电子表格复制的格式相同）。"
 
-#: tavletta/server/web/batch.js:298
+#: tavletta/server/web/batch.js:301
 msgid ""
 "The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
 msgstr "后续步骤将从范围生成值，例如 3000–5685 或 00300–00450。"
 
-#: tavletta/server/web/batch.js:302
+#: tavletta/server/web/batch.js:305
 msgid "Read and continue"
 msgstr "读取并继续"
 
-#: tavletta/server/web/batch.js:334
+#: tavletta/server/web/batch.js:337
 msgid "Choose a data file."
 msgstr "请选择数据文件。"
 
-#: tavletta/server/web/batch.js:342
+#: tavletta/server/web/batch.js:345
 msgid "Paste the list first."
 msgstr "请先粘贴列表。"
 
-#: tavletta/server/web/batch.js:347
+#: tavletta/server/web/batch.js:350
 msgid "The data are too large: at most {size} MB."
 msgstr "数据过大：最大 {size} MB。"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "semicolon"
 msgstr "分号"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "comma"
 msgstr "逗号"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "tab"
 msgstr "制表符"
 
-#: tavletta/server/web/batch.js:372
+#: tavletta/server/web/batch.js:371
 msgid "{name}: {kind}"
 msgstr "{name}：{kind}"
 
-#: tavletta/server/web/batch.js:373
+#: tavletta/server/web/batch.js:372
 msgid "Separated by {delimiter}"
 msgstr "分隔符：{delimiter}"
 
-#: tavletta/server/web/batch.js:374
+#: tavletta/server/web/batch.js:373
 msgid "Sheet: {sheet}"
 msgstr "工作表：{sheet}"
 
-#: tavletta/server/web/batch.js:375
+#: tavletta/server/web/batch.js:374
 msgid "{rows} rows, {columns} columns"
 msgstr "{rows} 行，{columns} 列"
 
-#: tavletta/server/web/batch.js:377
+#: tavletta/server/web/batch.js:376
 msgid "The first {count} rows"
 msgstr "前 {count} 行"
 
-#: tavletta/server/web/batch.js:388 tavletta/server/web/batch.js:635
+#: tavletta/server/web/batch.js:387 tavletta/server/web/batch.js:700
 msgid "Row"
 msgstr "行"
 
-#: tavletta/server/web/batch.js:413
-msgid "Choose the data column for each field of the template."
-msgstr "请为模板的每个字段选择数据列。"
+#: tavletta/server/web/batch.js:416
+msgid ""
+"Choose the data column for each field of the template. The preview shows the "
+"first label; the field in use is outlined in it."
+msgstr "为模板的每个字段选择数据列。预览显示第一张标签，正在使用的字段会用边框标出。"
 
-#: tavletta/server/web/batch.js:418
+#: tavletta/server/web/batch.js:419
+msgid ""
+"Assigned automatically (the same name, or the only column): {fields}. Check "
+"them below."
+msgstr "已自动分配（名称相同，或唯一的列）：{fields}。请在下方检查。"
+
+#: tavletta/server/web/batch.js:421
+msgid "The first label"
+msgstr "第一张标签"
+
+#: tavletta/server/web/batch.js:430
 msgid "– not assigned –"
 msgstr "– 未分配 –"
 
-#: tavletta/server/web/batch.js:419
+#: tavletta/server/web/batch.js:431
 msgid "The same value for all"
 msgstr "全部使用相同的值"
 
-#: tavletta/server/web/batch.js:423
+#: tavletta/server/web/batch.js:435
 msgid "Value for {name}"
 msgstr "{name} 的值"
 
-#: tavletta/server/web/batch.js:426
+#: tavletta/server/web/batch.js:440
 msgid "Data field {placeholder} of the template, required"
 msgstr "模板的数据字段 {placeholder}，必填"
 
-#: tavletta/server/web/batch.js:443
+#: tavletta/server/web/batch.js:466
 msgid "{name} has no data column. Choose one, or the same value for all."
 msgstr "{name} 没有数据列。请选择一列，或全部使用相同的值。"
 
-#: tavletta/server/web/batch.js:476
+#: tavletta/server/web/batch.js:499
+msgid "Not assigned yet: the preview shows a sample value."
+msgstr "尚未分配：预览显示示例值。"
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: empty"
+msgstr "第一张标签：空"
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: {value}"
+msgstr "第一张标签：{value}"
+
+#: tavletta/server/web/batch.js:510
+msgid "Preview of the first label"
+msgstr "第一张标签的预览"
+
+#: tavletta/server/web/batch.js:541
 msgid "Continuing: {count} rows left."
 msgstr "继续：剩余 {count} 行。"
 
-#: tavletta/server/web/batch.js:480
+#: tavletta/server/web/batch.js:545
 msgid "Choose again"
 msgstr "重新选择"
 
-#: tavletta/server/web/batch.js:486 tavletta/server/web/batch.js:612
+#: tavletta/server/web/batch.js:551 tavletta/server/web/batch.js:677
 msgid "All rows"
 msgstr "所有行"
 
-#: tavletta/server/web/batch.js:487
+#: tavletta/server/web/batch.js:552
 msgid "Some rows"
 msgstr "部分行"
 
-#: tavletta/server/web/batch.js:488
+#: tavletta/server/web/batch.js:553
 msgid "Ranges of a field"
 msgstr "字段的范围"
 
-#: tavletta/server/web/batch.js:494
+#: tavletta/server/web/batch.js:559
 msgid "Which rows?"
 msgstr "哪些行？"
 
-#: tavletta/server/web/batch.js:529
+#: tavletta/server/web/batch.js:594
 msgid ""
 "Several fields: their values are put together row by row (the first with the "
 "first), never every combination."
 msgstr "多个字段：其值按行逐一配对（第一个对第一个），绝不会生成所有组合。"
 
-#: tavletta/server/web/batch.js:530
+#: tavletta/server/web/batch.js:595
 msgid ""
 "Several fields: a row is printed if its values lie in the ranges of all of "
 "them."
 msgstr "多个字段：只有当一行的值都落在所有字段的范围内时才会打印。"
 
-#: tavletta/server/web/batch.js:561
+#: tavletta/server/web/batch.js:626
 msgid "From"
 msgstr "起始"
 
-#: tavletta/server/web/batch.js:561
+#: tavletta/server/web/batch.js:626
 msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
 msgstr "例如 3000、00300 或 INV-0001；或整个范围 3000-5685"
 
-#: tavletta/server/web/batch.js:562
+#: tavletta/server/web/batch.js:627
 msgid "To"
 msgstr "结束"
 
-#: tavletta/server/web/batch.js:568
+#: tavletta/server/web/batch.js:633
 msgid "Remove range"
 msgstr "移除范围"
 
-#: tavletta/server/web/batch.js:590
+#: tavletta/server/web/batch.js:655
 msgid "Add a range"
 msgstr "添加范围"
 
-#: tavletta/server/web/batch.js:598
+#: tavletta/server/web/batch.js:663
 msgid "Or the same value for all"
 msgstr "或全部使用相同的值"
 
-#: tavletta/server/web/batch.js:598
+#: tavletta/server/web/batch.js:663
 msgid "Used if no range is given for this field."
 msgstr "未给此字段指定范围时使用。"
 
-#: tavletta/server/web/batch.js:611 tavletta/server/web/batch.js:630
+#: tavletta/server/web/batch.js:676 tavletta/server/web/batch.js:695
 msgid "Rows"
 msgstr "行"
 
-#: tavletta/server/web/batch.js:611
+#: tavletta/server/web/batch.js:676
 msgid "For example 1-20, 25, 30-"
 msgstr "例如 1-20, 25, 30-"
 
-#: tavletta/server/web/batch.js:634
+#: tavletta/server/web/batch.js:699
 msgid "Rows {first} to {last} of {total}"
 msgstr "第 {first} 至 {last} 行，共 {total} 行"
 
-#: tavletta/server/web/batch.js:670
+#: tavletta/server/web/batch.js:735
 msgid "Page {page} of {pages}"
 msgstr "第 {page} 页，共 {pages} 页"
 
-#: tavletta/server/web/batch.js:676
+#: tavletta/server/web/batch.js:741
 msgid "Previous page"
 msgstr "上一页"
 
-#: tavletta/server/web/batch.js:677
+#: tavletta/server/web/batch.js:742
 msgid "Next page"
 msgstr "下一页"
 
-#: tavletta/server/web/batch.js:691
+#: tavletta/server/web/batch.js:756
 msgid "Write the rows as numbers and ranges, such as 1-20, 25."
 msgstr "请用数字和范围填写行，例如 1-20, 25。"
 
-#: tavletta/server/web/batch.js:753
+#: tavletta/server/web/batch.js:818
 msgid "The same for all labels"
 msgstr "所有标签相同"
 
-#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:203
+#: tavletta/server/web/batch.js:835 tavletta/server/web/print.js:203
 msgid "Printing needs a token with the role Print or Admin."
 msgstr "打印需要角色为“打印”或“管理员”的令牌。"
 
-#: tavletta/server/web/batch.js:772 tavletta/server/web/print.js:222
+#: tavletta/server/web/batch.js:837 tavletta/server/web/print.js:222
 msgid "Copies must be a whole number from 1."
 msgstr "份数必须是从 1 起的整数。"
 
-#: tavletta/server/web/batch.js:773 tavletta/server/web/print.js:223
+#: tavletta/server/web/batch.js:838 tavletta/server/web/print.js:223
 msgid "At most {max} copies on this printer."
 msgstr "此打印机最多 {max} 份。"
 
-#: tavletta/server/web/batch.js:774
+#: tavletta/server/web/batch.js:839
 msgid "At most {max} rows in one print job."
 msgstr "一个打印作业最多 {max} 行。"
 
-#: tavletta/server/web/batch.js:775
+#: tavletta/server/web/batch.js:840
 msgid ""
 "At most {max} labels in one print job. Choose fewer rows, or print them in "
 "several jobs."
 msgstr "一个打印作业最多 {max} 张标签。请选择较少的行，或分多个作业打印。"
 
-#: tavletta/server/web/batch.js:776 tavletta/server/web/print.js:204
+#: tavletta/server/web/batch.js:841 tavletta/server/web/print.js:204
 msgid "Confirm above that it should print on the labels loaded."
 msgstr "请在上方确认要在已装入的标签上打印。"
 
-#: tavletta/server/web/batch.js:783
+#: tavletta/server/web/batch.js:848
 msgid "At most {max} labels in one print job; {left} more could be added."
 msgstr "一个打印作业最多 {max} 张标签；还可添加 {left} 张。"
 
-#: tavletta/server/web/batch.js:784 tavletta/server/web/batch.js:846
+#: tavletta/server/web/batch.js:849 tavletta/server/web/batch.js:911
 #: tavletta/server/web/print.js:244
 msgid "Print {count} labels"
 msgstr "打印 {count} 张标签"
 
-#: tavletta/server/web/batch.js:806
+#: tavletta/server/web/batch.js:871
 msgid "First: {value}"
 msgstr "第一张：{value}"
 
-#: tavletta/server/web/batch.js:807
+#: tavletta/server/web/batch.js:872
 msgid "Last: {value}"
 msgstr "最后一张：{value}"
 
-#: tavletta/server/web/batch.js:810 tavletta/server/web/batch.js:811
+#: tavletta/server/web/batch.js:875 tavletta/server/web/batch.js:876
 msgid "Preview of the label {value}"
 msgstr "标签 {value} 的预览"
 
-#: tavletta/server/web/batch.js:840 tavletta/server/web/print.js:242
+#: tavletta/server/web/batch.js:905 tavletta/server/web/print.js:242
 msgid "Print {count} labels?"
 msgstr "打印 {count} 张标签？"
 
-#: tavletta/server/web/batch.js:854
+#: tavletta/server/web/batch.js:919
 msgid "Too much data for one print job ({size} MB). Choose fewer rows."
 msgstr "一个打印作业的数据过多（{size} MB）。请选择较少的行。"
 
-#: tavletta/server/web/batch.js:905
+#: tavletta/server/web/batch.js:971
 msgid "First printed: {first}, last printed in full: {last}"
 msgstr "第一张已打印：{first}，最后一张完整打印：{last}"
 
-#: tavletta/server/web/batch.js:916
+#: tavletta/server/web/batch.js:971
+msgid "(not all numbers in between)"
+msgstr "（并非中间所有编号）"
+
+#: tavletta/server/web/batch.js:982
 msgid "Continue from {value}"
 msgstr "从 {value} 继续"
 
-#: tavletta/server/web/batch.js:918
+#: tavletta/server/web/batch.js:984
 msgid "A label of a row that was printed in part is printed again in full."
 msgstr "某行只打印了一部分的标签会完整地重新打印。"
 
-#: tavletta/server/web/batch.js:926
+#: tavletta/server/web/batch.js:992
 msgid "New series"
 msgstr "新的数据合并"
 
@@ -4442,7 +4490,7 @@ msgstr "起始编号必须是从 0 起的整数。"
 msgid "At most {max} labels in one print job."
 msgstr "一个打印作业最多 {max} 张标签。"
 
-#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:184
 msgid "There is a problem"
 msgstr "出现问题"
 
@@ -4519,66 +4567,66 @@ msgstr "正在加载…"
 msgid "Try again"
 msgstr "重试"
 
-#: tavletta/server/web/ui.js:149
+#: tavletta/server/web/ui.js:151
 msgid "optional"
 msgstr "可选"
 
-#: tavletta/server/web/ui.js:260
+#: tavletta/server/web/ui.js:263
 msgid "Other labels are loaded in the printer than the template needs."
 msgstr "打印机中装入的标签与模板所需的不同。"
 
-#: tavletta/server/web/ui.js:326
+#: tavletta/server/web/ui.js:322
 msgid "Element {n}: {kind}"
 msgstr "元素 {n}：{kind}"
 
-#: tavletta/server/web/ui.js:385
+#: tavletta/server/web/ui.js:381
 msgid "Cancel printing"
 msgstr "取消打印"
 
-#: tavletta/server/web/ui.js:386
+#: tavletta/server/web/ui.js:382
 msgid "Labels already printed stay printed."
 msgstr "已打印的标签不受影响。"
 
-#: tavletta/server/web/ui.js:398
+#: tavletta/server/web/ui.js:394
 msgid "{printed} of {total}"
 msgstr "{printed} / {total}"
 
-#: tavletta/server/web/ui.js:407
+#: tavletta/server/web/ui.js:403
 msgid "About {minutes} min left"
 msgstr "约剩 {minutes} 分钟"
 
-#: tavletta/server/web/ui.js:409
+#: tavletta/server/web/ui.js:405
 msgid "Waiting for the printer…"
 msgstr "正在等待打印机…"
 
-#: tavletta/server/web/ui.js:437
+#: tavletta/server/web/ui.js:433
 msgid "Stopping after the label being printed…"
 msgstr "将在当前正在打印的标签之后停止…"
 
-#: tavletta/server/web/ui.js:456
+#: tavletta/server/web/ui.js:452
 msgid "Canceled"
 msgstr "已取消"
 
-#: tavletta/server/web/ui.js:456
+#: tavletta/server/web/ui.js:452
 msgid "Failed"
 msgstr "失败"
 
-#: tavletta/server/web/ui.js:468
+#: tavletta/server/web/ui.js:464
 msgid "Copied"
 msgstr "已复制"
 
-#: tavletta/server/web/ui.js:474
+#: tavletta/server/web/ui.js:470
 msgid "Copy"
 msgstr "复制"
 
-#: tavletta/server/web/ui.js:480
+#: tavletta/server/web/ui.js:476
 msgid "{printed} of {total} labels printed."
 msgstr "已打印 {printed} / {total} 张标签。"
 
-#: tavletta/server/web/ui.js:483
+#: tavletta/server/web/ui.js:479
 msgid "Took {seconds} s, finished at {time}."
 msgstr "耗时 {seconds} 秒，于 {time} 完成。"
 
-#: tavletta/server/web/ui.js:485
+#: tavletta/server/web/ui.js:481
 msgid "Job number"
 msgstr "作业编号"

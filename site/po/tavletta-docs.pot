@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 16:14+0100\n"
+"POT-Creation-Date: 2026-11-24 16:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1508,6 +1508,7 @@ msgid ""
 "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file is not there (any more): send the rows in data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
@@ -4349,7 +4350,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "**Templates**: the label files of the labels folder with a preview.  \"Print\" fills in the fields of one label and shows the preview as it is typed; the elements a field fills are outlined in it. With an `admin` token, templates are uploaded (`.tavletta` files) and deleted here."
+msgid "**Templates**: the label files of the labels folder with a preview.  Data fields show the first row of the template's data file, or sample values if it has none or it is missing. \"Print\" fills in the fields of one label and shows the preview as it is typed; the elements a field fills are outlined in it. With an `admin` token, templates are uploaded (`.tavletta` files) and deleted here."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4367,7 +4368,7 @@ msgstr ""
 #. type: Bullet: '  2. '
 #: docs/server.md
 #, markdown-text
-msgid "Assign: which column fills which field of the template (the same names are assigned already)."
+msgid "Assign: which column fills which field of the template (the same names are assigned already, case and spaces aside). The preview of the first label beside it outlines the field in use; each field shows its value, each column its first values."
 msgstr ""
 
 #. type: Bullet: '  3. '
@@ -4391,7 +4392,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "The page speaks the language of the browser, or the one chosen at the top."
+msgid "The page speaks the language of the browser, or the one chosen at the top: every language of the app, Arabic right to left. Times are on a 24-hour clock."
 msgstr ""
 
 #. type: Bullet: '- '

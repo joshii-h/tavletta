@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 16:14+0100\n"
+"PO-Revision-Date: 2026-11-24 16:17+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: sv\n"
 "Language: sv\n"
@@ -327,7 +327,7 @@ msgstr "Okänd skrivarmodell: %s"
 
 #: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:347 tavletta/ui/texts.py:729
-#: tavletta/server/service.py:902
+#: tavletta/server/service.py:903
 #, python-format
 msgid "Cannot open %s"
 msgstr "Kan inte öppna %s"
@@ -348,7 +348,7 @@ msgid "The label has no element or variable named %s"
 msgstr "Etiketten har inget element eller någon variabel med namnet %s"
 
 #: tavletta/cli.py:599 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1287
+#: tavletta/server/service.py:1288
 msgid "The label is empty"
 msgstr "Etiketten är tom"
 
@@ -361,9 +361,9 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output skriver PNG-bilder: ange ett namn som slutar på .png"
 
 #: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:746 tavletta/server/service.py:1146
-#: tavletta/server/service.py:1169 tavletta/server/service.py:1471
-#: tavletta/server/service.py:1707
+#: tavletta/ui/printing.py:746 tavletta/server/service.py:1147
+#: tavletta/server/service.py:1170 tavletta/server/service.py:1472
+#: tavletta/server/service.py:1708
 msgid "The label cannot be prepared for printing."
 msgstr "Etiketten kan inte förberedas för utskrift."
 
@@ -376,16 +376,16 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Flera skrivare hittades – välj en med --host (tavletta list-printers)"
 
-#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1697
+#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1698
 #, python-format
 msgid "Cannot save %s"
 msgstr "Kan inte spara %s"
 
-#: tavletta/cli.py:794 tavletta/server/service.py:1700
+#: tavletta/cli.py:794 tavletta/server/service.py:1701
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "etiketterna skrevs ut, men nästa räknarvärde sparades inte"
 
-#: tavletta/cli.py:809 tavletta/server/service.py:1316
+#: tavletta/cli.py:809 tavletta/server/service.py:1317
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "inget skrevs ut: nästa räknarvärde skulle inte kunna sparas"
 
@@ -394,7 +394,7 @@ msgid "Interrupted"
 msgstr "Avbruten"
 
 #: tavletta/cli.py:952 tavletta/ui/printing.py:488
-#: tavletta/server/service.py:1192
+#: tavletta/server/service.py:1193
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "Högst %d etiketter i ett utskriftsjobb"
@@ -409,7 +409,7 @@ msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet och --rows kräver en datafil (--data)"
 
 #: tavletta/cli.py:1022 tavletta/ui/printing.py:615
-#: tavletta/server/service.py:1004
+#: tavletta/server/service.py:1005
 msgid "No rows to print"
 msgstr "Inga rader att skriva ut"
 
@@ -418,7 +418,7 @@ msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "Etiketten använder en datafil utanför sin mapp: ange den med --data"
 
 #: tavletta/cli.py:1059 tavletta/ui/window.py:922
-#: tavletta/server/service.py:1063
+#: tavletta/server/service.py:1064
 #, python-format
 msgid "No such column: %s"
 msgstr "Okänd kolumn: %s"
@@ -441,7 +441,7 @@ msgid "Waiting for another print of %s to finish…"
 msgstr "Väntar på att en annan utskrift av %s ska bli klar…"
 
 #: tavletta/cli.py:1084 tavletta/server/service.py:791
-#: tavletta/server/service.py:1465
+#: tavletta/server/service.py:1466
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s är fortfarande låst av en annan utskrift – försök igen senare"
@@ -553,7 +553,7 @@ msgstr "Välj en annan fil"
 msgid "Remove data file"
 msgstr "Ta bort datafilen"
 
-#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:401
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:404
 msgid "Sheet"
 msgstr "Blad"
 
@@ -1070,7 +1070,7 @@ msgstr "Dra för att välja den del av bilden som ska behållas"
 #: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
 #: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
 #: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
-#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:220
+#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:223
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1370,7 +1370,7 @@ msgstr "%(left)s av %(total)s kvar"
 msgid "Reachable · the printer reports no status"
 msgstr "Nåbar · skrivaren rapporterar ingen status"
 
-#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:389
+#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:385
 msgid "Printing"
 msgstr "Skriver ut"
 
@@ -1471,7 +1471,7 @@ msgstr "Datafilen läses fortfarande. Försök igen om en stund."
 
 #: tavletta/ui/printing.py:148 tavletta/ui/printing.py:188
 #: tavletta/ui/printing.py:525 tavletta/ui/printing.py:550
-#: tavletta/server/web/ui.js:262
+#: tavletta/server/web/ui.js:265
 msgid "Print anyway"
 msgstr "Skriv ut ändå"
 
@@ -1531,7 +1531,7 @@ msgstr "För att testa på vanligt papper"
 msgid "Sheets: %d"
 msgstr "Ark: %d"
 
-#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:724
+#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:789
 msgid "Copies of each label"
 msgstr "Kopior av varje etikett"
 
@@ -1594,8 +1594,8 @@ msgstr "Skriv ut etikett"
 
 #: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
-#: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
-#: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
+#: tavletta/server/web/app.js:338 tavletta/server/web/batch.js:56
+#: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "Skriv ut"
@@ -3160,7 +3160,7 @@ msgid ""
 "more."
 msgstr "Skrivaren rapporterade ett problem. Stäng av den och slå på den igen och försök sedan en gång till."
 
-#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:456
+#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:452
 msgid "Printed"
 msgstr "Utskriven"
 
@@ -3222,7 +3222,7 @@ msgid "%s is not a Tavletta label"
 msgstr "%s är inte en Tavletta-etikett"
 
 #: tavletta/ui/texts.py:720 tavletta/ui/texts.py:740
-#: tavletta/server/service.py:913
+#: tavletta/server/service.py:914
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "Filen är skadad: %s"
@@ -3342,12 +3342,12 @@ msgstr "Ökar med varje utskriven etikett, med steget"
 msgid "Next number"
 msgstr "Nästa nummer"
 
-#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:563
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:628
 msgid "Step"
 msgstr "Steg"
 
-#: tavletta/ui/window.py:176 tavletta/server/web/app.js:45
-#: tavletta/server/web/app.js:288
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:47
+#: tavletta/server/web/app.js:296
 msgid "Templates"
 msgstr "Mallar"
 
@@ -3522,7 +3522,7 @@ msgstr "Ogiltigt värde för %s"
 msgid "The request took too long"
 msgstr "Förfrågan tog för lång tid"
 
-#: tavletta/server/http.py:478 tavletta/server/service.py:1618
+#: tavletta/server/http.py:478 tavletta/server/service.py:1619
 msgid "The server is busy – try again later"
 msgstr "Servern är upptagen – försök igen senare"
 
@@ -3581,7 +3581,7 @@ msgid "Send the header %s with this request"
 msgstr "Skicka huvudet %s med denna förfrågan"
 
 #: tavletta/server/http.py:721 tavletta/server/service.py:627
-#: tavletta/server/service.py:1591
+#: tavletta/server/service.py:1592
 msgid "This access token may not do this"
 msgstr "Denna åtkomsttoken får inte göra detta"
 
@@ -3726,651 +3726,699 @@ msgstr "Ingen skrivaradress: ange den som host"
 msgid "This printer address is not allowed: %s"
 msgstr "Denna skrivaradress tillåts inte: %s"
 
-#: tavletta/server/service.py:778 tavletta/server/service.py:921
+#: tavletta/server/service.py:778 tavletta/server/service.py:922
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "Dokumentsidor är inte tillåtna i label_content (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:954
+#: tavletta/server/service.py:955
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s är en datakolumn ({%(name)s}) – skicka den i data_rows"
 
-#: tavletta/server/service.py:1012
+#: tavletta/server/service.py:1013
 msgid "A sheet needs a data file"
 msgstr "Ett blad kräver en datafil"
 
-#: tavletta/server/service.py:1018
+#: tavletta/server/service.py:1019
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "Etiketten använder en datafil utanför etikettmappen: skicka med dess rader"
 
-#: tavletta/server/service.py:1218
+#: tavletta/server/service.py:1219
 msgid "Too many print jobs are waiting – try again later"
 msgstr "För många utskriftsjobb väntar – försök igen senare"
 
-#: tavletta/server/service.py:1487
+#: tavletta/server/service.py:1488
 #, python-format
 msgid "No such print job: %s"
 msgstr "Okänt utskriftsjobb: %s"
 
-#: tavletta/server/service.py:1499
+#: tavletta/server/service.py:1500
 msgid "The print job has already finished"
 msgstr "Utskriftsjobbet är redan klart"
 
-#: tavletta/server/service.py:1559
+#: tavletta/server/service.py:1560
 #, python-format
 msgid "A label named %s exists already"
 msgstr "Det finns redan en etikett som heter %s"
 
-#: tavletta/server/service.py:1564
+#: tavletta/server/service.py:1565
 msgid "The label could not be saved in the labels folder"
 msgstr "Etiketten kunde inte sparas i etikettmappen"
 
-#: tavletta/server/service.py:1622
+#: tavletta/server/service.py:1623
 msgid "The label is too large to render"
 msgstr "Etiketten är för stor för att renderas"
 
-#: tavletta/server/service.py:1636
+#: tavletta/server/service.py:1637
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "Etiketten är för stor: högst %d bilder och koder"
 
-#: tavletta/server/service.py:1659
+#: tavletta/server/service.py:1660
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "Etiketten är för stor: högst %(elements)d element och %(chars)d tecken per text"
 
-#: tavletta/server/service.py:1678
+#: tavletta/server/service.py:1679
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "Högst %d kopior på denna skrivare"
 
-#: tavletta/server/service.py:1683
+#: tavletta/server/service.py:1684
 msgid "Printers are chosen by name: leave out host"
 msgstr "Skrivare väljs efter namn: utelämna host"
 
-#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:482
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:515
 msgid "No connection to the server. Your input is kept."
 msgstr "Ingen anslutning till servern. Det du har angett finns kvar."
 
-#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:210
+#: tavletta/server/web/app.js:48 tavletta/server/web/app.js:214
 msgid "Printers"
 msgstr "Skrivare"
 
-#: tavletta/server/web/app.js:51
+#: tavletta/server/web/app.js:53
 msgid "Main"
 msgstr "Huvudmeny"
 
-#: tavletta/server/web/app.js:74
+#: tavletta/server/web/app.js:78
 msgid "Language"
 msgstr "Språk"
 
-#: tavletta/server/web/app.js:81
+#: tavletta/server/web/app.js:83
 msgid "Sign out"
 msgstr "Logga ut"
 
-#: tavletta/server/web/app.js:84
+#: tavletta/server/web/app.js:88
 msgid "Skip to content"
 msgstr "Hoppa till innehållet"
 
-#: tavletta/server/web/app.js:160
+#: tavletta/server/web/app.js:164
 msgid "Access token"
 msgstr "Åtkomsttoken"
 
-#: tavletta/server/web/app.js:161
+#: tavletta/server/web/app.js:165
 msgid ""
 "The administrator gives it to you. It is kept in this tab only and forgotten "
 "when the tab is closed."
 msgstr "Du får den av administratören. Den sparas bara i den här fliken och glöms när fliken stängs."
 
-#: tavletta/server/web/app.js:166 tavletta/server/web/app.js:202
+#: tavletta/server/web/app.js:170 tavletta/server/web/app.js:206
 msgid "Sign in"
 msgstr "Logga in"
 
-#: tavletta/server/web/app.js:172
+#: tavletta/server/web/app.js:176
 msgid "Show token"
 msgstr "Visa token"
 
-#: tavletta/server/web/app.js:180
+#: tavletta/server/web/app.js:184
 msgid "Enter the access token."
 msgstr "Ange åtkomsttoken."
 
-#: tavletta/server/web/app.js:195
+#: tavletta/server/web/app.js:199
 msgid ""
 "The token was not accepted. Check it, or ask the administrator for a new one."
 msgstr "Token godtogs inte. Kontrollera den eller be administratören om en ny."
 
-#: tavletta/server/web/app.js:209
+#: tavletta/server/web/app.js:213
 msgid "Check again"
 msgstr "Kontrollera igen"
 
-#: tavletta/server/web/app.js:221 tavletta/server/web/print.js:74
+#: tavletta/server/web/app.js:225 tavletta/server/web/print.js:74
 msgid "No printer this token may use. Ask the administrator."
 msgstr "Det finns ingen skrivare som den här token får använda. Fråga administratören."
 
-#: tavletta/server/web/app.js:234
+#: tavletta/server/web/app.js:238
 msgid "Location: {place}"
 msgstr "Plats: {place}"
 
-#: tavletta/server/web/app.js:235
+#: tavletta/server/web/app.js:239
 msgid "Meant for: {media}"
 msgstr "Avsedd för: {media}"
 
-#: tavletta/server/web/app.js:236
+#: tavletta/server/web/app.js:240
 msgid "Model: {model}"
 msgstr "Modell: {model}"
 
-#: tavletta/server/web/app.js:242
+#: tavletta/server/web/app.js:246
 msgid "Default"
 msgstr "Standard"
 
-#: tavletta/server/web/app.js:256
+#: tavletta/server/web/app.js:260
 msgid "Asking the printer…"
 msgstr "Frågar skrivaren…"
 
-#: tavletta/server/web/app.js:267
+#: tavletta/server/web/app.js:271
 msgid "Ask for its state"
 msgstr "Fråga efter status"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:277
 msgid "Address: {host}"
 msgstr "Adress: {host}"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:277
 msgid "No address set"
 msgstr "Ingen adress angiven"
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:312
 msgid "No templates yet. Upload one above."
 msgstr "Inga mallar ännu. Ladda upp en ovan."
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:312
 msgid "No templates yet. Ask the administrator."
 msgstr "Inga mallar ännu. Fråga administratören."
 
-#: tavletta/server/web/app.js:331
+#: tavletta/server/web/app.js:339
 msgid "Series"
 msgstr "Serie"
 
-#: tavletta/server/web/app.js:332
+#: tavletta/server/web/app.js:340
 msgid "Delete"
 msgstr "Ta bort"
 
-#: tavletta/server/web/app.js:340
+#: tavletta/server/web/app.js:348
 msgid "Size: {width} × {height} mm"
 msgstr "Storlek: {width} × {height} mm"
 
-#: tavletta/server/web/app.js:341
+#: tavletta/server/web/app.js:349
 msgid "Fields: {count}"
 msgstr "Fält: {count}"
 
-#: tavletta/server/web/app.js:342
+#: tavletta/server/web/app.js:350
 msgid "Printer model: {model}"
 msgstr "Skrivarmodell: {model}"
 
-#: tavletta/server/web/app.js:348 tavletta/server/web/print.js:188
+#: tavletta/server/web/app.js:356
+msgid "Preview of {name} with sample values"
+msgstr "Förhandsvisning av {name} med exempelvärden"
+
+#: tavletta/server/web/app.js:356 tavletta/server/web/print.js:188
 msgid "Preview of {name}"
 msgstr "Förhandsvisning av {name}"
 
-#: tavletta/server/web/app.js:359
+#: tavletta/server/web/app.js:358
+msgid "The preview shows sample values; a series can read another data file."
+msgstr "Förhandsvisningen visar exempelvärden; en serie kan läsa en annan datafil."
+
+#: tavletta/server/web/app.js:375
+msgid "The data file {name} is missing."
+msgstr "Datafilen {name} saknas."
+
+#: tavletta/server/web/app.js:384
+msgid "The template's data file is not in the labels folder."
+msgstr "Mallens datafil ligger inte i etikettmappen."
+
+#: tavletta/server/web/app.js:392
 msgid "Delete template?"
 msgstr "Ta bort mallen?"
 
-#: tavletta/server/web/app.js:360
+#: tavletta/server/web/app.js:393
 msgid "The template {name} is deleted from the server. Its data file stays."
 msgstr "Mallen {name} tas bort från servern. Dess datafil finns kvar."
 
-#: tavletta/server/web/app.js:361
+#: tavletta/server/web/app.js:394
 msgid "Delete {name}"
 msgstr "Ta bort {name}"
 
-#: tavletta/server/web/app.js:368
+#: tavletta/server/web/app.js:401
 msgid "{name} deleted."
 msgstr "{name} har tagits bort."
 
-#: tavletta/server/web/app.js:381
+#: tavletta/server/web/app.js:414
 msgid "Template file"
 msgstr "Mallfil"
 
-#: tavletta/server/web/app.js:382
+#: tavletta/server/web/app.js:415
 msgid "A .tavletta file saved by Tavletta, at most {size} MB."
 msgstr "En .tavletta-fil som sparats av Tavletta, högst {size} MB."
 
-#: tavletta/server/web/app.js:386
+#: tavletta/server/web/app.js:419
 msgid "Upload"
 msgstr "Ladda upp"
 
-#: tavletta/server/web/app.js:390
+#: tavletta/server/web/app.js:423
 msgid "Upload a template"
 msgstr "Ladda upp en mall"
 
-#: tavletta/server/web/app.js:392
+#: tavletta/server/web/app.js:425
 msgid "Replace a template of the same name"
 msgstr "Ersätt en mall med samma namn"
 
-#: tavletta/server/web/app.js:400
+#: tavletta/server/web/app.js:433
 msgid "Choose a template file."
 msgstr "Välj en mallfil."
 
-#: tavletta/server/web/app.js:405
+#: tavletta/server/web/app.js:438
 msgid "The file is too large: at most {size} MB."
 msgstr "Filen är för stor: högst {size} MB."
 
-#: tavletta/server/web/app.js:416
+#: tavletta/server/web/app.js:449
 msgid "{name} uploaded."
 msgstr "{name} har laddats upp."
 
-#: tavletta/server/web/app.js:420
+#: tavletta/server/web/app.js:453
 msgid ""
 "A template of this name exists. Choose \"Replace a template of the same "
 "name\" to replace it."
 msgstr "Det finns redan en mall med det här namnet. Välj \"Ersätt en mall med samma namn\" för att ersätta den."
 
-#: tavletta/server/web/app.js:422
+#: tavletta/server/web/app.js:455
 msgid ""
 "The file name can have letters, digits, spaces and . _ - ( ) + , and must "
 "not start with a dot. Rename the file."
 msgstr "Filnamnet får innehålla bokstäver, siffror, mellanslag och . _ - ( ) + , och får inte börja med en punkt. Byt namn på filen."
 
-#: tavletta/server/web/app.js:437
+#: tavletta/server/web/app.js:470
 msgid "Print job"
 msgstr "Utskriftsjobb"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:843
+#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:908
 #: tavletta/server/web/print.js:243
 msgid "Template: {name}"
 msgstr "Mall: {name}"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:844
+#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:909
 #: tavletta/server/web/print.js:243
 msgid "Printer: {name}"
 msgstr "Skrivare: {name}"
 
-#: tavletta/server/web/app.js:449 tavletta/server/web/batch.js:886
+#: tavletta/server/web/app.js:482 tavletta/server/web/batch.js:951
 msgid "Print job ended: {printed} of {total} labels printed."
 msgstr "Utskriftsjobbet avslutat: {printed} av {total} etiketter utskrivna."
 
-#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:272
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:275
 msgid "Data"
 msgstr "Data"
 
-#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:398
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:401
 msgid "Assign"
 msgstr "Tilldela"
 
-#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:465
+#: tavletta/server/web/batch.js:54 tavletta/server/web/batch.js:530
 msgid "Choose"
 msgstr "Välj"
 
-#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:706
+#: tavletta/server/web/batch.js:55 tavletta/server/web/batch.js:771
 msgid "Check"
 msgstr "Kontrollera"
 
-#: tavletta/server/web/batch.js:85
+#: tavletta/server/web/batch.js:88
 msgid "From needs a number."
 msgstr "Från behöver ett tal."
 
-#: tavletta/server/web/batch.js:86
+#: tavletta/server/web/batch.js:89
 msgid "To needs a number."
 msgstr "Till behöver ett tal."
 
-#: tavletta/server/web/batch.js:87
+#: tavletta/server/web/batch.js:90
 msgid "Step must be a whole number from 1."
 msgstr "Steg måste vara ett heltal från 1."
 
-#: tavletta/server/web/batch.js:88
+#: tavletta/server/web/batch.js:91
 msgid "From and To must be the same apart from the number ({from}, {to})."
 msgstr "Från och Till måste vara lika förutom talet ({from}, {to})."
 
-#: tavletta/server/web/batch.js:89
+#: tavletta/server/web/batch.js:92
 msgid ""
 "From has {from} digits, To {to}. Enter both with the same number of digits."
 msgstr "Från har {from} siffror, Till {to}. Ange båda med lika många siffror."
 
-#: tavletta/server/web/batch.js:90
+#: tavletta/server/web/batch.js:93
 msgid "To must be greater than or equal to From ({from})."
 msgstr "Till måste vara större än eller lika med Från ({from})."
 
-#: tavletta/server/web/batch.js:91
+#: tavletta/server/web/batch.js:94
 msgid ""
 "The ranges make different numbers of labels: {counts}. Make them the same "
 "length."
 msgstr "Intervallen ger olika antal etiketter: {counts}. Gör dem lika långa."
 
-#: tavletta/server/web/batch.js:100
+#: tavletta/server/web/batch.js:103
 msgid "Series of {name}"
 msgstr "Serie av {name}"
 
-#: tavletta/server/web/batch.js:117
+#: tavletta/server/web/batch.js:120
 msgid ""
 "This template has no data fields ({placeholder}). For many equal labels, set "
 "the copies when printing."
 msgstr "Den här mallen har inga datafält ({placeholder}). För många likadana etiketter anger du antalet kopior vid utskrift."
 
-#: tavletta/server/web/batch.js:127
+#: tavletta/server/web/batch.js:130
 msgid "Steps"
 msgstr "Steg"
 
-#: tavletta/server/web/batch.js:162 tavletta/server/web/batch.js:181
+#: tavletta/server/web/batch.js:165 tavletta/server/web/batch.js:184
 msgid "Enter a range for at least one field."
 msgstr "Ange ett intervall för minst ett fält."
 
-#: tavletta/server/web/batch.js:191 tavletta/server/web/batch.js:641
+#: tavletta/server/web/batch.js:194 tavletta/server/web/batch.js:706
 msgid "Row {n}"
 msgstr "Rad {n}"
 
-#: tavletta/server/web/batch.js:207 tavletta/server/web/batch.js:518
-#: tavletta/server/web/batch.js:708
+#: tavletta/server/web/batch.js:210 tavletta/server/web/batch.js:583
+#: tavletta/server/web/batch.js:773
 msgid "No row selected."
 msgstr "Ingen rad vald."
 
-#: tavletta/server/web/batch.js:211
+#: tavletta/server/web/batch.js:214
 msgid "{count} labels ({span})"
 msgstr "Etiketter: {count} ({span})"
 
-#: tavletta/server/web/batch.js:226
+#: tavletta/server/web/batch.js:229
 msgid "not needed"
 msgstr "behövs inte"
 
-#: tavletta/server/web/batch.js:248 tavletta/server/web/batch.js:302
+#: tavletta/server/web/batch.js:251 tavletta/server/web/batch.js:305
 msgid "Next"
 msgstr "Nästa"
 
-#: tavletta/server/web/batch.js:252 tavletta/server/web/batch.js:759
+#: tavletta/server/web/batch.js:255 tavletta/server/web/batch.js:824
 msgid "Back"
 msgstr "Tillbaka"
 
-#: tavletta/server/web/batch.js:276
+#: tavletta/server/web/batch.js:279
 msgid "Where do the values come from?"
 msgstr "Var kommer värdena ifrån?"
 
-#: tavletta/server/web/batch.js:277
+#: tavletta/server/web/batch.js:280
 msgid "A file (CSV, XLSX, ODS)"
 msgstr "En fil (CSV, XLSX, ODS)"
 
-#: tavletta/server/web/batch.js:278
+#: tavletta/server/web/batch.js:281
 msgid "A pasted list"
 msgstr "En inklistrad lista"
 
-#: tavletta/server/web/batch.js:279
+#: tavletta/server/web/batch.js:282
 msgid "No data: make numbers from ranges"
 msgstr "Inga data: skapa tal från intervall"
 
-#: tavletta/server/web/batch.js:287
+#: tavletta/server/web/batch.js:290
 msgid "Data file"
 msgstr "Datafil"
 
-#: tavletta/server/web/batch.js:287
+#: tavletta/server/web/batch.js:290
 msgid ""
 "At most {size} MB. Every cell is read as the text it shows: leading zeros "
 "stay."
 msgstr "Högst {size} MB. Varje cell läses som den text den visar: inledande nollor behålls."
 
-#: tavletta/server/web/batch.js:289 tavletta/server/web/batch.js:296
+#: tavletta/server/web/batch.js:292 tavletta/server/web/batch.js:299
 msgid "The first row holds the column names"
 msgstr "Första raden innehåller kolumnnamnen"
 
-#: tavletta/server/web/batch.js:290
+#: tavletta/server/web/batch.js:293
 msgid "Last file read: {name}"
 msgstr "Senast lästa fil: {name}"
 
-#: tavletta/server/web/batch.js:294 tavletta/server/web/batch.js:343
+#: tavletta/server/web/batch.js:297 tavletta/server/web/batch.js:346
 msgid "List"
 msgstr "Lista"
 
-#: tavletta/server/web/batch.js:294
+#: tavletta/server/web/batch.js:297
 msgid ""
 "One label per line; columns separated by tab, semicolon or comma (as copied "
 "from a spreadsheet)."
 msgstr "En etikett per rad; kolumner åtskilda med tabb, semikolon eller komma (som när de kopieras från ett kalkylblad)."
 
-#: tavletta/server/web/batch.js:298
+#: tavletta/server/web/batch.js:301
 msgid ""
 "The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
 msgstr "I nästa steg skapas värdena från intervall, t.ex. 3000–5685 eller 00300–00450."
 
-#: tavletta/server/web/batch.js:302
+#: tavletta/server/web/batch.js:305
 msgid "Read and continue"
 msgstr "Läs och fortsätt"
 
-#: tavletta/server/web/batch.js:334
+#: tavletta/server/web/batch.js:337
 msgid "Choose a data file."
 msgstr "Välj en datafil."
 
-#: tavletta/server/web/batch.js:342
+#: tavletta/server/web/batch.js:345
 msgid "Paste the list first."
 msgstr "Klistra in listan först."
 
-#: tavletta/server/web/batch.js:347
+#: tavletta/server/web/batch.js:350
 msgid "The data are too large: at most {size} MB."
 msgstr "Datan är för stor: högst {size} MB."
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "semicolon"
 msgstr "semikolon"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "comma"
 msgstr "komma"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "tab"
 msgstr "tabb"
 
-#: tavletta/server/web/batch.js:372
+#: tavletta/server/web/batch.js:371
 msgid "{name}: {kind}"
 msgstr "{name}: {kind}"
 
-#: tavletta/server/web/batch.js:373
+#: tavletta/server/web/batch.js:372
 msgid "Separated by {delimiter}"
 msgstr "Åtskilda med {delimiter}"
 
-#: tavletta/server/web/batch.js:374
+#: tavletta/server/web/batch.js:373
 msgid "Sheet: {sheet}"
 msgstr "Blad: {sheet}"
 
-#: tavletta/server/web/batch.js:375
+#: tavletta/server/web/batch.js:374
 msgid "{rows} rows, {columns} columns"
 msgstr "Rader: {rows}, kolumner: {columns}"
 
-#: tavletta/server/web/batch.js:377
+#: tavletta/server/web/batch.js:376
 msgid "The first {count} rows"
 msgstr "De första {count} raderna"
 
-#: tavletta/server/web/batch.js:388 tavletta/server/web/batch.js:635
+#: tavletta/server/web/batch.js:387 tavletta/server/web/batch.js:700
 msgid "Row"
 msgstr "Rad"
 
-#: tavletta/server/web/batch.js:413
-msgid "Choose the data column for each field of the template."
-msgstr "Välj datakolumn för varje fält i mallen."
+#: tavletta/server/web/batch.js:416
+msgid ""
+"Choose the data column for each field of the template. The preview shows the "
+"first label; the field in use is outlined in it."
+msgstr "Välj datakolumn för varje fält i mallen. Förhandsvisningen visar den första etiketten; fältet som används är markerat i den."
 
-#: tavletta/server/web/batch.js:418
+#: tavletta/server/web/batch.js:419
+msgid ""
+"Assigned automatically (the same name, or the only column): {fields}. Check "
+"them below."
+msgstr "Tilldelat automatiskt (samma namn eller enda kolumnen): {fields}. Kontrollera dem nedan."
+
+#: tavletta/server/web/batch.js:421
+msgid "The first label"
+msgstr "Den första etiketten"
+
+#: tavletta/server/web/batch.js:430
 msgid "– not assigned –"
 msgstr "– inte tilldelad –"
 
-#: tavletta/server/web/batch.js:419
+#: tavletta/server/web/batch.js:431
 msgid "The same value for all"
 msgstr "Samma värde för alla"
 
-#: tavletta/server/web/batch.js:423
+#: tavletta/server/web/batch.js:435
 msgid "Value for {name}"
 msgstr "Värde för {name}"
 
-#: tavletta/server/web/batch.js:426
+#: tavletta/server/web/batch.js:440
 msgid "Data field {placeholder} of the template, required"
 msgstr "Mallens datafält {placeholder}, obligatoriskt"
 
-#: tavletta/server/web/batch.js:443
+#: tavletta/server/web/batch.js:466
 msgid "{name} has no data column. Choose one, or the same value for all."
 msgstr "{name} har ingen datakolumn. Välj en, eller samma värde för alla."
 
-#: tavletta/server/web/batch.js:476
+#: tavletta/server/web/batch.js:499
+msgid "Not assigned yet: the preview shows a sample value."
+msgstr "Inte tilldelat än: förhandsvisningen visar ett exempelvärde."
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: empty"
+msgstr "På den första etiketten: tom"
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: {value}"
+msgstr "På den första etiketten: {value}"
+
+#: tavletta/server/web/batch.js:510
+msgid "Preview of the first label"
+msgstr "Förhandsvisning av den första etiketten"
+
+#: tavletta/server/web/batch.js:541
 msgid "Continuing: {count} rows left."
 msgstr "Fortsätter: {count} rader kvar."
 
-#: tavletta/server/web/batch.js:480
+#: tavletta/server/web/batch.js:545
 msgid "Choose again"
 msgstr "Välj igen"
 
-#: tavletta/server/web/batch.js:486 tavletta/server/web/batch.js:612
+#: tavletta/server/web/batch.js:551 tavletta/server/web/batch.js:677
 msgid "All rows"
 msgstr "Alla rader"
 
-#: tavletta/server/web/batch.js:487
+#: tavletta/server/web/batch.js:552
 msgid "Some rows"
 msgstr "Vissa rader"
 
-#: tavletta/server/web/batch.js:488
+#: tavletta/server/web/batch.js:553
 msgid "Ranges of a field"
 msgstr "Intervall för ett fält"
 
-#: tavletta/server/web/batch.js:494
+#: tavletta/server/web/batch.js:559
 msgid "Which rows?"
 msgstr "Vilka rader?"
 
-#: tavletta/server/web/batch.js:529
+#: tavletta/server/web/batch.js:594
 msgid ""
 "Several fields: their values are put together row by row (the first with the "
 "first), never every combination."
 msgstr "Flera fält: deras värden sätts ihop rad för rad (det första med det första), aldrig alla kombinationer."
 
-#: tavletta/server/web/batch.js:530
+#: tavletta/server/web/batch.js:595
 msgid ""
 "Several fields: a row is printed if its values lie in the ranges of all of "
 "them."
 msgstr "Flera fält: en rad skrivs ut om dess värden ligger inom intervallen för alla fälten."
 
-#: tavletta/server/web/batch.js:561
+#: tavletta/server/web/batch.js:626
 msgid "From"
 msgstr "Från"
 
-#: tavletta/server/web/batch.js:561
+#: tavletta/server/web/batch.js:626
 msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
 msgstr "Till exempel 3000, 00300 eller INV-0001; eller hela intervallet, 3000-5685"
 
-#: tavletta/server/web/batch.js:562
+#: tavletta/server/web/batch.js:627
 msgid "To"
 msgstr "Till"
 
-#: tavletta/server/web/batch.js:568
+#: tavletta/server/web/batch.js:633
 msgid "Remove range"
 msgstr "Ta bort intervall"
 
-#: tavletta/server/web/batch.js:590
+#: tavletta/server/web/batch.js:655
 msgid "Add a range"
 msgstr "Lägg till ett intervall"
 
-#: tavletta/server/web/batch.js:598
+#: tavletta/server/web/batch.js:663
 msgid "Or the same value for all"
 msgstr "Eller samma värde för alla"
 
-#: tavletta/server/web/batch.js:598
+#: tavletta/server/web/batch.js:663
 msgid "Used if no range is given for this field."
 msgstr "Används om inget intervall anges för det här fältet."
 
-#: tavletta/server/web/batch.js:611 tavletta/server/web/batch.js:630
+#: tavletta/server/web/batch.js:676 tavletta/server/web/batch.js:695
 msgid "Rows"
 msgstr "Rader"
 
-#: tavletta/server/web/batch.js:611
+#: tavletta/server/web/batch.js:676
 msgid "For example 1-20, 25, 30-"
 msgstr "Till exempel 1-20, 25, 30-"
 
-#: tavletta/server/web/batch.js:634
+#: tavletta/server/web/batch.js:699
 msgid "Rows {first} to {last} of {total}"
 msgstr "Rad {first} till {last} av {total}"
 
-#: tavletta/server/web/batch.js:670
+#: tavletta/server/web/batch.js:735
 msgid "Page {page} of {pages}"
 msgstr "Sida {page} av {pages}"
 
-#: tavletta/server/web/batch.js:676
+#: tavletta/server/web/batch.js:741
 msgid "Previous page"
 msgstr "Föregående sida"
 
-#: tavletta/server/web/batch.js:677
+#: tavletta/server/web/batch.js:742
 msgid "Next page"
 msgstr "Nästa sida"
 
-#: tavletta/server/web/batch.js:691
+#: tavletta/server/web/batch.js:756
 msgid "Write the rows as numbers and ranges, such as 1-20, 25."
 msgstr "Skriv raderna som tal och intervall, t.ex. 1-20, 25."
 
-#: tavletta/server/web/batch.js:753
+#: tavletta/server/web/batch.js:818
 msgid "The same for all labels"
 msgstr "Samma för alla etiketter"
 
-#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:203
+#: tavletta/server/web/batch.js:835 tavletta/server/web/print.js:203
 msgid "Printing needs a token with the role Print or Admin."
 msgstr "Utskrift kräver en token med rollen Skriv ut eller Admin."
 
-#: tavletta/server/web/batch.js:772 tavletta/server/web/print.js:222
+#: tavletta/server/web/batch.js:837 tavletta/server/web/print.js:222
 msgid "Copies must be a whole number from 1."
 msgstr "Kopior måste vara ett heltal från 1."
 
-#: tavletta/server/web/batch.js:773 tavletta/server/web/print.js:223
+#: tavletta/server/web/batch.js:838 tavletta/server/web/print.js:223
 msgid "At most {max} copies on this printer."
 msgstr "Högst {max} kopior på den här skrivaren."
 
-#: tavletta/server/web/batch.js:774
+#: tavletta/server/web/batch.js:839
 msgid "At most {max} rows in one print job."
 msgstr "Högst {max} rader i ett utskriftsjobb."
 
-#: tavletta/server/web/batch.js:775
+#: tavletta/server/web/batch.js:840
 msgid ""
 "At most {max} labels in one print job. Choose fewer rows, or print them in "
 "several jobs."
 msgstr "Högst {max} etiketter i ett utskriftsjobb. Välj färre rader eller skriv ut dem i flera jobb."
 
-#: tavletta/server/web/batch.js:776 tavletta/server/web/print.js:204
+#: tavletta/server/web/batch.js:841 tavletta/server/web/print.js:204
 msgid "Confirm above that it should print on the labels loaded."
 msgstr "Bekräfta ovan att utskriften ska göras på de isatta etiketterna."
 
-#: tavletta/server/web/batch.js:783
+#: tavletta/server/web/batch.js:848
 msgid "At most {max} labels in one print job; {left} more could be added."
 msgstr "Högst {max} etiketter i ett utskriftsjobb; {left} till kan läggas till."
 
-#: tavletta/server/web/batch.js:784 tavletta/server/web/batch.js:846
+#: tavletta/server/web/batch.js:849 tavletta/server/web/batch.js:911
 #: tavletta/server/web/print.js:244
 msgid "Print {count} labels"
 msgstr "Skriv ut {count} etiketter"
 
-#: tavletta/server/web/batch.js:806
+#: tavletta/server/web/batch.js:871
 msgid "First: {value}"
 msgstr "Första: {value}"
 
-#: tavletta/server/web/batch.js:807
+#: tavletta/server/web/batch.js:872
 msgid "Last: {value}"
 msgstr "Sista: {value}"
 
-#: tavletta/server/web/batch.js:810 tavletta/server/web/batch.js:811
+#: tavletta/server/web/batch.js:875 tavletta/server/web/batch.js:876
 msgid "Preview of the label {value}"
 msgstr "Förhandsvisning av etiketten {value}"
 
-#: tavletta/server/web/batch.js:840 tavletta/server/web/print.js:242
+#: tavletta/server/web/batch.js:905 tavletta/server/web/print.js:242
 msgid "Print {count} labels?"
 msgstr "Skriva ut {count} etiketter?"
 
-#: tavletta/server/web/batch.js:854
+#: tavletta/server/web/batch.js:919
 msgid "Too much data for one print job ({size} MB). Choose fewer rows."
 msgstr "För mycket data för ett utskriftsjobb ({size} MB). Välj färre rader."
 
-#: tavletta/server/web/batch.js:905
+#: tavletta/server/web/batch.js:971
 msgid "First printed: {first}, last printed in full: {last}"
 msgstr "Första utskrivna: {first}, sista helt utskrivna: {last}"
 
-#: tavletta/server/web/batch.js:916
+#: tavletta/server/web/batch.js:971
+msgid "(not all numbers in between)"
+msgstr "(inte alla nummer däremellan)"
+
+#: tavletta/server/web/batch.js:982
 msgid "Continue from {value}"
 msgstr "Fortsätt från {value}"
 
-#: tavletta/server/web/batch.js:918
+#: tavletta/server/web/batch.js:984
 msgid "A label of a row that was printed in part is printed again in full."
 msgstr "En etikett från en rad som skrevs ut delvis skrivs ut igen i sin helhet."
 
-#: tavletta/server/web/batch.js:926
+#: tavletta/server/web/batch.js:992
 msgid "New series"
 msgstr "Ny serie"
 
@@ -4442,7 +4490,7 @@ msgstr "Startnumret måste vara ett heltal från 0."
 msgid "At most {max} labels in one print job."
 msgstr "Högst {max} etiketter i ett utskriftsjobb."
 
-#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:184
 msgid "There is a problem"
 msgstr "Det finns ett problem"
 
@@ -4519,66 +4567,66 @@ msgstr "Läser in…"
 msgid "Try again"
 msgstr "Försök igen"
 
-#: tavletta/server/web/ui.js:149
+#: tavletta/server/web/ui.js:151
 msgid "optional"
 msgstr "valfritt"
 
-#: tavletta/server/web/ui.js:260
+#: tavletta/server/web/ui.js:263
 msgid "Other labels are loaded in the printer than the template needs."
 msgstr "Andra etiketter är isatta i skrivaren än mallen behöver."
 
-#: tavletta/server/web/ui.js:326
+#: tavletta/server/web/ui.js:322
 msgid "Element {n}: {kind}"
 msgstr "Element {n}: {kind}"
 
-#: tavletta/server/web/ui.js:385
+#: tavletta/server/web/ui.js:381
 msgid "Cancel printing"
 msgstr "Avbryt utskriften"
 
-#: tavletta/server/web/ui.js:386
+#: tavletta/server/web/ui.js:382
 msgid "Labels already printed stay printed."
 msgstr "Etiketter som redan skrivits ut förblir utskrivna."
 
-#: tavletta/server/web/ui.js:398
+#: tavletta/server/web/ui.js:394
 msgid "{printed} of {total}"
 msgstr "{printed} av {total}"
 
-#: tavletta/server/web/ui.js:407
+#: tavletta/server/web/ui.js:403
 msgid "About {minutes} min left"
 msgstr "Cirka {minutes} min kvar"
 
-#: tavletta/server/web/ui.js:409
+#: tavletta/server/web/ui.js:405
 msgid "Waiting for the printer…"
 msgstr "Väntar på skrivaren…"
 
-#: tavletta/server/web/ui.js:437
+#: tavletta/server/web/ui.js:433
 msgid "Stopping after the label being printed…"
 msgstr "Stoppar efter etiketten som skrivs ut…"
 
-#: tavletta/server/web/ui.js:456
+#: tavletta/server/web/ui.js:452
 msgid "Canceled"
 msgstr "Avbrutet"
 
-#: tavletta/server/web/ui.js:456
+#: tavletta/server/web/ui.js:452
 msgid "Failed"
 msgstr "Misslyckades"
 
-#: tavletta/server/web/ui.js:468
+#: tavletta/server/web/ui.js:464
 msgid "Copied"
 msgstr "Kopierat"
 
-#: tavletta/server/web/ui.js:474
+#: tavletta/server/web/ui.js:470
 msgid "Copy"
 msgstr "Kopiera"
 
-#: tavletta/server/web/ui.js:480
+#: tavletta/server/web/ui.js:476
 msgid "{printed} of {total} labels printed."
 msgstr "{printed} av {total} etiketter utskrivna."
 
-#: tavletta/server/web/ui.js:483
+#: tavletta/server/web/ui.js:479
 msgid "Took {seconds} s, finished at {time}."
 msgstr "Tog {seconds} s, klart {time}."
 
-#: tavletta/server/web/ui.js:485
+#: tavletta/server/web/ui.js:481
 msgid "Job number"
 msgstr "Jobbnummer"

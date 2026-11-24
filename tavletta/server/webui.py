@@ -11,7 +11,9 @@ files, nothing inline, no eval, no frames, no requests elsewhere.
 Its texts are translated from the app's gettext catalogs:
 /ui/messages.json holds the texts the scripts ask for (t("…") in the
 .js files, found when the server starts) in the language of ?lang= or
-Accept-Language.
+Accept-Language, and the direction of its script. Every catalog of the
+app is offered: the compiled ones of the installation, and in a checkout
+(an editable install has none compiled) po/<lang>.po read directly.
 """
 
 from __future__ import annotations
@@ -23,9 +25,11 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from tavletta.ui.i18n import LOCALE_DIR, _, accepted_languages, language
+from tavletta.ui.i18n import LOCALE_DIR, RTL_LANGUAGES, _, accepted_languages, language
 
 WEB_DIR = Path(__file__).parent / "web"
+# a checkout's catalogs (not in an installed package: there they are compiled)
+PO_DIR = Path(__file__).resolve().parents[2] / "po"
 TYPES = {
     ".html": "text/html; charset=utf-8",
     ".css": "text/css; charset=utf-8",
@@ -52,6 +56,13 @@ HEADERS = {
 # every t( is one of these, xgettext --keyword=t finds the same)
 _TEXT = re.compile(r'\bt\(\s*"((?:[^"\\\n]|\\.)*)"')
 _LANG = re.compile(r"[a-z]{2,3}(?:[_-][A-Za-z]{2})?\Z")
+# Chinese named by its script (zh-Hant, zh-Hans, without a region): the
+# region of the catalog in that script, before Accept-Language loses it
+_SCRIPT = re.compile(r"\bzh-(hant|hans)(?=\s*(?:[;,]|\Z))", re.IGNORECASE)
+_SCRIPT_REGION = {"hant": "zh-TW", "hans": "zh-CN"}
+# a language whose catalogs all have a region: the one for a region
+# without its own catalog, or none named
+_NEAREST = {"zh_MO": "zh_HK", "zh": "zh_CN"}
 
 
 @dataclass(frozen=True)
@@ -93,11 +104,21 @@ def texts() -> tuple[str, ...]:
     return tuple(found)
 
 
+def _compiled() -> set[str]:
+    return {p.parent.parent.name for p in LOCALE_DIR.glob("*/LC_MESSAGES/tavletta.mo")}
+
+
 @cache
 def languages() -> tuple[str, ...]:
-    """The languages there is a catalog for, English (the texts themselves) first."""
-    found = sorted(p.parent.parent.name for p in LOCALE_DIR.glob("*/LC_MESSAGES/tavletta.mo"))
-    return ("en", *found)
+    """The languages there is a catalog for, English (the texts themselves)
+    first: compiled, or as po/<lang>.po of a checkout."""
+    found = _compiled() | {p.stem for p in PO_DIR.glob("*.po")}
+    return ("en", *sorted(found))
+
+
+def direction(code: str) -> str:
+    """The direction of the language's script: "rtl" or "ltr"."""
+    return "rtl" if code.split("_")[0] in RTL_LANGUAGES else "ltr"
 
 
 def chosen_language(asked: str | None, header: str | None) -> str:
@@ -106,12 +127,23 @@ def chosen_language(asked: str | None, header: str | None) -> str:
     available = languages()
     wanted = [asked.replace("-", "_")] if asked and _LANG.match(asked) else []
     if not wanted and header:
+        header = _SCRIPT.sub(lambda m: _SCRIPT_REGION[m.group(1).lower()], header)
         wanted = accepted_languages(header) or ["en"]
     for code in wanted:
-        for candidate in (code, code.split("_")[0]):
-            if candidate in available:
-                return candidate
+        if found := _catalog_for(code, available):
+            return found
     return "en"
+
+
+def _catalog_for(code: str, available: tuple[str, ...]) -> str | None:
+    """The catalog for a language: its own, else the language's (de_AT:
+    de), else the nearest region's (zh_MO: zh_HK, zh_SG: zh_CN)."""
+    base = code.split("_")[0]
+    regional = sorted(c for c in available if c.startswith(base + "_"))
+    for candidate in (code, base, _NEAREST.get(code), _NEAREST.get(base), *regional[:1]):
+        if candidate in available:
+            return candidate
+    return None
 
 
 def messages(asked: str | None, header: str | None) -> Asset:
@@ -122,12 +154,63 @@ def messages(asked: str | None, header: str | None) -> Asset:
 
 @cache
 def _messages(code: str) -> Asset:
-    with language(code.replace("_", "-")):
-        table = {text: _(text) for text in texts()}
+    if code == "en" or code in _compiled():
+        with language(code.replace("_", "-")):
+            table = {text: _(text) for text in texts()}
+    else:  # a checkout: its po file
+        catalog = read_po(PO_DIR / f"{code}.po")
+        table = {text: catalog.get(text, text) for text in texts()}
     body = {
         "language": code,
+        "dir": direction(code),
         "languages": list(languages()),
         "messages": {k: v for k, v in table.items() if v != k},
     }
     data = json.dumps(body, ensure_ascii=False, sort_keys=True).encode()
     return Asset(data, "application/json; charset=utf-8", _etag(data))
+
+
+_PO_ESCAPES = {"n": "\n", "t": "\t", "r": "\r", '"': '"', "\\": "\\"}
+
+
+def _unquote(line: str) -> str:
+    """The text of a quoted po line ("a\\nb" -> a, newline, b)."""
+    body = line[line.index('"') + 1 : line.rindex('"')]
+    return re.sub(r"\\(.)", lambda m: _PO_ESCAPES.get(m.group(1), m.group(1)), body)
+
+
+def read_po(path: Path) -> dict[str, str]:
+    """The translations of a po file as msgfmt compiles them: no fuzzy,
+    empty or obsolete entries, no plurals; texts with a context (msgctxt)
+    are not the page's and are left out. {} if there is no such file."""
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return {}
+    found: dict[str, str] = {}
+    entry: dict[str, str] = {}
+    flags = ""
+    key = ""
+
+    def flush() -> None:
+        msgid, msgstr = entry.get("msgid", ""), entry.get("msgstr", "")
+        usable = msgid and msgstr and "fuzzy" not in flags
+        if usable and "msgctxt" not in entry and "msgid_plural" not in entry:
+            found[msgid] = msgstr
+
+    for line in [*lines, ""]:
+        line = line.strip()
+        if not line:
+            flush()
+            entry, flags, key = {}, "", ""
+        elif line.startswith("#,"):
+            flags += line
+        elif line.startswith("#"):
+            continue  # comments, and obsolete entries (#~)
+        elif line.startswith('"'):
+            if key:
+                entry[key] += _unquote(line)
+        else:
+            key = line.split(None, 1)[0]
+            entry[key] = _unquote(line)
+    return found

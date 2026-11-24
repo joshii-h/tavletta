@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 16:14+0100\n"
+"PO-Revision-Date: 2026-11-24 16:17+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ko\n"
 "Language: ko\n"
@@ -327,7 +327,7 @@ msgstr "알 수 없는 프린터 모델: %s"
 
 #: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:347 tavletta/ui/texts.py:729
-#: tavletta/server/service.py:902
+#: tavletta/server/service.py:903
 #, python-format
 msgid "Cannot open %s"
 msgstr "열 수 없음: %s"
@@ -348,7 +348,7 @@ msgid "The label has no element or variable named %s"
 msgstr "라벨에 %s라는 이름의 요소나 변수가 없습니다"
 
 #: tavletta/cli.py:599 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1287
+#: tavletta/server/service.py:1288
 msgid "The label is empty"
 msgstr "라벨이 비어 있습니다"
 
@@ -361,9 +361,9 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output은 PNG 이미지를 씁니다: .png로 끝나는 이름을 지정하세요"
 
 #: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:746 tavletta/server/service.py:1146
-#: tavletta/server/service.py:1169 tavletta/server/service.py:1471
-#: tavletta/server/service.py:1707
+#: tavletta/ui/printing.py:746 tavletta/server/service.py:1147
+#: tavletta/server/service.py:1170 tavletta/server/service.py:1472
+#: tavletta/server/service.py:1708
 msgid "The label cannot be prepared for printing."
 msgstr "라벨을 인쇄용으로 준비할 수 없습니다."
 
@@ -376,16 +376,16 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "프린터가 여러 대 발견되었습니다 – --host로 하나를 선택하세요 (tavletta list-printers)"
 
-#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1697
+#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1698
 #, python-format
 msgid "Cannot save %s"
 msgstr "저장할 수 없음: %s"
 
-#: tavletta/cli.py:794 tavletta/server/service.py:1700
+#: tavletta/cli.py:794 tavletta/server/service.py:1701
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "라벨은 인쇄되었지만 다음 카운터 값은 저장되지 않았습니다"
 
-#: tavletta/cli.py:809 tavletta/server/service.py:1316
+#: tavletta/cli.py:809 tavletta/server/service.py:1317
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "아무것도 인쇄되지 않았습니다: 다음 카운터 값을 저장할 수 없습니다"
 
@@ -394,7 +394,7 @@ msgid "Interrupted"
 msgstr "중단됨"
 
 #: tavletta/cli.py:952 tavletta/ui/printing.py:488
-#: tavletta/server/service.py:1192
+#: tavletta/server/service.py:1193
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "인쇄 작업 하나에 라벨은 최대 %d개까지 가능합니다"
@@ -409,7 +409,7 @@ msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet와 --rows에는 데이터 파일(--data)이 필요합니다"
 
 #: tavletta/cli.py:1022 tavletta/ui/printing.py:615
-#: tavletta/server/service.py:1004
+#: tavletta/server/service.py:1005
 msgid "No rows to print"
 msgstr "인쇄할 행이 없습니다"
 
@@ -418,7 +418,7 @@ msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "라벨이 폴더 밖에 있는 데이터 파일을 사용합니다: --data로 지정하십시오"
 
 #: tavletta/cli.py:1059 tavletta/ui/window.py:922
-#: tavletta/server/service.py:1063
+#: tavletta/server/service.py:1064
 #, python-format
 msgid "No such column: %s"
 msgstr "없는 열: %s"
@@ -441,7 +441,7 @@ msgid "Waiting for another print of %s to finish…"
 msgstr "%s의 다른 인쇄가 끝나기를 기다리는 중…"
 
 #: tavletta/cli.py:1084 tavletta/server/service.py:791
-#: tavletta/server/service.py:1465
+#: tavletta/server/service.py:1466
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s이(가) 아직 다른 인쇄에 의해 잠겨 있습니다 – 나중에 다시 시도하세요"
@@ -553,7 +553,7 @@ msgstr "다른 파일 선택"
 msgid "Remove data file"
 msgstr "데이터 파일 제거"
 
-#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:401
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:404
 msgid "Sheet"
 msgstr "시트"
 
@@ -1070,7 +1070,7 @@ msgstr "끌어서 남길 이미지 부분을 선택하세요"
 #: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
 #: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
 #: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
-#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:220
+#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:223
 msgid "Cancel"
 msgstr "취소"
 
@@ -1370,7 +1370,7 @@ msgstr "남은 양 %(left)s / %(total)s"
 msgid "Reachable · the printer reports no status"
 msgstr "연결 가능 · 프린터가 상태를 알리지 않음"
 
-#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:389
+#: tavletta/ui/printer.py:544 tavletta/server/web/ui.js:385
 msgid "Printing"
 msgstr "인쇄 중"
 
@@ -1471,7 +1471,7 @@ msgstr "데이터 파일을 아직 읽는 중입니다. 잠시 후 다시 시도
 
 #: tavletta/ui/printing.py:148 tavletta/ui/printing.py:188
 #: tavletta/ui/printing.py:525 tavletta/ui/printing.py:550
-#: tavletta/server/web/ui.js:262
+#: tavletta/server/web/ui.js:265
 msgid "Print anyway"
 msgstr "그래도 인쇄"
 
@@ -1531,7 +1531,7 @@ msgstr "일반 용지로 테스트할 때"
 msgid "Sheets: %d"
 msgstr "시트 수: %d"
 
-#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:724
+#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:789
 msgid "Copies of each label"
 msgstr "라벨당 매수"
 
@@ -1594,8 +1594,8 @@ msgstr "라벨 인쇄"
 
 #: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
-#: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
-#: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
+#: tavletta/server/web/app.js:338 tavletta/server/web/batch.js:56
+#: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "인쇄"
@@ -3160,7 +3160,7 @@ msgid ""
 "more."
 msgstr "프린터에서 문제를 보고했습니다. 프린터를 껐다가 다시 켠 뒤 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:456
+#: tavletta/ui/texts.py:673 tavletta/server/web/ui.js:452
 msgid "Printed"
 msgstr "인쇄함"
 
@@ -3222,7 +3222,7 @@ msgid "%s is not a Tavletta label"
 msgstr "Tavletta 라벨이 아님: %s"
 
 #: tavletta/ui/texts.py:720 tavletta/ui/texts.py:740
-#: tavletta/server/service.py:913
+#: tavletta/server/service.py:914
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "파일이 손상됨: %s"
@@ -3342,12 +3342,12 @@ msgstr "라벨을 인쇄할 때마다 증가 단위만큼 올라갑니다"
 msgid "Next number"
 msgstr "다음 번호"
 
-#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:563
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:628
 msgid "Step"
 msgstr "증가 단위"
 
-#: tavletta/ui/window.py:176 tavletta/server/web/app.js:45
-#: tavletta/server/web/app.js:288
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:47
+#: tavletta/server/web/app.js:296
 msgid "Templates"
 msgstr "서식"
 
@@ -3522,7 +3522,7 @@ msgstr "%s에 잘못된 값"
 msgid "The request took too long"
 msgstr "요청 시간이 너무 오래 걸렸습니다"
 
-#: tavletta/server/http.py:478 tavletta/server/service.py:1618
+#: tavletta/server/http.py:478 tavletta/server/service.py:1619
 msgid "The server is busy – try again later"
 msgstr "서버가 사용 중입니다 – 나중에 다시 시도하십시오"
 
@@ -3581,7 +3581,7 @@ msgid "Send the header %s with this request"
 msgstr "이 요청과 함께 %s 헤더를 보내십시오"
 
 #: tavletta/server/http.py:721 tavletta/server/service.py:627
-#: tavletta/server/service.py:1591
+#: tavletta/server/service.py:1592
 msgid "This access token may not do this"
 msgstr "이 액세스 토큰으로는 이 작업을 할 수 없습니다"
 
@@ -3726,651 +3726,699 @@ msgstr "프린터 주소 없음: host로 지정하십시오"
 msgid "This printer address is not allowed: %s"
 msgstr "허용되지 않는 프린터 주소: %s"
 
-#: tavletta/server/service.py:778 tavletta/server/service.py:921
+#: tavletta/server/service.py:778 tavletta/server/service.py:922
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content에서는 문서 페이지를 사용할 수 없습니다 (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:954
+#: tavletta/server/service.py:955
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – data_rows로 보내세요"
 
-#: tavletta/server/service.py:1012
+#: tavletta/server/service.py:1013
 msgid "A sheet needs a data file"
 msgstr "시트에는 데이터 파일이 필요합니다"
 
-#: tavletta/server/service.py:1018
+#: tavletta/server/service.py:1019
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "라벨이 라벨 폴더 밖에 있는 데이터 파일을 사용합니다: 그 행도 함께 보내십시오"
 
-#: tavletta/server/service.py:1218
+#: tavletta/server/service.py:1219
 msgid "Too many print jobs are waiting – try again later"
 msgstr "대기 중인 인쇄 작업이 너무 많습니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/service.py:1487
+#: tavletta/server/service.py:1488
 #, python-format
 msgid "No such print job: %s"
 msgstr "없는 인쇄 작업: %s"
 
-#: tavletta/server/service.py:1499
+#: tavletta/server/service.py:1500
 msgid "The print job has already finished"
 msgstr "인쇄 작업이 이미 끝났습니다"
 
-#: tavletta/server/service.py:1559
+#: tavletta/server/service.py:1560
 #, python-format
 msgid "A label named %s exists already"
 msgstr "이름이 %s인 라벨이 이미 있습니다"
 
-#: tavletta/server/service.py:1564
+#: tavletta/server/service.py:1565
 msgid "The label could not be saved in the labels folder"
 msgstr "라벨을 라벨 폴더에 저장할 수 없습니다"
 
-#: tavletta/server/service.py:1622
+#: tavletta/server/service.py:1623
 msgid "The label is too large to render"
 msgstr "라벨이 너무 커서 렌더링할 수 없습니다"
 
-#: tavletta/server/service.py:1636
+#: tavletta/server/service.py:1637
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "라벨이 너무 큽니다: 이미지와 코드는 최대 %d개까지 가능합니다"
 
-#: tavletta/server/service.py:1659
+#: tavletta/server/service.py:1660
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "라벨이 너무 큽니다: 요소는 최대 %(elements)d개, 텍스트당 최대 %(chars)d자까지 가능합니다"
 
-#: tavletta/server/service.py:1678
+#: tavletta/server/service.py:1679
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "이 프린터에서는 최대 %d매까지 가능합니다"
 
-#: tavletta/server/service.py:1683
+#: tavletta/server/service.py:1684
 msgid "Printers are chosen by name: leave out host"
 msgstr "프린터는 이름으로 선택합니다: host를 지정하지 마십시오"
 
-#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:482
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:515
 msgid "No connection to the server. Your input is kept."
 msgstr "서버에 연결되지 않았습니다. 입력한 내용은 유지됩니다."
 
-#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:210
+#: tavletta/server/web/app.js:48 tavletta/server/web/app.js:214
 msgid "Printers"
 msgstr "프린터"
 
-#: tavletta/server/web/app.js:51
+#: tavletta/server/web/app.js:53
 msgid "Main"
 msgstr "주 탐색"
 
-#: tavletta/server/web/app.js:74
+#: tavletta/server/web/app.js:78
 msgid "Language"
 msgstr "언어"
 
-#: tavletta/server/web/app.js:81
+#: tavletta/server/web/app.js:83
 msgid "Sign out"
 msgstr "로그아웃"
 
-#: tavletta/server/web/app.js:84
+#: tavletta/server/web/app.js:88
 msgid "Skip to content"
 msgstr "본문으로 건너뛰기"
 
-#: tavletta/server/web/app.js:160
+#: tavletta/server/web/app.js:164
 msgid "Access token"
 msgstr "액세스 토큰"
 
-#: tavletta/server/web/app.js:161
+#: tavletta/server/web/app.js:165
 msgid ""
 "The administrator gives it to you. It is kept in this tab only and forgotten "
 "when the tab is closed."
 msgstr "관리자에게서 받습니다. 이 탭에만 보관되며 탭을 닫으면 삭제됩니다."
 
-#: tavletta/server/web/app.js:166 tavletta/server/web/app.js:202
+#: tavletta/server/web/app.js:170 tavletta/server/web/app.js:206
 msgid "Sign in"
 msgstr "로그인"
 
-#: tavletta/server/web/app.js:172
+#: tavletta/server/web/app.js:176
 msgid "Show token"
 msgstr "토큰 표시"
 
-#: tavletta/server/web/app.js:180
+#: tavletta/server/web/app.js:184
 msgid "Enter the access token."
 msgstr "액세스 토큰을 입력하세요."
 
-#: tavletta/server/web/app.js:195
+#: tavletta/server/web/app.js:199
 msgid ""
 "The token was not accepted. Check it, or ask the administrator for a new one."
 msgstr "토큰이 승인되지 않았습니다. 토큰을 확인하거나 관리자에게 새 토큰을 요청하세요."
 
-#: tavletta/server/web/app.js:209
+#: tavletta/server/web/app.js:213
 msgid "Check again"
 msgstr "다시 확인"
 
-#: tavletta/server/web/app.js:221 tavletta/server/web/print.js:74
+#: tavletta/server/web/app.js:225 tavletta/server/web/print.js:74
 msgid "No printer this token may use. Ask the administrator."
 msgstr "이 토큰으로 사용할 수 있는 프린터가 없습니다. 관리자에게 문의하세요."
 
-#: tavletta/server/web/app.js:234
+#: tavletta/server/web/app.js:238
 msgid "Location: {place}"
 msgstr "위치: {place}"
 
-#: tavletta/server/web/app.js:235
+#: tavletta/server/web/app.js:239
 msgid "Meant for: {media}"
 msgstr "용도: {media}"
 
-#: tavletta/server/web/app.js:236
+#: tavletta/server/web/app.js:240
 msgid "Model: {model}"
 msgstr "모델: {model}"
 
-#: tavletta/server/web/app.js:242
+#: tavletta/server/web/app.js:246
 msgid "Default"
 msgstr "기본값"
 
-#: tavletta/server/web/app.js:256
+#: tavletta/server/web/app.js:260
 msgid "Asking the printer…"
 msgstr "프린터에 확인하는 중…"
 
-#: tavletta/server/web/app.js:267
+#: tavletta/server/web/app.js:271
 msgid "Ask for its state"
 msgstr "상태 확인"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:277
 msgid "Address: {host}"
 msgstr "주소: {host}"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:277
 msgid "No address set"
 msgstr "주소가 설정되지 않음"
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:312
 msgid "No templates yet. Upload one above."
 msgstr "아직 서식이 없습니다. 위에서 업로드하세요."
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:312
 msgid "No templates yet. Ask the administrator."
 msgstr "아직 서식이 없습니다. 관리자에게 문의하세요."
 
-#: tavletta/server/web/app.js:331
+#: tavletta/server/web/app.js:339
 msgid "Series"
 msgstr "데이터 병합"
 
-#: tavletta/server/web/app.js:332
+#: tavletta/server/web/app.js:340
 msgid "Delete"
 msgstr "삭제"
 
-#: tavletta/server/web/app.js:340
+#: tavletta/server/web/app.js:348
 msgid "Size: {width} × {height} mm"
 msgstr "크기: {width} × {height} mm"
 
-#: tavletta/server/web/app.js:341
+#: tavletta/server/web/app.js:349
 msgid "Fields: {count}"
 msgstr "필드: {count}"
 
-#: tavletta/server/web/app.js:342
+#: tavletta/server/web/app.js:350
 msgid "Printer model: {model}"
 msgstr "프린터 모델: {model}"
 
-#: tavletta/server/web/app.js:348 tavletta/server/web/print.js:188
+#: tavletta/server/web/app.js:356
+msgid "Preview of {name} with sample values"
+msgstr "샘플 값으로 본 {name} 미리 보기"
+
+#: tavletta/server/web/app.js:356 tavletta/server/web/print.js:188
 msgid "Preview of {name}"
 msgstr "{name} 미리 보기"
 
-#: tavletta/server/web/app.js:359
+#: tavletta/server/web/app.js:358
+msgid "The preview shows sample values; a series can read another data file."
+msgstr "미리 보기는 샘플 값을 보여 줍니다. 시리즈는 다른 데이터 파일을 읽을 수 있습니다."
+
+#: tavletta/server/web/app.js:375
+msgid "The data file {name} is missing."
+msgstr "데이터 파일 {name}이(가) 없습니다."
+
+#: tavletta/server/web/app.js:384
+msgid "The template's data file is not in the labels folder."
+msgstr "템플릿의 데이터 파일이 라벨 폴더에 없습니다."
+
+#: tavletta/server/web/app.js:392
 msgid "Delete template?"
 msgstr "서식을 삭제할까요?"
 
-#: tavletta/server/web/app.js:360
+#: tavletta/server/web/app.js:393
 msgid "The template {name} is deleted from the server. Its data file stays."
 msgstr "서식 {name}이(가) 서버에서 삭제됩니다. 데이터 파일은 남습니다."
 
-#: tavletta/server/web/app.js:361
+#: tavletta/server/web/app.js:394
 msgid "Delete {name}"
 msgstr "{name} 삭제"
 
-#: tavletta/server/web/app.js:368
+#: tavletta/server/web/app.js:401
 msgid "{name} deleted."
 msgstr "{name}을(를) 삭제했습니다."
 
-#: tavletta/server/web/app.js:381
+#: tavletta/server/web/app.js:414
 msgid "Template file"
 msgstr "서식 파일"
 
-#: tavletta/server/web/app.js:382
+#: tavletta/server/web/app.js:415
 msgid "A .tavletta file saved by Tavletta, at most {size} MB."
 msgstr "Tavletta로 저장한 .tavletta 파일, 최대 {size} MB."
 
-#: tavletta/server/web/app.js:386
+#: tavletta/server/web/app.js:419
 msgid "Upload"
 msgstr "업로드"
 
-#: tavletta/server/web/app.js:390
+#: tavletta/server/web/app.js:423
 msgid "Upload a template"
 msgstr "서식 업로드"
 
-#: tavletta/server/web/app.js:392
+#: tavletta/server/web/app.js:425
 msgid "Replace a template of the same name"
 msgstr "같은 이름의 서식 바꾸기"
 
-#: tavletta/server/web/app.js:400
+#: tavletta/server/web/app.js:433
 msgid "Choose a template file."
 msgstr "서식 파일을 선택하세요."
 
-#: tavletta/server/web/app.js:405
+#: tavletta/server/web/app.js:438
 msgid "The file is too large: at most {size} MB."
 msgstr "파일이 너무 큽니다. 최대 {size} MB입니다."
 
-#: tavletta/server/web/app.js:416
+#: tavletta/server/web/app.js:449
 msgid "{name} uploaded."
 msgstr "{name}을(를) 업로드했습니다."
 
-#: tavletta/server/web/app.js:420
+#: tavletta/server/web/app.js:453
 msgid ""
 "A template of this name exists. Choose \"Replace a template of the same "
 "name\" to replace it."
 msgstr "이 이름의 서식이 이미 있습니다. 바꾸려면 \"같은 이름의 서식 바꾸기\"를 선택하세요."
 
-#: tavletta/server/web/app.js:422
+#: tavletta/server/web/app.js:455
 msgid ""
 "The file name can have letters, digits, spaces and . _ - ( ) + , and must "
 "not start with a dot. Rename the file."
 msgstr "파일 이름에는 문자, 숫자, 공백과 . _ - ( ) + , 를 사용할 수 있으며 점으로 시작할 수 없습니다. 파일 이름을 바꾸세요."
 
-#: tavletta/server/web/app.js:437
+#: tavletta/server/web/app.js:470
 msgid "Print job"
 msgstr "인쇄 작업"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:843
+#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:908
 #: tavletta/server/web/print.js:243
 msgid "Template: {name}"
 msgstr "서식: {name}"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:844
+#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:909
 #: tavletta/server/web/print.js:243
 msgid "Printer: {name}"
 msgstr "프린터: {name}"
 
-#: tavletta/server/web/app.js:449 tavletta/server/web/batch.js:886
+#: tavletta/server/web/app.js:482 tavletta/server/web/batch.js:951
 msgid "Print job ended: {printed} of {total} labels printed."
 msgstr "인쇄 작업 종료: 라벨 {total}장 중 {printed}장 인쇄됨."
 
-#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:272
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:275
 msgid "Data"
 msgstr "데이터"
 
-#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:398
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:401
 msgid "Assign"
 msgstr "지정"
 
-#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:465
+#: tavletta/server/web/batch.js:54 tavletta/server/web/batch.js:530
 msgid "Choose"
 msgstr "선택"
 
-#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:706
+#: tavletta/server/web/batch.js:55 tavletta/server/web/batch.js:771
 msgid "Check"
 msgstr "확인"
 
-#: tavletta/server/web/batch.js:85
+#: tavletta/server/web/batch.js:88
 msgid "From needs a number."
 msgstr "'시작'에 숫자가 필요합니다."
 
-#: tavletta/server/web/batch.js:86
+#: tavletta/server/web/batch.js:89
 msgid "To needs a number."
 msgstr "'끝'에 숫자가 필요합니다."
 
-#: tavletta/server/web/batch.js:87
+#: tavletta/server/web/batch.js:90
 msgid "Step must be a whole number from 1."
 msgstr "'간격'은 1 이상의 정수여야 합니다."
 
-#: tavletta/server/web/batch.js:88
+#: tavletta/server/web/batch.js:91
 msgid "From and To must be the same apart from the number ({from}, {to})."
 msgstr "'시작'과 '끝'은 숫자 부분 외에는 같아야 합니다({from}, {to})."
 
-#: tavletta/server/web/batch.js:89
+#: tavletta/server/web/batch.js:92
 msgid ""
 "From has {from} digits, To {to}. Enter both with the same number of digits."
 msgstr "'시작'은 {from}자리, '끝'은 {to}자리입니다. 두 값을 같은 자릿수로 입력하세요."
 
-#: tavletta/server/web/batch.js:90
+#: tavletta/server/web/batch.js:93
 msgid "To must be greater than or equal to From ({from})."
 msgstr "'끝'은 '시작'({from})보다 크거나 같아야 합니다."
 
-#: tavletta/server/web/batch.js:91
+#: tavletta/server/web/batch.js:94
 msgid ""
 "The ranges make different numbers of labels: {counts}. Make them the same "
 "length."
 msgstr "범위마다 라벨 수가 다릅니다: {counts}. 길이를 같게 맞추세요."
 
-#: tavletta/server/web/batch.js:100
+#: tavletta/server/web/batch.js:103
 msgid "Series of {name}"
 msgstr "{name} 데이터 병합"
 
-#: tavletta/server/web/batch.js:117
+#: tavletta/server/web/batch.js:120
 msgid ""
 "This template has no data fields ({placeholder}). For many equal labels, set "
 "the copies when printing."
 msgstr "이 서식에는 데이터 필드({placeholder})가 없습니다. 같은 라벨을 여러 장 인쇄하려면 인쇄할 때 매수를 설정하세요."
 
-#: tavletta/server/web/batch.js:127
+#: tavletta/server/web/batch.js:130
 msgid "Steps"
 msgstr "단계"
 
-#: tavletta/server/web/batch.js:162 tavletta/server/web/batch.js:181
+#: tavletta/server/web/batch.js:165 tavletta/server/web/batch.js:184
 msgid "Enter a range for at least one field."
 msgstr "하나 이상의 필드에 범위를 입력하세요."
 
-#: tavletta/server/web/batch.js:191 tavletta/server/web/batch.js:641
+#: tavletta/server/web/batch.js:194 tavletta/server/web/batch.js:706
 msgid "Row {n}"
 msgstr "{n}행"
 
-#: tavletta/server/web/batch.js:207 tavletta/server/web/batch.js:518
-#: tavletta/server/web/batch.js:708
+#: tavletta/server/web/batch.js:210 tavletta/server/web/batch.js:583
+#: tavletta/server/web/batch.js:773
 msgid "No row selected."
 msgstr "선택한 행이 없습니다."
 
-#: tavletta/server/web/batch.js:211
+#: tavletta/server/web/batch.js:214
 msgid "{count} labels ({span})"
 msgstr "라벨 {count}장({span})"
 
-#: tavletta/server/web/batch.js:226
+#: tavletta/server/web/batch.js:229
 msgid "not needed"
 msgstr "필요 없음"
 
-#: tavletta/server/web/batch.js:248 tavletta/server/web/batch.js:302
+#: tavletta/server/web/batch.js:251 tavletta/server/web/batch.js:305
 msgid "Next"
 msgstr "다음"
 
-#: tavletta/server/web/batch.js:252 tavletta/server/web/batch.js:759
+#: tavletta/server/web/batch.js:255 tavletta/server/web/batch.js:824
 msgid "Back"
 msgstr "뒤로"
 
-#: tavletta/server/web/batch.js:276
+#: tavletta/server/web/batch.js:279
 msgid "Where do the values come from?"
 msgstr "값을 어디에서 가져올까요?"
 
-#: tavletta/server/web/batch.js:277
+#: tavletta/server/web/batch.js:280
 msgid "A file (CSV, XLSX, ODS)"
 msgstr "파일(CSV, XLSX, ODS)"
 
-#: tavletta/server/web/batch.js:278
+#: tavletta/server/web/batch.js:281
 msgid "A pasted list"
 msgstr "붙여 넣은 목록"
 
-#: tavletta/server/web/batch.js:279
+#: tavletta/server/web/batch.js:282
 msgid "No data: make numbers from ranges"
 msgstr "데이터 없음: 범위에서 번호 생성"
 
-#: tavletta/server/web/batch.js:287
+#: tavletta/server/web/batch.js:290
 msgid "Data file"
 msgstr "데이터 파일"
 
-#: tavletta/server/web/batch.js:287
+#: tavletta/server/web/batch.js:290
 msgid ""
 "At most {size} MB. Every cell is read as the text it shows: leading zeros "
 "stay."
 msgstr "최대 {size} MB. 모든 셀은 표시되는 텍스트 그대로 읽히므로 앞의 0이 유지됩니다."
 
-#: tavletta/server/web/batch.js:289 tavletta/server/web/batch.js:296
+#: tavletta/server/web/batch.js:292 tavletta/server/web/batch.js:299
 msgid "The first row holds the column names"
 msgstr "첫 행에 열 이름이 있음"
 
-#: tavletta/server/web/batch.js:290
+#: tavletta/server/web/batch.js:293
 msgid "Last file read: {name}"
 msgstr "마지막으로 읽은 파일: {name}"
 
-#: tavletta/server/web/batch.js:294 tavletta/server/web/batch.js:343
+#: tavletta/server/web/batch.js:297 tavletta/server/web/batch.js:346
 msgid "List"
 msgstr "목록"
 
-#: tavletta/server/web/batch.js:294
+#: tavletta/server/web/batch.js:297
 msgid ""
 "One label per line; columns separated by tab, semicolon or comma (as copied "
 "from a spreadsheet)."
 msgstr "한 줄에 라벨 하나, 열은 탭, 세미콜론 또는 쉼표로 구분합니다(스프레드시트에서 복사한 형식)."
 
-#: tavletta/server/web/batch.js:298
+#: tavletta/server/web/batch.js:301
 msgid ""
 "The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
 msgstr "다음 단계에서 3000–5685 또는 00300–00450 같은 범위로 값을 만듭니다."
 
-#: tavletta/server/web/batch.js:302
+#: tavletta/server/web/batch.js:305
 msgid "Read and continue"
 msgstr "읽고 계속"
 
-#: tavletta/server/web/batch.js:334
+#: tavletta/server/web/batch.js:337
 msgid "Choose a data file."
 msgstr "데이터 파일을 선택하세요."
 
-#: tavletta/server/web/batch.js:342
+#: tavletta/server/web/batch.js:345
 msgid "Paste the list first."
 msgstr "먼저 목록을 붙여 넣으세요."
 
-#: tavletta/server/web/batch.js:347
+#: tavletta/server/web/batch.js:350
 msgid "The data are too large: at most {size} MB."
 msgstr "데이터가 너무 큽니다. 최대 {size} MB입니다."
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "semicolon"
 msgstr "세미콜론"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "comma"
 msgstr "쉼표"
 
-#: tavletta/server/web/batch.js:370
+#: tavletta/server/web/batch.js:369
 msgid "tab"
 msgstr "탭"
 
-#: tavletta/server/web/batch.js:372
+#: tavletta/server/web/batch.js:371
 msgid "{name}: {kind}"
 msgstr "{name}: {kind}"
 
-#: tavletta/server/web/batch.js:373
+#: tavletta/server/web/batch.js:372
 msgid "Separated by {delimiter}"
 msgstr "구분 기호: {delimiter}"
 
-#: tavletta/server/web/batch.js:374
+#: tavletta/server/web/batch.js:373
 msgid "Sheet: {sheet}"
 msgstr "시트: {sheet}"
 
-#: tavletta/server/web/batch.js:375
+#: tavletta/server/web/batch.js:374
 msgid "{rows} rows, {columns} columns"
 msgstr "{rows}행, {columns}열"
 
-#: tavletta/server/web/batch.js:377
+#: tavletta/server/web/batch.js:376
 msgid "The first {count} rows"
 msgstr "처음 {count}행"
 
-#: tavletta/server/web/batch.js:388 tavletta/server/web/batch.js:635
+#: tavletta/server/web/batch.js:387 tavletta/server/web/batch.js:700
 msgid "Row"
 msgstr "행"
 
-#: tavletta/server/web/batch.js:413
-msgid "Choose the data column for each field of the template."
-msgstr "서식의 각 필드에 사용할 데이터 열을 선택하세요."
+#: tavletta/server/web/batch.js:416
+msgid ""
+"Choose the data column for each field of the template. The preview shows the "
+"first label; the field in use is outlined in it."
+msgstr "템플릿의 각 필드에 데이터 열을 선택하세요. 미리 보기는 첫 번째 라벨을 보여 주며, 사용 중인 필드는 테두리로 표시됩니다."
 
-#: tavletta/server/web/batch.js:418
+#: tavletta/server/web/batch.js:419
+msgid ""
+"Assigned automatically (the same name, or the only column): {fields}. Check "
+"them below."
+msgstr "자동으로 지정됨(같은 이름 또는 유일한 열): {fields}. 아래에서 확인하세요."
+
+#: tavletta/server/web/batch.js:421
+msgid "The first label"
+msgstr "첫 번째 라벨"
+
+#: tavletta/server/web/batch.js:430
 msgid "– not assigned –"
 msgstr "– 지정 안 됨 –"
 
-#: tavletta/server/web/batch.js:419
+#: tavletta/server/web/batch.js:431
 msgid "The same value for all"
 msgstr "모두 같은 값"
 
-#: tavletta/server/web/batch.js:423
+#: tavletta/server/web/batch.js:435
 msgid "Value for {name}"
 msgstr "{name}의 값"
 
-#: tavletta/server/web/batch.js:426
+#: tavletta/server/web/batch.js:440
 msgid "Data field {placeholder} of the template, required"
 msgstr "서식의 데이터 필드 {placeholder}, 필수"
 
-#: tavletta/server/web/batch.js:443
+#: tavletta/server/web/batch.js:466
 msgid "{name} has no data column. Choose one, or the same value for all."
 msgstr "{name}에 데이터 열이 없습니다. 열을 선택하거나 모두 같은 값을 지정하세요."
 
-#: tavletta/server/web/batch.js:476
+#: tavletta/server/web/batch.js:499
+msgid "Not assigned yet: the preview shows a sample value."
+msgstr "아직 지정되지 않음: 미리 보기는 샘플 값을 보여 줍니다."
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: empty"
+msgstr "첫 번째 라벨: 비어 있음"
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: {value}"
+msgstr "첫 번째 라벨: {value}"
+
+#: tavletta/server/web/batch.js:510
+msgid "Preview of the first label"
+msgstr "첫 번째 라벨 미리 보기"
+
+#: tavletta/server/web/batch.js:541
 msgid "Continuing: {count} rows left."
 msgstr "이어서 진행: {count}행 남음."
 
-#: tavletta/server/web/batch.js:480
+#: tavletta/server/web/batch.js:545
 msgid "Choose again"
 msgstr "다시 선택"
 
-#: tavletta/server/web/batch.js:486 tavletta/server/web/batch.js:612
+#: tavletta/server/web/batch.js:551 tavletta/server/web/batch.js:677
 msgid "All rows"
 msgstr "모든 행"
 
-#: tavletta/server/web/batch.js:487
+#: tavletta/server/web/batch.js:552
 msgid "Some rows"
 msgstr "일부 행"
 
-#: tavletta/server/web/batch.js:488
+#: tavletta/server/web/batch.js:553
 msgid "Ranges of a field"
 msgstr "필드의 범위"
 
-#: tavletta/server/web/batch.js:494
+#: tavletta/server/web/batch.js:559
 msgid "Which rows?"
 msgstr "어떤 행을 사용할까요?"
 
-#: tavletta/server/web/batch.js:529
+#: tavletta/server/web/batch.js:594
 msgid ""
 "Several fields: their values are put together row by row (the first with the "
 "first), never every combination."
 msgstr "필드가 여러 개인 경우: 값은 행 단위로 짝지어지며(첫 번째는 첫 번째와), 모든 조합을 만들지는 않습니다."
 
-#: tavletta/server/web/batch.js:530
+#: tavletta/server/web/batch.js:595
 msgid ""
 "Several fields: a row is printed if its values lie in the ranges of all of "
 "them."
 msgstr "필드가 여러 개인 경우: 값이 모든 필드의 범위 안에 있는 행만 인쇄됩니다."
 
-#: tavletta/server/web/batch.js:561
+#: tavletta/server/web/batch.js:626
 msgid "From"
 msgstr "시작"
 
-#: tavletta/server/web/batch.js:561
+#: tavletta/server/web/batch.js:626
 msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
 msgstr "예: 3000, 00300 또는 INV-0001, 또는 전체 범위 3000-5685"
 
-#: tavletta/server/web/batch.js:562
+#: tavletta/server/web/batch.js:627
 msgid "To"
 msgstr "끝"
 
-#: tavletta/server/web/batch.js:568
+#: tavletta/server/web/batch.js:633
 msgid "Remove range"
 msgstr "범위 제거"
 
-#: tavletta/server/web/batch.js:590
+#: tavletta/server/web/batch.js:655
 msgid "Add a range"
 msgstr "범위 추가"
 
-#: tavletta/server/web/batch.js:598
+#: tavletta/server/web/batch.js:663
 msgid "Or the same value for all"
 msgstr "또는 모두 같은 값"
 
-#: tavletta/server/web/batch.js:598
+#: tavletta/server/web/batch.js:663
 msgid "Used if no range is given for this field."
 msgstr "이 필드에 범위가 없으면 사용됩니다."
 
-#: tavletta/server/web/batch.js:611 tavletta/server/web/batch.js:630
+#: tavletta/server/web/batch.js:676 tavletta/server/web/batch.js:695
 msgid "Rows"
 msgstr "행"
 
-#: tavletta/server/web/batch.js:611
+#: tavletta/server/web/batch.js:676
 msgid "For example 1-20, 25, 30-"
 msgstr "예: 1-20, 25, 30-"
 
-#: tavletta/server/web/batch.js:634
+#: tavletta/server/web/batch.js:699
 msgid "Rows {first} to {last} of {total}"
 msgstr "{total}행 중 {first}~{last}행"
 
-#: tavletta/server/web/batch.js:670
+#: tavletta/server/web/batch.js:735
 msgid "Page {page} of {pages}"
 msgstr "{pages}페이지 중 {page}페이지"
 
-#: tavletta/server/web/batch.js:676
+#: tavletta/server/web/batch.js:741
 msgid "Previous page"
 msgstr "이전 페이지"
 
-#: tavletta/server/web/batch.js:677
+#: tavletta/server/web/batch.js:742
 msgid "Next page"
 msgstr "다음 페이지"
 
-#: tavletta/server/web/batch.js:691
+#: tavletta/server/web/batch.js:756
 msgid "Write the rows as numbers and ranges, such as 1-20, 25."
 msgstr "행을 1-20, 25처럼 번호와 범위로 입력하세요."
 
-#: tavletta/server/web/batch.js:753
+#: tavletta/server/web/batch.js:818
 msgid "The same for all labels"
 msgstr "모든 라벨에 동일"
 
-#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:203
+#: tavletta/server/web/batch.js:835 tavletta/server/web/print.js:203
 msgid "Printing needs a token with the role Print or Admin."
 msgstr "인쇄하려면 역할이 '인쇄' 또는 '관리자'인 토큰이 필요합니다."
 
-#: tavletta/server/web/batch.js:772 tavletta/server/web/print.js:222
+#: tavletta/server/web/batch.js:837 tavletta/server/web/print.js:222
 msgid "Copies must be a whole number from 1."
 msgstr "매수는 1 이상의 정수여야 합니다."
 
-#: tavletta/server/web/batch.js:773 tavletta/server/web/print.js:223
+#: tavletta/server/web/batch.js:838 tavletta/server/web/print.js:223
 msgid "At most {max} copies on this printer."
 msgstr "이 프린터에서는 최대 {max}매입니다."
 
-#: tavletta/server/web/batch.js:774
+#: tavletta/server/web/batch.js:839
 msgid "At most {max} rows in one print job."
 msgstr "인쇄 작업 하나에 최대 {max}행입니다."
 
-#: tavletta/server/web/batch.js:775
+#: tavletta/server/web/batch.js:840
 msgid ""
 "At most {max} labels in one print job. Choose fewer rows, or print them in "
 "several jobs."
 msgstr "인쇄 작업 하나에 라벨은 최대 {max}장입니다. 행을 줄이거나 여러 작업으로 나누어 인쇄하세요."
 
-#: tavletta/server/web/batch.js:776 tavletta/server/web/print.js:204
+#: tavletta/server/web/batch.js:841 tavletta/server/web/print.js:204
 msgid "Confirm above that it should print on the labels loaded."
 msgstr "들어 있는 라벨에 인쇄할지 위에서 확인하세요."
 
-#: tavletta/server/web/batch.js:783
+#: tavletta/server/web/batch.js:848
 msgid "At most {max} labels in one print job; {left} more could be added."
 msgstr "인쇄 작업 하나에 라벨은 최대 {max}장이며, {left}장 더 추가할 수 있습니다."
 
-#: tavletta/server/web/batch.js:784 tavletta/server/web/batch.js:846
+#: tavletta/server/web/batch.js:849 tavletta/server/web/batch.js:911
 #: tavletta/server/web/print.js:244
 msgid "Print {count} labels"
 msgstr "라벨 {count}장 인쇄"
 
-#: tavletta/server/web/batch.js:806
+#: tavletta/server/web/batch.js:871
 msgid "First: {value}"
 msgstr "처음: {value}"
 
-#: tavletta/server/web/batch.js:807
+#: tavletta/server/web/batch.js:872
 msgid "Last: {value}"
 msgstr "마지막: {value}"
 
-#: tavletta/server/web/batch.js:810 tavletta/server/web/batch.js:811
+#: tavletta/server/web/batch.js:875 tavletta/server/web/batch.js:876
 msgid "Preview of the label {value}"
 msgstr "라벨 {value} 미리 보기"
 
-#: tavletta/server/web/batch.js:840 tavletta/server/web/print.js:242
+#: tavletta/server/web/batch.js:905 tavletta/server/web/print.js:242
 msgid "Print {count} labels?"
 msgstr "라벨 {count}장을 인쇄할까요?"
 
-#: tavletta/server/web/batch.js:854
+#: tavletta/server/web/batch.js:919
 msgid "Too much data for one print job ({size} MB). Choose fewer rows."
 msgstr "인쇄 작업 하나에 데이터가 너무 많습니다({size} MB). 행을 줄이세요."
 
-#: tavletta/server/web/batch.js:905
+#: tavletta/server/web/batch.js:971
 msgid "First printed: {first}, last printed in full: {last}"
 msgstr "처음 인쇄: {first}, 마지막으로 완전히 인쇄: {last}"
 
-#: tavletta/server/web/batch.js:916
+#: tavletta/server/web/batch.js:971
+msgid "(not all numbers in between)"
+msgstr "(사이의 모든 번호는 아님)"
+
+#: tavletta/server/web/batch.js:982
 msgid "Continue from {value}"
 msgstr "{value}부터 계속"
 
-#: tavletta/server/web/batch.js:918
+#: tavletta/server/web/batch.js:984
 msgid "A label of a row that was printed in part is printed again in full."
 msgstr "일부만 인쇄된 행의 라벨은 처음부터 다시 인쇄됩니다."
 
-#: tavletta/server/web/batch.js:926
+#: tavletta/server/web/batch.js:992
 msgid "New series"
 msgstr "새 데이터 병합"
 
@@ -4442,7 +4490,7 @@ msgstr "시작 번호는 0 이상의 정수여야 합니다."
 msgid "At most {max} labels in one print job."
 msgstr "인쇄 작업 하나에 라벨은 최대 {max}장입니다."
 
-#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:184
 msgid "There is a problem"
 msgstr "문제가 있습니다"
 
@@ -4519,66 +4567,66 @@ msgstr "불러오는 중…"
 msgid "Try again"
 msgstr "다시 시도"
 
-#: tavletta/server/web/ui.js:149
+#: tavletta/server/web/ui.js:151
 msgid "optional"
 msgstr "선택 사항"
 
-#: tavletta/server/web/ui.js:260
+#: tavletta/server/web/ui.js:263
 msgid "Other labels are loaded in the printer than the template needs."
 msgstr "프린터에 들어 있는 라벨이 서식에 필요한 라벨과 다릅니다."
 
-#: tavletta/server/web/ui.js:326
+#: tavletta/server/web/ui.js:322
 msgid "Element {n}: {kind}"
 msgstr "요소 {n}: {kind}"
 
-#: tavletta/server/web/ui.js:385
+#: tavletta/server/web/ui.js:381
 msgid "Cancel printing"
 msgstr "인쇄 취소"
 
-#: tavletta/server/web/ui.js:386
+#: tavletta/server/web/ui.js:382
 msgid "Labels already printed stay printed."
 msgstr "이미 인쇄된 라벨은 그대로 남습니다."
 
-#: tavletta/server/web/ui.js:398
+#: tavletta/server/web/ui.js:394
 msgid "{printed} of {total}"
 msgstr "{printed}/{total}"
 
-#: tavletta/server/web/ui.js:407
+#: tavletta/server/web/ui.js:403
 msgid "About {minutes} min left"
 msgstr "약 {minutes}분 남음"
 
-#: tavletta/server/web/ui.js:409
+#: tavletta/server/web/ui.js:405
 msgid "Waiting for the printer…"
 msgstr "프린터를 기다리는 중…"
 
-#: tavletta/server/web/ui.js:437
+#: tavletta/server/web/ui.js:433
 msgid "Stopping after the label being printed…"
 msgstr "인쇄 중인 라벨 다음에 중지하는 중…"
 
-#: tavletta/server/web/ui.js:456
+#: tavletta/server/web/ui.js:452
 msgid "Canceled"
 msgstr "취소됨"
 
-#: tavletta/server/web/ui.js:456
+#: tavletta/server/web/ui.js:452
 msgid "Failed"
 msgstr "실패"
 
-#: tavletta/server/web/ui.js:468
+#: tavletta/server/web/ui.js:464
 msgid "Copied"
 msgstr "복사됨"
 
-#: tavletta/server/web/ui.js:474
+#: tavletta/server/web/ui.js:470
 msgid "Copy"
 msgstr "복사"
 
-#: tavletta/server/web/ui.js:480
+#: tavletta/server/web/ui.js:476
 msgid "{printed} of {total} labels printed."
 msgstr "라벨 {total}장 중 {printed}장 인쇄됨."
 
-#: tavletta/server/web/ui.js:483
+#: tavletta/server/web/ui.js:479
 msgid "Took {seconds} s, finished at {time}."
 msgstr "{seconds}초 걸림, {time}에 완료됨."
 
-#: tavletta/server/web/ui.js:485
+#: tavletta/server/web/ui.js:481
 msgid "Job number"
 msgstr "작업 번호"

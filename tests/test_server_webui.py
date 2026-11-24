@@ -183,3 +183,98 @@ def test_the_icon_is_the_apps():
     root = Path(webui.__file__).parents[2]
     drawing = root / "data" / "icons" / "tavletta-32.svg"
     assert (webui.WEB_DIR / "icon.svg").read_bytes() == drawing.read_bytes()
+
+
+# --- every language of the app ------------------------------------------------------------
+
+
+@pytest.fixture
+def checkout(monkeypatch, tmp_path):
+    """No compiled catalog (an editable install): the po files of po/."""
+    monkeypatch.setattr(webui, "LOCALE_DIR", tmp_path)
+    webui.languages.cache_clear()
+    webui._messages.cache_clear()
+    yield
+    webui.languages.cache_clear()
+    webui._messages.cache_clear()
+
+
+def test_every_catalog_of_the_app_is_offered(checkout):
+    catalogs = sorted(p.stem for p in webui.PO_DIR.glob("*.po"))
+    assert len(catalogs) >= 26 and {"ar", "zh_HK", "zh_TW", "zh_CN", "pt", "pt_BR"} <= set(
+        catalogs
+    )
+    assert webui.languages() == ("en", *catalogs)
+    body = json.loads(webui.messages("de", None).data)
+    assert body["languages"] == ["en", *catalogs]
+
+
+def test_a_checkout_translates_from_its_po_files(checkout):
+    for code in webui.languages()[1:]:
+        body = json.loads(webui.messages(code, None).data)
+        assert body["language"] == code
+        assert body["messages"]["Sign in"] != "Sign in", code
+    assert json.loads(webui.messages("de", None).data)["messages"]["Sign in"] == "Anmelden"
+
+
+def test_arabic_is_written_right_to_left(checkout):
+    assert json.loads(webui.messages("ar", None).data)["dir"] == "rtl"
+    assert json.loads(webui.messages("de", None).data)["dir"] == "ltr"
+    assert json.loads(webui.messages("en", None).data)["dir"] == "ltr"
+
+
+def test_the_language_of_a_region_or_script(checkout):
+    choose = webui.chosen_language
+    assert choose(None, "zh-HK") == "zh_HK"
+    assert choose(None, "zh-TW, en;q=0.5") == "zh_TW"
+    assert choose(None, "zh-Hant") == "zh_TW"
+    assert choose(None, "zh-Hant-HK") == "zh_HK"
+    assert choose(None, "zh-Hans, zh;q=0.8") == "zh_CN"
+    assert choose(None, "zh-MO") == "zh_HK"
+    assert choose(None, "zh-SG") == "zh_CN"
+    assert choose(None, "zh") == "zh_CN"
+    assert choose(None, "pt-BR") == "pt_BR"
+    assert choose(None, "pt-PT") == "pt"
+    assert choose(None, "ar-EG") == "ar"
+    assert choose(None, "de-AT") == "de"
+    assert choose("zh-HK", "de") == "zh_HK"
+    assert choose(None, "en-US, de-CH;q=0.8") == "en"
+
+
+def test_the_po_files_read_as_msgfmt_compiles_them(tmp_path):
+    """Without compiled catalogs the server reads po/<lang>.po itself: the
+    same translations as msgfmt makes of it (fuzzy, empty, context and
+    plural entries left out, escapes undone)."""
+    import gettext
+    import subprocess
+    from shutil import which
+
+    if which("msgfmt") is None:
+        pytest.skip("no msgfmt")
+    for po in sorted(webui.PO_DIR.glob("*.po")):
+        mo = tmp_path / po.stem / "LC_MESSAGES" / "tavletta.mo"
+        mo.parent.mkdir(parents=True)
+        subprocess.run(["msgfmt", "-o", str(mo), str(po)], check=True)
+        compiled = gettext.translation("tavletta", tmp_path, languages=[po.stem])
+        expected = {
+            k: v
+            for k, v in compiled._catalog.items()  # type: ignore[attr-defined]
+            if isinstance(k, str) and k and "\x04" not in k
+        }
+        assert webui.read_po(po) == expected, po.name
+
+
+def test_read_po_leaves_out_what_msgfmt_leaves_out(tmp_path):
+    po = tmp_path / "xx.po"
+    po.write_text(
+        'msgid ""\nmsgstr "Language: xx\\n"\n\n'
+        '#, fuzzy\nmsgid "Fuzzy"\nmsgstr "F"\n\n'
+        'msgid "Empty"\nmsgstr ""\n\n'
+        'msgctxt "month name"\nmsgid "May"\nmsgstr "Mai"\n\n'
+        'msgid "One"\nmsgid_plural "Many"\nmsgstr[0] "Eins"\n\n'
+        '#~ msgid "Old"\n#~ msgstr "Alt"\n\n'
+        'msgid ""\n"Two \\"lines\\"\\n"\n"and a \\\\ tab\\t"\nmsgstr "Zwei\\nZeilen"\n',
+        encoding="utf-8",
+    )
+    assert webui.read_po(po) == {'Two "lines"\nand a \\ tab\t': "Zwei\nZeilen"}
+    assert webui.read_po(tmp_path / "missing.po") == {}

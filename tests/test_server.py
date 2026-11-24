@@ -355,6 +355,7 @@ def test_describe_label(api, server_env):
     assert body["variables"] == ["lot"] and body["builtin_variables"] == ["date"]
     assert body["columns"] == ["Name", "Code"]
     assert body["data_file"] == "items.csv" and not body["data_file_unusable"]
+    assert not body["data_file_missing"]
     assert body["counter"] == {"used": False, "next": 5, "step": 1}
     assert set(body["features"]) == {"serial", "variables"}
 
@@ -372,9 +373,29 @@ def test_describe_label_with_a_data_file_elsewhere(api, server_env, tmp_path, pn
     )
     status, _r, body = call(api.base, "GET", "/api/v1/labels/far")
     assert body["data_file"] is None and body["data_file_unusable"]
+    assert not body["data_file_missing"]
     assert body["elements"] == [{"index": 1, "kind": "image", "file": "logo.png"}]
     status, _r, body = call(api.base, "POST", "/api/v1/preview", body={"label": "far"})
     assert status == 422 and body["error"]["code"] == "data_outside"
+
+
+def test_describe_label_whose_data_file_is_gone(api, server_env):
+    """The web page's card shows sample values then: the rows sent along
+    preview it, the label's own (missing) file is not asked for."""
+    label_file(
+        server_env.labels,
+        "gone.tavletta",
+        TextElement(text="{Name}"),
+        data_file=str(server_env.labels / "gone.csv"),
+    )
+    status, _r, body = call(api.base, "GET", "/api/v1/labels/gone")
+    assert body["data_file"] == "gone.csv" and body["data_file_missing"]
+    assert not body["data_file_unusable"]
+    status, _r, body = call(api.base, "POST", "/api/v1/preview", body={"label": "gone"})
+    assert status == 422 and body["error"]["code"] == "data_problem"
+    request = {"label": "gone", "data_rows": [{"Name": "Name"}], "format": "json"}
+    status, _r, body = call(api.base, "POST", "/api/v1/preview", body=request)
+    assert status == 200 and body["png"] and body["warnings"] == []
 
 
 # --- printers -------------------------------------------------------------------------

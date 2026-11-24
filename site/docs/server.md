@@ -120,7 +120,8 @@ address of the [reverse proxy](server-install.md#proxy)):
 - **Printers**: their state, the labels or tape loaded and problems, in
   words.
 - **Templates**: the label files of the labels folder with a preview.
-  "Print" fills in the fields of one label and shows the preview as it
+  Data fields show the first row of the template's data file, or sample
+  values if it has none or it is missing. "Print" fills in the fields of one label and shows the preview as it
   is typed; the elements a field fills are outlined in it. With an
   `admin` token, templates are uploaded (`.tavletta` files) and deleted
   here.
@@ -128,7 +129,9 @@ address of the [reverse proxy](server-install.md#proxy)):
   1. Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or
      no data at all. Leading zeros stay (`00300`).
   2. Assign: which column fills which field of the template (the same
-     names are assigned already).
+     names are assigned already, case and spaces aside). The preview of
+     the first label beside it outlines the field in use; each field
+     shows its value, each column its first values.
   3. Choose: all rows, some rows (`1-20, 25, 30-`), or by ranges of a
      field. Without data, ranges make the values: Inventory number from
      `3000` to `5685` is 2686 labels, `00300` to `00450` keeps the zeros,
@@ -140,7 +143,8 @@ address of the [reverse proxy](server-install.md#proxy)):
      how many are printed; Cancel stops after the current label. After a
      cancel or a printer problem, "Continue from …" prints the rest.
 - The page speaks the language of the browser, or the one chosen at the
-  top.
+  top: every language of the app, Arabic right to left. Times are on a
+  24-hour clock.
 - `--no-web-ui` turns the page off, for servers that only programs use.
 
 ## Programs (REST API) { #api }

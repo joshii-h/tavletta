@@ -203,3 +203,13 @@ export function rowListText(indexes) {
   if (start !== null) parts.push(start === previous ? `${start + 1}` : `${start + 1}-${previous + 1}`);
   return parts.join(", ");
 }
+
+// Whether whole numbers from first to last leave some out when `count`
+// labels were printed ("70000" to "70004" with 4 labels); false for
+// anything that is not a number
+export function leavesOut(first, last, count) {
+  const digits = /^\d{1,30}$/;
+  if (!digits.test(String(first)) || !digits.test(String(last))) return false;
+  const span = BigInt(last) - BigInt(first);
+  return (span < 0n ? -span : span) + 1n > BigInt(count);
+}

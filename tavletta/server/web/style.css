@@ -101,7 +101,7 @@ main:focus,
 
 .skip {
   position: absolute;
-  left: var(--sp-2);
+  inset-inline-start: var(--sp-2);
   top: -100px;
   padding: var(--sp-2) var(--sp-3);
   background: var(--surface);
@@ -524,6 +524,11 @@ legend {
   border-radius: 8px;
 }
 
+.card-note {
+  margin: var(--sp-2) 0 0;
+  font-size: 0.875rem;
+}
+
 .thumb img {
   max-width: 100%;
   max-height: 10rem;
@@ -623,6 +628,22 @@ legend {
 }
 
 /* --- series ---------------------------------------------------------------------- */
+
+/* the assignment: the field in use marked beside the outline in the preview */
+.assign-field {
+  padding-inline-start: var(--sp-3);
+  border-inline-start: 4px solid transparent;
+}
+
+.assign-field.on {
+  border-inline-start-color: var(--accent);
+}
+
+.sample {
+  margin: var(--sp-1) 0 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
 
 .steps {
   display: flex;
@@ -791,6 +812,10 @@ dialog .actions {
 }
 
 @media (forced-colors: active) {
+  .assign-field.on {
+    border-inline-start-color: Highlight;
+  }
+
   .boxes rect.on,
   .boxes rect:hover {
     stroke: Highlight;

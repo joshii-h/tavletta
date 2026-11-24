@@ -527,6 +527,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |
 | `data_file` | string or null |  |
 | `data_file_unusable` | boolean |  |
+| `data_file_missing` | boolean | data_file is not there (any more): send the rows in data_rows. |
 | `data_sheet` | string or null |  |
 | `counter` | object | used (the label has `{=counter}`), next, step. |
 | `features` | array of string |  |

@@ -9,6 +9,7 @@ import { batchView, forgetBatches } from "./batch.js";
 import { h, icon } from "./dom.js";
 import { chooseLanguage, lang, languageName, languages, loadMessages, mm, num, t } from "./i18n.js";
 import { forgetDrafts, printView } from "./print.js";
+import { withSamples } from "./samples.js";
 import {
   confirm,
   describe,
@@ -17,6 +18,7 @@ import {
   errorBanner,
   errorText,
   field,
+  imageUrl,
   jobProgress,
   jobResult,
   loading,
@@ -68,17 +70,19 @@ function header() {
       header();
       render();
     } },
-    languages.map((code) => h("option", { value: code, selected: code === lang }, languageName(code))),
+    // each name in its own language (and script direction)
+    languages.map((code) => h("option", { value: code, selected: code === lang, lang: code.replace("_", "-") }, languageName(code))),
   );
+  const signedIn = Boolean(session.me?.token_required); // replaceChildren would write out a false
   box.replaceChildren(
     h("label", { for: "language", class: "visually-hidden" }, t("Language")),
     select,
-    session.me &&
-      session.me.token_required &&
-      h("span", { class: "who" }, `${session.me.name} (${roleText(session.me.role)})`),
-    session.me &&
-      session.me.token_required &&
-      h("button", { type: "button", onclick: signOut }, t("Sign out")),
+    ...(signedIn
+      ? [
+          h("span", { class: "who" }, `${session.me.name} (${roleText(session.me.role)})`),
+          h("button", { type: "button", onclick: signOut }, t("Sign out")),
+        ]
+      : []),
   );
   const skip = document.getElementById("skip");
   skip.textContent = t("Skip to content");
@@ -155,7 +159,7 @@ async function render() {
 
 function signIn() {
   document.getElementById("nav").replaceChildren();
-  const input = h("input", { type: "password", autocomplete: "off", spellcheck: "false", autocapitalize: "off", name: "token" });
+  const input = h("input", { type: "password", autocomplete: "off", spellcheck: "false", autocapitalize: "off", name: "token", dir: "ltr" });
   const tokenField = field({
     label: t("Access token"),
     hint: t("The administrator gives it to you. It is kept in this tab only and forgotten when the tab is closed."),
@@ -281,6 +285,10 @@ async function printersView(ctx) {
 
 // --- templates -----------------------------------------------------------------------------
 
+// a template's own data file that cannot give the card's values:
+// unreadable (or gone since it was described), or without rows
+const DATA_PROBLEMS = ["data_problem", "no_rows"];
+
 async function templatesView(ctx) {
   const list = h("ul", { class: "cards", role: "list" });
   const admin = session.may("admin");
@@ -341,16 +349,41 @@ async function templatesView(ctx) {
           h("li", null, t("Fields: {count}", { count: num(fields) })),
           h("li", null, t("Printer model: {model}", { model: label.printer.name })),
         );
-        const blob = await api("POST", "/preview", { label: name }, { binary: true });
+        const shown = await cardPreview(name, label);
         if (!ctx.live()) return;
-        const url = URL.createObjectURL(blob);
+        const url = imageUrl(shown.preview);
         thumbnails.push(url);
-        figure.replaceChildren(h("img", { src: url, alt: t("Preview of {name}", { name: title }) }));
+        const alt = shown.sample ? t("Preview of {name} with sample values", { name: title }) : t("Preview of {name}", { name: title });
+        figure.replaceChildren(h("img", { src: url, alt }));
+        if (shown.note) figure.after(h("p", { class: "hint card-note" }, icon("info"), " ", shown.note, " ", t("The preview shows sample values; a series can read another data file.")));
       } catch (error) {
         if (ctx.live()) figure.replaceChildren(h("p", { class: "hint" }, icon("warn"), " ", errorText(error)));
       }
     }
     return { node, fill };
+  }
+
+  // The preview of a card: with the first row of the template's own data
+  // file, else with sample values for its data fields (never "{Name}"); a
+  // data file that is missing or cannot be read is a note, not an error.
+  // {preview, sample, note}
+  async function cardPreview(name, label) {
+    const render = (row) => api("POST", "/preview", { label: name, format: "json", ...(row ? { data_rows: [row] } : {}) });
+    if (!label.columns.length) return { preview: await render(null), sample: false };
+    let note = null;
+    if (label.data_file_missing) {
+      note = t("The data file {name} is missing.", { name: label.data_file });
+    } else if (label.data_file) {
+      try {
+        return { preview: await render(null), sample: false };
+      } catch (error) {
+        if (!DATA_PROBLEMS.includes(error.code)) throw error;
+        note = errorText(error);
+      }
+    } else if (label.data_file_unusable) {
+      note = t("The template's data file is not in the labels folder.");
+    }
+    return { preview: await withSamples(render, label), sample: true, note };
   }
 
   async function remove(name) {

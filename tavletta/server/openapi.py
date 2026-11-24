@@ -384,6 +384,10 @@ SCHEMAS: dict[str, Any] = {
             },
             "data_file": {"type": ["string", "null"]},
             "data_file_unusable": {"type": "boolean"},
+            "data_file_missing": {
+                "type": "boolean",
+                "description": "data_file is not there (any more): send the rows in data_rows.",
+            },
             "data_sheet": {"type": ["string", "null"]},
             "counter": {
                 "type": "object",

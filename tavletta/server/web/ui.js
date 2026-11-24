@@ -135,14 +135,16 @@ export function notice(kind, ...content) {
 
 // A labelled input with an optional hint; field.error(text) shows an error
 // under the label, before the input (GOV.UK), field.clear() removes it.
-export function field({ label, hint, input, optional = false }) {
+// `after`: a node after the input that describes it too (it gets an id).
+export function field({ label, hint, input, optional = false, after = null }) {
   const id = input.id || uid("f");
   input.id = id;
   const hintId = hint ? `${id}-hint` : null;
   const errorId = `${id}-error`;
+  if (after) after.id ||= `${id}-after`;
   const error = h("p", { id: errorId, class: "field-error", hidden: true });
-  const described = () => [hintId, error.hidden ? null : errorId].filter(Boolean).join(" ");
-  if (hintId) input.setAttribute("aria-describedby", hintId);
+  const described = () => [hintId, error.hidden ? null : errorId, after?.id].filter(Boolean).join(" ");
+  if (described()) input.setAttribute("aria-describedby", described());
   const wrap = h(
     "div",
     { class: "field" },
@@ -150,6 +152,7 @@ export function field({ label, hint, input, optional = false }) {
     hint && h("p", { id: hintId, class: "hint" }, hint),
     error,
     input,
+    after,
   );
   return {
     node: wrap,
@@ -271,17 +274,11 @@ export function warningsBox(warnings) {
 
 // --- the preview with the elements' boxes ------------------------------------------------
 
-// The fields of a label and the elements each fills: a column {Name}, a
-// variable {=name}, or the element's name.
-export function elementsOf(label, kind, name) {
-  return label.elements
-    .filter((e) => {
-      const content = `${e.text ?? ""}${e.data ?? ""}`;
-      if (kind === "column") return content.includes(`{${name}}`) || content.includes(`{${name}:`);
-      if (kind === "variable") return new RegExp(`\\{=${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[}:]`).test(content);
-      return e.name === name;
-    })
-    .map((e) => e.index - 1); // the API counts from 1, the geometry from 0
+// A preview of POST /preview as JSON: its image as an address for <img>,
+// let go with URL.revokeObjectURL.
+export function imageUrl(preview) {
+  const bytes = Uint8Array.from(atob(preview.png), (c) => c.charCodeAt(0));
+  return URL.createObjectURL(new Blob([bytes], { type: "image/png" }));
 }
 
 // A preview image with an outline over each element; hovering or focusing
@@ -305,8 +302,7 @@ export function previewPane(label, caption) {
 
   function show(preview, alt) {
     if (url) URL.revokeObjectURL(url);
-    const bytes = Uint8Array.from(atob(preview.png), (c) => c.charCodeAt(0));
-    url = URL.createObjectURL(new Blob([bytes], { type: "image/png" }));
+    url = imageUrl(preview);
     const img = h("img", { src: url, alt, width: preview.width, height: preview.height });
     const stack = h("div", { class: "stack" }, img);
     frame.replaceChildren(stack);
@@ -456,7 +452,7 @@ export function jobResult(job, extra = []) {
   const kinds = { done: ["ok", t("Printed")], canceled: ["warn", t("Canceled")], failed: ["error", t("Failed")] };
   const [kind, title] = kinds[job.state] ?? ["info", job.state];
   const seconds = job.started && job.finished ? (new Date(job.finished) - new Date(job.started)) / 1000 : null;
-  const idInput = h("input", { type: "text", readonly: true, value: job.id, class: "job-id", id: uid("job") });
+  const idInput = h("input", { type: "text", readonly: true, value: job.id, class: "job-id", id: uid("job"), dir: "ltr" });
   const copy = h(
     "button",
     {
