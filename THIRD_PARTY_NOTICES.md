@@ -87,8 +87,10 @@ Google's Material Icons (Apache-2.0). Notice and license text:
 
 libzint 2.15.0 (<https://zint.org.uk>), Copyright (C) 2009-2025 Robin
 Stuart and contributors, BSD-3-Clause, encodes most code types, and QR
-codes with a chosen error correction. It comes
-inside zint-bindings; its license text is in
+codes with a chosen error correction. The Flatpak builds it from the copy
+in zint-bindings' source distribution and links it into the binding, as
+zint-bindings' own wheels do; the Debian and Fedora packages of
+zint-bindings use the distribution's libzint instead. Its license text is in
 [`build-aux/flatpak/LICENSE.zint`](build-aux/flatpak/LICENSE.zint) (in the
 source distribution too), and the Flatpak installs it as
 `share/licenses/xyz.joshuahirsig.Tavletta/python3-zint-bindings/LICENSE.zint`.
@@ -97,7 +99,7 @@ source distribution too), and the Flatpak installs it as
 
 The Python bindings for libzint (<https://github.com/bindreams/zint-bindings>),
 Copyright 2024-2025 Anna Zhukova, Apache License 2.0; a dependency, the
-Flatpak bundles its wheel.
+Flatpak builds it from its source distribution.
 
 ### segno (BSD-3-Clause)
 

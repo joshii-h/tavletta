@@ -1,0 +1,21 @@
+# Label printers on USB for the user at the computer (an active local
+# session, as for sound or a webcam), without joining the group lp or
+# dialout. Installed by the Debian and RPM packages; by hand: copy to
+# /etc/udev/rules.d/, then `sudo udevadm trigger` (or plug the printer in
+# again). Before 73-seat-late.rules, which turns the tag into access.
+#
+# Only the makers Tavletta recognises on USB by name (the backends' makers
+# and manufacturer checks): printers of other makers that Tavletta drives by
+# their command set (ESC/POS, EPL, TSPL) still need the group lp.
+
+# USB printers on the kernel's printer class driver (usblp), /dev/usb/lp*:
+# Brother (P-touch, QL, VC-500W), cab, DYMO, TSC, Zebra
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="04f9", TAG+="uaccess"
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="0985", TAG+="uaccess"
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="0922", TAG+="uaccess"
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="1203", TAG+="uaccess"
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="0a5f", TAG+="uaccess"
+
+# NIIMBOT printers: a USB serial port (CDC ACM) of vendor 3513, no other
+# serial device (tavletta/backends/niimbot.py, VENDOR_IDS)
+SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", ATTRS{idVendor}=="3513", TAG+="uaccess"

@@ -1,0 +1,91 @@
+Source: tavletta
+Section: graphics
+Priority: optional
+Maintainer: Joshua Hirsig <tavletta@joshuahirsig.xyz>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-sequence-python3,
+ gettext,
+ pybuild-plugin-pyproject,
+ python3-all,
+ python3-setuptools (>= 77),
+# what the package needs at run time, for dh_python3 and the tests
+ python3-barcode (>= 0.15),
+ python3-labelprinter,
+ python3-pil,
+ python3-segno (>= 1.6),
+ python3-zint-bindings (>= 1.2.2),
+# the tests
+ appstream <!nocheck>,
+ desktop-file-utils <!nocheck>,
+ fonts-dejavu-core <!nocheck>,
+ gir1.2-adw-1 <!nocheck>,
+ gir1.2-gtk-4.0 <!nocheck>,
+ gir1.2-pangocairo-1.0 <!nocheck>,
+ gir1.2-poppler-0.18 <!nocheck>,
+ gir1.2-rsvg-2.0 <!nocheck>,
+ python3-gi <!nocheck>,
+ python3-gi-cairo <!nocheck>,
+ python3-hypothesis <!nocheck>,
+ python3-pytest <!nocheck>,
+ python3-pytest-xdist <!nocheck>,
+ python3-yaml <!nocheck>,
+ python3-zxing-cpp <!nocheck>,
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://tavletta.joshuahirsig.xyz/
+Vcs-Browser: https://git.joshuahirsig.xyz/joshii/tavletta
+Vcs-Git: https://git.joshuahirsig.xyz/joshii/tavletta.git
+X-Python3-Version: >= 3.11
+
+Package: tavletta
+Architecture: all
+Depends:
+ gir1.2-adw-1,
+ gir1.2-gtk-4.0,
+ gir1.2-pangocairo-1.0,
+ python3-gi,
+ python3-gi-cairo,
+ ${misc:Depends},
+ ${python3:Depends},
+Recommends:
+ avahi-daemon,
+ gir1.2-poppler-0.18,
+Suggests:
+ libnss-mdns,
+ tavletta-server,
+Description: design and print labels on label printers
+ Tavletta designs labels with text, images, symbols and codes, shows them
+ exactly as they will be printed and prints them over the network or USB:
+ on label printers with endless tape or die-cut labels, and on office
+ printers, one label per page or on label sheets. It talks to each printer
+ in its own language.
+ .
+ Supported printers include the Brother VC-500W, Brother QL and P-touch,
+ cab EOS, SQUIX and MACH, NIIMBOT, printers with ZPL, EPL2, TSPL, ESC/POS
+ or DYMO LabelWriter, and any printer the system knows through CUPS or IPP.
+ .
+ Features: QR, Data Matrix, PDF417, Aztec, EAN, UPC and GS1 codes; over
+ 7000 symbols; label sheets such as Avery or Zweckform; serial labels from
+ CSV, ODS or XLSX files; shipping labels from a carrier's PDF; a command
+ line that prints without a window, and a print server with a REST API
+ and MCP.
+ .
+ The print server as a system service is in tavletta-server.
+
+Package: tavletta-server
+Architecture: all
+Depends:
+ systemd | systemd-standalone-tmpfiles,
+ tavletta (= ${binary:Version}),
+ ${misc:Depends},
+Description: print server of the Tavletta label designer, as a system service
+ Tavletta designs and prints labels on label printers (Brother, cab, Zebra,
+ DYMO, NIIMBOT and printers with ZPL, EPL2, TSPL or ESC/POS) and office
+ printers.
+ .
+ This package runs its print server, with a REST API and MCP, as the
+ system service tavletta-server: as the user tavletta (made by the
+ package), sandboxed, on 127.0.0.1:8790, with its printers and access
+ tokens in /etc/tavletta and the labels in /var/lib/tavletta/labels. It is
+ installed but neither enabled nor started.

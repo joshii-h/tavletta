@@ -1,0 +1,20 @@
+# rpmlint filters for the packages build.sh builds: findings checked and
+# accepted, each with its reason.
+
+# GTK 4 and libadwaita are needed as GObject introspection typelibs, which
+# Fedora's packages do not provide as typelib(...) symbols: the library
+# packages are the only thing to require
+addFilter(r"tavletta\.noarch: E: explicit-lib-dependency libadwaita")
+# PyGObject has no python3dist(pygobject) provide in Fedora
+addFilter(r"tavletta\.noarch: W: python-leftover-require python3-gobject")
+# the writers' font is the system's (Requires: dejavu-sans-mono-fonts),
+# which rpmlint does not see when it checks the package alone
+addFilter(r"python3-barcode\.noarch: W: dangling-relative-symlink .*/barcode/fonts/DejaVuSansMono\.ttf")
+# the print server's folders belong to its user (sysusers.d), closed to
+# others: /etc/tavletta holds the access tokens, /var/lib/tavletta the labels
+# (site/docs/server-install.md); rpm creates the user before it installs them
+addFilter(r"tavletta-server\.noarch: W: non-standard-[ug]id /(etc|var/lib)/tavletta(/labels)? tavletta")
+addFilter(r"tavletta-server\.noarch: E: non-standard-dir-perm /(etc|var/lib)/tavletta(/labels)? 750")
+# the server's package has no documentation of its own: it needs tavletta,
+# whose package has it (README, man page, examples)
+addFilter(r"tavletta-server\.noarch: W: no-documentation")

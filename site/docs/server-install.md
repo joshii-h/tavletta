@@ -25,6 +25,7 @@ through it over the network. What the server does and how programs use it:
 - Either Docker Engine with the Compose plugin (option A, recommended),
   or Python 3.11 or newer with PyGObject, Pango and Cairo from the
   distribution (option B).
+- Or Debian 13 or Fedora 44 on x86-64, for their packages (option C).
 - Resources: 1 CPU core, 1 GB RAM reserved (the server usually uses
   50–150 MB; a large label is limited to 40 megapixels), 500 MB of disk
   for the image or the installation, plus the labels.
@@ -350,6 +351,51 @@ sudo systemctl restart tavletta-server
 ```
 
 Back up `/etc/tavletta`, `/var/lib/tavletta/labels` and your fonts.
+
+## Option C: Debian or Fedora package { #package }
+
+Each release has packages for Debian 13 (trixie) and Fedora 44 on x86-64:
+Tavletta, the Python packages it needs that the distribution does not
+have, and `tavletta-server`, the service of option B, installed but not
+enabled, with the user `tavletta` and its folders. Installing them needs
+only the distribution's package sources, no PyPI or GitHub.
+
+### 1. Install { #package-install }
+
+From the [latest release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/latest),
+download into an empty folder the `.deb` files and `SHA256SUMS-deb`
+(Debian), or the `.noarch.rpm` and `.x86_64.rpm` files and `SHA256SUMS-rpm`
+(Fedora). Check and install them:
+
+```sh
+sha256sum --ignore-missing -c SHA256SUMS-deb && sudo apt install ./*.deb   # Debian
+sha256sum --ignore-missing -c SHA256SUMS-rpm && sudo dnf install ./*.noarch.rpm ./*.x86_64.rpm   # Fedora
+/usr/bin/tavletta --version
+```
+
+### 2. Configure and start { #package-start }
+
+The package `tavletta-server` has made `/etc/tavletta` and
+`/var/lib/tavletta/labels`, owned by `tavletta`, with the paths of
+[option B](#native-user). Put `printers.toml` there ([as above](#printers)),
+make the tokens as the service user, then start the service:
+
+```sh
+sudo install -o tavletta -g tavletta -m 600 printers.toml /etc/tavletta/
+sudo -u tavletta /usr/bin/tavletta token new inventory-tool --role print \
+    --printer it-cab --tokens /etc/tavletta/tokens.toml --printers /etc/tavletta/printers.toml
+sudo systemctl enable --now tavletta-server
+curl http://127.0.0.1:8790/api/v1/health
+```
+
+Reload, restart and logs work as in [option B](#native-service). The
+service prints to network printers; it has no access to devices.
+
+### Updating { #package-update }
+
+Install the packages of the new release the same way; a running service
+is restarted with the new version. Back up `/etc/tavletta` and
+`/var/lib/tavletta/labels`.
 
 ## Reverse proxy and HTTPS { #proxy }
 

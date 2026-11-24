@@ -1,0 +1,31 @@
+Source: python-labelprinter
+Section: python
+Priority: optional
+Maintainer: Joshua Hirsig <tavletta@joshuahirsig.xyz>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-sequence-python3,
+ pybuild-plugin-pyproject,
+ python3-all,
+ python3-pil <!nocheck>,
+ python3-pytest <!nocheck>,
+ python3-setuptools,
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/joshii-h/labelprinter-vc500w
+Vcs-Browser: https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/packaging/debian-deps/python-labelprinter
+Vcs-Git: https://git.joshuahirsig.xyz/joshii/tavletta.git
+Testsuite: autopkgtest-pkg-pybuild
+
+Package: python3-labelprinter
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+Description: Python library for the Brother VC-500W label printer
+ labelprinter speaks the network protocol of the Brother VC-500W (also sold
+ as ColAura) colour label printer: it reads the printer's configuration and
+ status (loaded tape, tape remaining) and sends print jobs.
+ .
+ This package contains the library only; Tavletta uses it to print on the
+ VC-500W. It is built from a fork with fixes not yet merged upstream.

@@ -12,7 +12,7 @@ from tavletta import render as render_module
 from tavletta.model import BARCODES, SYMBOLOGIES, CodeElement, Label, LabelError
 from tavletta.render import RenderWarning, mm_to_px, render
 
-# symbology: (content, what a scanner reads)
+# symbology: (content, what a scanner reads; a tuple: any of these forms of it)
 SAMPLES = {
     "qr": ("https://example.org", "https://example.org"),
     "code128": ("ABC-123", "ABC-123"),
@@ -20,8 +20,11 @@ SAMPLES = {
     "code39": ("ABC-123 $/+%", "ABC-123 $/+%"),
     "code93": ("Abc-123!", "Abc-123!"),
     "ean8": ("9638507", "96385074"),
-    "upca": ("036000291452", "0036000291452"),  # read as the EAN-13 it is part of
-    "upce": ("0123456", "0012345000065"),  # read as the UPC-A it stands for
+    # zxing-cpp 3 reads UPC-A as the EAN-13 it is part of and UPC-E as that
+    # of the UPC-A it stands for; 2.x (Debian 13: 2.3, Fedora 44: 2.2) as
+    # the 12 and 8 digits printed under them. The same number either way.
+    "upca": ("036000291452", ("0036000291452", "036000291452")),
+    "upce": ("0123456", ("0012345000065", "01234565")),
     "itf14": ("1540014128876", "15400141288763"),
     "gs1_128": ("(01)09501101530003(17)260101(10)AB12", "(01)09501101530003(17)260101(10)AB12"),
     "datamatrix": ("Grüße aus Zürich 123", "Grüße aus Zürich 123"),
@@ -52,7 +55,8 @@ def test_codes_decode(symbology, dpi):
     data, expected = SAMPLES[symbology]
     part = render_module.render_code(CodeElement(data, symbology=symbology), mm_to_px(15, dpi))
     found = zxingcpp.read_barcodes(_page(part))
-    assert [result.text for result in found] == [expected]
+    forms = expected if isinstance(expected, tuple) else (expected,)
+    assert len(found) == 1 and found[0].text in forms, [result.text for result in found]
     if symbology in GS1_IDS:
         assert found[0].symbology_identifier == GS1_IDS[symbology]
 

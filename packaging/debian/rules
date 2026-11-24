@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME = tavletta
+# the program into the package tavletta (also with tavletta-server built)
+export PYBUILD_DESTDIR_python3 = debian/tavletta
+# The tests read the checkout (docs/examples, data/, po/): run them in the
+# source tree. Without a display: the tests marked gui need a GTK window.
+export PYBUILD_TEST_CUSTOM = 1
+export PYBUILD_TEST_ARGS = cd {dir} && FONTCONFIG_FILE={dir}/tests/fonts.conf {interpreter} -m pytest -q -p no:cacheprovider -n auto -m "not gui"
+
+%:
+	dh $@ --buildsystem=pybuild
+
+execute_after_dh_auto_install:
+	# licence texts: in debian/copyright; the notices, credits and the
+	# data licences (LICENSE.glabels, LICENSE.mdi) in /usr/share/doc/tavletta
+	rm -rf debian/tavletta/usr/lib/python3*/dist-packages/tavletta-*.dist-info/licenses
+	rm -f debian/tavletta/usr/lib/python3*/dist-packages/tavletta/sheets/LICENSE.glabels \
+	      debian/tavletta/usr/lib/python3*/dist-packages/tavletta/symbols/LICENSE.mdi
+	# the print server as a system service, its user and folders, in
+	# tavletta-server (picked up by dh_installsystemd, dh_installsysusers and
+	# dh_installtmpfiles); the program is the package's, not the one of a
+	# manual installation
+	install -D -m 0644 packaging/systemd/tavletta-server.service \
+	    debian/tavletta-server/usr/lib/systemd/system/tavletta-server.service
+	sed -i 's|^ExecStart=/opt/tavletta/bin/tavletta |ExecStart=/usr/bin/tavletta |' \
+	    debian/tavletta-server/usr/lib/systemd/system/tavletta-server.service
+	grep -q '^ExecStart=/usr/bin/tavletta serve ' \
+	    debian/tavletta-server/usr/lib/systemd/system/tavletta-server.service
+	install -D -m 0644 packaging/systemd/tavletta.sysusers.conf \
+	    debian/tavletta-server/usr/lib/sysusers.d/tavletta.conf
+	install -D -m 0644 packaging/systemd/tavletta.tmpfiles.conf \
+	    debian/tavletta-server/usr/lib/tmpfiles.d/tavletta.conf
+	# label printers on USB for the user at the computer, in tavletta
+	# (tavletta.README.Debian)
+	install -D -m 0644 packaging/udev/70-tavletta.rules \
+	    debian/tavletta/usr/lib/udev/rules.d/70-tavletta.rules
+
+# the user before the folders (dh_installtmpfiles): dh_installsysusers is in
+# dh's sequence only from compat 14 on
+execute_before_dh_installtmpfiles:
+	dh_installsysusers
+
+override_dh_installsystemd:
+	# installed, not enabled nor started: it needs printers.toml and tokens.toml.
+	# An upgrade does not stop it first (preinst), and restarts it if it runs:
+	# tavletta-server.postinst
+	dh_installsystemd -ptavletta-server --no-enable --no-start --no-stop-on-upgrade
+
+override_dh_compress:
+	# the example labels stay as they are, to open and print
+	dh_compress -Xexamples/

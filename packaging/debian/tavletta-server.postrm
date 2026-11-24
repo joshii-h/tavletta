@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+# Purge: the configuration the package's folders hold (printers.toml,
+# tokens.toml) and the service's cache go; /var/lib/tavletta only when no
+# label files are left in it, which are the administrator's data. The user
+# tavletta stays (tavletta-server.README.Debian).
+if [ "$1" = "purge" ]; then
+	rm -rf /etc/tavletta /var/cache/tavletta
+	rmdir /var/lib/tavletta/labels /var/lib/tavletta 2> /dev/null || true
+fi
+
+exit 0

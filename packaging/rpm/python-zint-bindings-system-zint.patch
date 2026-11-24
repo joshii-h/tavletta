@@ -1,0 +1,147 @@
+Build against the system's libzint (zint-devel) instead of the copy in
+external/zint; no vcpkg checkout and no pip install at configure time
+(network), so no type stub generation (pybind11-stubgen is not in Fedora);
+no -Werror; the build-system pins relaxed to what Fedora ships
+(scikit-build-core 0.11, pybind11 3.0.x, CMake 4).
+generate-enums.py takes the header to read as its argument.
+Not sent upstream yet (bindreams/zint-bindings).
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 88efbec..f25a233 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,5 @@
+ cmake_minimum_required(VERSION 3.28...4.1)
+ 
+-include(scripts/cmake/bundled-vcpkg.cmake)
+ if(SKBUILD)
+ 	set(PROJECT_VERSION "${SKBUILD_PROJECT_VERSION}")
+ else()
+@@ -28,15 +27,9 @@ endif()
+ find_package(pybind11 CONFIG REQUIRED)
+ find_package(fmt CONFIG REQUIRED)
+ 
+-set(ZINT_USE_QT OFF CACHE BOOL "")
+-set(ZINT_SHARED OFF CACHE BOOL "")
+-set(ZINT_STATIC ON CACHE BOOL "")
+-set(ZINT_FRONTEND OFF CACHE BOOL "")
+-add_subdirectory(external/zint)
+-set_target_properties(zint-static PROPERTIES
+-	POSITION_INDEPENDENT_CODE ON
+-	MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+-)
++# the system's libzint instead of the copy in external/zint
++find_path(ZINT_INCLUDE_DIR zint.h REQUIRED)
++find_library(ZINT_LIBRARY zint REQUIRED)
+ 
+ set(extension "zint_bindings")
+ pybind11_add_module(${extension} MODULE src/main.cpp)
+@@ -47,13 +40,14 @@ set_target_properties(${extension} PROPERTIES
+ 	MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+ )
+ 
+-target_link_libraries(${extension} PRIVATE zint-static fmt::fmt)
++target_include_directories(${extension} PRIVATE ${ZINT_INCLUDE_DIR})
++target_link_libraries(${extension} PRIVATE ${ZINT_LIBRARY} fmt::fmt)
+ target_compile_features(${extension} PRIVATE cxx_std_20)
+ target_compile_definitions(${extension} PRIVATE BINDINGS_VERSION=${PROJECT_VERSION})
+ 
+ include(scripts/cmake/warnings.cmake)
+ target_compile_warnings(${extension} PRIVATE
+-	GNU all extra pedantic error
++	GNU all extra pedantic
+ 	MSVC 4 X
+ )
+ 
+@@ -62,7 +56,7 @@ install(TARGETS ${extension} LIBRARY DESTINATION . COMPONENT ${extension})
+ # generate-enums.py ----------------------------------------------------------------------------------------------------
+ find_package(Python3 COMPONENTS Interpreter REQUIRED)
+ add_custom_target(_generate_enums
+-	COMMAND "${Python3_EXECUTABLE}" scripts/generate-enums.py
++	COMMAND "${Python3_EXECUTABLE}" scripts/generate-enums.py "${ZINT_INCLUDE_DIR}/zint.h"
+ 	DEPENDS "scripts/generate-enums.py"
+ 	BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/src/generated/enums.inc"
+ 	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+@@ -70,39 +64,3 @@ add_custom_target(_generate_enums
+ 	VERBATIM
+ )
+ add_dependencies(${extension} _generate_enums)
+-
+-
+-# scripts/generate-stub.py ---------------------------------------------------------------------------------------------
+-execute_process(
+-	# Install dependencies at configure time
+-	COMMAND "${Python3_EXECUTABLE}" -m pip install -r "${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate-stub.requirements.txt"
+-	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+-	COMMAND_ERROR_IS_FATAL ANY
+-)
+-add_custom_command(TARGET ${extension} POST_BUILD
+-	COMMAND "${CMAKE_COMMAND}" -E make_directory "zint-stubs"
+-	COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate-stub.py"
+-		$<TARGET_FILE:${extension}>
+-		--format-config "${CMAKE_CURRENT_SOURCE_DIR}"
+-		--output "zint-stubs/__init__.pyi"
+-	BYPRODUCTS "${CMAKE_CURRENT_BUILD_DIR}/zint-stubs"
+-	WORKING_DIRECTORY "${CMAKE_CURRENT_BUILD_DIR}"
+-	COMMENT "Generating stub file"
+-	VERBATIM
+-)
+-
+-if(Python3_VERSION_MINOR STREQUAL 13)  # Update this when Python 3.14 is released
+-	# Copy stubs into the source directory so they are visible in source control and PRs
+-	add_custom_command(TARGET ${extension} POST_BUILD
+-		COMMAND "${CMAKE_COMMAND}" -E copy
+-			"${CMAKE_CURRENT_BINARY_DIR}/zint-stubs/__init__.pyi"
+-			"src/generated/stubs.pyi"
+-		BYPRODUCTS "src/generated/stubs.pyi"
+-		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+-		COMMENT "Updating reference stub file"
+-		VERBATIM
+-	)
+-endif()
+-
+-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/zint-stubs" DESTINATION . COMPONENT ${extension})
+-# ----------------------------------------------------------------------------------------------------------------------
+diff --git a/pyproject.toml b/pyproject.toml
+index 1f67d85..b3e20a9 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -63,13 +63,8 @@ dist = [
+ 
+ [build-system]
+ requires = [
+-    "scikit-build-core >= 0.11.6",
+-    "pybind11 == 3.0.1",
+-    "pip >= 24",  # For installing script dependencies
+-    # Requirements from src/zint/scripts/generate-stub.requirements.txt
+-    "pybind11-stubgen == 2.5.5",
+-    "typing-extensions >= 4.6",
+-    "yapf",
++    "scikit-build-core >= 0.11",
++    "pybind11 >= 3.0",
+ ]
+ build-backend = "scikit_build_core.build"
+ 
+@@ -78,7 +73,7 @@ cmake.args = ["-GNinja"]
+ build.targets = ["zint_bindings"]
+ install.components = ["zint_bindings"]
+ 
+-cmake.version = ">=3.28,<4"
++cmake.version = ">=3.28"
+ ninja.version = ">=1.11"
+ ninja.make-fallback = false
+ 
+diff --git a/scripts/generate-enums.py b/scripts/generate-enums.py
+index b445061..bb9049b 100644
+--- a/scripts/generate-enums.py
++++ b/scripts/generate-enums.py
+@@ -107,7 +107,8 @@ def write_enum_macro(fd, enum: EnumInfo):
+ 
+ 
+ def main():
+-    with open("external/zint/backend/zint.h", "r", encoding="utf-8") as f:
++    header = sys.argv[1] if len(sys.argv) > 1 else "external/zint/backend/zint.h"
++    with open(header, "r", encoding="utf-8") as f:
+         source = f.read()
+ 
+     enums = [

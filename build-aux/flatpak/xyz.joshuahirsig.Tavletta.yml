@@ -8,9 +8,13 @@ finish-args:
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
-  # GPU, and printers on USB (/dev/usb/lp*, the kernel's printer class
-  # driver; --device=usb only covers raw libusb access), also those on a
-  # USB serial port (/dev/ttyACM*, NIIMBOT; serial ports have no portal)
+  # Printers on USB are device files of the kernel's drivers, which Tavletta
+  # opens directly: /dev/usb/lp* (printer class driver usblp: Brother, cab,
+  # Zebra, DYMO and other label printers) and /dev/ttyACM* (USB serial port:
+  # NIIMBOT). Only --device=all exposes them: --device=usb is /dev/bus/usb
+  # alone (raw libusb access, which the kernel driver holds), --device=dri
+  # the GPU alone, and neither printer files nor serial ports have a
+  # portal. It also gives the GPU, which GTK 4 renders with.
   - --device=all
   # printers on the network: TCP 9100, IPP to the printer or to CUPS on
   # localhost:631 (no --socket=cups: Tavletta has no client for CUPS's Unix
@@ -38,7 +42,10 @@ build-options:
 # so each licence is there once; THIRD_PARTY_NOTICES.md (tavletta/) says
 # what each component is.
 modules:
-  # build-only: Pillow's setup.py imports pybind11.setup_helpers
+  # build-only: Pillow's setup.py imports pybind11.setup_helpers, and
+  # zint-bindings' CMake build finds pybind11's CMake files in it. The
+  # wheel (headers and pure Python): its sdist builds with scikit-build-core
+  # and CMake, for files the wheel has as they are
   - name: python3-pybind11
     buildsystem: simple
     build-commands:
@@ -68,26 +75,44 @@ modules:
           type: pypi
           name: pillow
 
-  # pure Python
+  # build-only: segno's build backend; builds itself (backend-path), segno
+  # needs a 3.x
+  - name: python3-flit-core
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps --no-index
+        .
+    cleanup:
+      - '*'
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/69/59/b6fc2188dfc7ea4f936cd12b49d707f66a1cb7a1d2c16172963534db741b/flit_core-3.12.0.tar.gz
+        sha256: 18f63100d6f94385c6ed57a72073443e1a71a4acb4339491615d0f16d6ff01b2
+        x-checker-data:
+          type: pypi
+          name: flit-core
+          versions:
+            <: '4'
+
+  # pure Python, from its sdist (LICENSE at the top: flatpak-builder copies it)
   - name: python3-segno
     buildsystem: simple
     build-commands:
       - pip3 install --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps --no-index
-        segno-*.whl
-      - install -Dm644 -t ${FLATPAK_DEST}/share/licenses/${FLATPAK_ID}/python3-segno ${FLATPAK_DEST}/lib/python3*/site-packages/segno-*.dist-info/licenses/LICENSE
+        .
     cleanup:
       - /bin/segno
       - /share/man/man1/segno.1
     sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/d6/02/12c73fd423eb9577b97fc1924966b929eff7074ae6b2e15dd3d30cb9e4ae/segno-1.6.6-py3-none-any.whl
-        sha256: 28c7d081ed0cf935e0411293a465efd4d500704072cdb039778a2ab8736190c7
+      - type: archive
+        url: https://files.pythonhosted.org/packages/1c/2e/b396f750c53f570055bf5a9fc1ace09bed2dff013c73b7afec5702a581ba/segno-1.6.6.tar.gz
+        sha256: e60933afc4b52137d323a4434c8340e0ce1e58cec71439e46680d4db188f11b3
         x-checker-data:
           type: pypi
           name: segno
-          packagetype: bdist_wheel
 
-  # pure Python
+  # pure Python; the wheel, as its sdist's build needs setuptools-scm, which
+  # the SDK does not have
   - name: python3-python-barcode
     buildsystem: simple
     build-commands:
@@ -113,37 +138,33 @@ modules:
 
   # all symbologies but Code 128 and EAN-13, and QR codes only with a chosen
   # error correction (without one: segno): libzint 2.15.0 (BSD-3-Clause)
-  # in its Python binding (Apache-2.0). One extension module, no other
-  # dependencies; the wheel's Python tag must match the runtime's Python
-  # (GNOME 51: 3.14). Zint's BSD notice goes along with the binary.
+  # in its Python binding (Apache-2.0), built from the sdist (Flathub builds
+  # everything from source). Plain CMake instead of its build backend
+  # (scikit-build-core pins cmake<4 and downloads vcpkg and stub tools): the
+  # patch removes those network steps. Zint itself comes along in the sdist
+  # (external/zint) and is linked statically, as upstream does; fmt and
+  # pybind11 (python3-pybind11 above) as well as zlib and libpng are the
+  # SDK's. The binding's own LICENSE.md flatpak-builder copies itself, Zint's
+  # BSD notice is LICENSE.zint (the sdist has it under external/zint only).
   - name: python3-zint-bindings
     buildsystem: simple
     build-commands:
-      - pip3 install --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps --no-index
-        zint_bindings-*.whl
-      # (LICENSE.zint, a source of this module, flatpak-builder copies itself)
-      - install -Dm644 -t ${FLATPAK_DEST}/share/licenses/${FLATPAK_ID}/python3-zint-bindings ${FLATPAK_DEST}/lib/python3*/site-packages/zint_bindings-*.dist-info/licenses/LICENSE.md
+      - cmake -S . -B _build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSKBUILD=ON -DSKBUILD_PROJECT_VERSION="$(sed -n 's/^Version:[[:space:]]*//p' PKG-INFO)"
+        -Dpybind11_DIR="$(python3 -c 'import pybind11; print(pybind11.get_cmake_dir())')"
+        -DPython_EXECUTABLE=/usr/bin/python3 -DPython3_EXECUTABLE=/usr/bin/python3
+      - cmake --build _build --target zint_bindings
+      # into site-packages under /app, where pip puts the other modules
+      - cmake --install _build --component zint_bindings --prefix "$(python3 -c 'import sysconfig;
+        print(sysconfig.get_path("platlib", vars=dict(platbase="/app")))')"
     sources:
-      - type: file
-        only-arches: [x86_64]
-        url: https://files.pythonhosted.org/packages/24/83/e46b9270e30645f2de42d8d144c55010572f6e2823306bfcf889698f70f8/zint_bindings-1.2.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
-        sha256: eca28846dfac9222a0da8c8c1e1119575ac1080ad8921f61f519d5b85f1be38c
+      - type: archive
+        url: https://files.pythonhosted.org/packages/3f/cc/7dc669e7f10d013342196d7c6e40440bb4af73a20f7dcef94bed25e5efe4/zint_bindings-1.2.2.tar.gz
+        sha256: e28287040c34831b5919c6587bd3eb46d100571a187963d027afc62e3301998b
         x-checker-data:
-          type: json
-          url: https://pypi.org/pypi/zint-bindings/json
-          version-query: .info.version
-          url-query: '[.urls[] | select(.filename | test("cp314-cp314-manylinux.*x86_64"))][0].url'
-
-      - type: file
-        only-arches: [aarch64]
-        url: https://files.pythonhosted.org/packages/84/d7/ad16bb204293f62bc75f5bdb72fb9988493c54d1a1bda4109b6f65cc689a/zint_bindings-1.2.2-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl
-        sha256: b96f64fa77bc04289986919b5f7d09e747ddf1d1bb5eb5401e6c350b14e062d0
-        x-checker-data:
-          type: json
-          url: https://pypi.org/pypi/zint-bindings/json
-          version-query: .info.version
-          url-query: '[.urls[] | select(.filename | test("cp314-cp314-manylinux.*aarch64"))][0].url'
-
+          type: pypi
+          name: zint-bindings
+      - type: patch
+        path: zint-bindings-offline.patch
       - type: file
         path: LICENSE.zint
 
@@ -242,11 +263,18 @@ modules:
       # setup.py also installs desktop file, metainfo, icons, MIME type and translations
       - pip3 install --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps --no-index
         .
+      # the drawings for small sizes as PNG: Flathub accepts only PNG in the
+      # fixed-size hicolor folders (linter: non-png-icon-in-hicolor-size-folder)
+      - set -e; for size in 16 20 22 24 32; do dir=${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps;
+        rsvg-convert -w $size -h $size -o $dir/${FLATPAK_ID}.png $dir/${FLATPAK_ID}.svg; rm $dir/${FLATPAK_ID}.svg;
+        done
       # (LICENSE flatpak-builder copies itself)
       - install -Dm644 -t ${FLATPAK_DEST}/share/licenses/${FLATPAK_ID}/tavletta THIRD_PARTY_NOTICES.md CREDITS.md
         tavletta/sheets/LICENSE.glabels tavletta/symbols/LICENSE.mdi
     sources:
-      # local checkout, for development builds
+      # local checkout, for development builds. It must stay the last source:
+      # build-aux/flatpak/flathub.py replaces it with the release tag and its
+      # commit for Flathub, which does not accept a dir source
       - type: dir
         path: ../..
         skip:
@@ -257,11 +285,3 @@ modules:
           - repo
           - tavletta/locale
           - build
-      # for Flathub, replace the dir source with the release tag:
-      # - type: git
-      #   url: https://git.joshuahirsig.xyz/joshii/tavletta.git
-      #   tag: v<version>  # the release to build, as in tavletta/__init__.py
-      #   commit: <commit of that tag>
-      #   x-checker-data:
-      #     type: git
-      #     tag-pattern: ^v([\d.]+)$

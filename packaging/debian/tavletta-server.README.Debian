@@ -1,0 +1,25 @@
+Tavletta's print server for Debian
+==================================
+
+tavletta-server.service runs `tavletta serve` as the system user tavletta
+(made by this package), sandboxed, on 127.0.0.1:8790. It is installed but
+neither enabled nor started; an upgrade restarts it if it runs. Its files:
+
+  /etc/tavletta/printers.toml   the printers clients may use
+  /etc/tavletta/tokens.toml     the access tokens (hashes)
+  /var/lib/tavletta/labels/     the label files
+
+Both TOML files belong to tavletta, mode 600. Make a token as that user:
+
+  sudo -u tavletta /usr/bin/tavletta token new NAME --role print \
+      --tokens /etc/tavletta/tokens.toml --printers /etc/tavletta/printers.toml
+  sudo systemctl enable --now tavletta-server
+
+The service has no access to devices: it prints to network printers. The
+full guide, with a reverse proxy for HTTPS:
+https://tavletta.joshuahirsig.xyz/server-install/#package
+
+Purging the package (apt purge tavletta-server) deletes /etc/tavletta with
+its printers and tokens, and /var/lib/tavletta unless label files are left
+in it. The user tavletta stays, as files may still belong to it (Debian
+does not remove system users on purge); remove it with `deluser tavletta`.

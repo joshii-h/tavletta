@@ -1,0 +1,6 @@
+python-labelprinter (0.1.0+git20261105.a6f2957-1) unstable; urgency=medium
+
+  * Initial release, built for Tavletta's release assets from the fork
+    joshii-h/labelprinter-vc500w at a6f2957 (no ITP filed yet).
+
+ -- Joshua Hirsig <tavletta@joshuahirsig.xyz>  Tue, 17 Nov 2026 12:00:00 +0100

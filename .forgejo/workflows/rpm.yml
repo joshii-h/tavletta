@@ -1,0 +1,141 @@
+# Builds the RPMs for a tag v* in a Fedora 44 container and attaches them to
+# the Forgejo release: tavletta (noarch) and the Python packages it needs
+# that Fedora does not have (python3-segno, python3-barcode,
+# python3-labelprinter, python3-zint-bindings), each with its SRPM, and
+# SHA256SUMS-rpm. The specs follow Fedora's packaging guidelines
+# (packaging/rpm/, built by packaging/rpm/build.sh, checked by rpmlint).
+#
+# packaging/rpm/smoke-test.sh then installs the packages in a fresh
+# container, where nothing of the build is installed: `tavletta --version`
+# must print the tag's version, two labels are rendered without a printer
+# or display, the print server's unit, user and folders are checked. That
+# container is started through the host's Docker daemon, as in deb.yml
+# (which says why not in a second job).
+#
+# Assets (packaging/release-assets.sh): names GitHub keeps (the ^ of a
+# snapshot version becomes a dot); then a line in the release notes that
+# names the distribution and architecture (NOTES). The release itself comes
+# from release.yml; this workflow waits for it. GitHub copies the assets
+# (release-mirror.yml).
+#
+# Manual run (Actions -> RPM -> Run workflow): `tag` empty builds and tries
+# the packages of the selected branch and uploads nothing; a tag rebuilds
+# that release and attaches the files to it, as deb.yml does (the same file
+# is skipped, a different one replaced, so re-runs are safe).
+#
+# No secrets: Forgejo uses the automatic Actions token.
+
+name: RPM
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to build and attach, e.g. v1.1.2 (empty = test build, uploads nothing)
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  FORGEJO_URL: https://git.joshuahirsig.xyz
+  REPO_URL: https://git.joshuahirsig.xyz/${{ github.repository }}.git
+  # the image of the job and of the fresh container, pinned by digest: bump
+  # both together (tests/test_packaging.py checks that they agree)
+  IMAGE: fedora:44@sha256:15da97ed9aa94dd3d92c3925eb89520f6c80e07ea7ee24cba848d1f8b6912b3e
+  # a static Docker client, pinned by version and checksum: it talks to the
+  # host's daemon through the API, whose version the two negotiate, so it
+  # need not be the daemon's version (the same as docs.yml's, bumped together)
+  DOCKER_CLI_VERSION: "29.6.2"
+  DOCKER_CLI_SHA256: d6204aea92238e2453d5445c885b9d2e5eb8f82915568ec50edf9dbe12a3ac74
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  rpm:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:44@sha256:15da97ed9aa94dd3d92c3925eb89520f6c80e07ea7ee24cba848d1f8b6912b3e
+    timeout-minutes: 90
+    env:
+      # a push: the tag pushed; a manual run: the tag given, possibly empty
+      TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+    steps:
+      - name: Install system packages
+        run: dnf install -y -q git-core jq curl tar > /dev/null
+
+      - name: Get the code
+        run: |
+          set -euo pipefail
+          git clone -q "$REPO_URL" src
+          cd src
+          if [ -n "$TAG" ]; then
+            # strict: the tag is used in URLs and API paths
+            if ! printf '%s' "$TAG" | grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$'; then
+              echo "::error::not a release tag: $TAG"; exit 1
+            fi
+            git checkout -q --detach "refs/tags/$TAG"
+            echo "PUBLISH=true" >> "$GITHUB_ENV"
+          else
+            echo "::notice::test build of ${GITHUB_SHA}, nothing is uploaded"
+            git checkout -q --detach "$GITHUB_SHA"
+            echo "PUBLISH=false" >> "$GITHUB_ENV"
+          fi
+          version="$(sed -n 's/^__version__ = "\([^"]*\)"$/\1/p' tavletta/__init__.py)"
+          if [ -n "$TAG" ] && [ "$TAG" != "v$version" ]; then
+            echo "::error::tag $TAG does not match the version $version in tavletta/__init__.py"; exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          git log -1 --format='%h %s'
+
+      - name: Build
+        working-directory: src
+        run: |
+          set -euo pipefail
+          # a tag: the source as Forgejo serves it (the spec's Source),
+          # otherwise the checked out commit
+          if [ -n "$TAG" ]; then
+            curl -sS --fail -L -o ../tavletta.tar.gz "$FORGEJO_URL/$GITHUB_REPOSITORY/archive/$TAG.tar.gz"
+            packaging/rpm/build.sh ../rpms ../tavletta.tar.gz
+          else
+            packaging/rpm/build.sh ../rpms
+          fi
+
+      - name: Docker CLI
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_CLI_VERSION}.tgz" -o /tmp/docker.tgz
+          echo "$DOCKER_CLI_SHA256  /tmp/docker.tgz" | sha256sum -c --quiet -
+          tar -xzf /tmp/docker.tgz -C /tmp docker/docker
+          install -m 0755 /tmp/docker/docker /usr/local/bin/docker
+          docker version --format 'Docker daemon {{.Server.Version}}'
+
+      - name: Install and try in a fresh container
+        run: |
+          set -euo pipefail
+          mkdir try
+          cp -r rpms try/rpms
+          cp src/packaging/rpm/smoke-test.sh try/
+          src/packaging/clean-container.sh "$IMAGE" try ./smoke-test.sh rpms "$VERSION"
+
+      - name: Assets
+        run: src/packaging/release-assets.sh collect assets SHA256SUMS-rpm rpms/*.rpm
+
+      - name: Attach to the Forgejo release
+        if: env.PUBLISH == 'true'
+        env:
+          TOKEN: ${{ github.token }}
+          # the release notes name the files once they are attached
+          NOTES: '- Fedora 44 (`fc44`), x86_64: `tavletta-*.noarch.rpm`, and `tavletta-server-*.noarch.rpm` for the print server as a system service, with the Python packages Fedora lacks; their sources as `*.src.rpm`; checksums in `SHA256SUMS-rpm`'
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find assets -maxdepth 1 -type f ! -name SHA256SUMS-rpm | sort)
+          src/packaging/release-assets.sh upload "$TAG" "${files[@]}"
+          src/packaging/release-assets.sh notes "$TAG" "$NOTES"
+          # the checksum file last: release-mirror.yml waits for it
+          src/packaging/release-assets.sh upload "$TAG" assets/SHA256SUMS-rpm
