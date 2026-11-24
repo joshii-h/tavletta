@@ -91,35 +91,35 @@
   <screenshots>
     <screenshot type="default" environment="gnome">
       <caption>A label with a QR code and text</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/main.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/main.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A label with a QR code and text</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/main-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/main-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/colour.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/colour.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/colour-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/colour-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/sticker.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/sticker.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/sticker-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/sticker-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/print.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/print.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/print-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/print-dark.png</image>
     </screenshot>
   </screenshots>
 
@@ -183,6 +183,12 @@
   </provides>
 
   <releases>
+    <release version="1.2.1" date="2026-11-24">
+      <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.2.1</url>
+      <description>
+        <p>Linux packages (.deb, .rpm) for 1.2; test fixes.</p>
+      </description>
+    </release>
     <release version="1.2.0" date="2026-11-24">
       <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.2.0</url>
       <description>
