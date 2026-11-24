@@ -165,3 +165,103 @@ def measure(
 def moved(box: MmBox, dx: float, dy: float) -> MmBox:
     """A box moved by dx, dy mm (a dragged element's, until it is rendered)."""
     return box[0] + dx, box[1] + dy, box[2] + dx, box[3] + dy
+
+
+# --- snapping -------------------------------------------------------------------
+
+EPSILON = 1e-6  # mm: a box's line lies on a guide
+
+
+@dataclass(frozen=True)
+class Guide:
+    """A line a moving box snaps to: on axis "x" a vertical line at x =
+    position, on "y" a horizontal one."""
+
+    axis: str
+    position: float
+    source: str  # "label" (an edge or its middle), "element" or "grid"
+    index: int | None = None  # the element's, for "element"
+
+
+@dataclass(frozen=True)
+class Snap:
+    """How far to move a box so it snaps, and the guides it then lies on
+    (to draw while dragging)."""
+
+    dx: float
+    dy: float
+    guides: tuple[Guide, ...]
+
+
+def guides(geometry: Geometry, exclude: Iterable[int] = ()) -> list[Guide]:
+    """The lines to snap to: the label's edges and middle, and the edges and
+    middles of its elements but those excluded (the ones being moved)."""
+    skip = set(exclude)
+    found = [
+        Guide(axis, position, "label")
+        for axis, size in (("x", geometry.width_mm), ("y", geometry.height_mm))
+        for position in (0.0, size / 2, size)
+    ]
+    for b in geometry.boxes:
+        if b.index in skip:
+            continue
+        for axis, lines in (("x", _lines(b.left, b.right)), ("y", _lines(b.top, b.bottom))):
+            found += [Guide(axis, position, "element", b.index) for position in lines]
+    return found
+
+
+def _lines(start: float, end: float) -> tuple[float, float, float]:
+    return start, (start + end) / 2, end
+
+
+def snap(
+    box: MmBox,
+    geometry: Geometry,
+    exclude: Iterable[int] = (),
+    tolerance: float = 1.0,
+    grid: float = 0.0,
+) -> Snap:
+    """Where a moving box (the dragged elements' bounds, moved()) snaps:
+    on each axis the nearest guide (guides()) one of its edges or its
+    middle is within `tolerance` mm of, or a multiple of `grid` mm (0: no
+    grid) for one of its edges; a guide wins over the grid at the same
+    distance. To snap only one edge (resizing), give a box of no width
+    or height at that edge."""
+    found = guides(geometry, exclude)
+    dx, x_guides = _snap_axis("x", _lines(box[0], box[2]), found, tolerance, grid)
+    dy, y_guides = _snap_axis("y", _lines(box[1], box[3]), found, tolerance, grid)
+    return Snap(dx, dy, x_guides + y_guides)
+
+
+def _snap_axis(
+    axis: str, lines: tuple[float, float, float], found: list[Guide], tolerance: float, grid: float
+) -> tuple[float, tuple[Guide, ...]]:
+    """The offset along one axis, and the guides it puts the lines on."""
+    candidates = [g for g in found if g.axis == axis]
+    edges = (lines[0], lines[2])
+    # (distance, a grid line, offset): the nearest first, a guide before the grid
+    options = [
+        (abs(g.position - line), 0, g.position - line) for g in candidates for line in lines
+    ]
+    if grid > 0:
+        options += [(abs(_on_grid(e, grid) - e), 1, _on_grid(e, grid) - e) for e in edges]
+    near = [option for option in options if option[0] <= tolerance]
+    if not near:
+        return 0.0, ()
+    offset = min(near)[2]
+    on = [
+        g
+        for g in candidates
+        if any(abs(g.position - (line + offset)) <= EPSILON for line in lines)
+    ]
+    if grid > 0:
+        on += [
+            Guide(axis, _on_grid(e + offset, grid), "grid")
+            for e in edges
+            if abs(_on_grid(e + offset, grid) - (e + offset)) <= EPSILON
+        ]
+    return offset, tuple(dict.fromkeys(on))
+
+
+def _on_grid(value: float, grid: float) -> float:
+    return round(value / grid) * grid

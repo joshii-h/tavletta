@@ -135,3 +135,81 @@ def test_every_hit_contains_the_point_in_drawing_order(boxes, x, y):
 
 def test_moved_box():
     assert editing.moved((1, 2, 3, 4), 1.5, -2) == (2.5, 0, 4.5, 2)
+
+
+# --- snapping ---------------------------------------------------------------------
+
+
+def test_snaps_to_the_nearest_element_edge_and_says_which():
+    geometry = _geometry((10, 10, 20, 20), (40, 30, 50, 40))
+    # dragged box: its left edge 0.4 mm right of element 0's right edge
+    snapped = editing.snap((20.4, 30.8, 25.4, 32.8), geometry, exclude=(), tolerance=1)
+    assert snapped.dx == pytest.approx(-0.4)
+    assert snapped.dy == pytest.approx(-0.8)  # its top to element 1's top
+    assert editing.Guide("x", 20, "element", 0) in snapped.guides
+    assert editing.Guide("y", 30, "element", 1) in snapped.guides
+
+
+def test_snaps_to_the_label_edges_and_middle():
+    geometry = _geometry()
+    assert editing.snap((0.5, 3, 10.5, 8), geometry).dx == pytest.approx(-0.5)
+    middle = editing.snap((44.6, 3, 54.6, 8), geometry)  # its middle at 49.6
+    assert middle.dx == pytest.approx(0.4)
+    assert editing.Guide("x", 50, "label") in middle.guides
+    assert editing.snap((89.2, 3, 99.2, 8), geometry).dx == pytest.approx(0.8)
+
+
+def test_nothing_within_the_tolerance_does_not_snap():
+    geometry = _geometry((10, 10, 20, 20))
+    snapped = editing.snap((30, 27, 35, 28.5), geometry, tolerance=1)
+    assert (snapped.dx, snapped.dy, snapped.guides) == (0.0, 0.0, ())
+
+
+def test_the_moving_elements_are_no_guides():
+    geometry = _geometry((10, 10, 20, 20))
+    assert editing.snap((10.3, 10.3, 20.3, 20.3), geometry, exclude=[0]).guides == ()
+
+
+def test_snaps_to_the_grid_and_a_guide_wins_at_the_same_distance():
+    geometry = _geometry((12.5, 0, 13, 1))
+    snapped = editing.snap((7.3, 33.2, 9.3, 34.2), geometry, tolerance=1, grid=2.5)
+    assert snapped.dx == pytest.approx(0.2)  # 7.3 -> 7.5
+    assert snapped.dy == pytest.approx(-0.7)  # 33.2 -> 32.5
+    assert editing.Guide("x", 7.5, "grid") in snapped.guides
+    # an edge 1 mm from both an element (at 12) and the grid (at 10)
+    tie_geometry = _geometry((12, 0, 30, 1))
+    tie = editing.snap((11, 33.2, 11, 33.2), tie_geometry, tolerance=1, grid=5)
+    assert tie.dx == 1
+    assert tie.guides == (editing.Guide("x", 12, "element", 0),)
+
+
+def test_one_edge_alone_snaps_when_resizing():
+    geometry = _geometry((10, 10, 20, 20))
+    snapped = editing.snap((19.6, 30, 19.6, 30), geometry, tolerance=1)
+    assert snapped.dx == pytest.approx(0.4)
+
+
+@settings(max_examples=300)
+@given(
+    st.lists(box_strategy, max_size=8),
+    box_strategy,
+    st.floats(0.1, 3),
+    st.sampled_from([0.0, 1.0, 2.5]),
+)
+def test_a_snap_moves_within_the_tolerance_onto_its_guides(boxes, box, tolerance, grid):
+    geometry = _geometry(*boxes)
+    snapped = editing.snap(box, geometry, tolerance=tolerance, grid=grid)
+    assert abs(snapped.dx) <= tolerance + 1e-9 and abs(snapped.dy) <= tolerance + 1e-9
+    moved = editing.moved(box, snapped.dx, snapped.dy)
+    for guide in snapped.guides:
+        start, end = (moved[0], moved[2]) if guide.axis == "x" else (moved[1], moved[3])
+        assert any(abs(guide.position - v) <= 1e-6 for v in (start, (start + end) / 2, end))
+    # it snaps whenever a guide was in reach, so one is drawn
+    reach = [
+        g
+        for g in editing.guides(geometry)
+        if g.axis == "x"
+        and min(abs(g.position - v) for v in (box[0], (box[0] + box[2]) / 2, box[2])) <= tolerance
+    ]
+    if reach:
+        assert any(g.axis == "x" for g in snapped.guides)
