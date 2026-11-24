@@ -19,6 +19,7 @@ import {
   splitRange,
 } from "./ranges.js";
 import { backLink, labelFields, printerPicker, title } from "./print.js";
+import { autoAssign, columnText, elementsOf, withSamples } from "./samples.js";
 import {
   CONFIRM_FROM,
   confirm,
@@ -65,6 +66,7 @@ function fresh() {
     data: null, // POST /data
     // keyed by names from files and templates: no prototype ("__proto__")
     mapping: Object.create(null), // template column -> {column} or {fixed}
+    automatic: Object.create(null), // template column -> the data column assigned by its name
     mode: "all", // all, pick, ranges
     picked: new Set(),
     ranges: Object.create(null), // template column -> [{from, to, step}]
@@ -354,12 +356,8 @@ export async function batchView(name, ctx) {
     } catch (error) {
       throw new Error(errorText(error));
     }
-    // a new file: assignments by equal names, nothing picked
-    st.mapping = Object.create(null);
-    for (const column of columns) {
-      const same = st.data.columns.find((c) => c.toLowerCase() === column.toLowerCase());
-      st.mapping[column] = same !== undefined ? { column: same } : st.data.columns.length === 1 && columns.length === 1 ? { column: st.data.columns[0] } : {};
-    }
+    // a new file: assignments by equal names (case and spaces aside), nothing picked
+    ({ mapping: st.mapping, automatic: st.automatic } = autoAssign(columns, st.data.columns));
     st.picked = new Set();
     st.resume = null;
     one.clear();
@@ -393,6 +391,10 @@ export async function batchView(name, ctx) {
 
   // 2. assign -------------------------------------------------------------------------
 
+  // The data columns for the template's fields, beside a preview of the
+  // first label: focusing or pointing at a field outlines the elements it
+  // fills; each field says its value on the first label, each column's
+  // option its first values.
   function assignStep() {
     const summary = summaryBox();
     const form = h("form", { novalidate: true }, summary, heading(t("Assign")));
@@ -410,28 +412,48 @@ export async function batchView(name, ctx) {
       });
       form.append(one.node);
     }
-    form.append(h("p", null, t("Choose the data column for each field of the template.")));
+    form.append(h("p", null, t("Choose the data column for each field of the template. The preview shows the first label; the field in use is outlined in it.")));
+    const automatic = columns.filter((c) => Object.hasOwn(st.automatic, c) && st.mapping[c]?.column === st.automatic[c]);
+    if (automatic.length) {
+      form.append(notice("info", h("p", null, t("Assigned automatically (the same name, or the only column): {fields}. Check them below.", { fields: automatic.join(", ") }))));
+    }
+    const pane = previewPane(label, t("The first label"));
+    disposers.push(() => pane.dispose());
+    const first = st.data.rows[0] ?? {};
+    const refresh = debounce(() => showPreview(), 300);
+    disposers.push(() => refresh.cancel());
     const fields = columns.map((column) => {
       const select = h(
         "select",
         null,
         h("option", { value: "" }, t("– not assigned –")),
         h("option", { value: "\u0000fixed" }, t("The same value for all")),
-        st.data.columns.map((c) => h("option", { value: c, selected: st.mapping[column]?.column === c }, c)),
+        st.data.columns.map((c) => h("option", { value: c, selected: st.mapping[column]?.column === c }, columnText(c, st.data.rows))),
       );
       const fixed = h("input", { type: "text", value: st.mapping[column]?.fixed ?? "", autocomplete: "off" });
       const fixedField = field({ label: t("Value for {name}", { name: column }), input: fixed });
       if ("fixed" in (st.mapping[column] ?? {})) select.value = "\u0000fixed";
       fixedField.node.hidden = select.value !== "\u0000fixed";
-      const one = field({ label: column, hint: t("Data field {placeholder} of the template, required", { placeholder: `{${column}}` }), input: select });
+      // the value on the first label, read out as it changes
+      const sample = h("p", { class: "sample", "aria-live": "polite" });
+      const one = field({ label: column, hint: t("Data field {placeholder} of the template, required", { placeholder: `{${column}}` }), input: select, after: sample });
+      const wrap = h("div", { class: "assign-field" }, one.node, fixedField.node);
+      const entry = { wrap, indexes: elementsOf(label, "column", column) };
+      wrap.addEventListener("focusin", () => light(entry));
+      wrap.addEventListener("focusout", () => setTimeout(() => light(focused())));
+      wrap.addEventListener("pointerenter", () => light(entry));
+      wrap.addEventListener("pointerleave", () => light(focused()));
       const update = () => {
         fixedField.node.hidden = select.value !== "\u0000fixed";
         st.mapping[column] = select.value === "\u0000fixed" ? { fixed: fixed.value } : select.value ? { column: select.value } : {};
+        sample.textContent = sampleText(column);
+        refresh();
       };
+      sample.textContent = sampleText(column);
       select.addEventListener("change", update);
       fixed.addEventListener("input", update);
-      form.append(one.node, fixedField.node);
-      return { column, one, select };
+      form.append(wrap);
+      return { column, one, select, entry };
     });
     form.append(nav({ next: true }));
     form.addEventListener("submit", (event) => {
@@ -448,7 +470,49 @@ export async function batchView(name, ctx) {
       errorSummary(summary, problems);
       if (!problems.length) go(2);
     });
-    body.append(form);
+    body.append(h("div", { class: "split" }, form, pane.node));
+
+    // the field pointed at, else the one with the focus, outlined with the
+    // elements it fills
+    let lit = null;
+    function light(entry) {
+      lit?.wrap.classList.remove("on");
+      lit = entry;
+      entry?.wrap.classList.add("on");
+      pane.highlight(entry?.indexes ?? []);
+    }
+
+    function focused() {
+      return fields.find((f) => f.entry.wrap.contains(document.activeElement))?.entry ?? null;
+    }
+
+    // the value a field has on the first label
+    function given(column) {
+      const how = st.mapping[column] ?? {};
+      if (how.column !== undefined) return Object.hasOwn(first, how.column) ? first[how.column] : "";
+      return how.fixed;
+    }
+
+    function sampleText(column) {
+      const value = given(column);
+      if (value === undefined) return t("Not assigned yet: the preview shows a sample value.");
+      return value === "" ? t("On the first label: empty") : t("On the first label: {value}", { value });
+    }
+
+    async function showPreview() {
+      const row = Object.create(null);
+      for (const column of columns) {
+        const value = given(column);
+        if (value !== undefined) row[column] = value;
+      }
+      try {
+        await withSamples((values) => pane.load({ label: name, data_rows: [values] }, t("Preview of the first label")), label, row);
+      } catch {
+        // the pane shows the problem
+      }
+    }
+
+    showPreview();
   }
 
   async function base64(file) {

@@ -629,6 +629,22 @@ legend {
 
 /* --- series ---------------------------------------------------------------------- */
 
+/* the assignment: the field in use marked beside the outline in the preview */
+.assign-field {
+  padding-inline-start: var(--sp-3);
+  border-inline-start: 4px solid transparent;
+}
+
+.assign-field.on {
+  border-inline-start-color: var(--accent);
+}
+
+.sample {
+  margin: var(--sp-1) 0 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
 .steps {
   display: flex;
   flex-wrap: wrap;
@@ -796,6 +812,10 @@ dialog .actions {
 }
 
 @media (forced-colors: active) {
+  .assign-field.on {
+    border-inline-start-color: Highlight;
+  }
+
   .boxes rect.on,
   .boxes rect:hover {
     stroke: Highlight;
