@@ -156,6 +156,17 @@ def test_color_adjust_from_dict(data, expected):
     assert ColorAdjust.from_dict(data) == expected
 
 
+def test_limits_have_a_slack_for_rounding_only():
+    """A label as long or wide as allowed, give or take rounding, prints;
+    a hundredth of a millimetre more than the slack does not."""
+    from tavletta.backends.base import LIMIT_SLACK_MM, Capabilities
+
+    caps = Capabilities((), 300, (), max_length_mm=100.0, max_width_mm=50.0)
+    assert not caps.too_long(100.0 + LIMIT_SLACK_MM) and not caps.too_wide(50.0 + LIMIT_SLACK_MM)
+    assert caps.too_long(100.0 + 2 * LIMIT_SLACK_MM) and caps.too_wide(50.0 + 2 * LIMIT_SLACK_MM)
+    assert not Capabilities((), 300, ()).too_long(10**6)  # no limit
+
+
 def test_a_level_between_its_steps_is_kept():
     """The steps are the window's offer, not a grid every value snaps to."""
     level = Level("darkness", 0, 100, 10)

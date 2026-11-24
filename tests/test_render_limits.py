@@ -269,6 +269,38 @@ def test_nothing_of_a_page_is_kept_within_limits():
     assert len(source._pictures) == 1 and len(source._drawings) > 0
 
 
+def test_a_label_may_be_a_millimetre_longer_than_the_printer_takes():
+    """The printer's longest length, plus a millimetre of rounding."""
+    dpi = 254.0  # 10 pixels a millimetre
+    with limited(10**8, max_length_mm=100.0):
+        render_module.check_label(1010, 10, dpi)  # 101 mm
+        with pytest.raises(RenderTooLarge):
+            render_module.check_label(1011, 10, dpi)
+    render_module.check_label(10**5, 10, dpi)  # no limits: no check
+
+
+def test_an_image_file_of_as_many_pixels_as_allowed_is_decoded():
+    """Exactly as many pixels as allowed are taken, one more not."""
+    raw = encode_png((4, 5))
+    assert source._decode_frame(raw, 0, max_pixels=20)[0].size == (4, 5)
+    with pytest.raises(SourceError) as info:
+        source._decode_frame(raw, 0, max_pixels=19)
+    assert info.value.code == "too_large"
+
+
+def test_a_pdf_of_the_limit_is_sent_to_the_child(monkeypatch):
+    monkeypatch.setattr(source, "LIMITED_PDF_BYTES", 12)
+    assert source._child_raw(b64(b"%PDF-1.4 abc")) == b"%PDF-1.4 abc"  # 12 bytes
+    with pytest.raises(RenderTooLarge):
+        source._child_raw(b64(b"%PDF-1.4 abcd"))
+
+
+def encode_png(size: tuple[int, int]) -> bytes:
+    buffer = io.BytesIO()
+    Image.new("RGB", size, "white").save(buffer, "PNG")
+    return buffer.getvalue()
+
+
 def test_no_client_content_stays_in_the_process_caches_within_limits():
     """Codes, symbol paths and text sizes of a request are kept for the
     next renders only outside limits (the window), never in the server."""

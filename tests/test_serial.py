@@ -362,6 +362,9 @@ def test_codes_are_checked_with_the_counter_of_each_row():
     rows = [{"Prefix": "4006381333"}] * 3
     values = Values(datetime(2026, 1, 1), counter=98, copies=1)
     assert unprintable_rows(label, rows, range(3), values) == [3]  # 100: 13 digits
+    # each row starts after the copies of the rows before: 97 98 | 99 100 | 101 102
+    values = Values(datetime(2026, 1, 1), counter=97, copies=2)
+    assert unprintable_rows(label, rows, range(3), values) == [2, 3]
 
 
 # --- serial labels on label sheets -----------------------------------------------------

@@ -39,6 +39,9 @@ def test_slots_start_at_a_position_then_full_sheets():
     assert page_slots(sheet, 2, []) == [[0, 1]]  # nothing chosen: all
     assert sum(len(p) for p in page_slots(sheet, MAX_LABELS, [])) == MAX_LABELS
     assert first_positions(sheet, [30]) == list(range(24))
+    # the last position counts, the one after it is no position
+    assert first_positions(sheet, [23]) == [23]
+    assert first_positions(sheet, [24]) == list(range(24))
 
 
 def test_more_labels_than_a_job_takes_are_refused_not_cut_short():
@@ -55,6 +58,17 @@ def test_more_labels_than_a_job_takes_are_refused_not_cut_short():
 
 def _label(width_mm, height_mm, color="red"):
     return Image.new("RGB", (px(width_mm, DPI), px(height_mm, DPI)), color)
+
+
+def test_a_label_two_pixels_off_is_placed_as_it_is():
+    """Two pixels are rounding; three are another size: scaled to the box."""
+    from tavletta.sheets.layout import fit_label
+
+    label = _label(70, 37)
+    box = (label.width + 2, label.height - 2)
+    assert fit_label(label, box, DPI) is label
+    fitted = fit_label(label, (label.width + 3, label.height), DPI)
+    assert fitted is not label and fitted.size == (label.width + 3, label.height)
 
 
 def test_a_page_has_each_label_at_its_exact_place():

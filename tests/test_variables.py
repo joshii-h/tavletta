@@ -130,6 +130,14 @@ def test_counter_and_copies():
     assert text("{=copy:00}/{=copies}", copy=2, copies=5) == "02/5"
 
 
+def test_a_counter_pads_to_at_most_its_digits():
+    from tavletta.variables import MAX_DIGITS
+
+    assert text("{=counter:%s}" % ("0" * MAX_DIGITS), counter=7) == "7".zfill(MAX_DIGITS)
+    result, unknown = expand("{=counter:%s}" % ("0" * (MAX_DIGITS + 1)), values(counter=7))
+    assert unknown and result != "7".zfill(MAX_DIGITS + 1)
+
+
 def test_each_copy_gets_the_next_number():
     start = values(counter=100, step=2, copies=3)
     numbers = [expand("{=counter}", start.for_copy(n))[0] for n in (1, 2, 3)]

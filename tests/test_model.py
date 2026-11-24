@@ -290,6 +290,18 @@ def test_numbers_that_are_not_finite_are_damaged(number):
     assert Label.from_dict({"tape_mm": 50, "length_mm": 10**400}).length_mm == 1000
 
 
+def test_a_measure_differs_only_beyond_its_tolerance():
+    """1 mm, or 1 % of a long label: exactly that much is still the same."""
+    assert not model.measured_differs(51.0, 50.0) and model.measured_differs(51.01, 50.0)
+    assert not model.measured_differs(198.0, 200.0) and model.measured_differs(197.9, 200.0)
+
+
+def test_sheet_positions_beyond_the_largest_are_left_out():
+    top = model.MAX_SHEET_POSITIONS
+    choice = model.SheetChoice.from_dict({"id": "Avery L7160", "positions": [-1, top - 1, top]})
+    assert choice.positions == [top - 1]
+
+
 def test_from_dict_does_not_modify_input():
     data = {"version": 1, "elements": [], "tape_mm": 12}
     Label.from_dict(data)
