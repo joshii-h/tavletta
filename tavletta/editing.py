@@ -1,7 +1,8 @@
 """Editing a label with the mouse, without a toolkit: where its elements
 are (Geometry), which one lies under a point, snapping a moving box to
-guide lines, and the edits themselves as functions from a label to a new
-label. The window's editor and the print server's web page share it.
+guide lines, the edits themselves as functions from a label to a new
+label, and their undo (Editor). For the window's mouse editor and the
+print server's web page (docs/editing.md).
 
 Coordinates are label space in mm, as the preview shows the label: x
 along the tape from its left end, y across it from the tape's top edge
@@ -134,19 +135,9 @@ class Geometry:
     def within(self, rect: MmBox, touching: bool = False) -> list[int]:
         """The elements inside a rectangle (a rubber band, from any corner
         to the opposite one); touching: also those it only overlaps."""
-        left, right = sorted((rect[0], rect[2]))
-        top, bottom = sorted((rect[1], rect[3]))
-        if touching:
-            return [
-                b.index
-                for b in self.boxes
-                if b.left <= right and b.right >= left and b.top <= bottom and b.bottom >= top
-            ]
-        return [
-            b.index
-            for b in self.boxes
-            if left <= b.left and b.right <= right and top <= b.top and b.bottom <= bottom
-        ]
+        area = _normal(rect)
+        test = _overlaps if touching else _inside
+        return [b.index for b in self.boxes if test(b.box, area)]
 
     def bounds(self, indices: Iterable[int]) -> MmBox:
         """The box around some of the elements (ValueError: none given)."""
@@ -168,6 +159,21 @@ class Geometry:
             "layout": self.layout,
             "elements": [b.to_dict() for b in self.boxes],
         }
+
+
+def _normal(rect: MmBox) -> MmBox:
+    """A rectangle given by any two opposite corners, as a box."""
+    left, right = sorted((rect[0], rect[2]))
+    top, bottom = sorted((rect[1], rect[3]))
+    return left, top, right, bottom
+
+
+def _inside(box: MmBox, area: MmBox) -> bool:
+    return area[0] <= box[0] and box[2] <= area[2] and area[1] <= box[1] and box[3] <= area[3]
+
+
+def _overlaps(box: MmBox, area: MmBox) -> bool:
+    return box[0] <= area[2] and box[2] >= area[0] and box[1] <= area[3] and box[3] >= area[1]
 
 
 def measure(
@@ -262,28 +268,34 @@ def _snap_axis(
     """The offset along one axis, and the guides it puts the lines on."""
     candidates = [g for g in found if g.axis == axis]
     edges = (lines[0], lines[2])
+    offset = _nearest(lines, edges, candidates, tolerance, grid)
+    if offset is None:
+        return 0.0, ()
+    moved_lines = [v + offset for v in lines]
+    on = [g for g in candidates if any(abs(g.position - v) <= EPSILON for v in moved_lines)]
+    if grid > 0:
+        on += [
+            _grid_guide(axis, e + offset, grid) for e in edges if _on_grid_line(e + offset, grid)
+        ]
+    return offset, tuple(dict.fromkeys(on))
+
+
+def _nearest(lines, edges, candidates: list[Guide], tolerance: float, grid: float) -> float | None:
+    """The offset to the nearest guide (or grid line) within the tolerance."""
     # (distance, a grid line, offset): the nearest first, a guide before the grid
-    options = [
-        (abs(g.position - line), 0, g.position - line) for g in candidates for line in lines
-    ]
+    options = [(abs(g.position - v), 0, g.position - v) for g in candidates for v in lines]
     if grid > 0:
         options += [(abs(_on_grid(e, grid) - e), 1, _on_grid(e, grid) - e) for e in edges]
     near = [option for option in options if option[0] <= tolerance]
-    if not near:
-        return 0.0, ()
-    offset = min(near)[2]
-    on = [
-        g
-        for g in candidates
-        if any(abs(g.position - (line + offset)) <= EPSILON for line in lines)
-    ]
-    if grid > 0:
-        on += [
-            Guide(axis, _on_grid(e + offset, grid), "grid")
-            for e in edges
-            if abs(_on_grid(e + offset, grid) - (e + offset)) <= EPSILON
-        ]
-    return offset, tuple(dict.fromkeys(on))
+    return min(near)[2] if near else None
+
+
+def _grid_guide(axis: str, value: float, grid: float) -> Guide:
+    return Guide(axis, _on_grid(value, grid), "grid")
+
+
+def _on_grid_line(value: float, grid: float) -> bool:
+    return abs(_on_grid(value, grid) - value) <= EPSILON
 
 
 def _on_grid(value: float, grid: float) -> float:
