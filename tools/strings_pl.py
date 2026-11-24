@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Wybierz plik szablonu.",
     "The file is too large: at most {size} MB.": "Plik jest za duży: maksymalnie {size} MB.",
     "{name} uploaded.": "Przesłano {name}.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Szablon o tej nazwie już istnieje. Wybierz \"Zastąp szablon o tej samej nazwie\", aby go zastąpić.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': 'Szablon o tej nazwie już istnieje. Wybierz "Zastąp szablon o tej samej nazwie", aby go zastąpić.',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Nazwa pliku może zawierać litery, cyfry, spacje oraz . _ - ( ) + , i nie może zaczynać się od kropki. Zmień nazwę pliku.",
     "Print job": "Zadanie drukowania",
     "Template: {name}": "Szablon: {name}",

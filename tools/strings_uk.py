@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Виберіть файл шаблону.",
     "The file is too large: at most {size} MB.": "Файл завеликий: не більше {size} MB.",
     "{name} uploaded.": "{name} завантажено.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Шаблон із такою назвою вже існує. Щоб замінити його, виберіть «Замінити шаблон із такою самою назвою».",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "Шаблон із такою назвою вже існує. Щоб замінити його, виберіть «Замінити шаблон із такою самою назвою».",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Назва файлу може містити літери, цифри, пробіли та . _ - ( ) + , і не повинна починатися з крапки. Перейменуйте файл.",
     "Print job": "Завдання друку",
     "Template: {name}": "Шаблон: {name}",

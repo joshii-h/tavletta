@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Vali mallifail.",
     "The file is too large: at most {size} MB.": "Fail on liiga suur: kuni {size} MB.",
     "{name} uploaded.": "{name} on üles laaditud.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Selle nimega mall on olemas. Selle asendamiseks vali \"Asenda samanimeline mall\".",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': 'Selle nimega mall on olemas. Selle asendamiseks vali "Asenda samanimeline mall".',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Failinimes võivad olla tähed, numbrid, tühikud ja . _ - ( ) + , ning see ei tohi alata punktiga. Nimeta fail ümber.",
     "Print job": "Prinditöö",
     "Template: {name}": "Mall: {name}",

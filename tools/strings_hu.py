@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Válasszon sablonfájlt.",
     "The file is too large: at most {size} MB.": "A fájl túl nagy: legfeljebb {size} MB.",
     "{name} uploaded.": "{name} feltöltve.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Már létezik ilyen nevű sablon. A cseréjéhez válassza az \"Azonos nevű sablon cseréje\" lehetőséget.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': 'Már létezik ilyen nevű sablon. A cseréjéhez válassza az "Azonos nevű sablon cseréje" lehetőséget.',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "A fájlnév betűket, számjegyeket, szóközöket és a . _ - ( ) + , karaktereket tartalmazhatja, és nem kezdődhet ponttal. Nevezze át a fájlt.",
     "Print job": "Nyomtatási feladat",
     "Template: {name}": "Sablon: {name}",

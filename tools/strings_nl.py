@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Kies een sjabloonbestand.",
     "The file is too large: at most {size} MB.": "Het bestand is te groot: maximaal {size} MB.",
     "{name} uploaded.": "{name} geüpload.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Er bestaat al een sjabloon met deze naam. Kies ‘Sjabloon met dezelfde naam vervangen’ om het te vervangen.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "Er bestaat al een sjabloon met deze naam. Kies ‘Sjabloon met dezelfde naam vervangen’ om het te vervangen.",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "De bestandsnaam mag letters, cijfers, spaties en . _ - ( ) + , bevatten en mag niet met een punt beginnen. Geef het bestand een andere naam.",
     "Print job": "Afdruktaak",
     "Template: {name}": "Sjabloon: {name}",

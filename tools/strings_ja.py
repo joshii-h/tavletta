@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "テンプレートファイルを選択してください。",
     "The file is too large: at most {size} MB.": "ファイルが大きすぎます: 最大 {size} MB です。",
     "{name} uploaded.": "{name} をアップロードしました。",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "この名前のテンプレートはすでに存在します。置き換えるには「同じ名前のテンプレートを置き換える」を選択してください。",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "この名前のテンプレートはすでに存在します。置き換えるには「同じ名前のテンプレートを置き換える」を選択してください。",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "ファイル名に使用できるのは文字、数字、スペース、および . _ - ( ) + , で、先頭をドットにすることはできません。ファイル名を変更してください。",
     "Print job": "印刷ジョブ",
     "Template: {name}": "テンプレート: {name}",

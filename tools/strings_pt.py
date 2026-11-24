@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Escolha um ficheiro de modelo.",
     "The file is too large: at most {size} MB.": "O ficheiro é demasiado grande: no máximo {size} MB.",
     "{name} uploaded.": "{name} enviado.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Já existe um modelo com este nome. Escolha “Substituir um modelo com o mesmo nome” para o substituir.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "Já existe um modelo com este nome. Escolha “Substituir um modelo com o mesmo nome” para o substituir.",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "O nome do ficheiro pode conter letras, algarismos, espaços e . _ - ( ) + , e não pode começar por um ponto. Mude o nome do ficheiro.",
     "Print job": "Trabalho de impressão",
     "Template: {name}": "Modelo: {name}",

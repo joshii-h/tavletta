@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "टेम्पलेट फ़ाइल चुनें।",
     "The file is too large: at most {size} MB.": "फ़ाइल बहुत बड़ी है: अधिकतम {size} MB।",
     "{name} uploaded.": "{name} अपलोड हो गया।",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "इस नाम का टेम्पलेट मौजूद है। उसे बदलने के लिए “उसी नाम का टेम्पलेट बदलें” चुनें।",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "इस नाम का टेम्पलेट मौजूद है। उसे बदलने के लिए “उसी नाम का टेम्पलेट बदलें” चुनें।",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "फ़ाइल नाम में अक्षर, अंक, स्पेस और . _ - ( ) + , हो सकते हैं और यह बिंदु से शुरू नहीं होना चाहिए। फ़ाइल का नाम बदलें।",
     "Print job": "प्रिंट जॉब",
     "Template: {name}": "टेम्पलेट: {name}",

@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Välj en mallfil.",
     "The file is too large: at most {size} MB.": "Filen är för stor: högst {size} MB.",
     "{name} uploaded.": "{name} har laddats upp.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Det finns redan en mall med det här namnet. Välj \"Ersätt en mall med samma namn\" för att ersätta den.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': 'Det finns redan en mall med det här namnet. Välj "Ersätt en mall med samma namn" för att ersätta den.',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Filnamnet får innehålla bokstäver, siffror, mellanslag och . _ - ( ) + , och får inte börja med en punkt. Byt namn på filen.",
     "Print job": "Utskriftsjobb",
     "Template: {name}": "Mall: {name}",

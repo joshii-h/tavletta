@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Bir şablon dosyası seçin.",
     "The file is too large: at most {size} MB.": "Dosya çok büyük: en fazla {size} MB.",
     "{name} uploaded.": "{name} yüklendi.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Bu adda bir şablon var. Değiştirmek için \"Aynı adlı şablonu değiştir\" seçeneğini seçin.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': 'Bu adda bir şablon var. Değiştirmek için "Aynı adlı şablonu değiştir" seçeneğini seçin.',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Dosya adı harf, rakam, boşluk ve . _ - ( ) + , içerebilir ve nokta ile başlayamaz. Dosyayı yeniden adlandırın.",
     "Print job": "Yazdırma işi",
     "Template: {name}": "Şablon: {name}",

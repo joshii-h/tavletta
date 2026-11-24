@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Hãy chọn một tệp mẫu.",
     "The file is too large: at most {size} MB.": "Tệp quá lớn: tối đa {size} MB.",
     "{name} uploaded.": "Đã tải lên {name}.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Đã có mẫu với tên này. Hãy chọn “Thay thế mẫu cùng tên” để thay thế.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "Đã có mẫu với tên này. Hãy chọn “Thay thế mẫu cùng tên” để thay thế.",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Tên tệp có thể gồm chữ cái, chữ số, dấu cách và . _ - ( ) + , và không được bắt đầu bằng dấu chấm. Hãy đổi tên tệp.",
     "Print job": "Lệnh in",
     "Template: {name}": "Mẫu: {name}",

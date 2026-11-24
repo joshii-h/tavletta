@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "เลือกไฟล์แม่แบบ",
     "The file is too large: at most {size} MB.": "ไฟล์ใหญ่เกินไป: ไม่เกิน {size} MB",
     "{name} uploaded.": "อัปโหลด {name} แล้ว",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "มีแม่แบบชื่อนี้อยู่แล้ว เลือก “แทนที่แม่แบบที่มีชื่อเดียวกัน” เพื่อแทนที่",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "มีแม่แบบชื่อนี้อยู่แล้ว เลือก “แทนที่แม่แบบที่มีชื่อเดียวกัน” เพื่อแทนที่",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "ชื่อไฟล์มีได้เฉพาะตัวอักษร ตัวเลข ช่องว่าง และ . _ - ( ) + , และต้องไม่ขึ้นต้นด้วยจุด โปรดเปลี่ยนชื่อไฟล์",
     "Print job": "งานพิมพ์",
     "Template: {name}": "แม่แบบ: {name}",

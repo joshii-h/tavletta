@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "Valitse mallitiedosto.",
     "The file is too large: at most {size} MB.": "Tiedosto on liian suuri: enintään {size} MB.",
     "{name} uploaded.": "{name} lähetetty.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "Samanniminen malli on jo olemassa. Korvaa se valitsemalla \"Korvaa samanniminen malli\".",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': 'Samanniminen malli on jo olemassa. Korvaa se valitsemalla "Korvaa samanniminen malli".',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "Tiedostonimessä saa olla kirjaimia, numeroita, välilyöntejä ja merkkejä . _ - ( ) + , eikä se saa alkaa pisteellä. Nimeä tiedosto uudelleen.",
     "Print job": "Tulostustyö",
     "Template: {name}": "Malli: {name}",

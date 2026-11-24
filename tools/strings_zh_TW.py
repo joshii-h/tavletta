@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "請選擇範本檔案。",
     "The file is too large: at most {size} MB.": "檔案過大：最大 {size} MB。",
     "{name} uploaded.": "已上傳 {name}。",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "已有同名範本。若要取代，請選擇「取代同名範本」。",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "已有同名範本。若要取代，請選擇「取代同名範本」。",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "檔名可包含字母、數字、空格及 . _ - ( ) + ,，且不可以點開頭。請重新命名檔案。",
     "Print job": "列印工作",
     "Template: {name}": "範本：{name}",

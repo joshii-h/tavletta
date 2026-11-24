@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "اختر ملف قالب.",
     "The file is too large: at most {size} MB.": "الملف كبير جدًا: {size} MB على الأكثر.",
     "{name} uploaded.": "رُفع {name}.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "يوجد قالب بهذا الاسم. اختر «استبدال قالب بالاسم نفسه» لاستبداله.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': "يوجد قالب بهذا الاسم. اختر «استبدال قالب بالاسم نفسه» لاستبداله.",
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "يمكن أن يحتوي اسم الملف على حروف وأرقام ومسافات و. _ - ( ) + , ويجب ألا يبدأ بنقطة. أعد تسمية الملف.",
     "Print job": "مهمة الطباعة",
     "Template: {name}": "القالب: {name}",

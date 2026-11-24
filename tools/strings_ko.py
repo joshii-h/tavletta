@@ -848,7 +848,7 @@ TRANSLATIONS = {
     "Choose a template file.": "서식 파일을 선택하세요.",
     "The file is too large: at most {size} MB.": "파일이 너무 큽니다. 최대 {size} MB입니다.",
     "{name} uploaded.": "{name}을(를) 업로드했습니다.",
-    "A template of this name exists. Choose \"Replace a template of the same name\" to replace it.": "이 이름의 서식이 이미 있습니다. 바꾸려면 \"같은 이름의 서식 바꾸기\"를 선택하세요.",
+    'A template of this name exists. Choose "Replace a template of the same name" to replace it.': '이 이름의 서식이 이미 있습니다. 바꾸려면 "같은 이름의 서식 바꾸기"를 선택하세요.',
     "The file name can have letters, digits, spaces and . _ - ( ) + , and must not start with a dot. Rename the file.": "파일 이름에는 문자, 숫자, 공백과 . _ - ( ) + , 를 사용할 수 있으며 점으로 시작할 수 없습니다. 파일 이름을 바꾸세요.",
     "Print job": "인쇄 작업",
     "Template: {name}": "서식: {name}",
