@@ -42,14 +42,22 @@ from tavletta.model import (
     SymbolElement,
     TextElement,
 )
-from tavletta.render import Inks, Rendered, RenderWarning, mm_to_px, px_to_mm
+from tavletta.render import (
+    Box,
+    Inks,
+    Rendered,
+    RenderWarning,
+    element_boxes,
+    ink_box,
+    label_top,
+    mm_to_px,
+    px_to_mm,
+)
 
 FREE_SIZE_MM = 10.0  # an image, symbol or shape of size 0
 FREE_TEXT_MM = 4.0  # a text of size 0: its em
 FREE_MODULE_MM = 0.5  # a 2D code's module of size 0
 FREE_BAR_MM = 0.3  # a linear code's narrowest bar of size 0
-
-Box = tuple[int, int, int, int]  # left, top, right, bottom (exclusive)
 
 
 def mm_to_pt(mm: float) -> float:
@@ -74,11 +82,6 @@ class Part:
 
     def __init__(self, image: Image.Image, anchor: tuple[int, int] = (0, 0)):
         self.image, self.anchor = image, anchor
-
-
-def ink_box(image: Image.Image) -> Box | None:
-    """Where an RGBA image has ink (alpha at least half)."""
-    return image.getchannel("A").point(imagefx.HALF).getbbox()
 
 
 def text_part(element: TextElement, dpi: float, inks: Inks) -> Part:
@@ -239,7 +242,7 @@ def render(
     length += -length % steps[0]
     flow.check_label(length, frame.tape + 2 * frame.bleed, dpi)
     nominal = mm_to_px(label.tape_mm, dpi)
-    top = frame.bleed + (frame.tape - nominal) // 2
+    top = label_top(label, frame, dpi)
     warnings += flow._code_warnings(label, images, dpi)
     warnings += _warnings(label, images, places, (length, nominal), top)
     img = flow._canvas(label, (length, frame.tape + 2 * frame.bleed), warnings)
@@ -253,7 +256,7 @@ def render(
         isinstance(e, PageElement) for e in label.elements
     )
     length_mm = label.length_mm if user_length else px_to_mm(length, dpi)
-    return Rendered(img, length_mm, warnings, False)
+    return Rendered(img, length_mm, warnings, False, element_boxes(images, places, top, dpi))
 
 
 def _drawn(label: Label, frame, how, shortest: int, warnings):
@@ -261,7 +264,7 @@ def _drawn(label: Label, frame, how, shortest: int, warnings):
     corners), rooms (see element_part()) and the label's length."""
     dpi, _inks, steps = how
     nominal = mm_to_px(label.tape_mm, dpi)
-    top = frame.bleed + (frame.tape - nominal) // 2
+    top = label_top(label, frame, dpi)
     # endless tape: as long as the content, found once it is drawn
     length = max(shortest, mm_to_px(label.length_mm, dpi))
     origins = [(dots(e.x_mm, dpi), top + dots(e.y_mm, dpi)) for e in label.elements]
