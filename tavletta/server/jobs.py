@@ -63,6 +63,9 @@ class PrintJob:
     id: str = field(default_factory=lambda: secrets.token_urlsafe(12))
     state: str = QUEUED
     printed: int = 0
+    # labels after `printed` that may have printed too: the printer could
+    # not tell (a lost connection); "printed_max" in the API
+    unsure: int = 0
     rows_printed: int = 0
     failure: Failure | None = None
     remark: Callable[[], str | None] | None = None
@@ -93,6 +96,7 @@ class PrintJob:
             "owner": self.owner or None,
             "label": self.label or None,
             "printed": self.printed,
+            "printed_max": self.printed + self.unsure if self.unsure else None,
             "total": self.total,
             "rows_printed": self.rows_printed,
             "cancel_requested": self.stop.is_set(),

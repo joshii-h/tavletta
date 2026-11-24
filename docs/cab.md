@@ -258,7 +258,11 @@ Setting "Print method" (`method` in settings.json, per printer model):
   set on the printer". Only a hint: the web interface may be off or behind
   a password, and the media loaded is not known. [confirmed]
 - `/cgi-bin/get?cmd=3` (status) has the counters `thermalTransfer` and
-  `thermalDirect` in metres; not used. [confirmed]
+  `thermalDirect` in metres, not used, and `"labels": [2686, "-"]`, the
+  labels printed in the printer's life, with `serialno` and
+  `printerModel`; without a password on firmware 5.47. Tavletta reads the
+  label counter for what a job printed (see "What a job printed").
+  [confirmed]
 - `ESC s` error `R` "Ribbon detected in thermal direct mode" and `F` "Out
   of ribbon" [manual]: Tavletta reports `F` as "the printer finds no
   ribbon" (load one, or choose thermal direct) and `R` as "a ribbon is
@@ -373,14 +377,13 @@ A 1
   (`serial.BATCH_BYTES`), which only labels with large dithered images
   do. With the fake printer, 250 labels of 100 × 150 mm in one job: 2.3 GB
   of memory before, 0.26 GB packed. [measured]
-- Tavletta takes `ESC s`'s labels to print as those of the whole job (all
-  its `A`), counting down to 0. [assumed: the printout of 5 labels was
-  reported as 5 of 5; a count while a longer job runs and the count at a
-  problem in the middle of a job are not confirmed yet] The labels
-  printed before a problem are the job's labels minus those still to
-  print in the answer that reports it; a series then stops at the first
-  row not printed in full and says so, as label by label, and "Continue
-  from" goes on from that row.
+- Whether `ESC s`'s labels to print are those of the whole job (all its
+  `A`) or of the `A` being printed is not known. [open: the printout of 5
+  labels was reported as 5 of 5; a count while a longer job runs and the
+  count at a problem in the middle of a job are not confirmed yet] What a
+  series' job printed does not depend on it (see "What a job printed"):
+  a series stops at the first row not printed for certain and says so,
+  as label by label, and "Continue from" goes on from that row.
 - A series stops (the stop button, a cancelled job of the server)
   between two jobs: a job that has started is printed in full, up to
   "Labels per job" labels after the request. A problem cancels the job
@@ -390,6 +393,58 @@ A 1
   [measured with the fake printer]
 - Labels whose variables change from copy to copy (`{=copy}`) go label
   by label, one job each.
+
+## What a job printed
+
+A job of one label and its copies (one `A`) counts its labels down in
+`ESC s` [manual]; a series' job has an `A` for each label, and whether
+`ESC s` counts all of them is not confirmed (above). The labels a job
+printed are known this way:
+
+- With the web interface's label counter (`/cgi-bin/get?cmd=3`, network
+  only, read in 2 s or not at all): read just before the job is sent and
+  while it prints, the difference is what it printed, exactly: also at
+  a problem in the middle of a job (read after `ESC c`) and after a lost
+  connection, when it is watched until it reached the job's labels or
+  stayed the same for 10 s (`SETTLE_SECONDS`; the printer may print on
+  a job whose `ESC c` did not reach it). A series' job is over once the
+  counter counted every label; a printer idle 10 s with fewer counted
+  ended the job early, which is reported as a problem with the labels
+  counted. A printer whose web interface does not answer is not asked
+  again for 30 s. Another program printing at the same moment would
+  count as ours (at most the job's labels). [decided] [open: whether the
+  counter counts a label as it is printed or later; not watched during a
+  print yet]
+- Without it (USB, the web interface off or behind a password), from
+  `ESC s`: a job of one label is over when the printer counted its
+  labels down, as the manual has it; a series' job only once the printer
+  is idle, not when the labels to print reached 0 with the interpreter
+  still active (that may be one `A` of many). At a problem the labels
+  printed for certain are those it was seen to count down (both readings
+  agree on them: fewer than printed if it counts each `A` on its own), at
+  most the job's labels minus those still to print in the answer that
+  reports it; a job of one label counts exactly as the manual has it. A
+  series' job counts as stuck only after 180 s and 10 s for each label
+  still to print (`LABEL_SECONDS`), as a label printed may not show.
+  [decided]
+- A lost connection (or a job that never ended): up to every label of
+  the job may have printed, the ones counted before for certain. Cut off
+  while the images were sent (before `m m`, which Tavletta sends on its
+  own): nothing printed. [decided]
+- When more may have printed than for certain, the message says so ("The
+  job was sent, but its outcome is unknown: … up to N may have"), the
+  counter goes on after every label that may have printed (a number
+  skipped rather than one printed twice), and "Continue from" starts
+  after the last label printed for certain: rows may print twice, none is
+  left out, and the message says that too. The server's job tells
+  `printed` (for certain) and `printed_max`.
+- The model and resolution `qv` told are kept for 30 s, a job's last
+  label for 2 s (the next label of a series does not wait for the
+  interpreter's second after it). The web interface's serial number tells
+  another printer at the address: both are dropped then. Without the web
+  interface a printer swapped at the same network address within those
+  30 s would be taken for the one before (on USB its address names its
+  serial number, so it is another printer). [decided]
 
 ## Where the print lands
 

@@ -17,7 +17,7 @@ import pytest
 from PIL import Image
 
 from tavletta import cli
-from tavletta.backends.base import PaperJam, PrinterInfo
+from tavletta.backends.base import PaperJam, PrinterInfo, PrinterNotFound
 from tavletta.model import CodeElement, Label, TextElement
 from tavletta.server import http as server_http
 from tavletta.server import jobs as jobs_module
@@ -954,6 +954,33 @@ def test_serial_rows_that_cannot_print_are_refused(api, server_env):
     status, _r, answer = call(api.base, "POST", "/api/v1/print", body=body)
     assert status == 422 and answer["error"]["code"] == "label_unprintable"
     assert "2" in answer["error"]["message"]
+
+
+def test_serial_printer_failure_of_unknown_outcome(api, server_env, monkeypatch):
+    """The printer could not tell what printed (a lost connection): printed
+    and rows_printed for certain, printed_max what may have; the counter
+    goes on after that, the message says rows may print twice."""
+    label_file(server_env.labels, "named.tavletta", TextElement(text="{Name} {=counter}"))
+    sent = []
+
+    def print_label(image, host, options, progress=None):
+        if len(sent) == 1:
+            raise PrinterNotFound("connection reset", printed=0, copies=1, printed_max=1)
+        sent.append(image)
+
+    monkeypatch.setattr(server_env.printer, "print_label", print_label)
+    rows = [{"Name": "a"}, {"Name": "b"}, {"Name": "c"}]
+    body = {"label": "named", "data_rows": rows, "wait": 10}
+    _status, _r, job = call(api.base, "POST", "/api/v1/print", body=body)
+    assert job["state"] == "failed" and job["error"]["code"] == "printer_not_found"
+    assert (job["printed"], job["printed_max"], job["rows_printed"]) == (1, 2, 1)
+    assert "outcome is unknown" in job["error"]["message"]
+    assert "may print them twice" in job["error"]["message"]
+    assert Label.saved_counter(server_env.labels / "named.tavletta") == 3
+    sent.clear()
+    monkeypatch.setattr(server_env.printer, "print_label", lambda *a, **k: None)
+    _status, _r, job = call(api.base, "POST", "/api/v1/print", body=body)
+    assert job["state"] == "done" and job["printed_max"] is None
 
 
 def test_serial_printer_failure(api, server_env, monkeypatch):

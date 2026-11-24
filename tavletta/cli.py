@@ -907,7 +907,7 @@ def _send_series(args, series: Series, host: str, unit) -> int:
                 message, code = _("The label cannot be prepared for printing."), EXIT_LABEL
             else:
                 message, code = printer_error_text(e.error, unit), EXIT_PRINTER
-            where = series_stop_text(e.row, e.copies_printed, e.position)
+            where = series_stop_text(e.row, e.copies_printed, e.position, e.uncertain)
             raise CliError(message + " " + where, code) from None
         finally:
             with _uninterrupted():

@@ -749,7 +749,7 @@ class PrintFlow:
             message = _("The label cannot be prepared for printing.")
         else:  # also a code too large for the printer (CodeTooLarge)
             message = printer_error_text(error.error, self.window.unit)
-        where = series_stop_text(error.row, error.copies_printed, error.position)
+        where = series_stop_text(error.row, error.copies_printed, error.position, error.uncertain)
         self.failed(error.error, message + "\n\n" + where)
         return False
 

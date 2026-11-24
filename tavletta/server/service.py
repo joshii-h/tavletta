@@ -1403,9 +1403,11 @@ class Service:
             printed = True
         finally:
             job.printed = print_job.printed
+            job.unsure = print_job.unsure
             if save:
                 counter = print_job.next_counter()
-                self._save_counter(prepared, counter, print_job.printed, printed)
+                labels = print_job.printed + print_job.unsure
+                self._save_counter(prepared, counter, labels, printed)
         options = prepared.options  # not `prepared`: the finished job keeps this
         return lambda: printed_remark(options, result)
 
@@ -1433,9 +1435,11 @@ class Service:
             printed = True
         finally:
             job.printed = outcome.labels
+            job.unsure = outcome.unsure
             job.rows_printed = len(outcome.printed)
             if save:
-                self._save_counter(prepared, outcome.counter, outcome.labels, printed)
+                labels = outcome.labels + outcome.unsure
+                self._save_counter(prepared, outcome.counter, labels, printed)
         options, result = prepared.options, outcome.result
         return lambda: printed_remark(options, result)
 
@@ -1708,7 +1712,8 @@ def _series_failure(error: SeriesError, units: str | None) -> tuple[str, Callabl
             text = _("The label cannot be prepared for printing.")
         else:
             text = printer_error_text(error.error, unit_for(units))
-        return text + " " + series_stop_text(error.row, error.copies_printed)
+        where = series_stop_text(error.row, error.copies_printed, uncertain=error.uncertain)
+        return text + " " + where
 
     if error.preparing:
         return "prepare_failed", message

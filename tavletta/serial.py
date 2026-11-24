@@ -26,7 +26,7 @@ from tavletta.backends.base import (
     Progress,
     RenderAgain,
 )
-from tavletta.job import Job, PrepareFailed, merge_results
+from tavletta.job import Job, PrepareFailed, counted_labels, merge_results
 from tavletta.merge.fill import VARIABLE
 from tavletta.model import CodeElement, Label, TextElement
 from tavletta.render import DEFAULT_SAFE_MM
@@ -155,6 +155,9 @@ class SeriesResult:
     stopped: bool = False  # stopped by the user before the last row
     result: PrintResult | None = None  # of the last label, if anything differed
     labels: int = 0  # labels printed, also those of a row that failed
+    # labels after those that may have printed too: the printer could not
+    # tell (PrinterError.params["printed_max"]); the counter goes on after them
+    unsure: int = 0
     counter: int | None = None  # {=counter} of the next label; None without one
 
 
@@ -181,6 +184,12 @@ class SeriesError(Exception):
         self.error = error
         self.preparing = preparing  # the label could not be rendered
         self.outcome = outcome or SeriesResult(list(printed))
+
+    @property
+    def uncertain(self) -> bool:
+        """Labels after those printed may have printed too: going on from
+        `row` may print them twice."""
+        return self.outcome.unsure > 0
 
 
 class UnprintableRows(Exception):
@@ -354,9 +363,11 @@ def _print_in_batches(
                     [outcome.result, _send_batch(backend, host, jobs, images, options, report)]
                 )
         except Exception as e:
-            done = e.params.get("printed", 0) if isinstance(e, PrinterError) else 0
-            done = done if isinstance(done, int) and not isinstance(done, bool) else 0
-            rows, partial = divmod(max(0, min(done, copies * len(sent))), copies)
+            labels = copies * len(sent)
+            params = e.params if isinstance(e, PrinterError) else {}
+            done = counted_labels(params.get("printed"), labels)
+            outcome.unsure = max(0, counted_labels(params.get("printed_max"), labels) - done)
+            rows, partial = divmod(done, copies)
             _done(outcome, sent[:rows], done, values if counting else None)
             raise SeriesError(
                 sent[min(rows, len(sent) - 1)] + 1,
@@ -435,11 +446,12 @@ def _send_batch(backend: Backend, host: str, jobs: list[Job], images, options, r
 
 def _done(outcome: SeriesResult, indexes, labels: int, values: Values | None) -> None:
     """Rows (indexes from 0) printed in full and the labels that came out;
-    the counter on by them (`values`, None for a label without one)."""
+    the counter on by them and those that may have (`values`, None for a
+    label without one)."""
     outcome.printed += [index + 1 for index in indexes]
     outcome.labels += labels
     if values is not None:
-        outcome.counter = values.counter + values.step * outcome.labels
+        outcome.counter = values.counter + values.step * (outcome.labels + outcome.unsure)
 
 
 def _print_row(
@@ -458,8 +470,9 @@ def _print_row(
         raise SeriesError(row, list(outcome.printed), e, False, outcome, job.printed) from e
     finally:
         outcome.labels += job.printed
+        outcome.unsure = job.unsure
         if values is not None:
-            outcome.counter = values.counter + values.step * outcome.labels
+            outcome.counter = values.counter + values.step * (outcome.labels + outcome.unsure)
 
 
 # --- serial labels on label sheets ---------------------------------------------------

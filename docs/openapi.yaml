@@ -2687,7 +2687,15 @@ components:
           description: Name in the labels folder; null for label_content.
         printed:
           type: integer
-          description: Labels printed so far.
+          description: Labels printed so far, for certain.
+        printed_max:
+          type:
+          - integer
+          - 'null'
+          description: 'After a failure whose outcome the printer could not tell (the connection was
+            lost while it printed): up to this many labels may have printed. The counter goes on after
+            them; rows_printed counts the rows printed for certain, so printing again from the next one
+            may print labels twice. null otherwise.'
         total:
           type: integer
           description: 'Labels to print: copies x rows.'
@@ -2739,6 +2747,7 @@ components:
         owner: inventory-tool
         label: asset-tag.tavletta
         printed: 20
+        printed_max: null
         total: 20
         rows_printed: 20
         cancel_requested: false

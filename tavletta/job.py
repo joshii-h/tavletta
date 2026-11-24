@@ -193,6 +193,13 @@ def labels_reported(backend: Backend, info: PrinterInfo, chosen: Mapping[str, ob
     return bool(info.media_type) and not backend.senses_as_reported(chosen, info)
 
 
+def counted_labels(value: object, most: int) -> int:
+    """A count of labels in PrinterError.params, from 0 to `most`."""
+    if not isinstance(value, int) or isinstance(value, bool):
+        return 0
+    return max(0, min(value, most))
+
+
 class PrepareFailed(Exception):
     """The label could not be rendered for printing; the cause is chained."""
 
@@ -236,6 +243,10 @@ class Job:
         self.positions = positions
         self.position: int | None = None  # on sheets: the position being rendered
         self.printed = 0
+        # labels after `printed` that may have printed too: the printer could
+        # not tell (PrinterError.params["printed_max"]); the counter goes on
+        # after them, a number skipped rather than one printed twice
+        self.unsure = 0
         self.stopped = False  # run() ended early because `stop` was set
         # the first label is filled in once: its UUID is the same in the
         # check and the print; the others are made as they are needed, a
@@ -336,9 +347,10 @@ class Job:
         failure, and those a backend reports in PrinterError.params
         ["printed"] for the failed send (copies of one job before the
         problem). The error then carries "printed" and "copies" of the
-        whole job. Interrupted (Ctrl+C) during a send, the labels of that
-        send count as printed: the printer may have them, and a number
-        skipped is better than one printed twice."""
+        whole job, and "printed_max" if more may have printed (the
+        backend could not tell). Interrupted (Ctrl+C) during a send, the
+        labels of that send count as printed: the printer may have them,
+        and a number skipped is better than one printed twice."""
         if not self.options.host:  # prepare() renders for this printer
             self.options = replace(self.options, host=host)
         if self.sheet is not None:
@@ -362,10 +374,14 @@ class Job:
         try:
             result = self._print_label(image, label, host, options, progress)
         except PrinterError as e:
-            done = e.params.get("printed", 0)
-            if isinstance(done, int) and not isinstance(done, bool):
-                self.printed += max(0, min(done, options.copies))
-            if self.printed:
+            before = self.printed
+            self.printed += counted_labels(e.params.get("printed"), options.copies)
+            most = counted_labels(e.params.get("printed_max"), options.copies)
+            e.params.pop("printed_max", None)
+            if most > self.printed - before:  # more may have printed: the job's labels
+                e.params["printed_max"] = before + most
+                self.unsure = before + most - self.printed
+            if self.printed or "printed_max" in e.params:
                 e.params.update(printed=self.printed, copies=self.options.copies)
             raise
         except Exception:
@@ -425,7 +441,7 @@ class Job:
         """The counter for the next print, None if the label has none."""
         if not uses_counter(self.label):
             return None
-        return self.values.counter + self.values.step * self.printed
+        return self.values.counter + self.values.step * (self.printed + self.unsure)
 
 
 class _EachCopy:

@@ -503,7 +503,8 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `host` | string | The printer's address. |
 | `owner` | string or null | Name of the token. |
 | `label` | string or null | Name in the labels folder; null for label_content. |
-| `printed` | integer | Labels printed so far. |
+| `printed` | integer | Labels printed so far, for certain. |
+| `printed_max` | integer or null | After a failure whose outcome the printer could not tell (the connection was lost while it printed): up to this many labels may have printed. The counter goes on after them; rows_printed counts the rows printed for certain, so printing again from the next one may print labels twice. null otherwise. |
 | `total` | integer | Labels to print: copies x rows. |
 | `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |
 | `cancel_requested` | boolean | DELETE was sent. |
@@ -622,6 +623,7 @@ Example of a job:
   "owner": "inventory-tool",
   "label": "asset-tag.tavletta",
   "printed": 20,
+  "printed_max": null,
   "total": 20,
   "rows_printed": 20,
   "cancel_requested": false,

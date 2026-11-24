@@ -13,7 +13,8 @@ printer runs through without stopping between them; heat,
 backfeed and tear-off position stay as set on the printer. Status comes from the ESC
 commands, which the printer answers on the same connection; the setup of
 the web interface, if it answers, tells the print method and speed set on
-the printer.
+the printer, its status the labels a job printed (the label counter;
+without it see _Tally).
 """
 
 from __future__ import annotations
@@ -80,6 +81,9 @@ CANCEL_TIMEOUT = 1.0  # seconds for ESC c after a problem, and for closing then
 MAX_ANSWER = 256
 MIN_RATE = 8_000  # bytes a second: a job that trickles in slower counts as stalled
 PRINT_TIMEOUT = 180.0  # seconds without progress while waiting or printing
+# a series' job without the web interface's label counter: seconds more
+# for each label still to print before it counts as stuck (_Tally.allowance())
+LABEL_SECONDS = 10.0
 POLL_INTERVAL = 0.5  # the manual: status requests not more often than every 0.5 s
 START_GRACE = 3.0  # a job that never shows up as running counts as done after this
 # a job seen only as the interpreter active (printed between two polls)
@@ -127,6 +131,14 @@ WEB_PORT = 80
 WEB_TIMEOUT = 2.0  # seconds for the web interface's setup, an optional hint
 SETUP_PATH = "/cgi-bin/get?cmd=1"  # the setup as JSON, read without a password
 MAX_SETUP_BYTES = 1 << 20
+# the status as JSON (model, serial number, counters), read without a
+# password: its label counter tells the labels a job printed exactly
+COUNTERS_PATH = "/cgi-bin/get?cmd=3"
+MAX_COUNTERS_BYTES = 64 << 10
+# after a lost connection, or a job that never finished: the label counter
+# is watched until it stayed the same this long (the printer stopped, or
+# ended the job)
+SETTLE_SECONDS = 10.0
 # the setup read is kept this long per printer: a job of many labels, each
 # sent on its own (a counter), asks once, not once per label (up to
 # WEB_TIMEOUT each where port 80 is filtered)
@@ -303,6 +315,16 @@ def _selected(editor, shown: str) -> str | None:
 def _fetch_setup(host: str) -> bytes | None:
     """The setup tree from the printer's web interface; None on USB or if
     it does not answer (switched off, behind a password). Replaced in tests."""
+    return _fetch(host, SETUP_PATH, MAX_SETUP_BYTES)
+
+
+def _fetch_counters(host: str) -> bytes | None:
+    """The status of the web interface (model, serial number, counters);
+    None on USB or if it does not answer. Replaced in tests."""
+    return _fetch(host, COUNTERS_PATH, MAX_COUNTERS_BYTES)
+
+
+def _fetch(host: str, path: str, limit: int) -> bytes | None:
     if usb.is_usb(host):
         return None
     try:
@@ -310,9 +332,9 @@ def _fetch_setup(host: str) -> bytes | None:
             mdns.resolve_host(host), WEB_PORT, timeout=WEB_TIMEOUT
         )
         try:
-            connection.request("GET", SETUP_PATH)
+            connection.request("GET", path)
             response = connection.getresponse()
-            return response.read(MAX_SETUP_BYTES) if response.status == 200 else None
+            return response.read(limit) if response.status == 200 else None
         finally:
             connection.close()
     except Exception:  # noqa: BLE001 - only a hint: any failure tells nothing
@@ -336,6 +358,75 @@ def web_setup(host: str, fresh: bool = False) -> Setup:
     with _setups_lock:
         _setups[host] = (now, setup)
     return setup
+
+
+@dataclass(frozen=True)
+class Counters:
+    """What the web interface's status tells: the labels the printer has
+    printed in its life, its serial number and model ("" = unknown)."""
+
+    labels: int | None = None
+    serial: str = ""
+    model: str = ""
+
+
+def parse_counters(data: bytes | None) -> Counters:
+    """The status of /cgi-bin/get?cmd=3 (firmware 5.47: "labels": [2686,
+    "-"], "serialno", "printerModel"); anything else tells nothing."""
+    try:
+        tree = json.loads(data or b"")
+    except ValueError:
+        return Counters()
+    if not isinstance(tree, dict):
+        return Counters()
+    labels = tree.get("labels")
+    count = labels[0] if isinstance(labels, list) and labels else None
+    if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+        count = None
+    serial, model = tree.get("serialno"), tree.get("printerModel")
+    return Counters(
+        count, serial if isinstance(serial, str) else "", model if isinstance(model, str) else ""
+    )
+
+
+# printers whose web interface did not tell the label counter, by address:
+# when; not asked again for SETUP_SECONDS (each job would wait up to
+# WEB_TIMEOUT where port 80 is filtered)
+_no_counters: HostMemory[float] = HostMemory()
+
+
+def web_counters(host: str) -> Counters:
+    """The web interface's status now; nothing on USB, or for a printer
+    whose web interface did not tell it in the last SETUP_SECONDS."""
+    missed = _no_counters.get(host)
+    if usb.is_usb(host) or (missed is not None and 0 <= _clock() - missed < SETUP_SECONDS):
+        return Counters()
+    counters = parse_counters(_fetch_counters(host))
+    if counters.labels is None:
+        _no_counters[host] = _clock()
+    else:
+        _no_counters.pop(host, None)
+    return counters
+
+
+class _LabelCounter:
+    """The label counter of the web interface from just before a job: the
+    labels the job printed, exactly, also after a problem or a lost
+    connection (docs/cab.md)."""
+
+    def __init__(self, host: str, start: Counters):
+        assert start.labels is not None
+        self.host = host
+        self.start = start.labels
+        self.serial = start.serial
+
+    def printed(self) -> int | None:
+        """The labels printed since the job's start; None if the counter
+        does not tell now (or another printer answers there)."""
+        counters = parse_counters(_fetch_counters(self.host))
+        if counters.labels is None or counters.serial != self.serial:
+            return None
+        return counters.labels - self.start
 
 
 # --- the job --------------------------------------------------------------------
@@ -561,6 +652,8 @@ class Cab(Backend):
         # when a job ended on its last label with the interpreter still
         # active, by address (_wait_done()), for the next label's _wait_idle()
         self._ended: HostMemory[float] = HostMemory()
+        # the serial number the web interface told, by address (_identify())
+        self._serials: HostMemory[str] = HostMemory()
 
     def _dots(self, host: str) -> float:
         """The resolution this printer reported, else the default (also
@@ -666,7 +759,9 @@ class Cab(Backend):
         progress: ProgressCallback | None,
     ) -> PrintResult | None:
         """One job: a label (build_job()) or several (build_series_job()),
-        options.copies of each."""
+        options.copies of each. A problem once the job was sent carries
+        the labels printed for certain (params "printed", of "copies")
+        and, if more may have printed, "printed_max" (_Tally)."""
         first = images[0]
         rendered = float(first.info.get("dots_per_mm", self._dots(host)))
         check_width(first.width / rendered, self.capabilities)
@@ -681,6 +776,8 @@ class Cab(Backend):
             # query()): its status first, so that it tells the problem
             # (out of labels, head open) instead of timing out on qv
             _checked(s)
+            counters = web_counters(host)
+            self._identify(host, counters)
             # the printer may not have been asked yet (switched on later);
             # asked once for the labels of a series
             version = self._version(s, host)
@@ -702,24 +799,39 @@ class Cab(Backend):
             # the label before of a series ended a moment ago: its
             # interpreter's second of activity is no other job to wait for
             ended = self._ended.get(host)
-            _wait_idle(s, ended is not None and 0 <= _clock() - ended < TAIL_SECONDS)
+            waited = _wait_idle(s, ended is not None and 0 <= _clock() - ended < TAIL_SECONDS)
             self._ended.pop(host, None)
-            counted = _Counted()
+            if waited and counters.labels is not None:  # another job printed meanwhile
+                counters = web_counters(host)
+            counter = _LabelCounter(host, counters) if counters.labels is not None else None
+            tally = _Tally(total, len(images) == 1, counter)
+            downloads, labels = _split(job)
             try:
                 # a job cut off while sending would leave a partial image
                 # download in the printer, which spoils the next job
-                s.send(job)
-                if _wait_done(s, progress, total, counted):
+                s.send(downloads)
+                tally.sent = True  # labels may print from here on
+                s.send(labels)
+                if _wait_done(s, progress, tally):
                     self._ended[host] = _clock()
-            except PrinterError as e:
+            except (PrinterError, OSError) as e:
                 s.cancel()
-                if len(images) > 1:  # the labels before the problem: the series goes on after them
-                    e.params["printed"] = counted.done
-                raise
-            except OSError:
-                s.cancel()
-                raise
+                error = tally.failed(e, progress)
+                if error is e:
+                    raise
+                raise error from e
         return None
+
+    def _identify(self, host: str, counters: Counters) -> None:
+        """Another printer at this address (the web interface tells its
+        serial number): what was kept of the one before (its model and
+        resolution, a job of its that just ended) does not hold."""
+        if not counters.serial:
+            return
+        if self._serials.get(host) not in (None, counters.serial):
+            self._versions.pop(host, None)
+            self._ended.pop(host, None)
+        self._serials[host] = counters.serial
 
     def _version(self, s: _Session, host: str) -> Version:
         """What qv answered in the last VERSION_SECONDS, else asked now."""
@@ -761,71 +873,172 @@ def _checked(s: _Session) -> Status:
     return status
 
 
-def _wait_idle(s: _Session, own_tail: bool = False) -> None:
-    """Another job may still be printing: wait for it. own_tail: the
-    interpreter active without labels pending is still our last job's
-    (_wait_done() ended on its last label a moment ago): no wait for it."""
+def _wait_idle(s: _Session, own_tail: bool = False) -> bool:
+    """Another job may still be printing: wait for it; True if it had to.
+    own_tail: the interpreter active without labels pending is still our
+    last job's (_wait_done() ended on its last label a moment ago): no wait
+    for it."""
     deadline = _clock() + PRINT_TIMEOUT
 
     def idle(status: Status) -> bool:
         return status.idle or (own_tail and not status.pending)
 
+    waited = False
     while not idle(_checked(s)):
         if _clock() > deadline:
             raise PrinterBusy("printer still busy after %.0f s" % PRINT_TIMEOUT)
+        waited = True
         _sleep(POLL_INTERVAL)
+    return waited
 
 
-@dataclass
-class _Counted:
-    """The labels of a job seen printed (_wait_done())."""
+def _split(job: bytes) -> tuple[bytes, bytes]:
+    """The job's image downloads, and its labels (from "m m" on): a job cut
+    off within the downloads prints nothing."""
+    at = job.index(CR + b"m m" + CR) + len(CR)
+    return job[:at], job[at:]
 
-    done: int = 0
+
+class _Tally:
+    """What is known of the labels a job printed: `done` for certain,
+    `most` at most.
+
+    The label counter of the web interface (`counter`) tells it exactly.
+    Without it ESC s does: its labels to print are those of the whole job
+    for a job of one label and its copies (one A, the manual); for a
+    series' job (an A for each label) that they are those of the whole job
+    too is not confirmed (docs/cab.md), so only what both readings agree on
+    counts as printed: the labels it was seen to count down (fewer than
+    printed, if the count starts again for each A). At most the job's
+    labels minus those still to print."""
+
+    def __init__(self, total: int, whole_job: bool, counter: _LabelCounter | None):
+        self.total = total
+        self.whole_job = whole_job  # one A: ESC s counts the whole job's labels
+        self.counter = counter
+        self.sent = False  # the labels' part of the job is on its way
+        self.done = 0
+        self.stopped: Status | None = None  # the answer that told the problem
+        self._last: int | None = None  # labels to print at the poll before
+
+    def seen(self, pending: int) -> None:
+        """An ESC s answer's labels to print."""
+        if self.whole_job:
+            if 0 < pending <= self.total:
+                self.done = max(self.done, self.total - pending)
+        elif self._last is not None and pending < self._last:
+            self.done = min(self.total, self.done + self._last - pending)
+        self._last = pending
+
+    def allowance(self) -> float:
+        """Seconds without a label seen printed before the job counts as
+        stuck: PRINT_TIMEOUT, and for a series' job whose labels only ESC s
+        tells LABEL_SECONDS for each label still to print (if ESC s counts
+        each A on its own, a label printed may not show)."""
+        if self.whole_job or self.counter is not None:
+            return PRINT_TIMEOUT
+        return PRINT_TIMEOUT + LABEL_SECONDS * (self.total - self.done)
+
+    def counted(self) -> int | None:
+        """The labels the counter tells printed now; None without it (it
+        stopped telling: the rest of the job goes without it)."""
+        if self.counter is None:
+            return None
+        printed = self.counter.printed()
+        if printed is None:
+            self.counter = None
+            return None
+        printed = max(0, min(self.total, printed))
+        self.done = max(self.done, printed)
+        return printed
+
+    def failed(self, error: Exception, progress: ProgressCallback | None) -> PrinterError:
+        """The error, as a PrinterError, with what printed: the printer
+        reported a problem (ESC c sent: it prints no more) or the outcome is
+        not known (the connection was lost, the job never finished)."""
+        mapped = error if isinstance(error, PrinterError) else map_error(error)
+        if not self.sent:  # cut off within the image downloads: nothing printed
+            return mapped
+        if self.stopped is not None:
+            done, most = self._stopped(self.stopped.pending)
+        else:
+            done, most = self._unknown(progress)
+        mapped.params.update(printed=done, copies=self.total)
+        if most > done:
+            mapped.params["printed_max"] = most
+        return mapped
+
+    def _stopped(self, pending: int) -> tuple[int, int]:
+        printed = self.counted()
+        if printed is not None:
+            return printed, printed
+        self.seen(pending)
+        if self.whole_job:  # as the manual has it: the labels before were printed
+            return self.done, self.done
+        return self.done, self.total - pending if 0 < pending <= self.total else self.total
+
+    def _unknown(self, progress: ProgressCallback | None) -> tuple[int, int]:
+        """The counter watched until it reached the job's labels or stayed
+        the same for SETTLE_SECONDS: the printer may go on printing a job
+        whose ESC c did not reach it. Without the counter, or once it
+        stopped before the end: up to every label of the job."""
+        printed = self.counted()
+        last, since = printed, _clock()
+        deadline = since + PRINT_TIMEOUT
+        while printed is not None and printed < self.total and _clock() < deadline:
+            if _clock() - since >= SETTLE_SECONDS:
+                break
+            _sleep(POLL_INTERVAL)
+            printed = self.counted()
+            if printed != last:
+                last, since = printed, _clock()
+                report_progress(progress, min(self.total, (printed or 0) + 1), self.total)
+        if printed is not None and printed >= self.total:
+            return self.total, self.total
+        return self.done, self.total
 
 
-def _wait_done(
-    s: _Session,
-    progress: ProgressCallback | None,
-    copies: int,
-    counted: _Counted | None = None,
-) -> bool:
-    """Until the job has run: the printer counted its labels down to 0
-    (True: its interpreter still active, the job's second after it; the
-    next job need not wait for that); or, the labels never seen pending
-    (printed between two polls), it stayed idle for RUN_GRACE after its
-    interpreter was seen active, for START_GRACE if it was not seen at all. While the image is read the
-    interpreter is active without labels pending, which is not yet the
-    job. The timeout restarts with every printed label. `counted` keeps
-    the labels seen printed, also when the printer reports a problem."""
+def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) -> bool:
+    """Until the job has run; True if it ended on its last label with the
+    interpreter still active (the job's second after it, which the next
+    job of a series need not wait for).
+
+    A job of one label (and its copies) has run once the printer counted
+    its labels down to 0, or, the labels never seen pending (printed
+    between two polls), once it stayed idle for RUN_GRACE after its
+    interpreter was seen active, for START_GRACE if it was not seen at
+    all. While the image is read the interpreter is active without labels
+    pending, which is not yet the job. A series' job (an A for each label)
+    has run once the printer is idle (ESC s may count each A on its own),
+    and, with the web interface's label counter, once that counted every
+    label. The timeout restarts with every printed label. `tally` keeps
+    what printed, also when the printer reports a problem."""
+    total = tally.total
     started = False  # labels of the job seen pending
     active = False  # the interpreter seen active since the job was sent
     last = None
     idle_since = None
-    deadline = _clock() + PRINT_TIMEOUT
+    deadline = _clock() + tally.allowance()
     while True:
         status = s.status()
         error = status_error(status)
         if error:
-            # the labels still to print when the problem came: those
-            # before were printed
-            if counted is not None and status.pending and status.pending <= copies:
-                counted.done = max(counted.done, copies - status.pending)
+            tally.stopped = status
             raise error
+        tally.seen(status.pending)
+        if not tally.whole_job:
+            tally.counted()
+        if tally.done != last:
+            last = tally.done
+            deadline = _clock() + tally.allowance()
+            report_progress(progress, min(total, tally.done + 1), total)
         if status.pending:
             started, idle_since = True, None
-            done = max(0, copies - status.pending)
-            if counted is not None:
-                counted.done = done
-            if done != last:
-                last = done
-                deadline = _clock() + PRINT_TIMEOUT
-                report_progress(progress, min(copies, done + 1), copies)
-        elif status.running and started:
+        elif status.running and started and tally.whole_job:
             # counted down to 0: printed; the rest is the interpreter's
             # second of activity after a job (and a tear-off feed)
-            if counted is not None:
-                counted.done = copies
-            report_progress(progress, copies, copies)
+            tally.done = total
+            report_progress(progress, total, total)
             return True
         elif status.running:
             # the job's own: _wait_idle() saw the interpreter idle before
@@ -837,10 +1050,19 @@ def _wait_done(
             idle_since = _clock() if idle_since is None else idle_since
             grace = RUN_GRACE if active else START_GRACE
             if started or _clock() - idle_since >= grace:
-                if counted is not None:
-                    counted.done = copies
-                report_progress(progress, copies, copies)
-                return False
+                # all its labels printed; with the label counter a series'
+                # job only once that counted them all: short of it for
+                # SETTLE_SECONDS, the job ended early (the labels exact)
+                printed = None if tally.whole_job else tally.counted()
+                if printed is None or printed >= total:
+                    tally.done = total
+                    report_progress(progress, total, total)
+                    return False
+                if _clock() - idle_since >= SETTLE_SECONDS:
+                    tally.stopped = status
+                    raise PrinterError(
+                        "the job ended after %d of %d labels (label counter)" % (printed, total)
+                    )
         if _clock() > deadline:
             raise PrinterTimeout("printer stayed busy: %s" % status.raw)
         _sleep(POLL_INTERVAL)

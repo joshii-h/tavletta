@@ -506,7 +506,22 @@ def printer_error_text(error: Exception, unit: Unit) -> str:
         return code_text("generic", unit)
     text = code_text(error.code, unit, float(error.params.get("max_mm", 0)))
     printed = error.params.get("printed")
-    if printed:  # some of the copies (or sheets) came out before the problem
+    most = error.params.get("printed_max")
+    if isinstance(most, int) and isinstance(printed, int) and most > printed:
+        # the job was sent, but the printer could not tell what it printed
+        total = error.params.get("copies", most)
+        if printed:
+            done = _(
+                "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels "
+                "printed for certain, up to %(most)d may have."
+            )
+        else:
+            done = _(
+                "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d "
+                "labels may have printed."
+            )
+        text += " " + done % {"n": printed, "most": most, "total": total}
+    elif printed:  # some of the copies (or sheets) came out before the problem
         if error.params.get("pages"):
             done = _("Sheets already printed: %(n)d of %(total)d.")
         else:
@@ -751,14 +766,23 @@ def data_error_text(error: Exception, name: str) -> str:
 
 
 def series_stop_text(
-    row: int, copies_printed: int = 0, position: tuple[int, int] | None = None
+    row: int,
+    copies_printed: int = 0,
+    position: tuple[int, int] | None = None,
+    uncertain: bool = False,
 ) -> str:
     """Where a series stopped and how to go on; with the copies of that row
     the printer had already printed, so none is printed twice by mistake;
-    on label sheets where that row's label goes (position, sheet)."""
+    on label sheets where that row's label goes (position, sheet).
+    uncertain: rows from `row` on may have printed too (SeriesError)."""
     text = _("Printing stopped at row %(row)d. To continue, print again from row %(row)d.") % {
         "row": row
     }
+    if uncertain:
+        text += " " + _(
+            "Row %(row)d and the rows after it may have printed already: going on from "
+            "it may print them twice."
+        ) % {"row": row}
     if copies_printed:
         text += " " + _("Copies of row %(row)d already printed: %(copies)d.") % {
             "row": row,
