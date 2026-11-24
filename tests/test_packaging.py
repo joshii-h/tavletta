@@ -922,3 +922,59 @@ def test_the_rpm_sources_are_pinned_as_the_debian_ones():
     assert sums[f"labelprinter-vc500w-{commit[:7]}.tar.gz"] == pins["LABELPRINTER_SHA256"]
     assert sums[f"zint_bindings-{pins['ZINT_VERSION']}.tar.gz"] == pins["ZINT_SHA256"]
     assert "sha256sum -c" in (rpm / "build.sh").read_text()
+
+
+def test_clean_container_labels_its_containers_and_removes_stale_ones(tmp_path):
+    """packaging/clean-container.sh: --rm and the label tavletta.ci=1 with
+    the time made; leftovers older than three hours are removed first,
+    younger ones (another job's) stay; the command's exit status is kept."""
+    import os
+    import shutil
+    import subprocess
+    import time
+
+    if not shutil.which("bash"):
+        pytest.skip("no bash")
+    now = int(time.time())
+    log = tmp_path / "docker.log"
+    fake = tmp_path / "bin" / "docker"
+    fake.parent.mkdir()
+    fake.write_text(
+        "#!/bin/bash\n"
+        f'echo "$*" >> {log}\n'
+        'case "$1" in\n'
+        f"  ps) echo 'old {now - 4 * 3600}'; echo 'young {now - 600}'; echo 'unlabelled' ;;\n"
+        "  create) echo new-id ;;\n"
+        "  start) exit 7 ;;\n"
+        "esac\n"
+    )
+    fake.chmod(0o755)
+    (tmp_path / "work").mkdir()
+    done = subprocess.run(
+        [
+            "bash",
+            str(ROOT / "packaging" / "clean-container.sh"),
+            "img@sha256:x",
+            str(tmp_path / "work"),
+        ]
+        + ["./smoke-test.sh", "out"],
+        env={"PATH": f"{fake.parent}:{os.environ['PATH']}"},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert done.returncode == 7, done.stderr
+    calls = log.read_text().splitlines()
+    assert (
+        calls[0]
+        == 'ps -a --filter label=tavletta.ci=1 --format {{.ID}} {{.Label "tavletta.ci.created"}}'
+    )
+    removed = [c for c in calls if c.startswith("rm ")]
+    assert removed[0] == "rm -f old"
+    assert "rm -f young" not in removed
+    assert "rm -f unlabelled" in removed  # without the time: from before, stale
+    create = next(c for c in calls if c.startswith("create "))
+    assert create.startswith("create --rm --label tavletta.ci=1 --label tavletta.ci.created=")
+    assert create.endswith("--workdir /work img@sha256:x ./smoke-test.sh out")
+    assert f"cp {tmp_path / 'work'}/. new-id:/work" in calls
+    assert calls[-1] == "rm -f new-id"
