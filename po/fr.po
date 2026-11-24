@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-23 15:25+0100\n"
+"PO-Revision-Date: 2026-11-24 14:55+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -10,34 +10,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tavletta/app.py:147 tavletta/ui/styles.py:183
+#: tavletta/app.py:150 tavletta/ui/styles.py:183
 msgid "Box and frame"
 msgstr "Encadré et cadre"
 
-#: tavletta/app.py:221 tavletta/cli.py:185
+#: tavletta/app.py:224 tavletta/cli.py:186
 msgid "Design and print labels"
 msgstr "Créer et imprimer des étiquettes"
 
-#: tavletta/app.py:224
+#: tavletta/app.py:227
 msgid ""
 "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced "
 "tav-LET-ta."
 msgstr "Tavletta signifie « petite tablette » en romanche (de tavla, table, planche). Prononcé tav-LET-ta."
 
 #. translators: replace with your name to be credited in the About dialog
-#: tavletta/app.py:230
+#: tavletta/app.py:233
 msgid "translator-credits"
 msgstr "Tavletta contributors"
 
-#: tavletta/app.py:238
+#: tavletta/app.py:241
 msgid "Ideas for the variables (counter, date, UUID), no code"
 msgstr "Idées pour les variables (compteur, date, UUID), sans code"
 
-#: tavletta/app.py:241
+#: tavletta/app.py:244
 msgid "Protocol knowledge"
 msgstr "Connaissance des protocoles"
 
-#: tavletta/app.py:246
+#: tavletta/app.py:249
 #, python-format
 msgid ""
 "From %(projects)s and the manufacturers' manuals, written anew without their "
@@ -64,55 +64,55 @@ msgstr "NAME=VALUE attendu : %s"
 msgid "expected a whole number from %(min)d to %(max)d: %(value)s"
 msgstr "nombre entier de %(min)d à %(max)d attendu : %(value)s"
 
-#: tavletta/cli.py:179
+#: tavletta/cli.py:180
 #, python-format
 msgid "expected rows such as 3-10, 5 or 7-: %s"
 msgstr "lignes attendues, p. ex. 3-10, 5 ou 7- : %s"
 
-#: tavletta/cli.py:186
+#: tavletta/cli.py:187
 msgid "Without a command the application starts; label files given open in it."
 msgstr "Sans commande, l’application démarre ; les fichiers d’étiquette indiqués s’y ouvrent."
 
-#: tavletta/cli.py:192
+#: tavletta/cli.py:193
 msgid "print a label file without opening a window"
 msgstr "imprime un fichier d’étiquette sans ouvrir de fenêtre"
 
-#: tavletta/cli.py:193
+#: tavletta/cli.py:194
 msgid "Print a label file without opening a window."
 msgstr "Imprime un fichier d’étiquette sans ouvrir de fenêtre."
 
-#: tavletta/cli.py:195
+#: tavletta/cli.py:196
 msgid "the label (.tavletta)"
 msgstr "l’étiquette (.tavletta)"
 
-#: tavletta/cli.py:198
+#: tavletta/cli.py:199
 #, python-format
 msgid "printer model, by default the label's: %s"
 msgstr "modèle d’imprimante, par défaut celui de l’étiquette : %s"
 
-#: tavletta/cli.py:201
+#: tavletta/cli.py:202
 msgid "printer address, by default the one set in the app"
 msgstr "adresse de l’imprimante, par défaut celle réglée dans l’application"
 
-#: tavletta/cli.py:204
+#: tavletta/cli.py:205
 msgid "number of copies"
 msgstr "nombre de copies"
 
-#: tavletta/cli.py:214
+#: tavletta/cli.py:215
 msgid ""
 "text of the element NAME, or value of the variable {=NAME}; variables in a "
 "text are filled in; repeatable"
 msgstr "texte de l’élément NAME, ou valeur de la variable {=NAME} ; les variables d’un texte sont remplies ; répétable"
 
-#: tavletta/cli.py:224
+#: tavletta/cli.py:225
 msgid "like --set, but the value is used as it is: braces are no variables"
 msgstr "comme --set, mais la valeur est prise telle quelle : les accolades ne sont pas des variables"
 
-#: tavletta/cli.py:230
+#: tavletta/cli.py:231
 msgid "counter of the first label, instead of the one saved in the label"
 msgstr "compteur de la première étiquette, au lieu de celui enregistré dans l’étiquette"
 
-#: tavletta/cli.py:236
+#: tavletta/cli.py:237
 msgid ""
 "print with the printer model's defaults instead of the cut, colours, "
 "quality, extras (chain printing, high resolution, tape feed), printer "
@@ -120,7 +120,7 @@ msgid ""
 "the safety margin stay"
 msgstr "imprimer avec les valeurs par défaut du modèle d’imprimante au lieu de la coupe, des couleurs, de la qualité, des options (impression en chaîne, haute résolution, avance du ruban), des réglages d’imprimante et des contours des planches d’étiquettes choisis en dernier dans l’application ; l’adresse et la marge de sécurité restent"
 
-#: tavletta/cli.py:245
+#: tavletta/cli.py:246
 msgid ""
 "print method of a thermal printer that has the setting: printer (as set on "
 "the printer), transfer (with a ribbon) or direct (thermal direct, no "
@@ -128,326 +128,332 @@ msgid ""
 "one set on the printer"
 msgstr "mode d’impression d’une imprimante thermique qui a ce réglage : printer (comme réglé sur l’imprimante), transfer (avec ruban) ou direct (thermique direct, sans ruban) ; par défaut celui choisi dans l’application ; avec --printer-defaults, celui réglé sur l’imprimante"
 
-#: tavletta/cli.py:254
+#: tavletta/cli.py:255
 msgid ""
 "do not ask the printer before rendering (its model, tape and resolution)"
 msgstr "ne pas interroger l’imprimante avant le rendu (son modèle, son ruban et sa résolution)"
 
-#: tavletta/cli.py:260
+#: tavletta/cli.py:261
 msgid ""
 "do not save the next counter value in the label (a read-only file); the next "
 "print starts from the same number"
 msgstr "ne pas enregistrer la prochaine valeur du compteur dans l’étiquette (un fichier en lecture seule) ; la prochaine impression reprend au même numéro"
 
-#: tavletta/cli.py:269
+#: tavletta/cli.py:270
 msgid ""
 "serial labels: one label for each row of this CSV, ODS or XLSX file; by "
 "default the data file of the label"
 msgstr "étiquettes en série : une étiquette pour chaque ligne de ce fichier CSV, ODS ou XLSX ; par défaut le fichier de données de l’étiquette"
 
-#: tavletta/cli.py:274
+#: tavletta/cli.py:275
 msgid "the sheet of the data file, by default the first"
 msgstr "la feuille du fichier de données, par défaut la première"
 
-#: tavletta/cli.py:280
+#: tavletta/cli.py:281
 msgid "only these rows of the data file, e.g. 3-10, 5 or 7- (counted from 1)"
 msgstr "seulement ces lignes du fichier de données, p. ex. 3-10, 5 ou 7- (comptées à partir de 1)"
 
-#: tavletta/cli.py:283
+#: tavletta/cli.py:284
 msgid "check and render only, do not print"
 msgstr "vérifier et générer seulement, sans imprimer"
 
-#: tavletta/cli.py:289
+#: tavletta/cli.py:290
 msgid ""
 "with --dry-run: save each label as PNG as the window exports it, at most 600 "
 "dpi (- for stdout: the first only)"
 msgstr "avec --dry-run : enregistre chaque étiquette en PNG comme la fenêtre l’exporte, 600 dpi au plus (- pour la sortie standard : la première seulement)"
 
-#: tavletta/cli.py:295
+#: tavletta/cli.py:296
 msgid "list the printers found on the network"
 msgstr "liste les imprimantes trouvées sur le réseau"
 
-#: tavletta/cli.py:296
+#: tavletta/cli.py:297
 msgid "List the printers found on the network: model, address, name."
 msgstr "Liste les imprimantes trouvées sur le réseau : modèle, adresse, nom."
 
-#: tavletta/cli.py:298
+#: tavletta/cli.py:299
 #, python-format
 msgid "only this printer model: %s"
 msgstr "uniquement ce modèle d’imprimante : %s"
 
-#: tavletta/cli.py:310
+#: tavletta/cli.py:311
 #, python-format
 msgid "expected an address or network such as 172.16.0.0/12: %s"
 msgstr "adresse ou réseau attendu, p. ex. 172.16.0.0/12 : %s"
 
-#: tavletta/cli.py:320
+#: tavletta/cli.py:321
 msgid "the folder with the label files the server may use"
 msgstr "le dossier contenant les fichiers d’étiquette que le serveur peut utiliser"
 
-#: tavletta/cli.py:327
+#: tavletta/cli.py:328
 msgid "only print on this printer address (* matches anything); repeatable"
 msgstr "imprimer uniquement sur cette adresse d’imprimante (* correspond à tout) ; répétable"
 
-#: tavletta/cli.py:333
+#: tavletta/cli.py:334
 msgid "printers.toml: the printers clients may use, by name"
 msgstr "printers.toml : les imprimantes que les clients peuvent utiliser, par leur nom"
 
-#: tavletta/cli.py:340
+#: tavletta/cli.py:341
 msgid "most labels in one print job, copies times rows (default 10000)"
 msgstr "nombre maximal d’étiquettes dans une tâche d’impression, copies multipliées par lignes (par défaut 10000)"
 
-#: tavletta/cli.py:345
+#: tavletta/cli.py:346
 msgid "search the network for printers (off by default)"
 msgstr "chercher des imprimantes sur le réseau (désactivé par défaut)"
 
-#: tavletta/cli.py:351
+#: tavletta/cli.py:352
 msgid ""
 "allow document pages (PDF, images) in labels sent with the request; PDFs are "
 "then drawn in a separate process with limits (off by default)"
 msgstr "autoriser les pages de document (PDF, images) dans les étiquettes envoyées avec la requête ; les PDF sont alors dessinés dans un processus séparé avec des limites (désactivé par défaut)"
 
-#: tavletta/cli.py:360
+#: tavletta/cli.py:361
 msgid "run a print server with a REST API"
 msgstr "lance un serveur d’impression avec une REST API"
 
-#: tavletta/cli.py:361
+#: tavletta/cli.py:362
 msgid "Run a print server: a REST API and, with --mcp, MCP for AI clients."
 msgstr "Lance un serveur d’impression : une REST API et, avec --mcp, MCP pour les clients d’IA."
 
-#: tavletta/cli.py:364
+#: tavletta/cli.py:365
 msgid "address to listen on (default 127.0.0.1)"
 msgstr "adresse d’écoute (par défaut 127.0.0.1)"
 
-#: tavletta/cli.py:370
+#: tavletta/cli.py:371
 #, python-format
 msgid "port to listen on (default %d)"
 msgstr "port d’écoute (par défaut %d)"
 
-#: tavletta/cli.py:376
+#: tavletta/cli.py:377
 msgid ""
 "file with the access token; else the environment variable TAVLETTA_TOKEN"
 msgstr "fichier contenant le jeton d’accès ; sinon la variable d’environnement TAVLETTA_TOKEN"
 
-#: tavletta/cli.py:382
+#: tavletta/cli.py:383
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml : jetons d’accès nommés, avec leurs rôles"
 
-#: tavletta/cli.py:384
+#: tavletta/cli.py:385
 msgid "also serve MCP at /mcp"
 msgstr "servir aussi MCP sur /mcp"
 
-#: tavletta/cli.py:390
+#: tavletta/cli.py:391
 msgid "largest request body in MB (default 4)"
 msgstr "taille maximale du corps de la requête en MB (par défaut 4)"
 
-#: tavletta/cli.py:399
+#: tavletta/cli.py:400
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "un proxy inverse dont l’en-tête X-Forwarded-For indique le client, p. ex. 172.16.0.0/12 ; répétable"
 
-#: tavletta/cli.py:408
+#: tavletta/cli.py:409
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "autoriser les requêtes des pages web de cette origine ; répétable"
 
-#: tavletta/cli.py:413
+#: tavletta/cli.py:414
 msgid "serve MCP on standard input and output"
 msgstr "sert MCP sur l’entrée et la sortie standard"
 
-#: tavletta/cli.py:415
+#: tavletta/cli.py:416
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "Sert MCP sur l’entrée et la sortie standard, pour des clients d’IA comme Claude Desktop."
 
-#: tavletta/cli.py:425
+#: tavletta/cli.py:426
 msgid "manage the access tokens of the print server"
 msgstr "gère les jetons d’accès du serveur d’impression"
 
-#: tavletta/cli.py:426
+#: tavletta/cli.py:427
 msgid "Manage the access tokens of the print server."
 msgstr "Gère les jetons d’accès du serveur d’impression."
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:432
 msgid "make a token and add its hash to tokens.toml"
 msgstr "crée un jeton et ajoute son hachage à tokens.toml"
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:433
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "Crée un jeton, ajoute son hachage à tokens.toml et affiche le jeton une seule fois."
 
-#: tavletta/cli.py:434
+#: tavletta/cli.py:435
 msgid "name of the token, e.g. the device"
 msgstr "nom du jeton, p. ex. l’appareil"
 
-#: tavletta/cli.py:439
+#: tavletta/cli.py:440
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview : consulter seulement ; print : imprimer aussi ; admin : aussi toutes les tâches"
 
-#: tavletta/cli.py:441
+#: tavletta/cli.py:442
 msgid "tokens.toml to add it to"
 msgstr "tokens.toml auquel l’ajouter"
 
-#: tavletta/cli.py:447
+#: tavletta/cli.py:448
 msgid "only this printer of printers.toml; repeatable"
 msgstr "uniquement cette imprimante de printers.toml ; répétable"
 
-#: tavletta/cli.py:450
+#: tavletta/cli.py:451
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml, pour vérifier --printer"
 
-#: tavletta/cli.py:452
+#: tavletta/cli.py:453
 msgid "valid until, e.g. 2027-12-31"
 msgstr "valable jusqu’au, p. ex. 2027-12-31"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:454
 msgid "a note for people"
 msgstr "une note pour les humains"
 
-#: tavletta/cli.py:455
+#: tavletta/cli.py:456
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "enregistrer le hachage avec scrypt au lieu de SHA-256"
 
-#: tavletta/cli.py:461
+#: tavletta/cli.py:462
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "lire sur l’entrée standard un jeton de votre choix (enregistré avec scrypt) au lieu d’en créer un"
 
-#: tavletta/cli.py:481 tavletta/server/config.py:219
-#: tavletta/server/service.py:590
+#: tavletta/cli.py:482 tavletta/server/config.py:219
+#: tavletta/server/service.py:593
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "Modèle d’imprimante inconnu : %s"
 
-#: tavletta/cli.py:488 tavletta/ui/files.py:84 tavletta/ui/files.py:137
-#: tavletta/ui/texts.py:319 tavletta/ui/texts.py:701
-#: tavletta/server/service.py:747
+#: tavletta/cli.py:489 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/ui/texts.py:340 tavletta/ui/texts.py:722
+#: tavletta/server/service.py:750
 #, python-format
 msgid "Cannot open %s"
 msgstr "Impossible d’ouvrir %s"
 
-#: tavletta/cli.py:510 tavletta/server/main.py:260
+#: tavletta/cli.py:511 tavletta/server/main.py:260
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s n’est pas une date, attendu p. ex. 2026-12-31 ou 2026-12-31T08:30"
 
-#: tavletta/cli.py:558
+#: tavletta/cli.py:559
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} est rempli à l’impression et ne peut pas être défini"
 
-#: tavletta/cli.py:564
+#: tavletta/cli.py:565
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "L’étiquette n’a aucun élément ni variable nommé %s"
 
-#: tavletta/cli.py:592 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1123
+#: tavletta/cli.py:594 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1133
 msgid "The label is empty"
 msgstr "L’étiquette est vide"
 
-#: tavletta/cli.py:629
+#: tavletta/cli.py:631
 msgid "Cannot write the output"
 msgstr "Impossible d’écrire la sortie"
 
-#: tavletta/cli.py:660
+#: tavletta/cli.py:662
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output écrit des images PNG : indiquez un nom se terminant par .png"
 
-#: tavletta/cli.py:685 tavletta/cli.py:894 tavletta/ui/printing.py:535
-#: tavletta/ui/printing.py:699 tavletta/server/service.py:989
-#: tavletta/server/service.py:1012 tavletta/server/service.py:1307
-#: tavletta/server/service.py:1477
+#: tavletta/cli.py:687 tavletta/cli.py:896 tavletta/ui/printing.py:541
+#: tavletta/ui/printing.py:705 tavletta/server/service.py:992
+#: tavletta/server/service.py:1015 tavletta/server/service.py:1317
+#: tavletta/server/service.py:1487
 msgid "The label cannot be prepared for printing."
 msgstr "Impossible de préparer l’étiquette pour l’impression."
 
-#: tavletta/cli.py:772
+#: tavletta/cli.py:774
 msgid "No printer found – give its address with --host"
 msgstr "Aucune imprimante trouvée – indiquez son adresse avec --host"
 
-#: tavletta/cli.py:774
+#: tavletta/cli.py:776
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Plusieurs imprimantes trouvées – choisissez-en une avec --host (tavletta list-printers)"
 
-#: tavletta/cli.py:785 tavletta/ui/texts.py:744 tavletta/server/service.py:1467
+#: tavletta/cli.py:787 tavletta/ui/texts.py:765 tavletta/server/service.py:1477
 #, python-format
 msgid "Cannot save %s"
 msgstr "Impossible d’enregistrer %s"
 
-#: tavletta/cli.py:787 tavletta/server/service.py:1470
+#: tavletta/cli.py:789 tavletta/server/service.py:1480
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "les étiquettes ont été imprimées, mais la prochaine valeur du compteur n’a pas été enregistrée"
 
-#: tavletta/cli.py:802 tavletta/server/service.py:1152
+#: tavletta/cli.py:804 tavletta/server/service.py:1162
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "rien n’a été imprimé : la prochaine valeur du compteur ne pourrait pas être enregistrée"
 
-#: tavletta/cli.py:862 tavletta/cli.py:889 tavletta/cli.py:1251
+#: tavletta/cli.py:864 tavletta/cli.py:891 tavletta/cli.py:1255
 msgid "Interrupted"
 msgstr "Interrompu"
 
-#: tavletta/cli.py:962
+#: tavletta/cli.py:947 tavletta/ui/printing.py:447
+#: tavletta/server/service.py:1038
+#, python-format
+msgid "At most %d labels in one print job"
+msgstr "%d étiquettes au maximum dans une tâche d’impression"
+
+#: tavletta/cli.py:966
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method : ce modèle d’imprimante n’a pas de réglage de mode d’impression : %s"
 
-#: tavletta/cli.py:1004
+#: tavletta/cli.py:1008
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet et --rows exigent un fichier de données (--data)"
 
-#: tavletta/cli.py:1013 tavletta/ui/printing.py:568
-#: tavletta/server/service.py:849
+#: tavletta/cli.py:1017 tavletta/ui/printing.py:574
+#: tavletta/server/service.py:852
 msgid "No rows to print"
 msgstr "Aucune ligne à imprimer"
 
-#: tavletta/cli.py:1023
+#: tavletta/cli.py:1027
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "L’étiquette utilise un fichier de données hors de son dossier : indiquez-le avec --data"
 
-#: tavletta/cli.py:1050 tavletta/ui/window.py:849
-#: tavletta/server/service.py:906
+#: tavletta/cli.py:1054 tavletta/ui/window.py:912
+#: tavletta/server/service.py:909
 #, python-format
 msgid "No such column: %s"
 msgstr "Colonne inconnue : %s"
 
-#: tavletta/cli.py:1055 tavletta/ui/printing.py:648
+#: tavletta/cli.py:1059 tavletta/ui/printing.py:654
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "Le code-barres ou le code QR de ces lignes ne peut pas être créé à partir de leurs valeurs, par exemple un EAN-13 avec des lettres ou une cellule vide. Corrigez le fichier de données et relisez-le, ou imprimez sans ces lignes."
 
-#: tavletta/cli.py:1060 tavletta/ui/printing.py:653
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:659
 #, python-format
 msgid "Rows: %s"
 msgstr "Lignes : %s"
 
-#: tavletta/cli.py:1068
+#: tavletta/cli.py:1072
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "Attente de la fin d’une autre impression de %s…"
 
-#: tavletta/cli.py:1075 tavletta/server/service.py:1301
+#: tavletta/cli.py:1079 tavletta/server/service.py:1311
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s est encore verrouillé par une autre impression – réessayez plus tard"
 
-#: tavletta/cli.py:1081
+#: tavletta/cli.py:1085
 msgid "--output needs --dry-run"
 msgstr "--output exige --dry-run"
 
-#: tavletta/cli.py:1098
+#: tavletta/cli.py:1102
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "La prochaine valeur du compteur n’est pas enregistrée : la prochaine impression répétera les numéros"
 
-#: tavletta/cli.py:1194
+#: tavletta/cli.py:1198
 msgid "Waiting for the printer's answer…"
 msgstr "En attente de la réponse de l’imprimante…"
 
-#: tavletta/cli.py:1222 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1226 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "Aucune imprimante trouvée"
 
@@ -460,7 +466,7 @@ msgid "Choose data file"
 msgstr "Choisir le fichier de données"
 
 #: tavletta/ui/data.py:108 tavletta/ui/files.py:104 tavletta/ui/files.py:126
-#: tavletta/ui/files.py:207 tavletta/ui/texts.py:208
+#: tavletta/ui/files.py:207 tavletta/ui/texts.py:213
 msgid "Only local files can be used"
 msgstr "Seuls les fichiers locaux sont possibles"
 
@@ -503,7 +509,7 @@ msgstr "Non lu : hors du dossier de l’étiquette"
 msgid "Rows: %(rows)d · Columns: %(columns)d"
 msgstr "Lignes : %(rows)d · Colonnes : %(columns)d"
 
-#: tavletta/ui/data.py:281 tavletta/ui/shortcuts.py:71
+#: tavletta/ui/data.py:281 tavletta/ui/shortcuts.py:90
 msgid "Serial labels"
 msgstr "Étiquettes en série"
 
@@ -521,8 +527,8 @@ msgstr "Aucun fichier de données"
 msgid "CSV, ODS or XLSX"
 msgstr "CSV, ODS ou XLSX"
 
-#: tavletta/ui/data.py:291 tavletta/ui/elements.py:316
-#: tavletta/ui/elements.py:334 tavletta/ui/elements.py:347
+#: tavletta/ui/data.py:291 tavletta/ui/elements.py:359
+#: tavletta/ui/elements.py:377 tavletta/ui/elements.py:390
 msgid "Choose…"
 msgstr "Choisir…"
 
@@ -550,7 +556,106 @@ msgstr "Feuille"
 msgid "Insert column"
 msgstr "Insérer une colonne"
 
-#: tavletta/ui/elements.py:83 tavletta/ui/shortcuts.py:57
+#: tavletta/ui/editor.py:719
+#, python-format
+msgid "Elements removed: %d"
+msgstr "Éléments supprimés : %d"
+
+#: tavletta/ui/editor.py:719 tavletta/ui/shortcuts.py:53
+#: tavletta/ui/window.py:183
+msgid "Undo"
+msgstr "Annuler"
+
+#: tavletta/ui/editor.py:789
+msgid "Elements can be moved in the free layout"
+msgstr "Les éléments se déplacent dans la disposition libre"
+
+#: tavletta/ui/editor.py:790
+msgid "Use free layout"
+msgstr "Utiliser la disposition libre"
+
+#: tavletta/ui/editor.py:800
+msgid "No element selected"
+msgstr "Aucun élément sélectionné"
+
+#: tavletta/ui/editor.py:802
+#, python-format
+msgid "Elements selected: %(n)d of %(total)d"
+msgstr "Éléments sélectionnés : %(n)d sur %(total)d"
+
+#: tavletta/ui/editor.py:808
+#, python-format
+msgid "Element %(n)d of %(total)d: %(name)s"
+msgstr "Élément %(n)d sur %(total)d : %(name)s"
+
+#: tavletta/ui/editor.py:853
+msgid "Arrange"
+msgstr "Arranger"
+
+#: tavletta/ui/editor.py:854
+msgid "Align, distribute and snap the selected elements"
+msgstr "Aligner, répartir et magnétiser les éléments sélectionnés"
+
+#: tavletta/ui/editor.py:870 tavletta/ui/image_crop.py:82
+#: tavletta/ui/texts.py:113
+msgid "Left"
+msgstr "Gauche"
+
+#: tavletta/ui/editor.py:871 tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
+msgid "Centre"
+msgstr "Centre"
+
+#: tavletta/ui/editor.py:872 tavletta/ui/texts.py:113
+msgid "Right"
+msgstr "Droite"
+
+#: tavletta/ui/editor.py:873 tavletta/ui/image_crop.py:82
+#: tavletta/ui/texts.py:164
+msgid "Top"
+msgstr "Haut"
+
+#: tavletta/ui/editor.py:874 tavletta/ui/texts.py:164
+msgid "Middle"
+msgstr "Milieu"
+
+#: tavletta/ui/editor.py:875 tavletta/ui/texts.py:164
+msgid "Bottom"
+msgstr "Bas"
+
+#: tavletta/ui/editor.py:878
+msgid "Align"
+msgstr "Aligner"
+
+#: tavletta/ui/editor.py:880
+msgid "Horizontally"
+msgstr "Horizontalement"
+
+#: tavletta/ui/editor.py:881
+msgid "Vertically"
+msgstr "Verticalement"
+
+#: tavletta/ui/editor.py:882
+msgid "Distribute"
+msgstr "Répartir"
+
+#: tavletta/ui/editor.py:884
+msgid "Snap to guides"
+msgstr "Magnétiser aux repères"
+
+#: tavletta/ui/editor.py:885
+msgid "No grid"
+msgstr "Pas de grille"
+
+#: tavletta/ui/editor.py:888
+msgid "Snapping"
+msgstr "Magnétisme"
+
+#: tavletta/ui/editor.py:894 tavletta/ui/editor.py:895
+#, python-format
+msgid "Grid of %s"
+msgstr "Grille de %s"
+
+#: tavletta/ui/elements.py:83 tavletta/ui/shortcuts.py:58
 msgid "Content"
 msgstr "Contenu"
 
@@ -562,130 +667,130 @@ msgstr "Pas encore de contenu"
 msgid "Add text, an image, a symbol or a code"
 msgstr "Ajoutez du texte, une image, un symbole ou un code"
 
-#: tavletta/ui/elements.py:104 tavletta/ui/texts.py:259
-#: tavletta/ui/window.py:961
+#: tavletta/ui/elements.py:107 tavletta/ui/texts.py:280
+#: tavletta/ui/window.py:1025
 msgid "Text"
 msgstr "Texte"
 
-#: tavletta/ui/elements.py:105
+#: tavletta/ui/elements.py:108
 msgid "Image…"
 msgstr "Image…"
 
-#: tavletta/ui/elements.py:106
+#: tavletta/ui/elements.py:109
 msgid "Symbol…"
 msgstr "Symbole…"
 
-#: tavletta/ui/elements.py:107
+#: tavletta/ui/elements.py:110
 msgid "QR code / barcode"
 msgstr "Code QR / code-barres"
 
-#: tavletta/ui/elements.py:108
+#: tavletta/ui/elements.py:111
 msgid "Line or shape"
 msgstr "Ligne ou forme"
 
-#: tavletta/ui/elements.py:110
+#: tavletta/ui/elements.py:113
 msgid "Add"
 msgstr "Ajouter"
 
-#: tavletta/ui/elements.py:204 tavletta/ui/label_group.py:145
+#: tavletta/ui/elements.py:247 tavletta/ui/label_group.py:145
 msgid "Remove"
 msgstr "Supprimer"
 
-#: tavletta/ui/elements.py:207
+#: tavletta/ui/elements.py:250
 msgid "Move down"
 msgstr "Déplacer vers l’arrière"
 
-#: tavletta/ui/elements.py:208
+#: tavletta/ui/elements.py:251
 msgid "Move up"
 msgstr "Déplacer vers l’avant"
 
-#: tavletta/ui/elements.py:226 tavletta/ui/elements.py:363
+#: tavletta/ui/elements.py:269 tavletta/ui/elements.py:406
 #: tavletta/ui/freelayout.py:190
 msgid "Size"
 msgstr "Taille"
 
-#: tavletta/ui/elements.py:233
+#: tavletta/ui/elements.py:276
 msgid "pt, 0 = fill tape height"
 msgstr "pt, 0 = remplir la hauteur du ruban"
 
-#: tavletta/ui/elements.py:238
+#: tavletta/ui/elements.py:281
 msgid "Line alignment"
 msgstr "Alignement des lignes"
 
-#: tavletta/ui/elements.py:246
+#: tavletta/ui/elements.py:289
 msgid "Name for the command line"
 msgstr "Nom pour la ligne de commande"
 
-#: tavletta/ui/elements.py:285
+#: tavletta/ui/elements.py:328
 msgid "Font"
 msgstr "Police"
 
-#: tavletta/ui/elements.py:302 tavletta/ui/freelayout.py:214
+#: tavletta/ui/elements.py:345 tavletta/ui/freelayout.py:214
 msgid "Bold"
 msgstr "Gras"
 
-#: tavletta/ui/elements.py:304
+#: tavletta/ui/elements.py:347
 msgid "Italic"
 msgstr "Italique"
 
-#: tavletta/ui/elements.py:305
+#: tavletta/ui/elements.py:348
 msgid "Underline"
 msgstr "Souligné"
 
-#: tavletta/ui/elements.py:306
+#: tavletta/ui/elements.py:349
 msgid "Strikethrough"
 msgstr "Barré"
 
-#: tavletta/ui/elements.py:314
+#: tavletta/ui/elements.py:357
 msgid "Image file"
 msgstr "Fichier image"
 
-#: tavletta/ui/elements.py:315 tavletta/ui/elements.py:346
+#: tavletta/ui/elements.py:358 tavletta/ui/elements.py:389
 #: tavletta/ui/label_group.py:133
 msgid "None"
 msgstr "Aucune"
 
-#: tavletta/ui/elements.py:324
+#: tavletta/ui/elements.py:367
 msgid "Crop, turn and adjustments reset for the new image"
 msgstr "Recadrage, rotation et réglages réinitialisés pour la nouvelle image"
 
-#: tavletta/ui/elements.py:332
+#: tavletta/ui/elements.py:375
 msgid "Area"
 msgstr "Zone"
 
-#: tavletta/ui/elements.py:338 tavletta/ui/shipping.py:295
+#: tavletta/ui/elements.py:381 tavletta/ui/shipping.py:295
 msgid "Scale"
 msgstr "Mise à l’échelle"
 
-#: tavletta/ui/elements.py:344 tavletta/ui/texts.py:263
+#: tavletta/ui/elements.py:387 tavletta/ui/texts.py:284
 msgid "Symbol"
 msgstr "Symbole"
 
-#: tavletta/ui/elements.py:369 tavletta/ui/styles.py:513
+#: tavletta/ui/elements.py:412 tavletta/ui/styles.py:513
 #, python-format
 msgid "%(unit)s, 0 = fill tape height"
 msgstr "%(unit)s, 0 = remplir la hauteur du ruban"
 
-#: tavletta/ui/elements.py:374
+#: tavletta/ui/elements.py:417
 msgid ""
 "Black-and-white printers print symbols in black, or in white if the colour "
 "is light"
 msgstr "Les imprimantes noir et blanc impriment les symboles en noir, ou en blanc si la couleur est claire"
 
-#: tavletta/ui/elements.py:381 tavletta/ui/freelayout.py:166
+#: tavletta/ui/elements.py:424 tavletta/ui/freelayout.py:166
 #: tavletta/ui/styles.py:113
 msgid "Rotation"
 msgstr "Rotation"
 
-#: tavletta/ui/elements.py:394
+#: tavletta/ui/elements.py:437
 msgid "Type"
 msgstr "Type"
 
-#: tavletta/ui/elements.py:398
+#: tavletta/ui/elements.py:441
 msgid "Content (link, text, number)"
 msgstr "Contenu (lien, texte, numéro)"
 
-#: tavletta/ui/elements.py:408 tavletta/ui/styles.py:548
+#: tavletta/ui/elements.py:451 tavletta/ui/styles.py:548
 msgid "Colour"
 msgstr "Couleur"
 
@@ -726,7 +831,7 @@ msgstr "etiquette"
 msgid "Save label"
 msgstr "Enregistrer l’étiquette"
 
-#: tavletta/ui/files.py:233 tavletta/ui/window.py:196
+#: tavletta/ui/files.py:233 tavletta/ui/window.py:206
 msgid "Save as template…"
 msgstr "Enregistrer comme modèle…"
 
@@ -739,7 +844,7 @@ msgstr "%s enregistré"
 msgid "Export PNG"
 msgstr "Exporter en PNG"
 
-#: tavletta/ui/files.py:276 tavletta/ui/window.py:874
+#: tavletta/ui/files.py:276 tavletta/ui/window.py:937
 msgid "The preview cannot be drawn"
 msgstr "Impossible de dessiner l’aperçu"
 
@@ -752,8 +857,8 @@ msgid "No templates yet – use “Save as template…”"
 msgstr "Pas encore de modèles – utilisez « Enregistrer comme modèle… »"
 
 #: tavletta/ui/files.py:315 tavletta/ui/label_group.py:67
-#: tavletta/ui/shortcuts.py:45 tavletta/ui/window.py:76
-#: tavletta/ui/window.py:222
+#: tavletta/ui/shortcuts.py:46 tavletta/ui/window.py:82
+#: tavletta/ui/window.py:233
 msgid "Label"
 msgstr "Étiquette"
 
@@ -957,9 +1062,9 @@ msgid "Drag to choose the part of the image to keep"
 msgstr "Faites glisser pour choisir la partie de l’image à conserver"
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:233
-#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:657
+#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
 #: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
-#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:890
+#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:954
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -967,14 +1072,6 @@ msgstr "Annuler"
 #: tavletta/ui/shipping.py:230
 msgid "Apply"
 msgstr "Appliquer"
-
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:111
-msgid "Left"
-msgstr "Gauche"
-
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:162
-msgid "Top"
-msgstr "Haut"
 
 #: tavletta/ui/image_crop.py:82 tavletta/ui/label_group.py:326
 msgid "Width"
@@ -1117,35 +1214,39 @@ msgstr "%(unit)s entre deux étiquettes sur le rouleau"
 msgid "Content direction"
 msgstr "Orientation du contenu"
 
-#: tavletta/ui/preview.py:65
+#: tavletta/ui/preview.py:75
+msgid "Label preview"
+msgstr "Aperçu de l’étiquette"
+
+#: tavletta/ui/preview.py:89
 msgid "Fit to window"
 msgstr "Ajuster à la fenêtre"
 
-#: tavletta/ui/preview.py:68
+#: tavletta/ui/preview.py:92
 msgid "Zoom out"
 msgstr "Zoom arrière"
 
-#: tavletta/ui/preview.py:72
+#: tavletta/ui/preview.py:96
 msgid "Zoom in"
 msgstr "Zoom avant"
 
-#: tavletta/ui/preview.py:81 tavletta/ui/shortcuts.py:73
+#: tavletta/ui/preview.py:105 tavletta/ui/shortcuts.py:92
 msgid "First row"
 msgstr "Première ligne"
 
-#: tavletta/ui/preview.py:82 tavletta/ui/shortcuts.py:74
+#: tavletta/ui/preview.py:106 tavletta/ui/shortcuts.py:93
 msgid "Previous row"
 msgstr "Ligne précédente"
 
-#: tavletta/ui/preview.py:83 tavletta/ui/shortcuts.py:75
+#: tavletta/ui/preview.py:107 tavletta/ui/shortcuts.py:94
 msgid "Next row"
 msgstr "Ligne suivante"
 
-#: tavletta/ui/preview.py:84 tavletta/ui/shortcuts.py:76
+#: tavletta/ui/preview.py:108 tavletta/ui/shortcuts.py:95
 msgid "Last row"
 msgstr "Dernière ligne"
 
-#: tavletta/ui/preview.py:98
+#: tavletta/ui/preview.py:122
 #, python-format
 msgid "Row %(n)d of %(total)d"
 msgstr "Ligne %(n)d sur %(total)d"
@@ -1342,7 +1443,7 @@ msgstr "Numéro de série"
 msgid "Probably made"
 msgstr "Fabrication probable"
 
-#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:755
+#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:761
 msgid "Close"
 msgstr "Fermer"
 
@@ -1354,8 +1455,8 @@ msgstr "Cette planche d’étiquettes est inconnue de cette version – choisiss
 msgid "The data file is still being read. Try again in a moment."
 msgstr "Le fichier de données est encore en cours de lecture. Réessayez dans un instant."
 
-#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:478
-#: tavletta/ui/printing.py:503
+#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
+#: tavletta/ui/printing.py:509
 msgid "Print anyway"
 msgstr "Imprimer quand même"
 
@@ -1463,20 +1564,20 @@ msgstr "Imprimer les étiquettes en série"
 msgid "Print label"
 msgstr "Imprimer l’étiquette"
 
-#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:742
-#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:184
+#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
+#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:194
 msgid "Print"
 msgstr "Imprimer"
 
-#: tavletta/ui/printing.py:475
+#: tavletta/ui/printing.py:481
 msgid "Codes may not scan"
 msgstr "Les codes risquent de ne pas être lus"
 
-#: tavletta/ui/printing.py:495
+#: tavletta/ui/printing.py:501
 msgid "Labels in the printer's margin"
 msgstr "Étiquettes dans la marge de l’imprimante"
 
-#: tavletta/ui/printing.py:497
+#: tavletta/ui/printing.py:503
 #, python-format
 msgid ""
 "The printer cannot print near the edges of the paper. The content of labels "
@@ -1484,63 +1585,63 @@ msgid ""
 "safety margin, or leave these positions out."
 msgstr "L’imprimante ne peut pas imprimer près des bords du papier. Le contenu des étiquettes %(positions)s empiète sur cette marge et serait coupé. Augmentez la marge de sécurité ou omettez ces positions."
 
-#: tavletta/ui/printing.py:515
+#: tavletta/ui/printing.py:521
 msgid "No printer yet – search for one or enter its address"
 msgstr "Pas encore d’imprimante – recherchez-en une ou saisissez son adresse"
 
-#: tavletta/ui/printing.py:519
+#: tavletta/ui/printing.py:525
 msgid "Printing…"
 msgstr "Impression…"
 
-#: tavletta/ui/printing.py:587 tavletta/ui/printing.py:627
+#: tavletta/ui/printing.py:593 tavletta/ui/printing.py:633
 msgid "Printing serial labels"
 msgstr "Impression des étiquettes en série"
 
-#: tavletta/ui/printing.py:588
+#: tavletta/ui/printing.py:594
 msgid "Stop"
 msgstr "Arrêter"
 
-#: tavletta/ui/printing.py:617
+#: tavletta/ui/printing.py:623
 msgid "Stopping after this label…"
 msgstr "Arrêt après cette étiquette…"
 
-#: tavletta/ui/printing.py:624 tavletta/ui/printing.py:710
+#: tavletta/ui/printing.py:630 tavletta/ui/printing.py:716
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "Impression %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:656
+#: tavletta/ui/printing.py:662
 msgid "Rows that cannot be printed"
 msgstr "Lignes qui ne peuvent pas être imprimées"
 
-#: tavletta/ui/printing.py:659
+#: tavletta/ui/printing.py:665
 msgid "Print without these rows"
 msgstr "Imprimer sans ces lignes"
 
-#: tavletta/ui/printing.py:684
+#: tavletta/ui/printing.py:690
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "Arrêté après la ligne %(row)d"
 
-#: tavletta/ui/printing.py:689
+#: tavletta/ui/printing.py:695
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "Ligne %(row)d imprimée"
 
-#: tavletta/ui/printing.py:691
+#: tavletta/ui/printing.py:697
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "Lignes %(first)d à %(last)d imprimées"
 
-#: tavletta/ui/printing.py:750
+#: tavletta/ui/printing.py:756
 msgid "Printing failed"
 msgstr "Échec de l’impression"
 
-#: tavletta/ui/printing.py:751
+#: tavletta/ui/printing.py:757
 msgid "Details"
 msgstr "Détails"
 
-#: tavletta/ui/printing.py:754 tavletta/ui/window.py:914
+#: tavletta/ui/printing.py:760 tavletta/ui/window.py:978
 msgid "Report"
 msgstr "Signaler"
 
@@ -1617,7 +1718,7 @@ msgstr "Cliquez sur une étiquette pour l’omettre ou pour imprimer à nouveau 
 msgid "Labels %s reach into the margin the printer cannot print on"
 msgstr "Les étiquettes %s empiètent sur la marge où l’imprimante ne peut pas imprimer"
 
-#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:276
+#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:297
 msgid "Shipping label"
 msgstr "Étiquette d’expédition"
 
@@ -1653,75 +1754,111 @@ msgstr "Suggestion suivante"
 msgid "Page"
 msgstr "Page"
 
-#: tavletta/ui/shortcuts.py:47 tavletta/ui/window.py:193
+#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:203
 msgid "New label"
 msgstr "Nouvelle étiquette"
 
-#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:156
+#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:165
 msgid "Open"
 msgstr "Ouvrir"
 
-#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:169
+#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:178
 msgid "Save"
 msgstr "Enregistrer"
 
-#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:195
+#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:205
 msgid "Save as…"
 msgstr "Enregistrer sous…"
 
-#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:174
-msgid "Undo"
-msgstr "Annuler"
-
-#: tavletta/ui/shortcuts.py:53 tavletta/ui/window.py:175
+#: tavletta/ui/shortcuts.py:54 tavletta/ui/window.py:184
 msgid "Redo"
 msgstr "Rétablir"
 
-#: tavletta/ui/shortcuts.py:59
+#: tavletta/ui/shortcuts.py:60
 msgid "Add text"
 msgstr "Ajouter du texte"
 
-#: tavletta/ui/shortcuts.py:60
+#: tavletta/ui/shortcuts.py:61
 msgid "Add an image"
 msgstr "Ajouter une image"
 
-#: tavletta/ui/shortcuts.py:61
+#: tavletta/ui/shortcuts.py:62
 msgid "Add a symbol"
 msgstr "Ajouter un symbole"
 
-#: tavletta/ui/shortcuts.py:62
+#: tavletta/ui/shortcuts.py:63
 msgid "Add a code"
 msgstr "Ajouter un code"
 
-#: tavletta/ui/shortcuts.py:63
+#: tavletta/ui/shortcuts.py:64
 msgid "Add a line or shape"
 msgstr "Ajouter une ligne ou une forme"
 
-#: tavletta/ui/shortcuts.py:64
+#: tavletta/ui/shortcuts.py:65
 msgid "Duplicate the open element"
 msgstr "Dupliquer l’élément ouvert"
 
-#: tavletta/ui/shortcuts.py:65
+#: tavletta/ui/shortcuts.py:66
 msgid "Remove the open element"
 msgstr "Supprimer l’élément ouvert"
 
-#: tavletta/ui/shortcuts.py:66
+#: tavletta/ui/shortcuts.py:67
 msgid "Move the open element up"
 msgstr "Déplacer l’élément ouvert vers l’avant"
 
-#: tavletta/ui/shortcuts.py:67
+#: tavletta/ui/shortcuts.py:68
 msgid "Move the open element down"
 msgstr "Déplacer l’élément ouvert vers l’arrière"
 
-#: tavletta/ui/shortcuts.py:80
+#: tavletta/ui/shortcuts.py:73
+msgid "Preview"
+msgstr "Aperçu"
+
+#: tavletta/ui/shortcuts.py:75
+msgid "Select all elements"
+msgstr "Sélectionner tous les éléments"
+
+#: tavletta/ui/shortcuts.py:76
+msgid "Select no element"
+msgstr "Ne sélectionner aucun élément"
+
+#: tavletta/ui/shortcuts.py:77
+msgid "Move the selection by 0.1 mm"
+msgstr "Déplacer la sélection de 0,1 mm"
+
+#: tavletta/ui/shortcuts.py:79
+msgid "Move the selection by 1 mm"
+msgstr "Déplacer la sélection de 1 mm"
+
+#: tavletta/ui/shortcuts.py:82
+msgid "Remove the selected elements"
+msgstr "Supprimer les éléments sélectionnés"
+
+#: tavletta/ui/shortcuts.py:83
+msgid "Cancel dragging, or select no element"
+msgstr "Annuler le glissement ou ne sélectionner aucun élément"
+
+#: tavletta/ui/shortcuts.py:84
+msgid "Click: add to the selection or take out"
+msgstr "Clic : ajouter à la sélection ou l’en retirer"
+
+#: tavletta/ui/shortcuts.py:85
+msgid "Drag: along one axis, resize in proportion"
+msgstr "Glisser : le long d’un axe, redimensionner proportionnellement"
+
+#: tavletta/ui/shortcuts.py:86
+msgid "Drag: without snapping"
+msgstr "Glisser : sans magnétisme"
+
+#: tavletta/ui/shortcuts.py:99
 msgid "General"
 msgstr "Général"
 
-#: tavletta/ui/shortcuts.py:82 tavletta/ui/window.py:201
+#: tavletta/ui/shortcuts.py:101 tavletta/ui/window.py:211
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
-#: tavletta/ui/shortcuts.py:83 tavletta/ui/window.py:202
+#: tavletta/ui/shortcuts.py:102 tavletta/ui/window.py:212
 msgid "Help"
 msgstr "Aide"
 
@@ -1904,7 +2041,7 @@ msgstr "L’image est illisible"
 msgid "Crop…"
 msgstr "Recadrer…"
 
-#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:69
+#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:71
 msgid "Brightness"
 msgstr "Luminosité"
 
@@ -2005,777 +2142,761 @@ msgstr "Utilisés récemment"
 msgid "No symbol found"
 msgstr "Aucun symbole trouvé"
 
-#: tavletta/ui/texts.py:34
+#: tavletta/ui/texts.py:36
 msgid "Full cut"
 msgstr "Coupe complète"
 
-#: tavletta/ui/texts.py:35
+#: tavletta/ui/texts.py:37
 msgid "Half cut"
 msgstr "Prédécoupe"
 
-#: tavletta/ui/texts.py:36
+#: tavletta/ui/texts.py:38
 msgid "Cut after the last label"
 msgstr "Coupe après la dernière étiquette"
 
-#: tavletta/ui/texts.py:37
+#: tavletta/ui/texts.py:39
 msgid "No cut"
 msgstr "Sans coupe"
 
-#: tavletta/ui/texts.py:43
+#: tavletta/ui/texts.py:45
 msgid "Chain printing"
 msgstr "Impression en chaîne"
 
-#: tavletta/ui/texts.py:44
+#: tavletta/ui/texts.py:46
 msgid "Saves tape: the last label stays in the printer until the next print"
 msgstr "Économise du ruban : la dernière étiquette reste dans l’imprimante jusqu’à la prochaine impression"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "High resolution"
 msgstr "Haute résolution"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "Twice as fine along the tape, prints more slowly"
 msgstr "Deux fois plus fin le long du ruban, impression plus lente"
 
-#: tavletta/ui/texts.py:50
+#: tavletta/ui/texts.py:52
 msgid "Laminated tape"
 msgstr "Ruban laminé"
 
-#: tavletta/ui/texts.py:51
+#: tavletta/ui/texts.py:53
 msgid "Non-laminated tape"
 msgstr "Ruban non laminé"
 
-#: tavletta/ui/texts.py:52
+#: tavletta/ui/texts.py:54
 msgid "Fabric tape"
 msgstr "Ruban textile"
 
-#: tavletta/ui/texts.py:53
+#: tavletta/ui/texts.py:55
 msgid "FLe tape"
 msgstr "Ruban FLe"
 
-#: tavletta/ui/texts.py:54
+#: tavletta/ui/texts.py:56
 msgid "Flexible ID tape"
 msgstr "Ruban d’identification flexible"
 
-#: tavletta/ui/texts.py:55
+#: tavletta/ui/texts.py:57
 msgid "Satin tape"
 msgstr "Ruban satiné"
 
-#: tavletta/ui/texts.py:56
+#: tavletta/ui/texts.py:58
 msgid "Heat-shrink tube 2:1"
 msgstr "Gaine thermorétractable 2:1"
 
-#: tavletta/ui/texts.py:57
+#: tavletta/ui/texts.py:59
 msgid "Heat-shrink tube 3:1"
 msgstr "Gaine thermorétractable 3:1"
 
-#: tavletta/ui/texts.py:61
+#: tavletta/ui/texts.py:63
 msgid "Vivid"
 msgstr "Vif"
 
-#: tavletta/ui/texts.py:62
+#: tavletta/ui/texts.py:64
 msgid "Normal"
 msgstr "Normal"
 
-#: tavletta/ui/texts.py:63
+#: tavletta/ui/texts.py:65
 msgid "Black and white (sharper)"
 msgstr "Noir et blanc (plus net)"
 
-#: tavletta/ui/texts.py:64
+#: tavletta/ui/texts.py:66
 msgid "Black"
 msgstr "Noir"
 
-#: tavletta/ui/texts.py:65
+#: tavletta/ui/texts.py:67
 msgid "Red and black"
 msgstr "Rouge et noir"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "Standard"
 msgstr "Standard"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "High resolution (600 dpi)"
 msgstr "Haute résolution (600 dpi)"
 
-#: tavletta/ui/texts.py:70
+#: tavletta/ui/texts.py:72
 msgid "Red"
 msgstr "Rouge"
 
-#: tavletta/ui/texts.py:71
+#: tavletta/ui/texts.py:73
 msgid "Green"
 msgstr "Vert"
 
-#: tavletta/ui/texts.py:72
+#: tavletta/ui/texts.py:74
 msgid "Blue"
 msgstr "Bleu"
 
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "Start"
 msgstr "Début"
 
-#: tavletta/ui/texts.py:74 tavletta/ui/texts.py:111
-msgid "Centre"
-msgstr "Centre"
-
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "End"
 msgstr "Fin"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Across the roll"
 msgstr "Sur la largeur du rouleau"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Along the roll"
 msgstr "Dans le sens du rouleau"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Single label"
 msgstr "Étiquette seule"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Label sheet"
 msgstr "Planche d’étiquettes"
 
-#: tavletta/ui/texts.py:80
+#: tavletta/ui/texts.py:82
 msgid "Resolution"
 msgstr "Résolution"
 
-#: tavletta/ui/texts.py:81
+#: tavletta/ui/texts.py:83
 msgid "Label sensor"
 msgstr "Capteur d’étiquettes"
 
-#: tavletta/ui/texts.py:82
+#: tavletta/ui/texts.py:84
 msgid "After printing"
 msgstr "Après l’impression"
 
-#: tavletta/ui/texts.py:83
+#: tavletta/ui/texts.py:85
 msgid "Darkness"
 msgstr "Noirceur"
 
-#: tavletta/ui/texts.py:84
+#: tavletta/ui/texts.py:86
 msgid "Print density"
 msgstr "Densité d’impression"
 
-#: tavletta/ui/texts.py:85
+#: tavletta/ui/texts.py:87
 msgid "Speed"
 msgstr "Vitesse"
 
-#: tavletta/ui/texts.py:86
+#: tavletta/ui/texts.py:88
 msgid "Print upside down"
 msgstr "Imprimer à l’envers"
 
-#: tavletta/ui/texts.py:87
+#: tavletta/ui/texts.py:89
 msgid "Print method"
 msgstr "Mode d’impression"
 
-#: tavletta/ui/texts.py:91
+#: tavletta/ui/texts.py:93
 msgid "As reported by the printer"
 msgstr "Selon l’imprimante"
 
-#: tavletta/ui/texts.py:92
+#: tavletta/ui/texts.py:94
 msgid "As set on the printer"
 msgstr "Comme réglé sur l’imprimante"
 
-#: tavletta/ui/texts.py:93
+#: tavletta/ui/texts.py:95
 msgid "Gap between labels"
 msgstr "Espace entre les étiquettes"
 
-#: tavletta/ui/texts.py:94
+#: tavletta/ui/texts.py:96
 msgid "Black mark"
 msgstr "Marque noire"
 
-#: tavletta/ui/texts.py:95
+#: tavletta/ui/texts.py:97
 msgid "Continuous media"
 msgstr "Support continu"
 
-#: tavletta/ui/texts.py:96
+#: tavletta/ui/texts.py:98
 msgid "Transparent labels"
 msgstr "Étiquettes transparentes"
 
-#: tavletta/ui/texts.py:97
+#: tavletta/ui/texts.py:99
 msgid "Tear off"
 msgstr "Détacher"
 
-#: tavletta/ui/texts.py:98
+#: tavletta/ui/texts.py:100
 msgid "Peel off"
 msgstr "Décoller"
 
-#: tavletta/ui/texts.py:99
+#: tavletta/ui/texts.py:101
 msgid "Cut off"
 msgstr "Couper"
 
-#: tavletta/ui/texts.py:100
+#: tavletta/ui/texts.py:102
 msgid "Thermal transfer (ribbon)"
 msgstr "Transfert thermique (ruban)"
 
-#: tavletta/ui/texts.py:101
+#: tavletta/ui/texts.py:103
 msgid "Thermal direct"
 msgstr "Thermique direct"
 
-#: tavletta/ui/texts.py:111
-msgid "Right"
-msgstr "Droite"
-
-#: tavletta/ui/texts.py:116
+#: tavletta/ui/texts.py:118
 msgid "2D codes"
 msgstr "Codes 2D"
 
-#: tavletta/ui/texts.py:118
+#: tavletta/ui/texts.py:120
 msgid "QR code"
 msgstr "Code QR"
 
-#: tavletta/ui/texts.py:125
+#: tavletta/ui/texts.py:127
 msgid "Linear barcodes"
 msgstr "Codes-barres linéaires"
 
-#: tavletta/ui/texts.py:140
+#: tavletta/ui/texts.py:142
 msgid ""
 "Application identifiers in brackets, e.g. "
 "(01)09501101530003(17)261231(10)AB12"
 msgstr "Identifiants d’application entre parenthèses, p. ex. (01)09501101530003(17)261231(10)AB12"
 
-#: tavletta/ui/texts.py:143
+#: tavletta/ui/texts.py:145
 msgid "Links, text, Wi-Fi access; phones read it"
 msgstr "Liens, texte, accès Wi-Fi ; lisible par les téléphones"
 
-#: tavletta/ui/texts.py:144
+#: tavletta/ui/texts.py:146
 msgid "Text or numbers in little space, e.g. on small parts"
 msgstr "Texte ou chiffres dans peu d’espace, p. ex. sur de petites pièces"
 
-#: tavletta/ui/texts.py:145
+#: tavletta/ui/texts.py:147
 msgid "Much text, e.g. an address or a document number"
 msgstr "Beaucoup de texte, p. ex. une adresse ou un numéro de document"
 
-#: tavletta/ui/texts.py:146
+#: tavletta/ui/texts.py:148
 msgid "Text or numbers; needs no blank margin, e.g. on tickets"
 msgstr "Texte ou chiffres ; sans marge blanche, p. ex. sur des billets"
 
-#: tavletta/ui/texts.py:147
+#: tavletta/ui/texts.py:149
 msgid "Latin letters, digits and punctuation"
 msgstr "Lettres latines, chiffres et ponctuation"
 
-#: tavletta/ui/texts.py:148
+#: tavletta/ui/texts.py:150
 msgid "Capital letters, digits, spaces and - . $ / + %"
 msgstr "Majuscules, chiffres, espaces et - . $ / + %"
 
-#: tavletta/ui/texts.py:149
+#: tavletta/ui/texts.py:151
 msgid "Latin letters, digits and punctuation; shorter than Code 39"
 msgstr "Lettres latines, chiffres et ponctuation ; plus court que Code 39"
 
-#: tavletta/ui/texts.py:150
+#: tavletta/ui/texts.py:152
 msgid "12 digits, the check digit is added (or 13 with it)"
 msgstr "12 chiffres, la clé de contrôle est ajoutée (ou 13 avec elle)"
 
-#: tavletta/ui/texts.py:151
+#: tavletta/ui/texts.py:153
 msgid "7 digits, the check digit is added (or 8 with it)"
 msgstr "7 chiffres, la clé de contrôle est ajoutée (ou 8 avec elle)"
 
-#: tavletta/ui/texts.py:152
+#: tavletta/ui/texts.py:154
 msgid "11 digits, the check digit is added (or 12 with it)"
 msgstr "11 chiffres, la clé de contrôle est ajoutée (ou 12 avec elle)"
 
-#: tavletta/ui/texts.py:153
+#: tavletta/ui/texts.py:155
 msgid "7 digits starting with 0 or 1, the check digit is added (or 8 with it)"
 msgstr "7 chiffres commençant par 0 ou 1, la clé de contrôle est ajoutée (ou 8 avec elle)"
 
-#: tavletta/ui/texts.py:154
+#: tavletta/ui/texts.py:156
 msgid ""
 "13 digits of a shipping carton's GTIN, the check digit is added (or 14 with "
 "it)"
 msgstr "13 chiffres du GTIN d’un carton d’expédition, la clé de contrôle est ajoutée (ou 14 avec elle)"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:162
 msgid "Whole area, centred"
 msgstr "Zone entière, centrée"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:162
 msgid "Fill the label, edges cut off"
 msgstr "Remplir l’étiquette, bords coupés"
 
-#: tavletta/ui/texts.py:162
-msgid "Middle"
-msgstr "Milieu"
-
-#: tavletta/ui/texts.py:162
-msgid "Bottom"
-msgstr "Bas"
-
-#: tavletta/ui/texts.py:164
+#: tavletta/ui/texts.py:166
 msgid "Automatic"
 msgstr "Automatique"
 
-#: tavletta/ui/texts.py:165
+#: tavletta/ui/texts.py:167
 msgid "Threshold (drawings, logos)"
 msgstr "Seuil (dessins, logos)"
 
-#: tavletta/ui/texts.py:166
+#: tavletta/ui/texts.py:168
 msgid "Dithering (photos)"
 msgstr "Tramage (photos)"
 
-#: tavletta/ui/texts.py:167
+#: tavletta/ui/texts.py:169
 msgid "Ordered pattern"
 msgstr "Motif ordonné"
 
-#: tavletta/ui/texts.py:170
+#: tavletta/ui/texts.py:172
 msgctxt "line style"
 msgid "Solid"
 msgstr "Continu"
 
-#: tavletta/ui/texts.py:171
+#: tavletta/ui/texts.py:173
 msgid "Dashed"
 msgstr "Tirets"
 
-#: tavletta/ui/texts.py:172 tavletta/ui/texts.py:197
+#: tavletta/ui/texts.py:174 tavletta/ui/texts.py:199
 msgid "Dotted"
 msgstr "Pointillés"
 
-#: tavletta/ui/texts.py:174
+#: tavletta/ui/texts.py:176
 msgid "Double"
 msgstr "Double"
 
-#: tavletta/ui/texts.py:176
+#: tavletta/ui/texts.py:178
 msgid "Line"
 msgstr "Ligne"
 
-#: tavletta/ui/texts.py:177
+#: tavletta/ui/texts.py:179
 msgid "Rectangle"
 msgstr "Rectangle"
 
-#: tavletta/ui/texts.py:178
+#: tavletta/ui/texts.py:180
 msgid "Ellipse"
 msgstr "Ellipse"
 
-#: tavletta/ui/texts.py:179
+#: tavletta/ui/texts.py:181
 msgid "Separator"
 msgstr "Séparateur"
 
-#: tavletta/ui/texts.py:182
+#: tavletta/ui/texts.py:184
 msgid "Horizontal"
 msgstr "Horizontale"
 
-#: tavletta/ui/texts.py:183
+#: tavletta/ui/texts.py:185
 msgid "Vertical"
 msgstr "Verticale"
 
-#: tavletta/ui/texts.py:184
+#: tavletta/ui/texts.py:186
 msgid "Diagonal, rising"
 msgstr "Diagonale montante"
 
-#: tavletta/ui/texts.py:185
+#: tavletta/ui/texts.py:187
 msgid "Diagonal, falling"
 msgstr "Diagonale descendante"
 
-#: tavletta/ui/texts.py:188
+#: tavletta/ui/texts.py:190
 msgctxt "arrows"
 msgid "None"
 msgstr "Aucune"
 
-#: tavletta/ui/texts.py:189
+#: tavletta/ui/texts.py:191
 msgid "At the start"
 msgstr "Au début"
 
-#: tavletta/ui/texts.py:190
+#: tavletta/ui/texts.py:192
 msgid "At the end"
 msgstr "À la fin"
 
-#: tavletta/ui/texts.py:191
+#: tavletta/ui/texts.py:193
 msgid "At both ends"
 msgstr "Aux deux extrémités"
 
-#: tavletta/ui/texts.py:194
+#: tavletta/ui/texts.py:196
 msgctxt "fill"
 msgid "None"
 msgstr "Aucun"
 
-#: tavletta/ui/texts.py:195
+#: tavletta/ui/texts.py:197
 msgctxt "fill"
 msgid "Solid"
 msgstr "Plein"
 
-#: tavletta/ui/texts.py:196
+#: tavletta/ui/texts.py:198
 msgid "Hatched"
 msgstr "Hachuré"
 
-#: tavletta/ui/texts.py:198
+#: tavletta/ui/texts.py:200
 msgid "Grid"
 msgstr "Grille"
-
-#. translators: %(formats)s is a list of file formats: PNG, JPEG, …
-#: tavletta/ui/texts.py:219
-#, python-format
-msgid ""
-"%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
-msgstr "%(name)s n’est pas une image utilisable par Tavletta. Formats possibles : %(formats)s."
 
 #: tavletta/ui/texts.py:232
 #, python-format
 msgid "%(name)s is too large to put on a label: at most %(size)d MB."
 msgstr "%(name)s est trop volumineux pour une étiquette : %(size)d Mo au plus."
 
-#: tavletta/ui/texts.py:227
+#. translators: %(formats)s is a list of file formats: PNG, JPEG, …
+#: tavletta/ui/texts.py:240
+#, python-format
+msgid ""
+"%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
+msgstr "%(name)s n’est pas une image utilisable par Tavletta. Formats possibles : %(formats)s."
+
+#: tavletta/ui/texts.py:248
 #, python-format
 msgid "%(name)s is not a label, an image or a data file"
 msgstr "%(name)s n’est ni une étiquette, ni une image, ni un fichier de données"
 
 #. translators: the print density a NIIMBOT model uses by default
-#: tavletta/ui/texts.py:245
+#: tavletta/ui/texts.py:266
 msgctxt "print density"
 msgid "Default"
 msgstr "Par défaut"
 
-#: tavletta/ui/texts.py:249
+#: tavletta/ui/texts.py:270
 #, python-format
 msgid "%d %%"
 msgstr "%d %%"
 
 #. translators: print speed in inches per second, as label printers state it
-#: tavletta/ui/texts.py:252
+#: tavletta/ui/texts.py:273
 #, python-format
 msgid "%d in/s"
 msgstr "%d po/s"
 
-#: tavletta/ui/texts.py:261
+#: tavletta/ui/texts.py:282
 msgid "Image"
 msgstr "Image"
 
-#: tavletta/ui/texts.py:296
+#: tavletta/ui/texts.py:317
 #, python-format
 msgid "Endless, %(width)s wide"
 msgstr "Continu, %(width)s de large"
 
-#: tavletta/ui/texts.py:306
+#: tavletta/ui/texts.py:327
 msgid ""
 "Check that all of the label is inside the selection. Drag to move it or its "
 "edges, or draw a new one."
 msgstr "Vérifiez que toute l’étiquette se trouve dans la sélection. Faites glisser pour la déplacer ou déplacer ses bords, ou tracez-en une nouvelle."
 
-#: tavletta/ui/texts.py:310
+#: tavletta/ui/texts.py:331
 msgid ""
 "Several areas could be the label. Check the selection or try the next one."
 msgstr "Plusieurs zones pourraient être l’étiquette. Vérifiez la sélection ou essayez la suivante."
 
-#: tavletta/ui/texts.py:312
+#: tavletta/ui/texts.py:333
 msgid "Everything printed on the page is selected. Drag to choose the label."
 msgstr "Tout ce qui est imprimé sur la page est sélectionné. Faites glisser pour choisir l’étiquette."
 
-#: tavletta/ui/texts.py:313
+#: tavletta/ui/texts.py:334
 msgid "Nothing is printed on this page."
 msgstr "Rien n’est imprimé sur cette page."
 
-#: tavletta/ui/texts.py:318
+#: tavletta/ui/texts.py:339
 msgid "PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "Les fichiers PDF nécessitent Poppler (poppler-glib), qui n’est pas installé"
 
-#: tavletta/ui/texts.py:329
+#: tavletta/ui/texts.py:350
 msgid "System printer (CUPS, IPP)"
 msgstr "Imprimante système (CUPS, IPP)"
 
-#: tavletta/ui/texts.py:330
+#: tavletta/ui/texts.py:351
 msgid "Receipt printer (ESC/POS)"
 msgstr "Imprimante de tickets (ESC/POS)"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:332
+#: tavletta/ui/texts.py:353
 #, python-format
 msgid "%s, continuous rolls"
 msgstr "%s, rouleaux continus"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:334
+#: tavletta/ui/texts.py:355
 #, python-format
 msgid "%s, die-cut labels"
 msgstr "%s, étiquettes prédécoupées"
 
-#: tavletta/ui/texts.py:357
+#: tavletta/ui/texts.py:378
 #, python-format
 msgid "Element %(n)d: the code is empty"
 msgstr "Élément %(n)d : le code est vide"
 
-#: tavletta/ui/texts.py:358
+#: tavletta/ui/texts.py:379
 #, python-format
 msgid "Element %(n)d: EAN-13 needs exactly 12 digits"
 msgstr "Élément %(n)d : EAN-13 exige exactement 12 chiffres"
 
-#: tavletta/ui/texts.py:359
+#: tavletta/ui/texts.py:380
 #, python-format
 msgid "Element %(n)d: the EAN-13 check digit is wrong"
 msgstr "Élément %(n)d : la clé de contrôle EAN-13 est fausse"
 
-#: tavletta/ui/texts.py:360
+#: tavletta/ui/texts.py:381
 #, python-format
 msgid "Element %(n)d: Code 128 holds at most %(max)d characters"
 msgstr "Élément %(n)d : Code 128 contient au maximum %(max)d caractères"
 
-#: tavletta/ui/texts.py:362
+#: tavletta/ui/texts.py:383
 #, python-format
 msgid ""
 "Element %(n)d: the bars are too thin to scan reliably – use a longer or "
 "larger label, or shorter content"
 msgstr "Élément %(n)d : les barres sont trop fines pour être lues de façon fiable – utilisez une étiquette plus longue ou plus grande, ou un contenu plus court"
 
-#: tavletta/ui/texts.py:366
+#: tavletta/ui/texts.py:387
 #, python-format
 msgid ""
 "Element %(n)d: Code 128 only accepts Latin letters, digits and punctuation"
 msgstr "Élément %(n)d : Code 128 n’accepte que les lettres latines, les chiffres et la ponctuation"
 
-#: tavletta/ui/texts.py:368
+#: tavletta/ui/texts.py:389
 #, python-format
 msgid "Element %(n)d: EAN-8 needs 7 digits, or 8 with the check digit"
 msgstr "Élément %(n)d : EAN-8 exige 7 chiffres, ou 8 avec la clé de contrôle"
 
-#: tavletta/ui/texts.py:369
+#: tavletta/ui/texts.py:390
 #, python-format
 msgid "Element %(n)d: UPC-A needs 11 digits, or 12 with the check digit"
 msgstr "Élément %(n)d : UPC-A exige 11 chiffres, ou 12 avec la clé de contrôle"
 
-#: tavletta/ui/texts.py:371
+#: tavletta/ui/texts.py:392
 #, python-format
 msgid ""
 "Element %(n)d: UPC-E needs 7 digits starting with 0 or 1, or 8 with the "
 "check digit"
 msgstr "Élément %(n)d : UPC-E exige 7 chiffres commençant par 0 ou 1, ou 8 avec la clé de contrôle"
 
-#: tavletta/ui/texts.py:373
+#: tavletta/ui/texts.py:394
 #, python-format
 msgid "Element %(n)d: ITF-14 needs 13 digits, or 14 with the check digit"
 msgstr "Élément %(n)d : ITF-14 exige 13 chiffres, ou 14 avec la clé de contrôle"
 
-#: tavletta/ui/texts.py:374
+#: tavletta/ui/texts.py:395
 #, python-format
 msgid "Element %(n)d: the check digit is wrong"
 msgstr "Élément %(n)d : la clé de contrôle est fausse"
 
-#: tavletta/ui/texts.py:376
+#: tavletta/ui/texts.py:397
 #, python-format
 msgid ""
 "Element %(n)d: Code 39 only accepts capital letters, digits, spaces and - . "
 "$ / + %%"
 msgstr "Élément %(n)d : Code 39 n’accepte que les majuscules, les chiffres, les espaces et - . $ / + %%"
 
-#: tavletta/ui/texts.py:379
+#: tavletta/ui/texts.py:400
 #, python-format
 msgid ""
 "Element %(n)d: Code 93 only accepts Latin letters, digits and punctuation"
 msgstr "Élément %(n)d : Code 93 n’accepte que les lettres latines, les chiffres et la ponctuation"
 
-#: tavletta/ui/texts.py:382
+#: tavletta/ui/texts.py:403
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data only accepts Latin letters, digits and punctuation"
 msgstr "Élément %(n)d : les données GS1 n’acceptent que les lettres latines, les chiffres et la ponctuation"
 
-#: tavletta/ui/texts.py:385
+#: tavletta/ui/texts.py:406
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data must be application identifiers in brackets, each "
 "followed by its value, e.g. (01)09501101530003(10)AB12"
 msgstr "Élément %(n)d : les données GS1 doivent être des identifiants d’application entre parenthèses, chacun suivi de sa valeur, p. ex. (01)09501101530003(10)AB12"
 
-#: tavletta/ui/texts.py:388
+#: tavletta/ui/texts.py:409
 #, python-format
 msgid "Element %(n)d: (%(ai)s) is not a GS1 application identifier"
 msgstr "Élément %(n)d : (%(ai)s) n’est pas un identifiant d’application GS1"
 
-#: tavletta/ui/texts.py:390
+#: tavletta/ui/texts.py:411
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) has the wrong "
 "length"
 msgstr "Élément %(n)d : la valeur de l’identifiant d’application (%(ai)s) n’a pas la bonne longueur"
 
-#: tavletta/ui/texts.py:393
+#: tavletta/ui/texts.py:414
 #, python-format
 msgid ""
 "Element %(n)d: the check digit of application identifier (%(ai)s) is wrong"
 msgstr "Élément %(n)d : la clé de contrôle de l’identifiant d’application (%(ai)s) est fausse"
 
-#: tavletta/ui/texts.py:396
+#: tavletta/ui/texts.py:417
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) is not valid: a "
 "date, number or character it does not allow"
 msgstr "Élément %(n)d : la valeur de l’identifiant d’application (%(ai)s) n’est pas valide : une date, un nombre ou un caractère qu’il n’autorise pas"
 
-#: tavletta/ui/texts.py:400
+#: tavletta/ui/texts.py:421
 #, python-format
 msgid ""
 "Element %(n)d: no UPC-A number shortens to these UPC-E digits – check them "
 "or use UPC-A"
 msgstr "Élément %(n)d : aucun numéro UPC-A ne se réduit à ces chiffres UPC-E – vérifiez-les ou utilisez UPC-A"
 
-#: tavletta/ui/texts.py:404
+#: tavletta/ui/texts.py:425
 #, python-format
 msgid ""
 "Element %(n)d: scanners set to Full ASCII read a $, /, + or %% before a "
 "capital letter as another character"
 msgstr "Élément %(n)d : les lecteurs réglés sur Full ASCII lisent un $, /, + ou %% devant une majuscule comme un autre caractère"
 
-#: tavletta/ui/texts.py:407
+#: tavletta/ui/texts.py:428
 #, python-format
 msgid "Element %(n)d: the content is too long for this type of code"
 msgstr "Élément %(n)d : le contenu est trop long pour ce type de code"
 
-#: tavletta/ui/texts.py:408
+#: tavletta/ui/texts.py:429
 #, python-format
 msgid "Element %(n)d: the content cannot be encoded in this type of code"
 msgstr "Élément %(n)d : le contenu ne peut pas être encodé dans ce type de code"
 
-#: tavletta/ui/texts.py:410
+#: tavletta/ui/texts.py:431
 #, python-format
 msgid ""
 "Element %(n)d: this type of code needs the Zint library (zint-bindings), "
 "which is not installed"
 msgstr "Élément %(n)d : ce type de code nécessite la bibliothèque Zint (zint-bindings), qui n’est pas installée"
 
-#: tavletta/ui/texts.py:413
+#: tavletta/ui/texts.py:434
 #, python-format
 msgid "Element %(n)d: the image cannot be read"
 msgstr "Élément %(n)d : l’image est illisible"
 
-#: tavletta/ui/texts.py:414
+#: tavletta/ui/texts.py:435
 #, python-format
 msgid "Element %(n)d: this symbol is not in the symbol library"
 msgstr "Élément %(n)d : ce symbole n’est pas dans la bibliothèque de symboles"
 
-#: tavletta/ui/texts.py:415
+#: tavletta/ui/texts.py:436
 #, python-format
 msgid "Element %(n)d: the document cannot be read"
 msgstr "Élément %(n)d : le document est illisible"
 
-#: tavletta/ui/texts.py:417
+#: tavletta/ui/texts.py:438
 #, python-format
 msgid ""
 "Element %(n)d: PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "Élément %(n)d : les fichiers PDF nécessitent Poppler (poppler-glib), qui n’est pas installé"
 
-#: tavletta/ui/texts.py:419
+#: tavletta/ui/texts.py:440
 #, python-format
 msgid "Element %(n)d cannot be drawn"
 msgstr "Impossible de dessiner l’élément %(n)d"
 
-#: tavletta/ui/texts.py:421
+#: tavletta/ui/texts.py:442
 #, python-format
 msgid ""
 "Element %(n)d: the text is too long to be drawn in one line – break it into "
 "lines or shorten it"
 msgstr "Élément %(n)d : le texte est trop long pour être dessiné sur une seule ligne – répartissez-le sur plusieurs lignes ou raccourcissez-le"
 
-#: tavletta/ui/texts.py:425
+#: tavletta/ui/texts.py:446
 #, python-format
 msgid ""
 "Element %(n)d: the text is too tall to be drawn – use fewer lines or a "
 "smaller size"
 msgstr "Élément %(n)d : le texte est trop haut pour être dessiné – utilisez moins de lignes ou une taille plus petite"
 
-#: tavletta/ui/texts.py:428
+#: tavletta/ui/texts.py:449
 #, python-format
 msgid ""
 "Element %(n)d: the font %(font)s is not installed – another font is used"
 msgstr "Élément %(n)d : la police %(font)s n’est pas installée – une autre police est utilisée"
 
-#: tavletta/ui/texts.py:431
+#: tavletta/ui/texts.py:452
 msgid ""
 "Safety margin, border, its inset and edge spacing leave no room – reduce them"
 msgstr "La marge de sécurité, la bordure, son retrait et la marge latérale ne laissent aucune place – réduisez-les"
 
-#: tavletta/ui/texts.py:433
+#: tavletta/ui/texts.py:454
 msgid "The fixed length is shorter than the spacing – increase it"
 msgstr "La longueur fixe est plus courte que l’espacement – augmentez-la"
 
-#: tavletta/ui/texts.py:434
+#: tavletta/ui/texts.py:455
 msgid "The background image cannot be read"
 msgstr "L’image de fond est illisible"
 
-#: tavletta/ui/texts.py:436
+#: tavletta/ui/texts.py:457
 #, python-format
 msgid ""
 "Element %(n)d: the code's modules are only one printer dot wide and may not "
 "scan – make the code larger"
 msgstr "Élément %(n)d : les modules du code n’ont qu’un point d’impression de large et risquent de ne pas être lus – agrandissez le code"
 
-#: tavletta/ui/texts.py:440
+#: tavletta/ui/texts.py:461
 #, python-format
 msgid ""
 "Element %(n)d: the blank space the code needs around it does not fit – make "
 "the code larger"
 msgstr "Élément %(n)d : l’espace vide dont le code a besoin autour de lui ne tient pas – agrandissez le code"
 
-#: tavletta/ui/texts.py:444
+#: tavletta/ui/texts.py:465
 #, python-format
 msgid ""
 "Element %(n)d: the code does not fit in its space, even at one printer dot "
 "per module – make the label larger or the content shorter"
 msgstr "Élément %(n)d : le code ne tient pas dans son espace, même avec un point d’impression par module – agrandissez l’étiquette ou raccourcissez le contenu"
 
-#: tavletta/ui/texts.py:447
+#: tavletta/ui/texts.py:468
 #, python-format
 msgid "Element %(n)d: %(name)s is not a known variable"
 msgstr "Élément %(n)d : %(name)s n’est pas une variable connue"
 
-#: tavletta/ui/texts.py:449
+#: tavletta/ui/texts.py:470
 #, python-format
 msgid "Element %(n)d: the date of %(name)s is before the year 1 or after 9999"
 msgstr "Élément %(n)d : la date de %(name)s est antérieure à l’an 1 ou postérieure à 9999"
 
-#: tavletta/ui/texts.py:452
+#: tavletta/ui/texts.py:473
 #, python-format
 msgid "Element %(n)d: the variable %(name)s… is not closed – end it with }"
 msgstr "Élément %(n)d : la variable %(name)s… n’est pas fermée – terminez-la par }"
 
-#: tavletta/ui/texts.py:455
+#: tavletta/ui/texts.py:476
 #, python-format
 msgid ""
 "Element %(n)d: on a black-and-white printer it hardly stands out from what "
 "lies behind it, as a whole or in part – choose another colour or move it"
 msgstr "Élément %(n)d : sur une imprimante noir et blanc, il se distingue à peine de ce qui se trouve derrière lui, en tout ou en partie – choisissez une autre couleur ou déplacez-le"
 
-#: tavletta/ui/texts.py:458
+#: tavletta/ui/texts.py:479
 #, python-format
 msgid "Element %(n)d: the shape has neither a line nor a fill"
 msgstr "Élément %(n)d : la forme n’a ni trait ni remplissage"
 
-#: tavletta/ui/texts.py:460
+#: tavletta/ui/texts.py:481
 #, python-format
 msgid ""
 "Element %(n)d reaches beyond the edge of the label and is cut off there – "
 "move it or make it smaller"
 msgstr "L’élément %(n)d dépasse le bord de l’étiquette et y est coupé – déplacez-le ou réduisez-le"
 
-#: tavletta/ui/texts.py:464
+#: tavletta/ui/texts.py:485
 #, python-format
 msgid ""
 "Element %(n)d: the padding, frame, outline or shadow leave no room for the "
 "text – make them smaller"
 msgstr "Élément %(n)d : la marge intérieure, le cadre, le contour ou l’ombre ne laissent aucune place au texte – réduisez-les"
 
-#: tavletta/ui/texts.py:479
+#: tavletta/ui/texts.py:500
 #, python-format
 msgid "Sheets already printed: %(n)d of %(total)d."
 msgstr "Planches déjà imprimées : %(n)d sur %(total)d."
 
-#: tavletta/ui/texts.py:481
+#: tavletta/ui/texts.py:502
 #, python-format
 msgid "Labels already printed: %(n)d of %(total)d."
 msgstr "Étiquettes déjà imprimées : %(n)d sur %(total)d."
 
-#: tavletta/ui/texts.py:485
+#: tavletta/ui/texts.py:506
 msgid "The sheets still waiting in the queue were canceled."
 msgstr "Les planches encore en attente dans la file ont été annulées."
 
-#: tavletta/ui/texts.py:487
+#: tavletta/ui/texts.py:508
 msgid "The labels still waiting in the queue were canceled."
 msgstr "Les étiquettes encore en attente dans la file ont été annulées."
 
-#: tavletta/ui/texts.py:498
+#: tavletta/ui/texts.py:519
 #, python-format
 msgid ""
 "The label is %(size)s, but labels of %(loaded)s are loaded. Check the label "
 "size, or load the matching roll."
 msgstr "L’étiquette mesure %(size)s, mais des étiquettes de %(loaded)s sont chargées. Vérifiez la taille de l’étiquette ou chargez le rouleau correspondant."
 
-#: tavletta/ui/texts.py:506
+#: tavletta/ui/texts.py:527
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2783,7 +2904,7 @@ msgid ""
 "size and the gap, or calibrate the printer."
 msgstr "L’étiquette mesure %(size)s avec un espace de %(gap)s, donc une nouvelle commence tous les %(pitch)s. L’imprimante a mesuré une étiquette tous les %(measured)s. Vérifiez la taille de l’étiquette et l’espace, ou étalonnez l’imprimante."
 
-#: tavletta/ui/texts.py:512
+#: tavletta/ui/texts.py:533
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2791,92 +2912,92 @@ msgid ""
 "size and the gap."
 msgstr "L’étiquette mesure %(size)s avec un espace de %(gap)s, donc une nouvelle commence tous les %(pitch)s. L’imprimante a mesuré une étiquette tous les %(measured)s. Vérifiez la taille de l’étiquette et l’espace."
 
-#: tavletta/ui/texts.py:529
+#: tavletta/ui/texts.py:550
 msgid ""
 "The printer cannot be found. Check that it is switched on and in the same "
 "network, or enter its IP address."
 msgstr "Imprimante introuvable. Vérifiez qu’elle est allumée et sur le même réseau, ou saisissez son adresse IP."
 
-#: tavletta/ui/texts.py:533
+#: tavletta/ui/texts.py:554
 msgid ""
 "The printer cannot be found on USB. Check the cable and that the printer is "
 "switched on and awake, then search again."
 msgstr "L’imprimante est introuvable sur USB. Vérifiez le câble et que l’imprimante est allumée et sortie de veille, puis relancez la recherche."
 
-#: tavletta/ui/texts.py:536
+#: tavletta/ui/texts.py:557
 msgid "The printer does not answer. Check that it is switched on and awake."
 msgstr "L’imprimante ne répond pas. Vérifiez qu’elle est allumée et sortie de veille."
 
-#: tavletta/ui/texts.py:538
+#: tavletta/ui/texts.py:559
 msgid ""
 "The printer stopped taking data. Check whether it shows a problem, such as "
 "no labels or an open cover, then try again."
 msgstr "L’imprimante n’accepte plus de données. Vérifiez si elle signale un problème, par exemple plus d’étiquettes ou un capot ouvert, puis réessayez."
 
-#: tavletta/ui/texts.py:542
+#: tavletta/ui/texts.py:563
 msgid ""
 "The printer refuses the connection. Switch it off and on again. If its web "
 "interface offers a “Port 9100” option, turn it on."
 msgstr "L’imprimante refuse la connexion. Éteignez-la puis rallumez-la. Si son interface web propose une option « Port 9100 », activez-la."
 
-#: tavletta/ui/texts.py:545
+#: tavletta/ui/texts.py:566
 msgid "No cassette is inserted. Insert one and try again."
 msgstr "Aucune cassette insérée. Insérez-en une et réessayez."
 
-#: tavletta/ui/texts.py:546
+#: tavletta/ui/texts.py:567
 msgid "The printer's cover is open. Close it and try again."
 msgstr "Le capot de l’imprimante est ouvert. Fermez-le et réessayez."
 
-#: tavletta/ui/texts.py:547
+#: tavletta/ui/texts.py:568
 msgid "The label is jammed. Open the cover, remove it and try again."
 msgstr "L’étiquette est coincée. Ouvrez le capot, retirez-la et réessayez."
 
-#: tavletta/ui/texts.py:548
+#: tavletta/ui/texts.py:569
 msgid "The cassette is not recognised. Insert it again or try another one."
 msgstr "La cassette n’est pas reconnue. Réinsérez-la ou essayez-en une autre."
 
-#: tavletta/ui/texts.py:549
+#: tavletta/ui/texts.py:570
 msgid "The printer is busy. Wait a moment and try again."
 msgstr "L’imprimante est occupée. Patientez un instant et réessayez."
 
-#: tavletta/ui/texts.py:550
+#: tavletta/ui/texts.py:571
 #, python-format
 msgid "The label is too long for this printer: at most %(max)s."
 msgstr "L’étiquette est trop longue pour cette imprimante : %(max)s au maximum."
 
-#: tavletta/ui/texts.py:551
+#: tavletta/ui/texts.py:572
 #, python-format
 msgid "The label is too wide for this printer: at most %(max)s."
 msgstr "L’étiquette est trop large pour cette imprimante : %(max)s au maximum."
 
-#: tavletta/ui/texts.py:552
+#: tavletta/ui/texts.py:573
 msgid "The printer is out of labels. Load a new roll and try again."
 msgstr "L’imprimante n’a plus d’étiquettes. Chargez un nouveau rouleau et réessayez."
 
-#: tavletta/ui/texts.py:553
+#: tavletta/ui/texts.py:574
 msgid "The print head is open. Close it and try again."
 msgstr "La tête d’impression est ouverte. Fermez-la et réessayez."
 
-#: tavletta/ui/texts.py:555
+#: tavletta/ui/texts.py:576
 msgid ""
 "The printer cannot find the next label. Check that the labels are loaded "
 "correctly and run through the label sensor."
 msgstr "L’imprimante ne trouve pas l’étiquette suivante. Vérifiez que les étiquettes sont bien chargées et passent correctement dans le capteur d’étiquettes."
 
-#: tavletta/ui/texts.py:559
+#: tavletta/ui/texts.py:580
 msgid ""
 "There is a problem with the ribbon. Check that it is inserted correctly and "
 "matches the print method set on the printer."
 msgstr "Il y a un problème avec le ruban. Vérifiez qu’il est bien inséré et qu’il correspond au mode d’impression réglé sur l’imprimante."
 
-#: tavletta/ui/texts.py:565
+#: tavletta/ui/texts.py:586
 #, python-format
 msgid ""
 "The printer finds no ribbon. Load a ribbon and try again. Labels that print "
 "without one need “%(direct)s” under “%(method)s”."
 msgstr "L’imprimante ne trouve pas de ruban. Chargez un ruban et réessayez. Les étiquettes qui s’impriment sans ruban demandent « %(direct)s » sous « %(method)s »."
 
-#: tavletta/ui/texts.py:572
+#: tavletta/ui/texts.py:593
 #, python-format
 msgid ""
 "A ribbon is loaded, but the printer prints without it (thermal direct). For "
@@ -2884,239 +3005,239 @@ msgid ""
 "remove the ribbon."
 msgstr "Un ruban est chargé, mais l’imprimante imprime sans lui (thermique direct). Pour les étiquettes qui ont besoin du ruban, choisissez « %(transfer)s » sous « %(method)s », ou retirez le ruban."
 
-#: tavletta/ui/texts.py:577
+#: tavletta/ui/texts.py:598
 msgid "The printer is paused. Resume it on its display and try again."
 msgstr "L’imprimante est en pause. Reprenez l’impression depuis son écran et réessayez."
 
-#: tavletta/ui/texts.py:578
+#: tavletta/ui/texts.py:599
 msgid "The printer is out of paper. Load paper and try again."
 msgstr "L’imprimante n’a plus de papier. Chargez du papier et réessayez."
 
-#: tavletta/ui/texts.py:580
+#: tavletta/ui/texts.py:601
 msgid ""
 "The paper is jammed. Remove it as the printer's display shows and try again."
 msgstr "Le papier est coincé. Retirez-le comme l’indique l’écran de l’imprimante et réessayez."
 
-#: tavletta/ui/texts.py:582
+#: tavletta/ui/texts.py:603
 msgid "The printer is out of toner or ink. Replace it and try again."
 msgstr "L’imprimante n’a plus de toner ou d’encre. Remplacez la cartouche et réessayez."
 
-#: tavletta/ui/texts.py:583
+#: tavletta/ui/texts.py:604
 msgid "The printer cannot print this size. Choose a paper size it offers."
 msgstr "L’imprimante ne peut pas imprimer ce format. Choisissez un format de papier qu’elle propose."
 
-#: tavletta/ui/texts.py:585
+#: tavletta/ui/texts.py:606
 msgid ""
 "The printer takes none of the formats Tavletta can send (PDF, PWG Raster, "
 "JPEG)."
 msgstr "L’imprimante n’accepte aucun des formats que Tavletta peut envoyer (PDF, PWG Raster, JPEG)."
 
-#: tavletta/ui/texts.py:588
+#: tavletta/ui/texts.py:609
 msgid ""
 "The printer's queue is paused. Resume it in the system's printer settings "
 "and try again."
 msgstr "La file d’attente de l’imprimante est en pause. Reprenez-la dans les paramètres d’imprimante du système et réessayez."
 
-#: tavletta/ui/texts.py:592
+#: tavletta/ui/texts.py:613
 msgid ""
 "The print job was held in the queue, for example until it is released or a "
 "password is entered. Check the queue in the system's printer settings and "
 "try again."
 msgstr "La tâche d’impression a été retenue dans la file d’attente, par exemple jusqu’à ce qu’elle soit libérée ou qu’un mot de passe soit saisi. Vérifiez la file d’attente dans les paramètres d’imprimante du système et réessayez."
 
-#: tavletta/ui/texts.py:596
+#: tavletta/ui/texts.py:617
 msgid "The print job was canceled at the printer or in the queue."
 msgstr "La tâche d’impression a été annulée sur l’imprimante ou dans la file d’attente."
 
-#: tavletta/ui/texts.py:597
+#: tavletta/ui/texts.py:618
 #, python-format
 msgid ""
 "The printer did not report its resolution in time. Choose it under “%s”."
 msgstr "L’imprimante n’a pas indiqué sa résolution à temps. Choisissez-la sous « %s »."
 
-#: tavletta/ui/texts.py:600
+#: tavletta/ui/texts.py:621
 msgid ""
 "The loaded roll does not match the label. Load a matching roll, or choose "
 "the label size or printer model of the roll that is loaded."
 msgstr "Le rouleau chargé ne correspond pas à l’étiquette. Chargez un rouleau adapté, ou choisissez la taille d’étiquette ou le modèle d’imprimante du rouleau chargé."
 
-#: tavletta/ui/texts.py:603
+#: tavletta/ui/texts.py:624
 msgid "The printer's battery is low – charge it or connect the power adapter."
 msgstr "La batterie de l’imprimante est faible – rechargez-la ou branchez l’adaptateur secteur."
 
-#: tavletta/ui/texts.py:604
+#: tavletta/ui/texts.py:625
 msgid ""
 "The print head is too hot. Wait until it has cooled down, then try again."
 msgstr "La tête d’impression est trop chaude. Attendez qu’elle ait refroidi, puis réessayez."
 
-#: tavletta/ui/texts.py:606
+#: tavletta/ui/texts.py:627
 msgid ""
 "Tavletta cannot print on this printer model: it does not take the raster "
 "images Tavletta sends."
 msgstr "Tavletta ne peut pas imprimer sur ce modèle d’imprimante : il n’accepte pas les images matricielles que Tavletta envoie."
 
-#: tavletta/ui/texts.py:610
+#: tavletta/ui/texts.py:631
 msgid "Tavletta does not know this printer model and cannot print on it yet."
 msgstr "Tavletta ne connaît pas ce modèle d’imprimante et ne peut pas encore imprimer dessus."
 
-#: tavletta/ui/texts.py:613
+#: tavletta/ui/texts.py:634
 msgid ""
 "The printer is in Editor Lite mode and shows up as a USB drive. Switch "
 "Editor Lite off on the printer (its lamp goes out), then search again."
 msgstr "L’imprimante est en mode Editor Lite et apparaît comme un lecteur USB. Désactivez Editor Lite sur l’imprimante (son voyant s’éteint), puis relancez la recherche."
 
-#: tavletta/ui/texts.py:617
+#: tavletta/ui/texts.py:638
 msgid ""
 "Tavletta is not allowed to use the printer's USB port. Add your user to the "
 "group “lp” (sudo usermod -aG lp $USER), then log out and in again."
 msgstr "Tavletta n’est pas autorisé à utiliser le port USB de l’imprimante. Ajoutez votre utilisateur au groupe « lp » (sudo usermod -aG lp $USER), puis fermez et rouvrez votre session."
 
-#: tavletta/ui/texts.py:621
+#: tavletta/ui/texts.py:642
 msgid ""
 "The page is too large to make at the resolution the printer takes. Choose a "
 "smaller paper size, or print on a printer that takes PDF."
 msgstr "La page est trop grande pour être produite à la résolution que l’imprimante accepte. Choisissez un format de papier plus petit ou imprimez sur une imprimante qui accepte le PDF."
 
-#: tavletta/ui/texts.py:625
+#: tavletta/ui/texts.py:646
 msgid ""
 "A code does not fit on the label at this printer's resolution and would be "
 "cut off. Make the label larger or the code's content shorter."
 msgstr "Un code ne tient pas sur l’étiquette à la résolution de cette imprimante et serait coupé. Agrandissez l’étiquette ou raccourcissez le contenu du code."
 
-#: tavletta/ui/texts.py:629
+#: tavletta/ui/texts.py:650
 msgid ""
 "Tavletta is not allowed to use the printer's serial port. Add your user to "
 "the group “dialout” (sudo usermod -aG dialout $USER; on Arch Linux the group "
 "is “uucp”), then log out and in again."
 msgstr "Tavletta n’est pas autorisé à utiliser le port série de l’imprimante. Ajoutez votre utilisateur au groupe « dialout » (sudo usermod -aG dialout $USER ; sous Arch Linux, le groupe s’appelle « uucp »), puis fermez et rouvrez votre session."
 
-#: tavletta/ui/texts.py:634
+#: tavletta/ui/texts.py:655
 msgid ""
 "The printer reported a problem. Switch it off and on again, then try once "
 "more."
 msgstr "L’imprimante a signalé un problème. Éteignez-la puis rallumez-la, puis réessayez."
 
-#: tavletta/ui/texts.py:645
+#: tavletta/ui/texts.py:666
 msgid "Printed"
 msgstr "Imprimé"
 
-#: tavletta/ui/texts.py:651
+#: tavletta/ui/texts.py:672
 msgid "Sent to the printer – it prints when its turn comes"
 msgstr "Envoyé à l’imprimante – il sera imprimé quand son tour viendra"
 
-#: tavletta/ui/texts.py:653
+#: tavletta/ui/texts.py:674
 msgid "Sent to the printer – it did not confirm printing"
 msgstr "Envoyé à l’imprimante – elle n’a pas confirmé l’impression"
 
-#: tavletta/ui/texts.py:657
+#: tavletta/ui/texts.py:678
 #, python-format
 msgid "Printed with “%(used)s”, as the loaded roll needs it"
 msgstr "Imprimé en « %(used)s », comme l’exige le rouleau chargé"
 
-#: tavletta/ui/texts.py:661
+#: tavletta/ui/texts.py:682
 #, python-format
 msgid ""
 "Colour mode “%(wanted)s” is not available on this printer, printed with "
 "“%(used)s”"
 msgstr "Le mode couleur « %(wanted)s » n’est pas disponible sur cette imprimante, impression en « %(used)s »"
 
-#: tavletta/ui/texts.py:671
+#: tavletta/ui/texts.py:692
 msgid "Warming up…"
 msgstr "Préchauffage…"
 
-#: tavletta/ui/texts.py:672
+#: tavletta/ui/texts.py:693
 msgid "Cooling down…"
 msgstr "Refroidissement…"
 
-#: tavletta/ui/texts.py:673
+#: tavletta/ui/texts.py:694
 msgid "Cleaning…"
 msgstr "Nettoyage…"
 
-#: tavletta/ui/texts.py:674
+#: tavletta/ui/texts.py:695
 msgid "Swipe the printer's panel to cut the label"
 msgstr "Faites glisser le panneau de l’imprimante pour couper l’étiquette"
 
-#: tavletta/ui/texts.py:676
+#: tavletta/ui/texts.py:697
 msgid "Out of paper – load paper to continue"
 msgstr "Plus de papier – chargez du papier pour continuer"
 
-#: tavletta/ui/texts.py:677
+#: tavletta/ui/texts.py:698
 msgid "Cover open – close it to continue"
 msgstr "Capot ouvert – fermez-le pour continuer"
 
-#: tavletta/ui/texts.py:678
+#: tavletta/ui/texts.py:699
 msgid "Paper jammed – remove it to continue"
 msgstr "Papier coincé – retirez-le pour continuer"
 
-#: tavletta/ui/texts.py:689
+#: tavletta/ui/texts.py:710
 msgid "This label needs a newer version of Tavletta"
 msgstr "Cette étiquette nécessite une version plus récente de Tavletta"
 
-#: tavletta/ui/texts.py:691
+#: tavletta/ui/texts.py:712
 #, python-format
 msgid "%s is not a Tavletta label"
 msgstr "%s n’est pas une étiquette Tavletta"
 
-#: tavletta/ui/texts.py:692 tavletta/ui/texts.py:712
-#: tavletta/server/service.py:758
+#: tavletta/ui/texts.py:713 tavletta/ui/texts.py:733
+#: tavletta/server/service.py:761
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "Le fichier est endommagé : %s"
 
-#: tavletta/ui/texts.py:699
+#: tavletta/ui/texts.py:720
 #, python-format
 msgid "The data file %s is not there any more. Choose it again or remove it."
 msgstr "Le fichier de données %s n’existe plus. Choisissez-le à nouveau ou retirez-le."
 
-#: tavletta/ui/texts.py:703
+#: tavletta/ui/texts.py:724
 #, python-format
 msgid "%(file)s has no sheet named %(sheet)s"
 msgstr "%(file)s n’a pas de feuille nommée %(sheet)s"
 
-#: tavletta/ui/texts.py:705
+#: tavletta/ui/texts.py:726
 #, python-format
 msgid "%s is not a table. Use a CSV, ODS or XLSX file."
 msgstr "%s n’est pas un tableau. Utilisez un fichier CSV, ODS ou XLSX."
 
-#: tavletta/ui/texts.py:707
+#: tavletta/ui/texts.py:728
 #, python-format
 msgid ""
 "%s is too large for serial labels. Split it into smaller files or remove "
 "rows and columns that are not needed."
 msgstr "%s est trop volumineux pour des étiquettes en série. Divisez-le en fichiers plus petits ou supprimez les lignes et les colonnes inutiles."
 
-#: tavletta/ui/texts.py:710
+#: tavletta/ui/texts.py:731
 #, python-format
 msgid "%s contains no data."
 msgstr "%s ne contient aucune donnée."
 
-#: tavletta/ui/texts.py:721
+#: tavletta/ui/texts.py:742
 #, python-format
 msgid ""
 "Printing stopped at row %(row)d. To continue, print again from row %(row)d."
 msgstr "L’impression s’est arrêtée à la ligne %(row)d. Pour continuer, relancez l’impression à partir de la ligne %(row)d."
 
-#: tavletta/ui/texts.py:725
+#: tavletta/ui/texts.py:746
 #, python-format
 msgid "Copies of row %(row)d already printed: %(copies)d."
 msgstr "Copies de la ligne %(row)d déjà imprimées : %(copies)d."
 
-#: tavletta/ui/texts.py:730
+#: tavletta/ui/texts.py:751
 #, python-format
 msgid "Row %(row)d goes at position %(position)d of sheet %(sheet)d."
 msgstr "La ligne %(row)d va à la position %(position)d de la planche %(sheet)d."
 
-#: tavletta/ui/texts.py:741
+#: tavletta/ui/texts.py:762
 #, python-format
 msgid "Cannot save %s: no permission to write there"
 msgstr "Impossible d’enregistrer %s : pas d’autorisation d’écriture"
 
-#: tavletta/ui/texts.py:743
+#: tavletta/ui/texts.py:764
 #, python-format
 msgid "Cannot save %s: the disk is full"
 msgstr "Impossible d’enregistrer %s : le disque est plein"
 
-#: tavletta/ui/texts.py:753
+#: tavletta/ui/texts.py:774
 #, python-format
 msgid ""
 "This cassette seems to be from %(month)s %(year)d. Old ZINK paper prints "
@@ -3182,70 +3303,70 @@ msgstr "Numéro suivant"
 msgid "Step"
 msgstr "Pas"
 
-#: tavletta/ui/window.py:163
+#: tavletta/ui/window.py:172
 msgid "Templates"
 msgstr "Modèles"
 
-#: tavletta/ui/window.py:194
+#: tavletta/ui/window.py:204
 msgid "Shipping label…"
 msgstr "Étiquette d’expédition…"
 
-#: tavletta/ui/window.py:197
+#: tavletta/ui/window.py:207
 msgid "Data for serial labels…"
 msgstr "Données pour étiquettes en série…"
 
-#: tavletta/ui/window.py:198
+#: tavletta/ui/window.py:208
 msgid "Forget allowed data files"
 msgstr "Oublier les fichiers de données autorisés"
 
-#: tavletta/ui/window.py:199
+#: tavletta/ui/window.py:209
 msgid "Export PNG…"
 msgstr "Exporter en PNG…"
 
-#: tavletta/ui/window.py:203
+#: tavletta/ui/window.py:213
 msgid "Report a problem…"
 msgstr "Signaler un problème…"
 
-#: tavletta/ui/window.py:204
+#: tavletta/ui/window.py:214
 msgid "About Tavletta"
 msgstr "À propos de Tavletta"
 
-#: tavletta/ui/window.py:683
+#: tavletta/ui/window.py:734
 msgid "Unsaved label"
 msgstr "Étiquette non enregistrée"
 
-#: tavletta/ui/window.py:842
+#: tavletta/ui/window.py:905
 msgid "content scaled down to fit"
 msgstr "contenu réduit pour tenir"
 
-#: tavletta/ui/window.py:846
+#: tavletta/ui/window.py:909
 #, python-format
 msgid "Problem: %s"
 msgstr "Problème : %s"
 
-#: tavletta/ui/window.py:865
+#: tavletta/ui/window.py:928
 #, python-format
 msgid "Too long for this printer: at most %s"
 msgstr "Trop longue pour cette imprimante : %s au maximum"
 
-#: tavletta/ui/window.py:869
+#: tavletta/ui/window.py:932
 #, python-format
 msgid "Too wide for this printer: at most %s"
 msgstr "Trop large pour cette imprimante : %s au maximum"
 
-#: tavletta/ui/window.py:941
+#: tavletta/ui/window.py:1005
 msgid "The browser cannot be opened"
 msgstr "Impossible d’ouvrir le navigateur"
 
-#: tavletta/ui/window.py:943
+#: tavletta/ui/window.py:1007
 msgid "Copy link"
 msgstr "Copier le lien"
 
-#: tavletta/ui/window.py:1014
+#: tavletta/ui/window.py:1079
 msgid "Only local files can be dropped"
 msgstr "Seuls les fichiers locaux peuvent être déposés"
 
-#: tavletta/ui/window.py:1067
+#: tavletta/ui/window.py:1132
 msgid "Please wait until printing has finished"
 msgstr "Veuillez attendre la fin de l’impression"
 
@@ -3343,7 +3464,7 @@ msgstr "liste de noms d’imprimantes attendue"
 msgid "printers can only be limited with --printers"
 msgstr "les imprimantes ne peuvent être limitées qu’avec --printers"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:529
+#: tavletta/server/config.py:479 tavletta/server/service.py:532
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "Imprimante inconnue : %s"
@@ -3357,7 +3478,7 @@ msgstr "Valeur non valide pour %s"
 msgid "The request took too long"
 msgstr "La requête a pris trop de temps"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1388
+#: tavletta/server/http.py:473 tavletta/server/service.py:1398
 msgid "The server is busy – try again later"
 msgstr "Le serveur est occupé – réessayez plus tard"
 
@@ -3542,80 +3663,75 @@ msgstr "Trop de colonnes : %d au maximum"
 msgid "Too many cells: at most %d"
 msgstr "Trop de cellules : %d au maximum"
 
-#: tavletta/server/service.py:541
+#: tavletta/server/service.py:544
 msgid "Choose a printer by its name"
 msgstr "Choisissez une imprimante par son nom"
 
-#: tavletta/server/service.py:605 tavletta/server/service.py:1361
+#: tavletta/server/service.py:608 tavletta/server/service.py:1371
 msgid "This access token may not do this"
 msgstr "Ce jeton d’accès n’a pas le droit de faire cela"
 
-#: tavletta/server/service.py:662
+#: tavletta/server/service.py:665
 msgid "No printer address: give it as host"
 msgstr "Aucune adresse d’imprimante : indiquez-la dans host"
 
-#: tavletta/server/service.py:671
+#: tavletta/server/service.py:674
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "Cette adresse d’imprimante n’est pas autorisée : %s"
 
-#: tavletta/server/service.py:766
+#: tavletta/server/service.py:769
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "Les pages de document ne sont pas autorisées dans label_content (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:799
+#: tavletta/server/service.py:802
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s est une colonne de données ({%(name)s}) – envoyez-la dans data_rows"
 
-#: tavletta/server/service.py:857
+#: tavletta/server/service.py:860
 msgid "A sheet needs a data file"
 msgstr "Une feuille exige un fichier de données"
 
-#: tavletta/server/service.py:863
+#: tavletta/server/service.py:866
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "L’étiquette utilise un fichier de données hors du dossier d’étiquettes : envoyez ses lignes avec la requête"
 
-#: tavletta/server/service.py:1033
-#, python-format
-msgid "At most %d labels in one print job"
-msgstr "%d étiquettes au maximum dans une tâche d’impression"
-
-#: tavletta/server/service.py:1059
+#: tavletta/server/service.py:1064
 msgid "Too many print jobs are waiting – try again later"
 msgstr "Trop de tâches d’impression en attente – réessayez plus tard"
 
-#: tavletta/server/service.py:1323
+#: tavletta/server/service.py:1333
 #, python-format
 msgid "No such print job: %s"
 msgstr "Tâche d’impression introuvable : %s"
 
-#: tavletta/server/service.py:1335
+#: tavletta/server/service.py:1345
 msgid "The print job has already finished"
 msgstr "La tâche d’impression est déjà terminée"
 
-#: tavletta/server/service.py:1392
+#: tavletta/server/service.py:1402
 msgid "The label is too large to render"
 msgstr "L’étiquette est trop grande pour être rendue"
 
-#: tavletta/server/service.py:1406
+#: tavletta/server/service.py:1416
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "L’étiquette est trop grande : %d images et codes au maximum"
 
-#: tavletta/server/service.py:1429
+#: tavletta/server/service.py:1439
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "L’étiquette est trop grande : %(elements)d éléments au maximum et %(chars)d caractères par texte"
 
-#: tavletta/server/service.py:1448
+#: tavletta/server/service.py:1458
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "%d copies au maximum sur cette imprimante"
 
-#: tavletta/server/service.py:1453
+#: tavletta/server/service.py:1463
 msgid "Printers are chosen by name: leave out host"
 msgstr "Les imprimantes se choisissent par leur nom : omettez host"
