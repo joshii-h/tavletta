@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 16:17+0100\n"
+"PO-Revision-Date: 2026-11-24 16:22+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: es\n"
 "Language: es\n"
@@ -233,232 +233,236 @@ msgstr "archivo con el token de acceso; si no, la variable de entorno TAVLETTA_T
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml: tokens de acceso con nombre y roles"
 
-#: tavletta/cli.py:385
+#: tavletta/cli.py:389
+msgid "oidc.toml: people sign in to the web page with OpenID Connect"
+msgstr "oidc.toml: iniciar sesión en la página web con OpenID Connect"
+
+#: tavletta/cli.py:391
 msgid "also serve MCP at /mcp"
 msgstr "servir también MCP en /mcp"
 
-#: tavletta/cli.py:389
+#: tavletta/cli.py:395
 msgid "do not serve the web page at /: only the REST API (and MCP)"
 msgstr "no servir la página web en /: solo la REST API (y MCP)"
 
-#: tavletta/cli.py:396
+#: tavletta/cli.py:402
 msgid "largest request body in MB (default 4)"
 msgstr "tamaño máximo del cuerpo de la solicitud en MB (por defecto 4)"
 
-#: tavletta/cli.py:405
+#: tavletta/cli.py:411
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "un proxy inverso cuya cabecera X-Forwarded-For indica el cliente, p. ej. 172.16.0.0/12; repetible"
 
-#: tavletta/cli.py:414
+#: tavletta/cli.py:420
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "permitir solicitudes desde páginas web de este origen; repetible"
 
-#: tavletta/cli.py:419
+#: tavletta/cli.py:425
 msgid "serve MCP on standard input and output"
 msgstr "sirve MCP por la entrada y la salida estándar"
 
-#: tavletta/cli.py:421
+#: tavletta/cli.py:427
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "Sirve MCP por la entrada y la salida estándar, para clientes de IA como Claude Desktop."
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:437
 msgid "manage the access tokens of the print server"
 msgstr "gestiona los tokens de acceso del servidor de impresión"
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:438
 msgid "Manage the access tokens of the print server."
 msgstr "Gestiona los tokens de acceso del servidor de impresión."
 
-#: tavletta/cli.py:437
+#: tavletta/cli.py:443
 msgid "make a token and add its hash to tokens.toml"
 msgstr "crea un token y añade su hash a tokens.toml"
 
-#: tavletta/cli.py:438
+#: tavletta/cli.py:444
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "Crea un token, añade su hash a tokens.toml y muestra el token una sola vez."
 
-#: tavletta/cli.py:440
+#: tavletta/cli.py:446
 msgid "name of the token, e.g. the device"
 msgstr "nombre del token, p. ej. el dispositivo"
 
-#: tavletta/cli.py:445
+#: tavletta/cli.py:451
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview: solo ver; print: también imprimir; admin: también todos los trabajos"
 
-#: tavletta/cli.py:447
+#: tavletta/cli.py:453
 msgid "tokens.toml to add it to"
 msgstr "tokens.toml al que añadirlo"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:459
 msgid "only this printer of printers.toml; repeatable"
 msgstr "solo esta impresora de printers.toml; repetible"
 
-#: tavletta/cli.py:456
+#: tavletta/cli.py:462
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml, para comprobar --printer"
 
-#: tavletta/cli.py:458
+#: tavletta/cli.py:464
 msgid "valid until, e.g. 2027-12-31"
 msgstr "válido hasta, p. ej. 2027-12-31"
 
-#: tavletta/cli.py:459
+#: tavletta/cli.py:465
 msgid "a note for people"
 msgstr "una nota para personas"
 
-#: tavletta/cli.py:461
+#: tavletta/cli.py:467
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "guardar el hash con scrypt en lugar de SHA-256"
 
-#: tavletta/cli.py:467
+#: tavletta/cli.py:473
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "tomar de la entrada estándar un token elegido por usted (guardado con scrypt) en lugar de crear uno"
 
-#: tavletta/cli.py:487 tavletta/server/config.py:220
+#: tavletta/cli.py:493 tavletta/server/config.py:220
 #: tavletta/server/service.py:612
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "Modelo de impresora desconocido: %s"
 
-#: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:347 tavletta/ui/texts.py:729
 #: tavletta/server/service.py:903
 #, python-format
 msgid "Cannot open %s"
 msgstr "No se puede abrir %s"
 
-#: tavletta/cli.py:516 tavletta/server/main.py:262
+#: tavletta/cli.py:522 tavletta/server/main.py:301
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s no es una fecha, se esperaba p. ej. 2026-12-31 o 2026-12-31T08:30"
 
-#: tavletta/cli.py:564
+#: tavletta/cli.py:570
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} se rellena al imprimir y no se puede establecer"
 
-#: tavletta/cli.py:570
+#: tavletta/cli.py:576
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "La etiqueta no tiene ningún elemento ni variable llamado %s"
 
-#: tavletta/cli.py:599 tavletta/ui/printing.py:123
+#: tavletta/cli.py:605 tavletta/ui/printing.py:123
 #: tavletta/server/service.py:1288
 msgid "The label is empty"
 msgstr "La etiqueta está vacía"
 
-#: tavletta/cli.py:636
+#: tavletta/cli.py:642
 msgid "Cannot write the output"
 msgstr "No se puede escribir la salida"
 
-#: tavletta/cli.py:667
+#: tavletta/cli.py:673
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output escribe imágenes PNG: indica un nombre que termine en .png"
 
-#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:582
+#: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
 #: tavletta/ui/printing.py:746 tavletta/server/service.py:1147
 #: tavletta/server/service.py:1170 tavletta/server/service.py:1472
 #: tavletta/server/service.py:1708
 msgid "The label cannot be prepared for printing."
 msgstr "No se puede preparar la etiqueta para imprimir."
 
-#: tavletta/cli.py:779
+#: tavletta/cli.py:785
 msgid "No printer found – give its address with --host"
 msgstr "No se encontró ninguna impresora – indique su dirección con --host"
 
-#: tavletta/cli.py:781
+#: tavletta/cli.py:787
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Se encontraron varias impresoras – elija una con --host (tavletta list-printers)"
 
-#: tavletta/cli.py:792 tavletta/ui/texts.py:772 tavletta/server/service.py:1698
+#: tavletta/cli.py:798 tavletta/ui/texts.py:772 tavletta/server/service.py:1698
 #, python-format
 msgid "Cannot save %s"
 msgstr "No se puede guardar %s"
 
-#: tavletta/cli.py:794 tavletta/server/service.py:1701
+#: tavletta/cli.py:800 tavletta/server/service.py:1701
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "las etiquetas se imprimieron, pero no se guardó el siguiente valor del contador"
 
-#: tavletta/cli.py:809 tavletta/server/service.py:1317
+#: tavletta/cli.py:815 tavletta/server/service.py:1317
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "no se imprimió nada: el siguiente valor del contador no se podría guardar"
 
-#: tavletta/cli.py:869 tavletta/cli.py:896 tavletta/cli.py:1260
+#: tavletta/cli.py:875 tavletta/cli.py:902 tavletta/cli.py:1266
 msgid "Interrupted"
 msgstr "Interrumpido"
 
-#: tavletta/cli.py:952 tavletta/ui/printing.py:488
+#: tavletta/cli.py:958 tavletta/ui/printing.py:488
 #: tavletta/server/service.py:1193
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "Como máximo %d etiquetas en un trabajo de impresión"
 
-#: tavletta/cli.py:971
+#: tavletta/cli.py:977
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method: este modelo de impresora no tiene ajuste de método de impresión: %s"
 
-#: tavletta/cli.py:1013
+#: tavletta/cli.py:1019
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet y --rows requieren un archivo de datos (--data)"
 
-#: tavletta/cli.py:1022 tavletta/ui/printing.py:615
+#: tavletta/cli.py:1028 tavletta/ui/printing.py:615
 #: tavletta/server/service.py:1005
 msgid "No rows to print"
 msgstr "No hay filas para imprimir"
 
-#: tavletta/cli.py:1032
+#: tavletta/cli.py:1038
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "La etiqueta usa un archivo de datos fuera de su carpeta: indíquelo con --data"
 
-#: tavletta/cli.py:1059 tavletta/ui/window.py:922
+#: tavletta/cli.py:1065 tavletta/ui/window.py:922
 #: tavletta/server/service.py:1064
 #, python-format
 msgid "No such column: %s"
 msgstr "No existe la columna: %s"
 
-#: tavletta/cli.py:1064 tavletta/ui/printing.py:695
+#: tavletta/cli.py:1070 tavletta/ui/printing.py:695
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "El código de barras o el código QR de estas filas no se puede crear con sus valores, por ejemplo un EAN-13 con letras o una celda vacía. Corrija el archivo de datos y vuelva a leerlo, o imprima sin estas filas."
 
-#: tavletta/cli.py:1069 tavletta/ui/printing.py:700
+#: tavletta/cli.py:1075 tavletta/ui/printing.py:700
 #, python-format
 msgid "Rows: %s"
 msgstr "Filas: %s"
 
-#: tavletta/cli.py:1077
+#: tavletta/cli.py:1083
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "Esperando a que termine otra impresión de %s…"
 
-#: tavletta/cli.py:1084 tavletta/server/service.py:791
+#: tavletta/cli.py:1090 tavletta/server/service.py:791
 #: tavletta/server/service.py:1466
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s sigue bloqueado por otra impresión – inténtalo más tarde"
 
-#: tavletta/cli.py:1090
+#: tavletta/cli.py:1096
 msgid "--output needs --dry-run"
 msgstr "--output requiere --dry-run"
 
-#: tavletta/cli.py:1107
+#: tavletta/cli.py:1113
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "El siguiente valor del contador no se guarda: la próxima impresión repetirá los números"
 
-#: tavletta/cli.py:1203
+#: tavletta/cli.py:1209
 msgid "Waiting for the printer's answer…"
 msgstr "Esperando la respuesta de la impresora…"
 
-#: tavletta/cli.py:1231 tavletta/ui/printer.py:343
+#: tavletta/cli.py:1237 tavletta/ui/printer.py:343
 msgid "No printer found"
 msgstr "No se encontró ninguna impresora"
 
@@ -1594,7 +1598,7 @@ msgstr "Imprimir etiqueta"
 
 #: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
-#: tavletta/server/web/app.js:338 tavletta/server/web/batch.js:56
+#: tavletta/server/web/app.js:384 tavletta/server/web/batch.js:56
 #: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
@@ -3346,8 +3350,8 @@ msgstr "Siguiente número"
 msgid "Step"
 msgstr "Paso"
 
-#: tavletta/ui/window.py:176 tavletta/server/web/app.js:47
-#: tavletta/server/web/app.js:296
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:49
+#: tavletta/server/web/app.js:342
 msgid "Templates"
 msgstr "Plantillas"
 
@@ -3420,7 +3424,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:89 tavletta/server/config.py:93
-#: tavletta/server/config.py:99 tavletta/server/main.py:344
+#: tavletta/server/config.py:99 tavletta/server/main.py:383
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "No se puede leer %(file)s: %(reason)s"
@@ -3429,7 +3433,8 @@ msgstr "No se puede leer %(file)s: %(reason)s"
 msgid "expected a table"
 msgstr "se esperaba una tabla"
 
-#: tavletta/server/config.py:119 tavletta/server/config.py:453
+#: tavletta/server/config.py:119 tavletta/server/config.py:455
+#: tavletta/server/oidc.py:226 tavletta/server/oidc.py:318
 msgid "missing"
 msgstr "falta"
 
@@ -3456,6 +3461,7 @@ msgid "expected one of: %s"
 msgstr "se esperaba uno de: %s"
 
 #: tavletta/server/config.py:153 tavletta/server/config.py:159
+#: tavletta/server/oidc.py:287
 msgid "unknown key"
 msgstr "clave desconocida"
 
@@ -3483,32 +3489,34 @@ msgstr "este modelo de impresora no corta"
 msgid "this printer model has no colour settings"
 msgstr "este modelo de impresora no tiene ajustes de color"
 
-#: tavletta/server/config.py:408
+#: tavletta/server/config.py:410
 msgid "expected a date such as 2027-12-31"
 msgstr "se esperaba una fecha como 2027-12-31"
 
-#: tavletta/server/config.py:427
+#: tavletta/server/config.py:429
 msgid "the same token twice"
 msgstr "el mismo token dos veces"
 
-#: tavletta/server/config.py:440
+#: tavletta/server/config.py:442
 #, python-format
 msgid "%s can be changed by every user of this computer: chmod 600 it"
 msgstr "%s puede ser modificado por cualquier usuario de este equipo: aplíquele chmod 600"
 
-#: tavletta/server/config.py:450
+#: tavletta/server/config.py:452
 msgid "not a token hash: expected sha256:… or scrypt:…"
 msgstr "no es un hash de token: se esperaba sha256:… o scrypt:…"
 
-#: tavletta/server/config.py:476
+#: tavletta/server/config.py:478
 msgid "expected a list of printer names"
 msgstr "se esperaba una lista de nombres de impresora"
 
-#: tavletta/server/config.py:480 tavletta/server/main.py:370
+#: tavletta/server/config.py:482 tavletta/server/main.py:409
+#: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "las impresoras solo se pueden limitar con --printers"
 
-#: tavletta/server/config.py:482 tavletta/server/service.py:551
+#: tavletta/server/config.py:484 tavletta/server/oidc.py:251
+#: tavletta/server/service.py:551
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "Impresora desconocida: %s"
@@ -3518,74 +3526,77 @@ msgstr "Impresora desconocida: %s"
 msgid "Invalid value for %s"
 msgstr "Valor no válido para %s"
 
-#: tavletta/server/http.py:469 tavletta/server/http.py:518
+#: tavletta/server/http.py:481 tavletta/server/http.py:530
 msgid "The request took too long"
 msgstr "La solicitud tardó demasiado"
 
-#: tavletta/server/http.py:478 tavletta/server/service.py:1619
+#: tavletta/server/http.py:490 tavletta/server/service.py:1619
 msgid "The server is busy – try again later"
 msgstr "El servidor está ocupado: inténtelo de nuevo más tarde"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:533
 msgid "Internal error"
 msgstr "Error interno"
 
-#: tavletta/server/http.py:526
+#: tavletta/server/http.py:538
 msgid "This server only answers on its local address"
 msgstr "Este servidor solo responde en su dirección local"
 
-#: tavletta/server/http.py:530
+#: tavletta/server/http.py:542 tavletta/server/http.py:658
+#: tavletta/server/http.py:662
 msgid "Requests from this web page are not allowed"
 msgstr "No se permiten solicitudes desde esta página web"
 
-#: tavletta/server/http.py:557
-msgid "Too many requests – try again later"
-msgstr "Demasiadas solicitudes: inténtelo de nuevo más tarde"
-
-#: tavletta/server/http.py:559
+#: tavletta/server/http.py:570 tavletta/server/http.py:580
+#: tavletta/server/http.py:671
 msgid "Access token missing or wrong"
 msgstr "Falta el token de acceso o es incorrecto"
 
-#: tavletta/server/http.py:600 tavletta/server/http.py:605
-msgid "The request needs a Content-Length"
-msgstr "La solicitud necesita un Content-Length"
+#: tavletta/server/http.py:578 tavletta/server/http.py:694
+msgid "Too many requests – try again later"
+msgstr "Demasiadas solicitudes: inténtelo de nuevo más tarde"
 
-#: tavletta/server/http.py:602
-msgid "The request has more than one Content-Length"
-msgstr "La solicitud tiene más de un Content-Length"
-
-#: tavletta/server/http.py:608 tavletta/server/service.py:836
-msgid "The request is too large"
-msgstr "La solicitud es demasiado grande"
-
-#: tavletta/server/http.py:613
-msgid "The request body is incomplete"
-msgstr "El cuerpo de la solicitud está incompleto"
-
-#: tavletta/server/http.py:620
-msgid "Send the request as application/json"
-msgstr "Envíe la solicitud como application/json"
-
-#: tavletta/server/http.py:652 tavletta/server/http.py:662
-#: tavletta/server/http.py:783
-msgid "Not found"
-msgstr "No encontrado"
-
-#: tavletta/server/http.py:661 tavletta/server/http.py:774
-msgid "Method not allowed"
-msgstr "Método no permitido"
-
-#: tavletta/server/http.py:678
+#: tavletta/server/http.py:651 tavletta/server/http.py:802
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Envíe la cabecera %s con esta solicitud"
 
-#: tavletta/server/http.py:721 tavletta/server/service.py:627
+#: tavletta/server/http.py:682 tavletta/server/http.py:776
+#: tavletta/server/http.py:786 tavletta/server/http.py:909
+msgid "Not found"
+msgstr "No encontrado"
+
+#: tavletta/server/http.py:684 tavletta/server/http.py:785
+#: tavletta/server/http.py:900
+msgid "Method not allowed"
+msgstr "Método no permitido"
+
+#: tavletta/server/http.py:721 tavletta/server/http.py:726
+msgid "The request needs a Content-Length"
+msgstr "La solicitud necesita un Content-Length"
+
+#: tavletta/server/http.py:723
+msgid "The request has more than one Content-Length"
+msgstr "La solicitud tiene más de un Content-Length"
+
+#: tavletta/server/http.py:729 tavletta/server/service.py:836
+msgid "The request is too large"
+msgstr "La solicitud es demasiado grande"
+
+#: tavletta/server/http.py:734
+msgid "The request body is incomplete"
+msgstr "El cuerpo de la solicitud está incompleto"
+
+#: tavletta/server/http.py:741
+msgid "Send the request as application/json"
+msgstr "Envíe la solicitud como application/json"
+
+#: tavletta/server/http.py:847 tavletta/server/service.py:627
 #: tavletta/server/service.py:1592
 msgid "This access token may not do this"
 msgstr "Este token de acceso no puede hacer esto"
 
-#: tavletta/server/http.py:897
+#: tavletta/server/http.py:1025
 msgid "The request is not valid JSON"
 msgstr "La solicitud no es JSON válido"
 
@@ -3599,12 +3610,12 @@ msgstr "La carpeta de etiquetas %s no existe"
 msgid "Cannot read the token file %s"
 msgstr "No se puede leer el archivo de token %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:315
+#: tavletta/server/main.py:54 tavletta/server/main.py:354
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "El token de acceso solo puede contener caracteres ASCII imprimibles sin espacios"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:320
+#: tavletta/server/main.py:59 tavletta/server/main.py:359
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "El token de acceso debe tener al menos %d caracteres"
@@ -3622,54 +3633,87 @@ msgstr "Use --tokens o --token-file, no ambos"
 msgid "Not a valid printer address pattern: %s"
 msgstr "No es un patrón de dirección de impresora válido: %s"
 
-#: tavletta/server/main.py:117
+#: tavletta/server/main.py:118
 #, python-format
 msgid ""
 "Refusing to listen on %s without an access token: set TAVLETTA_TOKEN or use "
 "--token-file"
 msgstr "No se escuchará en %s sin token de acceso: defina TAVLETTA_TOKEN o use --token-file"
 
-#: tavletta/server/main.py:141
+#: tavletta/server/main.py:143
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "No se puede escuchar en %(address)s: %(reason)s"
 
-#: tavletta/server/main.py:274
+#: tavletta/server/main.py:160
+msgid "--oidc signs in to the web page: not with --no-web-ui"
+msgstr "--oidc inicia sesión en la página web: no con --no-web-ui"
+
+#: tavletta/server/main.py:165
+msgid ""
+"--oidc needs PyJWT with cryptography (python3-jwt, pip install "
+"tavletta[oidc])"
+msgstr "--oidc necesita PyJWT con cryptography (python3-jwt, pip install tavletta[oidc])"
+
+#: tavletta/server/main.py:313
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "No es un nombre válido: letras, dígitos, . _ - (hasta 64)"
 
-#: tavletta/server/main.py:285
+#: tavletta/server/main.py:324
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s está en uso por otro programa: inténtelo de nuevo más tarde"
 
-#: tavletta/server/main.py:292
+#: tavletta/server/main.py:331
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "El token %(name)s se añadió a %(file)s."
 
-#: tavletta/server/main.py:299
+#: tavletta/server/main.py:338
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "El token se muestra solo esta vez; %s guarda solo su hash."
 
-#: tavletta/server/main.py:310
+#: tavletta/server/main.py:349
 msgid "Access token: "
 msgstr "Token de acceso: "
 
-#: tavletta/server/main.py:325
+#: tavletta/server/main.py:364
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "Un token elegido no debe parecerse a uno generado (tav_…)"
 
-#: tavletta/server/main.py:375
+#: tavletta/server/main.py:414
 #, python-format
 msgid "A token named %s exists already"
 msgstr "Ya existe un token llamado %s"
 
-#: tavletta/server/main.py:402
+#: tavletta/server/main.py:441
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "Este token ya está en el archivo, como %s"
+
+#: tavletta/server/oidc.py:153 tavletta/server/oidc.py:157
+#: tavletta/server/oidc.py:267
+msgid "expected an https:// address (http:// only on this computer)"
+msgstr "se esperaba una dirección https:// (http:// solo en este equipo)"
+
+#: tavletta/server/oidc.py:183 tavletta/server/oidc.py:199
+#: tavletta/server/oidc.py:259
+msgid "expected a list of texts"
+msgstr "se esperaba una lista de textos"
+
+#: tavletta/server/oidc.py:215 tavletta/server/oidc.py:219
+#, python-format
+msgid "Cannot read the client secret file %s"
+msgstr "No se puede leer el archivo del secreto de cliente %s"
+
+#: tavletta/server/oidc.py:231
+msgid "map at least one role"
+msgstr "asigne al menos un rol"
+
+#: tavletta/server/oidc.py:277
+msgid "use either printers_claim or [oidc.printers]"
+msgstr "use printers_claim o [oidc.printers], no ambos"
 
 #: tavletta/server/paths.py:46 tavletta/server/service.py:815
 #, python-format
@@ -3791,23 +3835,23 @@ msgstr "Como máximo %d copias en esta impresora"
 msgid "Printers are chosen by name: leave out host"
 msgstr "Las impresoras se eligen por su nombre: omita host"
 
-#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:515
+#: tavletta/server/web/api.js:68 tavletta/server/web/app.js:561
 msgid "No connection to the server. Your input is kept."
 msgstr "No hay conexión con el servidor. Lo introducido se conserva."
 
-#: tavletta/server/web/app.js:48 tavletta/server/web/app.js:214
+#: tavletta/server/web/app.js:50 tavletta/server/web/app.js:260
 msgid "Printers"
 msgstr "Impresoras"
 
-#: tavletta/server/web/app.js:53
+#: tavletta/server/web/app.js:55
 msgid "Main"
 msgstr "Navegación principal"
 
-#: tavletta/server/web/app.js:78
+#: tavletta/server/web/app.js:81
 msgid "Language"
 msgstr "Idioma"
 
-#: tavletta/server/web/app.js:83
+#: tavletta/server/web/app.js:84
 msgid "Sign out"
 msgstr "Cerrar sesión"
 
@@ -3815,196 +3859,223 @@ msgstr "Cerrar sesión"
 msgid "Skip to content"
 msgstr "Ir al contenido"
 
-#: tavletta/server/web/app.js:164
+#: tavletta/server/web/app.js:185
+msgid ""
+"You are signed in at {provider}, but have no access to Tavletta. Ask the "
+"administrator for it."
+msgstr "Ha iniciado sesión en {provider}, pero no tiene acceso a Tavletta. Pídaselo al administrador."
+
+#: tavletta/server/web/app.js:186
+msgid "Signing in took too long or was started in another window. Try again."
+msgstr "El inicio de sesión tardó demasiado o se empezó en otra ventana. Inténtelo de nuevo."
+
+#: tavletta/server/web/app.js:187
+msgid "Signing in was canceled."
+msgstr "Se canceló el inicio de sesión."
+
+#: tavletta/server/web/app.js:189
+msgid "Signing in did not work. Try again, or ask the administrator."
+msgstr "No se pudo iniciar sesión. Inténtelo de nuevo o pregunte al administrador."
+
+#: tavletta/server/web/app.js:199
+msgid "Sign in with {provider}"
+msgstr "Iniciar sesión con {provider}"
+
+#: tavletta/server/web/app.js:201 tavletta/server/web/app.js:214
+#: tavletta/server/web/app.js:252
+msgid "Sign in"
+msgstr "Iniciar sesión"
+
+#: tavletta/server/web/app.js:204
+msgid "Or with an access token"
+msgstr "O con un token de acceso"
+
+#: tavletta/server/web/app.js:208
 msgid "Access token"
 msgstr "Token de acceso"
 
-#: tavletta/server/web/app.js:165
+#: tavletta/server/web/app.js:209
 msgid ""
 "The administrator gives it to you. It is kept in this tab only and forgotten "
 "when the tab is closed."
 msgstr "Se lo proporciona el administrador. Solo se guarda en esta pestaña y se olvida al cerrarla."
 
-#: tavletta/server/web/app.js:170 tavletta/server/web/app.js:206
-msgid "Sign in"
-msgstr "Iniciar sesión"
-
-#: tavletta/server/web/app.js:176
+#: tavletta/server/web/app.js:221
 msgid "Show token"
 msgstr "Mostrar token"
 
-#: tavletta/server/web/app.js:184
+#: tavletta/server/web/app.js:229
 msgid "Enter the access token."
 msgstr "Introduzca el token de acceso."
 
-#: tavletta/server/web/app.js:199
+#: tavletta/server/web/app.js:245
 msgid ""
 "The token was not accepted. Check it, or ask the administrator for a new one."
 msgstr "No se aceptó el token. Compruébelo o pida uno nuevo al administrador."
 
-#: tavletta/server/web/app.js:213
+#: tavletta/server/web/app.js:259
 msgid "Check again"
 msgstr "Volver a comprobar"
 
-#: tavletta/server/web/app.js:225 tavletta/server/web/print.js:74
+#: tavletta/server/web/app.js:271 tavletta/server/web/print.js:74
 msgid "No printer this token may use. Ask the administrator."
 msgstr "Este token no puede usar ninguna impresora. Consulte al administrador."
 
-#: tavletta/server/web/app.js:238
+#: tavletta/server/web/app.js:284
 msgid "Location: {place}"
 msgstr "Ubicación: {place}"
 
-#: tavletta/server/web/app.js:239
+#: tavletta/server/web/app.js:285
 msgid "Meant for: {media}"
 msgstr "Pensada para: {media}"
 
-#: tavletta/server/web/app.js:240
+#: tavletta/server/web/app.js:286
 msgid "Model: {model}"
 msgstr "Modelo: {model}"
 
-#: tavletta/server/web/app.js:246
+#: tavletta/server/web/app.js:292
 msgid "Default"
 msgstr "Predeterminada"
 
-#: tavletta/server/web/app.js:260
+#: tavletta/server/web/app.js:306
 msgid "Asking the printer…"
 msgstr "Consultando la impresora…"
 
-#: tavletta/server/web/app.js:271
+#: tavletta/server/web/app.js:317
 msgid "Ask for its state"
 msgstr "Consultar el estado"
 
-#: tavletta/server/web/app.js:277
+#: tavletta/server/web/app.js:323
 msgid "Address: {host}"
 msgstr "Dirección: {host}"
 
-#: tavletta/server/web/app.js:277
+#: tavletta/server/web/app.js:323
 msgid "No address set"
 msgstr "No hay ninguna dirección definida"
 
-#: tavletta/server/web/app.js:312
+#: tavletta/server/web/app.js:358
 msgid "No templates yet. Upload one above."
 msgstr "Aún no hay plantillas. Suba una arriba."
 
-#: tavletta/server/web/app.js:312
+#: tavletta/server/web/app.js:358
 msgid "No templates yet. Ask the administrator."
 msgstr "Aún no hay plantillas. Consulte al administrador."
 
-#: tavletta/server/web/app.js:339
+#: tavletta/server/web/app.js:385
 msgid "Series"
 msgstr "Serie"
 
-#: tavletta/server/web/app.js:340
+#: tavletta/server/web/app.js:386
 msgid "Delete"
 msgstr "Eliminar"
 
-#: tavletta/server/web/app.js:348
+#: tavletta/server/web/app.js:394
 msgid "Size: {width} × {height} mm"
 msgstr "Tamaño: {width} × {height} mm"
 
-#: tavletta/server/web/app.js:349
+#: tavletta/server/web/app.js:395
 msgid "Fields: {count}"
 msgstr "Campos: {count}"
 
-#: tavletta/server/web/app.js:350
+#: tavletta/server/web/app.js:396
 msgid "Printer model: {model}"
 msgstr "Modelo de impresora: {model}"
 
-#: tavletta/server/web/app.js:356
+#: tavletta/server/web/app.js:402
 msgid "Preview of {name} with sample values"
 msgstr "Vista previa de {name} con valores de ejemplo"
 
-#: tavletta/server/web/app.js:356 tavletta/server/web/print.js:188
+#: tavletta/server/web/app.js:402 tavletta/server/web/print.js:188
 msgid "Preview of {name}"
 msgstr "Vista previa de {name}"
 
-#: tavletta/server/web/app.js:358
+#: tavletta/server/web/app.js:404
 msgid "The preview shows sample values; a series can read another data file."
 msgstr "La vista previa muestra valores de ejemplo; una serie puede leer otro archivo de datos."
 
-#: tavletta/server/web/app.js:375
+#: tavletta/server/web/app.js:421
 msgid "The data file {name} is missing."
 msgstr "Falta el archivo de datos {name}."
 
-#: tavletta/server/web/app.js:384
+#: tavletta/server/web/app.js:430
 msgid "The template's data file is not in the labels folder."
 msgstr "El archivo de datos de la plantilla no está en la carpeta de etiquetas."
 
-#: tavletta/server/web/app.js:392
+#: tavletta/server/web/app.js:438
 msgid "Delete template?"
 msgstr "¿Eliminar la plantilla?"
 
-#: tavletta/server/web/app.js:393
+#: tavletta/server/web/app.js:439
 msgid "The template {name} is deleted from the server. Its data file stays."
 msgstr "La plantilla {name} se elimina del servidor. Su archivo de datos se conserva."
 
-#: tavletta/server/web/app.js:394
+#: tavletta/server/web/app.js:440
 msgid "Delete {name}"
 msgstr "Eliminar {name}"
 
-#: tavletta/server/web/app.js:401
+#: tavletta/server/web/app.js:447
 msgid "{name} deleted."
 msgstr "Se eliminó {name}."
 
-#: tavletta/server/web/app.js:414
+#: tavletta/server/web/app.js:460
 msgid "Template file"
 msgstr "Archivo de plantilla"
 
-#: tavletta/server/web/app.js:415
+#: tavletta/server/web/app.js:461
 msgid "A .tavletta file saved by Tavletta, at most {size} MB."
 msgstr "Un archivo .tavletta guardado por Tavletta, como máximo {size} MB."
 
-#: tavletta/server/web/app.js:419
+#: tavletta/server/web/app.js:465
 msgid "Upload"
 msgstr "Subir"
 
-#: tavletta/server/web/app.js:423
+#: tavletta/server/web/app.js:469
 msgid "Upload a template"
 msgstr "Subir una plantilla"
 
-#: tavletta/server/web/app.js:425
+#: tavletta/server/web/app.js:471
 msgid "Replace a template of the same name"
 msgstr "Reemplazar una plantilla con el mismo nombre"
 
-#: tavletta/server/web/app.js:433
+#: tavletta/server/web/app.js:479
 msgid "Choose a template file."
 msgstr "Elija un archivo de plantilla."
 
-#: tavletta/server/web/app.js:438
+#: tavletta/server/web/app.js:484
 msgid "The file is too large: at most {size} MB."
 msgstr "El archivo es demasiado grande: como máximo {size} MB."
 
-#: tavletta/server/web/app.js:449
+#: tavletta/server/web/app.js:495
 msgid "{name} uploaded."
 msgstr "Se subió {name}."
 
-#: tavletta/server/web/app.js:453
+#: tavletta/server/web/app.js:499
 msgid ""
 "A template of this name exists. Choose \"Replace a template of the same "
 "name\" to replace it."
 msgstr "Ya existe una plantilla con este nombre. Elija «Reemplazar una plantilla con el mismo nombre» para reemplazarla."
 
-#: tavletta/server/web/app.js:455
+#: tavletta/server/web/app.js:501
 msgid ""
 "The file name can have letters, digits, spaces and . _ - ( ) + , and must "
 "not start with a dot. Rename the file."
 msgstr "El nombre del archivo puede contener letras, dígitos, espacios y . _ - ( ) + , y no debe empezar por un punto. Cambie el nombre del archivo."
 
-#: tavletta/server/web/app.js:470
+#: tavletta/server/web/app.js:516
 msgid "Print job"
 msgstr "Trabajo de impresión"
 
-#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:908
+#: tavletta/server/web/app.js:523 tavletta/server/web/batch.js:908
 #: tavletta/server/web/print.js:243
 msgid "Template: {name}"
 msgstr "Plantilla: {name}"
 
-#: tavletta/server/web/app.js:477 tavletta/server/web/batch.js:909
+#: tavletta/server/web/app.js:523 tavletta/server/web/batch.js:909
 #: tavletta/server/web/print.js:243
 msgid "Printer: {name}"
 msgstr "Impresora: {name}"
 
-#: tavletta/server/web/app.js:482 tavletta/server/web/batch.js:951
+#: tavletta/server/web/app.js:528 tavletta/server/web/batch.js:951
 msgid "Print job ended: {printed} of {total} labels printed."
 msgstr "Trabajo de impresión terminado: {printed} de {total} etiquetas impresas."
 

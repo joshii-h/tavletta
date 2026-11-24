@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 16:17+0100\n"
+"POT-Creation-Date: 2026-11-24 16:22+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2157,18 +2157,22 @@ msgstr "Me { #me }"
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
-"| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token. |\n"
+"| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token; 'oidc:<user>' for someone signed in to the web page with OpenID Connect. |\n"
+"| `display_name` | string | A person's name from the provider; else the same as name. |\n"
+"| `session` | boolean | true: signed in to the web page with OpenID Connect (its session cookie), not with a token. |\n"
 "| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
 "| `printers` | array or null | The printers the token may use; null: all. |\n"
-"| `token_required` | boolean | false: the server has no token (loopback only). |\n"
+"| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
 "| Feld | Typ | Bedeutung |\n"
 "|---|---|---|\n"
-"| `name` | string | Der Name des Tokens in tokens.toml; 'token' für das eine Token von `--token-file`, 'local' ohne Token. |\n"
+"| `name` | string | Der Name des Tokens in tokens.toml; 'token' für das eine Token von `--token-file`, 'local' ohne Token; 'oidc:<user>' für jemanden, der auf der Webseite mit OpenID Connect angemeldet ist. |\n"
+"| `display_name` | string | Der Name einer Person beim Anbieter; sonst dasselbe wie name. |\n"
+"| `session` | boolean | true: auf der Webseite mit OpenID Connect angemeldet (deren Sitzungs-Cookie), nicht mit einem Token. |\n"
 "| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
 "| `printers` | array or null | Die Drucker, die das Token verwenden darf; null: alle. |\n"
-"| `token_required` | boolean | false: Der Server hat kein Token (nur Loopback). |\n"
+"| `token_required` | boolean | false: Der Server hat kein Token und kein `--oidc` (nur Loopback). |\n"
 "| `limits` | object | Was eine Anfrage höchstens verlangen darf: Etiketten in einem Auftrag (`--max-labels`; auf Etikettenbögen höchstens 999), Kopien, Datenzeilen, Spalten und Zellen, und den Inhalt in Bytes (`--max-body`; auch die grösste hochladbare Etikettendatei). |\n"
 
 #. type: Title ###
@@ -5497,6 +5501,109 @@ msgstr "Machen Sie den Server nie aus dem Internet erreichbar."
 #. type: Title ##
 #: docs/server-install.md
 #, no-wrap
+msgid "Signing in with OpenID Connect { #oidc }"
+msgstr "Anmelden mit OpenID Connect { #oidc }"
+
+#. type: Plain text
+#: docs/server-install.md
+msgid ""
+"People can sign in to the web page with your organisation's identity "
+"provider (Keycloak, Authentik, Microsoft Entra ID, Okta …) instead of an "
+"access token; their roles at the provider become Tavletta's roles.  Programs "
+"keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
+"localhost` works without, for testing)."
+msgstr ""
+"Statt mit einem Zugangs-Token können sich Leute auch beim Identitätsanbieter "
+"Ihrer Organisation (Keycloak, Authentik, Microsoft Entra ID, Okta …) auf der "
+"Webseite anmelden; ihre Rollen beim Anbieter werden zu den Rollen in "
+"Tavletta. Programme verwenden weiter Tokens. Es braucht HTTPS über den "
+"Reverse Proxy (nur `http://localhost` geht ohne, zum Testen)."
+
+#. type: Bullet: '1. '
+#: docs/server-install.md
+msgid ""
+"Register a client at the provider: confidential (with a secret), the "
+"authorization code flow only, PKCE S256, redirect URI `https://"
+"labels.example.com/oidc/callback`, post-logout redirect URI `https://"
+"labels.example.com/`. Make the roles or groups reach the ID token: in "
+"Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
+"with *Add to ID token* on; Authentik sends `groups`."
+msgstr ""
+"Beim Anbieter einen Client einrichten: vertraulich (mit einem Geheimnis), "
+"nur der Authorization Code Flow, PKCE S256, Weiterleitungs-URI `https://"
+"labels.example.com/oidc/callback`, Weiterleitungs-URI nach dem Abmelden "
+"`https://labels.example.com/`. Dafür sorgen, dass die Rollen oder Gruppen "
+"ins ID-Token kommen: in Keycloak ein Mapper *User Client Role* (oder *User "
+"Realm Role*) am Client mit *Add to ID token* eingeschaltet; Authentik "
+"schickt `groups`."
+
+#. type: Bullet: '2. '
+#: docs/server-install.md
+msgid ""
+"Put the secret into `config/oidc-secret` (the secret alone, mode 600)  and "
+"write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
+"commented start):"
+msgstr ""
+"Das Geheimnis in `config/oidc-secret` legen (nur das Geheimnis, Modus 600) "
+"und `config/oidc.toml` schreiben (`cp oidc.example.toml config/oidc.toml` "
+"liefert einen kommentierten Anfang):"
+
+#. type: Fenced code block (toml)
+#: docs/server-install.md
+#, no-wrap
+msgid ""
+"   [oidc]\n"
+"   issuer = \"https://id.example.com/realms/example\"\n"
+"   client_id = \"tavletta\"\n"
+"   client_secret_file = \"/config/oidc-secret\"\n"
+"   public_url = \"https://labels.example.com\"\n"
+"   provider_name = \"Example ID\"\n"
+"   roles_claim = \"resource_access.tavletta.roles\"   # Authentik: \"groups\"\n"
+"\n"
+"   [oidc.roles]\n"
+"   preview = [\"tavletta-preview\"]\n"
+"   print = [\"tavletta-print\"]\n"
+"   admin = [\"tavletta-admin\"]\n"
+msgstr ""
+
+#. type: Bullet: '3. '
+#: docs/server-install.md
+msgid ""
+"Add `\"--oidc\"` and `\"/config/oidc.toml\"` to `command:` in `compose.yaml` "
+"(native: to `ExecStart`, with `/etc/tavletta/...`), keep `--trusted-proxy`, "
+"and restart."
+msgstr ""
+"`\"--oidc\"` und `\"/config/oidc.toml\"` bei `command:` in `compose.yaml` "
+"ergänzen (nativ: bei `ExecStart`, mit `/etc/tavletta/...`), `--trusted-"
+"proxy` beibehalten und neu starten."
+
+#. type: Plain text
+#: docs/server-install.md
+msgid ""
+"The page then shows \"Sign in with Example ID\". Someone without one of the "
+"roles gets \"no access\". A session lasts 8 hours, or 60 minutes without use "
+"(`session_hours`, `idle_minutes`); a role removed or an account disabled at "
+"the provider counts from the next sign in, so keep sessions short where "
+"admins sign in. `token_login = false` hides the token field on the page. "
+"Printers can be limited per role (`[oidc.printers]`) or by a claim "
+"(`printers_claim`). Every key and the security details: [docs/server.md]"
+"(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#signing-in-with-openid-connect-oidctoml)."
+msgstr ""
+"Die Seite zeigt dann „Mit Example ID anmelden“. Wer keine der Rollen hat, "
+"bekommt „kein Zugang“. Eine Sitzung dauert 8 Stunden, oder 60 Minuten ohne "
+"Nutzung (`session_hours`, `idle_minutes`); eine beim Anbieter entfernte "
+"Rolle oder ein gesperrtes Konto gilt erst ab der nächsten Anmeldung, darum "
+"Sitzungen kurz halten, wo sich Admins anmelden. `token_login = false` "
+"blendet das Token-Feld auf der Seite aus. Drucker lassen sich pro Rolle "
+"(`[oidc.printers]`) oder über einen Claim (`printers_claim`) beschränken. "
+"Alle Schlüssel und die Sicherheitsdetails: [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#signing-"
+"in-with-openid-connect-oidctoml)."
+
+#. type: Title ##
+#: docs/server-install.md
+#, no-wrap
 msgid "Fonts { #fonts }"
 msgstr "Schriften { #fonts }"
 
@@ -5638,6 +5745,17 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server-install.md
 msgid ""
+"With `--oidc`: `public_url` set, the client confidential with PKCE, only the "
+"roles people need, short sessions where admins sign in, `oidc-secret` mode "
+"600."
+msgstr ""
+"Mit `--oidc`: `public_url` gesetzt, der Client vertraulich mit PKCE, nur die "
+"Rollen, die Leute brauchen, kurze Sitzungen, wo sich Admins anmelden, `oidc-"
+"secret` mit Modus 600."
+
+#. type: Bullet: '- '
+#: docs/server-install.md
+msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
@@ -5694,6 +5812,7 @@ msgid ""
 "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
 "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
 "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
+"| \"Signing in did not work\" on the web page | The log says why: the provider cannot be reached, the redirect URI or secret is wrong at the provider, or the page is reached over plain HTTP (set `public_url`, `--trusted-proxy`). \"No access\": the roles do not reach the ID token (a mapper is missing) or none is mapped in `[oidc.roles]`. |\n"
 "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
 "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
 msgstr ""
@@ -5711,6 +5830,7 @@ msgstr ""
 "| `other_labels_loaded` in den Warnungen | Im Drucker sind andere Etiketten eingelegt als die des Etiketts: die passende Rolle einlegen, oder Grösse und Lücke des Etiketts prüfen. Ein ZPL-Drucker meldet vielleicht einen Abstand, den er auf einer früheren Rolle gemessen hat: ihn kalibrieren. |\n"
 "| `409 counter_not_saved` | Die Etikettendatei ist für den Benutzer des Servers nicht beschreibbar: mit `chown` diesem Benutzer geben (Docker: 1000, nativ: `tavletta`). |\n"
 "| Datum oder Uhrzeit auf Etiketten ein, zwei Stunden daneben | Der Container läuft auf UTC: `TAVLETTA_TZ=Europe/Zurich` in `.env` setzen, dann `docker compose up -d`. |\n"
+"| „Die Anmeldung hat nicht geklappt“ auf der Webseite | Das Log sagt, warum: Der Anbieter ist nicht erreichbar, Weiterleitungs-URI oder Geheimnis stimmen beim Anbieter nicht, oder die Seite wird über einfaches HTTP aufgerufen (`public_url`, `--trusted-proxy` setzen). „Kein Zugang“: Die Rollen kommen nicht ins ID-Token (ein Mapper fehlt), oder in `[oidc.roles]` ist keine zugeordnet. |\n"
 "| Der Server startet nicht | `docker compose logs` oder `journalctl -u tavletta-server`: Ein Fehler in `printers.toml` oder `tokens.toml` wird mit seinem Schlüssel genannt. |\n"
 "| Zugriff auf die Ordner verweigert (Fedora, RHEL mit SELinux und Podman) | `:Z` an die Volumes in `compose.yaml` anhängen. |\n"
 
@@ -6054,11 +6174,14 @@ msgstr ""
 msgid ""
 "**Sign in** with an access token (without a token on the server there is "
 "nothing to sign in to). The browser keeps it in this tab only; \"Sign out\" "
-"forgets it."
+"forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
+"organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
 "**Anmelden** mit einem Zugangstoken (ohne Token auf dem Server gibt es "
 "nichts anzumelden). Der Browser behält es nur in diesem Tab; „Abmelden“ "
-"vergisst es."
+"vergisst es. Wo der Server dafür eingerichtet ist, meldet „Mit … anmelden“ "
+"stattdessen mit dem Konto Ihrer Organisation an ([OpenID Connect](server-"
+"install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md

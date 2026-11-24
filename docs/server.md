@@ -55,7 +55,7 @@ tavletta serve [--host 127.0.0.1] [--port 8790] [--labels-dir DIR] [--mcp]
                [--printers printers.toml | --allow-printer ADDR] [--discover]
                [--tokens tokens.toml | --token-file FILE] [--allow-origin URL]
                [--max-body MB] [--max-labels N] [--trusted-proxy CIDR]
-               [--no-web-ui]
+               [--no-web-ui] [--oidc oidc.toml]
 tavletta mcp [--labels-dir DIR] [--printers printers.toml | --allow-printer ADDR]
              [--discover] [--max-labels N]
 tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
@@ -73,6 +73,7 @@ tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
 | `--token-file` | one access token for everything (role admin); else the variable `TAVLETTA_TOKEN`; at least 16 characters |
 | `--labels-dir` | the only folder label and data files are read from; `~/.local/share/tavletta/labels` by default (made if missing) |
 | `--mcp` | MCP (Streamable HTTP) at `/mcp` as well |
+| `--oidc` | `oidc.toml`: people sign in to the web page with an OpenID Connect provider ([below](#signing-in-with-openid-connect-oidctoml)); tokens keep working for programs. Not with `--no-web-ui`; needs PyJWT with cryptography |
 | `--no-web-ui` | no web page at `/` (and `/ui/`): those paths answer 404, as before there was one; for servers that only serve programs |
 | `--allow-origin` | web origin whose pages may call the server (`https://app.example`): CORS preflights are answered and the answers carry `Access-Control-Allow-Origin`; repeatable |
 | `--allow-printer` | without a printer list: only these printers, compared with the host of the address (never the whole address). A pattern of only digits, dots and `*` is an address pattern: four IPv4 parts, `*` standing for whole parts (`192.168.1.*`, `10.*`, `*.5`, `*.*`); a network as Python's ipaddress reads it (`192.168.1.0/24`, `2001:db8::/32`) is one too. Address patterns match IP addresses only, a host name if every address it resolves to matches one of them (so `192.168.1.evil.example` is not in `192.168.1.*`, and `*.*` matches `printer.local` only by the addresses it resolves to, not by its name). Any other pattern is a name pattern (`*.local`, `cups.example.com`) and matches host names. The server then prints on the first address the resolver gives (only that one; there is no trying the others), not on the name (a name looked up again could point elsewhere; an `ipps` printer must then accept its IP address). `*` alone allows everything without a lookup. A pattern that can never match is refused at startup: a network that is none (`10.0.0.0/33`), an address pattern with a part over 255 or a leading zero (`010.1.1.1`), a `*` within a part (`10*`), more than four parts, or fewer than four without a `*` (`1.2.3`, `10`); repeatable |
@@ -232,6 +233,154 @@ description = "PC at gate 2"
   role admin, named `token`. Without any token (loopback only) requests
   count as `local`, role admin.
 
+## Signing in with OpenID Connect (oidc.toml)
+
+`--oidc oidc.toml` lets people sign in to the web page with the
+organisation's identity provider (Keycloak, Authentik, Microsoft Entra
+ID, Okta, Zitadel, Google …): any provider that follows OpenID Connect
+Core and Discovery. Their roles at the provider become Tavletta's roles.
+Access tokens (`tokens.toml`, `--token-file`) stay as they are, for
+programs and MCP clients; the page offers both, or only the provider.
+
+```toml
+[oidc]
+issuer = "https://id.example.com/realms/example"   # as the provider names itself
+client_id = "tavletta"
+client_secret_file = "/etc/tavletta/oidc-secret"   # mode 600, the secret alone
+public_url = "https://labels.example.com"          # the page's address in the browser
+provider_name = "Example ID"                       # "Sign in with Example ID"
+roles_claim = "realm_access.roles"                 # where the role names are
+
+[oidc.roles]                                       # names at the provider
+preview = ["tavletta-preview"]
+print = ["tavletta-print"]
+admin = ["tavletta-admin"]
+```
+
+| Key | Meaning |
+|---|---|
+| `issuer` | the provider's issuer, exactly as its `/.well-known/openid-configuration` names it; `https://` (`http://` only for an address of this computer, for testing) |
+| `client_id`, `client_secret_file` | the client registered at the provider (confidential); the file holds the secret only (read at startup, a file others can read is warned about) |
+| `token_auth` | how the secret is sent to the token endpoint: `client_secret_basic` (default) or `client_secret_post`. `private_key_jwt` is not supported |
+| `public_url` | the page's origin as the browser sees it (`https://host[:port]`, no path). Recommended behind every reverse proxy; without it the origin comes from `Host`, or from `X-Forwarded-Proto` and `X-Forwarded-Host` of a `--trusted-proxy` |
+| `provider_name` | the button's text: "Sign in with …" (default `OpenID Connect`) |
+| `scopes` | `["openid", "profile", "email"]` by default; must contain `openid` |
+| `roles_claim` | required: the claim with the role or group names, a path through nested objects: `realm_access.roles`, `resource_access.tavletta.roles`, `groups`, `roles`. For a name with a dot: a list (`["resource_access", "my.client", "roles"]`). The claim is a text, a list of texts, or an object whose keys are the names |
+| `[oidc.roles]` | for `preview`, `print`, `admin`: the names (a text or a list) at the provider. The highest role someone has counts; at least one role must be mapped |
+| `username_claim` | names the person in the log and as the owner of jobs, as `oidc:<value>` (no token name can have a colon): `preferred_username` by default, else `sub`. Must be unique and stable at the provider |
+| `name_claim` | shown on the page: `name` by default |
+| `printers_claim` | a claim with the printer names someone may use (needs `--printers`; names not in `printers.toml` are ignored; no claim: no printer) |
+| `[oidc.printers]` | instead: printers per role or group name, `"*"` for all: `tavletta-lager = ["lager-cab"]`. Someone gets the printers of all their names in the table, none if none is in it (needs `--printers`) |
+| `userinfo` | `true`: the claims of the userinfo endpoint too (for providers that put groups only there); the ID token's claims win |
+| `token_login` | `false`: the page offers only the provider (tokens still work for the API) |
+| `session_hours`, `idle_minutes` | a session ends after 8 hours, or after 60 minutes without a request (0.1 to 168 hours, 1 minute to a week). Where admins sign in, shorter is better (e.g. 2 hours, 15 minutes): signing out at the provider, a disabled account or a removed role count only once the Tavletta session has ended (there is no back-channel logout) |
+| `ca_file` | certificates to trust for the provider (an internal CA) besides the system's |
+
+Everything is read strictly, as `tokens.toml`: an unknown key, a wrong
+type, a printer that is not in `printers.toml` stops the server with the
+file and key. Changes need a restart (sessions are in memory and end
+with it). PyJWT with cryptography must be installed (`pip install
+tavletta[oidc]`; Debian and Fedora: `python3-jwt`, `python3-cryptography`;
+the container image and the server packages have them; the Flatpak does
+not). A server with `--oidc` may listen beyond loopback without a token:
+every request then needs a session or a token.
+
+**How it works.** The page shows "Sign in with <provider_name>"; that is
+`GET /oidc/login?return=#/…`, which redirects to the provider with the
+authorization code flow: PKCE with S256, a random `state` and `nonce`
+(256 bits each), the scopes, and `redirect_uri = <public_url>/oidc/callback`.
+A sign in started at another address than `public_url` is sent there
+first (once). The provider redirects back to `/oidc/callback`, which
+
+- takes the sign in of that `state` (once; at most 10 minutes old) and
+  checks that the same browser started it: a second cookie,
+  `__Host-tavletta-login`, holds a secret whose SHA-256 the sign in
+  keeps, so a callback address sent to someone else does not sign them
+  in as another person;
+- refuses an `iss` parameter of another issuer (RFC 9207) and an error
+  answer (`access_denied`: "Signing in was canceled");
+- exchanges the code at the token endpoint with the secret and the PKCE
+  verifier (no redirects followed; 10 s; at most 1 MB);
+- checks the ID token with PyJWT: signed with RS256/384/512,
+  PS256/384/512, ES256/384/512 or EdDSA by a key of the provider's
+  `jwks_uri` (`none` and HS* are refused; a key with an `alg` is used for
+  that algorithm only), `iss` and `aud` exactly, `azp` when present or
+  when there are several audiences, `exp`, `iat` and `nbf` with 60 s of
+  leeway, `sub`, and the `nonce`;
+- maps the claims: without a mapped role there is no session, the page
+  says "you are signed in at <provider>, but have no access" and the log
+  names the user;
+- starts a new session (a new id on every sign in; a session cookie sent
+  along is ended) and redirects to the page the user was on (only
+  addresses of the page, `#/…`: no open redirect).
+
+The provider's settings (discovery) and keys are fetched when first
+needed (and at startup, in the background: a provider that is away does
+not stop the server) and kept for an hour; a key id not seen before
+fetches the keys again, at most every 30 s (keys rotate). Failed sign
+ins (not cancellations) count like wrong tokens: ten in a minute from one
+address are 429 for a minute. With `--oidc`, a request with neither a
+token nor a session (the page loading while signed out) is 401 but not
+counted, so people behind one address do not block each other.
+
+**The session.** The cookie `__Host-tavletta-session` is `Secure`,
+`HttpOnly`, `SameSite=Lax`, `Path=/`, no `Domain` (the `__Host-` prefix
+makes browsers insist on that), and holds 256 random bits; the server
+keeps the session in memory under the SHA-256 of that value (at most
+10 000 sessions, 20 per person, the least used gives way). It counts for
+the REST API only, never for `/mcp` (MCP clients use tokens), and only
+from the page itself: with `X-Tavletta-Request`, an `Origin` (required
+for anything but GET) that is the page's own (`public_url`), and a
+`Sec-Fetch-Site` of `same-origin` if the browser sends one; a request
+with `Authorization` uses its token, not the cookie. Roles and printers
+are taken at sign in and kept for the session: a change at the provider
+(a role removed, the account disabled, a sign out there) counts from the
+next sign in; Tavletta does not take part in back-channel or front-channel
+logout, so keep `session_hours` and `idle_minutes` short where that
+matters. A restart of the server ends every session. Over plain HTTP (only `http://localhost`
+or `127.0.0.1`, for testing) the cookies are `tavletta-session` and
+`tavletta-login` without `Secure`; any other plain HTTP origin is refused
+("Signing in did not work"; the log says why).
+
+**Signing out** (`POST /oidc/logout`, from the page) ends the session and
+sends the browser to the provider's `end_session_endpoint` with
+`id_token_hint`, `client_id` and `post_logout_redirect_uri =
+<public_url>/`, if the provider offers one, which ends the session there
+too and comes back to the page.
+
+**At the provider** (Keycloak as the example; other providers have the
+same settings under other names):
+
+- a client `tavletta`, OpenID Connect, *Client authentication* on
+  (confidential), *Standard flow* only (no direct access grants, no
+  implicit flow), *PKCE method* S256;
+- *Valid redirect URIs* `https://labels.example.com/oidc/callback`,
+  *Valid post logout redirect URIs* `https://labels.example.com/`, *Web
+  origins* `+`;
+- the secret from *Credentials* into `client_secret_file`;
+- the roles, either as client roles of `tavletta` (`tavletta-preview`,
+  `tavletta-print`, `tavletta-admin`) or as realm roles, given to users or
+  groups. Keycloak puts both only into the access token by default; Tavletta
+  reads the ID token (and, with `userinfo = true`, the userinfo), so the
+  client needs a mapper (*Client scopes* → `tavletta-dedicated` → *Add
+  mapper* → *By configuration*): *User Client Role*
+  (`oidc-usermodel-client-role-mapper`), client `tavletta`, claim name
+  `resource_access.${client_id}.roles`, multivalued, *Add to ID token* on,
+  and `roles_claim = "resource_access.tavletta.roles"`; or *User Realm
+  Role* (`oidc-usermodel-realm-role-mapper`), claim name
+  `realm_access.roles`, *Add to ID token* on, and `roles_claim =
+  "realm_access.roles"`. Without the mapper everyone gets "no access".
+  The issuer is `https://<keycloak>/realms/<realm>`.
+
+Other providers: Authentik sends the user's groups as `groups`
+(`roles_claim = "groups"`, the groups named as in `[oidc.roles]`), its
+issuer is `https://<authentik>/application/o/<application slug>/`;
+Microsoft Entra ID sends app roles as `roles`, Zitadel project roles as
+`urn:zitadel:iam:org:project:roles` (an object: its keys are the names).
+
+Tested against Keycloak 26 (sign in, roles, no role, signing out at the
+provider too).
+
 ## REST API
 
 JSON in and out under `/api/v1`. The full description is served at
@@ -245,7 +394,7 @@ reference page `site/docs/api.md` are written from it by
 |---|---|
 | `GET /health` | `{"status": "ok", "version": …}`; the only request without a token (besides the files of the web page) |
 | `GET /openapi.json` | the OpenAPI description |
-| `GET /me` | the token's `name`, `role` and `printers`, whether the server needs a token, and the `limits` of a request (labels in one job, on sheets, copies, data rows, columns, cells, body bytes) |
+| `GET /me` | the token's `name`, `role` and `printers`, whether the server needs a token, and the `limits` of a request (labels in one job, on sheets, copies, data rows, columns, cells, body bytes); for someone signed in with OpenID Connect also `display_name` and `session: true` |
 | `GET /printers?status=false` | with `printers.toml`: its printers the token may use, with `name`, `printer` (model), `host`, `description`, `location`, `media`, `default`, `max_copies` and `status` |
 | `GET /printers?discover=false` | without it: printer models: id, name, kind (`tape`, `labels`, `pages`), resolution, tape widths or label sizes, the address set in the app (`configured_host`) and, with `--discover`, the printers found on the network (`found`; remembered for 30 s) |
 | `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, the size of the labels loaded (`label_mm`, if the printer tells it), print width, print method and media type set on the printer, cassette; from the server's settings for the printer: `job_print_method` and `job_media_type`, what the server's jobs print with and how they find the labels, which the printer's `method` and `media` settings may choose for each job, else as set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
@@ -390,7 +539,10 @@ packages, Flatpak). `--no-web-ui` turns it off.
   every request. "Sign out" forgets it and everything shown or entered.
   A 401 (token expired or revoked) asks for a token again and keeps what
   was entered. Without a token on the server (loopback only) the page
-  needs no sign in.
+  needs no sign in. With `--oidc` the page offers "Sign in with
+  <provider>" too, or only that ([Signing in with OpenID
+  Connect](#signing-in-with-openid-connect-oidctoml)); the header shows the
+  person's name and role, and "Sign out" also signs out at the provider.
 - **Roles**: the page asks `GET /me` and leaves out what the role may not
   do: a `preview` token sees templates, printers and previews, the print
   buttons say why they cannot be used; `print` prints; `admin` also
@@ -497,7 +649,13 @@ A client of MCP sends rows as `data_rows` itself.
   is set as text (`textContent`), never as markup.
 - The page sends `X-Tavletta-Request` and JSON with every request: the
   checks of the API against other web pages ([Security](#security))
-  apply to it unchanged.
+  apply to it unchanged. Signed in with OpenID Connect, its session
+  cookie (HttpOnly, the page never sees it) counts only with that header
+  and from the page's own origin, never for MCP.
+- `/oidc/info`, `/oidc/login` and `/oidc/callback` are answered without a
+  token (only with `--oidc`; 404 otherwise); their redirects carry
+  `Referrer-Policy: no-referrer`, and nothing of the callback's address
+  (code, state) is logged.
 - `/data` answers at most 500 000 cells and 16 MB of names and values
   (413): a small file with a long cell or column name in every row would
   otherwise make a huge answer.
@@ -740,9 +898,11 @@ With the Flatpak: `"command": "flatpak"`, `"args": ["run",
   memory (1 GB) and processes, and `MALLOC_ARENA_MAX=2` keeps threads
   from holding on to memory a large label used.
 - **Logs** (stderr, the journal): client address, token name (`-` before
-  a token was accepted), method, path without the query (`-` for both if
+  a token was accepted; `oidc:<user>` for someone signed in to the page),
+  method, path without the query (`-` for both if
   the request line could not be read), status; for each job its id, token name, label,
-  printer and outcome. Never headers, tokens or label content.
+  printer and outcome; sign ins and outs, and why a sign in failed. Never
+  headers, tokens, cookies, codes or label content.
 - No shell is run and no path from a request is used outside the labels
   folder.
 
@@ -889,9 +1049,10 @@ docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.1.2 --format '{{ js
 
 Planned for the server, not there yet:
 
-- **Single sign-on**: OpenID Connect (Keycloak and others) as a second way
-  to authenticate, roles from token claims mapped onto preview, print and
-  admin, per-user printer limits.
+- **Single sign-on, further**: back-channel logout (a sign out or a
+  disabled account at the provider ending the Tavletta session at once)
+  and `private_key_jwt` for the client; signing in with OpenID Connect
+  itself is there ([oidc.toml](#signing-in-with-openid-connect-oidctoml)).
 - **Audit log**: who printed what, where and when, as JSON lines in a file
   of its own, kept apart from the operational log.
 - **Metrics**: Prometheus at `/metrics` (jobs by state and printer, labels

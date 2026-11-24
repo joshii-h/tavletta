@@ -1,10 +1,10 @@
 // The print server's web page: one page, views by the address's #fragment
 // (#/templates, #/printers, #/print/<label>, #/batch/<label>, #/job/<id>).
-// Everything shown comes from the REST API with the token of this tab; the
-// server checks every request, the page only leaves out what a token may
-// not do.
+// Everything shown comes from the REST API with the token of this tab (or
+// the session of signing in with OpenID Connect); the server checks every
+// request, the page only leaves out what a token may not do.
 
-import { api, labelPath, token, whenUnauthorized } from "./api.js";
+import { api, endSession, labelPath, loginInfo, token, whenUnauthorized } from "./api.js";
 import { batchView, forgetBatches } from "./batch.js";
 import { h, icon } from "./dom.js";
 import { chooseLanguage, lang, languageName, languages, loadMessages, mm, num, t } from "./i18n.js";
@@ -32,6 +32,8 @@ const main = () => document.getElementById("main");
 let current = { dispose() {} }; // the view shown: what it holds is let go on leaving
 let generation = 0; // a view's answers that come after the next view started are dropped
 let afterSignIn = null; // the address asked for before signing in
+let provider = null; // signing in with OpenID Connect: { provider, token_login }, else null
+let signInError = null; // why signing in with the provider failed (#/signin-error/<code>)
 
 // --- the live region ----------------------------------------------------------------
 
@@ -75,43 +77,63 @@ function header() {
   );
   const signedIn = Boolean(session.me?.token_required); // replaceChildren would write out a false
   box.replaceChildren(
-    h("label", { for: "language", class: "visually-hidden" }, t("Language")),
-    select,
-    ...(signedIn
-      ? [
-          h("span", { class: "who" }, `${session.me.name} (${roleText(session.me.role)})`),
-          h("button", { type: "button", onclick: signOut }, t("Sign out")),
-        ]
-      : []),
+    ...shown([
+      h("label", { for: "language", class: "visually-hidden" }, t("Language")),
+      select,
+      signedIn && h("span", { class: "who" }, `${session.me.display_name ?? session.me.name} (${roleText(session.me.role)})`),
+      signedIn && h("button", { type: "button", onclick: signOut }, t("Sign out")),
+    ]),
   );
   const skip = document.getElementById("skip");
   skip.textContent = t("Skip to content");
 }
 
-// signing out forgets the token and everything entered or shown
-function signOut() {
+// signing out forgets the token and everything entered or shown; a
+// session ends on the server, and at the provider if it offers that
+async function signOut() {
+  const ended = session.me?.session ? await endSession() : null;
+  signInError = null;
   token.clear();
   session.clear();
   forgetDrafts();
   forgetBatches();
   current.dispose();
   main().replaceChildren();
+  if (ended && ended !== "/") {
+    location.assign(ended);
+    return;
+  }
   location.hash = "#/";
   signIn();
 }
 
 // --- views -------------------------------------------------------------------------------
 
+// replaceChildren() would show null as "null": what is left out is left out
+function shown(parts) {
+  return parts.filter((part) => part !== null && part !== undefined && part !== false);
+}
+
 // show a view: one <h1>, focused, its title in the window's title
 function mount(title, ...content) {
   const heading = h("h1", { tabindex: "-1" }, title);
-  main().replaceChildren(heading, ...content);
+  main().replaceChildren(heading, ...shown(content));
   document.title = `${title} – Tavletta`;
   heading.focus();
   return heading;
 }
 
+// the provider's answer came back as #/signin-error/<code>: kept for the
+// sign in view, the address cleaned up
+function takeSignInError() {
+  const failed = location.hash.match(/^#\/signin-error\/([a-z_]+)$/);
+  if (!failed) return;
+  signInError = failed[1];
+  history.replaceState(null, "", location.pathname);
+}
+
 async function render() {
+  takeSignInError();
   generation += 1;
   const mine = generation;
   current.dispose();
@@ -157,8 +179,30 @@ async function render() {
 
 // --- signing in ------------------------------------------------------------------------
 
+// why signing in with the provider did not work
+function signInErrorText(code) {
+  const texts = {
+    no_role: t("You are signed in at {provider}, but have no access to Tavletta. Ask the administrator for it.", { provider: provider?.provider ?? "" }),
+    expired: t("Signing in took too long or was started in another window. Try again."),
+    denied: t("Signing in was canceled."),
+  };
+  return texts[code] ?? t("Signing in did not work. Try again, or ask the administrator.");
+}
+
 function signIn() {
   document.getElementById("nav").replaceChildren();
+  const parts = [];
+  if (signInError) parts.push(notice("warn", h("p", null, signInErrorText(signInError))));
+  if (provider) {
+    const back = afterSignIn ?? (location.hash.length > 2 ? location.hash : "#/templates");
+    const href = `/oidc/login?return=${encodeURIComponent(back)}`;
+    parts.push(h("div", { class: "actions" }, h("a", { class: "button primary", href }, t("Sign in with {provider}", { provider: provider.provider }))));
+    if (!provider.token_login) {
+      mount(t("Sign in"), h("div", { class: "narrow" }, ...parts));
+      return;
+    }
+    parts.push(h("h2", null, t("Or with an access token")));
+  }
   const input = h("input", { type: "password", autocomplete: "off", spellcheck: "false", autocapitalize: "off", name: "token", dir: "ltr" });
   const tokenField = field({
     label: t("Access token"),
@@ -167,10 +211,11 @@ function signIn() {
   });
   const show = h("input", { type: "checkbox", id: "show-token", onchange: (e) => (input.type = e.target.checked ? "text" : "password") });
   const summary = summaryBox();
-  const button = h("button", { type: "submit", class: "primary" }, t("Sign in"));
+  const button = h("button", { type: "submit", class: provider ? null : "primary" }, t("Sign in"));
   const form = h(
     "form",
     { class: "narrow", novalidate: true },
+    ...parts,
     summary,
     tokenField.node,
     h("div", { class: "check" }, show, h("label", { for: "show-token" }, t("Show token"))),
@@ -190,6 +235,7 @@ function signIn() {
     token.set(value);
     try {
       session.me = await api("GET", "/me");
+      signInError = null;
       input.value = "";
       location.hash = afterSignIn ?? "#/templates";
       afterSignIn = null;
@@ -514,6 +560,8 @@ async function start() {
   window.addEventListener("hashchange", () => render());
   window.addEventListener("offline", () => document.getElementById("banner").replaceChildren(notice("warn", h("p", null, t("No connection to the server. Your input is kept.")))));
   window.addEventListener("online", () => document.getElementById("banner").replaceChildren());
+  takeSignInError();
+  provider = await loginInfo();
   try {
     session.me = await api("GET", "/me");
   } catch (error) {

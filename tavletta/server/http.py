@@ -15,7 +15,9 @@ this order, before it reaches a route:
 3. Token: with a token every request but /api/v1/health and the files of
    the web page needs "Authorization: Bearer <token>", compared in
    constant time. Ten wrong tokens from one address within a minute block
-   it for that minute.
+   it for that minute. With --oidc the web page may send its session
+   cookie instead (API only, never MCP), with X-Tavletta-Request and from
+   its own origin (weblogin.py).
 4. Size: a body needs a Content-Length of at most --max-body bytes.
 
 Logs name the client, method, path (without the query) and status, never
@@ -46,6 +48,8 @@ from tavletta.server.errors import ApiError, bad_request
 from tavletta.server.mcp import HttpTransport, Mcp
 from tavletta.server.openapi import spec
 from tavletta.server.service import Service
+from tavletta.server.weblogin import PREFIX as LOGIN_PREFIX
+from tavletta.server.weblogin import Answer, WebLogin, cookies
 from tavletta.ui.i18n import _, language
 
 log = logging.getLogger(__name__)
@@ -132,6 +136,12 @@ class Config:
     trusted_proxies: tuple[ipaddress.IPv4Network | ipaddress.IPv6Network, ...] = ()
     tokens: TokenStore | None = None  # named tokens with roles (tokens.toml)
     web_ui: bool = True  # the web page at / (off: --no-web-ui)
+    login: WebLogin | None = None  # signing in to the page with OpenID Connect (--oidc)
+
+    @property
+    def secured(self) -> bool:
+        """Whether requests need a token (or a session of the web page)."""
+        return bool(self.token or self.tokens or self.login)
 
 
 def rate_key(address: str) -> str:
@@ -462,8 +472,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle(self, method: str) -> None:
         self.caller = LOCAL
+        self.via_session = False
+        self.set_cookies: list[str] = []
         config = self.server.config
-        self.who = "-" if config.token or config.tokens else LOCAL.name
+        self.who = "-" if config.secured else LOCAL.name
         if self.server.reaper.expired(self.connection):
             self.close_connection = True
             self._error(ApiError(408, "timeout", _("The request took too long")))
@@ -530,7 +542,7 @@ class Handler(BaseHTTPRequestHandler):
                 403, "origin_not_allowed", _("Requests from this web page are not allowed")
             )
         config = self.server.config
-        if (config.token or config.tokens) and not self._public():
+        if config.secured and not self._public():
             self.caller = self._authorize()
             self.who = self.caller.name
 
@@ -538,15 +550,24 @@ class Handler(BaseHTTPRequestHandler):
         """Answered without a token: the health check and the files of the
         web page (the program itself; its data come from the API)."""
         path = self._path()
-        return path == PREFIX + "/health" or self._web_page(path)
+        return path == PREFIX + "/health" or self._web_page(path) or self._login_page(path)
 
     def _web_page(self, path: str) -> bool:
         return self.server.web_ui and (path == "/" or path.startswith(WEB_PREFIX))
+
+    def _login_page(self, path: str) -> bool:
+        return self.server.config.login is not None and path.startswith(LOGIN_PREFIX)
 
     def _authorize(self) -> Caller:
         """Who the token belongs to; 401 for a wrong, expired or revoked one.
         Wrong tokens block the address for a while, valid ones never: a
         blocked address only skips the slow hash of tokens not seen before."""
+        if self._session_request():
+            return self._session_caller()
+        if self.server.config.login is not None and "Authorization" not in self.headers:
+            # the page asking who is signed in, signed out: no token was
+            # guessed (people behind one address must not block each other)
+            raise ApiError(401, "unauthorized", _("Access token missing or wrong"))
         client = rate_key(self.client())
         blocked = self.server.rate_limit.blocked(client)
         scheme, _sep, value = self.headers.get("Authorization", "").partition(" ")
@@ -562,7 +583,8 @@ class Handler(BaseHTTPRequestHandler):
         config = self.server.config
         if config.tokens is not None:
             return config.tokens.find(given, cheap_only=known_only) if given else None
-        assert config.token is not None
+        if config.token is None:  # people sign in to the page only
+            return None
         return (
             Caller("token") if hmac.compare_digest(given.encode(), config.token.encode()) else None
         )
@@ -586,7 +608,106 @@ class Handler(BaseHTTPRequestHandler):
 
     def _origin_ok(self, origin: str) -> bool:
         own = {"http://" + self.headers.get("Host", ""), "https://" + self.headers.get("Host", "")}
+        if self.server.config.login is not None:
+            own.add(self._own_origin())
         return origin in own or origin in self.server.config.origins
+
+    # --- the web page's session (weblogin.py) ------------------------------------------
+
+    def _site(self) -> str:
+        """The origin the browser sees: Host, or behind a trusted proxy its
+        X-Forwarded-Proto and X-Forwarded-Host (the first of each)."""
+        scheme, host = "http", self.headers.get("Host", "")
+        if self.server.trusted(self.client_address[0]):
+            proto = self.headers.get("X-Forwarded-Proto", "").split(",")[0].strip().lower()
+            scheme = proto if proto in ("http", "https") else scheme
+            host = self.headers.get("X-Forwarded-Host", "").split(",")[0].strip() or host
+        return "%s://%s" % (scheme, host if _host_name(host) else "")
+
+    def _own_origin(self) -> str:
+        login = self.server.config.login
+        assert login is not None
+        return login.origin(self._site())
+
+    def _jar(self) -> dict[str, str | None]:
+        return cookies(self.headers.get_all("Cookie") or [])
+
+    def _session_request(self) -> bool:
+        """A request of the web page with its session: no Authorization
+        header, to the API (MCP takes tokens only), and a session cookie."""
+        login = self.server.config.login
+        if login is None or "Authorization" in self.headers:
+            return False
+        if not self._path().startswith(PREFIX + "/"):
+            return False
+        return login.names(self._own_origin())[0] in self._jar()
+
+    def _same_page(self) -> None:
+        """A request with the session cookie must come from the page itself:
+        X-Tavletta-Request (a form or <img> of another site cannot send it)
+        and the page's origin (Origin is required for anything but GET)."""
+        if self.headers.get(CLIENT_HEADER) is None:
+            raise ApiError(
+                403, "header_required", _("Send the header %s with this request") % CLIENT_HEADER
+            )
+        origin = self.headers.get("Origin")
+        fetch_site = self.headers.get("Sec-Fetch-Site")
+        foreign = origin is not None and origin != self._own_origin()
+        if foreign or (origin is None and self.command not in ("GET", "HEAD")):
+            raise ApiError(
+                403, "origin_not_allowed", _("Requests from this web page are not allowed")
+            )
+        if fetch_site is not None and fetch_site not in ("same-origin", "none"):
+            raise ApiError(
+                403, "origin_not_allowed", _("Requests from this web page are not allowed")
+            )
+
+    def _session_caller(self) -> Caller:
+        self._same_page()
+        login = self.server.config.login
+        assert login is not None
+        session = login.session(self._site(), self._jar())
+        if session is None:
+            raise ApiError(401, "unauthorized", _("Access token missing or wrong"))
+        self.via_session = True
+        return session.caller
+
+    def _login(self, method: str, path: str) -> None:
+        """/oidc/...: signing in and out of the web page."""
+        login = self.server.config.login
+        assert login is not None
+        route = path[len(LOGIN_PREFIX) :]
+        expected = "POST" if route == "logout" else "GET"
+        if route not in ("info", "login", "callback", "logout"):
+            raise ApiError(404, "not_found", _("Not found"))
+        if method != expected:
+            raise ApiError(405, "method_not_allowed", _("Method not allowed"))
+        client = rate_key(self.client())
+        if route == "info":
+            self._send(200, login.info())
+            return
+        if route == "logout":
+            self._same_page()
+            self._raw_json()  # read (and JSON, as every POST): the connection goes on
+            answer = login.logout(self._site(), self._jar())
+        elif self.server.rate_limit.blocked(client):
+            raise ApiError(429, "too_many_requests", _("Too many requests – try again later"))
+        elif route == "login":
+            query = self._query()
+            asked = query.get("return", [None])[-1]
+            answer = login.start(self._site(), asked, client, moved="moved" in query)
+        else:
+            answer = login.finish(self._site(), self._query(), self._jar())
+        if answer.failed:
+            self.server.rate_limit.failed(client)
+        self._send_answer(answer)
+
+    def _send_answer(self, answer: Answer) -> None:
+        self.set_cookies = answer.cookies
+        headers = dict(answer.headers)
+        if answer.status == 303:  # nothing of the callback's address goes on
+            headers["Referrer-Policy"] = "no-referrer"
+        self._send(answer.status, answer.body, headers)
 
     def _path(self) -> str:
         # also for a request line that could not be read (no path then)
@@ -645,6 +766,9 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/mcp" and self.server.mcp is not None:
             self._mcp(method)
             return
+        if self._login_page(path):
+            self._login(method, path)
+            return
         if self._web_page(path):
             self._web(method, path)
             return
@@ -671,7 +795,7 @@ class Handler(BaseHTTPRequestHandler):
         """Without a token, requests that make the server contact printers
         need CLIENT_HEADER: an <img> on a web page cannot send it."""
         config = self.server.config
-        if not (config.token or config.tokens) and self.headers.get(CLIENT_HEADER) is None:
+        if not config.secured and self.headers.get(CLIENT_HEADER) is None:
             raise ApiError(
                 403,
                 "header_required",
@@ -701,9 +825,11 @@ class Handler(BaseHTTPRequestHandler):
             200,
             {
                 "name": caller.name,
+                "display_name": caller.display or caller.name,
                 "role": caller.role,
                 "printers": sorted(caller.printers) if caller.printers is not None else None,
-                "token_required": bool(config.token or config.tokens),
+                "token_required": config.secured,
+                "session": self.via_session,  # signed in to the page (POST /oidc/logout)
                 "limits": dict(self.server.service.limits(), max_body=config.max_body),
             },
         )
@@ -842,6 +968,8 @@ class Handler(BaseHTTPRequestHandler):
         extra = dict(self._cors(), **(headers or {}))
         if kind:
             self.send_header("Content-Type", kind)
+        for cookie in getattr(self, "set_cookies", []):
+            self.send_header("Set-Cookie", cookie)
         if status != 304:
             self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", extra.pop("Cache-Control", "no-store"))

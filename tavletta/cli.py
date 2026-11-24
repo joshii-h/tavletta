@@ -382,6 +382,12 @@ def _server_parsers(commands) -> None:
         type=Path,
         help=_("tokens.toml: named access tokens with roles"),
     )
+    serve.add_argument(
+        "--oidc",
+        metavar="FILE",
+        type=Path,
+        help=_("oidc.toml: people sign in to the web page with OpenID Connect"),
+    )
     serve.add_argument("--mcp", action="store_true", help=_("also serve MCP at /mcp"))
     serve.add_argument(
         "--no-web-ui",

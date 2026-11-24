@@ -1,5 +1,7 @@
 // The REST API, with the token of this tab: kept in sessionStorage only
-// (gone with the tab, never in localStorage, a cookie or the address).
+// (gone with the tab, never in localStorage, a cookie or the address). Or,
+// signed in with OpenID Connect, with the server's session cookie (HttpOnly:
+// the page never sees it; sent to this server only).
 // Every request sends X-Tavletta-Request, which a page of another site
 // cannot send without asking first (the server answers no such question).
 
@@ -53,7 +55,7 @@ export async function api(method, path, body, { signal, binary = false } = {}) {
   const headers = { "X-Tavletta-Request": "1", "Accept-Language": lang.replace("_", "-") };
   const current = token.get() ?? memory;
   if (current) headers.Authorization = `Bearer ${current}`;
-  const init = { method, headers, signal, credentials: "omit", cache: "no-store", redirect: "error" };
+  const init = { method, headers, signal, credentials: "same-origin", cache: "no-store", redirect: "error" };
   if (body !== undefined) {
     headers["Content-Type"] = "application/json";
     init.body = typeof body === "string" ? body : JSON.stringify(body);
@@ -85,4 +87,34 @@ export async function api(method, path, body, { signal, binary = false } = {}) {
 // a path segment: a label name may contain slashes for subfolders
 export function labelPath(name) {
   return name.split("/").map(encodeURIComponent).join("/");
+}
+
+// Signing in with OpenID Connect, if the server offers it: { provider,
+// token_login }, or null (signing in with a token only).
+export async function loginInfo() {
+  try {
+    const response = await fetch("/oidc/info", { credentials: "omit", cache: "no-store", redirect: "error" });
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+// Ends the session on the server; where to go next (the provider's
+// logout, which comes back to the page, or the page itself).
+export async function endSession() {
+  try {
+    const response = await fetch("/oidc/logout", {
+      method: "POST",
+      headers: { "X-Tavletta-Request": "1", "Content-Type": "application/json" },
+      body: "{}",
+      credentials: "same-origin",
+      cache: "no-store",
+      redirect: "error",
+    });
+    const data = response.ok ? await response.json() : null;
+    return typeof data?.redirect === "string" ? data.redirect : "/";
+  } catch {
+    return "/";
+  }
 }
