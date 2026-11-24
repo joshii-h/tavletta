@@ -124,20 +124,16 @@ def test_the_flatpak_ships_every_licence_once():
                 assert source["url"].endswith("-py3-none-any.whl"), source["url"]
 
     # the manifest for Flathub: the same, with the release tag instead of the checkout
-    import importlib.util
-
-    spec = importlib.util.spec_from_file_location("flathub", path.parent / "flathub.py")
-    flathub = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(flathub)
+    flathub = _flathub()
     text = path.read_text(encoding="utf-8")
-    release = yaml.safe_load(flathub.flathub_manifest(text, "v1.1.0", "0" * 40))
+    release = yaml.safe_load(flathub.flathub_manifest(text, "v1.1.2", "0" * 40))
     sources = [s for m in release["modules"] for s in m.get("sources", [])]
     assert not [s for s in sources if s["type"] == "dir"]  # Flathub rejects dir sources
     assert release["modules"][-1]["sources"] == [
         {
             "type": "git",
-            "url": "https://git.joshuahirsig.xyz/joshii/tavletta.git",
-            "tag": "v1.1.0",
+            "url": "https://github.com/joshii-h/tavletta.git",  # the mirror, see flathub.py
+            "tag": "v1.1.2",
             "commit": "0" * 40,
             "x-checker-data": {"type": "git", "tag-pattern": r"^v([\d.]+)$"},
         }
@@ -426,3 +422,81 @@ def test_the_packages_are_at_the_version_of_the_source():
     assert newest.endswith(f" - {upstream}-{release}"), newest
     changelog = (ROOT / "packaging" / "debian" / "changelog").read_text(encoding="utf-8")
     assert re.match(rf"tavletta \({re.escape(upstream)}-\d+\) ", changelog), changelog[:40]
+
+
+def _flathub():
+    import importlib.util
+
+    path = ROOT / "build-aux" / "flatpak" / "flathub.py"
+    spec = importlib.util.spec_from_file_location("flathub", path)
+    flathub = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(flathub)
+    return flathub
+
+
+def test_flathub_pins_the_commit_the_mirror_has_for_the_tag():
+    """--commit must be the tag's commit here and on the mirror Flathub
+    fetches from; an annotated tag counts by the commit it points to."""
+    import subprocess
+
+    flathub = _flathub()
+    a, b, tag_object = "a" * 40, "b" * 40, "c" * 40
+    calls = []
+
+    def git(local, remote):
+        def run(args, **kwargs):
+            calls.append(args)
+            if args[1] == "rev-parse":
+                return subprocess.CompletedProcess(args, 0 if local else 1, f"{local}\n", "")
+            assert args[1:4] == ["ls-remote", "--tags", flathub.REPO_URL]
+            return subprocess.CompletedProcess(args, 0, remote, "")
+
+        return run
+
+    annotated = f"{tag_object}\trefs/tags/v1.1.2\n{a}\trefs/tags/v1.1.2^{{}}\n"
+    assert flathub.commit_of("v1.1.2", None, git(a, annotated)) == a
+    assert flathub.commit_of("v1.1.2", a, git(None, f"{a}\trefs/tags/v1.1.2\n")) == a
+    refused = [
+        (None, git(None, annotated), "no tag v1.1.2 here"),
+        (b, git(a, annotated), "is not the tag v1.1.2 here"),
+        (b, git(None, annotated), f"is {a} on"),
+        (None, git(a, ""), "is not on https://github.com/joshii-h/tavletta.git"),
+        ("A" * 40, git(None, annotated), "not a full commit SHA"),
+    ]
+    for given, run, message in refused:
+        with pytest.raises(ValueError, match=re.escape(message)):
+            flathub.commit_of("v1.1.2", given, run)
+    assert all(c[0] == "git" for c in calls)
+    for tag in ("v1.1", "v01.1.2", "1.1.2", "v1.1.2-"):
+        with pytest.raises(ValueError, match="not a release tag"):
+            flathub.flathub_manifest("", tag, a)
+
+
+def test_every_tag_check_takes_the_same_semver_tags():
+    """The workflows that act on a tag (release, packages, documentation,
+    container, mirror, Flatpak bundle) and flathub.py take the same tags:
+    the container's semver rules, which test_the_container_workflow_takes_only_semver_tags
+    pins down."""
+    import itertools
+
+    checks = {}
+    for path in itertools.chain(
+        (ROOT / ".forgejo" / "workflows").glob("*.yml"),
+        (ROOT / ".github" / "workflows").glob("*.yml"),
+    ):
+        for pattern in re.findall(r"grep -Eq '(\^v[^']+)'", path.read_text(encoding="utf-8")):
+            checks[f"{path.parent.parent.name}/{path.name}"] = pattern
+    assert set(checks) == {
+        ".forgejo/release.yml",
+        ".forgejo/deb.yml",
+        ".forgejo/rpm.yml",
+        ".forgejo/docs.yml",
+        ".github/docker.yml",
+        ".github/release-mirror.yml",
+        ".github/flatpak-bundle.yml",
+    }
+    assert len(set(checks.values())) == 1, checks
+    pattern = checks[".github/docker.yml"]
+    flathub = _flathub()
+    for tag in ("v1.1.2", "v2.0.0-rc.1", "v1.1", "v1.1.2.1", "v01.1.2", "1.1.2"):
+        assert bool(re.fullmatch(pattern, tag)) == bool(flathub.TAG.fullmatch(tag)), tag

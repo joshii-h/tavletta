@@ -30,7 +30,7 @@ jobs:
       - name: Copy the release
         run: |
           set -euo pipefail
-          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+(\.[0-9]+)*(-[A-Za-z0-9.]+)?$'; then
+          if ! printf '%s' "$TAG" | grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'; then
             echo "::error::not a release tag: $TAG"; exit 1
           fi
           # wait for the Forgejo release and its assets (built there, up to 25 minutes);
