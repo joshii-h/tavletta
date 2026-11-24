@@ -3,8 +3,9 @@
 `tavletta/editing.py` is what a mouse editor needs, without a toolkit:
 where the elements of a label are, which one lies under the pointer,
 snapping, and the edits with their undo. The window's editor (select,
-drag, snap, resize, undo) and the print server's web page (elements
-highlighted in the preview) are to share it; neither is built yet.
+drag, snap, resize, undo: [below](#the-windows-editor)) is built on it;
+the print server's web page (elements highlighted in the preview) is to
+share it.
 
 ## Coordinates
 
@@ -15,11 +16,14 @@ preview never turns the label: on die-cut labels whose content runs
 across the roll (`orientation` "across") label space is the same. A box
 is `(left, top, right, bottom)`.
 
-To go from the preview's pixels to millimetres, divide by the preview's
-pixels per millimetre (`PREVIEW_PX_PER_MM` times the zoom). On endless
-tape the preview shows the whole tape (`render.whole_tape`), so its top
-row is the tape's edge; where the print head is narrower than the tape,
-the rounding of the strip in its middle can put it a pixel off.
+The preview's image (`job.preview_image()`) is label space at its
+resolution, its left column the label's left edge. Its top row is not
+always the label's top edge: a raster taller than the tape (a VC-500W's)
+has rows above it, a print head narrower than the tape is centred on the
+whole tape (`render.whole_tape`). `job.preview_top()` is the image's row
+of the label's top edge, from which the boxes are measured. So a pixel of
+the image is `(x / dpi * 25.4, (y - top) / dpi * 25.4)` mm; on the
+screen the image is scaled by the zoom.
 
 ## Geometry: one layout, from the render
 
@@ -154,6 +158,42 @@ editor.undo(), editor.redo()  # a drag going on is called off first
 in quick succession can be one step, as typing is. `apply()` returns
 False for an edit that changed nothing; no empty step is recorded.
 
+## The window's editor
+
+`tavletta/ui/editor.py` (input, selection, edits) and `ui/canvas.py`
+(what it draws, the arithmetic of pixels) make the window's preview an
+editor; the user's side is in the user guide (site/docs/use.md, "Arranging
+with the mouse").
+
+- **Pixels to mm**: `canvas.view_of()` takes the image as `Gtk.Picture`
+  draws it (fitted into its allocation and centred), its resolution and
+  `preview_top()`. The view is in the widget's logical pixels: on a display
+  of scale 2 GTK draws them with twice the device pixels, nothing changes.
+  The preview never turns the label (die-cut labels "across" included),
+  and a label on a sheet is shown as designed, so neither turns the view.
+  The picture is exactly as large as the zoom says (`preview.LabelPicture`):
+  a `Gtk.Picture` would grow to the image's own pixels.
+- **Geometry**: `Geometry.of()` of the window's render, while the render
+  is of the elements the label has (their identities, `model.element_id`);
+  an element added, removed or moved up or down has none until the next
+  render. Elements edited since the render are where they landed.
+- **A drag** is a `Gtk.GestureDrag` (mouse, touch, pen; 4 px before it
+  moves): on an element it moves the selection, on a handle it resizes, in
+  the empty it is a rubber band. Each motion snaps (`snap()`, 6 screen
+  pixels) and redraws the overlay only: guides, outlines, handles, and the
+  dragged elements' pixels cut from the preview's texture and drawn at
+  their new box (scaled for a resize). Nothing is rendered until it ends;
+  then the edit is one step (`Editor.apply()` on the window's `History`),
+  the changed fields are taken over into the window's elements in place
+  (the sidebar keeps its rows), and the preview renders as after any edit.
+  Until that render is shown the elements are drawn where they landed.
+- **Keys** (while the preview has the focus): arrows nudge by 0.1 mm, with
+  Shift 1 mm, a run of them one step (History's `key`); Delete, Ctrl+A,
+  Shift+Ctrl+A, Escape. Tab stays focus navigation.
+- **Selection**: by element identity, so it outlives undo and reordering;
+  the sidebar opens the row of the element chosen last and marks the
+  others, and opening a row there selects its element.
+
 ## Cost
 
 Measured on a label of 50 elements (texts, some turned, QR codes in all
@@ -172,5 +212,21 @@ four turns, shapes, symbols), Python 3.14 on an Intel Core i7-1365U:
 
 A drag needs no render per mouse event: the dragged boxes move with the
 pointer (`moved()`), `snap()` and `move()` take about 1.3 ms together, well
-within a frame at 60 fps (16.7 ms). The preview renders after the drag
-(or, throttled, during it), and its boxes are the new geometry.
+within a frame at 60 fps (16.7 ms). The preview renders after the drag,
+and its boxes are the new geometry.
+
+The window's editor on that label (VC-500W, 100 mm tape, 200 mm long, 320
+dpi; a headless KWin, software rendering), median and 95th percentile:
+
+| | ms |
+|---|---|
+| a motion event (snap, the overlay's scene), 1 or 10 elements dragged | 0.9 to 1.4 / 1.3 to 2.0 |
+| the overlay drawn (render nodes) | 0.3 to 0.7 / 0.8 to 2.4 |
+| from a motion event to the frame painted | 5 to 10 |
+| the drag's end: the edit, its step, the sidebar | 2.5 to 5 |
+| a resize's end (the element's row built again) | about 100 |
+| the render after it, in the preview's thread | 47 to 100 |
+| an arrow key | 1.7 |
+
+Building the whole sidebar again takes 2 to 2.5 s for 50 elements, which
+is why an edit of the preview takes its changes over in place.
