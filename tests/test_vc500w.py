@@ -539,6 +539,14 @@ def test_print_default_mode_is_no_fallback(printer, backend):
     assert backend.print_label(_label_image(), "p", PrintOptions(mode="color")) is None
 
 
+@pytest.mark.parametrize("copies", [0, -3])
+def test_no_copies_prints_one_as_every_backend(printer, backend, copies):
+    """copies 0 printed nothing and reported success."""
+    events = []
+    backend.print_label(_label_image(), "p", PrintOptions(copies=copies), events.append)
+    assert len(printer.device.prints()) == 1 and events[0] == Progress(1, 1)
+
+
 def test_print_copies_progress_and_stages(printer, backend):
     printer.device.after_print = [
         status("BUSY", "PREHEATING"),

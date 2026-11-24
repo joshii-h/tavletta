@@ -585,11 +585,12 @@ class VC500W(Backend):
             else:
                 data, width, height = encode_jpeg(image, mode), 0, 0
             xml = print_xml(mode, fmt, len(data), cut, options.color, width, height)
-            for n in range(1, options.copies + 1):
-                report_progress(progress, n, options.copies)
-                _wait_ready(s, progress, n, options.copies)
+            copies = max(1, options.copies)  # as every backend: at least one
+            for n in range(1, copies + 1):
+                report_progress(progress, n, copies)
+                _wait_ready(s, progress, n, copies)
                 _send(s, xml, data)
-                _wait_done(s, progress, n, options.copies)
+                _wait_done(s, progress, n, copies)
         if options.mode and mode.id != options.mode:
             return PrintResult(mode=mode.id)
         return None
