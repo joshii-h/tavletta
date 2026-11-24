@@ -194,6 +194,7 @@ def unprintable_rows(
     rows: Sequence[Mapping[str, str]],
     indexes: Sequence[int],
     values: Values | None = None,
+    stop: threading.Event | None = None,
 ) -> list[int]:
     """The rows (counted from 1) whose filled codes cannot be drawn: the
     renderer would print a crossed-out box instead. Only codes with column
@@ -202,21 +203,25 @@ def unprintable_rows(
     `values` (those of the first label), the counter as it will be on each
     copy of each row: a counter can overflow a code's digits on a later
     copy (an EAN-13 at 99999 + 1). Without variables that change per copy
-    one check per row does."""
-    codes = [e for e in label.elements if isinstance(e, CodeElement) and column_names(e.data)]
-    if not codes:
+    one check per row does. `stop` set: no row after the first is
+    checked (those found so far are returned), as a series prints its
+    first row in any case."""
+    filled = [e for e in label.elements if isinstance(e, CodeElement) and column_names(e.data)]
+    if not filled:
         return []
     first = values or Values(datetime.now())
     copies = range(1, first.copies + 1) if varies_per_copy(label) else range(1, 2)
     bad = []
     for position, index in enumerate(indexes):
+        if position and stop is not None and stop.is_set():
+            break
         row_values = replace(first, counter=first.counter + first.step * first.copies * position)
         if any(
             _code_fails(
                 replace(code, data=expand(code.data, row_values.for_copy(copy), rows[index])[0])
             )
             for copy in copies
-            for code in codes
+            for code in filled
         ):
             bad.append(index + 1)
     return bad
@@ -258,9 +263,15 @@ def print_series(
     label fails. `outcome` (returned) is kept up to date while printing.
     `check` False: the caller has run unprintable_rows() already."""
     values = series.first_values()
-    if check and (bad := unprintable_rows(series.label, series.rows, series.indexes, values)):
-        raise UnprintableRows(bad)
     outcome = outcome if outcome is not None else SeriesResult()
+    if check:
+        # stopped while the rows are checked: the check ends after the
+        # first row, which is printed, then the series stops (below); a
+        # job of sheets cannot stop, all its rows are checked
+        checking_stop = stop if series.sheet is None else None
+        bad = unprintable_rows(series.label, series.rows, series.indexes, values, checking_stop)
+        if bad:
+            raise UnprintableRows(bad)
     counting = uses_counter(series.label)
     outcome.counter = values.counter if counting else None
     if series.sheet is not None:

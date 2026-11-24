@@ -1,6 +1,7 @@
 """Symbologies: what they encode (read back with a decoder), drawn in whole
 printer dots with their quiet zones, and what they refuse."""
 
+import itertools
 import sys
 
 import pytest
@@ -462,6 +463,63 @@ def test_verify_meets_the_encoders_own_limits(data, symbology, key):
     with pytest.raises(codes.CodeError) as info:
         codes.verify(CodeElement(data, symbology))
     assert info.value.key == key
+
+
+@pytest.mark.parametrize("symbology", sorted(codes.SURE_BYTES))
+def test_2d_codes_within_their_sure_bytes_always_fit(symbology):
+    """However the content mixes characters (each switch of the encoder's
+    mode costs), what SURE_BYTES lets through without making the code
+    can be made."""
+    import random
+
+    alphabet = ["a", "A", "1", "0", " ", "~", "\x01", "\x7f", "\u00e9", "\u00ff", "\u9519"]
+    alphabet.append("\U0001f600")
+    bound = codes.SURE_BYTES[symbology]
+    samples = [(a * r1, b * r2) for a in alphabet for b in alphabet for r1, r2 in ((1, 1), (1, 3))]
+    samples += [(c, "") for c in random.Random(1).choices(alphabet, k=40)]
+    for first, second in samples:
+        data = ""
+        for piece in itertools.cycle([first, second] if second else [first]):
+            if len((data + piece).encode()) > bound:
+                break
+            data += piece
+        codes.encode(CodeElement(data, symbology))  # no CodeError
+
+
+@pytest.mark.parametrize("symbology", ["datamatrix", "pdf417", "aztec"])
+@pytest.mark.parametrize("char", ["x", "\u00e9"])
+def test_verify_of_a_long_2d_code_agrees_with_encoding_it(symbology, char, monkeypatch):
+    """Around the capacity verify() and encode() say the same (a PDF417
+    made once, in Zint's columns); within SURE_BYTES nothing is made."""
+    from tavletta.model import CodeElement as Code
+
+    def largest(fits):
+        low, high = 1, 4000
+        while low < high:
+            middle = (low + high + 1) // 2
+            low, high = (middle, high) if fits(middle) else (low, middle - 1)
+        return low
+
+    def encodes(n):
+        try:
+            codes.encode(Code(char * n, symbology))
+        except codes.CodeError:
+            return False
+        return True
+
+    top = largest(encodes)
+    for n in (top - 1, top, top + 1):
+        if encodes(n):
+            codes.verify(Code(char * n, symbology))
+        else:
+            with pytest.raises(codes.CodeError):
+                codes.verify(Code(char * n, symbology))
+    made = []
+    monkeypatch.setattr(codes, "encode", made.append)
+    monkeypatch.setattr(codes, "_zint_symbol", lambda *args: made.append(args))
+    size = len(char.encode())
+    codes.verify(Code(char * (codes.SURE_BYTES[symbology] // size), symbology))
+    assert made == []
 
 
 @pytest.mark.parametrize("level", ["", "L", "M", "Q", "H"])

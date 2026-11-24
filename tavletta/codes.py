@@ -165,18 +165,33 @@ QR_BYTES = {"L": 2953, "M": 2331, "Q": 1663, "H": 1273}
 QR_ECI_BYTES = 2  # the UTF-8 ECI in front of content beyond ASCII (12 bits)
 
 
+# 2D codes whose content of at most this many bytes (UTF-8) fits whatever
+# the encoder makes of it: no character costs more than two codewords (an
+# upper or byte shift in front of it; Aztec 18 bits, a binary shift of one
+# byte), the ECI included. A square DataMatrix holds 1558 codewords, a
+# PDF417 code 928 with Zint's error correction for that size, an Aztec code
+# about 15 000 data bits at Zint's default error correction (23 %).
+SURE_BYTES = {"datamatrix": 700, "pdf417": 400, "aztec": 800}
+
+
 def verify(element: CodeElement) -> None:
     """Raise CodeError (or another encoder error) if the code cannot be
     made: check(), then the encoder's own limits (the length a code
     holds, the syntax of GS1 data, the forms of UPC-E), as encode() would
-    meet them while drawing. A QR code whose content fits in any case is
-    not made: that takes milliseconds, and this checks every row of a
-    data file."""
+    meet them while drawing. This checks every row of a data file: a 2D
+    code whose content fits in any case (QR_BYTES, SURE_BYTES) is not
+    made, that takes milliseconds; a longer PDF417 is made once, with the
+    columns Zint chooses, not in every shape encode() compares."""
     check(element)
+    size = len(element.data.encode())
     if element.symbology == "qr":
-        room = QR_BYTES[element.error_correction or "M"] - QR_ECI_BYTES
-        if len(element.data.encode()) <= room:
+        if size <= QR_BYTES[element.error_correction or "M"] - QR_ECI_BYTES:
             return
+    elif size <= SURE_BYTES.get(element.symbology, -1):
+        return
+    if element.symbology == "pdf417":
+        _zint_symbol(_zint_module(), "pdf417", element.data)
+        return
     encode(element)
 
 
@@ -265,11 +280,16 @@ ZINT_AI = re.compile(r"AI \((\d+)\)")
 ZINT_ROW_BYTES = 144
 
 
-def _zint(symbology: str, data: str) -> Symbol:
+def _zint_module():
     try:
         import zint
     except ImportError:
         raise CodeError("code_unavailable") from None
+    return zint
+
+
+def _zint(symbology: str, data: str) -> Symbol:
+    zint = _zint_module()
     if symbology == "pdf417":
         return _pdf417(zint, data)
     symbol = _zint_symbol(zint, symbology, data)

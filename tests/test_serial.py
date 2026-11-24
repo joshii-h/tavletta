@@ -294,6 +294,36 @@ def test_rows_whose_codes_the_encoder_refuses_are_unprintable():
         assert unprintable_rows(label, rows, range(2)) == [2], symbology
 
 
+def test_stopped_while_the_rows_are_checked(monkeypatch):
+    """The check of many rows takes a while: Stop ends it after the first
+    row, which is printed as always; the rows not checked are not."""
+    from tavletta import serial as serial_module
+
+    label = Label(
+        tape_mm=12, printer="fake-mono", elements=[CodeElement(data="{C}", symbology="qr")]
+    )
+    rows = [{"C": "ok"}] * 10 + [{"C": "x" * 3000}] + [{"C": "ok"}] * 40
+    stop = threading.Event()
+    checked = []
+    real = serial_module._code_fails
+
+    def code_fails(element):
+        checked.append(element.data)
+        if len(checked) == 3:
+            stop.set()  # the user stops on the third row
+        return real(element)
+
+    monkeypatch.setattr(serial_module, "_code_fails", code_fails)
+    backend = Recorder()
+    series = Series(label, rows, range(51), PrintOptions())
+    outcome = print_series(backend, "host", series, stop=stop)
+    assert outcome.stopped and outcome.printed == [1] and len(backend.jobs) == 1
+    assert len(checked) == 3  # no row checked after the stop
+    # set before: the first row only (row 11 is not looked at)
+    assert unprintable_rows(label, rows, range(51), stop=stop) == []
+    assert unprintable_rows(label, rows, range(10, 51), stop=stop) == [11]
+
+
 def test_a_counter_that_overflows_a_code_on_a_later_copy():
     """The second copy's counter makes the EAN-13 13 digits with a wrong
     check digit: found before printing, not halfway through the row."""
