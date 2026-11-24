@@ -20,10 +20,12 @@ shown and hit, but an edit refuses it (NotFree).
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+import copy
+import math
+from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
-from tavletta.model import Label
+from tavletta.model import MAX_SIZE_MM, Label, validate_element
 from tavletta.render import DEFAULT_SAFE_MM, PRINT_DPI, MmBox, Rendered, render
 from tavletta.variables import Values, expand_label
 
@@ -265,3 +267,147 @@ def _snap_axis(
 
 def _on_grid(value: float, grid: float) -> float:
     return round(value / grid) * grid
+
+
+# --- edits ----------------------------------------------------------------------
+#
+# Each edit takes a label and gives a new one, the label it was given stays
+# as it is (the window's undo keeps copies of labels, tavletta.history); an
+# edit that changes nothing gives the label itself. The elements are named
+# by their index in label.elements. Every changed element is checked as a
+# label file's (model.validate_element): a position is never negative.
+
+POSITION_DIGITS = 2  # positions in mm, rounded as freelayout.adopt() rounds them
+
+
+class NotFree(ValueError):
+    """An edit of the elements' places on a label of the flowing layout."""
+
+
+def move(label: Label, indices: Collection[int], dx: float, dy: float) -> Label:
+    """The elements moved by dx, dy mm, together: no further left or up
+    than the one nearest the edge can go (a position is never negative),
+    so they keep their places to one another."""
+    _check_free(label)
+    chosen = _chosen(label, indices)
+    _check_finite(dx, dy)
+    if not chosen:
+        return label
+    elements = [label.elements[i] for i in chosen]
+    dx = _within(dx, [e.x_mm for e in elements])
+    dy = _within(dy, [e.y_mm for e in elements])
+    return _moved(label, dict.fromkeys(chosen, (dx, dy)))
+
+
+def _within(delta: float, positions: list[float]) -> float:
+    """A move no further than every position can go (0 … MAX_SIZE_MM)."""
+    return min(max(delta, -min(positions)), MAX_SIZE_MM - max(positions))
+
+
+ALIGNMENTS = ("left", "center", "right", "top", "middle", "bottom")
+
+
+def align(label: Label, geometry: Geometry, indices: Collection[int], edge: str) -> Label:
+    """The elements' boxes lined up at one edge or middle (ALIGNMENTS:
+    "center" along the label, "middle" across it): of the box around them
+    all, or of the label for one element alone."""
+    if edge not in ALIGNMENTS:
+        raise ValueError("unknown alignment %r" % edge)
+    _check_free(label, geometry)
+    chosen = _chosen(label, indices)
+    if not chosen:
+        return label
+    target = (
+        geometry.bounds(chosen)
+        if len(chosen) > 1
+        else (0.0, 0.0, geometry.width_mm, geometry.height_mm)
+    )
+    offsets = {}
+    for index in chosen:
+        box = geometry.boxes[index]
+        offsets[index] = {
+            "left": (target[0] - box.left, 0.0),
+            "center": ((target[0] + target[2] - box.left - box.right) / 2, 0.0),
+            "right": (target[2] - box.right, 0.0),
+            "top": (0.0, target[1] - box.top),
+            "middle": (0.0, (target[1] + target[3] - box.top - box.bottom) / 2),
+            "bottom": (0.0, target[3] - box.bottom),
+        }[edge]
+    return _moved(label, offsets)
+
+
+def distribute(label: Label, geometry: Geometry, indices: Collection[int], axis: str) -> Label:
+    """The same space between neighbouring boxes, along the label (axis "x")
+    or across it ("y"): the first and the last keep their places. Fewer
+    than three elements stay as they are."""
+    if axis not in ("x", "y"):
+        raise ValueError("unknown axis %r" % axis)
+    _check_free(label, geometry)
+    chosen = _chosen(label, indices)
+    if len(chosen) < 3:
+        return label
+    across = axis == "y"
+
+    def span(index: int) -> tuple[float, float]:
+        box = geometry.boxes[index].box
+        return (box[1], box[3]) if across else (box[0], box[2])
+
+    order = sorted(chosen, key=lambda i: (span(i)[0], i))
+    sizes = sum(span(i)[1] - span(i)[0] for i in order)
+    gap = (span(order[-1])[1] - span(order[0])[0] - sizes) / (len(order) - 1)
+    offsets, start = {}, span(order[0])[0]
+    for index in order:
+        shift = start - span(index)[0]
+        offsets[index] = (0.0, shift) if across else (shift, 0.0)
+        start += span(index)[1] - span(index)[0] + gap
+    return _moved(label, offsets)
+
+
+def _moved(label: Label, offsets: Mapping[int, tuple[float, float]]) -> Label:
+    changes = {}
+    for index, (dx, dy) in offsets.items():
+        element = label.elements[index]
+        changes[index] = {
+            "x_mm": round(element.x_mm + dx, POSITION_DIGITS),
+            "y_mm": round(element.y_mm + dy, POSITION_DIGITS),
+        }
+    return _changed(label, changes)
+
+
+def _changed(label: Label, changes: Mapping[int, Mapping[str, object]]) -> Label:
+    """A copy of the label with some fields of some elements changed, each
+    changed element checked (validate_element); the label itself if
+    nothing changes."""
+    if all(
+        getattr(label.elements[i], name) == value
+        for i, fields in changes.items()
+        for name, value in fields.items()
+    ):
+        return label
+    new = copy.deepcopy(label)  # the embedded files' text is shared, not copied
+    for index, fields in changes.items():
+        element = new.elements[index]
+        for name, value in fields.items():
+            setattr(element, name, value)
+        validate_element(element)
+    return new
+
+
+def _check_free(label: Label, geometry: Geometry | None = None) -> None:
+    if label.layout != "free":
+        raise NotFree("the elements of the flowing layout have no places of their own")
+    if geometry is not None and len(geometry.boxes) != len(label.elements):
+        raise ValueError("the geometry is not of this label")
+
+
+def _chosen(label: Label, indices: Collection[int]) -> list[int]:
+    """The indices in order, each once (IndexError: no such element)."""
+    chosen = sorted(set(indices))
+    if chosen and not 0 <= chosen[0] <= chosen[-1] < len(label.elements):
+        raise IndexError("no such element")
+    return chosen
+
+
+def _check_finite(*values: float) -> None:
+    if not all(math.isfinite(v) for v in values):
+        raise ValueError("not a finite number")

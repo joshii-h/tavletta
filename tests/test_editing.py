@@ -3,7 +3,10 @@ testing, snapping, the edits and their undo."""
 
 from __future__ import annotations
 
+import copy
+import itertools
 import json
+import math
 from datetime import datetime
 
 import pytest
@@ -12,7 +15,7 @@ from hypothesis import strategies as st
 
 from tavletta import editing
 from tavletta.editing import ElementBox, Geometry
-from tavletta.model import CodeElement, Label, TextElement
+from tavletta.model import CodeElement, Label, ShapeElement, TextElement, element_id
 from tavletta.render import render
 from tavletta.variables import Values
 
@@ -213,3 +216,141 @@ def test_a_snap_moves_within_the_tolerance_onto_its_guides(boxes, box, tolerance
     ]
     if reach:
         assert any(g.axis == "x" for g in snapped.guides)
+
+
+# --- edits ------------------------------------------------------------------------
+
+DOT = 25.4 / DPI
+
+
+def _three() -> Label:
+    return _free_label(
+        ShapeElement(shape="rectangle", width_mm=5, height_mm=4, x_mm=2, y_mm=3),
+        ShapeElement(shape="ellipse", width_mm=8, height_mm=6, x_mm=20, y_mm=10, fill="solid"),
+        TextElement(text="Tx", size_pt=12, x_mm=40, y_mm=5),
+    )
+
+
+def test_move_gives_a_new_label_and_keeps_the_old_one():
+    label = _three()
+    before = copy.deepcopy(label)
+    moved = editing.move(label, [0, 2], 1.234, -0.5)
+    assert label == before  # the label given stays as it was
+    assert [(e.x_mm, e.y_mm) for e in moved.elements] == [(3.23, 2.5), (20, 10), (41.23, 4.5)]
+    assert [element_id(e) for e in moved.elements] == [element_id(e) for e in label.elements]
+    assert moved.to_dict()["elements"][1] == label.to_dict()["elements"][1]
+
+
+def test_moved_elements_render_where_their_boxes_moved_to():
+    label = _three()
+    before = Geometry.of(label, render(label, dpi=DPI))
+    moved = editing.move(label, [1], 3.5, 2.25)
+    after = Geometry.of(moved, render(moved, dpi=DPI))
+    want = editing.moved(before.boxes[1].box, 3.5, 2.25)
+    assert after.boxes[1].box == pytest.approx(want, abs=DOT)
+    assert after.boxes[0].box == before.boxes[0].box
+
+
+def test_a_move_stops_at_the_label_edge_for_all_together():
+    label = _three()
+    moved = editing.move(label, [0, 1], -5, -4)
+    assert [(e.x_mm, e.y_mm) for e in moved.elements[:2]] == [(0, 0), (18, 7)]
+
+
+def test_a_move_of_nothing_is_the_label_itself():
+    label = _three()
+    assert editing.move(label, [], 3, 3) is label
+    assert editing.move(label, [0], 0, 0) is label
+
+
+def test_edits_refuse_the_flowing_layout_wrong_elements_and_numbers():
+    label = _three()
+    flowing = Label(tape_mm=24, elements=[TextElement()])
+    with pytest.raises(editing.NotFree):
+        editing.move(flowing, [0], 1, 1)
+    with pytest.raises(IndexError):
+        editing.move(label, [3], 1, 1)
+    with pytest.raises(IndexError):
+        editing.move(label, [-1], 1, 1)
+    with pytest.raises(ValueError):
+        editing.move(label, [0], math.nan, 1)
+    geometry = _geometry((0, 0, 1, 1))  # of another label
+    with pytest.raises(ValueError):
+        editing.align(label, geometry, [0, 1], "left")
+    with pytest.raises(ValueError):
+        editing.align(label, editing.measure(label, dpi=DPI), [0, 1], "sideways")
+    with pytest.raises(ValueError):
+        editing.distribute(label, editing.measure(label, dpi=DPI), [0, 1, 2], "z")
+
+
+@pytest.mark.parametrize(
+    ("edge", "side"),
+    [("left", 0), ("right", 2), ("top", 1), ("bottom", 3), ("center", None), ("middle", None)],
+)
+def test_aligned_boxes_line_up_once_rendered(edge, side):
+    label = _three()
+    geometry = editing.measure(label, dpi=DPI)
+    aligned = editing.align(label, geometry, [0, 1, 2], edge)
+    after = editing.measure(aligned, dpi=DPI)
+    if side is None:
+        axis = (0, 2) if edge == "center" else (1, 3)
+        values = [(b.box[axis[0]] + b.box[axis[1]]) / 2 for b in after.boxes]
+    else:
+        values = [b.box[side] for b in after.boxes]
+    assert max(values) - min(values) <= 2 * DOT
+
+
+def test_one_element_aligns_to_the_label():
+    label = _free_label(ShapeElement(shape="rectangle", width_mm=6, height_mm=4, x_mm=2, y_mm=3))
+    label.auto_length, label.length_mm = False, 50
+    geometry = editing.measure(label, dpi=DPI)
+    centred = editing.measure(editing.align(label, geometry, [0], "center"), dpi=DPI)
+    box = centred.boxes[0]
+    assert (box.left + box.right) / 2 == pytest.approx(25, abs=DOT)
+    bottom = editing.measure(editing.align(label, geometry, [0], "bottom"), dpi=DPI)
+    assert bottom.boxes[0].bottom == pytest.approx(24, abs=DOT)
+
+
+@pytest.mark.parametrize("axis", ["x", "y"])
+def test_distributed_boxes_have_the_same_gaps(axis):
+    label = _free_label(
+        *(
+            ShapeElement(shape="rectangle", width_mm=w, height_mm=w, x_mm=x, y_mm=x / 4)
+            for w, x in ((3, 1), (5, 6), (2, 30), (4, 60))
+        )
+    )
+    geometry = editing.measure(label, dpi=DPI)
+    spread = editing.measure(editing.distribute(label, geometry, [3, 1, 0, 2], axis), dpi=DPI)
+    start, end = (0, 2) if axis == "x" else (1, 3)
+    boxes = sorted(spread.boxes, key=lambda b: b.box[start])
+    gaps = [b.box[start] - a.box[end] for a, b in itertools.pairwise(boxes)]
+    assert max(gaps) - min(gaps) <= 2 * DOT
+    assert boxes[0].box == geometry.boxes[0].box and boxes[-1].box == geometry.boxes[3].box
+
+
+def test_two_elements_are_not_distributed():
+    label = _three()
+    assert editing.distribute(label, editing.measure(label, dpi=DPI), [0, 1], "x") is label
+
+
+@settings(max_examples=200)
+@given(
+    st.lists(st.tuples(st.floats(0, 200), st.floats(0, 200)), min_size=1, max_size=5),
+    st.floats(-300, 300),
+    st.floats(-300, 300),
+)
+def test_a_move_keeps_positions_valid_and_their_distances(places, dx, dy):
+    label = _free_label(*(ShapeElement(x_mm=x, y_mm=y) for x, y in places))
+    rounded = editing.move(label, range(len(places)), 0.001, 0.001)  # to hundredths
+    moved = editing.move(rounded, range(len(places)), dx, dy)
+    xs = [e.x_mm for e in moved.elements]
+    ys = [e.y_mm for e in moved.elements]
+    assert min(xs) >= 0 and min(ys) >= 0
+    old = rounded.elements
+    for a, b in itertools.combinations(range(len(places)), 2):
+        assert xs[a] - xs[b] == pytest.approx(old[a].x_mm - old[b].x_mm, abs=0.011)
+        assert ys[a] - ys[b] == pytest.approx(old[a].y_mm - old[b].y_mm, abs=0.011)
+    back = editing.move(moved, range(len(places)), -(xs[0] - old[0].x_mm), -(ys[0] - old[0].y_mm))
+    assert [(e.x_mm, e.y_mm) for e in back.elements] == pytest.approx(
+        [(e.x_mm, e.y_mm) for e in old], abs=0.011
+    )
