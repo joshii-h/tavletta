@@ -1124,20 +1124,21 @@ def _flag(value, name: str) -> bool:
     return value
 
 
-_TRUE = frozenset({"true", "yes", "on", "1"})
-_FALSE = frozenset({"false", "no", "off", "0", ""})
+# words that say no; every other word says yes, as bool() read them before
+_FALSE = frozenset({"false", "no", "n", "off", "0", "", "none", "null", "nein", "non"})
 
 
 def _loose_flag(value, name: str) -> bool:
     """A flag that the first versions did not check (auto_length, bold,
-    italic): a number or a word as well as true or false, but "false" is
-    false (bool("false") would be True); anything else is damaged."""
-    if isinstance(value, bool):
-        return value
+    italic), read as they read it (bool()), with what bool() got wrong
+    put right: "false" and other words that say no are false, NaN is no
+    flag. None (null) is false; a list or an object is damaged."""
+    if value is None or isinstance(value, bool):
+        return bool(value)
     if isinstance(value, (int, float)) and not (isinstance(value, float) and math.isnan(value)):
         return value != 0
-    if isinstance(value, str) and value.strip().lower() in _TRUE | _FALSE:
-        return value.strip().lower() in _TRUE
+    if isinstance(value, str):
+        return value.strip().lower() not in _FALSE
     raise _damaged("%s must be true or false" % name)
 
 

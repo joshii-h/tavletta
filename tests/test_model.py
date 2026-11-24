@@ -258,16 +258,19 @@ def test_old_version_accepted_and_booleans_normalised():
 @pytest.mark.parametrize(
     ("value", "expected"),
     [("false", False), ("False", False), ("no", False), ("0", False), ("", False), (0.0, False)]
-    + [("true", True), (" Yes ", True), ("1", True), (2, True), (True, True)],
+    + [(None, False), ("n", False), ("off", False), ("nein", False)]
+    + [("true", True), (" Yes ", True), ("1", True), (2, True), (True, True)]
+    + [("ja", True), ("y", True), ("x", True)],
 )
 def test_loose_booleans_read_false_as_false(value, expected):
-    """bool("false") is True: a word is read for what it says."""
+    """bool("false") is True: a word that says no is read as no; others,
+    null and numbers as the first versions read them."""
     data = {"tape_mm": 50, "auto_length": value, "elements": [{"kind": "text", "bold": value}]}
     label = Label.from_dict(data)
     assert label.auto_length is expected and label.elements[0].bold is expected
 
 
-@pytest.mark.parametrize("value", ["maybe", None, [], {}, float("nan")])
+@pytest.mark.parametrize("value", [[], [1], {}, {"a": 1}, float("nan")])
 def test_loose_booleans_refuse_junk(value):
     for data in ({"auto_length": value}, {"elements": [{"kind": "text", "italic": value}]}):
         with pytest.raises(LabelError) as info:
