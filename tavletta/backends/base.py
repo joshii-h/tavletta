@@ -885,7 +885,7 @@ class Backend(ABC):
         """The connected printer's name for the interface; the model family by default."""
         return self.name
 
-    def setting(self, options: PrintOptions, key: str) -> str | int | bool | None:
+    def setting(self, options: PrintOptions, key: str) -> str | int | float | bool | None:
         """The value of one of the printer's settings for a job (settings()
         of the printer in options.info): what the options carry if valid,
         else the default. KeyError for other keys."""

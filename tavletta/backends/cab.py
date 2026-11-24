@@ -570,7 +570,8 @@ class Cab(Backend):
             image = image.rotate(-90, expand=True)
         # where this printer puts the print along the feed, made up for:
         # the label prints where the preview shows it
-        image = shift_along(image, float(self.setting(options, "offset_mm")), dots)
+        offset = self.setting(options, "offset_mm")  # a Distance: always a float
+        image = shift_along(image, offset if isinstance(offset, float) else 0.0, dots)
         image.info["dots_per_mm"] = dots
         # in printer orientation too: x across the print head (build_job)
         image.info["size_mm"] = label.media_size()
