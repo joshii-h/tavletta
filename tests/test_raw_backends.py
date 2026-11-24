@@ -704,14 +704,21 @@ def test_zpl_auto_resolution_per_printer(monkeypatch):
     assert None in asked  # status questions: the usual timeout
 
 
-def test_whole_ratios():
-    assert [raw.whole_ratio(f) for f in (2.0, 0.5, 3.0, 1.5, 304.8 / 203.2)] == [
-        True,
-        False,
-        True,
-        False,
-        False,
-    ]
+def test_an_image_for_another_resolution_scales_by_whole_ratios_only():
+    """One rule for raw printers, cab and NIIMBOT: 2 and 3 times every dot
+    a block of dots; scaling down or by 1.5 spoils thin lines and bars,
+    the label is rendered again."""
+    from tavletta.backends.base import for_resolution
+
+    image = Image.new("1", (8, 4), 1)
+    image.info["kept"] = True
+    assert for_resolution(image, 203.2, 203.2) is image
+    for rendered, printer, size in ((101.6, 203.2, (16, 8)), (4.0, 12.0, (24, 12))):
+        scaled = for_resolution(image, rendered, printer)
+        assert scaled.size == size and scaled.info["kept"]
+    for rendered, printer in ((406.4, 203.2), (203.2, 304.8), (12.0, 8.0), (203.0, 300.0)):
+        with pytest.raises(RenderAgain):
+            for_resolution(image, rendered, printer)
 
 
 def test_zpl_print_uses_settings(monkeypatch):

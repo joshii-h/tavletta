@@ -19,7 +19,6 @@ import base64
 import http.client
 import io
 import json
-import math
 import re
 import socket
 import threading
@@ -54,6 +53,7 @@ from tavletta.backends.base import (
     RibbonOut,
     Toggle,
     check_width,
+    for_resolution,
     map_error,
     open_session,
     report_progress,
@@ -577,8 +577,7 @@ class Cab(Backend):
             dots = version.dots_per_mm if version.model else rendered
             self._learn(host, dots)
             size_mm = image.info.get("size_mm")
-            if not math.isclose(dots, rendered):
-                image = _rescale(image, dots / rendered)
+            image = for_resolution(image, rendered, dots)  # else rendered again (RenderAgain)
             upside_down = self.setting(options, "upside_down") is True
             job = build_job(
                 image, dots, options.gap_mm, copies, method, speed, upside_down, size_mm
@@ -593,13 +592,6 @@ class Cab(Backend):
                 s.cancel()
                 raise
         return None
-
-
-def _rescale(image: Image.Image, factor: float) -> Image.Image:
-    """Made for another resolution: scale the (already black and white)
-    image instead of failing; prepare() renders right the next time."""
-    size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
-    return image.resize(size, Image.Resampling.NEAREST)
 
 
 def _cab_name(model: str) -> str:

@@ -638,6 +638,23 @@ class RenderAgain(PrinterError):
     (it now renders for the reported resolution) and print once more."""
 
 
+def for_resolution(image: Image.Image, rendered: float, printer: float) -> Image.Image:
+    """A black and white image made at the resolution `rendered`, for a
+    printer of the resolution `printer` (dpi or dots per mm, both alike):
+    as it is if they agree; scaled up dot by dot by a whole ratio (2, 3:
+    every dot a block of dots); else RenderAgain. Scaling down drops dots
+    and spoils thin lines and the bars of codes, 1.5 makes them uneven."""
+    if math.isclose(printer, rendered):
+        return image
+    factor = printer / rendered
+    if factor < 1 or not math.isclose(factor, round(factor), abs_tol=0.01):
+        raise RenderAgain("rendered at %g, the printer has %g" % (rendered, printer))
+    size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
+    resized = image.resize(size, Image.Resampling.NEAREST)
+    resized.info.update(image.info)
+    return resized
+
+
 class WrongMedia(PrinterError):
     """The loaded roll is of another kind or size than the label (a
     continuous roll for a die-cut label or the other way round)."""

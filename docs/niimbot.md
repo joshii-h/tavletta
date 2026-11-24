@@ -194,7 +194,10 @@ inserted:
   for the B4. [spec: Thermalith `printers.json`, `stockWidthMm`]
 - Resolution: 203 dpi models are rendered at exactly 8 dots per mm, the
   300 dpi models at 300 dpi. The resolution is never derived from the
-  printer's mm-per-dot value (no NIIMBOT printer has 229 dpi). [spec]
+  printer's mm-per-dot value (no NIIMBOT printer has 229 dpi). [spec] A
+  label rendered before the model was known, for the other resolution,
+  is rendered again for the model the printer names (scaling by 1.48
+  would make bars and lines uneven). [decided]
 - At most 65535 rows (the row number is 16 bits).
 
 ## Print sequences [spec]

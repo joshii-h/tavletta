@@ -15,7 +15,6 @@ Niimbot.Net (EvilGeniusLabs, GPL-3.0-or-later), written anew for Tavletta.
 
 from __future__ import annotations
 
-import math
 import time
 from collections.abc import Iterator
 from contextlib import AbstractContextManager, suppress
@@ -55,6 +54,7 @@ from tavletta.backends.base import (
     RibbonError,
     Setting,
     error_text,
+    for_resolution,
     network_error,
     open_session,
     report_progress,
@@ -1064,10 +1064,9 @@ def _job_for(
             "%.1f mm is wider than %.1f mm (NIIMBOT %s)" % (width_mm, model.widest_mm, model.name),
             max_mm=model.widest_mm,
         )
-    if not math.isclose(rendered, model.dpi):  # made before the printer was asked
-        factor = model.dpi / rendered
-        size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
-        image = image.resize(size, Image.Resampling.NEAREST)
+    # made before the printer was asked: scaled by a whole ratio, else
+    # rendered again for the model now known (RenderAgain)
+    image = for_resolution(image, rendered, model.dpi)
     if image.height > MAX_ROWS:
         limit = MAX_ROWS * 25.4 / model.dpi
         raise LabelTooLong("%d rows" % image.height, max_mm=round(limit, 1))

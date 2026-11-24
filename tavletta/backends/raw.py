@@ -12,7 +12,6 @@ language notes; the byte sequences follow LPrint by Michael R Sweet
 
 from __future__ import annotations
 
-import math
 import socket
 import time
 from abc import abstractmethod
@@ -36,10 +35,10 @@ from tavletta.backends.base import (
     PrintResult,
     ProgressCallback,
     Raster,
-    RenderAgain,
     ResolutionUnknown,
     check_length,
     check_width,
+    for_resolution,
     map_error,
     open_session,
     report_progress,
@@ -253,22 +252,6 @@ def state(answered: bool, error: PrinterError | None, busy: bool = False) -> str
     return "BUSY" if busy else "IDLE"
 
 
-def whole_ratio(factor: float) -> bool:
-    """2, 3: scaling up by it keeps every dot (each becomes a block of
-    dots). Scaling down (1/2) would drop every second dot and spoil thin
-    lines and bars, 1.5 would make lines uneven: both are rendered again."""
-    return factor >= 1 and math.isclose(factor, round(factor), abs_tol=0.01)
-
-
-def rescale(image: Image.Image, factor: float) -> Image.Image:
-    """Made for another resolution by a whole ratio: scale the black and
-    white image dot by dot (see whole_ratio)."""
-    size = (max(1, round(image.width * factor)), max(1, round(image.height * factor)))
-    resized = image.resize(size, Image.Resampling.NEAREST)
-    resized.info.update(image.info)
-    return resized
-
-
 def usb_model(host: str) -> str:
     """The model in a usb:// address ("LabelWriter 450"); "" for others."""
     if not usb.is_usb(host):
@@ -455,12 +438,7 @@ class RawBackend(Backend):
             if problem:
                 raise problem
             dpi = self.job_dpi(s, options, rendered)
-            if not math.isclose(dpi, rendered):
-                if not whole_ratio(dpi / rendered):
-                    raise RenderAgain(
-                        "rendered at %g dpi, the printer has %g dpi" % (rendered, dpi)
-                    )
-                image = rescale(image, dpi / rendered)
+            image = for_resolution(image, rendered, dpi)
             s.send(self.build_job(image, dpi, options, host))
             s.finish()
             report_progress(progress, copies, copies)

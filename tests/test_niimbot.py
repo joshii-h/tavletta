@@ -1168,12 +1168,25 @@ def test_a_d110_m_on_protocol_4(fake):
     assert len(fake.sent(0x13)[0]) == 13
 
 
-def test_print_rescales_an_image_made_for_another_resolution(fake):
+def test_an_image_made_for_another_resolution_is_rendered_again(fake):
+    """1.48 times would make bars and lines uneven: rendered again for the
+    model now known, and printed once."""
+    from tavletta.backends.base import RenderAgain
+    from tavletta.job import Job
+    from tavletta.model import Label, TextElement
+
     fake.model_id = 4097  # 300 dpi
     fake.feeds = False
+    backend = Niimbot()
     image = _image(400, 240)  # 50 × 30 mm at 8 dots/mm
-    Niimbot().print_label(image, "printer", PrintOptions())
-    assert fake.sent(0x13)[0][:4] == niimbot.u16(354) + niimbot.u16(567)  # 30 mm, the head
+    with pytest.raises(RenderAgain):
+        backend.print_label(image, "printer", PrintOptions())
+    assert 0x13 not in fake.commands()
+    label = Label(printer="niimbot", auto_length=False, elements=[TextElement(text="x")])
+    label.set_media_size(30, 15)
+    Job(Niimbot(), label, PrintOptions()).run("printer")
+    assert len(fake.sent(0x13)) == 1
+    assert fake.sent(0x13)[0][:2] == niimbot.u16(round(15 / 25.4 * 300))  # rows at 300 dpi
 
 
 def test_print_cuts_a_wide_label_to_the_head(fake):

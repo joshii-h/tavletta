@@ -510,15 +510,37 @@ def test_print_cancel_survives_a_closed_connection(backend, printer, monkeypatch
         backend.print_label(Image.new("RGB", (600, 300), "white"), "h", PrintOptions())
 
 
-def test_print_learns_the_resolution_and_rescales(backend, printer):
-    """Rendered for 12 dots/mm, but the printer turns out to be a /200."""
+def test_print_learns_the_resolution_and_renders_again(backend, printer):
+    """Rendered for 12 dots/mm, but the printer turns out to be a /200:
+    two thirds would drop dots of bars and lines; rendered again for it,
+    and printed once."""
+    from tavletta.backends.base import RenderAgain
+    from tavletta.job import Job
+
     image = backend.prepare(_label(50, 25), PrintOptions())
     assert image.info["dots_per_mm"] == 12.0 and image.size == (600, 300)
     printer.device.version = "5.40 (MACH 4S/200)"
-    backend.print_label(image, "h", PrintOptions())
+    with pytest.raises(RenderAgain):
+        backend.print_label(image, "h", PrintOptions())
+    assert printer.device.jobs == [] and backend.reported["h"] == 8.0
+    assert backend.prepare(_label(50, 25), PrintOptions(host="h")).size == (400, 200)
+    fresh = Cab()  # a job does it on its own
+    job = Job(fresh, _label(50, 25, elements=[TextElement(text="x")]), PrintOptions())
+    job.run("h")
     png, commands = _job_parts(printer.device.jobs[0])
     assert png.size == (400, 200) and commands[2] == "S l1;0,0,25,28,50"
-    assert backend.dots_per_mm == 8.0
+    assert len(printer.device.jobs) == 1 and job.printed == 1
+
+
+def test_print_renders_again_for_nearly_twice_the_resolution(backend, printer):
+    """Rendered for 12 dots/mm on a /600 (23.6 dots/mm): about twice, not
+    exactly, which would make lines uneven; rendered again."""
+    from tavletta.backends.base import RenderAgain
+
+    image = backend.prepare(_label(50, 25), PrintOptions())
+    printer.device.version = "5.40 (SQUIX 4/600)"
+    with pytest.raises(RenderAgain):
+        backend.print_label(image, "h", PrintOptions())
 
 
 def test_print_keeps_the_resolution_if_the_printer_does_not_say(backend, printer):
