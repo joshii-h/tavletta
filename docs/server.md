@@ -305,7 +305,10 @@ first (once). The provider redirects back to `/oidc/callback`, which
   back to), encrypted and signed with a key the server makes when it
   starts (Fernet), so a callback address sent to someone else does not
   sign them in as another person, and the server keeps nothing for a
-  sign in under way (a restart ends those);
+  sign in under way (a restart ends those). A new `/oidc/login` of the
+  browser replaces it (its own action); a callback removes it only when
+  its `state` is the one the cookie holds, so a callback someone else
+  makes the browser load does not end a sign in under way;
 - refuses an `iss` parameter of another issuer (RFC 9207) and an error
   answer (`access_denied`: "Signing in was canceled");
 - exchanges the code at the token endpoint with the secret and the PKCE
@@ -331,13 +334,22 @@ kept for a sign in under way, there is no store to fill and no limit of
 sign ins: many people behind one address (NAT, a proxy) sign in at
 once, a browser starting again replaces its own sign in, and nothing of
 another browser is ever dropped. Sign ins are not counted with wrong
-tokens either, failed or not (a provider away blocks nobody); the limits
-of requests per client apply as to any request. The states taken are
+tokens. A code the provider does not take (or an ID token that does not
+check out) costs a request to it with the client's secret: 60 of them a
+minute from one address, then 429 for a minute; at most 4 token
+exchanges run at once (a callback waits up to 10 s for one). A provider
+that cannot be reached counts too, so behind NAT the limit is generous. The states taken are
 remembered for 10 minutes (at most 10 000; a callback of one forgotten
 sent again still fails at the provider, which takes a code once). With
 `--oidc`, a request with neither a token nor a session (the page loading
 while signed out) is 401 but not counted, so people behind one address
 do not block each other.
+
+Sessions and the key of the login cookies are in the memory of one
+server process: several instances behind a load balancer do not share
+them (a sign in started at one fails at another, a session counts at its
+own instance only). Run one instance per web address, or make the load
+balancer keep each browser at one instance.
 
 **The session.** The cookie `__Host-tavletta-session` is `Secure`,
 `HttpOnly`, `SameSite=Lax`, `Path=/`, no `Domain` (the `__Host-` prefix

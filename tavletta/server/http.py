@@ -80,6 +80,9 @@ CORS_HEADERS = (
 )
 CORS_EXPOSED = "Location, X-Tavletta-Warnings, Mcp-Session-Id"
 AUTH_FAILURES = 10  # wrong tokens per address and minute before it is blocked
+# sign in callbacks whose code the provider did not take, per address and
+# minute (each a request to it with the client's secret): then 429
+EXCHANGE_FAILURES = 60
 LOOPBACK_NAMES = frozenset({"localhost", "localhost.localdomain", "ip6-localhost"})
 
 
@@ -240,6 +243,7 @@ class Server(ThreadingHTTPServer):
         self.mcp = HttpTransport(Mcp(service)) if config.mcp else None
         self.web_ui = config.web_ui
         self.rate_limit = RateLimit()  # wrong tokens
+        self.exchange_limit = RateLimit(EXCHANGE_FAILURES)  # weblogin.Answer.exchange_failed
         self.parses = threading.BoundedSemaphore(PARSES)
         self.reaper = Reaper()
         # a few more connections than requests: /health is answered even
@@ -698,8 +702,9 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, login.info())
             return
         # nothing kept on the server until the session (the sign in under
-        # way is in the browser's cookie): no limit of its own, and none of
-        # wrong tokens, so people behind one address never block each other
+        # way is in the browser's cookie), and not counted with wrong tokens:
+        # only codes the provider did not take are, apart (EXCHANGE_FAILURES)
+        client = rate_key(self.client())
         if route == "logout":
             self._same_page()
             self._raw_json()  # read (and JSON, as every POST): the connection goes on
@@ -708,8 +713,12 @@ class Handler(BaseHTTPRequestHandler):
             query = self._query()
             asked = query.get("return", [None])[-1]
             answer = login.start(self._site(), asked, moved="moved" in query)
+        elif self.server.exchange_limit.blocked(client):
+            raise ApiError(429, "too_many_requests", _("Too many requests – try again later"))
         else:
             answer = login.finish(self._site(), self._query(), self._jar())
+            if answer.exchange_failed:
+                self.server.exchange_limit.failed(client)
         self._send_answer(answer)
 
     def _send_answer(self, answer: Answer) -> None:

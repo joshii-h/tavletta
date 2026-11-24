@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import logging
 import re
+import threading
 import time
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
@@ -50,6 +51,10 @@ DEFAULT_AFTER = "#/templates"
 # what the page is told when a sign in fails (it says what they mean)
 ERRORS = ("failed", "expired", "denied", "no_role")
 LOGIN_COOKIE_SECONDS = 600
+# token exchanges with the provider at once (each a request with the
+# client's secret, up to 10 s); a callback waits this long for one
+EXCHANGES = 4
+EXCHANGE_WAIT = 10.0
 
 
 @dataclass
@@ -58,6 +63,10 @@ class Answer:
     headers: dict[str, str] = field(default_factory=dict)
     cookies: list[str] = field(default_factory=list)
     body: object | None = None
+    # a code the token endpoint did not take (or an ID token that did not
+    # check out): counted for the address (http.py), as each costs a
+    # request to the provider with the client's secret
+    exchange_failed: bool = False
 
 
 def cookies(lines: Iterable[str]) -> dict[str, str | None]:
@@ -91,6 +100,7 @@ class WebLogin:
         self.provider = provider or Provider(settings, clock)
         self.printers = printers
         self.logins = Logins(clock)
+        self._exchanges = threading.BoundedSemaphore(EXCHANGES)
         self.sessions = Sessions(settings.session_seconds, settings.idle_seconds, clock)
 
     # --- where the page is
@@ -170,10 +180,15 @@ class WebLogin:
         login = self.logins.take(state, jar.get(login_cookie)) if state else None
         try:
             answer = self._finish(origin, query, login, jar.get(session_cookie))
+        except _ExchangeFailed as e:
+            log.warning("OIDC sign in failed: %s", e.error)
+            answer = _failed(e.error.code)
+            answer.exchange_failed = True
         except OidcError as e:
             log.warning("OIDC sign in failed: %s", e)
             answer = _failed(e.code)
-        answer.cookies.append(self._cookie(origin, login_cookie, "", 0))
+        if login is not None:  # its sign in is over; another's (a forged callback) is not
+            answer.cookies.append(self._cookie(origin, login_cookie, "", 0))
         return answer
 
     def _finish(self, origin: str, query, login, old: str | None) -> Answer:
@@ -191,7 +206,16 @@ class WebLogin:
         code = _one(query, "code")
         if not code:
             raise OidcError("failed", "the answer has no code")
-        caller, subject, id_token = self._caller(origin, code, login)
+        if not self._exchanges.acquire(timeout=EXCHANGE_WAIT):
+            raise OidcError("failed", "%d sign ins at the provider at once" % EXCHANGES)
+        try:
+            caller, subject, id_token = self._caller(origin, code, login)
+        except OidcError as e:
+            if e.code == "no_role":  # signed in at the provider, without a role here
+                raise
+            raise _ExchangeFailed(e) from e
+        finally:
+            self._exchanges.release()
         if old:
             self.sessions.end(old)  # a new id for every sign in
         value = self.sessions.create(caller, subject, id_token)
@@ -248,6 +272,14 @@ def _same_host(site: str, public: str) -> bool:
     except ValueError:  # not a port at all
         return False
     return here.hostname == there.hostname and (port or default) == (there.port or default)
+
+
+class _ExchangeFailed(Exception):
+    """The provider did not sign in a callback's code (OidcError)."""
+
+    def __init__(self, error: OidcError):
+        super().__init__(str(error))
+        self.error = error
 
 
 def _one(query: Mapping[str, list[str]], key: str) -> str | None:

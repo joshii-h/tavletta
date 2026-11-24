@@ -386,20 +386,70 @@ def test_a_provider_that_cannot_be_reached(make_site):
     assert status == 303 and response.getheader("Location") == "/#/signin-error/failed"
 
 
-def test_signing_in_is_not_limited_by_wrong_tokens_or_failures(site):
+def test_signing_in_is_not_limited_by_wrong_tokens(site):
     """Nothing is kept on the server until the session: many sign ins from
-    one address (people behind NAT), wrong tokens, failures of the provider
-    and callbacks for no sign in under way block nobody."""
+    one address (people behind NAT), wrong tokens and callbacks for no sign
+    in under way block nobody."""
     from tavletta.server.http import AUTH_FAILURES
 
     for _ in range(AUTH_FAILURES):  # wrong tokens: tokens blocked, sign ins not
         call(site.base, "GET", "/api/v1/labels", token="wrong")
-    for _ in range(40):
+    for _ in range(80):
         assert call(site.base, "GET", "/oidc/login")[0] == 303
         call(site.base, "GET", "/oidc/callback?state=%s&code=x" % ("x" * 43))
+    assert sign_in(site)[0] == 303 and "tavletta-session" in sign_in(site)[2]
+
+
+def test_codes_the_provider_does_not_take_are_limited(site, monkeypatch):
+    """Each costs a request to the provider with the client's secret:
+    EXCHANGE_FAILURES a minute per address, then 429; a role missing is no
+    such failure."""
+    from tavletta.server import http as server_http
+
+    monkeypatch.setattr(site.server, "exchange_limit", server_http.RateLimit(3))
+    for _ in range(2):
+        assert failure(site, claims={"realm_access": {"roles": []}}) == "no_role"
     for _ in range(3):
         failure(site, claims={"nonce": "other"})
-    assert sign_in(site)[0] == 303 and "tavletta-session" in sign_in(site)[2]
+    status, _response, body = call(site.base, "GET", "/oidc/callback?state=x&code=y")
+    assert status == 429 and body["error"]["code"] == "too_many_requests"
+    assert call(site.base, "GET", "/oidc/login")[0] == 303  # starting is not limited
+    assert call(site.base, "GET", "/api/v1/labels", token=TOKEN)[0] != 429
+
+
+def test_token_exchanges_at_once_are_held_to_a_few(site, monkeypatch):
+    """At most EXCHANGES at the provider at once; a callback that gets none
+    in time fails (and is not counted against its address)."""
+    from tavletta.server import weblogin
+
+    monkeypatch.setattr(weblogin, "EXCHANGE_WAIT", 0.05)
+    held = site.login._exchanges
+    for _ in range(weblogin.EXCHANGES):
+        assert held.acquire(blocking=False)
+    try:
+        assert failure(site) == "failed"
+        assert not site.server.exchange_limit._failures
+    finally:
+        for _ in range(weblogin.EXCHANGES):
+            held.release()
+    assert sign_in(site)[0] == 303
+
+
+def test_a_foreign_callback_does_not_end_a_sign_in_under_way(site):
+    """Only a callback of the cookie's own state removes it: one with
+    another state (made by someone else) leaves the sign in under way."""
+    location, cookies = start(site)
+    cookie = {"Cookie": "tavletta-login=" + value(cookies["tavletta-login"])}
+    _status, response, _ = call(
+        site.base, "GET", "/oidc/callback?state=%s&code=x" % ("y" * 43), headers=cookie
+    )
+    assert "tavletta-login" not in set_cookies(response)
+    code = site.fake.authorize(location)
+    state = parse_qs(urlsplit(location).query)["state"][0]
+    path = "/oidc/callback?code=%s&state=%s" % (code, state)
+    _status, response, _ = call(site.base, "GET", path, headers=cookie)
+    assert response.getheader("Location") == "/#/print/a"
+    assert "Max-Age=0" in set_cookies(response)["tavletta-login"]
 
 
 # --- roles and printers ------------------------------------------------------------------
