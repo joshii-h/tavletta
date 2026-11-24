@@ -418,8 +418,7 @@ def resize(label: Label, geometry: Geometry, index: int, box: MmBox) -> Label:
     _check_free(label, geometry)
     _chosen(len(label.elements), [index])
     _check_finite(*box)
-    left, right = sorted((box[0], box[2]))
-    top, bottom = sorted((box[1], box[3]))
+    left, top, right, bottom = _normal(box)
     old = geometry.boxes[index]
     sx = (right - left) / old.width if old.width > 0 else 1.0
     sy = (bottom - top) / old.height if old.height > 0 else 1.0
