@@ -260,8 +260,9 @@ Setting "Print method" (`method` in settings.json, per printer model):
 - `/cgi-bin/get?cmd=3` (status) has the counters `thermalTransfer` and
   `thermalDirect` in metres, not used, and `"labels": [2686, "-"]`, the
   labels printed in the printer's life, with `serialno` and
-  `printerModel`; without a password on firmware 5.47. Tavletta reads the
-  label counter for what a job printed (see "What a job printed").
+  `printerModel`; without a password on firmware 5.47. Tavletta compares
+  the label counter with what `ESC s` tells of a job that failed (see
+  "What a job printed").
   [confirmed]
 - `ESC s` error `R` "Ribbon detected in thermal direct mode" and `F` "Out
   of ribbon" [manual]: Tavletta reports `F` as "the printer finds no
@@ -398,60 +399,63 @@ A 1
 
 A job of one label and its copies (one `A`) counts its labels down in
 `ESC s` [manual]; a series' job has an `A` for each label, and whether
-`ESC s` counts all of them is not confirmed (above). The labels a job
-printed are known this way:
+`ESC s` counts all of them is not confirmed (above). The web interface's
+label counter (`/cgi-bin/get?cmd=3`) counts the labels of the printer's
+life, but when it counts a label (as it is printed, later, in blocks, at
+the end of a job) has not been watched during a print. So `ESC s`
+decides, and the counter only checks it:
 
-- With the web interface's label counter (`/cgi-bin/get?cmd=3`, network
-  only, read in 2 s or not at all): read just before the job is sent and
-  while it prints, the difference is what it printed, exactly: also at
-  a problem in the middle of a job (read after `ESC c`) and after a lost
-  connection, when it is watched until it reached the job's labels or
-  stayed the same for 10 s (`SETTLE_SECONDS`; the printer may print on
-  a job whose `ESC c` did not reach it). A series' job is over once the
-  counter counted every label, also with the interpreter still active
-  (the next job need not wait for its second); a printer idle 10 s with
-  fewer counted ended the job early, which is reported as a problem with
-  the labels counted. A printer whose web interface does not answer is not asked
-  again for 30 s. Another program printing at the same moment would
-  count as ours (at most the job's labels). [decided] [open: whether the
-  counter counts a label as it is printed or later; not watched during a
-  print yet]
-- Without it (USB, the web interface off or behind a password), from
-  `ESC s`: a job of one label is over when the printer counted its
-  labels down, as the manual has it; a series' job only once the printer
-  is idle at two polls in a row, not when the labels to print reached 0
-  with the interpreter still active (that may be one `A` of many), nor
-  at a moment idle between two `A`. At a problem the labels
-  printed for certain are those it was seen to count down (both readings
-  agree on them: fewer than printed if it counts each `A` on its own), at
-  most the job's labels minus those still to print in the answer that
-  reports it; a job of one label counts exactly as the manual has it. A
-  series' job counts as stuck only after 180 s and 10 s for each label
-  still to print (`LABEL_SECONDS`), as a label printed may not show.
-  Waiting for idle costs a series' job the interpreter's second after it
-  and a poll: with a timed fake printer (0.2 s to read an image, 0.4 s a
-  label, the interpreter active 1 s after a job) 45 labels in jobs of 20
-  took 32.5 s instead of 28 s, in one job 29.5 s; with the label counter
-  28 s as before, label by label 80 s either way. [decided] [measured with the fake
-  printer]
-- A lost connection (or a job that never ended): up to every label of
-  the job may have printed, the ones counted before for certain. Cut off
-  while the images were sent (before `m m`, which Tavletta sends on its
-  own): nothing printed. [decided]
+- A job's end comes from `ESC s` alone: a job of one label is over when
+  the printer counted its labels down, as the manual has it; a series'
+  job only once the printer is idle at two polls in a row, not when the
+  labels to print reached 0 with the interpreter still active (that may
+  be one `A` of many), nor at a moment idle between two `A`. Nothing
+  waits for the counter. A series' job counts as stuck only after 180 s
+  and 10 s for each label still to print (`LABEL_SECONDS`), as a label
+  printed may not show. Waiting for idle costs a series' job the
+  interpreter's second after it and a poll: with a timed fake printer
+  (0.2 s to read an image, 0.4 s a label, the interpreter active 1 s after
+  a job) 45 labels in jobs of 20 took 32.5 s instead of 28 s, in one job
+  29.5 s; label by label 80 s as before. [decided] [measured with the
+  fake printer]
+- At a problem the labels printed for certain are, from `ESC s`, those it
+  was seen to count down (both readings of it agree on them: fewer than
+  printed if it counts each `A` on its own), at most the job's labels
+  minus those still to print in the answer that reports it; a job of one
+  label counts exactly, as the manual has it. A lost connection (or a job
+  that never ended): up to every label of the job may have printed, the
+  ones seen counted down for certain. Cut off while the images were sent
+  (before `m m`, which Tavletta sends on its own): nothing printed.
+  [decided]
+- The counter (network only, read in 2 s or not at all) is read with the
+  printer idle just before a job (not right after a label of the job
+  before whose interpreter is still active: that label may not be counted
+  yet), and once more when the job fails, after `ESC c` (three tries,
+  0.5 s apart). Where it tells another number than `ESC s`, the outcome
+  is the range of both: printed for certain the smaller, at most the
+  larger; a number only the counter tells is never taken as certain. A
+  counter lower than at the start (reset) or higher by more than the
+  job's labels (another program printing) tells nothing. It is not read
+  while a job prints, nor when one ends well. A printer whose web
+  interface did not answer is not asked again for 30 s. [decided] [open:
+  when the counter counts a label]
 - When more may have printed than for certain, the message says so ("The
   job was sent, but its outcome is unknown: … up to N may have"), the
   counter goes on after every label that may have printed (a number
   skipped rather than one printed twice), and "Continue from" starts
   after the last label printed for certain: rows may print twice, none is
-  left out, and the message says that too. The server's job tells
-  `printed` (for certain) and `printed_max`.
+  left out, and the message says that too. In a series the numbers are
+  those of the series, not of its job of up to "Labels per job". The
+  server's job tells `printed` (for certain) and `printed_max`.
 - The model and resolution `qv` told are kept for 30 s, a job's last
   label for 2 s (the next label of a series does not wait for the
-  interpreter's second after it). The web interface's serial number tells
-  another printer at the address: both are dropped then. Without the web
-  interface a printer swapped at the same network address within those
-  30 s would be taken for the one before (on USB its address names its
-  serial number, so it is another printer). [decided]
+  interpreter's second after it). The web interface's serial number,
+  read with the printer idle, tells another printer at the address: both
+  are dropped then. Without the web interface, or during a series sent
+  label by label (the printer not idle between them), a printer swapped
+  at the same network address within those 30 s would be taken for the
+  one before (on USB its address names its serial number, so it is
+  another printer). [decided]
 
 ## Where the print lands
 

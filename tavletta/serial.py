@@ -321,7 +321,11 @@ def print_series(
         # the counter goes on from the labels before; UUID and ID are new
         start = replace(values, counter=values.counter + values.step * outcome.labels)
         job = Job(backend, series.label, series.options, series.safe_mm, start, series.rows[index])
-        _print_row(job, host, report, row, outcome, values if counting else None)
+        try:
+            _print_row(job, host, report, row, outcome, values if counting else None)
+        except SeriesError as e:
+            _of_series(e, total * max(1, series.options.copies))
+            raise
         outcome.printed.append(row)
     return outcome
 
@@ -374,14 +378,15 @@ def _print_in_batches(
             outcome.unsure = max(0, counted_labels(params.get("printed_max"), labels) - done)
             rows, partial = divmod(done, copies)
             _done(outcome, sent[:rows], done, values if counting else None)
-            raise SeriesError(
+            failed = SeriesError(
                 sent[min(rows, len(sent) - 1)] + 1,
                 list(outcome.printed),
                 e,
                 False,
                 outcome,
                 partial,
-            ) from e
+            )
+            raise _of_series(failed, copies * total) from e
         except BaseException:  # Ctrl+C: the labels sent may be out, their numbers used
             outcome.labels += copies * len(sent)
             if counting:
@@ -446,6 +451,21 @@ def _send_batch(backend: Backend, host: str, jobs: list[Job], images, options, r
             for job in jobs[: len(images)]
         ]
         return backend.print_batch(again, host, options, report)
+
+
+def _of_series(error: SeriesError, labels: int) -> SeriesError:
+    """The labels a printer's problem tells printed (and that may have),
+    counted for the whole series of `labels` labels, not for its job (up to
+    "Labels per job") or row: its message then agrees with the row the
+    series stopped at."""
+    cause = error.error
+    if isinstance(cause, PrinterError) and cause.params.keys() & {"printed", "printed_max"}:
+        outcome = error.outcome
+        cause.params.pop("printed_max", None)
+        cause.params.update(printed=outcome.labels, copies=labels)
+        if outcome.unsure:
+            cause.params["printed_max"] = outcome.labels + outcome.unsure
+    return error
 
 
 def _done(outcome: SeriesResult, indexes, labels: int, values: Values | None) -> None:

@@ -77,14 +77,20 @@ class FakeCab:
         self.serial = "000000000001"
         self.counted: list[str] = []  # hosts whose counters were asked
         self.alone = False  # printing on without the connection (lose())
+        # what the web interface tells of the counter (None: the counter);
+        # a counter whose timing is not known: late, in blocks, at the end
+        self.view = None
+        self.job_start = 0  # the counter when the labels of the last job came
+        self.job_total = 0  # and their number
 
     def counters(self) -> bytes | None:
         if self.counter is None:
             return None
         if self.alone:  # the connection is gone: it prints on, a label a request
             self.print_one()
+        shown = self.counter if self.view is None else self.view(self)
         return json.dumps(
-            {"printerModel": "EOS2/300", "serialno": self.serial, "labels": [self.counter, "-"]}
+            {"printerModel": "EOS2/300", "serialno": self.serial, "labels": [shown, "-"]}
         ).encode()
 
     def shown_pending(self) -> int:
@@ -151,6 +157,8 @@ class FakeSocket:
             # all labels of the job: a series' job has an A for each label
             device.blocks = [int(n) for n in re.findall(rb"\nA (\d+)", device.jobs[-1])]
             device.pending = sum(device.blocks)
+            device.job_start = device.counter or 0
+            device.job_total = device.pending
         else:
             assert data.startswith(b"d PNG;"), data[:40]
             device.jobs.append(data)
@@ -1324,6 +1332,12 @@ def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
     error = failed.value
     assert error.row == 28 and error.printed == list(range(1, 28))
     assert error.outcome.labels == 27 and isinstance(error.error, OutOfLabels)
+    # counted for the series, not for its job of 20: as the row it stopped at
+    from tavletta.ui.texts import printer_error_text
+    from tavletta.units import unit_for
+
+    assert error.error.params == {"printed": 27, "copies": 45}
+    assert "27 of 45" in printer_error_text(error.error, unit_for("mm"))
     assert len(printer.device.jobs) == 2 and printer.device.cancelled == 1
 
 
@@ -1558,33 +1572,6 @@ def test_fetch_counters_reads_the_web_interface(web, monkeypatch):
     assert REAL_FETCH_COUNTERS("usb://cab/EOS2%2F300?serial=1") is None
 
 
-def test_a_series_job_with_the_label_counter_is_exact(printer):
-    """The web interface's label counter, read before the job and while it
-    prints, tells the labels printed; ESC s alone is not trusted for the
-    labels of every A."""
-    from tavletta.serial import print_series
-
-    printer.device.counter = 2686
-    events = []
-    outcome = print_series(Cab(), "h", _series(5), events.append)
-    assert outcome.printed == [1, 2, 3, 4, 5] and outcome.labels == 5
-    assert printer.device.counter == 2691 and printer.device.counted
-    assert [e.event.copy for e in events][-1] == 5
-
-
-def test_a_series_job_where_esc_s_counts_each_a_waits_for_the_counter(printer):
-    """If ESC s counts the labels of each A on its own (not confirmed
-    either way), the job is not over at the first A counted down: with
-    the counter, once that counted every label."""
-    from tavletta.serial import print_series
-
-    printer.device.counter = 0
-    printer.device.per_block = True
-    outcome = print_series(Cab(), "h", _series(6, copies=2))
-    assert outcome.labels == 12 and printer.device.counter == 12
-    assert printer.device.pending == 0 and len(printer.device.jobs) == 1
-
-
 def test_a_series_job_without_the_counter_is_done_when_the_printer_is_idle(printer):
     """Without the web interface a series' job is over once the printer is
     idle, not when its labels to print reached 0 with the interpreter
@@ -1594,26 +1581,6 @@ def test_a_series_job_without_the_counter_is_done_when_the_printer_is_idle(print
     printer.device.per_block = True
     outcome = print_series(Cab(), "h", _series(6, copies=2))
     assert outcome.labels == 12 and printer.device.pending == 0
-
-
-def test_an_error_in_a_series_job_with_the_counter_is_exact(printer, monkeypatch):
-    from tavletta.serial import SeriesError, print_series
-
-    printer.device.counter = 100
-    printer.device.per_block = True  # ESC s alone would not tell
-    real = FakeCab.status
-
-    def status(self):
-        if self.counter == 107:
-            return b"YP000001N"
-        return real(self)
-
-    monkeypatch.setattr(FakeCab, "status", status)
-    with pytest.raises(SeriesError) as failed:
-        print_series(Cab(), "h", _series(10))
-    error = failed.value
-    assert error.row == 8 and error.printed == list(range(1, 8)) and not error.uncertain
-    assert error.error.params == {"printed": 7, "copies": 10}
 
 
 def test_an_error_in_a_series_job_without_the_counter_is_uncertain(printer, monkeypatch):
@@ -1662,37 +1629,6 @@ def test_a_connection_lost_in_a_series_job_without_the_counter(printer, monkeypa
     assert error.error.params["printed"] == 2 and error.error.params["printed_max"] == 10
     assert error.uncertain and error.row == 3 and error.printed == [1, 2]
     assert error.outcome.labels == 2 and error.outcome.unsure == 8
-
-
-def test_a_connection_lost_in_a_series_job_with_the_counter(printer, monkeypatch):
-    """The label counter is watched until it reached the job's labels:
-    every row printed, none to print again."""
-    from tavletta.serial import SeriesError, print_series
-
-    printer.device.counter = 0
-    _lose_after(monkeypatch, printer.device, 3)
-    with pytest.raises(SeriesError) as failed:
-        print_series(Cab(), "h", _series(10))
-    error = failed.value
-    assert error.error.params == {"printed": 10, "copies": 10} and not error.uncertain
-    assert error.outcome.labels == 10 and printer.device.counter == 10
-
-
-def test_a_connection_lost_with_a_counter_that_stops(printer, monkeypatch):
-    """The counter stays the same for SETTLE_SECONDS (the printer stopped
-    with a problem nobody hears of): printed for certain what it counted,
-    up to the whole job."""
-    from tavletta.serial import SeriesError, print_series
-
-    printer.device.counter = 0
-    _lose_after(monkeypatch, printer.device, 3, prints_on=False)
-    start = printer.now[0]
-    with pytest.raises(SeriesError) as failed:
-        print_series(Cab(), "h", _series(10))
-    params = failed.value.error.params
-    assert params["printed"] == printer.device.counter == 3 and params["printed_max"] == 10
-    assert printer.now[0] - start >= cab.SETTLE_SECONDS
-    assert failed.value.row == 4 and failed.value.uncertain
 
 
 def test_a_connection_lost_while_the_images_are_sent_printed_nothing(printer, monkeypatch):
@@ -1764,26 +1700,6 @@ def test_an_error_in_a_job_of_copies_counts_the_copies_before_it(backend, printe
     assert failed.value.params == {"printed": 3, "copies": 5} and job.unsure == 0
 
 
-def test_a_series_job_that_ends_short_of_its_labels(printer, monkeypatch):
-    """The printer goes idle with the counter short of the job's labels
-    (it dropped the rest): a problem, the labels counted exact."""
-    from tavletta.serial import SeriesError, print_series
-
-    printer.device.counter = 0
-    real = FakeCab.status
-
-    def status(self):
-        if self.pending == 2:
-            self.pending = 0  # dropped
-        return real(self)
-
-    monkeypatch.setattr(FakeCab, "status", status)
-    with pytest.raises(SeriesError) as failed:
-        print_series(Cab(), "h", _series(6))
-    assert failed.value.error.params == {"printed": 4, "copies": 6}
-    assert failed.value.row == 5 and not failed.value.uncertain
-
-
 def test_the_counter_of_a_printer_without_web_interface_is_not_asked_each_job(printer):
     for _ in range(3):
         Cab().print_label(_blank(), "h", PrintOptions())
@@ -1847,22 +1763,6 @@ def test_a_stuck_series_job_without_the_counter_gets_time_for_each_label(printer
     assert failed.value.error.params["printed_max"] == 4
 
 
-@pytest.mark.parametrize("counter", [0, None])
-def test_a_series_job_counted_in_full_need_not_wait_for_the_interpreter(printer, counter):
-    """With the label counter a series' job is over once it counted every
-    label, also with the interpreter still active (its second after the
-    job, which the next job need not wait for); without it only once the
-    printer is idle."""
-    from tavletta.backends.base import PackedImage
-
-    printer.device.counter = counter
-    backend = Cab()
-    image = PackedImage.of(backend.prepare(_label(40, 18.6), PrintOptions()))
-    backend.print_batch([image] * 3, "h", PrintOptions())
-    assert ("h" in backend._ended) == (counter is not None)
-    assert printer.device.printed() == 3
-
-
 def test_a_series_job_tells_its_labels_printed_while_it_prints(printer):
     """SeriesProgress.printed rises label by label within a job of
     several labels (the server's job tells it), not only per job."""
@@ -1887,3 +1787,144 @@ def test_a_series_job_is_not_over_at_a_moment_idle_between_its_labels(printer, m
     image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
     Cab().print_batch([image] * 2, "h", PrintOptions())
     assert next(states, None) is None  # every answer was asked for
+
+
+# the label counter, whose timing is not known: as printed, a label late, in
+# blocks of 5, only at the job's end, reset at the job's start
+COUNTER_VIEWS = {
+    "as printed": None,
+    "a label late": lambda d: (
+        d.counter - 1 if d.counter - d.job_start < d.job_total else d.counter
+    ),
+    "in blocks": lambda d: d.job_start + (d.counter - d.job_start) // 5 * 5,
+    "at the end": lambda d: d.job_start if d.counter - d.job_start < d.job_total else d.counter,
+    "reset": lambda d: d.counter - d.job_start,
+}
+
+
+@pytest.mark.parametrize("view", COUNTER_VIEWS)
+@pytest.mark.parametrize("per_block", [False, True])
+def test_a_series_job_ends_by_esc_s_whatever_the_counter_tells(printer, view, per_block):
+    """The counter decides nothing about a job's end: a series' job is over
+    when the printer is idle, also with a counter that is late or tells
+    nothing until the end (or ESC s counting each A on its own)."""
+    from tavletta.serial import print_series
+
+    printer.device.counter, printer.device.view = 100, COUNTER_VIEWS[view]
+    printer.device.per_block = per_block
+    outcome = print_series(Cab(), "h", _series(6, copies=2))
+    assert outcome.labels == 12 and printer.device.counter == 112
+    assert printer.device.pending == 0 and printer.device.counted == ["h"]
+
+
+def _fail_at(monkeypatch, pending: int) -> None:
+    """Out of labels with `pending` labels of the job still to print."""
+    real = FakeCab.status
+
+    def status(self):
+        if self.pending == pending and self.jobs and b"m m" in self.jobs[-1]:
+            return b"YP%06dN" % self.shown_pending()
+        return real(self)
+
+    monkeypatch.setattr(FakeCab, "status", status)
+
+
+def _bounds_hold(error, device, total):
+    """printed is for certain, printed_max at most: the labels that came out
+    lie between them, and no number rests on the counter alone."""
+    actual = device.counter - device.job_start
+    printed = error.params.get("printed", 0)
+    most = error.params.get("printed_max", printed)
+    assert printed <= actual <= most <= total, (printed, actual, most)
+    return printed, most
+
+
+@pytest.mark.parametrize("view", COUNTER_VIEWS)
+@pytest.mark.parametrize("per_block", [False, True])
+def test_a_problem_in_a_series_job_is_bounded_whatever_the_counter_tells(
+    printer, monkeypatch, view, per_block
+):
+    from tavletta.backends.base import PackedImage
+
+    printer.device.counter, printer.device.view = 100, COUNTER_VIEWS[view]
+    printer.device.per_block = per_block
+    _fail_at(monkeypatch, 4)  # 6 of 10 printed
+    image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
+    with pytest.raises(OutOfLabels) as failed:
+        Cab().print_batch([image] * 10, "h", PrintOptions())
+    printed, most = _bounds_hold(failed.value, printer.device, 10)
+    if view == "as printed" and not per_block:  # ESC s and the counter agree
+        assert printed == most == 6
+
+
+@pytest.mark.parametrize("view", COUNTER_VIEWS)
+def test_a_problem_in_a_job_of_copies_is_bounded_whatever_the_counter_tells(
+    backend, printer, monkeypatch, view
+):
+    """ESC s counts the copies of one label (the manual); a counter that
+    tells another number makes it a range, never a number of its own."""
+    printer.device.counter, printer.device.view = 100, COUNTER_VIEWS[view]
+    _fail_at(monkeypatch, 4)
+    with pytest.raises(OutOfLabels) as failed:
+        backend.print_label(_blank(), "h", PrintOptions(copies=10))
+    printed, most = _bounds_hold(failed.value, printer.device, 10)
+    exact = view in ("as printed", "reset")  # agreeing, or telling nothing
+    assert (printed == most == 6) is exact
+
+
+@pytest.mark.parametrize("view", COUNTER_VIEWS)
+@pytest.mark.parametrize("single", [False, True])
+def test_a_lost_connection_is_bounded_whatever_the_counter_tells(
+    printer, monkeypatch, view, single
+):
+    """Up to every label of the job may print on; printed for certain only
+    what both ESC s and the counter confirm."""
+    from tavletta.backends.base import PackedImage
+
+    printer.device.counter, printer.device.view = 100, COUNTER_VIEWS[view]
+    _lose_after(monkeypatch, printer.device, 4, prints_on=False)
+    image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
+    with pytest.raises(PrinterError) as failed:
+        if single:
+            Cab().print_label(image.open(), "h", PrintOptions(copies=10))
+        else:
+            Cab().print_batch([image] * 10, "h", PrintOptions())
+    printed, most = _bounds_hold(failed.value, printer.device, 10)
+    assert most == 10 and printed <= 3
+
+
+def test_one_failed_read_of_the_counter_is_not_its_end(printer, monkeypatch):
+    """A read that fails (a busy web server) is tried again: the counter
+    still checks ESC s's count."""
+    printer.device.counter = 100
+    printer.device.view = lambda d: d.counter - (d.counter > 100)  # a label short: a range
+    _fail_at(monkeypatch, 4)
+    real = cab._fetch_counters
+    reads = []
+
+    def flaky(host):
+        reads.append(host)
+        return None if len(reads) == 2 else real(host)  # the read after the problem
+
+    monkeypatch.setattr(cab, "_fetch_counters", flaky)
+    with pytest.raises(OutOfLabels) as failed:
+        Cab().print_label(_blank(), "h", PrintOptions(copies=10))
+    assert failed.value.params == {"printed": 5, "copies": 10, "printed_max": 6}
+    assert len(reads) == 3
+
+
+def test_the_counter_is_read_only_with_the_printer_idle(printer, monkeypatch):
+    """Its start for a job is read when the printer is idle: right after a
+    label of the job before (the interpreter still active), its last label
+    may not be counted yet, and is not read then."""
+    states = iter(
+        [b"Y-000000N", b"Y-000000N", b"Y-000001Y", b"Y-000000Y"]  # first label: tail
+        + [b"Y-000000Y", b"Y-000000Y", b"Y-000001Y", b"Y-000000N"]  # second: no read
+    )
+    monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
+    printer.device.counter = 0
+    backend = Cab()
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert printer.device.counted == ["h"]
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert printer.device.counted == ["h"]
