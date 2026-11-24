@@ -172,17 +172,24 @@ QR_ECI_BYTES = 2  # the UTF-8 ECI in front of content beyond ASCII (12 bits)
 # PDF417 code 928 with Zint's error correction for that size, an Aztec code
 # about 15 000 data bits at Zint's default error correction (23 %).
 SURE_BYTES = {"datamatrix": 700, "pdf417": 400, "aztec": 800}
+# codes whose encoder (python-barcode) takes all that check() lets through:
+# Code 128 any printable ASCII up to CODE128_MAX, EAN-13 any 12 digits and
+# the right check digit
+CHECKED_IN_FULL = frozenset({"code128", "ean13"})
 
 
 def verify(element: CodeElement) -> None:
     """Raise CodeError (or another encoder error) if the code cannot be
     made: check(), then the encoder's own limits (the length a code
     holds, the syntax of GS1 data, the forms of UPC-E), as encode() would
-    meet them while drawing. This checks every row of a data file: a 2D
-    code whose content fits in any case (QR_BYTES, SURE_BYTES) is not
-    made, that takes milliseconds; a longer PDF417 is made once, with the
+    meet them while drawing. This checks every row of a data file: a code
+    check() covers in full (CHECKED_IN_FULL), or a 2D code whose content
+    fits in any case (QR_BYTES, SURE_BYTES), is not made, that takes up to
+    milliseconds; a longer PDF417 is made once, with the
     columns Zint chooses, not in every shape encode() compares."""
     check(element)
+    if element.symbology in CHECKED_IN_FULL:
+        return
     size = len(element.data.encode())
     if element.symbology == "qr":
         if size <= QR_BYTES[element.error_correction or "M"] - QR_ECI_BYTES:

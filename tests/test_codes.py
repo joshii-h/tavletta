@@ -6,6 +6,8 @@ import sys
 
 import pytest
 from conftest import ink_bbox
+from hypothesis import given, settings
+from hypothesis import strategies as st
 from PIL import Image
 
 from tavletta import codes
@@ -463,6 +465,20 @@ def test_verify_meets_the_encoders_own_limits(data, symbology, key):
     with pytest.raises(codes.CodeError) as info:
         codes.verify(CodeElement(data, symbology))
     assert info.value.key == key
+
+
+@settings(max_examples=200, deadline=None)
+@given(
+    text=st.text(
+        alphabet=st.characters(min_codepoint=32, max_codepoint=126), min_size=1, max_size=200
+    ),
+    digits=st.text(alphabet="0123456789", min_size=12, max_size=12),
+)
+def test_what_check_lets_through_for_code128_and_ean13_encodes(text, digits):
+    """verify() makes no Code 128 or EAN-13: check() is all they need."""
+    codes.encode(CodeElement(text, "code128"))
+    codes.encode(CodeElement(digits + str(codes.gs1_check_digit(digits)), "ean13"))
+    assert {"code128", "ean13"} == codes.CHECKED_IN_FULL
 
 
 @pytest.mark.parametrize("symbology", sorted(codes.SURE_BYTES))
