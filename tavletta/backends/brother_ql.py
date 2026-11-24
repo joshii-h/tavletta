@@ -1128,11 +1128,11 @@ class BrotherQL(_BrotherQL):
 
     def label_media(self, image: Image.Image) -> Media:
         media = continuous_media(image.info.get("tape_mm", 0))
+        across = image.height // _scale(image)  # dots of the head, also in high quality
         if media is None:  # not made by prepare(): by its height
-            across = image.height // _scale(image)
             media = next((m for m in CONTINUOUS if m.dots[0] == across), None)
         if media is None:
-            raise UnsupportedSize("no roll is %d dots wide" % image.height)
+            raise UnsupportedSize("no roll is %d dots wide" % across)
         return media
 
     def to_printer(self, image: Image.Image) -> Image.Image:
