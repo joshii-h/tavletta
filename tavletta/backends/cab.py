@@ -7,8 +7,8 @@ and places it on a die-cut label of the given size. The print method
 (thermal transfer with a ribbon, or thermal direct) is the printer's own
 setting unless the "method" setting chooses one for each job;
 "upside_down" turns the label by 180° (O R); "offset_mm" moves the print
-along the feed, for a printer that prints off the label's place; heat, backfeed and tear-off
-position stay as set on the printer. Status comes from the ESC
+along the feed, for a printer that prints off the label's place; heat,
+backfeed and tear-off position stay as set on the printer. Status comes from the ESC
 commands, which the printer answers on the same connection; the setup of
 the web interface, if it answers, tells the print method and speed set on
 the printer.
@@ -669,9 +669,9 @@ def _wait_idle(s: _Session, own_tail: bool = False) -> None:
 def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> bool:
     """Until the job has run: the printer counted its labels down to 0
     (True: its interpreter still active, the job's second after it; the
-    next job need not wait for that); or, the labels never seen pending (printed between two polls), it
-    stayed idle for RUN_GRACE after its interpreter was seen active, for
-    START_GRACE if it was not seen at all. While the image is read the
+    next job need not wait for that); or, the labels never seen pending
+    (printed between two polls), it stayed idle for RUN_GRACE after its
+    interpreter was seen active, for START_GRACE if it was not seen at all. While the image is read the
     interpreter is active without labels pending, which is not yet the
     job. The timeout restarts with every printed label."""
     started = False  # labels of the job seen pending
