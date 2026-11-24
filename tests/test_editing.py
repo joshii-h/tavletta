@@ -368,9 +368,10 @@ def test_a_move_keeps_positions_valid_and_their_distances(places, dx, dy):
         assert xs[a] - xs[b] == pytest.approx(old[a].x_mm - old[b].x_mm, abs=0.011)
         assert ys[a] - ys[b] == pytest.approx(old[a].y_mm - old[b].y_mm, abs=0.011)
     back = editing.move(moved, range(len(places)), -(xs[0] - old[0].x_mm), -(ys[0] - old[0].y_mm))
-    assert [(e.x_mm, e.y_mm) for e in back.elements] == pytest.approx(
-        [(e.x_mm, e.y_mm) for e in old], abs=0.011
-    )
+    # element by element: pytest.approx takes no nested tuples (pytest 9 refuses
+    # them, older versions compare them exactly)
+    for element, before in zip(back.elements, old, strict=True):
+        assert (element.x_mm, element.y_mm) == pytest.approx((before.x_mm, before.y_mm), abs=0.011)
 
 
 # --- resizing -----------------------------------------------------------------------
