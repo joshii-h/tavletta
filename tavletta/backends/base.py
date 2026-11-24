@@ -216,7 +216,10 @@ class Choice:
 @dataclass(frozen=True)
 class Level:
     """A printer setting in steps, e.g. darkness in per cent. None, the
-    default, keeps what is set on the printer."""
+    default, keeps what is set on the printer. The steps are what the
+    window offers; a value between them (settings.json or printers.toml
+    edited by hand) is kept as it is, within the range, and the window
+    shows it too: the printers take every value of the range."""
 
     key: str
     lower: int

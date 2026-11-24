@@ -14,6 +14,7 @@ from tavletta.backends.base import (
     Backend,
     ColorAdjust,
     LabelTooLong,
+    Level,
     PrinterError,
     PrinterInfo,
     PrintMode,
@@ -153,6 +154,13 @@ def test_every_backend_has_a_contract_test():
 )
 def test_color_adjust_from_dict(data, expected):
     assert ColorAdjust.from_dict(data) == expected
+
+
+def test_a_level_between_its_steps_is_kept():
+    """The steps are the window's offer, not a grid every value snaps to."""
+    level = Level("darkness", 0, 100, 10)
+    assert [level.value(v) for v in (55, 54.6, 100, 130, -5)] == [55, 55, 100, 100, 0]
+    assert list(level.steps())[:3] == [0, 10, 20] and 55 not in level.steps()
 
 
 def test_color_adjust_round_trip_and_neutral():
