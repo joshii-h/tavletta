@@ -8,8 +8,10 @@
 # there has attached its checksum file, which it uploads last:
 # SHA256SUMS (release.yml), SHA256SUMS-deb (deb.yml), SHA256SUMS-rpm
 # (rpm.yml). A file Forgejo has with other content than here (a rebuild) is
-# replaced. After WAIT_MINUTES without all of them it copies what is there
-# and fails, naming what is missing.
+# replaced, one that disappears while it is copied (replaced again) is taken
+# again in the next pass, and the release notes follow Forgejo's, to which
+# the workflows add their downloads. After WAIT_MINUTES without all the
+# checksum files it fails, naming what is missing.
 #
 # Manual run (Actions -> Mirror release from Forgejo -> Run workflow) with a
 # tag: copies that release again, once, without waiting; for files attached
@@ -75,7 +77,11 @@ jobs:
               # flatpak-bundle.yml uploads the bundle here itself: replacing it
               # raced with that workflow (v1.0.1)
               case "$name" in Tavletta-*.flatpak|Tavletta-*.flatpak.sha256) echo "$id" >> copied; continue ;; esac
-              curl -sS --fail -L -o "assets/$name" "$url"
+              # a file replaced on Forgejo meanwhile (a re-run of its workflow) is
+              # gone at this address: the next pass takes the new one
+              if ! curl -sS --fail -L -o "assets/$name" "$url"; then
+                echo "$name: not downloaded, again in the next pass"; failed=1; continue
+              fi
               ours="sha256:$(sha256sum "assets/$name" | cut -d' ' -f1)"
               mine="$(awk -F'\t' -v n="$name" '$1 == n { print $2 "\t" $3 }' <<<"$here")"
               if [ -n "$mine" ]; then
@@ -104,6 +110,15 @@ jobs:
             done 3< <(jq -r '.assets[] | [.id, .name, .browser_download_url] | @tsv' <<<"$release")
           }
 
+          notes() {  # the release notes as on Forgejo, where workflows add their lines
+            jq -r '.body // ""' <<<"$release" > notes.md
+            if [ "$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)" != \
+                 "$(cat notes.md)" ]; then
+              gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md > /dev/null
+              echo "release notes updated"
+            fi
+          }
+
           missing() {  # the checksum files not on the Forgejo release yet
             local f
             for f in $COMPLETE; do
@@ -112,11 +127,18 @@ jobs:
           }
 
           # once a minute: frequent polling looks like a crawler to the server's CrowdSec
+          retries=0
           for ((minute = 0; ; minute++)); do
+            failed=0
             if release="$(curl -sS --fail "$FORGEJO_API/releases/tags/$TAG")"; then
               create
               copy
-              [ -z "$(missing)" ] && break
+              notes
+              [ -z "$(missing)" ] && [ "$failed" = 0 ] && break
+            fi
+            # a download that failed: again soon, a few times, also in a manual run
+            if [ "$failed" = 1 ] && [ "$retries" -lt 5 ]; then
+              retries=$((retries + 1)); sleep 30; continue
             fi
             if [ "$minute" -ge "$WAIT_MINUTES" ]; then
               if [ -z "${release:-}" ]; then
