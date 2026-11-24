@@ -46,7 +46,9 @@ env:
   # the image of the job and of the fresh container, pinned by digest: bump
   # both together (tests/test_packaging.py checks that they agree)
   IMAGE: fedora:44@sha256:15da97ed9aa94dd3d92c3925eb89520f6c80e07ea7ee24cba848d1f8b6912b3e
-  # match the host's Docker daemon (as docs.yml)
+  # a static Docker client, pinned by version and checksum: it talks to the
+  # host's daemon through the API, whose version the two negotiate, so it
+  # need not be the daemon's version (the same as docs.yml's, bumped together)
   DOCKER_CLI_VERSION: "29.6.2"
   DOCKER_CLI_SHA256: d6204aea92238e2453d5445c885b9d2e5eb8f82915568ec50edf9dbe12a3ac74
 
