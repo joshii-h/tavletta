@@ -816,7 +816,7 @@ def _setup(**kwargs) -> bytes:
 
 
 def test_print_method_is_a_printer_setting(backend):
-    setting, upside_down = backend.settings(None)
+    setting, upside_down, _offset = backend.settings(None)
     assert setting.key == "method" and setting.choices == ("printer", "transfer", "direct")
     assert upside_down.key == "upside_down" and upside_down.value(None) is False
     # the default keeps the printer's own setting, as before the setting existed
@@ -1054,3 +1054,88 @@ def test_the_print_method_a_job_prints_with(chosen, reported, expected):
     assert Cab().job_print_method(chosen, info) == expected
     # ZPL leaves the method to the printer: as it reports it
     assert zpl.Zpl().job_print_method(chosen, info) == (reported or "")
+
+
+# --- label after label (a series) ------------------------------------------------------
+
+
+def _blank():
+    return Image.new("RGB", (480, 223), "white")
+
+
+def test_qv_is_asked_once_for_the_labels_of_a_series(backend, printer):
+    """qv keeps the interpreter active for about a second, which each
+    label would wait for: asked again only after VERSION_SECONDS."""
+    for _ in range(3):
+        backend.print_label(_blank(), "h", PrintOptions())
+    assert printer.device.requests.count(b"qv\r\n") == 1 and len(printer.device.jobs) == 3
+    printer.now[0] += cab.VERSION_SECONDS
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert printer.device.requests.count(b"qv\r\n") == 2
+    backend.print_label(_blank(), "other", PrintOptions())  # each printer its own
+    assert printer.device.requests.count(b"qv\r\n") == 3
+
+
+def test_a_job_printed_between_two_polls_is_done_after_two_idle_polls(
+    backend, printer, monkeypatch
+):
+    """Only the interpreter seen active, then idle: done after RUN_GRACE
+    (idle at two polls in a row), not START_GRACE."""
+    states = iter([b"Y-000000N", b"Y-000000N", b"Y-000000Y", b"Y-000000N", b"Y-000000N"])
+    monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
+    start = printer.now[0]
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert printer.now[0] - start == pytest.approx(2 * cab.POLL_INTERVAL)
+    assert cab.RUN_GRACE < cab.START_GRACE
+
+
+def test_a_job_never_seen_still_gets_the_start_grace(backend, printer, monkeypatch):
+    monkeypatch.setattr(FakeCab, "status", lambda self: b"Y-000000N")
+    start = printer.now[0]
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert printer.now[0] - start >= cab.START_GRACE
+
+
+def test_the_next_label_does_not_wait_for_the_interpreters_second(backend, printer, monkeypatch):
+    """Counted down to 0 with the interpreter still active: printed. The
+    next label of a series is sent at once, not after the interpreter's
+    second of activity; later than TAIL_SECONDS it waits for idle again."""
+    states = iter(
+        [b"Y-000000N", b"Y-000000N", b"Y-000001Y", b"Y-000000Y"]  # first label
+        + [b"Y-000000Y", b"Y-000000Y", b"Y-000001Y", b"Y-000000Y"]  # second: sent at once
+        + [b"Y-000000Y", b"Y-000000Y", b"Y-000000N"]  # third, later: waits for idle
+        + [b"Y-000001Y", b"Y-000000N"]
+    )
+    monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
+    backend.print_label(_blank(), "h", PrintOptions())
+    before = len(printer.sleeps)
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert len(printer.device.jobs) == 2
+    # the second waited only for its own label: one poll interval
+    assert printer.sleeps[before:] == [cab.POLL_INTERVAL]
+    printer.now[0] += cab.TAIL_SECONDS
+    before = len(printer.sleeps)
+    backend.print_label(_blank(), "h", PrintOptions())
+    assert len(printer.device.jobs) == 3
+    assert printer.sleeps[before:] == [cab.POLL_INTERVAL] * 2  # idle first, then its label
+
+
+def test_a_series_stops_at_the_label_the_printer_fails(printer, monkeypatch):
+    """Out of labels at the third label: rows 1 and 2 printed, the error
+    names the third, nothing after it is sent."""
+    from tavletta.serial import Series, SeriesError, print_series
+
+    def status(self):
+        if len(self.jobs) >= 3:
+            return b"YP000000N"
+        return FakeCab.real_status(self)
+
+    monkeypatch.setattr(FakeCab, "real_status", FakeCab.status, raising=False)
+    monkeypatch.setattr(FakeCab, "status", status)
+    label = _label(40, 18.6, elements=[TextElement(text="{Number}")])
+    rows = [{"Number": str(n)} for n in range(70000, 70005)]
+    series = Series(label=label, rows=rows, indexes=list(range(5)), options=PrintOptions())
+    with pytest.raises(SeriesError) as failed:
+        print_series(Cab(), "h", series)
+    assert failed.value.outcome.printed == [1, 2] and failed.value.outcome.labels == 2
+    assert len(printer.device.jobs) == 3 and printer.device.cancelled == 1

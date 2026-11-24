@@ -76,6 +76,15 @@ MIN_RATE = 8_000  # bytes a second: a job that trickles in slower counts as stal
 PRINT_TIMEOUT = 180.0  # seconds without progress while waiting or printing
 POLL_INTERVAL = 0.5  # the manual: status requests not more often than every 0.5 s
 START_GRACE = 3.0  # a job that never shows up as running counts as done after this
+# a job seen only as the interpreter active (printed between two polls)
+# counts as done when the printer stayed idle this long: idle at two polls
+# in a row, so an idle moment between reading the image and printing is
+# not taken for the end
+RUN_GRACE = POLL_INTERVAL
+# the interpreter stays active about a second after a job (docs/cab.md): a
+# label sent this soon after the last label of the one before need not wait
+# for that
+TAIL_SECONDS = 2.0
 IMAGE_NAME = "TAVLETTA"  # at most 8 characters; each job replaces the previous image
 CR = b"\r\n"
 ESC = b"\x1b"
@@ -107,6 +116,10 @@ MAX_SETUP_BYTES = 1 << 20
 # sent on its own (a counter), asks once, not once per label (up to
 # WEB_TIMEOUT each where port 80 is filtered)
 SETUP_SECONDS = 30.0
+# a printer's model and resolution (qv) is asked again after this: a
+# series prints label after label without asking (qv keeps the interpreter
+# active for about a second, which each label would wait for)
+VERSION_SECONDS = 30.0
 
 # common die-cut sizes (width × height); the first one is the default
 LABEL_SIZES = (
@@ -485,6 +498,11 @@ class Cab(Backend):
         # serves every cab printer of a print server, so nothing of one
         # printer stands in for another (or for none)
         self.reported: HostMemory[float] = HostMemory()
+        # what qv answered, by address: (when, the answer), for print_label()
+        self._versions: HostMemory[tuple[float, Version]] = HostMemory()
+        # when a job ended on its last label with the interpreter still
+        # active, by address (_wait_done()), for the next label's _wait_idle()
+        self._ended: HostMemory[float] = HostMemory()
 
     def _dots(self, host: str) -> float:
         """The resolution this printer reported, else the default (also
@@ -577,8 +595,9 @@ class Cab(Backend):
             # query()): its status first, so that it tells the problem
             # (out of labels, head open) instead of timing out on qv
             _checked(s)
-            # the printer may not have been asked yet (switched on later)
-            version = s.version()
+            # the printer may not have been asked yet (switched on later);
+            # asked once for the labels of a series
+            version = self._version(s, host)
             dots = rendered  # a printer that does not tell: as rendered, nothing learned
             if version.model:
                 dots = self.reported[host] = version.dots_per_mm
@@ -588,16 +607,31 @@ class Cab(Backend):
             job = build_job(
                 image, dots, options.gap_mm, copies, method, speed, upside_down, size_mm
             )
-            _wait_idle(s)
+            # the label before of a series ended a moment ago: its
+            # interpreter's second of activity is no other job to wait for
+            ended = self._ended.get(host)
+            _wait_idle(s, ended is not None and 0 <= _clock() - ended < TAIL_SECONDS)
+            self._ended.pop(host, None)
             try:
                 # a job cut off while sending would leave a partial image
                 # download in the printer, which spoils the next job
                 s.send(job)
-                _wait_done(s, progress, copies)
+                if _wait_done(s, progress, copies):
+                    self._ended[host] = _clock()
             except (PrinterError, OSError):
                 s.cancel()
                 raise
         return None
+
+    def _version(self, s: _Session, host: str) -> Version:
+        """What qv answered in the last VERSION_SECONDS, else asked now."""
+        now = _clock()
+        cached = self._versions.get(host)
+        if cached and 0 <= now - cached[0] < VERSION_SECONDS:
+            return cached[1]
+        version = s.version()
+        self._versions[host] = (now, version)
+        return version
 
 
 def _cab_name(model: str) -> str:
@@ -617,21 +651,31 @@ def _checked(s: _Session) -> Status:
     return status
 
 
-def _wait_idle(s: _Session) -> None:
-    """Another job may still be printing: wait for it."""
+def _wait_idle(s: _Session, own_tail: bool = False) -> None:
+    """Another job may still be printing: wait for it. own_tail: the
+    interpreter active without labels pending is still our last job's
+    (_wait_done() ended on its last label a moment ago): no wait for it."""
     deadline = _clock() + PRINT_TIMEOUT
-    while not _checked(s).idle:
+
+    def idle(status: Status) -> bool:
+        return status.idle or (own_tail and not status.pending)
+
+    while not idle(_checked(s)):
         if _clock() > deadline:
             raise PrinterBusy("printer still busy after %.0f s" % PRINT_TIMEOUT)
         _sleep(POLL_INTERVAL)
 
 
-def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> None:
-    """Until the job has run: the printer counted its labels down to 0, or
-    stayed idle for START_GRACE (a job printed between two polls). While the
-    image is read the interpreter is active without labels pending, which is
-    not yet the job. The timeout restarts with every printed label."""
-    started = False
+def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> bool:
+    """Until the job has run: the printer counted its labels down to 0
+    (True: its interpreter still active, the job's second after it; the
+    next job need not wait for that); or, the labels never seen pending (printed between two polls), it
+    stayed idle for RUN_GRACE after its interpreter was seen active, for
+    START_GRACE if it was not seen at all. While the image is read the
+    interpreter is active without labels pending, which is not yet the
+    job. The timeout restarts with every printed label."""
+    started = False  # labels of the job seen pending
+    active = False  # the interpreter seen active since the job was sent
     last = None
     idle_since = None
     deadline = _clock() + PRINT_TIMEOUT
@@ -644,13 +688,23 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> N
                 last = done
                 deadline = _clock() + PRINT_TIMEOUT
                 report_progress(progress, min(copies, done + 1), copies)
+        elif status.running and started:
+            # counted down to 0: printed; the rest is the interpreter's
+            # second of activity after a job (and a tear-off feed)
+            report_progress(progress, copies, copies)
+            return True
         elif status.running:
-            idle_since = None
+            # the job's own: _wait_idle() saw the interpreter idle before
+            # it was sent. A job that printed between two polls shows only
+            # this (and the second of activity after it): done once the
+            # printer stayed idle for RUN_GRACE, not START_GRACE
+            active, idle_since = True, None
         else:
             idle_since = _clock() if idle_since is None else idle_since
-            if started or _clock() - idle_since >= START_GRACE:
+            grace = RUN_GRACE if active else START_GRACE
+            if started or _clock() - idle_since >= grace:
                 report_progress(progress, copies, copies)
-                return
+                return False
         if _clock() > deadline:
             raise PrinterTimeout("printer stayed busy: %s" % status.raw)
         _sleep(POLL_INTERVAL)

@@ -86,8 +86,11 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
   accepted. [confirmed]
 - The print head reports itself in the web interface as "106 mm 12 dots/mm"
   on the EOS2/300; Tavletta renders at exactly 12 dots per mm (8 for /200,
-  23.6 for /600 models), so a 100 mm label is 1200 dots. Each print asks
-  `qv` first. [confirmed for the /300]
+  23.6 for /600 models), so a 100 mm label is 1200 dots. A print asks
+  `qv` first, unless the printer answered it in the last 30 s
+  (`VERSION_SECONDS`): `qv` keeps the interpreter active for about a
+  second, which each label of a series would wait for. [confirmed for the
+  /300] [decided]
 - An image rendered for another resolution than `qv` reports is scaled
   dot by dot if the ratio is a whole one upwards, else the label is
   rendered again for the printer's resolution (as for ZPL: scaling down
@@ -140,9 +143,27 @@ A 1                       (number of labels)
   interface's password). The job above was accepted that way without a
   protocol error. [confirmed]
 - While a job runs, the label counter of `ESC s` counts down to 0 and the
-  last character goes back to `N`. Tavletta counts a job as done once it saw
-  labels pending and then none, or after 3 s without any activity.
-  [manual] [open: how fast it counts on a real printout]
+  last character goes back to `N`. [manual] Tavletta counts a job as done
+  once it saw labels pending and then none (the interpreter may still be
+  active: the second after a job, a tear-off feed); a job whose labels
+  were never seen pending (a short label printed between two polls, which
+  are at least 0.5 s apart) once the printer, seen active after the job
+  was sent, is idle at two polls in a row; a job not seen at all after
+  3 s without any activity. [decided] [open: how fast it counts on a real
+  printout]
+- Label after label (a series, or copies with variables): the next job
+  is sent as soon as the one before counted down to 0, also while its
+  interpreter is still active (within 2 s, `TAIL_SECONDS`); otherwise a
+  job waits until the printer is idle, as another program's job may be
+  running. Each label is still confirmed before the next is sent, so the
+  labels printed are known exactly when one fails. With a timed fake
+  printer (0.2 s to read the image, 0.4 s to print a 20 mm label, the
+  interpreter active 1 s after) a label took 3.0 s, 5.5 s when the print
+  fell between two polls; now 1.0 to 2.3 s. Sending the labels of a
+  series without waiting (the printer queues them) would reach the
+  printer's speed, but then a failing label could not be told from those
+  queued behind it. [measured with the fake printer] [open: on a real
+  printout]
 - On an error while sending or during a job (out of labels, head open,
   timeout) Tavletta sends `ESC c` (cancel job), so that the remaining
   labels are not printed once the problem is solved and the user prints
