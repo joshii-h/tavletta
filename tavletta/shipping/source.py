@@ -18,6 +18,7 @@ import hashlib
 import io
 import json
 import math
+import re
 import threading
 from collections import OrderedDict
 from collections.abc import Callable
@@ -111,6 +112,9 @@ def _poppler() -> Any:
     return Poppler
 
 
+_NOT_BASE64 = re.compile(r"[^A-Za-z0-9+/=]")
+
+
 def _decoded(data: str) -> bytes:
     try:
         return base64.b64decode(data)
@@ -119,8 +123,10 @@ def _decoded(data: str) -> bytes:
 
 
 def starts_as_pdf(data: str) -> bool:
-    """Whether the file (base64) is a PDF, from its first kilobyte only."""
-    head = data[:1368]  # 1026 bytes; base64 comes in groups of four characters
+    """Whether the file (base64) is a PDF, from its first kilobyte only.
+    Line breaks and other characters outside the alphabet are left out,
+    as _decoded() leaves them out (base64 wrapped at 76 characters)."""
+    head = _NOT_BASE64.sub("", data[:2048])[:1368]  # 1026 bytes, in groups of four
     try:
         return is_pdf(base64.b64decode(head[: len(head) // 4 * 4]))
     except (binascii.Error, ValueError):

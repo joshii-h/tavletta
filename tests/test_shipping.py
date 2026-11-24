@@ -109,6 +109,27 @@ def test_is_pdf():
     assert not source.is_pdf(b"x" * 1024 + b"%PDF-1.4")
 
 
+@pytest.mark.parametrize("wrap", ["\n", "\r\n", " "])
+def test_base64_with_line_breaks_is_known_as_pdf(wrap):
+    """base64 as mail and many tools write it, in lines of 76 (or 64)
+    characters: still a PDF, not an image that cannot be read."""
+    import base64
+
+    raw = b"%PDF-1.4\n" + bytes(range(256)) * 12
+    plain = base64.b64encode(raw).decode()
+    for width in (76, 64):
+        wrapped = wrap.join(plain[i : i + width] for i in range(0, len(plain), width))
+        assert source.starts_as_pdf(wrapped) and source._decoded(wrapped) == raw
+    assert source.starts_as_pdf(plain)
+    assert not source.starts_as_pdf(b64(encode(square_image())))
+
+
+@needs_poppler
+def test_a_wrapped_pdf_is_read_as_a_pdf(pdf):
+    wrapped = "\n".join(pdf[i : i + 76] for i in range(0, len(pdf), 76))
+    assert source.page_info(wrapped, 1) == source.page_info(pdf, 1)
+
+
 def test_image_with_pdf_header_in_its_comment():
     jpeg = encode(square_image(), "JPEG")
     raw = jpeg[:2] + b"\xff\xfe\x00\x10%PDF-1.4 hello" + jpeg[2:]
