@@ -53,6 +53,14 @@ from tavletta.backends import (
 from tavletta.backends.base import PrinterInfo, Progress
 from tavletta.model import Label, TextElement
 
+# The fake OIDC provider listens on loopback: a proxy of the environment must
+# not carry the requests to it (urllib takes it from http_proxy). Debian's
+# pybuild sets http_proxy to a closed port to keep a package build offline.
+for _name in ("no_proxy", "NO_PROXY"):
+    os.environ[_name] = ",".join(
+        filter(None, (os.environ.get(_name), "127.0.0.1", "localhost", "::1"))
+    )
+
 
 def _png_b64(size=(20, 10), color="red", mode="RGB", fmt="PNG", exif=None) -> str:
     buf = io.BytesIO()
