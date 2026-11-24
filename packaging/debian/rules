@@ -3,10 +3,8 @@
 export PYBUILD_NAME = tavletta
 # The tests read the checkout (docs/examples, data/, po/): run them in the
 # source tree. Without a display: the tests marked gui need a GTK window.
-# Not the UPC read-back tests: trixie's zxing-cpp 2.3 reads UPC-A and UPC-E
-# as 12 and 8 digits, newer versions (the tests' oracle) as EAN-13.
 export PYBUILD_TEST_CUSTOM = 1
-export PYBUILD_TEST_ARGS = cd {dir} && FONTCONFIG_FILE={dir}/tests/fonts.conf {interpreter} -m pytest -q -p no:cacheprovider -n auto -m "not gui" -k "not (test_codes_decode and upc)"
+export PYBUILD_TEST_ARGS = cd {dir} && FONTCONFIG_FILE={dir}/tests/fonts.conf {interpreter} -m pytest -q -p no:cacheprovider -n auto -m "not gui"
 
 %:
 	dh $@ --buildsystem=pybuild

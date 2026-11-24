@@ -24,6 +24,7 @@ BuildRequires:  libappstream-glib
 BuildRequires:  python3-pytest
 BuildRequires:  python3-hypothesis
 BuildRequires:  python3-pyyaml
+BuildRequires:  python3dist(zxing-cpp)
 BuildRequires:  python3-gobject
 BuildRequires:  pango
 BuildRequires:  gtk4
@@ -85,8 +86,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 # the GTK window needs a display: the modules of the window are not imported
 %pyproject_check_import -e 'tavletta.app' -e 'tavletta.ui.*'
 %{py3_test_envvars} %{python3} -m tavletta.launch --version
-# without a display, the window's tests skip (marker gui); the tests that
-# read codes back need zxing-cpp, not in Fedora: skipped. test_packaging.py
+# without a display, the window's tests skip (marker gui). test_packaging.py
 # checks the repository's packaging files (Flatpak, container, CI), not the
 # program.
 %pytest -m 'not gui' -p no:cacheprovider --ignore=tests/test_packaging.py
