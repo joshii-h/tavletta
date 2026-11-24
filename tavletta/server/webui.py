@@ -4,7 +4,8 @@ turns it off).
 
 The page and its files need no token (they hold nothing but the program
 itself); everything it shows comes from the REST API, with the token the
-user gives, which the page keeps in sessionStorage only. Every file is sent
+user gives, which the page keeps in sessionStorage only, or with the
+session cookie of signing in with OpenID Connect (weblogin.py). Every file is sent
 with a strict Content-Security-Policy: scripts and styles only from these
 files, nothing inline, no eval, no frames, no requests elsewhere.
 

@@ -141,6 +141,20 @@ class _Handler(BaseHTTPRequestHandler):
             with fake.lock:
                 fake.jwks_fetches += 1
             self._json(200, {"keys": [k.jwk() for k in fake.keys]})
+        elif path == "/realms/test/auth":  # a browser: signed in at once, sent back
+            code = fake.authorize(self.path)
+            query = parse_qs(urlsplit(self.path).query)
+            target = "%s?code=%s&state=%s" % (query["redirect_uri"][0], code, query["state"][0])
+            self.send_response(303)
+            self.send_header("Location", target)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+        elif path == "/realms/test/logout":
+            query = parse_qs(urlsplit(self.path).query)
+            self.send_response(303)
+            self.send_header("Location", query["post_logout_redirect_uri"][0])
+            self.send_header("Content-Length", "0")
+            self.end_headers()
         elif path == "/realms/test/userinfo":
             auth = self.headers.get("Authorization", "")
             if auth != "Bearer access-1":
