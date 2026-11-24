@@ -65,7 +65,6 @@ from tavletta.model import (
     TextElement,
     data_inside,
     locked,
-    read_file,
     writable,
 )
 from tavletta.render import RenderTooLarge, RenderWarning, limited
@@ -169,9 +168,9 @@ class Prepared:
     named: NamedPrinter | None = None  # the printer of printers.toml it is for
     # a label sheet (page printers): every label a position, as in the app
     sheet: SheetJob | None = None
-    # the label file's layout when it was read (_layout()): a job is not
-    # queued for a file replaced since
-    layout: bytes | None = None
+    # print requests: the label file as it was read (_FileState): a job is
+    # not queued for a file replaced since
+    source: _FileState | None = None
 
     def job(self, values: Values | None = None, index: int | None = None) -> Job:
         columns = self.rows[self.indexes[0] if index is None else index] if self.rows else None
@@ -1026,8 +1025,10 @@ class Service:
             named = self._choose(request.printer, caller, printing)
         path = self.labels.label(request.label) if request.label is not None else None
         # before it is read: a file replaced in between is found changed
-        layout = _layout(path) if path else None
-        label = self._label(request, path, named.backend if named else request.printer)
+        file_id = _file_id(path) if path and printing else None
+        model = named.backend if named else request.printer
+        label, layout = self._label(request, path, model, file_id is not None)
+        source = _FileState(file_id, layout) if file_id and layout else None
         backend = self._backend(label.printer)
         settings = self._named_settings(named) if named else self._settings()
         printer = settings.printer(backend)
@@ -1065,16 +1066,20 @@ class Service:
             request.counter_start is not None,
             named,
             sheet,
-            layout,
+            source,
         )
 
-    def _label(self, request: LabelRequest, path: Path | None, model: str | None) -> Label:
-        """The label of the request, moved to the printer model asked for."""
+    def _label(
+        self, request: LabelRequest, path: Path | None, model: str | None, layout: bool = False
+    ) -> tuple[Label, bytes | None]:
+        """The label of the request, moved to the printer model asked for;
+        with `layout`, its layout as read (_layout())."""
         label = self._load(path) if path else self._content(request.content or {})
+        read = _layout(label) if layout else None
         if model and model != label.printer:
             self._backend(model)
             label.switch_printer(model)
-        return label
+        return label, read
 
     def _rows(self, request: LabelRequest, label: Label, path: Path | None, span):
         """The data rows: given inline, a data file of the labels folder,
@@ -1304,11 +1309,13 @@ class Service:
             # not for a label deleted or replaced since it was checked
             # (_label_free()): it would print the layout before and save its
             # counter into the new file
+            source = prepared.source
+            now = source.now(prepared.path) if source and prepared.path else None
             with self._submitting:
                 if prepared.path is not None:
                     if not os.path.lexists(prepared.path):
                         raise not_found("label_not_found", _("No such label: %s") % name)
-                    if _layout(prepared.path) != prepared.layout:
+                    if source and prepared.path and not source.same(now, prepared.path):
                         raise ApiError(
                             409,
                             "label_changed",
@@ -1680,17 +1687,49 @@ def _label_exists(name: str) -> ApiError:
     return ApiError(409, "label_exists", _("A label named %s exists already") % name)
 
 
-def _layout(path: Path) -> bytes | None:
-    """The SHA-256 of a label file's content but what a print saves into
-    it (Label.store_counter(): the counter, and the features and version
-    that come with it); None if it cannot be read."""
+def _file_id(path: Path) -> tuple[int, int, int] | None:
+    """Which file is there now: inode, modification time and size."""
     try:
-        data = json.loads(read_file(path))
-    except (OSError, ValueError, RecursionError):
+        info = os.stat(path)
+    except OSError:
         return None
-    if isinstance(data, dict):
-        data = {k: v for k, v in data.items() if k not in ("counter_next", "features", "version")}
+    return info.st_ino, info.st_mtime_ns, info.st_size
+
+
+def _layout(label: Label) -> bytes:
+    """The SHA-256 of a label's content but its counter, which a print
+    saves into the file (Label.store_counter())."""
+    data = label.to_dict()
+    data.pop("counter_next", None)
     return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).digest()
+
+
+@dataclass(frozen=True)
+class _FileState:
+    """A label file as a print request read it: which file (_file_id(),
+    taken before it was read) and its layout (_layout())."""
+
+    file_id: tuple[int, int, int] | None
+    layout: bytes
+
+    def now(self, path: Path) -> _FileState | None:
+        """The file now, read again only if it is another file (or was
+        written: a print's counter); None if it cannot be read. Outside
+        the lock of queuing: reading a large file takes a while."""
+        file_id = _file_id(path)
+        if file_id == self.file_id:
+            return self
+        try:
+            return _FileState(file_id, _layout(Label.load(path)))
+        except (OSError, LabelError):
+            return None
+
+    def same(self, now: _FileState | None, path: Path) -> bool:
+        """Whether the file is still the one read, but for its counter: by
+        `now` if no other file came since it was looked at, else read again."""
+        if now is not None and _file_id(path) != now.file_id:
+            now = self.now(path)  # changed meanwhile: rare, read within the lock
+        return now is not None and now.layout == self.layout
 
 
 def _not_deleted(error: OSError) -> ApiError:

@@ -424,6 +424,23 @@ def test_no_job_is_queued_for_a_label_replaced_after_its_check(server_env):
     assert "box.tavletta" in str(refused.value)
 
 
+def test_only_a_print_request_keeps_how_its_label_file_was(server_env, monkeypatch):
+    """A preview reads the file once, no layout is made of it; a print
+    request's file is read again before it is queued only if it is
+    another file (or was written) by then."""
+    from tavletta.server.requests import PrintRequest
+
+    service = _service(server_env)
+    assert service.prepare(PrintRequest(label="box")).source is None
+    checked = service.check_print(PrintRequest(label="box"))
+    assert checked.prepared.source is not None
+    loads = []
+    real = Label.load
+    monkeypatch.setattr(Label, "load", staticmethod(lambda path: loads.append(path) or real(path)))
+    assert service.queue_print(checked).done.wait(10)
+    assert loads == []  # the same file: not read again
+
+
 def test_a_label_that_cannot_be_deleted_says_so(base, server_env, monkeypatch):
     import errno
     from pathlib import Path
