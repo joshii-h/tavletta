@@ -81,9 +81,9 @@ def sections() -> list[tuple[str, list[tuple[str, str]]]]:
                 ),
                 (_("Remove the selected elements"), "Delete"),
                 (_("Cancel dragging, or select no element"), "Escape"),
-                (_("Click: add to the selection or take out"), "Shift_L Control_L"),
-                (_("Drag: along one axis, resize in proportion"), "Shift_L"),
-                (_("Drag: without snapping"), "Alt_L Control_L"),
+                (_("Click: add to the selection or take out"), "<Shift> <Control>"),
+                (_("Drag: along one axis, resize in proportion"), "<Shift>"),
+                (_("Drag: without snapping"), "<Alt> <Control>"),
             ],
         ),
         (
