@@ -51,8 +51,9 @@ rm -r external/zint
 
 %install
 %pyproject_install
-# the wheel's licenses/LICENSE.md, marked %%license (-l): the only copy
-%pyproject_save_files -l zint
+# the metadata names no license file (-L): LICENSE.md marked below, the
+# wheel's copy of it left out
+%pyproject_save_files -L zint
 
 
 %check
@@ -62,6 +63,8 @@ rm -r external/zint
 
 
 %files -n python3-zint-bindings -f %{pyproject_files}
+%license LICENSE.md
+%exclude %{python3_sitearch}/zint_bindings-%{version}.dist-info/licenses/
 %doc README.md
 
 
