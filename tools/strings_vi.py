@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Số nhãn mỗi lệnh in",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Các nhãn của một loạt được gửi đến máy in thành một lệnh in và in liên tục không dừng giữa chúng. Dừng và hủy có hiệu lực giữa các lệnh in: lệnh in đã bắt đầu sẽ được in hết. Hãy giảm giá trị này nếu máy in hết bộ nhớ.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Máy in không đủ bộ nhớ cho lệnh in. Hãy giảm “%s” trong cài đặt máy in rồi thử lại.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Lệnh in đã được gửi nhưng không rõ kết quả: chắc chắn đã in %(n)d trên %(total)d nhãn, có thể tới %(most)d.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Lệnh in đã được gửi nhưng không rõ kết quả: có thể đã in tới %(most)d trên %(total)d nhãn.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Hàng %(row)d và các hàng sau có thể đã được in: tiếp tục từ hàng đó có thể in chúng hai lần.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc không có trong bản Flatpak: để dùng, hãy cài Tavletta từ gói deb hoặc rpm, ảnh container hoặc bằng pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc cùng --trusted-proxy cần public_url trong cài đặt OIDC: địa chỉ dùng để mở trang web",
+    "%s has print jobs waiting or printing – try again when they are done": "%s có lệnh in đang chờ hoặc đang in – hãy thử lại khi chúng xong",
+    "Reading the file takes too long – send a smaller one": "Đọc tệp mất quá nhiều thời gian – hãy gửi tệp nhỏ hơn",
+    "The label could not be deleted from the labels folder": "Không xóa được nhãn khỏi thư mục nhãn",
 }

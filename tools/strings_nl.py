@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Etiketten per taak",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiketten van een reeks die als één taak naar de printer gaan en zonder te stoppen worden afgedrukt. Stoppen en annuleren werken tussen taken: een begonnen taak wordt volledig afgedrukt. Verlaag de waarde als het geheugen van de printer vol raakt.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Het geheugen van de printer is vol voor deze taak. Verlaag „%s” in de printerinstellingen en probeer het opnieuw.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "De taak is verzonden, maar de uitkomst is onbekend: %(n)d van %(total)d etiketten zeker afgedrukt, mogelijk tot %(most)d.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "De taak is verzonden, maar de uitkomst is onbekend: mogelijk zijn tot %(most)d van %(total)d etiketten afgedrukt.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Rij %(row)d en de rijen erna zijn mogelijk al afgedrukt: als je vanaf die rij verdergaat, worden ze misschien twee keer afgedrukt.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc is niet beschikbaar in de Flatpak: installeer Tavletta daarvoor via het deb- of rpm-pakket, de containerimage of met pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc met --trusted-proxy heeft public_url nodig in de OIDC-instellingen: het adres waarop de webpagina wordt geopend",
+    "%s has print jobs waiting or printing – try again when they are done": "Voor %s wachten afdruktaken of worden ze afgedrukt – probeer het opnieuw als ze klaar zijn",
+    "Reading the file takes too long – send a smaller one": "Het lezen van het bestand duurt te lang – stuur een kleiner bestand",
+    "The label could not be deleted from the labels folder": "Het etiket kon niet uit de etikettenmap worden verwijderd",
 }

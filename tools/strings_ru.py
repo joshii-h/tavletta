@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Этикеток в задании",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Этикетки серии, отправляемые на принтер одним заданием и печатаемые без остановки между ними. Остановка и отмена срабатывают между заданиями: начатое задание печатается полностью. Уменьшите значение, если у принтера не хватает памяти.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Принтеру не хватило памяти для задания. Уменьшите «%s» в настройках принтера и попробуйте снова.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Задание отправлено, но его результат неизвестен: точно напечатано %(n)d из %(total)d этикеток, возможно — до %(most)d.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Задание отправлено, но его результат неизвестен: возможно, напечатано до %(most)d из %(total)d этикеток.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Строка %(row)d и следующие за ней, возможно, уже напечатаны: при продолжении с неё они могут напечататься дважды.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc недоступен во Flatpak: для этого установите Tavletta из пакета deb или rpm, образа контейнера или через pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc с --trusted-proxy требует public_url в настройках OIDC: адрес, по которому открывают веб-страницу",
+    "%s has print jobs waiting or printing – try again when they are done": "Для %s есть задания печати в очереди или в работе – повторите попытку, когда они завершатся",
+    "Reading the file takes too long – send a smaller one": "Чтение файла занимает слишком много времени – отправьте файл поменьше",
+    "The label could not be deleted from the labels folder": "Не удалось удалить этикетку из папки этикеток",
 }

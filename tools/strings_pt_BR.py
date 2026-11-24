@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Etiquetas por trabalho",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiquetas de uma série enviadas à impressora como um só trabalho, que as imprime sem parar entre elas. Parar e cancelar têm efeito entre trabalhos: um trabalho já iniciado é impresso por completo. Diminua o valor se a impressora ficar sem memória.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "A impressora ficou sem memória para o trabalho. Diminua “%s” nas configurações da impressora e tente de novo.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "O trabalho foi enviado, mas o resultado é desconhecido: %(n)d de %(total)d etiquetas impressas com certeza, até %(most)d talvez.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "O trabalho foi enviado, mas o resultado é desconhecido: até %(most)d de %(total)d etiquetas podem ter sido impressas.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "A linha %(row)d e as seguintes podem já ter sido impressas: continuando a partir dela, elas podem ser impressas duas vezes.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc não está disponível no Flatpak: para usá-lo, instale o Tavletta pelo pacote deb ou rpm, pela imagem de contêiner ou com pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc com --trusted-proxy precisa de public_url nas configurações de OIDC: o endereço em que a página web é aberta",
+    "%s has print jobs waiting or printing – try again when they are done": "%s tem trabalhos de impressão aguardando ou imprimindo – tente novamente quando terminarem",
+    "Reading the file takes too long – send a smaller one": "A leitura do arquivo está demorando demais – envie um menor",
+    "The label could not be deleted from the labels folder": "Não foi possível excluir a etiqueta da pasta de etiquetas",
 }

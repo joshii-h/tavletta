@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "จำนวนฉลากต่องาน",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "ฉลากของชุดที่ส่งไปยังเครื่องพิมพ์เป็นงานเดียวและพิมพ์ต่อเนื่องโดยไม่หยุดระหว่างกัน การหยุดและการยกเลิกมีผลระหว่างงาน งานที่เริ่มแล้วจะพิมพ์จนครบ ลดค่านี้ลงหากหน่วยความจำของเครื่องพิมพ์ไม่พอ",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "หน่วยความจำของเครื่องพิมพ์ไม่พอสำหรับงานนี้ ลด “%s” ในการตั้งค่าเครื่องพิมพ์ แล้วลองอีกครั้ง",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "ส่งงานแล้ว แต่ไม่ทราบผลลัพธ์: พิมพ์ฉลากแน่นอนแล้ว %(n)d จาก %(total)d และอาจพิมพ์ได้ถึง %(most)d",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "ส่งงานแล้ว แต่ไม่ทราบผลลัพธ์: อาจพิมพ์ฉลากไปแล้วถึง %(most)d จาก %(total)d",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "แถว %(row)d และแถวถัดไปอาจพิมพ์ไปแล้ว: การพิมพ์ต่อจากแถวนั้นอาจพิมพ์ซ้ำสองครั้ง",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc ใช้ไม่ได้ใน Flatpak: หากต้องการใช้ ให้ติดตั้ง Tavletta จากแพ็กเกจ deb หรือ rpm อิมเมจคอนเทนเนอร์ หรือด้วย pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc ร่วมกับ --trusted-proxy ต้องมี public_url ในการตั้งค่า OIDC: ที่อยู่ที่ใช้เปิดหน้าเว็บ",
+    "%s has print jobs waiting or printing – try again when they are done": "%s มีงานพิมพ์ที่รออยู่หรือกำลังพิมพ์ – โปรดลองอีกครั้งเมื่องานเสร็จแล้ว",
+    "Reading the file takes too long – send a smaller one": "การอ่านไฟล์ใช้เวลานานเกินไป – โปรดส่งไฟล์ที่เล็กลง",
+    "The label could not be deleted from the labels folder": "ลบฉลากออกจากโฟลเดอร์ฉลากไม่ได้",
 }

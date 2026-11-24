@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Tarroja työtä kohden",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Sarjan tarrat, jotka lähetetään tulostimelle yhtenä työnä ja tulostetaan pysähtymättä niiden välillä. Pysäytys ja peruutus tulevat voimaan töiden välillä: aloitettu työ tulostetaan kokonaan. Pienennä arvoa, jos tulostimen muisti loppuu.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Tulostimen muisti loppui työn aikana. Pienennä kohtaa ”%s” tulostimen asetuksissa ja yritä uudelleen.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Työ lähetettiin, mutta sen lopputulos on tuntematon: %(n)d/%(total)d tarraa tulostettu varmasti, enintään %(most)d mahdollisesti.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Työ lähetettiin, mutta sen lopputulos on tuntematon: enintään %(most)d/%(total)d tarraa on voitu tulostaa.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Rivi %(row)d ja sitä seuraavat rivit on ehkä jo tulostettu: jos jatkat siitä, ne voivat tulostua kahdesti.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc ei ole käytettävissä Flatpakissa: asenna Tavletta sitä varten deb- tai rpm-paketista, konttikuvasta tai pipillä",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc yhdessä --trusted-proxy-valitsimen kanssa vaatii public_url-arvon OIDC-asetuksiin: osoitteen, josta verkkosivu avataan",
+    "%s has print jobs waiting or printing – try again when they are done": "Kohteella %s on odottavia tai tulostuvia tulostustöitä – yritä uudelleen, kun ne ovat valmiita",
+    "Reading the file takes too long – send a smaller one": "Tiedoston lukeminen kestää liian kauan – lähetä pienempi tiedosto",
+    "The label could not be deleted from the labels folder": "Tarraa ei voitu poistaa tarrakansiosta",
 }

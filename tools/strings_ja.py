@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "ジョブあたりのラベル数",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "シリーズのラベルを 1 つのジョブとしてプリンターに送り、途中で止まらずに印刷します。停止とキャンセルはジョブの間で有効になり、始まったジョブは最後まで印刷されます。プリンターのメモリが足りない場合は値を下げてください。",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "ジョブに必要なプリンターのメモリが足りません。プリンター設定で「%s」を下げてから、もう一度お試しください。",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "ジョブは送信されましたが、結果は不明です。%(total)d 枚中 %(n)d 枚は確実に印刷され、最大 %(most)d 枚が印刷された可能性があります。",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "ジョブは送信されましたが、結果は不明です。%(total)d 枚中最大 %(most)d 枚が印刷された可能性があります。",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "%(row)d 行目以降はすでに印刷された可能性があります。そこから続けると二重に印刷されることがあります。",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc は Flatpak では使用できません。使用するには、deb または rpm パッケージ、コンテナーイメージ、または pip で Tavletta をインストールしてください",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--trusted-proxy と併用する --oidc には、OIDC 設定の public_url (Web ページを開くアドレス) が必要です",
+    "%s has print jobs waiting or printing – try again when they are done": "%s の印刷ジョブが待機中または印刷中です – 完了してからもう一度お試しください",
+    "Reading the file takes too long – send a smaller one": "ファイルの読み込みに時間がかかりすぎます – もっと小さいファイルを送ってください",
+    "The label could not be deleted from the labels folder": "ラベルをラベルフォルダーから削除できませんでした",
 }

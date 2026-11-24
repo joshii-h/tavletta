@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "प्रति जॉब लेबल",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "किसी सीरीज़ के लेबल जो प्रिंटर को एक ही जॉब के रूप में भेजे जाते हैं और बीच में रुके बिना प्रिंट होते हैं। रोकना और रद्द करना जॉब के बीच लागू होता है: शुरू हो चुका जॉब पूरा प्रिंट होता है। प्रिंटर की मेमोरी कम पड़े तो यह मान घटाएँ।",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "इस जॉब के लिए प्रिंटर की मेमोरी कम पड़ गई। प्रिंटर सेटिंग्स में “%s” घटाएँ, फिर दोबारा कोशिश करें।",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "जॉब भेजा गया, लेकिन उसका परिणाम अज्ञात है: %(total)d में से %(n)d लेबल निश्चित रूप से प्रिंट हुए, शायद %(most)d तक।",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "जॉब भेजा गया, लेकिन उसका परिणाम अज्ञात है: %(total)d में से %(most)d तक लेबल प्रिंट हुए हो सकते हैं।",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "पंक्ति %(row)d और उसके बाद की पंक्तियाँ शायद पहले ही प्रिंट हो चुकी हैं: वहाँ से जारी रखने पर वे दो बार प्रिंट हो सकती हैं।",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc Flatpak में उपलब्ध नहीं है: इसके लिए Tavletta को deb या rpm पैकेज, कंटेनर इमेज या pip से इंस्टॉल करें",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--trusted-proxy के साथ --oidc को OIDC सेटिंग्स में public_url चाहिए: वह पता जिस पर वेब पेज खोला जाता है",
+    "%s has print jobs waiting or printing – try again when they are done": "%s के प्रिंट जॉब प्रतीक्षा में हैं या प्रिंट हो रहे हैं – उनके पूरे होने पर फिर से प्रयास करें",
+    "Reading the file takes too long – send a smaller one": "फ़ाइल पढ़ने में बहुत समय लग रहा है – छोटी फ़ाइल भेजें",
+    "The label could not be deleted from the labels folder": "लेबल को लेबल फ़ोल्डर से हटाया नहीं जा सका",
 }

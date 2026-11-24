@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Etiketter per jobb",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etiketter i en serie som skickas till skrivaren som ett jobb och skrivs ut utan uppehåll mellan dem. Stoppa och avbryt verkar mellan jobben: ett påbörjat jobb skrivs ut helt. Sänk värdet om skrivarens minne tar slut.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Skrivarens minne räckte inte till jobbet. Sänk ”%s” i skrivarinställningarna och försök igen.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Jobbet skickades, men resultatet är okänt: %(n)d av %(total)d etiketter säkert utskrivna, upp till %(most)d kanske.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Jobbet skickades, men resultatet är okänt: upp till %(most)d av %(total)d etiketter kan ha skrivits ut.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Rad %(row)d och raderna efter den kan redan ha skrivits ut: om du fortsätter från den kan de skrivas ut två gånger.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc finns inte i Flatpak: installera Tavletta från deb- eller rpm-paketet, containeravbildningen eller med pip för det",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc med --trusted-proxy behöver public_url i OIDC-inställningarna: adressen där webbsidan öppnas",
+    "%s has print jobs waiting or printing – try again when they are done": "%s har utskriftsjobb som väntar eller skrivs ut – försök igen när de är klara",
+    "Reading the file takes too long – send a smaller one": "Att läsa filen tar för lång tid – skicka en mindre",
+    "The label could not be deleted from the labels folder": "Etiketten kunde inte tas bort från etikettmappen",
 }

@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "İş başına etiket",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Bir serinin yazıcıya tek iş olarak gönderilen ve aralarında durmadan basılan etiketleri. Durdurma ve iptal işler arasında geçerli olur: başlamış bir iş tamamen basılır. Yazıcının belleği yetmezse değeri düşürün.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Yazıcının belleği bu iş için yetmedi. Yazıcı ayarlarında “%s” değerini düşürüp yeniden deneyin.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "İş gönderildi, ancak sonucu bilinmiyor: %(total)d etiketten %(n)d tanesi kesin olarak yazdırıldı, %(most)d taneye kadar yazdırılmış olabilir.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "İş gönderildi, ancak sonucu bilinmiyor: %(total)d etiketten %(most)d taneye kadar yazdırılmış olabilir.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "%(row)d. satır ve sonrakiler zaten yazdırılmış olabilir: oradan devam etmek onları iki kez yazdırabilir.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc Flatpak içinde kullanılamaz: bunun için Tavletta'yı deb veya rpm paketinden, kapsayıcı görüntüsünden ya da pip ile kurun",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--trusted-proxy ile --oidc, OIDC ayarlarında public_url gerektirir: web sayfasının açıldığı adres",
+    "%s has print jobs waiting or printing – try again when they are done": "%s için bekleyen veya yazdırılan yazdırma işleri var – bittiklerinde yeniden deneyin",
+    "Reading the file takes too long – send a smaller one": "Dosyayı okumak çok uzun sürüyor – daha küçük bir dosya gönderin",
+    "The label could not be deleted from the labels folder": "Etiket, etiketler klasöründen silinemedi",
 }

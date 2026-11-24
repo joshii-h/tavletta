@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 18:39+0100\n"
+"PO-Revision-Date: 2026-11-24 19:30+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -324,19 +324,19 @@ msgid ""
 msgstr "أخذ رمز اخترته من الإدخال القياسي (يُخزَّن باستخدام scrypt) بدلًا من إنشاء رمز"
 
 #: tavletta/cli.py:493 tavletta/server/config.py:221
-#: tavletta/server/service.py:612
+#: tavletta/server/service.py:640
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "طراز طابعة غير معروف: %s"
 
 #: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
-#: tavletta/ui/texts.py:351 tavletta/ui/texts.py:739
-#: tavletta/server/service.py:903
+#: tavletta/ui/texts.py:351 tavletta/ui/texts.py:754
+#: tavletta/server/service.py:982
 #, python-format
 msgid "Cannot open %s"
 msgstr "تعذّر فتح %s"
 
-#: tavletta/cli.py:522 tavletta/server/main.py:301
+#: tavletta/cli.py:522 tavletta/server/main.py:337
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s ليس تاريخًا، المتوقع مثل 2026-12-31 أو 2026-12-31T08:30"
@@ -352,7 +352,7 @@ msgid "The label has no element or variable named %s"
 msgstr "لا يحتوي الملصق على عنصر أو متغير باسم %s"
 
 #: tavletta/cli.py:605 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1288
+#: tavletta/server/service.py:1371
 msgid "The label is empty"
 msgstr "الملصق فارغ"
 
@@ -365,9 +365,9 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "يكتب --output صور PNG: أعطِ اسمًا ينتهي بـ .png"
 
 #: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:749 tavletta/server/service.py:1147
-#: tavletta/server/service.py:1170 tavletta/server/service.py:1472
-#: tavletta/server/service.py:1708
+#: tavletta/ui/printing.py:749 tavletta/server/service.py:1226
+#: tavletta/server/service.py:1249 tavletta/server/service.py:1561
+#: tavletta/server/service.py:1820
 msgid "The label cannot be prepared for printing."
 msgstr "تعذّر تجهيز الملصق للطباعة."
 
@@ -380,16 +380,16 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "عُثر على عدة طابعات – اختر واحدة باستخدام --host (tavletta list-printers)"
 
-#: tavletta/cli.py:798 tavletta/ui/texts.py:782 tavletta/server/service.py:1698
+#: tavletta/cli.py:798 tavletta/ui/texts.py:806 tavletta/server/service.py:1810
 #, python-format
 msgid "Cannot save %s"
 msgstr "تعذّر حفظ %s"
 
-#: tavletta/cli.py:800 tavletta/server/service.py:1701
+#: tavletta/cli.py:800 tavletta/server/service.py:1813
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "طُبعت الملصقات، لكن لم تُحفظ قيمة العدّاد التالية"
 
-#: tavletta/cli.py:815 tavletta/server/service.py:1317
+#: tavletta/cli.py:815 tavletta/server/service.py:1400
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "لم يُطبع شيء: تعذّر حفظ قيمة العدّاد التالية"
 
@@ -398,7 +398,7 @@ msgid "Interrupted"
 msgstr "تمت المقاطعة"
 
 #: tavletta/cli.py:958 tavletta/ui/printing.py:488
-#: tavletta/server/service.py:1193
+#: tavletta/server/service.py:1272
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "%d ملصق كحد أقصى في مهمة طباعة واحدة"
@@ -413,7 +413,7 @@ msgid "--sheet and --rows need a data file (--data)"
 msgstr "يتطلب --sheet و--rows ملف بيانات (--data)"
 
 #: tavletta/cli.py:1028 tavletta/ui/printing.py:616
-#: tavletta/server/service.py:1005
+#: tavletta/server/service.py:1084
 msgid "No rows to print"
 msgstr "لا توجد صفوف للطباعة"
 
@@ -422,7 +422,7 @@ msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "يستخدم الملصق ملف بيانات خارج مجلده: حدّده باستخدام --data"
 
 #: tavletta/cli.py:1065 tavletta/ui/window.py:922
-#: tavletta/server/service.py:1064
+#: tavletta/server/service.py:1143
 #, python-format
 msgid "No such column: %s"
 msgstr "لا يوجد عمود بهذا الاسم: %s"
@@ -444,8 +444,8 @@ msgstr "الصفوف: %s"
 msgid "Waiting for another print of %s to finish…"
 msgstr "في انتظار انتهاء طباعة أخرى لـ %s…"
 
-#: tavletta/cli.py:1090 tavletta/server/service.py:791
-#: tavletta/server/service.py:1466
+#: tavletta/cli.py:1090 tavletta/server/service.py:837
+#: tavletta/server/service.py:1555
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "لا يزال %s مقفلًا بطباعة أخرى – حاول لاحقًا"
@@ -2929,32 +2929,46 @@ msgid ""
 "text – make them smaller"
 msgstr "العنصر %(n)d: لا يترك الحشو أو الإطار أو الحد الخارجي أو الظل أي مساحة للنص – قلّلها"
 
-#: tavletta/ui/texts.py:511
+#: tavletta/ui/texts.py:515
+#, python-format
+msgid ""
+"The job was sent, but its outcome is unknown: %(n)d of %(total)d labels "
+"printed for certain, up to %(most)d may have."
+msgstr "أُرسلت المهمة، لكن نتيجتها غير معروفة: طُبع %(n)d من %(total)d ملصقًا بالتأكيد، وربما حتى %(most)d."
+
+#: tavletta/ui/texts.py:520
+#, python-format
+msgid ""
+"The job was sent, but its outcome is unknown: up to %(most)d of %(total)d "
+"labels may have printed."
+msgstr "أُرسلت المهمة، لكن نتيجتها غير معروفة: ربما طُبع حتى %(most)d من %(total)d ملصقًا."
+
+#: tavletta/ui/texts.py:526
 #, python-format
 msgid "Sheets already printed: %(n)d of %(total)d."
 msgstr "الأوراق المطبوعة بالفعل: %(n)d من %(total)d."
 
-#: tavletta/ui/texts.py:513
+#: tavletta/ui/texts.py:528
 #, python-format
 msgid "Labels already printed: %(n)d of %(total)d."
 msgstr "الملصقات المطبوعة بالفعل: %(n)d من %(total)d."
 
-#: tavletta/ui/texts.py:517
+#: tavletta/ui/texts.py:532
 msgid "The sheets still waiting in the queue were canceled."
 msgstr "أُلغيت الأوراق التي كانت لا تزال تنتظر في قائمة الانتظار."
 
-#: tavletta/ui/texts.py:519
+#: tavletta/ui/texts.py:534
 msgid "The labels still waiting in the queue were canceled."
 msgstr "أُلغيت الملصقات التي كانت لا تزال تنتظر في قائمة الانتظار."
 
-#: tavletta/ui/texts.py:530
+#: tavletta/ui/texts.py:545
 #, python-format
 msgid ""
 "The label is %(size)s, but labels of %(loaded)s are loaded. Check the label "
 "size, or load the matching roll."
 msgstr "حجم الملصق %(size)s، لكن الملصقات الموضوعة بحجم %(loaded)s. تحقق من حجم الملصق أو ضع الرول المناسب."
 
-#: tavletta/ui/texts.py:538
+#: tavletta/ui/texts.py:553
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2962,7 +2976,7 @@ msgid ""
 "size and the gap, or calibrate the printer."
 msgstr "حجم الملصق %(size)s مع فراغ %(gap)s، لذا يبدأ ملصق جديد كل %(pitch)s. قاست الطابعة ملصقًا كل %(measured)s. تحقق من حجم الملصق والفراغ، أو قم بمعايرة الطابعة."
 
-#: tavletta/ui/texts.py:544
+#: tavletta/ui/texts.py:559
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2970,92 +2984,92 @@ msgid ""
 "size and the gap."
 msgstr "حجم الملصق %(size)s مع فراغ %(gap)s، لذا يبدأ ملصق جديد كل %(pitch)s. قاست الطابعة ملصقًا كل %(measured)s. تحقق من حجم الملصق والفراغ."
 
-#: tavletta/ui/texts.py:561
+#: tavletta/ui/texts.py:576
 msgid ""
 "The printer cannot be found. Check that it is switched on and in the same "
 "network, or enter its IP address."
 msgstr "تعذّر العثور على الطابعة. تأكّد من أنها قيد التشغيل وعلى الشبكة نفسها، أو أدخل عنوان IP الخاص بها."
 
-#: tavletta/ui/texts.py:565
+#: tavletta/ui/texts.py:580
 msgid ""
 "The printer cannot be found on USB. Check the cable and that the printer is "
 "switched on and awake, then search again."
 msgstr "لا يمكن العثور على الطابعة عبر USB. تحقّق من الكابل ومن أن الطابعة قيد التشغيل وليست في وضع السكون، ثم ابحث مجددًا."
 
-#: tavletta/ui/texts.py:568
+#: tavletta/ui/texts.py:583
 msgid "The printer does not answer. Check that it is switched on and awake."
 msgstr "الطابعة لا تستجيب. تأكّد من أنها قيد التشغيل وليست في وضع السكون."
 
-#: tavletta/ui/texts.py:570
+#: tavletta/ui/texts.py:585
 msgid ""
 "The printer stopped taking data. Check whether it shows a problem, such as "
 "no labels or an open cover, then try again."
 msgstr "توقفت الطابعة عن استقبال البيانات. تحقّق مما إذا كانت تعرض مشكلة، مثل نفاد الملصقات أو غطاء مفتوح، ثم حاول مرة أخرى."
 
-#: tavletta/ui/texts.py:574
+#: tavletta/ui/texts.py:589
 msgid ""
 "The printer refuses the connection. Switch it off and on again. If its web "
 "interface offers a “Port 9100” option, turn it on."
 msgstr "ترفض الطابعة الاتصال. أطفئها ثم شغّلها مجددًا. إن كانت واجهة الويب الخاصة بها توفّر خيار «Port 9100»، ففعّله."
 
-#: tavletta/ui/texts.py:577
+#: tavletta/ui/texts.py:592
 msgid "No cassette is inserted. Insert one and try again."
 msgstr "لا توجد خرطوشة. أدخل خرطوشة وحاول مجددًا."
 
-#: tavletta/ui/texts.py:578
+#: tavletta/ui/texts.py:593
 msgid "The printer's cover is open. Close it and try again."
 msgstr "غطاء الطابعة مفتوح. أغلقه وحاول مجددًا."
 
-#: tavletta/ui/texts.py:579
+#: tavletta/ui/texts.py:594
 msgid "The label is jammed. Open the cover, remove it and try again."
 msgstr "الملصق عالق. افتح الغطاء وأزل الملصق ثم حاول مجددًا."
 
-#: tavletta/ui/texts.py:580
+#: tavletta/ui/texts.py:595
 msgid "The cassette is not recognised. Insert it again or try another one."
 msgstr "لم يتم التعرّف على الخرطوشة. أعد إدخالها أو جرّب خرطوشة أخرى."
 
-#: tavletta/ui/texts.py:581
+#: tavletta/ui/texts.py:596
 msgid "The printer is busy. Wait a moment and try again."
 msgstr "الطابعة مشغولة. انتظر قليلًا وحاول مجددًا."
 
-#: tavletta/ui/texts.py:582
+#: tavletta/ui/texts.py:597
 #, python-format
 msgid "The label is too long for this printer: at most %(max)s."
 msgstr "الملصق طويل جدًا لهذه الطابعة: الحد الأقصى %(max)s."
 
-#: tavletta/ui/texts.py:583
+#: tavletta/ui/texts.py:598
 #, python-format
 msgid "The label is too wide for this printer: at most %(max)s."
 msgstr "الملصق أعرض من أن تطبعه هذه الطابعة: الحد الأقصى %(max)s."
 
-#: tavletta/ui/texts.py:584
+#: tavletta/ui/texts.py:599
 msgid "The printer is out of labels. Load a new roll and try again."
 msgstr "نفدت الملصقات من الطابعة. ضع رولًا جديدًا وحاول مرة أخرى."
 
-#: tavletta/ui/texts.py:585
+#: tavletta/ui/texts.py:600
 msgid "The print head is open. Close it and try again."
 msgstr "رأس الطباعة مفتوح. أغلقه وحاول مرة أخرى."
 
-#: tavletta/ui/texts.py:587
+#: tavletta/ui/texts.py:602
 msgid ""
 "The printer cannot find the next label. Check that the labels are loaded "
 "correctly and run through the label sensor."
 msgstr "تعذّر على الطابعة العثور على الملصق التالي. تحقق من تحميل الملصقات بشكل صحيح ومن مرورها عبر حسّاس الملصقات."
 
-#: tavletta/ui/texts.py:591
+#: tavletta/ui/texts.py:606
 msgid ""
 "There is a problem with the ribbon. Check that it is inserted correctly and "
 "matches the print method set on the printer."
 msgstr "توجد مشكلة في شريط الحبر. تحقق من تركيبه بشكل صحيح ومن توافقه مع طريقة الطباعة المضبوطة على الطابعة."
 
-#: tavletta/ui/texts.py:597
+#: tavletta/ui/texts.py:612
 #, python-format
 msgid ""
 "The printer finds no ribbon. Load a ribbon and try again. Labels that print "
 "without one need “%(direct)s” under “%(method)s”."
 msgstr "لا تجد الطابعة شريط حبر. ركّب شريطًا وحاول مرة أخرى. الملصقات التي تُطبع بلا شريط تحتاج إلى «%(direct)s» في «%(method)s»."
 
-#: tavletta/ui/texts.py:604
+#: tavletta/ui/texts.py:619
 #, python-format
 msgid ""
 "A ribbon is loaded, but the printer prints without it (thermal direct). For "
@@ -3063,246 +3077,253 @@ msgid ""
 "remove the ribbon."
 msgstr "شريط الحبر مركّب، لكن الطابعة تطبع بدونه (حرارية مباشرة). للملصقات التي تحتاج إلى الشريط اختر «%(transfer)s» في «%(method)s»، أو أزل الشريط."
 
-#: tavletta/ui/texts.py:609
+#: tavletta/ui/texts.py:624
 msgid "The printer is paused. Resume it on its display and try again."
 msgstr "الطابعة متوقفة مؤقتًا. استأنف من شاشتها وحاول مرة أخرى."
 
-#: tavletta/ui/texts.py:612
+#: tavletta/ui/texts.py:627
 #, python-format
 msgid ""
 "The printer ran out of memory for the job. Lower “%s” in the printer "
 "settings, then try again."
 msgstr "نفدت ذاكرة الطابعة لهذه المهمة. خفّض «%s» في إعدادات الطابعة، ثم حاول مرة أخرى."
 
-#: tavletta/ui/texts.py:616
+#: tavletta/ui/texts.py:631
 msgid "The printer is out of paper. Load paper and try again."
 msgstr "نفد الورق من الطابعة. حمّل الورق وحاول مجددًا."
 
-#: tavletta/ui/texts.py:618
+#: tavletta/ui/texts.py:633
 msgid ""
 "The paper is jammed. Remove it as the printer's display shows and try again."
 msgstr "الورق عالق. أزله كما تعرض شاشة الطابعة وحاول مجددًا."
 
-#: tavletta/ui/texts.py:620
+#: tavletta/ui/texts.py:635
 msgid "The printer is out of toner or ink. Replace it and try again."
 msgstr "نفد الحبر أو مسحوق الحبر من الطابعة. استبدله وحاول مجددًا."
 
-#: tavletta/ui/texts.py:621
+#: tavletta/ui/texts.py:636
 msgid "The printer cannot print this size. Choose a paper size it offers."
 msgstr "لا تستطيع الطابعة طباعة هذا الحجم. اختر حجم ورق تدعمه."
 
-#: tavletta/ui/texts.py:623
+#: tavletta/ui/texts.py:638
 msgid ""
 "The printer takes none of the formats Tavletta can send (PDF, PWG Raster, "
 "JPEG)."
 msgstr "لا تقبل الطابعة أيًّا من الصيغ التي يستطيع Tavletta إرسالها (PDF وPWG Raster وJPEG)."
 
-#: tavletta/ui/texts.py:626
+#: tavletta/ui/texts.py:641
 msgid ""
 "The printer's queue is paused. Resume it in the system's printer settings "
 "and try again."
 msgstr "قائمة انتظار الطابعة متوقفة مؤقتًا. استأنفها من إعدادات الطابعة في النظام وحاول مجددًا."
 
-#: tavletta/ui/texts.py:630
+#: tavletta/ui/texts.py:645
 msgid ""
 "The print job was held in the queue, for example until it is released or a "
 "password is entered. Check the queue in the system's printer settings and "
 "try again."
 msgstr "احتُجزت مهمة الطباعة في قائمة الانتظار، مثلًا إلى أن يُفرج عنها أو تُدخل كلمة مرور. تحقق من قائمة الانتظار في إعدادات الطابعة في النظام وحاول مجددًا."
 
-#: tavletta/ui/texts.py:634
+#: tavletta/ui/texts.py:649
 msgid "The print job was canceled at the printer or in the queue."
 msgstr "أُلغيت مهمة الطباعة في الطابعة أو في قائمة الانتظار."
 
-#: tavletta/ui/texts.py:635
+#: tavletta/ui/texts.py:650
 #, python-format
 msgid ""
 "The printer did not report its resolution in time. Choose it under “%s”."
 msgstr "لم تُبلغ الطابعة عن دقتها في الوقت المناسب. اخترها من «%s»."
 
-#: tavletta/ui/texts.py:638
+#: tavletta/ui/texts.py:653
 msgid ""
 "The loaded roll does not match the label. Load a matching roll, or choose "
 "the label size or printer model of the roll that is loaded."
 msgstr "الرول الموضوع لا يناسب الملصق. ضع رولًا مناسبًا، أو اختر حجم الملصق أو طراز الطابعة الخاص بالرول الموضوع."
 
-#: tavletta/ui/texts.py:641
+#: tavletta/ui/texts.py:656
 msgid "The printer's battery is low – charge it or connect the power adapter."
 msgstr "بطارية الطابعة منخفضة – اشحنها أو وصّل محوّل الطاقة."
 
-#: tavletta/ui/texts.py:642
+#: tavletta/ui/texts.py:657
 msgid ""
 "The print head is too hot. Wait until it has cooled down, then try again."
 msgstr "رأس الطباعة ساخن جدًا. انتظر حتى يبرد، ثم حاول مرة أخرى."
 
-#: tavletta/ui/texts.py:644
+#: tavletta/ui/texts.py:659
 msgid ""
 "Tavletta cannot print on this printer model: it does not take the raster "
 "images Tavletta sends."
 msgstr "لا يستطيع Tavletta الطباعة على طراز الطابعة هذا: فهو لا يقبل الصور النقطية التي يرسلها Tavletta."
 
-#: tavletta/ui/texts.py:648
+#: tavletta/ui/texts.py:663
 msgid "Tavletta does not know this printer model and cannot print on it yet."
 msgstr "لا يعرف Tavletta طراز الطابعة هذا ولا يستطيع الطباعة عليه بعد."
 
-#: tavletta/ui/texts.py:651
+#: tavletta/ui/texts.py:666
 msgid ""
 "The printer is in Editor Lite mode and shows up as a USB drive. Switch "
 "Editor Lite off on the printer (its lamp goes out), then search again."
 msgstr "الطابعة في وضع Editor Lite وتظهر كمحرك أقراص USB. أوقف Editor Lite في الطابعة (ينطفئ مصباحه)، ثم ابحث مرة أخرى."
 
-#: tavletta/ui/texts.py:655
+#: tavletta/ui/texts.py:670
 msgid ""
 "Tavletta is not allowed to use the printer's USB port. Add your user to the "
 "group “lp” (sudo usermod -aG lp $USER), then log out and in again."
 msgstr "لا يملك Tavletta إذن استخدام منفذ USB الخاص بالطابعة. أضف المستخدم الخاص بك إلى المجموعة «lp» (sudo usermod -aG lp $USER)، ثم سجّل الخروج وسجّل الدخول مجددًا."
 
-#: tavletta/ui/texts.py:659
+#: tavletta/ui/texts.py:674
 msgid ""
 "The page is too large to make at the resolution the printer takes. Choose a "
 "smaller paper size, or print on a printer that takes PDF."
 msgstr "الصفحة أكبر من أن تُنشأ بالدقة التي تقبلها الطابعة. اختر حجم ورق أصغر، أو اطبع على طابعة تقبل PDF."
 
-#: tavletta/ui/texts.py:663
+#: tavletta/ui/texts.py:678
 msgid ""
 "A code does not fit on the label at this printer's resolution and would be "
 "cut off. Make the label larger or the code's content shorter."
 msgstr "لا يتسع الرمز على الملصق بدقة هذه الطابعة وسيُقطع. كبّر الملصق أو اختصر محتوى الرمز."
 
-#: tavletta/ui/texts.py:667
+#: tavletta/ui/texts.py:682
 msgid ""
 "Tavletta is not allowed to use the printer's serial port. Add your user to "
 "the group “dialout” (sudo usermod -aG dialout $USER; on Arch Linux the group "
 "is “uucp”), then log out and in again."
 msgstr "لا يملك Tavletta إذن استخدام المنفذ التسلسلي الخاص بالطابعة. أضف المستخدم الخاص بك إلى المجموعة «dialout» (sudo usermod -aG dialout $USER؛ في Arch Linux اسم المجموعة «uucp»)، ثم سجّل الخروج وسجّل الدخول مجددًا."
 
-#: tavletta/ui/texts.py:672
+#: tavletta/ui/texts.py:687
 msgid ""
 "The printer reported a problem. Switch it off and on again, then try once "
 "more."
 msgstr "أبلغت الطابعة عن مشكلة. أطفئها ثم شغّلها مجددًا، ثم حاول مرة أخرى."
 
-#: tavletta/ui/texts.py:683 tavletta/server/web/ui.js:452
+#: tavletta/ui/texts.py:698 tavletta/server/web/ui.js:452
 msgid "Printed"
 msgstr "تمت الطباعة"
 
-#: tavletta/ui/texts.py:689
+#: tavletta/ui/texts.py:704
 msgid "Sent to the printer – it prints when its turn comes"
 msgstr "أُرسل إلى الطابعة – ستتم طباعته عندما يحين دوره"
 
-#: tavletta/ui/texts.py:691
+#: tavletta/ui/texts.py:706
 msgid "Sent to the printer – it did not confirm printing"
 msgstr "أُرسل إلى الطابعة – لم تؤكد الطباعة"
 
-#: tavletta/ui/texts.py:695
+#: tavletta/ui/texts.py:710
 #, python-format
 msgid "Printed with “%(used)s”, as the loaded roll needs it"
 msgstr "طُبع باستخدام «%(used)s» لأن الرول الموضوع يحتاج إلى ذلك"
 
-#: tavletta/ui/texts.py:699
+#: tavletta/ui/texts.py:714
 #, python-format
 msgid ""
 "Colour mode “%(wanted)s” is not available on this printer, printed with "
 "“%(used)s”"
 msgstr "وضع الألوان «%(wanted)s» غير متاح على هذه الطابعة، طُبع باستخدام «%(used)s»"
 
-#: tavletta/ui/texts.py:709
+#: tavletta/ui/texts.py:724
 msgid "Warming up…"
 msgstr "جارٍ التسخين…"
 
-#: tavletta/ui/texts.py:710
+#: tavletta/ui/texts.py:725
 msgid "Cooling down…"
 msgstr "جارٍ التبريد…"
 
-#: tavletta/ui/texts.py:711
+#: tavletta/ui/texts.py:726
 msgid "Cleaning…"
 msgstr "جارٍ التنظيف…"
 
-#: tavletta/ui/texts.py:712
+#: tavletta/ui/texts.py:727
 msgid "Swipe the printer's panel to cut the label"
 msgstr "اسحب على لوحة الطابعة لقص الملصق"
 
-#: tavletta/ui/texts.py:714
+#: tavletta/ui/texts.py:729
 msgid "Out of paper – load paper to continue"
 msgstr "نفد الورق – حمّل الورق للمتابعة"
 
-#: tavletta/ui/texts.py:715
+#: tavletta/ui/texts.py:730
 msgid "Cover open – close it to continue"
 msgstr "الغطاء مفتوح – أغلقه للمتابعة"
 
-#: tavletta/ui/texts.py:716
+#: tavletta/ui/texts.py:731
 msgid "Paper jammed – remove it to continue"
 msgstr "الورق عالق – أزله للمتابعة"
 
-#: tavletta/ui/texts.py:727
+#: tavletta/ui/texts.py:742
 msgid "This label needs a newer version of Tavletta"
 msgstr "يتطلب هذا الملصق إصدارًا أحدث من Tavletta"
 
-#: tavletta/ui/texts.py:729
+#: tavletta/ui/texts.py:744
 #, python-format
 msgid "%s is not a Tavletta label"
 msgstr "%s ليس ملصق Tavletta"
 
-#: tavletta/ui/texts.py:730 tavletta/ui/texts.py:750
-#: tavletta/server/service.py:914
+#: tavletta/ui/texts.py:745 tavletta/ui/texts.py:765
+#: tavletta/server/service.py:993
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "الملف تالف: %s"
 
-#: tavletta/ui/texts.py:737
+#: tavletta/ui/texts.py:752
 #, python-format
 msgid "The data file %s is not there any more. Choose it again or remove it."
 msgstr "لم يعد ملف البيانات %s موجودًا. اختره مجددًا أو أزله."
 
-#: tavletta/ui/texts.py:741
+#: tavletta/ui/texts.py:756
 #, python-format
 msgid "%(file)s has no sheet named %(sheet)s"
 msgstr "لا يحتوي %(file)s على ورقة باسم %(sheet)s"
 
-#: tavletta/ui/texts.py:743
+#: tavletta/ui/texts.py:758
 #, python-format
 msgid "%s is not a table. Use a CSV, ODS or XLSX file."
 msgstr "%s ليس جدولًا. استخدم ملف CSV أو ODS أو XLSX."
 
-#: tavletta/ui/texts.py:745
+#: tavletta/ui/texts.py:760
 #, python-format
 msgid ""
 "%s is too large for serial labels. Split it into smaller files or remove "
 "rows and columns that are not needed."
 msgstr "%s كبير جدًا للملصقات المتسلسلة. قسّمه إلى ملفات أصغر أو أزل الصفوف والأعمدة غير اللازمة."
 
-#: tavletta/ui/texts.py:748
+#: tavletta/ui/texts.py:763
 #, python-format
 msgid "%s contains no data."
 msgstr "لا يحتوي %s على أي بيانات."
 
-#: tavletta/ui/texts.py:759
+#: tavletta/ui/texts.py:778
 #, python-format
 msgid ""
 "Printing stopped at row %(row)d. To continue, print again from row %(row)d."
 msgstr "توقفت الطباعة عند الصف %(row)d. للمتابعة، اطبع مجددًا بدءًا من الصف %(row)d."
 
-#: tavletta/ui/texts.py:763
+#: tavletta/ui/texts.py:783
+#, python-format
+msgid ""
+"Row %(row)d and the rows after it may have printed already: going on from it "
+"may print them twice."
+msgstr "ربما طُبع الصف %(row)d والصفوف التي تليه بالفعل: المتابعة منه قد تطبعها مرتين."
+
+#: tavletta/ui/texts.py:787
 #, python-format
 msgid "Copies of row %(row)d already printed: %(copies)d."
 msgstr "النسخ المطبوعة بالفعل من الصف %(row)d: %(copies)d."
 
-#: tavletta/ui/texts.py:768
+#: tavletta/ui/texts.py:792
 #, python-format
 msgid "Row %(row)d goes at position %(position)d of sheet %(sheet)d."
 msgstr "الصف %(row)d يأتي في الموضع %(position)d من الورقة %(sheet)d."
 
-#: tavletta/ui/texts.py:779
+#: tavletta/ui/texts.py:803
 #, python-format
 msgid "Cannot save %s: no permission to write there"
 msgstr "تعذّر حفظ %s: لا يوجد إذن بالكتابة هناك"
 
-#: tavletta/ui/texts.py:781
+#: tavletta/ui/texts.py:805
 #, python-format
 msgid "Cannot save %s: the disk is full"
 msgstr "تعذّر حفظ %s: القرص ممتلئ"
 
-#: tavletta/ui/texts.py:791
+#: tavletta/ui/texts.py:815
 #, python-format
 msgid ""
 "This cassette seems to be from %(month)s %(year)d. Old ZINK paper prints "
@@ -3442,7 +3463,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:90 tavletta/server/config.py:94
-#: tavletta/server/config.py:100 tavletta/server/main.py:383
+#: tavletta/server/config.py:100 tavletta/server/main.py:419
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "تعذّرت قراءة %(file)s: %(reason)s"
@@ -3528,13 +3549,13 @@ msgstr "ليس تجزئة رمز: المتوقع sha256:… أو scrypt:…"
 msgid "expected a list of printer names"
 msgstr "المتوقع قائمة بأسماء الطابعات"
 
-#: tavletta/server/config.py:484 tavletta/server/main.py:409
+#: tavletta/server/config.py:484 tavletta/server/main.py:445
 #: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "لا يمكن تقييد الطابعات إلا باستخدام --printers"
 
 #: tavletta/server/config.py:486 tavletta/server/oidc.py:251
-#: tavletta/server/service.py:551
+#: tavletta/server/service.py:579
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "طابعة غير معروفة: %s"
@@ -3544,77 +3565,78 @@ msgstr "طابعة غير معروفة: %s"
 msgid "Invalid value for %s"
 msgstr "قيمة غير صالحة لـ %s"
 
-#: tavletta/server/http.py:481 tavletta/server/http.py:530
+#: tavletta/server/http.py:491 tavletta/server/http.py:540
 msgid "The request took too long"
 msgstr "استغرق الطلب وقتًا طويلًا جدًا"
 
-#: tavletta/server/http.py:490 tavletta/server/service.py:1619
+#: tavletta/server/http.py:500 tavletta/server/service.py:1731
 msgid "The server is busy – try again later"
 msgstr "الخادم مشغول – حاول مجددًا لاحقًا"
 
-#: tavletta/server/http.py:533
+#: tavletta/server/http.py:543
 msgid "Internal error"
 msgstr "خطأ داخلي"
 
-#: tavletta/server/http.py:538
+#: tavletta/server/http.py:548
 msgid "This server only answers on its local address"
 msgstr "لا يستجيب هذا الخادم إلا على عنوانه المحلي"
 
-#: tavletta/server/http.py:542 tavletta/server/http.py:658
-#: tavletta/server/http.py:662
+#: tavletta/server/http.py:552 tavletta/server/http.py:672
+#: tavletta/server/http.py:676
 msgid "Requests from this web page are not allowed"
 msgstr "الطلبات من صفحة الويب هذه غير مسموح بها"
 
-#: tavletta/server/http.py:570 tavletta/server/http.py:580
-#: tavletta/server/http.py:671
+#: tavletta/server/http.py:580 tavletta/server/http.py:590
+#: tavletta/server/http.py:685
 msgid "Access token missing or wrong"
 msgstr "رمز الوصول مفقود أو خاطئ"
 
-#: tavletta/server/http.py:578 tavletta/server/http.py:694
+#: tavletta/server/http.py:588 tavletta/server/http.py:709
+#: tavletta/server/http.py:720
 msgid "Too many requests – try again later"
 msgstr "طلبات كثيرة جدًا – حاول مجددًا لاحقًا"
 
-#: tavletta/server/http.py:651 tavletta/server/http.py:802
+#: tavletta/server/http.py:665 tavletta/server/http.py:828
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "أرسل الترويسة %s مع هذا الطلب"
 
-#: tavletta/server/http.py:682 tavletta/server/http.py:776
-#: tavletta/server/http.py:786 tavletta/server/http.py:909
+#: tavletta/server/http.py:696 tavletta/server/http.py:802
+#: tavletta/server/http.py:812 tavletta/server/http.py:935
 msgid "Not found"
 msgstr "غير موجود"
 
-#: tavletta/server/http.py:684 tavletta/server/http.py:785
-#: tavletta/server/http.py:900
+#: tavletta/server/http.py:698 tavletta/server/http.py:811
+#: tavletta/server/http.py:926
 msgid "Method not allowed"
 msgstr "الطريقة غير مسموح بها"
 
-#: tavletta/server/http.py:721 tavletta/server/http.py:726
+#: tavletta/server/http.py:744 tavletta/server/http.py:749
 msgid "The request needs a Content-Length"
 msgstr "يحتاج الطلب إلى Content-Length"
 
-#: tavletta/server/http.py:723
+#: tavletta/server/http.py:746
 msgid "The request has more than one Content-Length"
 msgstr "يحتوي الطلب على أكثر من Content-Length واحد"
 
-#: tavletta/server/http.py:729 tavletta/server/service.py:836
+#: tavletta/server/http.py:752 tavletta/server/service.py:898
 msgid "The request is too large"
 msgstr "الطلب كبير جدًا"
 
-#: tavletta/server/http.py:734
+#: tavletta/server/http.py:757
 msgid "The request body is incomplete"
 msgstr "نص الطلب غير مكتمل"
 
-#: tavletta/server/http.py:741
+#: tavletta/server/http.py:764
 msgid "Send the request as application/json"
 msgstr "أرسل الطلب بصيغة application/json"
 
-#: tavletta/server/http.py:847 tavletta/server/service.py:627
-#: tavletta/server/service.py:1592
+#: tavletta/server/http.py:873 tavletta/server/service.py:655
+#: tavletta/server/service.py:1704
 msgid "This access token may not do this"
 msgstr "لا يُسمح لرمز الوصول هذا بفعل ذلك"
 
-#: tavletta/server/http.py:1025
+#: tavletta/server/http.py:1058
 msgid "The request is not valid JSON"
 msgstr "الطلب ليس JSON صالحًا"
 
@@ -3628,12 +3650,12 @@ msgstr "مجلد الملصقات %s غير موجود"
 msgid "Cannot read the token file %s"
 msgstr "تعذّرت قراءة ملف الرمز %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:354
+#: tavletta/server/main.py:54 tavletta/server/main.py:390
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "لا يجوز أن يحتوي رمز الوصول إلا على أحرف ASCII قابلة للطباعة دون مسافات"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:359
+#: tavletta/server/main.py:59 tavletta/server/main.py:395
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "يجب ألا يقل طول رمز الوصول عن %d حرفًا"
@@ -3667,45 +3689,57 @@ msgstr "تعذّر الاستماع على %(address)s: %(reason)s"
 msgid "--oidc signs in to the web page: not with --no-web-ui"
 msgstr "يُستخدم --oidc لتسجيل الدخول إلى صفحة الويب: لا يُستخدم مع --no-web-ui"
 
-#: tavletta/server/main.py:165
+#: tavletta/server/main.py:167
+msgid ""
+"--oidc is not available in the Flatpak: install Tavletta from the deb or rpm "
+"package, the container image or with pip for it"
+msgstr "لا يتوفر --oidc في Flatpak: لاستخدامه ثبّت Tavletta من حزمة deb أو rpm أو صورة الحاوية أو باستخدام pip"
+
+#: tavletta/server/main.py:173
 msgid ""
 "--oidc needs PyJWT with cryptography (python3-jwt, pip install "
 "tavletta[oidc])"
 msgstr "يحتاج --oidc إلى PyJWT مع cryptography (python3-jwt، pip install tavletta[oidc])"
 
-#: tavletta/server/main.py:313
+#: tavletta/server/main.py:210
+msgid ""
+"--oidc with --trusted-proxy needs public_url in the OIDC settings: the "
+"address people open the web page at"
+msgstr "يحتاج --oidc مع --trusted-proxy إلى public_url في إعدادات OIDC: العنوان الذي تُفتح به صفحة الويب"
+
+#: tavletta/server/main.py:349
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "ليس اسمًا صالحًا: أحرف، أرقام، . _ - (حتى 64)"
 
-#: tavletta/server/main.py:324
+#: tavletta/server/main.py:360
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s قيد الاستخدام من برنامج آخر – حاول مجددًا لاحقًا"
 
-#: tavletta/server/main.py:331
+#: tavletta/server/main.py:367
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "أُضيف الرمز %(name)s إلى %(file)s."
 
-#: tavletta/server/main.py:338
+#: tavletta/server/main.py:374
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "يُعرض الرمز هذه المرة فقط؛ لا يحتفظ %s إلا بتجزئته."
 
-#: tavletta/server/main.py:349
+#: tavletta/server/main.py:385
 msgid "Access token: "
 msgstr "رمز الوصول: "
 
-#: tavletta/server/main.py:364
+#: tavletta/server/main.py:400
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "يجب ألا يبدو الرمز المختار مثل رمز مُنشأ (tav_…)"
 
-#: tavletta/server/main.py:414
+#: tavletta/server/main.py:450
 #, python-format
 msgid "A token named %s exists already"
 msgstr "يوجد بالفعل رمز باسم %s"
 
-#: tavletta/server/main.py:441
+#: tavletta/server/main.py:477
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "هذا الرمز موجود في الملف بالفعل باسم %s"
@@ -3733,7 +3767,8 @@ msgstr "اربط دورًا واحدًا على الأقل"
 msgid "use either printers_claim or [oidc.printers]"
 msgstr "استخدم printers_claim أو [oidc.printers]، لا كليهما"
 
-#: tavletta/server/paths.py:46 tavletta/server/service.py:815
+#: tavletta/server/paths.py:46 tavletta/server/service.py:871
+#: tavletta/server/service.py:1298
 #, python-format
 msgid "No such label: %s"
 msgstr "لا يوجد ملصق بهذا الاسم: %s"
@@ -3770,86 +3805,99 @@ msgstr "صفوف بيانات كثيرة جدًا: الحد الأقصى %d"
 msgid "Too many columns: at most %d"
 msgstr "أعمدة كثيرة جدًا: الحد الأقصى %d"
 
-#: tavletta/server/requests.py:239 tavletta/server/service.py:834
+#: tavletta/server/requests.py:239 tavletta/server/service.py:896
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "خلايا كثيرة جدًا: الحد الأقصى %d"
 
-#: tavletta/server/service.py:563
+#: tavletta/server/service.py:591
 msgid "Choose a printer by its name"
 msgstr "اختر طابعة باسمها"
 
-#: tavletta/server/service.py:685
+#: tavletta/server/service.py:713
 msgid "No printer address: give it as host"
 msgstr "لا يوجد عنوان طابعة: حدّده في host"
 
-#: tavletta/server/service.py:694
+#: tavletta/server/service.py:722
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "عنوان الطابعة هذا غير مسموح به: %s"
 
-#: tavletta/server/service.py:778 tavletta/server/service.py:922
+#: tavletta/server/service.py:806 tavletta/server/service.py:1001
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "صفحات المستندات غير مسموح بها في label_content (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:955
+#: tavletta/server/service.py:842
+#, python-format
+msgid "%s has print jobs waiting or printing – try again when they are done"
+msgstr "لدى %s مهام طباعة في الانتظار أو قيد الطباعة – حاول مجددًا عند انتهائها"
+
+#: tavletta/server/service.py:889
+msgid "Reading the file takes too long – send a smaller one"
+msgstr "تستغرق قراءة الملف وقتًا طويلًا جدًا – أرسل ملفًا أصغر"
+
+#: tavletta/server/service.py:1034
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s عمود بيانات ({%(name)s}) – أرسله في data_rows"
 
-#: tavletta/server/service.py:1013
+#: tavletta/server/service.py:1092
 msgid "A sheet needs a data file"
 msgstr "تحتاج الورقة إلى ملف بيانات"
 
-#: tavletta/server/service.py:1019
+#: tavletta/server/service.py:1098
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "يستخدم الملصق ملف بيانات خارج مجلد الملصقات: أرسل صفوفه معه"
 
-#: tavletta/server/service.py:1219
+#: tavletta/server/service.py:1302
 msgid "Too many print jobs are waiting – try again later"
 msgstr "مهام طباعة كثيرة جدًا في الانتظار – حاول مجددًا لاحقًا"
 
-#: tavletta/server/service.py:1488
+#: tavletta/server/service.py:1577
 #, python-format
 msgid "No such print job: %s"
 msgstr "لا توجد مهمة طباعة بهذا المعرّف: %s"
 
-#: tavletta/server/service.py:1500
+#: tavletta/server/service.py:1589
 msgid "The print job has already finished"
 msgstr "انتهت مهمة الطباعة بالفعل"
 
-#: tavletta/server/service.py:1560
+#: tavletta/server/service.py:1661
 #, python-format
 msgid "A label named %s exists already"
 msgstr "يوجد ملصق باسم %s بالفعل"
 
-#: tavletta/server/service.py:1565
+#: tavletta/server/service.py:1666
+msgid "The label could not be deleted from the labels folder"
+msgstr "تعذّر حذف الملصق من مجلد الملصقات"
+
+#: tavletta/server/service.py:1677
 msgid "The label could not be saved in the labels folder"
 msgstr "تعذّر حفظ الملصق في مجلد الملصقات"
 
-#: tavletta/server/service.py:1623
+#: tavletta/server/service.py:1735
 msgid "The label is too large to render"
 msgstr "الملصق كبير جدًا بحيث يتعذر عرضه"
 
-#: tavletta/server/service.py:1637
+#: tavletta/server/service.py:1749
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "الملصق كبير جدًا: الحد الأقصى %d من الصور والرموز"
 
-#: tavletta/server/service.py:1660
+#: tavletta/server/service.py:1772
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "الملصق كبير جدًا: %(elements)d عنصرًا كحد أقصى و%(chars)d حرفًا في النص الواحد"
 
-#: tavletta/server/service.py:1679
+#: tavletta/server/service.py:1791
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "%d نسخ كحد أقصى على هذه الطابعة"
 
-#: tavletta/server/service.py:1684
+#: tavletta/server/service.py:1796
 msgid "Printers are chosen by name: leave out host"
 msgstr "تُختار الطابعات بالاسم: احذف host"
 

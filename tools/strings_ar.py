@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "الملصقات في كل مهمة",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "ملصقات السلسلة التي تُرسل إلى الطابعة كمهمة واحدة وتُطبع دون توقف بينها. يسري الإيقاف والإلغاء بين المهام: المهمة التي بدأت تُطبع كاملة. خفّض القيمة إذا نفدت ذاكرة الطابعة.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "نفدت ذاكرة الطابعة لهذه المهمة. خفّض «%s» في إعدادات الطابعة، ثم حاول مرة أخرى.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "أُرسلت المهمة، لكن نتيجتها غير معروفة: طُبع %(n)d من %(total)d ملصقًا بالتأكيد، وربما حتى %(most)d.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "أُرسلت المهمة، لكن نتيجتها غير معروفة: ربما طُبع حتى %(most)d من %(total)d ملصقًا.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "ربما طُبع الصف %(row)d والصفوف التي تليه بالفعل: المتابعة منه قد تطبعها مرتين.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "لا يتوفر --oidc في Flatpak: لاستخدامه ثبّت Tavletta من حزمة deb أو rpm أو صورة الحاوية أو باستخدام pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "يحتاج --oidc مع --trusted-proxy إلى public_url في إعدادات OIDC: العنوان الذي تُفتح به صفحة الويب",
+    "%s has print jobs waiting or printing – try again when they are done": "لدى %s مهام طباعة في الانتظار أو قيد الطباعة – حاول مجددًا عند انتهائها",
+    "Reading the file takes too long – send a smaller one": "تستغرق قراءة الملف وقتًا طويلًا جدًا – أرسل ملفًا أصغر",
+    "The label could not be deleted from the labels folder": "تعذّر حذف الملصق من مجلد الملصقات",
 }

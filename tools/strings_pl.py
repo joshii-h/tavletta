@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Etykiety na zadanie",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Etykiety serii wysyłane do drukarki jako jedno zadanie, drukowane bez zatrzymywania się między nimi. Zatrzymanie i anulowanie działają między zadaniami: rozpoczęte zadanie zostanie wydrukowane w całości. Zmniejsz wartość, jeśli drukarce zabraknie pamięci.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Drukarce zabrakło pamięci na to zadanie. Zmniejsz „%s” w ustawieniach drukarki i spróbuj ponownie.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Zadanie zostało wysłane, ale jego wynik jest nieznany: na pewno wydrukowano %(n)d z %(total)d etykiet, być może do %(most)d.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Zadanie zostało wysłane, ale jego wynik jest nieznany: mogło zostać wydrukowanych do %(most)d z %(total)d etykiet.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Wiersz %(row)d i następne mogły już zostać wydrukowane: kontynuując od niego, można je wydrukować dwa razy.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc nie jest dostępne we Flatpaku: w tym celu zainstaluj Tavletta z pakietu deb lub rpm, obrazu kontenera albo przez pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc z --trusted-proxy wymaga public_url w ustawieniach OIDC: adresu, pod którym otwiera się stronę internetową",
+    "%s has print jobs waiting or printing – try again when they are done": "%s ma zadania drukowania oczekujące lub w toku – spróbuj ponownie, gdy się zakończą",
+    "Reading the file takes too long – send a smaller one": "Odczyt pliku trwa zbyt długo – wyślij mniejszy",
+    "The label could not be deleted from the labels folder": "Nie udało się usunąć etykiety z folderu etykiet",
 }

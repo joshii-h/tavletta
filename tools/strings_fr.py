@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Étiquettes par tâche",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Étiquettes d’une série envoyées à l’imprimante en une seule tâche, imprimées sans arrêt entre elles. Arrêter et annuler prennent effet entre deux tâches : une tâche commencée est imprimée entièrement. Diminuez la valeur si la mémoire de l’imprimante est insuffisante.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "La mémoire de l’imprimante est insuffisante pour la tâche. Diminuez « %s » dans les réglages de l’imprimante, puis réessayez.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "La tâche a été envoyée, mais son résultat est inconnu : %(n)d étiquettes sur %(total)d imprimées à coup sûr, jusqu’à %(most)d peut-être.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "La tâche a été envoyée, mais son résultat est inconnu : jusqu’à %(most)d étiquettes sur %(total)d ont peut-être été imprimées.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "La ligne %(row)d et les suivantes ont peut-être déjà été imprimées : en reprenant à partir d’elle, elles risquent d’être imprimées deux fois.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc n’est pas disponible dans le Flatpak : pour l’utiliser, installez Tavletta à partir du paquet deb ou rpm, de l’image de conteneur ou avec pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc avec --trusted-proxy nécessite public_url dans les paramètres OIDC : l’adresse à laquelle on ouvre la page web",
+    "%s has print jobs waiting or printing – try again when they are done": "%s a des tâches d’impression en attente ou en cours – réessayez quand elles seront terminées",
+    "Reading the file takes too long – send a smaller one": "La lecture du fichier prend trop de temps – envoyez-en un plus petit",
+    "The label could not be deleted from the labels folder": "Impossible de supprimer l’étiquette du dossier des étiquettes",
 }

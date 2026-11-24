@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Етикеток у завданні",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Етикетки серії, що надсилаються на принтер одним завданням і друкуються без зупинки між ними. Зупинка й скасування діють між завданнями: розпочате завдання друкується повністю. Зменште значення, якщо принтеру бракує пам’яті.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Принтеру забракло пам’яті для завдання. Зменште «%s» у налаштуваннях принтера й спробуйте ще раз.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Завдання надіслано, але його результат невідомий: точно надруковано %(n)d з %(total)d етикеток, можливо — до %(most)d.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Завдання надіслано, але його результат невідомий: можливо, надруковано до %(most)d з %(total)d етикеток.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Рядок %(row)d і наступні, можливо, вже надруковано: якщо продовжити з нього, їх може бути надруковано двічі.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc недоступний у Flatpak: для цього встановіть Tavletta з пакета deb або rpm, образу контейнера чи через pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc з --trusted-proxy потребує public_url у налаштуваннях OIDC: адресу, за якою відкривають вебсторінку",
+    "%s has print jobs waiting or printing – try again when they are done": "Для %s є завдання друку в черзі або в роботі – повторіть спробу, коли вони завершаться",
+    "Reading the file takes too long – send a smaller one": "Читання файлу триває надто довго – надішліть менший файл",
+    "The label could not be deleted from the labels folder": "Не вдалося видалити етикетку з теки етикеток",
 }

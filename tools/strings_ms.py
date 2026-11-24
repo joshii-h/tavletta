@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Label setiap tugas",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Label daripada satu siri yang dihantar ke pencetak sebagai satu tugas dan dicetak tanpa berhenti di antaranya. Henti dan batal berkuat kuasa di antara tugas: tugas yang sudah bermula dicetak sepenuhnya. Kurangkan nilai jika memori pencetak habis.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Memori pencetak tidak mencukupi untuk tugas ini. Kurangkan “%s” dalam tetapan pencetak, kemudian cuba lagi.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Kerja telah dihantar, tetapi hasilnya tidak diketahui: %(n)d daripada %(total)d label pasti dicetak, sehingga %(most)d mungkin.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Kerja telah dihantar, tetapi hasilnya tidak diketahui: sehingga %(most)d daripada %(total)d label mungkin telah dicetak.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Baris %(row)d dan baris selepasnya mungkin sudah dicetak: meneruskan dari baris itu mungkin mencetaknya dua kali.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc tidak tersedia dalam Flatpak: untuk itu, pasang Tavletta daripada pakej deb atau rpm, imej bekas atau dengan pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc dengan --trusted-proxy memerlukan public_url dalam tetapan OIDC: alamat tempat halaman web dibuka",
+    "%s has print jobs waiting or printing – try again when they are done": "%s mempunyai kerja cetak yang menunggu atau sedang dicetak – cuba lagi apabila selesai",
+    "Reading the file takes too long – send a smaller one": "Membaca fail mengambil masa terlalu lama – hantar fail yang lebih kecil",
+    "The label could not be deleted from the labels folder": "Label tidak dapat dipadam daripada folder label",
 }

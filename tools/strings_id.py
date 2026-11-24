@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Label per tugas",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Label dari satu seri yang dikirim ke printer sebagai satu tugas dan dicetak tanpa berhenti di antaranya. Hentikan dan batalkan berlaku di antara tugas: tugas yang sudah dimulai dicetak sampai selesai. Turunkan nilainya jika memori printer habis.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Memori printer tidak cukup untuk tugas ini. Turunkan “%s” di pengaturan printer, lalu coba lagi.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Tugas telah dikirim, tetapi hasilnya tidak diketahui: %(n)d dari %(total)d label pasti tercetak, hingga %(most)d mungkin.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Tugas telah dikirim, tetapi hasilnya tidak diketahui: hingga %(most)d dari %(total)d label mungkin sudah tercetak.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Baris %(row)d dan baris setelahnya mungkin sudah tercetak: melanjutkan dari baris itu bisa mencetaknya dua kali.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc tidak tersedia di Flatpak: untuk itu, pasang Tavletta dari paket deb atau rpm, image kontainer, atau dengan pip",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc dengan --trusted-proxy memerlukan public_url di pengaturan OIDC: alamat tempat halaman web dibuka",
+    "%s has print jobs waiting or printing – try again when they are done": "%s memiliki tugas cetak yang menunggu atau sedang dicetak – coba lagi setelah selesai",
+    "Reading the file takes too long – send a smaller one": "Membaca file terlalu lama – kirim file yang lebih kecil",
+    "The label could not be deleted from the labels folder": "Label tidak dapat dihapus dari folder label",
 }

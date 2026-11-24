@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "每個工作的標籤數",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "一個系列中作為一個工作傳送到印表機的標籤，印表機在它們之間不停頓地連續列印。停止和取消在工作之間生效：已開始的工作會完整列印。如果印表機記憶體不足，請降低此值。",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "印表機記憶體不足，無法完成此工作。請在印表機設定中降低「%s」，然後再試一次。",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "工作已送出，但結果不明：%(total)d 張標籤中確定已列印 %(n)d 張，最多可能已列印 %(most)d 張。",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "工作已送出，但結果不明：%(total)d 張標籤中最多可能已列印 %(most)d 張。",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "第 %(row)d 列及其後的列可能已經列印：從該列繼續可能會重複列印。",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "Flatpak 中無法使用 --oidc：如需使用，請透過 deb 或 rpm 套件、容器映像檔或 pip 安裝 Tavletta",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "與 --trusted-proxy 一起使用時，--oidc 需要在 OIDC 設定中提供 public_url：開啟網頁所用的位址",
+    "%s has print jobs waiting or printing – try again when they are done": "%s 有正在等待或正在列印的列印工作，請在完成後再試一次",
+    "Reading the file takes too long – send a smaller one": "讀取檔案耗時過久，請傳送較小的檔案",
+    "The label could not be deleted from the labels folder": "無法從標籤資料夾中刪除標籤",
 }

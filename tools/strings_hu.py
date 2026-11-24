@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Címke feladatonként",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Egy sorozat címkéi, amelyeket egyetlen feladatként kap a nyomtató, és megállás nélkül nyomtat ki. A leállítás és a megszakítás a feladatok között lép életbe: a megkezdett feladat teljesen kinyomtatódik. Csökkentse az értéket, ha elfogy a nyomtató memóriája.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "A nyomtató memóriája nem elég a feladathoz. Csökkentse ezt a nyomtató beállításaiban: „%s”, majd próbálja újra.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "A feladat elküldve, de az eredménye ismeretlen: %(n)d / %(total)d címke biztosan kinyomtatva, legfeljebb %(most)d talán.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "A feladat elküldve, de az eredménye ismeretlen: legfeljebb %(most)d / %(total)d címke nyomtatódhatott ki.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "A(z) %(row)d. sor és az utána következők talán már kinyomtatódtak: ha innen folytatja, kétszer nyomtatódhatnak ki.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "Az --oidc nem érhető el a Flatpakban: ehhez telepítse a Tavlettát a deb vagy rpm csomagból, a konténerképből vagy pip-pel",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "Az --oidc a --trusted-proxy kapcsolóval public_url-t igényel az OIDC-beállításokban: azt a címet, ahol a weboldalt megnyitják",
+    "%s has print jobs waiting or printing – try again when they are done": "A(z) %s nyomtatási feladatai várakoznak vagy nyomtatás alatt vannak – próbálja újra, ha elkészültek",
+    "Reading the file takes too long – send a smaller one": "A fájl beolvasása túl sokáig tart – küldjön kisebbet",
+    "The label could not be deleted from the labels folder": "A címkét nem sikerült törölni a címkemappából",
 }

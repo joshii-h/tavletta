@@ -1058,4 +1058,12 @@ TRANSLATIONS = {
     "Labels per job": "Silte töö kohta",
     "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory.": "Seeria sildid, mis saadetakse printerile ühe tööna ja prinditakse vahepeal peatumata. Peatamine ja tühistamine mõjuvad tööde vahel: alustatud töö prinditakse lõpuni. Vähenda väärtust, kui printeri mälu saab otsa.",
     "The printer ran out of memory for the job. Lower “%s” in the printer settings, then try again.": "Printeri mälu sai töö jaoks otsa. Vähenda printeri seadetes väärtust „%s“ ja proovi uuesti.",
+    "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels printed for certain, up to %(most)d may have.": "Töö saadeti, kuid selle tulemus on teadmata: %(n)d/%(total)d silti kindlasti prinditud, kuni %(most)d võib-olla.",
+    "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d labels may have printed.": "Töö saadeti, kuid selle tulemus on teadmata: prinditud võib olla kuni %(most)d/%(total)d silti.",
+    "Row %(row)d and the rows after it may have printed already: going on from it may print them twice.": "Rida %(row)d ja sellele järgnevad read võivad olla juba prinditud: sealt jätkates võidakse need kaks korda printida.",
+    "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm package, the container image or with pip for it": "--oidc pole Flatpakis saadaval: paigalda Tavletta selleks deb- või rpm-paketist, konteineri kujutisest või pip-iga",
+    "--oidc with --trusted-proxy needs public_url in the OIDC settings: the address people open the web page at": "--oidc koos --trusted-proxy-ga vajab OIDC seadetes public_url-i: aadressi, millelt veebileht avatakse",
+    "%s has print jobs waiting or printing – try again when they are done": "%s jaoks on prinditöid ootel või printimisel – proovi uuesti, kui need on valmis",
+    "Reading the file takes too long – send a smaller one": "Faili lugemine võtab liiga kaua aega – saada väiksem fail",
+    "The label could not be deleted from the labels folder": "Silti ei õnnestunud siltide kaustast kustutada",
 }
