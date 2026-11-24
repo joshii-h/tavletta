@@ -248,8 +248,8 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
   have printed more. Check the labels that came out: printing again from
   the row the message names may print some twice, but leaves none out.
   With the printer's web interface reachable on the network (the
-  default), Tavletta reads its label counter and knows the number
-  exactly.
+  default), Tavletta also checks the number against the printer's label
+  counter; where the two differ, the message gives the range.
 - Labels with a ribbon print blank or smeared, the ribbon does not move:
   the printer is set to thermal direct. Choose
   [[ui:Thermal transfer (ribbon)]] under [[ui:Print method]].
