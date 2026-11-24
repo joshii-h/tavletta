@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import contextlib
 import socket
+import sys
 import threading
 import time
 
@@ -120,6 +121,9 @@ def test_a_trickling_printer_ends_at_the_cap():
     printer.join(5)
 
 
+@pytest.mark.skipif(
+    sys.platform != "linux", reason="unsent() reads the send queue on Linux only (SIOCOUTQ)"
+)
 def test_finishing_waits_for_a_printer_that_stalls():
     printer = SlowPrinter(stop_after=4096)
     printer.start()
