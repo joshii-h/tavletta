@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 15:25+0100\n"
+"PO-Revision-Date: 2026-11-24 16:05+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: zh_HK\n"
 "Language: zh_HK\n"
@@ -233,232 +233,236 @@ msgstr "包含存取權杖的檔案；否則使用環境變數 TAVLETTA_TOKEN"
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml：附角色的具名存取權杖"
 
-#: tavletta/cli.py:385
+#: tavletta/cli.py:389
+msgid "oidc.toml: people sign in to the web page with OpenID Connect"
+msgstr "oidc.toml：以 OpenID Connect 登入網頁"
+
+#: tavletta/cli.py:391
 msgid "also serve MCP at /mcp"
 msgstr "同時在 /mcp 提供 MCP"
 
-#: tavletta/cli.py:389
+#: tavletta/cli.py:395
 msgid "do not serve the web page at /: only the REST API (and MCP)"
 msgstr "不在 / 提供網頁：僅提供 REST API（及 MCP）"
 
-#: tavletta/cli.py:396
+#: tavletta/cli.py:402
 msgid "largest request body in MB (default 4)"
 msgstr "要求主體的最大大小，單位 MB（預設 4）"
 
-#: tavletta/cli.py:405
+#: tavletta/cli.py:411
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "其 X-Forwarded-For 標頭指明用戶端的反向代理伺服器，例如 172.16.0.0/12；可重複使用"
 
-#: tavletta/cli.py:414
+#: tavletta/cli.py:420
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "允許來自此來源網頁的要求；可重複使用"
 
-#: tavletta/cli.py:419
+#: tavletta/cli.py:425
 msgid "serve MCP on standard input and output"
 msgstr "透過標準輸入與輸出提供 MCP"
 
-#: tavletta/cli.py:421
+#: tavletta/cli.py:427
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "透過標準輸入與輸出提供 MCP，供 Claude Desktop 等 AI 用戶端使用。"
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:437
 msgid "manage the access tokens of the print server"
 msgstr "管理列印伺服器的存取權杖"
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:438
 msgid "Manage the access tokens of the print server."
 msgstr "管理列印伺服器的存取權杖。"
 
-#: tavletta/cli.py:437
+#: tavletta/cli.py:443
 msgid "make a token and add its hash to tokens.toml"
 msgstr "產生權杖並將其雜湊值加入 tokens.toml"
 
-#: tavletta/cli.py:438
+#: tavletta/cli.py:444
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "產生權杖，將其雜湊值加入 tokens.toml，並僅顯示一次權杖。"
 
-#: tavletta/cli.py:440
+#: tavletta/cli.py:446
 msgid "name of the token, e.g. the device"
 msgstr "權杖名稱，例如裝置名稱"
 
-#: tavletta/cli.py:445
+#: tavletta/cli.py:451
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview：僅檢視；print：也可列印；admin：也可管理所有工作"
 
-#: tavletta/cli.py:447
+#: tavletta/cli.py:453
 msgid "tokens.toml to add it to"
 msgstr "要加入的 tokens.toml"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:459
 msgid "only this printer of printers.toml; repeatable"
 msgstr "僅限 printers.toml 中的此印表機；可重複使用"
 
-#: tavletta/cli.py:456
+#: tavletta/cli.py:462
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml，用於檢查 --printer"
 
-#: tavletta/cli.py:458
+#: tavletta/cli.py:464
 msgid "valid until, e.g. 2027-12-31"
 msgstr "有效期限至，例如 2027-12-31"
 
-#: tavletta/cli.py:459
+#: tavletta/cli.py:465
 msgid "a note for people"
 msgstr "給人看的備註"
 
-#: tavletta/cli.py:461
+#: tavletta/cli.py:467
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "以 scrypt 而非 SHA-256 儲存雜湊值"
 
-#: tavletta/cli.py:467
+#: tavletta/cli.py:473
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "從標準輸入讀取您自選的權杖（以 scrypt 儲存），而非產生一個"
 
-#: tavletta/cli.py:487 tavletta/server/config.py:219
+#: tavletta/cli.py:493 tavletta/server/config.py:219
 #: tavletta/server/service.py:612
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "未知的印表機型號：%s"
 
-#: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:340 tavletta/ui/texts.py:722
 #: tavletta/server/service.py:902
 #, python-format
 msgid "Cannot open %s"
 msgstr "無法開啟 %s"
 
-#: tavletta/cli.py:516 tavletta/server/main.py:262
+#: tavletta/cli.py:522 tavletta/server/main.py:301
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s 不是日期，應類似 2026-12-31 或 2026-12-31T08:30"
 
-#: tavletta/cli.py:564
+#: tavletta/cli.py:570
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} 會在列印時填入，無法設定"
 
-#: tavletta/cli.py:570
+#: tavletta/cli.py:576
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "標籤中沒有名為 %s 的元素或變數"
 
-#: tavletta/cli.py:599 tavletta/ui/printing.py:123
+#: tavletta/cli.py:605 tavletta/ui/printing.py:123
 #: tavletta/server/service.py:1287
 msgid "The label is empty"
 msgstr "標籤是空的"
 
-#: tavletta/cli.py:636
+#: tavletta/cli.py:642
 msgid "Cannot write the output"
 msgstr "無法寫入輸出"
 
-#: tavletta/cli.py:667
+#: tavletta/cli.py:673
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output 會寫入 PNG 影像：請提供以 .png 結尾的名稱"
 
-#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
+#: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:541
 #: tavletta/ui/printing.py:705 tavletta/server/service.py:1146
 #: tavletta/server/service.py:1169 tavletta/server/service.py:1471
 #: tavletta/server/service.py:1707
 msgid "The label cannot be prepared for printing."
 msgstr "無法準備標籤以供列印。"
 
-#: tavletta/cli.py:779
+#: tavletta/cli.py:785
 msgid "No printer found – give its address with --host"
 msgstr "找不到印表機，請用 --host 指定其位址"
 
-#: tavletta/cli.py:781
+#: tavletta/cli.py:787
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "找到多台印表機，請用 --host 選擇一台（tavletta list-printers）"
 
-#: tavletta/cli.py:792 tavletta/ui/texts.py:765 tavletta/server/service.py:1697
+#: tavletta/cli.py:798 tavletta/ui/texts.py:765 tavletta/server/service.py:1697
 #, python-format
 msgid "Cannot save %s"
 msgstr "無法儲存 %s"
 
-#: tavletta/cli.py:794 tavletta/server/service.py:1700
+#: tavletta/cli.py:800 tavletta/server/service.py:1700
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "標籤已列印，但下一個計數器值未能儲存"
 
-#: tavletta/cli.py:809 tavletta/server/service.py:1316
+#: tavletta/cli.py:815 tavletta/server/service.py:1316
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "未列印任何內容：下一個計數器值無法儲存"
 
-#: tavletta/cli.py:869 tavletta/cli.py:896 tavletta/cli.py:1260
+#: tavletta/cli.py:875 tavletta/cli.py:902 tavletta/cli.py:1266
 msgid "Interrupted"
 msgstr "已中斷"
 
-#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/cli.py:958 tavletta/ui/printing.py:447
 #: tavletta/server/service.py:1192
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "一個列印工作中最多 %d 個標籤"
 
-#: tavletta/cli.py:971
+#: tavletta/cli.py:977
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method：此印表機型號沒有列印方式設定：%s"
 
-#: tavletta/cli.py:1013
+#: tavletta/cli.py:1019
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet 和 --rows 需要資料檔案（--data）"
 
-#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/cli.py:1028 tavletta/ui/printing.py:574
 #: tavletta/server/service.py:1004
 msgid "No rows to print"
 msgstr "沒有要列印的列"
 
-#: tavletta/cli.py:1032
+#: tavletta/cli.py:1038
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "此標籤使用其資料夾以外的資料檔案：請用 --data 指定"
 
-#: tavletta/cli.py:1059 tavletta/ui/window.py:915
+#: tavletta/cli.py:1065 tavletta/ui/window.py:915
 #: tavletta/server/service.py:1063
 #, python-format
 msgid "No such column: %s"
 msgstr "沒有此欄位：%s"
 
-#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
+#: tavletta/cli.py:1070 tavletta/ui/printing.py:654
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "無法根據這些列的值產生條碼或 QR 碼，例如含字母的 EAN-13 或空白儲存格。請修正資料檔案並重新讀取，或略過這些列再列印。"
 
-#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
+#: tavletta/cli.py:1075 tavletta/ui/printing.py:659
 #, python-format
 msgid "Rows: %s"
 msgstr "列：%s"
 
-#: tavletta/cli.py:1077
+#: tavletta/cli.py:1083
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "正在等待 %s 的另一個列印工作完成…"
 
-#: tavletta/cli.py:1084 tavletta/server/service.py:791
+#: tavletta/cli.py:1090 tavletta/server/service.py:791
 #: tavletta/server/service.py:1465
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s 仍被另一個列印工作鎖定 – 請稍後再試"
 
-#: tavletta/cli.py:1090
+#: tavletta/cli.py:1096
 msgid "--output needs --dry-run"
 msgstr "--output 需要 --dry-run"
 
-#: tavletta/cli.py:1107
+#: tavletta/cli.py:1113
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "下一個計數器值不會儲存：下次列印會重複這些編號"
 
-#: tavletta/cli.py:1203
+#: tavletta/cli.py:1209
 msgid "Waiting for the printer's answer…"
 msgstr "正在等候印表機的回應…"
 
-#: tavletta/cli.py:1231 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1237 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "找不到印表機"
 
@@ -1572,7 +1576,7 @@ msgstr "列印標籤"
 
 #: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:194
-#: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
+#: tavletta/server/web/app.js:377 tavletta/server/web/batch.js:54
 #: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
@@ -3313,8 +3317,8 @@ msgstr "下一個編號"
 msgid "Step"
 msgstr "步進值"
 
-#: tavletta/ui/window.py:172 tavletta/server/web/app.js:45
-#: tavletta/server/web/app.js:288
+#: tavletta/ui/window.py:172 tavletta/server/web/app.js:47
+#: tavletta/server/web/app.js:335
 msgid "Templates"
 msgstr "範本"
 
@@ -3387,7 +3391,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:88 tavletta/server/config.py:92
-#: tavletta/server/config.py:98 tavletta/server/main.py:344
+#: tavletta/server/config.py:98 tavletta/server/main.py:383
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "無法讀取 %(file)s：%(reason)s"
@@ -3396,7 +3400,8 @@ msgstr "無法讀取 %(file)s：%(reason)s"
 msgid "expected a table"
 msgstr "應為表格"
 
-#: tavletta/server/config.py:118 tavletta/server/config.py:450
+#: tavletta/server/config.py:118 tavletta/server/config.py:452
+#: tavletta/server/oidc.py:224 tavletta/server/oidc.py:316
 msgid "missing"
 msgstr "缺少"
 
@@ -3423,6 +3428,7 @@ msgid "expected one of: %s"
 msgstr "應為下列之一：%s"
 
 #: tavletta/server/config.py:152 tavletta/server/config.py:158
+#: tavletta/server/oidc.py:285
 msgid "unknown key"
 msgstr "未知的鍵"
 
@@ -3450,32 +3456,34 @@ msgstr "此印表機型號無法裁切"
 msgid "this printer model has no colour settings"
 msgstr "此印表機型號沒有色彩設定"
 
-#: tavletta/server/config.py:405
+#: tavletta/server/config.py:407
 msgid "expected a date such as 2027-12-31"
 msgstr "應為日期，例如 2027-12-31"
 
-#: tavletta/server/config.py:424
+#: tavletta/server/config.py:426
 msgid "the same token twice"
 msgstr "同一權杖出現兩次"
 
-#: tavletta/server/config.py:437
+#: tavletta/server/config.py:439
 #, python-format
 msgid "%s can be changed by every user of this computer: chmod 600 it"
 msgstr "此電腦的所有使用者都能變更 %s：請對其執行 chmod 600"
 
-#: tavletta/server/config.py:447
+#: tavletta/server/config.py:449
 msgid "not a token hash: expected sha256:… or scrypt:…"
 msgstr "不是權杖雜湊值：應為 sha256:… 或 scrypt:…"
 
-#: tavletta/server/config.py:473
+#: tavletta/server/config.py:475
 msgid "expected a list of printer names"
 msgstr "應為印表機名稱清單"
 
-#: tavletta/server/config.py:477 tavletta/server/main.py:370
+#: tavletta/server/config.py:479 tavletta/server/main.py:409
+#: tavletta/server/oidc.py:240 tavletta/server/oidc.py:277
 msgid "printers can only be limited with --printers"
 msgstr "只能透過 --printers 限制印表機"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:551
+#: tavletta/server/config.py:481 tavletta/server/oidc.py:249
+#: tavletta/server/service.py:551
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "未知的印表機：%s"
@@ -3485,74 +3493,76 @@ msgstr "未知的印表機：%s"
 msgid "Invalid value for %s"
 msgstr "%s 的值無效"
 
-#: tavletta/server/http.py:469 tavletta/server/http.py:518
+#: tavletta/server/http.py:481 tavletta/server/http.py:530
 msgid "The request took too long"
 msgstr "要求耗時過長"
 
-#: tavletta/server/http.py:478 tavletta/server/service.py:1618
+#: tavletta/server/http.py:490 tavletta/server/service.py:1618
 msgid "The server is busy – try again later"
 msgstr "伺服器忙碌中，請稍後再試"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:533
 msgid "Internal error"
 msgstr "內部錯誤"
 
-#: tavletta/server/http.py:526
+#: tavletta/server/http.py:538
 msgid "This server only answers on its local address"
 msgstr "此伺服器只在其本機位址上回應"
 
-#: tavletta/server/http.py:530
+#: tavletta/server/http.py:542 tavletta/server/http.py:654
+#: tavletta/server/http.py:658
 msgid "Requests from this web page are not allowed"
 msgstr "不允許來自此網頁的要求"
 
-#: tavletta/server/http.py:557
+#: tavletta/server/http.py:574 tavletta/server/http.py:690
 msgid "Too many requests – try again later"
 msgstr "要求過多，請稍後再試"
 
-#: tavletta/server/http.py:559
+#: tavletta/server/http.py:576 tavletta/server/http.py:667
 msgid "Access token missing or wrong"
 msgstr "存取權杖遺失或錯誤"
 
-#: tavletta/server/http.py:600 tavletta/server/http.py:605
-msgid "The request needs a Content-Length"
-msgstr "要求需要 Content-Length"
-
-#: tavletta/server/http.py:602
-msgid "The request has more than one Content-Length"
-msgstr "要求包含多個 Content-Length"
-
-#: tavletta/server/http.py:608 tavletta/server/service.py:836
-msgid "The request is too large"
-msgstr "要求過大"
-
-#: tavletta/server/http.py:613
-msgid "The request body is incomplete"
-msgstr "要求主體不完整"
-
-#: tavletta/server/http.py:620
-msgid "Send the request as application/json"
-msgstr "請以 application/json 格式傳送要求"
-
-#: tavletta/server/http.py:652 tavletta/server/http.py:662
-#: tavletta/server/http.py:783
-msgid "Not found"
-msgstr "找不到"
-
-#: tavletta/server/http.py:661 tavletta/server/http.py:774
-msgid "Method not allowed"
-msgstr "不允許的方法"
-
-#: tavletta/server/http.py:678
+#: tavletta/server/http.py:647 tavletta/server/http.py:798
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "請隨此要求傳送標頭 %s"
 
-#: tavletta/server/http.py:721 tavletta/server/service.py:627
+#: tavletta/server/http.py:678 tavletta/server/http.py:772
+#: tavletta/server/http.py:782 tavletta/server/http.py:905
+msgid "Not found"
+msgstr "找不到"
+
+#: tavletta/server/http.py:680 tavletta/server/http.py:781
+#: tavletta/server/http.py:896
+msgid "Method not allowed"
+msgstr "不允許的方法"
+
+#: tavletta/server/http.py:717 tavletta/server/http.py:722
+msgid "The request needs a Content-Length"
+msgstr "要求需要 Content-Length"
+
+#: tavletta/server/http.py:719
+msgid "The request has more than one Content-Length"
+msgstr "要求包含多個 Content-Length"
+
+#: tavletta/server/http.py:725 tavletta/server/service.py:836
+msgid "The request is too large"
+msgstr "要求過大"
+
+#: tavletta/server/http.py:730
+msgid "The request body is incomplete"
+msgstr "要求主體不完整"
+
+#: tavletta/server/http.py:737
+msgid "Send the request as application/json"
+msgstr "請以 application/json 格式傳送要求"
+
+#: tavletta/server/http.py:843 tavletta/server/service.py:627
 #: tavletta/server/service.py:1591
 msgid "This access token may not do this"
 msgstr "此存取權杖無權執行此操作"
 
-#: tavletta/server/http.py:897
+#: tavletta/server/http.py:1021
 msgid "The request is not valid JSON"
 msgstr "要求不是有效的 JSON"
 
@@ -3566,12 +3576,12 @@ msgstr "標籤資料夾 %s 不存在"
 msgid "Cannot read the token file %s"
 msgstr "無法讀取權杖檔案 %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:315
+#: tavletta/server/main.py:54 tavletta/server/main.py:354
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "存取權杖只能包含不含空格的可列印 ASCII 字元"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:320
+#: tavletta/server/main.py:59 tavletta/server/main.py:359
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "存取權杖長度至少須為 %d 個字元"
@@ -3589,54 +3599,87 @@ msgstr "請使用 --tokens 或 --token-file，二者擇一"
 msgid "Not a valid printer address pattern: %s"
 msgstr "不是有效的印表機位址模式：%s"
 
-#: tavletta/server/main.py:117
+#: tavletta/server/main.py:118
 #, python-format
 msgid ""
 "Refusing to listen on %s without an access token: set TAVLETTA_TOKEN or use "
 "--token-file"
 msgstr "拒絕在沒有存取權杖的情況下監聽 %s：請設定 TAVLETTA_TOKEN 或使用 --token-file"
 
-#: tavletta/server/main.py:141
+#: tavletta/server/main.py:143
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "無法監聽 %(address)s：%(reason)s"
 
-#: tavletta/server/main.py:274
+#: tavletta/server/main.py:160
+msgid "--oidc signs in to the web page: not with --no-web-ui"
+msgstr "--oidc 用於登入網頁：不能與 --no-web-ui 併用"
+
+#: tavletta/server/main.py:165
+msgid ""
+"--oidc needs PyJWT with cryptography (python3-jwt, pip install "
+"tavletta[oidc])"
+msgstr "--oidc 需要含 cryptography 的 PyJWT（python3-jwt、pip install tavletta[oidc]）"
+
+#: tavletta/server/main.py:313
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "名稱無效：只能使用字母、數字、. _ -（最多 64 個）"
 
-#: tavletta/server/main.py:285
+#: tavletta/server/main.py:324
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s 正由另一個程式使用，請稍後再試"
 
-#: tavletta/server/main.py:292
+#: tavletta/server/main.py:331
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "權杖 %(name)s 已加入 %(file)s。"
 
-#: tavletta/server/main.py:299
+#: tavletta/server/main.py:338
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "權杖僅顯示這一次；%s 只保留其雜湊值。"
 
-#: tavletta/server/main.py:310
+#: tavletta/server/main.py:349
 msgid "Access token: "
 msgstr "存取權杖："
 
-#: tavletta/server/main.py:325
+#: tavletta/server/main.py:364
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "自選權杖不得看起來像產生的權杖（tav_…）"
 
-#: tavletta/server/main.py:375
+#: tavletta/server/main.py:414
 #, python-format
 msgid "A token named %s exists already"
 msgstr "名為 %s 的權杖已存在"
 
-#: tavletta/server/main.py:402
+#: tavletta/server/main.py:441
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "此權杖已在檔案中，名稱為 %s"
+
+#: tavletta/server/oidc.py:151 tavletta/server/oidc.py:155
+#: tavletta/server/oidc.py:265
+msgid "expected an https:// address (http:// only on this computer)"
+msgstr "應為 https:// 位址（http:// 僅限本機）"
+
+#: tavletta/server/oidc.py:181 tavletta/server/oidc.py:197
+#: tavletta/server/oidc.py:257
+msgid "expected a list of texts"
+msgstr "應為文字清單"
+
+#: tavletta/server/oidc.py:213 tavletta/server/oidc.py:217
+#, python-format
+msgid "Cannot read the client secret file %s"
+msgstr "無法讀取用戶端密碼檔案 %s"
+
+#: tavletta/server/oidc.py:229
+msgid "map at least one role"
+msgstr "請至少對應一個角色"
+
+#: tavletta/server/oidc.py:275
+msgid "use either printers_claim or [oidc.printers]"
+msgstr "請只使用 printers_claim 或 [oidc.printers] 其中之一"
 
 #: tavletta/server/paths.py:46 tavletta/server/service.py:815
 #, python-format
@@ -3758,19 +3801,19 @@ msgstr "此印表機最多 %d 份"
 msgid "Printers are chosen by name: leave out host"
 msgstr "印表機依名稱選擇：請省略 host"
 
-#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:482
+#: tavletta/server/web/api.js:68 tavletta/server/web/app.js:529
 msgid "No connection to the server. Your input is kept."
 msgstr "無法連線至伺服器。您輸入的內容已保留。"
 
-#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:210
+#: tavletta/server/web/app.js:48 tavletta/server/web/app.js:257
 msgid "Printers"
 msgstr "印表機"
 
-#: tavletta/server/web/app.js:51
+#: tavletta/server/web/app.js:53
 msgid "Main"
 msgstr "主要導覽"
 
-#: tavletta/server/web/app.js:74
+#: tavletta/server/web/app.js:78
 msgid "Language"
 msgstr "語言"
 
@@ -3778,184 +3821,211 @@ msgstr "語言"
 msgid "Sign out"
 msgstr "登出"
 
-#: tavletta/server/web/app.js:84
+#: tavletta/server/web/app.js:85
 msgid "Skip to content"
 msgstr "跳至內容"
 
-#: tavletta/server/web/app.js:160
+#: tavletta/server/web/app.js:182
+msgid ""
+"You are signed in at {provider}, but have no access to Tavletta. Ask the "
+"administrator for it."
+msgstr "您已在 {provider} 登入，但沒有 Tavletta 的存取權。請向管理員申請。"
+
+#: tavletta/server/web/app.js:183
+msgid "Signing in took too long or was started in another window. Try again."
+msgstr "登入時間過長，或是在另一個視窗中開始。請再試一次。"
+
+#: tavletta/server/web/app.js:184
+msgid "Signing in was canceled."
+msgstr "已取消登入。"
+
+#: tavletta/server/web/app.js:186
+msgid "Signing in did not work. Try again, or ask the administrator."
+msgstr "登入失敗。請再試一次，或詢問管理員。"
+
+#: tavletta/server/web/app.js:196
+msgid "Sign in with {provider}"
+msgstr "以 {provider} 登入"
+
+#: tavletta/server/web/app.js:198 tavletta/server/web/app.js:211
+#: tavletta/server/web/app.js:249
+msgid "Sign in"
+msgstr "登入"
+
+#: tavletta/server/web/app.js:201
+msgid "Or with an access token"
+msgstr "或使用存取權杖"
+
+#: tavletta/server/web/app.js:205
 msgid "Access token"
 msgstr "存取權杖"
 
-#: tavletta/server/web/app.js:161
+#: tavletta/server/web/app.js:206
 msgid ""
 "The administrator gives it to you. It is kept in this tab only and forgotten "
 "when the tab is closed."
 msgstr "由管理員提供。權杖只保存在此分頁中，關閉分頁後即會清除。"
 
-#: tavletta/server/web/app.js:166 tavletta/server/web/app.js:202
-msgid "Sign in"
-msgstr "登入"
-
-#: tavletta/server/web/app.js:172
+#: tavletta/server/web/app.js:218
 msgid "Show token"
 msgstr "顯示權杖"
 
-#: tavletta/server/web/app.js:180
+#: tavletta/server/web/app.js:226
 msgid "Enter the access token."
 msgstr "請輸入存取權杖。"
 
-#: tavletta/server/web/app.js:195
+#: tavletta/server/web/app.js:242
 msgid ""
 "The token was not accepted. Check it, or ask the administrator for a new one."
 msgstr "權杖未被接受。請檢查權杖，或向管理員索取新的權杖。"
 
-#: tavletta/server/web/app.js:209
+#: tavletta/server/web/app.js:256
 msgid "Check again"
 msgstr "重新檢查"
 
-#: tavletta/server/web/app.js:221 tavletta/server/web/print.js:74
+#: tavletta/server/web/app.js:268 tavletta/server/web/print.js:74
 msgid "No printer this token may use. Ask the administrator."
 msgstr "此權杖沒有可用的印表機。請洽詢管理員。"
 
-#: tavletta/server/web/app.js:234
+#: tavletta/server/web/app.js:281
 msgid "Location: {place}"
 msgstr "位置：{place}"
 
-#: tavletta/server/web/app.js:235
+#: tavletta/server/web/app.js:282
 msgid "Meant for: {media}"
 msgstr "適用於：{media}"
 
-#: tavletta/server/web/app.js:236
+#: tavletta/server/web/app.js:283
 msgid "Model: {model}"
 msgstr "型號：{model}"
 
-#: tavletta/server/web/app.js:242
+#: tavletta/server/web/app.js:289
 msgid "Default"
 msgstr "預設"
 
-#: tavletta/server/web/app.js:256
+#: tavletta/server/web/app.js:303
 msgid "Asking the printer…"
 msgstr "正在詢問印表機…"
 
-#: tavletta/server/web/app.js:267
+#: tavletta/server/web/app.js:314
 msgid "Ask for its state"
 msgstr "查詢狀態"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:320
 msgid "Address: {host}"
 msgstr "位址：{host}"
 
-#: tavletta/server/web/app.js:273
+#: tavletta/server/web/app.js:320
 msgid "No address set"
 msgstr "未設定位址"
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:351
 msgid "No templates yet. Upload one above."
 msgstr "尚無範本。請在上方上傳。"
 
-#: tavletta/server/web/app.js:304
+#: tavletta/server/web/app.js:351
 msgid "No templates yet. Ask the administrator."
 msgstr "尚無範本。請洽詢管理員。"
 
-#: tavletta/server/web/app.js:331
+#: tavletta/server/web/app.js:378
 msgid "Series"
 msgstr "資料合併"
 
-#: tavletta/server/web/app.js:332
+#: tavletta/server/web/app.js:379
 msgid "Delete"
 msgstr "刪除"
 
-#: tavletta/server/web/app.js:340
+#: tavletta/server/web/app.js:387
 msgid "Size: {width} × {height} mm"
 msgstr "尺寸：{width} × {height} mm"
 
-#: tavletta/server/web/app.js:341
+#: tavletta/server/web/app.js:388
 msgid "Fields: {count}"
 msgstr "欄位：{count}"
 
-#: tavletta/server/web/app.js:342
+#: tavletta/server/web/app.js:389
 msgid "Printer model: {model}"
 msgstr "印表機型號：{model}"
 
-#: tavletta/server/web/app.js:348 tavletta/server/web/print.js:188
+#: tavletta/server/web/app.js:395 tavletta/server/web/print.js:188
 msgid "Preview of {name}"
 msgstr "{name} 的預覽"
 
-#: tavletta/server/web/app.js:359
+#: tavletta/server/web/app.js:406
 msgid "Delete template?"
 msgstr "要刪除範本嗎？"
 
-#: tavletta/server/web/app.js:360
+#: tavletta/server/web/app.js:407
 msgid "The template {name} is deleted from the server. Its data file stays."
 msgstr "範本 {name} 將從伺服器刪除。其資料檔會保留。"
 
-#: tavletta/server/web/app.js:361
+#: tavletta/server/web/app.js:408
 msgid "Delete {name}"
 msgstr "刪除 {name}"
 
-#: tavletta/server/web/app.js:368
+#: tavletta/server/web/app.js:415
 msgid "{name} deleted."
 msgstr "已刪除 {name}。"
 
-#: tavletta/server/web/app.js:381
+#: tavletta/server/web/app.js:428
 msgid "Template file"
 msgstr "範本檔案"
 
-#: tavletta/server/web/app.js:382
+#: tavletta/server/web/app.js:429
 msgid "A .tavletta file saved by Tavletta, at most {size} MB."
 msgstr "由 Tavletta 儲存的 .tavletta 檔案，最大 {size} MB。"
 
-#: tavletta/server/web/app.js:386
+#: tavletta/server/web/app.js:433
 msgid "Upload"
 msgstr "上傳"
 
-#: tavletta/server/web/app.js:390
+#: tavletta/server/web/app.js:437
 msgid "Upload a template"
 msgstr "上傳範本"
 
-#: tavletta/server/web/app.js:392
+#: tavletta/server/web/app.js:439
 msgid "Replace a template of the same name"
 msgstr "取代同名範本"
 
-#: tavletta/server/web/app.js:400
+#: tavletta/server/web/app.js:447
 msgid "Choose a template file."
 msgstr "請選擇範本檔案。"
 
-#: tavletta/server/web/app.js:405
+#: tavletta/server/web/app.js:452
 msgid "The file is too large: at most {size} MB."
 msgstr "檔案過大：最大 {size} MB。"
 
-#: tavletta/server/web/app.js:416
+#: tavletta/server/web/app.js:463
 msgid "{name} uploaded."
 msgstr "已上傳 {name}。"
 
-#: tavletta/server/web/app.js:420
+#: tavletta/server/web/app.js:467
 msgid ""
 "A template of this name exists. Choose \"Replace a template of the same "
 "name\" to replace it."
 msgstr "已有同名範本。若要取代，請選擇「取代同名範本」。"
 
-#: tavletta/server/web/app.js:422
+#: tavletta/server/web/app.js:469
 msgid ""
 "The file name can have letters, digits, spaces and . _ - ( ) + , and must "
 "not start with a dot. Rename the file."
 msgstr "檔名可包含字母、數字、空格及 . _ - ( ) + ,，且不可以點開頭。請重新命名檔案。"
 
-#: tavletta/server/web/app.js:437
+#: tavletta/server/web/app.js:484
 msgid "Print job"
 msgstr "列印工作"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:843
+#: tavletta/server/web/app.js:491 tavletta/server/web/batch.js:843
 #: tavletta/server/web/print.js:243
 msgid "Template: {name}"
 msgstr "範本：{name}"
 
-#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:844
+#: tavletta/server/web/app.js:491 tavletta/server/web/batch.js:844
 #: tavletta/server/web/print.js:243
 msgid "Printer: {name}"
 msgstr "印表機：{name}"
 
-#: tavletta/server/web/app.js:449 tavletta/server/web/batch.js:886
+#: tavletta/server/web/app.js:496 tavletta/server/web/batch.js:886
 msgid "Print job ended: {printed} of {total} labels printed."
 msgstr "列印工作已結束：已列印 {printed} / {total} 張標籤。"
 
