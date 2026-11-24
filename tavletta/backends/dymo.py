@@ -13,10 +13,9 @@ from __future__ import annotations
 
 from PIL import Image
 
-from tavletta.backends import usb
+from tavletta.backends import mdns, usb
 from tavletta.backends.base import (
     Capabilities,
-    FoundPrinter,
     HostMemory,
     LabelSize,
     LabelTooWide,
@@ -150,18 +149,21 @@ class Dymo(RawBackend):
     def __init__(self, port: int | None = None):
         super().__init__(port)
         # models of network printers as they announce themselves, by host
-        # ("" = looked for, not announced): the 4XL has a wider head
+        # name and by address ("" = looked for, not announced): the 4XL has
+        # a wider head
         self.models: HostMemory[str] = HostMemory()
 
     def model(self, host: str) -> str:
         return usb_model(host) or self.models.get(host, "")
 
-    def discover(self, timeout: float = 3.0) -> list[FoundPrinter]:
-        found = super().discover(timeout)
-        for printer in found:
-            if not usb.is_usb(printer.host):
-                self.models[printer.host] = printer.name
-        return found
+    def seen(self, service: mdns.Service) -> None:
+        """The model as the print server tells it (usb_MDL), else the
+        service name; for the host name and the address alike: a printer
+        is often entered by its IP address."""
+        model = service.txt.get("usb_mdl") or service.name
+        for host in (service.host, service.address):
+            if host:
+                self.models[host] = model
 
     def query(self, host: str) -> PrinterInfo:
         if not usb.is_usb(host) and host not in self.models:

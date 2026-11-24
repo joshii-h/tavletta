@@ -22,10 +22,12 @@ reference, **[assumed]** likely but untested, **[open]** unknown.
 - The LabelWriter 550 and 5XL only print on DYMO's labels with a chip and
   are left out, as in LPrint. The LabelManager tape printers use another
   dialect and are not supported. [LPrint]
-- On the network the model comes from the mDNS announcement (the service
-  name or `usb_MDL`), looked up once per address when the printer was not
-  found by a search (also when nothing answers: not again on each
-  refresh): a 4XL has the wider head. [assumed]
+- On the network the model comes from the mDNS announcement (`usb_MDL`,
+  else the service name), kept for the printer's host name and for its
+  address, so a printer entered by IP address is known too; looked up
+  once per address when the printer was not found by a search (also when
+  nothing answers: not again on each refresh): a 4XL has the wider head.
+  [assumed]
 
 ## Status
 

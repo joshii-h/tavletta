@@ -558,6 +558,24 @@ def test_dymo_4xl_on_the_network(monkeypatch):
     backend.print_label(Image.new("RGB", (1200, 40), "white"), "lw.local", PrintOptions())
 
 
+def test_dymo_4xl_entered_by_its_address(monkeypatch):
+    """A printer entered by IP address is found by its address in the
+    announcement; the model from usb_MDL, whatever the service is named."""
+    from tavletta.backends import mdns
+
+    fake = install(monkeypatch, FakePrinter())
+    txt = {"usb_mfg": "DYMO", "usb_mdl": "LabelWriter 4XL"}
+    service = mdns.Service("Shipping desk", "lw.local", "192.0.2.5", 9100, txt)
+    monkeypatch.setattr(raw, "_browse", lambda service_type, match, timeout: [service])
+    backend = dymo.Dymo()
+    assert backend.query("192.0.2.5").model == "LabelWriter 4XL"
+    assert backend.model("lw.local") == "LabelWriter 4XL"
+    # the 104 mm of a 4XL label fit its head: not refused, nor cut to 672 dots
+    image = Image.new("RGB", (1200, 40), "white")
+    backend.print_label(image, "192.0.2.5", PrintOptions())
+    assert b"\x1bD\x96" in fake.printer.jobs[-1]  # 150 bytes per row
+
+
 def test_dymo_wide_labels(monkeypatch):
     backend = dymo.Dymo()
     fake = install(monkeypatch, FakePrinter())

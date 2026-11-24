@@ -323,11 +323,16 @@ class RawBackend(Backend):
             for p in usb.printers()
             if self.speaks(p.manufacturer, p.model, p.commands)
         ]
-        return plugged + [
-            FoundPrinter(s.name, s.host, s.address)
-            for s in _browse(SERVICE, lambda _name: True, timeout)
-            if self._announced(s.name, s.txt)
-        ]
+        announced = []
+        for service in _browse(SERVICE, lambda _name: True, timeout):
+            if self._announced(service.name, service.txt):
+                self.seen(service)
+                announced.append(FoundPrinter(service.name, service.host, service.address))
+        return plugged + announced
+
+    def seen(self, service: mdns.Service) -> None:
+        """A printer of this language announced on the network: what a
+        backend learns from the announcement (DYMO: the model)."""
 
     def _announced(self, name: str, txt: dict[str, str]) -> bool:
         commands = tuple(c.strip().upper() for c in txt.get("usb_cmd", "").split(",") if c.strip())
