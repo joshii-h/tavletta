@@ -1284,8 +1284,8 @@ paths:
           x-tavletta-codes:
           - length_required
         '413':
-          description: Over --max-body (the file in base64), over the limits of data files, or more than
-            500000 cells (rows times columns)
+          description: Over --max-body (the file in base64), over the limits of data files, more than
+            500000 cells (rows times columns), or longer than 10 s to read
           content:
             application/json:
               schema:
@@ -1335,7 +1335,7 @@ paths:
         '501':
           description: A method HTTP knows but the server does not
         '503':
-          description: 'Busy: no request slot, render slot or thread free'
+          description: Another file is being read (one at a time, one per client address)
           content:
             application/json:
               schema:

@@ -1097,10 +1097,15 @@ def _data_paths() -> dict:
                     "400": _error("Invalid request", "invalid_field", "unknown_field", "not_json"),
                     "413": _error(
                         "Over --max-body (the file in base64), over the limits of data files, "
-                        "or more than 500000 cells (rows times columns)",
+                        "more than 500000 cells (rows times columns), or longer than 10 s "
+                        "to read",
                         "too_large",
                     ),
                     "422": _error("Not a table, damaged or empty", "data_problem"),
+                    "503": _error(
+                        "Another file is being read (one at a time, one per client address)",
+                        "busy",
+                    ),
                 },
                 requestBody={
                     "required": True,

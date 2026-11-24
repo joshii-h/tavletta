@@ -881,7 +881,7 @@ class Handler(BaseHTTPRequestHandler):
         body = self._raw_json()
         with self._parsing(body):
             request = requests.data_request(_parse(body))
-        self._send(200, self.server.service.read_data(request))
+        self._send(200, self.server.service.read_data(request, rate_key(self.client())))
 
     def preview(self, _parts: list[str]) -> None:
         body = self._raw_json()

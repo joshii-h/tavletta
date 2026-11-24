@@ -9,6 +9,7 @@ import io
 import json
 import os
 import threading
+import time
 
 import pytest
 from PIL import Image
@@ -495,6 +496,55 @@ def test_geometry_is_none_when_the_render_has_no_boxes():
 
     label = Label(printer="fake-mono", tape_mm=12, elements=[TextElement(text="x")])
     assert service_module._geometry(label, Rendered(), 300, None) is None
+
+
+def test_reading_data_takes_no_render_slot(base, server_env, monkeypatch):
+    """A spreadsheet being read leaves the render slots to previews and
+    prints; a second file of the same client is 503 meanwhile."""
+    from tavletta import merge
+
+    reading, go_on = threading.Event(), threading.Event()
+    real = merge.read_book_data
+
+    def slow(content, sheet="", cancel=None):
+        reading.set()
+        go_on.wait(10)
+        return real(content, sheet, cancel)
+
+    monkeypatch.setattr(service_module, "read_book_data", slow)
+    answers = []
+    first = threading.Thread(target=lambda: answers.append(data(base, b"A\n1\n")))
+    first.start()
+    try:
+        assert reading.wait(10)
+        body = {"label": "box"}
+        for _ in range(3):  # both render slots are free
+            assert call(base, "POST", "/api/v1/preview", body=body, token=VIEWER)[0] == 200
+        status, _response, answer = data(base, b"A\n2\n")
+        assert status == 503 and answer["error"]["code"] == "busy"
+    finally:
+        go_on.set()
+        first.join(10)
+    assert answers[0][0] == 200
+    assert data(base, b"A\n3\n")[0] == 200
+
+
+def test_reading_data_is_held_to_a_time(base, monkeypatch):
+    """A file that takes longer than DATA_SECONDS to read is 413."""
+    from tavletta.merge import table
+
+    monkeypatch.setattr(service_module, "DATA_SECONDS", 0.05)
+    real = table.check_cancelled
+
+    def slow():
+        time.sleep(0.01)
+        real()
+
+    monkeypatch.setattr(table, "check_cancelled", slow)
+    rows = "".join("%d\n" % n for n in range(1000))
+    status, _response, body = data(base, ("A\n" + rows).encode())
+    assert status == 413 and body["error"]["code"] == "too_large"
+    assert "too long" in body["error"]["message"]
 
 
 def test_data_answers_no_more_cells_than_a_print_could_send(base, monkeypatch):

@@ -138,6 +138,13 @@ STALE_UPLOAD_SECONDS = 3600.0
 # cells of a data file read for the web page (POST /data): its rows come
 # back as JSON and go out again as data_rows, which --max-body limits
 MAX_DATA_CELLS = 500_000
+# data files read for POST /data at once, apart from the render slots (a
+# preview waits for no spreadsheet), and one per client address at a time
+DATA_PARSES = 1
+# seconds reading one may take: a few MB of XLSX can unpack to millions of
+# XML elements (merge.limits), which the app reads, but a server must not
+# spend half a minute on for anyone with the role preview
+DATA_SECONDS = 10.0
 MAX_DATA_CHARS = 16 * 1024 * 1024  # of the answer's names and values together
 
 
@@ -421,6 +428,8 @@ class Service:
         self._held = threading.local()  # render slots this thread holds
         self._waiting = 0  # requests waiting for a render slot
         self._waiting_lock = threading.Lock()
+        self._data_parses = threading.BoundedSemaphore(DATA_PARSES)  # POST /data
+        self._reading: set[str] = set()  # the client addresses reading one now
         self._remove_stale_uploads()
 
     def _remove_stale_uploads(self) -> None:
@@ -862,17 +871,23 @@ class Service:
                 raise not_found("label_not_found", _("No such label: %s") % shown) from None
         log.info("label %s deleted by %s", shown, caller.name)
 
-    def read_data(self, request: DataRequest) -> dict:
+    def read_data(self, request: DataRequest, client: str = "") -> dict:
         """The rows of a data file sent with the request (POST /data), as
         the app reads one: every cell as the text it shows (leading zeros
-        and number formats kept). Parsed in a render slot: a large
-        spreadsheet takes as long and as much memory as a render."""
+        and number formats kept). Read in a slot of its own (DATA_PARSES,
+        one for each client address at a time; 503 busy), not a render
+        slot: previews and prints do not wait for a large spreadsheet.
+        Within DATA_SECONDS, else 413."""
         name = request.name or "data"
         try:
-            with self.render_slot():
-                book = read_book_data(request.content, request.sheet)
+            with self._data_slot(client):
+                book = _read_within(request.content, request.sheet, DATA_SECONDS)
                 table = book.table if request.header else without_header(book.table)
         except MergeError as e:
+            if e.code == "cancelled":
+                raise ApiError(
+                    413, "too_large", _("Reading the file takes too long – send a smaller one")
+                ) from None
             raise ApiError(422, "data_problem", data_error_text(e, name)) from None
         # the rows go back as JSON: no more than a print request could send,
         # counted in cells and in characters (a long cell or column name in
@@ -889,6 +904,23 @@ class Service:
             "columns": table.columns,
             "rows": table.rows,
         }
+
+    @contextlib.contextmanager
+    def _data_slot(self, client: str) -> Iterator[None]:
+        with self._waiting_lock:
+            if client in self._reading:
+                raise _busy()
+            self._reading.add(client)
+        try:
+            if not self._data_parses.acquire(timeout=RENDER_WAIT):
+                raise _busy()
+            try:
+                yield
+            finally:
+                self._data_parses.release()
+        finally:
+            with self._waiting_lock:
+                self._reading.discard(client)
 
     def limits(self) -> dict:
         """What a request may ask for at most, for the web page to tell
@@ -1571,6 +1603,18 @@ def _geometry(label: Label, rendered, dpi: float, sheet: SheetJob | None) -> dic
     except ValueError:  # a backend whose render does not tell the boxes
         return None
     return dict(geometry.to_dict(), dpi=api_dpi(dpi))
+
+
+def _read_within(content: bytes, sheet: str, seconds: float):
+    """read_book_data(), stopped (MergeError "cancelled") after `seconds`."""
+    stop = threading.Event()
+    timer = threading.Timer(seconds, stop.set)
+    timer.daemon = True
+    timer.start()
+    try:
+        return read_book_data(content, sheet, stop)
+    finally:
+        timer.cancel()
 
 
 def _answer_chars(rows: list[dict[str, str]]) -> int:

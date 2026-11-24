@@ -683,7 +683,12 @@ A client of MCP sends rows as `data_rows` itself.
   (code, state) is logged.
 - `/data` answers at most 500 000 cells and 16 MB of names and values
   (413): a small file with a long cell or column name in every row would
-  otherwise make a huge answer.
+  otherwise make a huge answer. A file is read in a slot of its own, not
+  a render slot (previews and prints do not wait for a spreadsheet): one
+  at a time, one per client address (503 `busy`, after up to 20 s for
+  the slot), and within 10 s (413): a few MB of XLSX can unpack to
+  millions of XML elements, which the app reads, but a server should not
+  spend half a minute on for anyone with the role preview.
 - The files are sent with an `ETag` and `Cache-Control: no-cache`: a
   browser asks again and gets 304 while they are unchanged, and the new
   files right after an update.
