@@ -4,6 +4,8 @@ asked for, and not at all with --no-web-ui."""
 
 from __future__ import annotations
 
+import json
+
 import pytest
 from test_server import TOKEN, call
 
@@ -138,3 +140,36 @@ def test_chosen_language(monkeypatch):
     assert webui.chosen_language(None, "en, de") == "en"
     assert webui.chosen_language("<script>", "de") == "de"
     assert webui.chosen_language(None, None) == "en"
+
+
+def test_the_texts_are_translated(monkeypatch, tmp_path):
+    """With a catalog: the msgstr of each text the scripts use."""
+    import subprocess
+    from shutil import which
+
+    if which("msgfmt") is None:
+        pytest.skip("no msgfmt")
+    from pathlib import Path
+
+    root = Path(webui.__file__).parents[2]
+    out = tmp_path / "de" / "LC_MESSAGES"
+    out.mkdir(parents=True)
+    subprocess.run(
+        ["msgfmt", "-o", str(out / "tavletta.mo"), str(root / "po" / "de.po")], check=True
+    )
+    from tavletta.ui import i18n
+
+    monkeypatch.setattr(webui, "LOCALE_DIR", tmp_path)
+    monkeypatch.setattr(i18n, "LOCALE_DIR", tmp_path)
+    i18n.translation_for.cache_clear()
+    webui.languages.cache_clear()
+    webui._messages.cache_clear()
+    try:
+        asset = webui.messages("de", None)
+        body = json.loads(asset.data)
+        assert body["messages"]["Sign in"] == "Anmelden"
+        assert set(body["messages"]) <= set(webui.texts())
+    finally:
+        i18n.translation_for.cache_clear()
+        webui.languages.cache_clear()
+        webui._messages.cache_clear()

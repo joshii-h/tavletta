@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-23 15:25+0100\n"
+"PO-Revision-Date: 2026-11-24 14:49+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: zh_CN\n"
 "Language: zh_CN\n"
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Box and frame"
 msgstr "方框与外框"
 
-#: tavletta/app.py:221 tavletta/cli.py:185
+#: tavletta/app.py:221 tavletta/cli.py:186
 msgid "Design and print labels"
 msgstr "设计并打印标签"
 
@@ -64,55 +64,55 @@ msgstr "应为 NAME=VALUE：%s"
 msgid "expected a whole number from %(min)d to %(max)d: %(value)s"
 msgstr "应为 %(min)d 到 %(max)d 之间的整数：%(value)s"
 
-#: tavletta/cli.py:179
+#: tavletta/cli.py:180
 #, python-format
 msgid "expected rows such as 3-10, 5 or 7-: %s"
 msgstr "应为 3-10、5 或 7- 这样的行：%s"
 
-#: tavletta/cli.py:186
+#: tavletta/cli.py:187
 msgid "Without a command the application starts; label files given open in it."
 msgstr "不带命令时启动应用程序；给出的标签文件在其中打开。"
 
-#: tavletta/cli.py:192
+#: tavletta/cli.py:193
 msgid "print a label file without opening a window"
 msgstr "不打开窗口，直接打印标签文件"
 
-#: tavletta/cli.py:193
+#: tavletta/cli.py:194
 msgid "Print a label file without opening a window."
 msgstr "不打开窗口，直接打印标签文件。"
 
-#: tavletta/cli.py:195
+#: tavletta/cli.py:196
 msgid "the label (.tavletta)"
 msgstr "标签（.tavletta）"
 
-#: tavletta/cli.py:198
+#: tavletta/cli.py:199
 #, python-format
 msgid "printer model, by default the label's: %s"
 msgstr "打印机型号，默认为标签中的型号：%s"
 
-#: tavletta/cli.py:201
+#: tavletta/cli.py:202
 msgid "printer address, by default the one set in the app"
 msgstr "打印机地址，默认为应用中设置的地址"
 
-#: tavletta/cli.py:204
+#: tavletta/cli.py:205
 msgid "number of copies"
 msgstr "份数"
 
-#: tavletta/cli.py:214
+#: tavletta/cli.py:215
 msgid ""
 "text of the element NAME, or value of the variable {=NAME}; variables in a "
 "text are filled in; repeatable"
 msgstr "元素 NAME 的文本，或变量 {=NAME} 的值；文本中的变量会被填入；可重复使用"
 
-#: tavletta/cli.py:224
+#: tavletta/cli.py:225
 msgid "like --set, but the value is used as it is: braces are no variables"
 msgstr "同 --set，但值按原样使用：花括号不作为变量"
 
-#: tavletta/cli.py:230
+#: tavletta/cli.py:231
 msgid "counter of the first label, instead of the one saved in the label"
 msgstr "第一张标签的计数器，代替标签中保存的值"
 
-#: tavletta/cli.py:236
+#: tavletta/cli.py:237
 msgid ""
 "print with the printer model's defaults instead of the cut, colours, "
 "quality, extras (chain printing, high resolution, tape feed), printer "
@@ -120,7 +120,7 @@ msgid ""
 "the safety margin stay"
 msgstr "使用打印机型号的默认值打印，而不是应用中最后选择的裁切、颜色、质量、附加功能（连续打印、高分辨率、走带）、打印机设置和标签纸轮廓；地址和安全边距保留"
 
-#: tavletta/cli.py:245
+#: tavletta/cli.py:246
 msgid ""
 "print method of a thermal printer that has the setting: printer (as set on "
 "the printer), transfer (with a ribbon) or direct (thermal direct, no "
@@ -128,326 +128,337 @@ msgid ""
 "one set on the printer"
 msgstr "带此设置的热敏打印机的打印方式：printer（按打印机上的设置）、transfer（使用碳带）或 direct（热敏直打，无碳带）；默认为应用中选择的方式，使用 --printer-defaults 时为打印机上设置的方式"
 
-#: tavletta/cli.py:254
+#: tavletta/cli.py:255
 msgid ""
 "do not ask the printer before rendering (its model, tape and resolution)"
 msgstr "渲染前不询问打印机（型号、标签带和分辨率）"
 
-#: tavletta/cli.py:260
+#: tavletta/cli.py:261
 msgid ""
 "do not save the next counter value in the label (a read-only file); the next "
 "print starts from the same number"
 msgstr "不在标签中保存下一个计数器值（只读文件）；下次打印从相同编号开始"
 
-#: tavletta/cli.py:269
+#: tavletta/cli.py:270
 msgid ""
 "serial labels: one label for each row of this CSV, ODS or XLSX file; by "
 "default the data file of the label"
 msgstr "数据合并标签：此 CSV、ODS 或 XLSX 文件的每一行一个标签；默认为标签的数据文件"
 
-#: tavletta/cli.py:274
+#: tavletta/cli.py:275
 msgid "the sheet of the data file, by default the first"
 msgstr "数据文件的工作表，默认为第一个"
 
-#: tavletta/cli.py:280
+#: tavletta/cli.py:281
 msgid "only these rows of the data file, e.g. 3-10, 5 or 7- (counted from 1)"
 msgstr "仅数据文件的这些行，例如 3-10、5 或 7-（从 1 开始计数）"
 
-#: tavletta/cli.py:283
+#: tavletta/cli.py:284
 msgid "check and render only, do not print"
 msgstr "只检查并渲染，不打印"
 
-#: tavletta/cli.py:289
+#: tavletta/cli.py:290
 msgid ""
 "with --dry-run: save each label as PNG as the window exports it, at most 600 "
 "dpi (- for stdout: the first only)"
 msgstr "配合 --dry-run：按窗口导出的样子将每张标签保存为 PNG，最高 600 dpi（- 表示标准输出：仅第一张）"
 
-#: tavletta/cli.py:295
+#: tavletta/cli.py:296
 msgid "list the printers found on the network"
 msgstr "列出在网络中找到的打印机"
 
-#: tavletta/cli.py:296
+#: tavletta/cli.py:297
 msgid "List the printers found on the network: model, address, name."
 msgstr "列出在网络中找到的打印机：型号、地址、名称。"
 
-#: tavletta/cli.py:298
+#: tavletta/cli.py:299
 #, python-format
 msgid "only this printer model: %s"
 msgstr "仅此打印机型号：%s"
 
-#: tavletta/cli.py:310
+#: tavletta/cli.py:311
 #, python-format
 msgid "expected an address or network such as 172.16.0.0/12: %s"
 msgstr "应为地址或网络，例如 172.16.0.0/12：%s"
 
-#: tavletta/cli.py:320
+#: tavletta/cli.py:321
 msgid "the folder with the label files the server may use"
 msgstr "包含服务器可使用的标签文件的文件夹"
 
-#: tavletta/cli.py:327
+#: tavletta/cli.py:328
 msgid "only print on this printer address (* matches anything); repeatable"
 msgstr "仅在此打印机地址上打印（* 匹配任意内容）；可重复使用"
 
-#: tavletta/cli.py:333
+#: tavletta/cli.py:334
 msgid "printers.toml: the printers clients may use, by name"
 msgstr "printers.toml：客户端可按名称使用的打印机"
 
-#: tavletta/cli.py:340
+#: tavletta/cli.py:341
 msgid "most labels in one print job, copies times rows (default 10000)"
 msgstr "一个打印作业中的最大标签数，即份数乘以行数（默认 10000）"
 
-#: tavletta/cli.py:345
+#: tavletta/cli.py:346
 msgid "search the network for printers (off by default)"
 msgstr "在网络中搜索打印机（默认关闭）"
 
-#: tavletta/cli.py:351
+#: tavletta/cli.py:352
 msgid ""
 "allow document pages (PDF, images) in labels sent with the request; PDFs are "
 "then drawn in a separate process with limits (off by default)"
 msgstr "允许随请求发送的标签中包含文档页面（PDF、图片）；PDF 将在有限制的独立进程中绘制（默认关闭）"
 
-#: tavletta/cli.py:360
+#: tavletta/cli.py:361
 msgid "run a print server with a REST API"
 msgstr "运行带 REST API 的打印服务器"
 
-#: tavletta/cli.py:361
+#: tavletta/cli.py:362
 msgid "Run a print server: a REST API and, with --mcp, MCP for AI clients."
 msgstr "运行打印服务器：提供 REST API，使用 --mcp 时还为 AI 客户端提供 MCP。"
 
-#: tavletta/cli.py:364
+#: tavletta/cli.py:365
 msgid "address to listen on (default 127.0.0.1)"
 msgstr "监听的地址（默认 127.0.0.1）"
 
-#: tavletta/cli.py:370
+#: tavletta/cli.py:371
 #, python-format
 msgid "port to listen on (default %d)"
 msgstr "监听的端口（默认 %d）"
 
-#: tavletta/cli.py:376
+#: tavletta/cli.py:377
 msgid ""
 "file with the access token; else the environment variable TAVLETTA_TOKEN"
 msgstr "包含访问令牌的文件；否则使用环境变量 TAVLETTA_TOKEN"
 
-#: tavletta/cli.py:382
+#: tavletta/cli.py:383
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml：带角色的具名访问令牌"
 
-#: tavletta/cli.py:384
+#: tavletta/cli.py:385
 msgid "also serve MCP at /mcp"
 msgstr "同时在 /mcp 提供 MCP"
 
-#: tavletta/cli.py:390
+#: tavletta/cli.py:389
+msgid "do not serve the web page at /: only the REST API (and MCP)"
+msgstr "不在 / 提供网页：仅提供 REST API（及 MCP）"
+
+#: tavletta/cli.py:396
 msgid "largest request body in MB (default 4)"
 msgstr "请求体的最大大小，单位 MB（默认 4）"
 
-#: tavletta/cli.py:399
+#: tavletta/cli.py:405
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "其 X-Forwarded-For 标头指明客户端的反向代理，例如 172.16.0.0/12；可重复使用"
 
-#: tavletta/cli.py:408
+#: tavletta/cli.py:414
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "允许来自此来源网页的请求；可重复使用"
 
-#: tavletta/cli.py:413
+#: tavletta/cli.py:419
 msgid "serve MCP on standard input and output"
 msgstr "通过标准输入和输出提供 MCP"
 
-#: tavletta/cli.py:415
+#: tavletta/cli.py:421
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "通过标准输入和输出提供 MCP，供 Claude Desktop 等 AI 客户端使用。"
 
-#: tavletta/cli.py:425
+#: tavletta/cli.py:431
 msgid "manage the access tokens of the print server"
 msgstr "管理打印服务器的访问令牌"
 
-#: tavletta/cli.py:426
+#: tavletta/cli.py:432
 msgid "Manage the access tokens of the print server."
 msgstr "管理打印服务器的访问令牌。"
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:437
 msgid "make a token and add its hash to tokens.toml"
 msgstr "生成令牌并将其哈希添加到 tokens.toml"
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:438
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "生成令牌，将其哈希添加到 tokens.toml，并仅显示一次令牌。"
 
-#: tavletta/cli.py:434
+#: tavletta/cli.py:440
 msgid "name of the token, e.g. the device"
 msgstr "令牌名称，例如设备名"
 
-#: tavletta/cli.py:439
+#: tavletta/cli.py:445
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview：仅查看；print：还可打印；admin：还可管理所有作业"
 
-#: tavletta/cli.py:441
+#: tavletta/cli.py:447
 msgid "tokens.toml to add it to"
 msgstr "要添加到的 tokens.toml"
 
-#: tavletta/cli.py:447
+#: tavletta/cli.py:453
 msgid "only this printer of printers.toml; repeatable"
 msgstr "仅限 printers.toml 中的此打印机；可重复使用"
 
-#: tavletta/cli.py:450
+#: tavletta/cli.py:456
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml，用于检查 --printer"
 
-#: tavletta/cli.py:452
+#: tavletta/cli.py:458
 msgid "valid until, e.g. 2027-12-31"
 msgstr "有效期至，例如 2027-12-31"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:459
 msgid "a note for people"
 msgstr "给人看的备注"
 
-#: tavletta/cli.py:455
+#: tavletta/cli.py:461
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "使用 scrypt 而非 SHA-256 存储哈希"
 
-#: tavletta/cli.py:461
+#: tavletta/cli.py:467
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "从标准输入读取你自选的令牌（使用 scrypt 存储），而不是生成一个"
 
-#: tavletta/cli.py:481 tavletta/server/config.py:219
-#: tavletta/server/service.py:590
+#: tavletta/cli.py:487 tavletta/server/config.py:219
+#: tavletta/server/service.py:608
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "未知的打印机型号：%s"
 
-#: tavletta/cli.py:488 tavletta/ui/files.py:84 tavletta/ui/files.py:137
-#: tavletta/ui/texts.py:319 tavletta/ui/texts.py:701
-#: tavletta/server/service.py:747
+#: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/ui/texts.py:340 tavletta/ui/texts.py:722
+#: tavletta/server/service.py:888
 #, python-format
 msgid "Cannot open %s"
 msgstr "无法打开 %s"
 
-#: tavletta/cli.py:510 tavletta/server/main.py:260
+#: tavletta/cli.py:516 tavletta/server/main.py:262
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s 不是日期，应类似 2026-12-31 或 2026-12-31T08:30"
 
-#: tavletta/cli.py:558
+#: tavletta/cli.py:564
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} 会在打印时填入，无法设置"
 
-#: tavletta/cli.py:564
+#: tavletta/cli.py:570
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "标签中没有名为 %s 的元素或变量"
 
-#: tavletta/cli.py:592 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1123
+#: tavletta/cli.py:599 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1273
 msgid "The label is empty"
 msgstr "标签为空"
 
-#: tavletta/cli.py:629
+#: tavletta/cli.py:636
 msgid "Cannot write the output"
 msgstr "无法写入输出"
 
-#: tavletta/cli.py:660
+#: tavletta/cli.py:667
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output 写入 PNG 图像：请给出以 .png 结尾的名称"
 
-#: tavletta/cli.py:685 tavletta/cli.py:894 tavletta/ui/printing.py:535
-#: tavletta/ui/printing.py:699 tavletta/server/service.py:989
-#: tavletta/server/service.py:1012 tavletta/server/service.py:1307
-#: tavletta/server/service.py:1477
+#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
+#: tavletta/ui/printing.py:705 tavletta/server/service.py:1132
+#: tavletta/server/service.py:1155 tavletta/server/service.py:1457
+#: tavletta/server/service.py:1683
 msgid "The label cannot be prepared for printing."
 msgstr "无法准备标签以供打印。"
 
-#: tavletta/cli.py:772
+#: tavletta/cli.py:779
 msgid "No printer found – give its address with --host"
 msgstr "未找到打印机，请用 --host 指定其地址"
 
-#: tavletta/cli.py:774
+#: tavletta/cli.py:781
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "找到多台打印机，请用 --host 选择一台（tavletta list-printers）"
 
-#: tavletta/cli.py:785 tavletta/ui/texts.py:744 tavletta/server/service.py:1467
+#: tavletta/cli.py:792 tavletta/ui/texts.py:765 tavletta/server/service.py:1673
 #, python-format
 msgid "Cannot save %s"
 msgstr "无法保存 %s"
 
-#: tavletta/cli.py:787 tavletta/server/service.py:1470
+#: tavletta/cli.py:794 tavletta/server/service.py:1676
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "标签已打印，但下一个计数器值未能保存"
 
-#: tavletta/cli.py:802 tavletta/server/service.py:1152
+#: tavletta/cli.py:809 tavletta/server/service.py:1302
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "未打印任何内容：下一个计数器值无法保存"
 
-#: tavletta/cli.py:862 tavletta/cli.py:889 tavletta/cli.py:1251
+#: tavletta/cli.py:869 tavletta/cli.py:896 tavletta/cli.py:1260
 msgid "Interrupted"
 msgstr "已中断"
 
-#: tavletta/cli.py:962
+#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/server/service.py:1178
+#, python-format
+msgid "At most %d labels in one print job"
+msgstr "一个打印作业中最多 %d 个标签"
+
+#: tavletta/cli.py:971
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method：此打印机型号没有打印方式设置：%s"
 
-#: tavletta/cli.py:1004
+#: tavletta/cli.py:1013
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet 和 --rows 需要数据文件（--data）"
 
-#: tavletta/cli.py:1013 tavletta/ui/printing.py:568
-#: tavletta/server/service.py:849
+#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/server/service.py:990
 msgid "No rows to print"
 msgstr "没有要打印的行"
 
-#: tavletta/cli.py:1023
+#: tavletta/cli.py:1032
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "此标签使用其文件夹之外的数据文件：请用 --data 指定"
 
-#: tavletta/cli.py:1050 tavletta/ui/window.py:849
-#: tavletta/server/service.py:906
+#: tavletta/cli.py:1059 tavletta/ui/window.py:849
+#: tavletta/server/service.py:1049
 #, python-format
 msgid "No such column: %s"
 msgstr "没有此列：%s"
 
-#: tavletta/cli.py:1055 tavletta/ui/printing.py:648
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "无法根据这些行的值生成条形码或二维码，例如含字母的 EAN-13 或空单元格。请修正数据文件并重新读取，或不打印这些行。"
 
-#: tavletta/cli.py:1060 tavletta/ui/printing.py:653
+#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
 #, python-format
 msgid "Rows: %s"
 msgstr "行：%s"
 
-#: tavletta/cli.py:1068
+#: tavletta/cli.py:1077
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "正在等待 %s 的另一个打印任务完成…"
 
-#: tavletta/cli.py:1075 tavletta/server/service.py:1301
+#: tavletta/cli.py:1084 tavletta/server/service.py:790
+#: tavletta/server/service.py:1451
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s 仍被另一个打印任务锁定 – 请稍后再试"
 
-#: tavletta/cli.py:1081
+#: tavletta/cli.py:1090
 msgid "--output needs --dry-run"
 msgstr "--output 需要 --dry-run"
 
-#: tavletta/cli.py:1098
+#: tavletta/cli.py:1107
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "下一个计数器值不会保存：下次打印会重复这些编号"
 
-#: tavletta/cli.py:1194
+#: tavletta/cli.py:1203
 msgid "Waiting for the printer's answer…"
 msgstr "正在等待打印机的回应…"
 
-#: tavletta/cli.py:1222 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1231 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "未找到打印机"
 
@@ -460,7 +471,7 @@ msgid "Choose data file"
 msgstr "选择数据文件"
 
 #: tavletta/ui/data.py:108 tavletta/ui/files.py:104 tavletta/ui/files.py:126
-#: tavletta/ui/files.py:207 tavletta/ui/texts.py:208
+#: tavletta/ui/files.py:207 tavletta/ui/texts.py:213
 msgid "Only local files can be used"
 msgstr "只能使用本地文件"
 
@@ -542,7 +553,7 @@ msgstr "选择其他文件"
 msgid "Remove data file"
 msgstr "移除数据文件"
 
-#: tavletta/ui/data.py:337
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:399
 msgid "Sheet"
 msgstr "工作表"
 
@@ -562,8 +573,8 @@ msgstr "还没有内容"
 msgid "Add text, an image, a symbol or a code"
 msgstr "添加文本、图像、符号或条码"
 
-#: tavletta/ui/elements.py:104 tavletta/ui/texts.py:259
-#: tavletta/ui/window.py:961
+#: tavletta/ui/elements.py:104 tavletta/ui/texts.py:280
+#: tavletta/ui/window.py:961 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "文本"
 
@@ -657,7 +668,7 @@ msgstr "区域"
 msgid "Scale"
 msgstr "缩放"
 
-#: tavletta/ui/elements.py:344 tavletta/ui/texts.py:263
+#: tavletta/ui/elements.py:344 tavletta/ui/texts.py:284
 msgid "Symbol"
 msgstr "符号"
 
@@ -957,9 +968,10 @@ msgid "Drag to choose the part of the image to keep"
 msgstr "拖动以选择要保留的图像部分"
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:233
-#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:657
+#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
 #: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
 #: tavletta/ui/symbols.py:79 tavletta/ui/window.py:890
+#: tavletta/server/web/ui.js:220
 msgid "Cancel"
 msgstr "取消"
 
@@ -968,11 +980,11 @@ msgstr "取消"
 msgid "Apply"
 msgstr "应用"
 
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:111
+#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:113
 msgid "Left"
 msgstr "左对齐"
 
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:162
+#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:164
 msgid "Top"
 msgstr "顶部"
 
@@ -1150,7 +1162,7 @@ msgstr "最后一行"
 msgid "Row %(n)d of %(total)d"
 msgstr "第 %(n)d 行，共 %(total)d 行"
 
-#: tavletta/ui/printer.py:66
+#: tavletta/ui/printer.py:66 tavletta/server/web/print.js:71
 msgid "Printer"
 msgstr "打印机"
 
@@ -1255,7 +1267,7 @@ msgstr "剩余 %(left)s／%(total)s"
 msgid "Reachable · the printer reports no status"
 msgstr "可连接 · 打印机未报告状态"
 
-#: tavletta/ui/printer.py:390
+#: tavletta/ui/printer.py:390 tavletta/server/web/ui.js:387
 msgid "Printing"
 msgstr "正在打印"
 
@@ -1264,7 +1276,7 @@ msgstr "正在打印"
 msgid "Ready · a label every %s"
 msgstr "就绪 · 每 %s 一张标签"
 
-#: tavletta/ui/printer.py:393
+#: tavletta/ui/printer.py:393 tavletta/server/web/ui.js:47
 msgid "Ready"
 msgstr "就绪"
 
@@ -1342,7 +1354,7 @@ msgstr "序列号"
 msgid "Probably made"
 msgstr "推测生产时间"
 
-#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:755
+#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:761
 msgid "Close"
 msgstr "关闭"
 
@@ -1354,8 +1366,8 @@ msgstr "此版本不认识这种标签纸 – 请选择其他标签纸"
 msgid "The data file is still being read. Try again in a moment."
 msgstr "仍在读取数据文件。请稍后再试。"
 
-#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:478
-#: tavletta/ui/printing.py:503
+#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
+#: tavletta/ui/printing.py:509 tavletta/server/web/ui.js:260
 msgid "Print anyway"
 msgstr "仍然打印"
 
@@ -1402,11 +1414,11 @@ msgstr "用于在普通纸上测试"
 msgid "Sheets: %d"
 msgstr "纸张数：%d"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/batch.js:722
 msgid "Copies of each label"
 msgstr "每张标签的份数"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr "份数"
 
@@ -1463,20 +1475,23 @@ msgstr "打印数据合并标签"
 msgid "Print label"
 msgstr "打印标签"
 
-#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:742
+#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
 #: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:184
+#: tavletta/server/web/app.js:325 tavletta/server/web/batch.js:54
+#: tavletta/server/web/batch.js:117 tavletta/server/web/batch.js:875
+#: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "打印"
 
-#: tavletta/ui/printing.py:475
+#: tavletta/ui/printing.py:481
 msgid "Codes may not scan"
 msgstr "条码可能无法扫描"
 
-#: tavletta/ui/printing.py:495
+#: tavletta/ui/printing.py:501
 msgid "Labels in the printer's margin"
 msgstr "标签位于打印机边距内"
 
-#: tavletta/ui/printing.py:497
+#: tavletta/ui/printing.py:503
 #, python-format
 msgid ""
 "The printer cannot print near the edges of the paper. The content of labels "
@@ -1484,63 +1499,63 @@ msgid ""
 "safety margin, or leave these positions out."
 msgstr "打印机无法在纸张边缘附近打印。标签 %(positions)s 的内容伸入该边距，会被裁掉。请增大安全边距，或跳过这些位置。"
 
-#: tavletta/ui/printing.py:515
+#: tavletta/ui/printing.py:521
 msgid "No printer yet – search for one or enter its address"
 msgstr "还没有打印机，请搜索或输入其地址"
 
-#: tavletta/ui/printing.py:519
+#: tavletta/ui/printing.py:525
 msgid "Printing…"
 msgstr "正在打印…"
 
-#: tavletta/ui/printing.py:587 tavletta/ui/printing.py:627
+#: tavletta/ui/printing.py:593 tavletta/ui/printing.py:633
 msgid "Printing serial labels"
 msgstr "正在打印数据合并标签"
 
-#: tavletta/ui/printing.py:588
+#: tavletta/ui/printing.py:594
 msgid "Stop"
 msgstr "停止"
 
-#: tavletta/ui/printing.py:617
+#: tavletta/ui/printing.py:623
 msgid "Stopping after this label…"
 msgstr "将在这张标签后停止…"
 
-#: tavletta/ui/printing.py:624 tavletta/ui/printing.py:710
+#: tavletta/ui/printing.py:630 tavletta/ui/printing.py:716
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "正在打印 %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:656
+#: tavletta/ui/printing.py:662
 msgid "Rows that cannot be printed"
 msgstr "无法打印的行"
 
-#: tavletta/ui/printing.py:659
+#: tavletta/ui/printing.py:665
 msgid "Print without these rows"
 msgstr "不打印这些行"
 
-#: tavletta/ui/printing.py:684
+#: tavletta/ui/printing.py:690
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "已在第 %(row)d 行后停止"
 
-#: tavletta/ui/printing.py:689
+#: tavletta/ui/printing.py:695
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "已打印第 %(row)d 行"
 
-#: tavletta/ui/printing.py:691
+#: tavletta/ui/printing.py:697
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "已打印第 %(first)d 至 %(last)d 行"
 
-#: tavletta/ui/printing.py:750
+#: tavletta/ui/printing.py:756
 msgid "Printing failed"
 msgstr "打印失败"
 
-#: tavletta/ui/printing.py:751
+#: tavletta/ui/printing.py:757 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "详细信息"
 
-#: tavletta/ui/printing.py:754 tavletta/ui/window.py:914
+#: tavletta/ui/printing.py:760 tavletta/ui/window.py:914
 msgid "Report"
 msgstr "报告"
 
@@ -1617,7 +1632,7 @@ msgstr "单击标签可跳过该位置或重新在其上打印。仅影响第一
 msgid "Labels %s reach into the margin the printer cannot print on"
 msgstr "标签 %s 伸入了打印机无法打印的边距"
 
-#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:276
+#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:297
 msgid "Shipping label"
 msgstr "快递标签"
 
@@ -1904,7 +1919,7 @@ msgstr "无法读取图像"
 msgid "Crop…"
 msgstr "裁剪…"
 
-#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:69
+#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:71
 msgid "Brightness"
 msgstr "亮度"
 
@@ -2005,777 +2020,777 @@ msgstr "最近使用"
 msgid "No symbol found"
 msgstr "未找到符号"
 
-#: tavletta/ui/texts.py:34
+#: tavletta/ui/texts.py:36
 msgid "Full cut"
 msgstr "全切"
 
-#: tavletta/ui/texts.py:35
+#: tavletta/ui/texts.py:37
 msgid "Half cut"
 msgstr "半切"
 
-#: tavletta/ui/texts.py:36
+#: tavletta/ui/texts.py:38
 msgid "Cut after the last label"
 msgstr "最后一张标签后裁切"
 
-#: tavletta/ui/texts.py:37
+#: tavletta/ui/texts.py:39
 msgid "No cut"
 msgstr "不切"
 
-#: tavletta/ui/texts.py:43
+#: tavletta/ui/texts.py:45
 msgid "Chain printing"
 msgstr "连续打印"
 
-#: tavletta/ui/texts.py:44
+#: tavletta/ui/texts.py:46
 msgid "Saves tape: the last label stays in the printer until the next print"
 msgstr "节省色带：最后一张标签留在打印机内，直到下次打印"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "High resolution"
 msgstr "高分辨率"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "Twice as fine along the tape, prints more slowly"
 msgstr "沿色带方向精细两倍，打印较慢"
 
-#: tavletta/ui/texts.py:50
+#: tavletta/ui/texts.py:52
 msgid "Laminated tape"
 msgstr "覆膜色带"
 
-#: tavletta/ui/texts.py:51
+#: tavletta/ui/texts.py:53
 msgid "Non-laminated tape"
 msgstr "非覆膜色带"
 
-#: tavletta/ui/texts.py:52
+#: tavletta/ui/texts.py:54
 msgid "Fabric tape"
 msgstr "布质色带"
 
-#: tavletta/ui/texts.py:53
+#: tavletta/ui/texts.py:55
 msgid "FLe tape"
 msgstr "FLe 色带"
 
-#: tavletta/ui/texts.py:54
+#: tavletta/ui/texts.py:56
 msgid "Flexible ID tape"
 msgstr "柔性标识色带"
 
-#: tavletta/ui/texts.py:55
+#: tavletta/ui/texts.py:57
 msgid "Satin tape"
 msgstr "缎面色带"
 
-#: tavletta/ui/texts.py:56
+#: tavletta/ui/texts.py:58
 msgid "Heat-shrink tube 2:1"
 msgstr "热缩管 2:1"
 
-#: tavletta/ui/texts.py:57
+#: tavletta/ui/texts.py:59
 msgid "Heat-shrink tube 3:1"
 msgstr "热缩管 3:1"
 
-#: tavletta/ui/texts.py:61
+#: tavletta/ui/texts.py:63
 msgid "Vivid"
 msgstr "鲜艳"
 
-#: tavletta/ui/texts.py:62
+#: tavletta/ui/texts.py:64
 msgid "Normal"
 msgstr "标准"
 
-#: tavletta/ui/texts.py:63
+#: tavletta/ui/texts.py:65
 msgid "Black and white (sharper)"
 msgstr "黑白（更清晰）"
 
-#: tavletta/ui/texts.py:64
+#: tavletta/ui/texts.py:66
 msgid "Black"
 msgstr "黑色"
 
-#: tavletta/ui/texts.py:65
+#: tavletta/ui/texts.py:67
 msgid "Red and black"
 msgstr "红色和黑色"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "Standard"
 msgstr "标准"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "High resolution (600 dpi)"
 msgstr "高分辨率 (600 dpi)"
 
-#: tavletta/ui/texts.py:70
+#: tavletta/ui/texts.py:72
 msgid "Red"
 msgstr "红"
 
-#: tavletta/ui/texts.py:71
+#: tavletta/ui/texts.py:73
 msgid "Green"
 msgstr "绿"
 
-#: tavletta/ui/texts.py:72
+#: tavletta/ui/texts.py:74
 msgid "Blue"
 msgstr "蓝"
 
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "Start"
 msgstr "开头"
 
-#: tavletta/ui/texts.py:74 tavletta/ui/texts.py:111
+#: tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
 msgid "Centre"
 msgstr "居中"
 
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "End"
 msgstr "结尾"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Across the roll"
 msgstr "沿卷宽方向"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Along the roll"
 msgstr "沿送纸方向"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Single label"
 msgstr "单张标签"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Label sheet"
 msgstr "标签纸"
 
-#: tavletta/ui/texts.py:80
+#: tavletta/ui/texts.py:82
 msgid "Resolution"
 msgstr "分辨率"
 
-#: tavletta/ui/texts.py:81
+#: tavletta/ui/texts.py:83
 msgid "Label sensor"
 msgstr "标签传感器"
 
-#: tavletta/ui/texts.py:82
+#: tavletta/ui/texts.py:84
 msgid "After printing"
 msgstr "打印后"
 
-#: tavletta/ui/texts.py:83
+#: tavletta/ui/texts.py:85
 msgid "Darkness"
 msgstr "打印浓度"
 
-#: tavletta/ui/texts.py:84
+#: tavletta/ui/texts.py:86
 msgid "Print density"
 msgstr "打印浓度"
 
-#: tavletta/ui/texts.py:85
+#: tavletta/ui/texts.py:87
 msgid "Speed"
 msgstr "速度"
 
-#: tavletta/ui/texts.py:86
+#: tavletta/ui/texts.py:88
 msgid "Print upside down"
 msgstr "上下颠倒打印"
 
-#: tavletta/ui/texts.py:87
+#: tavletta/ui/texts.py:89
 msgid "Print method"
 msgstr "打印方式"
 
-#: tavletta/ui/texts.py:91
+#: tavletta/ui/texts.py:93
 msgid "As reported by the printer"
 msgstr "按打印机报告"
 
-#: tavletta/ui/texts.py:92
+#: tavletta/ui/texts.py:94
 msgid "As set on the printer"
 msgstr "按打印机上的设置"
 
-#: tavletta/ui/texts.py:93
+#: tavletta/ui/texts.py:95
 msgid "Gap between labels"
 msgstr "标签之间的间隙"
 
-#: tavletta/ui/texts.py:94
+#: tavletta/ui/texts.py:96
 msgid "Black mark"
 msgstr "黑标"
 
-#: tavletta/ui/texts.py:95
+#: tavletta/ui/texts.py:97
 msgid "Continuous media"
 msgstr "连续纸"
 
-#: tavletta/ui/texts.py:96
+#: tavletta/ui/texts.py:98
 msgid "Transparent labels"
 msgstr "透明标签"
 
-#: tavletta/ui/texts.py:97
+#: tavletta/ui/texts.py:99
 msgid "Tear off"
 msgstr "撕纸"
 
-#: tavletta/ui/texts.py:98
+#: tavletta/ui/texts.py:100
 msgid "Peel off"
 msgstr "剥离"
 
-#: tavletta/ui/texts.py:99
+#: tavletta/ui/texts.py:101
 msgid "Cut off"
 msgstr "裁切"
 
-#: tavletta/ui/texts.py:100
+#: tavletta/ui/texts.py:102
 msgid "Thermal transfer (ribbon)"
 msgstr "热转印（碳带）"
 
-#: tavletta/ui/texts.py:101
+#: tavletta/ui/texts.py:103
 msgid "Thermal direct"
 msgstr "热敏直打"
 
-#: tavletta/ui/texts.py:111
+#: tavletta/ui/texts.py:113
 msgid "Right"
 msgstr "右对齐"
 
-#: tavletta/ui/texts.py:116
+#: tavletta/ui/texts.py:118
 msgid "2D codes"
 msgstr "二维条码"
 
-#: tavletta/ui/texts.py:118
+#: tavletta/ui/texts.py:120
 msgid "QR code"
 msgstr "二维码"
 
-#: tavletta/ui/texts.py:125
+#: tavletta/ui/texts.py:127
 msgid "Linear barcodes"
 msgstr "一维条码"
 
-#: tavletta/ui/texts.py:140
+#: tavletta/ui/texts.py:142
 msgid ""
 "Application identifiers in brackets, e.g. "
 "(01)09501101530003(17)261231(10)AB12"
 msgstr "括号中的应用标识符，例如 (01)09501101530003(17)261231(10)AB12"
 
-#: tavletta/ui/texts.py:143
+#: tavletta/ui/texts.py:145
 msgid "Links, text, Wi-Fi access; phones read it"
 msgstr "链接、文本、Wi-Fi 接入；手机可扫描"
 
-#: tavletta/ui/texts.py:144
+#: tavletta/ui/texts.py:146
 msgid "Text or numbers in little space, e.g. on small parts"
 msgstr "在很小的空间内放文字或数字，例如小零件上"
 
-#: tavletta/ui/texts.py:145
+#: tavletta/ui/texts.py:147
 msgid "Much text, e.g. an address or a document number"
 msgstr "大量文字，例如地址或文档编号"
 
-#: tavletta/ui/texts.py:146
+#: tavletta/ui/texts.py:148
 msgid "Text or numbers; needs no blank margin, e.g. on tickets"
 msgstr "文字或数字；周围无需空白，例如用于票券"
 
-#: tavletta/ui/texts.py:147
+#: tavletta/ui/texts.py:149
 msgid "Latin letters, digits and punctuation"
 msgstr "拉丁字母、数字和标点符号"
 
-#: tavletta/ui/texts.py:148
+#: tavletta/ui/texts.py:150
 msgid "Capital letters, digits, spaces and - . $ / + %"
 msgstr "大写字母、数字、空格及 - . $ / + %"
 
-#: tavletta/ui/texts.py:149
+#: tavletta/ui/texts.py:151
 msgid "Latin letters, digits and punctuation; shorter than Code 39"
 msgstr "拉丁字母、数字和标点符号；比 Code 39 更短"
 
-#: tavletta/ui/texts.py:150
+#: tavletta/ui/texts.py:152
 msgid "12 digits, the check digit is added (or 13 with it)"
 msgstr "12 位数字，自动添加校验位（或含校验位共 13 位）"
 
-#: tavletta/ui/texts.py:151
+#: tavletta/ui/texts.py:153
 msgid "7 digits, the check digit is added (or 8 with it)"
 msgstr "7 位数字，自动添加校验位（或含校验位共 8 位）"
 
-#: tavletta/ui/texts.py:152
+#: tavletta/ui/texts.py:154
 msgid "11 digits, the check digit is added (or 12 with it)"
 msgstr "11 位数字，自动添加校验位（或含校验位共 12 位）"
 
-#: tavletta/ui/texts.py:153
+#: tavletta/ui/texts.py:155
 msgid "7 digits starting with 0 or 1, the check digit is added (or 8 with it)"
 msgstr "以 0 或 1 开头的 7 位数字，自动添加校验位（或含校验位共 8 位）"
 
-#: tavletta/ui/texts.py:154
+#: tavletta/ui/texts.py:156
 msgid ""
 "13 digits of a shipping carton's GTIN, the check digit is added (or 14 with "
 "it)"
 msgstr "运输箱 GTIN 的 13 位数字，自动添加校验位（或含校验位共 14 位）"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:162
 msgid "Whole area, centred"
 msgstr "整个区域，居中"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:162
 msgid "Fill the label, edges cut off"
 msgstr "填满标签，边缘被裁掉"
 
-#: tavletta/ui/texts.py:162
+#: tavletta/ui/texts.py:164
 msgid "Middle"
 msgstr "中间"
 
-#: tavletta/ui/texts.py:162
+#: tavletta/ui/texts.py:164
 msgid "Bottom"
 msgstr "底部"
 
-#: tavletta/ui/texts.py:164
+#: tavletta/ui/texts.py:166
 msgid "Automatic"
 msgstr "自动"
 
-#: tavletta/ui/texts.py:165
+#: tavletta/ui/texts.py:167
 msgid "Threshold (drawings, logos)"
 msgstr "阈值（线稿、标志）"
 
-#: tavletta/ui/texts.py:166
+#: tavletta/ui/texts.py:168
 msgid "Dithering (photos)"
 msgstr "抖动（照片）"
 
-#: tavletta/ui/texts.py:167
+#: tavletta/ui/texts.py:169
 msgid "Ordered pattern"
 msgstr "有序图案"
 
-#: tavletta/ui/texts.py:170
+#: tavletta/ui/texts.py:172
 msgctxt "line style"
 msgid "Solid"
 msgstr "实线"
 
-#: tavletta/ui/texts.py:171
+#: tavletta/ui/texts.py:173
 msgid "Dashed"
 msgstr "虚线"
 
-#: tavletta/ui/texts.py:172 tavletta/ui/texts.py:197
+#: tavletta/ui/texts.py:174 tavletta/ui/texts.py:199
 msgid "Dotted"
 msgstr "点状"
 
-#: tavletta/ui/texts.py:174
+#: tavletta/ui/texts.py:176
 msgid "Double"
 msgstr "双线"
 
-#: tavletta/ui/texts.py:176
+#: tavletta/ui/texts.py:178
 msgid "Line"
 msgstr "线条"
 
-#: tavletta/ui/texts.py:177
+#: tavletta/ui/texts.py:179
 msgid "Rectangle"
 msgstr "矩形"
 
-#: tavletta/ui/texts.py:178
+#: tavletta/ui/texts.py:180
 msgid "Ellipse"
 msgstr "椭圆"
 
-#: tavletta/ui/texts.py:179
+#: tavletta/ui/texts.py:181
 msgid "Separator"
 msgstr "分隔线"
 
-#: tavletta/ui/texts.py:182
+#: tavletta/ui/texts.py:184
 msgid "Horizontal"
 msgstr "水平"
 
-#: tavletta/ui/texts.py:183
+#: tavletta/ui/texts.py:185
 msgid "Vertical"
 msgstr "垂直"
 
-#: tavletta/ui/texts.py:184
+#: tavletta/ui/texts.py:186
 msgid "Diagonal, rising"
 msgstr "斜线，向上"
 
-#: tavletta/ui/texts.py:185
+#: tavletta/ui/texts.py:187
 msgid "Diagonal, falling"
 msgstr "斜线，向下"
 
-#: tavletta/ui/texts.py:188
+#: tavletta/ui/texts.py:190
 msgctxt "arrows"
 msgid "None"
 msgstr "无"
 
-#: tavletta/ui/texts.py:189
+#: tavletta/ui/texts.py:191
 msgid "At the start"
 msgstr "在起点"
 
-#: tavletta/ui/texts.py:190
+#: tavletta/ui/texts.py:192
 msgid "At the end"
 msgstr "在终点"
 
-#: tavletta/ui/texts.py:191
+#: tavletta/ui/texts.py:193
 msgid "At both ends"
 msgstr "在两端"
 
-#: tavletta/ui/texts.py:194
+#: tavletta/ui/texts.py:196
 msgctxt "fill"
 msgid "None"
 msgstr "无"
 
-#: tavletta/ui/texts.py:195
+#: tavletta/ui/texts.py:197
 msgctxt "fill"
 msgid "Solid"
 msgstr "实心"
 
-#: tavletta/ui/texts.py:196
+#: tavletta/ui/texts.py:198
 msgid "Hatched"
 msgstr "斜线填充"
 
-#: tavletta/ui/texts.py:198
+#: tavletta/ui/texts.py:200
 msgid "Grid"
 msgstr "网格"
-
-#. translators: %(formats)s is a list of file formats: PNG, JPEG, …
-#: tavletta/ui/texts.py:219
-#, python-format
-msgid ""
-"%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
-msgstr "%(name)s 不是 Tavletta 可使用的图像。可使用的格式：%(formats)s。"
 
 #: tavletta/ui/texts.py:232
 #, python-format
 msgid "%(name)s is too large to put on a label: at most %(size)d MB."
 msgstr "%(name)s 太大，无法放入标签：最多 %(size)d MB。"
 
-#: tavletta/ui/texts.py:227
+#. translators: %(formats)s is a list of file formats: PNG, JPEG, …
+#: tavletta/ui/texts.py:240
+#, python-format
+msgid ""
+"%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
+msgstr "%(name)s 不是 Tavletta 可使用的图像。可使用的格式：%(formats)s。"
+
+#: tavletta/ui/texts.py:248
 #, python-format
 msgid "%(name)s is not a label, an image or a data file"
 msgstr "%(name)s 不是标签、图像或数据文件"
 
 #. translators: the print density a NIIMBOT model uses by default
-#: tavletta/ui/texts.py:245
+#: tavletta/ui/texts.py:266
 msgctxt "print density"
 msgid "Default"
 msgstr "默认"
 
-#: tavletta/ui/texts.py:249
+#: tavletta/ui/texts.py:270
 #, python-format
 msgid "%d %%"
 msgstr "%d%%"
 
 #. translators: print speed in inches per second, as label printers state it
-#: tavletta/ui/texts.py:252
+#: tavletta/ui/texts.py:273
 #, python-format
 msgid "%d in/s"
 msgstr "%d 英寸/秒"
 
-#: tavletta/ui/texts.py:261
+#: tavletta/ui/texts.py:282 tavletta/server/web/ui.js:66
 msgid "Image"
 msgstr "图像"
 
-#: tavletta/ui/texts.py:296
+#: tavletta/ui/texts.py:317
 #, python-format
 msgid "Endless, %(width)s wide"
 msgstr "连续，宽 %(width)s"
 
-#: tavletta/ui/texts.py:306
+#: tavletta/ui/texts.py:327
 msgid ""
 "Check that all of the label is inside the selection. Drag to move it or its "
 "edges, or draw a new one."
 msgstr "请检查整个标签是否都在选区内。拖动可移动选区或其边缘，也可以重新画一个。"
 
-#: tavletta/ui/texts.py:310
+#: tavletta/ui/texts.py:331
 msgid ""
 "Several areas could be the label. Check the selection or try the next one."
 msgstr "有多个区域可能是标签。请检查选区或尝试下一个。"
 
-#: tavletta/ui/texts.py:312
+#: tavletta/ui/texts.py:333
 msgid "Everything printed on the page is selected. Drag to choose the label."
 msgstr "已选中页面上打印的全部内容。拖动以选择标签。"
 
-#: tavletta/ui/texts.py:313
+#: tavletta/ui/texts.py:334
 msgid "Nothing is printed on this page."
 msgstr "此页面上没有打印任何内容。"
 
-#: tavletta/ui/texts.py:318
+#: tavletta/ui/texts.py:339
 msgid "PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "PDF 文件需要 Poppler（poppler-glib），但尚未安装"
 
-#: tavletta/ui/texts.py:329
+#: tavletta/ui/texts.py:350
 msgid "System printer (CUPS, IPP)"
 msgstr "系统打印机（CUPS、IPP）"
 
-#: tavletta/ui/texts.py:330
+#: tavletta/ui/texts.py:351
 msgid "Receipt printer (ESC/POS)"
 msgstr "小票打印机 (ESC/POS)"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:332
+#: tavletta/ui/texts.py:353
 #, python-format
 msgid "%s, continuous rolls"
 msgstr "%s，连续标签卷"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:334
+#: tavletta/ui/texts.py:355
 #, python-format
 msgid "%s, die-cut labels"
 msgstr "%s，模切标签"
 
-#: tavletta/ui/texts.py:357
+#: tavletta/ui/texts.py:378
 #, python-format
 msgid "Element %(n)d: the code is empty"
 msgstr "元素 %(n)d：条码内容为空"
 
-#: tavletta/ui/texts.py:358
+#: tavletta/ui/texts.py:379
 #, python-format
 msgid "Element %(n)d: EAN-13 needs exactly 12 digits"
 msgstr "元素 %(n)d：EAN-13 需要正好 12 位数字"
 
-#: tavletta/ui/texts.py:359
+#: tavletta/ui/texts.py:380
 #, python-format
 msgid "Element %(n)d: the EAN-13 check digit is wrong"
 msgstr "元素 %(n)d：EAN-13 校验位错误"
 
-#: tavletta/ui/texts.py:360
+#: tavletta/ui/texts.py:381
 #, python-format
 msgid "Element %(n)d: Code 128 holds at most %(max)d characters"
 msgstr "元素 %(n)d：Code 128 最多容纳 %(max)d 个字符"
 
-#: tavletta/ui/texts.py:362
+#: tavletta/ui/texts.py:383
 #, python-format
 msgid ""
 "Element %(n)d: the bars are too thin to scan reliably – use a longer or "
 "larger label, or shorter content"
 msgstr "元素 %(n)d：条太细，无法可靠扫描，请使用更长或更大的标签，或缩短内容"
 
-#: tavletta/ui/texts.py:366
+#: tavletta/ui/texts.py:387
 #, python-format
 msgid ""
 "Element %(n)d: Code 128 only accepts Latin letters, digits and punctuation"
 msgstr "元素 %(n)d：Code 128 只接受拉丁字母、数字和标点符号"
 
-#: tavletta/ui/texts.py:368
+#: tavletta/ui/texts.py:389
 #, python-format
 msgid "Element %(n)d: EAN-8 needs 7 digits, or 8 with the check digit"
 msgstr "元素 %(n)d：EAN-8 需要 7 位数字，或含校验位共 8 位"
 
-#: tavletta/ui/texts.py:369
+#: tavletta/ui/texts.py:390
 #, python-format
 msgid "Element %(n)d: UPC-A needs 11 digits, or 12 with the check digit"
 msgstr "元素 %(n)d：UPC-A 需要 11 位数字，或含校验位共 12 位"
 
-#: tavletta/ui/texts.py:371
+#: tavletta/ui/texts.py:392
 #, python-format
 msgid ""
 "Element %(n)d: UPC-E needs 7 digits starting with 0 or 1, or 8 with the "
 "check digit"
 msgstr "元素 %(n)d：UPC-E 需要以 0 或 1 开头的 7 位数字，或含校验位共 8 位"
 
-#: tavletta/ui/texts.py:373
+#: tavletta/ui/texts.py:394
 #, python-format
 msgid "Element %(n)d: ITF-14 needs 13 digits, or 14 with the check digit"
 msgstr "元素 %(n)d：ITF-14 需要 13 位数字，或含校验位共 14 位"
 
-#: tavletta/ui/texts.py:374
+#: tavletta/ui/texts.py:395
 #, python-format
 msgid "Element %(n)d: the check digit is wrong"
 msgstr "元素 %(n)d：校验位错误"
 
-#: tavletta/ui/texts.py:376
+#: tavletta/ui/texts.py:397
 #, python-format
 msgid ""
 "Element %(n)d: Code 39 only accepts capital letters, digits, spaces and - . "
 "$ / + %%"
 msgstr "元素 %(n)d：Code 39 只接受大写字母、数字、空格及 - . $ / + %%"
 
-#: tavletta/ui/texts.py:379
+#: tavletta/ui/texts.py:400
 #, python-format
 msgid ""
 "Element %(n)d: Code 93 only accepts Latin letters, digits and punctuation"
 msgstr "元素 %(n)d：Code 93 只接受拉丁字母、数字和标点符号"
 
-#: tavletta/ui/texts.py:382
+#: tavletta/ui/texts.py:403
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data only accepts Latin letters, digits and punctuation"
 msgstr "元素 %(n)d：GS1 数据只接受拉丁字母、数字和标点符号"
 
-#: tavletta/ui/texts.py:385
+#: tavletta/ui/texts.py:406
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data must be application identifiers in brackets, each "
 "followed by its value, e.g. (01)09501101530003(10)AB12"
 msgstr "元素 %(n)d：GS1 数据必须是括号中的应用标识符，每个后面跟着它的值，例如 (01)09501101530003(10)AB12"
 
-#: tavletta/ui/texts.py:388
+#: tavletta/ui/texts.py:409
 #, python-format
 msgid "Element %(n)d: (%(ai)s) is not a GS1 application identifier"
 msgstr "元素 %(n)d：(%(ai)s) 不是 GS1 应用标识符"
 
-#: tavletta/ui/texts.py:390
+#: tavletta/ui/texts.py:411
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) has the wrong "
 "length"
 msgstr "元素 %(n)d：应用标识符 (%(ai)s) 的值长度错误"
 
-#: tavletta/ui/texts.py:393
+#: tavletta/ui/texts.py:414
 #, python-format
 msgid ""
 "Element %(n)d: the check digit of application identifier (%(ai)s) is wrong"
 msgstr "元素 %(n)d：应用标识符 (%(ai)s) 的校验位错误"
 
-#: tavletta/ui/texts.py:396
+#: tavletta/ui/texts.py:417
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) is not valid: a "
 "date, number or character it does not allow"
 msgstr "元素 %(n)d：应用标识符 (%(ai)s) 的值无效：含有不允许的日期、数字或字符"
 
-#: tavletta/ui/texts.py:400
+#: tavletta/ui/texts.py:421
 #, python-format
 msgid ""
 "Element %(n)d: no UPC-A number shortens to these UPC-E digits – check them "
 "or use UPC-A"
 msgstr "元素 %(n)d：没有 UPC-A 号码能缩短为这些 UPC-E 数字 – 请检查数字或改用 UPC-A"
 
-#: tavletta/ui/texts.py:404
+#: tavletta/ui/texts.py:425
 #, python-format
 msgid ""
 "Element %(n)d: scanners set to Full ASCII read a $, /, + or %% before a "
 "capital letter as another character"
 msgstr "元素 %(n)d：设为 Full ASCII 的扫描器会把大写字母前的 $、/、+ 或 %% 读成其他字符"
 
-#: tavletta/ui/texts.py:407
+#: tavletta/ui/texts.py:428
 #, python-format
 msgid "Element %(n)d: the content is too long for this type of code"
 msgstr "元素 %(n)d：内容对此类条码来说太长"
 
-#: tavletta/ui/texts.py:408
+#: tavletta/ui/texts.py:429
 #, python-format
 msgid "Element %(n)d: the content cannot be encoded in this type of code"
 msgstr "元素 %(n)d：此类条码无法编码该内容"
 
-#: tavletta/ui/texts.py:410
+#: tavletta/ui/texts.py:431
 #, python-format
 msgid ""
 "Element %(n)d: this type of code needs the Zint library (zint-bindings), "
 "which is not installed"
 msgstr "元素 %(n)d：此类条码需要 Zint 库（zint-bindings），但尚未安装"
 
-#: tavletta/ui/texts.py:413
+#: tavletta/ui/texts.py:434
 #, python-format
 msgid "Element %(n)d: the image cannot be read"
 msgstr "元素 %(n)d：无法读取图像"
 
-#: tavletta/ui/texts.py:414
+#: tavletta/ui/texts.py:435
 #, python-format
 msgid "Element %(n)d: this symbol is not in the symbol library"
 msgstr "元素 %(n)d：符号库中没有此符号"
 
-#: tavletta/ui/texts.py:415
+#: tavletta/ui/texts.py:436
 #, python-format
 msgid "Element %(n)d: the document cannot be read"
 msgstr "元素 %(n)d：无法读取文档"
 
-#: tavletta/ui/texts.py:417
+#: tavletta/ui/texts.py:438
 #, python-format
 msgid ""
 "Element %(n)d: PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "元素 %(n)d：PDF 文件需要 Poppler（poppler-glib），但尚未安装"
 
-#: tavletta/ui/texts.py:419
+#: tavletta/ui/texts.py:440
 #, python-format
 msgid "Element %(n)d cannot be drawn"
 msgstr "无法绘制元素 %(n)d"
 
-#: tavletta/ui/texts.py:421
+#: tavletta/ui/texts.py:442
 #, python-format
 msgid ""
 "Element %(n)d: the text is too long to be drawn in one line – break it into "
 "lines or shorten it"
 msgstr "元素 %(n)d：文本太长，无法在一行中绘制 – 请分成多行或缩短"
 
-#: tavletta/ui/texts.py:425
+#: tavletta/ui/texts.py:446
 #, python-format
 msgid ""
 "Element %(n)d: the text is too tall to be drawn – use fewer lines or a "
 "smaller size"
 msgstr "元素 %(n)d：文本太高，无法绘制 – 请减少行数或使用更小的字号"
 
-#: tavletta/ui/texts.py:428
+#: tavletta/ui/texts.py:449
 #, python-format
 msgid ""
 "Element %(n)d: the font %(font)s is not installed – another font is used"
 msgstr "元素 %(n)d：未安装字体 %(font)s – 将使用其他字体"
 
-#: tavletta/ui/texts.py:431
+#: tavletta/ui/texts.py:452
 msgid ""
 "Safety margin, border, its inset and edge spacing leave no room – reduce them"
 msgstr "安全边距、边框及其内缩和边缘间距已占满空间，请减小"
 
-#: tavletta/ui/texts.py:433
+#: tavletta/ui/texts.py:454
 msgid "The fixed length is shorter than the spacing – increase it"
 msgstr "固定长度比间距还短，请增大"
 
-#: tavletta/ui/texts.py:434
+#: tavletta/ui/texts.py:455
 msgid "The background image cannot be read"
 msgstr "无法读取背景图像"
 
-#: tavletta/ui/texts.py:436
+#: tavletta/ui/texts.py:457
 #, python-format
 msgid ""
 "Element %(n)d: the code's modules are only one printer dot wide and may not "
 "scan – make the code larger"
 msgstr "元素 %(n)d：条码的模块只有一个打印点宽，可能无法扫描 – 请放大条码"
 
-#: tavletta/ui/texts.py:440
+#: tavletta/ui/texts.py:461
 #, python-format
 msgid ""
 "Element %(n)d: the blank space the code needs around it does not fit – make "
 "the code larger"
 msgstr "元素 %(n)d：条码周围所需的空白放不下 – 请放大条码"
 
-#: tavletta/ui/texts.py:444
+#: tavletta/ui/texts.py:465
 #, python-format
 msgid ""
 "Element %(n)d: the code does not fit in its space, even at one printer dot "
 "per module – make the label larger or the content shorter"
 msgstr "元素 %(n)d：即使每个模块只用一个打印点，条码仍放不进它的空间 – 请放大标签或缩短内容"
 
-#: tavletta/ui/texts.py:447
+#: tavletta/ui/texts.py:468
 #, python-format
 msgid "Element %(n)d: %(name)s is not a known variable"
 msgstr "元素 %(n)d：%(name)s 不是已知变量"
 
-#: tavletta/ui/texts.py:449
+#: tavletta/ui/texts.py:470
 #, python-format
 msgid "Element %(n)d: the date of %(name)s is before the year 1 or after 9999"
 msgstr "元素 %(n)d：%(name)s 的日期早于公元 1 年或晚于 9999 年"
 
-#: tavletta/ui/texts.py:452
+#: tavletta/ui/texts.py:473
 #, python-format
 msgid "Element %(n)d: the variable %(name)s… is not closed – end it with }"
 msgstr "元素 %(n)d：变量 %(name)s… 未闭合 – 请以 } 结束"
 
-#: tavletta/ui/texts.py:455
+#: tavletta/ui/texts.py:476
 #, python-format
 msgid ""
 "Element %(n)d: on a black-and-white printer it hardly stands out from what "
 "lies behind it, as a whole or in part – choose another colour or move it"
 msgstr "元素 %(n)d：在黑白打印机上，此元素整体或部分几乎无法与后方内容区分 – 请选择其他颜色或移动它"
 
-#: tavletta/ui/texts.py:458
+#: tavletta/ui/texts.py:479
 #, python-format
 msgid "Element %(n)d: the shape has neither a line nor a fill"
 msgstr "元素 %(n)d：此形状既无线条也无填充"
 
-#: tavletta/ui/texts.py:460
+#: tavletta/ui/texts.py:481
 #, python-format
 msgid ""
 "Element %(n)d reaches beyond the edge of the label and is cut off there – "
 "move it or make it smaller"
 msgstr "元素 %(n)d 超出标签边缘，会在那里被裁掉 – 请移动它或将它缩小"
 
-#: tavletta/ui/texts.py:464
+#: tavletta/ui/texts.py:485
 #, python-format
 msgid ""
 "Element %(n)d: the padding, frame, outline or shadow leave no room for the "
 "text – make them smaller"
 msgstr "元素 %(n)d：内边距、外框、轮廓或阴影使文本没有空间 – 请减小"
 
-#: tavletta/ui/texts.py:479
+#: tavletta/ui/texts.py:500
 #, python-format
 msgid "Sheets already printed: %(n)d of %(total)d."
 msgstr "已打印的纸张：%(n)d/%(total)d。"
 
-#: tavletta/ui/texts.py:481
+#: tavletta/ui/texts.py:502
 #, python-format
 msgid "Labels already printed: %(n)d of %(total)d."
 msgstr "已打印的标签：%(n)d/%(total)d。"
 
-#: tavletta/ui/texts.py:485
+#: tavletta/ui/texts.py:506
 msgid "The sheets still waiting in the queue were canceled."
 msgstr "仍在队列中等待的纸张已取消。"
 
-#: tavletta/ui/texts.py:487
+#: tavletta/ui/texts.py:508
 msgid "The labels still waiting in the queue were canceled."
 msgstr "仍在队列中等待的标签已取消。"
 
-#: tavletta/ui/texts.py:498
+#: tavletta/ui/texts.py:519
 #, python-format
 msgid ""
 "The label is %(size)s, but labels of %(loaded)s are loaded. Check the label "
 "size, or load the matching roll."
 msgstr "标签为 %(size)s，但装入的是 %(loaded)s 的标签。请检查标签尺寸，或装入相符的标签卷。"
 
-#: tavletta/ui/texts.py:506
+#: tavletta/ui/texts.py:527
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2783,7 +2798,7 @@ msgid ""
 "size and the gap, or calibrate the printer."
 msgstr "标签为 %(size)s，间隙为 %(gap)s，因此每 %(pitch)s 开始一张新标签。打印机测得每 %(measured)s 一张标签。请检查标签尺寸和间隙，或校准打印机。"
 
-#: tavletta/ui/texts.py:512
+#: tavletta/ui/texts.py:533
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2791,92 +2806,92 @@ msgid ""
 "size and the gap."
 msgstr "标签为 %(size)s，间隙为 %(gap)s，因此每 %(pitch)s 开始一张新标签。打印机测得每 %(measured)s 一张标签。请检查标签尺寸和间隙。"
 
-#: tavletta/ui/texts.py:529
+#: tavletta/ui/texts.py:550
 msgid ""
 "The printer cannot be found. Check that it is switched on and in the same "
 "network, or enter its IP address."
 msgstr "找不到打印机。请确认打印机已开机并处于同一网络，或输入其 IP 地址。"
 
-#: tavletta/ui/texts.py:533
+#: tavletta/ui/texts.py:554
 msgid ""
 "The printer cannot be found on USB. Check the cable and that the printer is "
 "switched on and awake, then search again."
 msgstr "在 USB 上找不到打印机。请检查数据线，并确认打印机已开机且未处于休眠状态，然后重新搜索。"
 
-#: tavletta/ui/texts.py:536
+#: tavletta/ui/texts.py:557
 msgid "The printer does not answer. Check that it is switched on and awake."
 msgstr "打印机没有响应。请确认打印机已开机且未处于休眠状态。"
 
-#: tavletta/ui/texts.py:538
+#: tavletta/ui/texts.py:559
 msgid ""
 "The printer stopped taking data. Check whether it shows a problem, such as "
 "no labels or an open cover, then try again."
 msgstr "打印机已停止接收数据。请检查打印机是否显示问题，例如标签用完或盖子未关，然后重试。"
 
-#: tavletta/ui/texts.py:542
+#: tavletta/ui/texts.py:563
 msgid ""
 "The printer refuses the connection. Switch it off and on again. If its web "
 "interface offers a “Port 9100” option, turn it on."
 msgstr "打印机拒绝连接。请将打印机关机后重新开机。如果其网页界面提供“Port 9100”选项，请将其开启。"
 
-#: tavletta/ui/texts.py:545
+#: tavletta/ui/texts.py:566
 msgid "No cassette is inserted. Insert one and try again."
 msgstr "未装入色带盒。请装入后重试。"
 
-#: tavletta/ui/texts.py:546
+#: tavletta/ui/texts.py:567
 msgid "The printer's cover is open. Close it and try again."
 msgstr "打印机盖板已打开。请关上后重试。"
 
-#: tavletta/ui/texts.py:547
+#: tavletta/ui/texts.py:568
 msgid "The label is jammed. Open the cover, remove it and try again."
 msgstr "标签卡纸。请打开盖板取出标签后重试。"
 
-#: tavletta/ui/texts.py:548
+#: tavletta/ui/texts.py:569
 msgid "The cassette is not recognised. Insert it again or try another one."
 msgstr "无法识别色带盒。请重新装入或换一个色带盒。"
 
-#: tavletta/ui/texts.py:549
+#: tavletta/ui/texts.py:570
 msgid "The printer is busy. Wait a moment and try again."
 msgstr "打印机正忙。请稍候重试。"
 
-#: tavletta/ui/texts.py:550
+#: tavletta/ui/texts.py:571
 #, python-format
 msgid "The label is too long for this printer: at most %(max)s."
 msgstr "标签对此打印机来说太长：最多 %(max)s。"
 
-#: tavletta/ui/texts.py:551
+#: tavletta/ui/texts.py:572
 #, python-format
 msgid "The label is too wide for this printer: at most %(max)s."
 msgstr "标签对这台打印机来说太宽：最多 %(max)s。"
 
-#: tavletta/ui/texts.py:552
+#: tavletta/ui/texts.py:573
 msgid "The printer is out of labels. Load a new roll and try again."
 msgstr "打印机的标签用完了。请装入新的标签卷后重试。"
 
-#: tavletta/ui/texts.py:553
+#: tavletta/ui/texts.py:574
 msgid "The print head is open. Close it and try again."
 msgstr "打印头已打开。请合上后重试。"
 
-#: tavletta/ui/texts.py:555
+#: tavletta/ui/texts.py:576
 msgid ""
 "The printer cannot find the next label. Check that the labels are loaded "
 "correctly and run through the label sensor."
 msgstr "打印机找不到下一张标签。请检查标签是否装好，并从标签传感器中穿过。"
 
-#: tavletta/ui/texts.py:559
+#: tavletta/ui/texts.py:580
 msgid ""
 "There is a problem with the ribbon. Check that it is inserted correctly and "
 "matches the print method set on the printer."
 msgstr "碳带有问题。请检查是否装好，并与打印机上设置的打印方式相符。"
 
-#: tavletta/ui/texts.py:565
+#: tavletta/ui/texts.py:586
 #, python-format
 msgid ""
 "The printer finds no ribbon. Load a ribbon and try again. Labels that print "
 "without one need “%(direct)s” under “%(method)s”."
 msgstr "打印机找不到碳带。请装入碳带后重试。无需碳带打印的标签需要在“%(method)s”中选择“%(direct)s”。"
 
-#: tavletta/ui/texts.py:572
+#: tavletta/ui/texts.py:593
 #, python-format
 msgid ""
 "A ribbon is loaded, but the printer prints without it (thermal direct). For "
@@ -2884,239 +2899,239 @@ msgid ""
 "remove the ribbon."
 msgstr "已装入碳带，但打印机不使用碳带打印（热敏直打）。需要碳带的标签请在“%(method)s”中选择“%(transfer)s”，或取出碳带。"
 
-#: tavletta/ui/texts.py:577
+#: tavletta/ui/texts.py:598
 msgid "The printer is paused. Resume it on its display and try again."
 msgstr "打印机已暂停。请在其屏幕上恢复后重试。"
 
-#: tavletta/ui/texts.py:578
+#: tavletta/ui/texts.py:599
 msgid "The printer is out of paper. Load paper and try again."
 msgstr "打印机缺纸。请装入纸张后重试。"
 
-#: tavletta/ui/texts.py:580
+#: tavletta/ui/texts.py:601
 msgid ""
 "The paper is jammed. Remove it as the printer's display shows and try again."
 msgstr "卡纸。请按打印机屏幕上的提示取出纸张后重试。"
 
-#: tavletta/ui/texts.py:582
+#: tavletta/ui/texts.py:603
 msgid "The printer is out of toner or ink. Replace it and try again."
 msgstr "打印机的墨粉或墨水已用尽。请更换后重试。"
 
-#: tavletta/ui/texts.py:583
+#: tavletta/ui/texts.py:604
 msgid "The printer cannot print this size. Choose a paper size it offers."
 msgstr "打印机无法打印此大小。请选择打印机提供的纸张尺寸。"
 
-#: tavletta/ui/texts.py:585
+#: tavletta/ui/texts.py:606
 msgid ""
 "The printer takes none of the formats Tavletta can send (PDF, PWG Raster, "
 "JPEG)."
 msgstr "打印机不接受 Tavletta 能发送的任何格式（PDF、PWG Raster、JPEG）。"
 
-#: tavletta/ui/texts.py:588
+#: tavletta/ui/texts.py:609
 msgid ""
 "The printer's queue is paused. Resume it in the system's printer settings "
 "and try again."
 msgstr "打印机队列已暂停。请在系统的打印机设置中恢复后重试。"
 
-#: tavletta/ui/texts.py:592
+#: tavletta/ui/texts.py:613
 msgid ""
 "The print job was held in the queue, for example until it is released or a "
 "password is entered. Check the queue in the system's printer settings and "
 "try again."
 msgstr "打印作业在队列中被暂挂，例如直到被释放或输入密码为止。请在系统的打印机设置中检查队列后重试。"
 
-#: tavletta/ui/texts.py:596
+#: tavletta/ui/texts.py:617
 msgid "The print job was canceled at the printer or in the queue."
 msgstr "打印作业已在打印机上或队列中被取消。"
 
-#: tavletta/ui/texts.py:597
+#: tavletta/ui/texts.py:618
 #, python-format
 msgid ""
 "The printer did not report its resolution in time. Choose it under “%s”."
 msgstr "打印机未及时报告分辨率，请在“%s”中选择。"
 
-#: tavletta/ui/texts.py:600
+#: tavletta/ui/texts.py:621
 msgid ""
 "The loaded roll does not match the label. Load a matching roll, or choose "
 "the label size or printer model of the roll that is loaded."
 msgstr "装入的标签卷与标签不符。请装入相符的标签卷，或选择与装入的标签卷相符的标签尺寸或打印机型号。"
 
-#: tavletta/ui/texts.py:603
+#: tavletta/ui/texts.py:624
 msgid "The printer's battery is low – charge it or connect the power adapter."
 msgstr "打印机电量不足 – 请充电或连接电源适配器。"
 
-#: tavletta/ui/texts.py:604
+#: tavletta/ui/texts.py:625
 msgid ""
 "The print head is too hot. Wait until it has cooled down, then try again."
 msgstr "打印头过热。请等待冷却后重试。"
 
-#: tavletta/ui/texts.py:606
+#: tavletta/ui/texts.py:627
 msgid ""
 "Tavletta cannot print on this printer model: it does not take the raster "
 "images Tavletta sends."
 msgstr "Tavletta 无法在此打印机型号上打印：它不接受 Tavletta 发送的光栅图像。"
 
-#: tavletta/ui/texts.py:610
+#: tavletta/ui/texts.py:631
 msgid "Tavletta does not know this printer model and cannot print on it yet."
 msgstr "Tavletta 尚不认识此打印机型号，暂时无法在其上打印。"
 
-#: tavletta/ui/texts.py:613
+#: tavletta/ui/texts.py:634
 msgid ""
 "The printer is in Editor Lite mode and shows up as a USB drive. Switch "
 "Editor Lite off on the printer (its lamp goes out), then search again."
 msgstr "打印机处于 Editor Lite 模式，显示为 USB 驱动器。请在打印机上关闭 Editor Lite（指示灯熄灭），然后重新搜索。"
 
-#: tavletta/ui/texts.py:617
+#: tavletta/ui/texts.py:638
 msgid ""
 "Tavletta is not allowed to use the printer's USB port. Add your user to the "
 "group “lp” (sudo usermod -aG lp $USER), then log out and in again."
 msgstr "Tavletta 无权使用打印机的 USB 端口。请将您的用户添加到“lp”组（sudo usermod -aG lp $USER），然后注销并重新登录。"
 
-#: tavletta/ui/texts.py:621
+#: tavletta/ui/texts.py:642
 msgid ""
 "The page is too large to make at the resolution the printer takes. Choose a "
 "smaller paper size, or print on a printer that takes PDF."
 msgstr "页面太大，无法以打印机接受的分辨率生成。请选择较小的纸张尺寸，或使用接受 PDF 的打印机打印。"
 
-#: tavletta/ui/texts.py:625
+#: tavletta/ui/texts.py:646
 msgid ""
 "A code does not fit on the label at this printer's resolution and would be "
 "cut off. Make the label larger or the code's content shorter."
 msgstr "以这台打印机的分辨率，条码放不进标签，会被裁掉。请放大标签或缩短条码内容。"
 
-#: tavletta/ui/texts.py:629
+#: tavletta/ui/texts.py:650
 msgid ""
 "Tavletta is not allowed to use the printer's serial port. Add your user to "
 "the group “dialout” (sudo usermod -aG dialout $USER; on Arch Linux the group "
 "is “uucp”), then log out and in again."
 msgstr "Tavletta 无权使用打印机的串口。请将您的用户添加到“dialout”组（sudo usermod -aG dialout $USER；在 Arch Linux 上该组名为“uucp”），然后注销并重新登录。"
 
-#: tavletta/ui/texts.py:634
+#: tavletta/ui/texts.py:655
 msgid ""
 "The printer reported a problem. Switch it off and on again, then try once "
 "more."
 msgstr "打印机报告了问题。请关机后重新开机，然后再试一次。"
 
-#: tavletta/ui/texts.py:645
+#: tavletta/ui/texts.py:666 tavletta/server/web/ui.js:454
 msgid "Printed"
 msgstr "已打印"
 
-#: tavletta/ui/texts.py:651
+#: tavletta/ui/texts.py:672
 msgid "Sent to the printer – it prints when its turn comes"
 msgstr "已发送到打印机 – 轮到时就会打印"
 
-#: tavletta/ui/texts.py:653
+#: tavletta/ui/texts.py:674
 msgid "Sent to the printer – it did not confirm printing"
 msgstr "已发送到打印机 – 打印机未确认已打印"
 
-#: tavletta/ui/texts.py:657
+#: tavletta/ui/texts.py:678
 #, python-format
 msgid "Printed with “%(used)s”, as the loaded roll needs it"
 msgstr "因装入的标签卷需要，已改用“%(used)s”打印"
 
-#: tavletta/ui/texts.py:661
+#: tavletta/ui/texts.py:682
 #, python-format
 msgid ""
 "Colour mode “%(wanted)s” is not available on this printer, printed with "
 "“%(used)s”"
 msgstr "此打印机不支持色彩模式“%(wanted)s”，已改用“%(used)s”打印"
 
-#: tavletta/ui/texts.py:671
+#: tavletta/ui/texts.py:692
 msgid "Warming up…"
 msgstr "正在预热…"
 
-#: tavletta/ui/texts.py:672
+#: tavletta/ui/texts.py:693
 msgid "Cooling down…"
 msgstr "正在冷却…"
 
-#: tavletta/ui/texts.py:673
+#: tavletta/ui/texts.py:694
 msgid "Cleaning…"
 msgstr "正在清洁…"
 
-#: tavletta/ui/texts.py:674
+#: tavletta/ui/texts.py:695
 msgid "Swipe the printer's panel to cut the label"
 msgstr "请滑动打印机面板以切割标签"
 
-#: tavletta/ui/texts.py:676
+#: tavletta/ui/texts.py:697
 msgid "Out of paper – load paper to continue"
 msgstr "缺纸 – 装入纸张后继续"
 
-#: tavletta/ui/texts.py:677
+#: tavletta/ui/texts.py:698
 msgid "Cover open – close it to continue"
 msgstr "盖板已打开 – 关上后继续"
 
-#: tavletta/ui/texts.py:678
+#: tavletta/ui/texts.py:699
 msgid "Paper jammed – remove it to continue"
 msgstr "卡纸 – 取出纸张后继续"
 
-#: tavletta/ui/texts.py:689
+#: tavletta/ui/texts.py:710
 msgid "This label needs a newer version of Tavletta"
 msgstr "此标签需要更新版本的 Tavletta"
 
-#: tavletta/ui/texts.py:691
+#: tavletta/ui/texts.py:712
 #, python-format
 msgid "%s is not a Tavletta label"
 msgstr "%s 不是 Tavletta 标签"
 
-#: tavletta/ui/texts.py:692 tavletta/ui/texts.py:712
-#: tavletta/server/service.py:758
+#: tavletta/ui/texts.py:713 tavletta/ui/texts.py:733
+#: tavletta/server/service.py:899
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "文件已损坏：%s"
 
-#: tavletta/ui/texts.py:699
+#: tavletta/ui/texts.py:720
 #, python-format
 msgid "The data file %s is not there any more. Choose it again or remove it."
 msgstr "数据文件 %s 已不存在。请重新选择或将其移除。"
 
-#: tavletta/ui/texts.py:703
+#: tavletta/ui/texts.py:724
 #, python-format
 msgid "%(file)s has no sheet named %(sheet)s"
 msgstr "%(file)s 中没有名为 %(sheet)s 的工作表"
 
-#: tavletta/ui/texts.py:705
+#: tavletta/ui/texts.py:726
 #, python-format
 msgid "%s is not a table. Use a CSV, ODS or XLSX file."
 msgstr "%s 不是表格。请使用 CSV、ODS 或 XLSX 文件。"
 
-#: tavletta/ui/texts.py:707
+#: tavletta/ui/texts.py:728
 #, python-format
 msgid ""
 "%s is too large for serial labels. Split it into smaller files or remove "
 "rows and columns that are not needed."
 msgstr "%s 对数据合并标签来说太大。请拆分成较小的文件，或删除不需要的行和列。"
 
-#: tavletta/ui/texts.py:710
+#: tavletta/ui/texts.py:731
 #, python-format
 msgid "%s contains no data."
 msgstr "%s 不含任何数据。"
 
-#: tavletta/ui/texts.py:721
+#: tavletta/ui/texts.py:742
 #, python-format
 msgid ""
 "Printing stopped at row %(row)d. To continue, print again from row %(row)d."
 msgstr "打印在第 %(row)d 行停止。如需继续，请从第 %(row)d 行重新打印。"
 
-#: tavletta/ui/texts.py:725
+#: tavletta/ui/texts.py:746
 #, python-format
 msgid "Copies of row %(row)d already printed: %(copies)d."
 msgstr "第 %(row)d 行已打印的份数：%(copies)d。"
 
-#: tavletta/ui/texts.py:730
+#: tavletta/ui/texts.py:751
 #, python-format
 msgid "Row %(row)d goes at position %(position)d of sheet %(sheet)d."
 msgstr "第 %(row)d 行位于第 %(sheet)d 张标签纸的第 %(position)d 个位置。"
 
-#: tavletta/ui/texts.py:741
+#: tavletta/ui/texts.py:762
 #, python-format
 msgid "Cannot save %s: no permission to write there"
 msgstr "无法保存 %s：没有写入权限"
 
-#: tavletta/ui/texts.py:743
+#: tavletta/ui/texts.py:764
 #, python-format
 msgid "Cannot save %s: the disk is full"
 msgstr "无法保存 %s：磁盘已满"
 
-#: tavletta/ui/texts.py:753
+#: tavletta/ui/texts.py:774
 #, python-format
 msgid ""
 "This cassette seems to be from %(month)s %(year)d. Old ZINK paper prints "
@@ -3178,11 +3193,12 @@ msgstr "每打印一张标签按步长递增"
 msgid "Next number"
 msgstr "下一个编号"
 
-#: tavletta/ui/variables.py:122
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:561
 msgid "Step"
 msgstr "步长"
 
-#: tavletta/ui/window.py:163
+#: tavletta/ui/window.py:163 tavletta/server/web/app.js:45
+#: tavletta/server/web/app.js:283
 msgid "Templates"
 msgstr "模板"
 
@@ -3255,7 +3271,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:88 tavletta/server/config.py:92
-#: tavletta/server/config.py:98 tavletta/server/main.py:342
+#: tavletta/server/config.py:98 tavletta/server/main.py:344
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "无法读取 %(file)s：%(reason)s"
@@ -3339,11 +3355,11 @@ msgstr "不是令牌哈希：应为 sha256:… 或 scrypt:…"
 msgid "expected a list of printer names"
 msgstr "应为打印机名称列表"
 
-#: tavletta/server/config.py:477 tavletta/server/main.py:368
+#: tavletta/server/config.py:477 tavletta/server/main.py:370
 msgid "printers can only be limited with --printers"
 msgstr "只能通过 --printers 限制打印机"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:529
+#: tavletta/server/config.py:479 tavletta/server/service.py:547
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "未知打印机：%s"
@@ -3353,68 +3369,74 @@ msgstr "未知打印机：%s"
 msgid "Invalid value for %s"
 msgstr "%s 的值无效"
 
-#: tavletta/server/http.py:464 tavletta/server/http.py:513
+#: tavletta/server/http.py:469 tavletta/server/http.py:518
 msgid "The request took too long"
 msgstr "请求耗时过长"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1388
+#: tavletta/server/http.py:478 tavletta/server/service.py:1594
 msgid "The server is busy – try again later"
 msgstr "服务器繁忙，请稍后重试"
 
-#: tavletta/server/http.py:516
+#: tavletta/server/http.py:521
 msgid "Internal error"
 msgstr "内部错误"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:526
 msgid "This server only answers on its local address"
 msgstr "此服务器只在其本地地址上应答"
 
-#: tavletta/server/http.py:525
+#: tavletta/server/http.py:530
 msgid "Requests from this web page are not allowed"
 msgstr "不允许来自此网页的请求"
 
-#: tavletta/server/http.py:543
+#: tavletta/server/http.py:557
 msgid "Too many requests – try again later"
 msgstr "请求过多，请稍后重试"
 
-#: tavletta/server/http.py:545
+#: tavletta/server/http.py:559
 msgid "Access token missing or wrong"
 msgstr "访问令牌缺失或错误"
 
-#: tavletta/server/http.py:586 tavletta/server/http.py:591
+#: tavletta/server/http.py:600 tavletta/server/http.py:605
 msgid "The request needs a Content-Length"
 msgstr "请求需要 Content-Length"
 
-#: tavletta/server/http.py:588
+#: tavletta/server/http.py:602
 msgid "The request has more than one Content-Length"
 msgstr "请求包含多个 Content-Length"
 
-#: tavletta/server/http.py:594
+#: tavletta/server/http.py:608
 msgid "The request is too large"
 msgstr "请求过大"
 
-#: tavletta/server/http.py:599
+#: tavletta/server/http.py:613
 msgid "The request body is incomplete"
 msgstr "请求体不完整"
 
-#: tavletta/server/http.py:606
+#: tavletta/server/http.py:620
 msgid "Send the request as application/json"
 msgstr "请以 application/json 格式发送请求"
 
-#: tavletta/server/http.py:635 tavletta/server/http.py:645
+#: tavletta/server/http.py:652 tavletta/server/http.py:662
+#: tavletta/server/http.py:783
 msgid "Not found"
 msgstr "未找到"
 
-#: tavletta/server/http.py:644
+#: tavletta/server/http.py:661 tavletta/server/http.py:774
 msgid "Method not allowed"
 msgstr "不允许的方法"
 
-#: tavletta/server/http.py:661
+#: tavletta/server/http.py:678
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "请随此请求发送标头 %s"
 
-#: tavletta/server/http.py:816
+#: tavletta/server/http.py:721 tavletta/server/service.py:623
+#: tavletta/server/service.py:1567
+msgid "This access token may not do this"
+msgstr "此访问令牌无权执行此操作"
+
+#: tavletta/server/http.py:897
 msgid "The request is not valid JSON"
 msgstr "请求不是有效的 JSON"
 
@@ -3428,12 +3450,12 @@ msgstr "标签文件夹 %s 不存在"
 msgid "Cannot read the token file %s"
 msgstr "无法读取令牌文件 %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:313
+#: tavletta/server/main.py:54 tavletta/server/main.py:315
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "访问令牌只能包含不含空格的可打印 ASCII 字符"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:318
+#: tavletta/server/main.py:59 tavletta/server/main.py:320
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "访问令牌长度至少为 %d 个字符"
@@ -3458,164 +3480,960 @@ msgid ""
 "--token-file"
 msgstr "拒绝在没有访问令牌的情况下监听 %s：请设置 TAVLETTA_TOKEN 或使用 --token-file"
 
-#: tavletta/server/main.py:140
+#: tavletta/server/main.py:141
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "无法监听 %(address)s：%(reason)s"
 
-#: tavletta/server/main.py:272
+#: tavletta/server/main.py:274
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "名称无效：只能使用字母、数字、. _ -（最多 64 个）"
 
-#: tavletta/server/main.py:283
+#: tavletta/server/main.py:285
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s 正被另一个程序使用，请稍后重试"
 
-#: tavletta/server/main.py:290
+#: tavletta/server/main.py:292
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "令牌 %(name)s 已添加到 %(file)s。"
 
-#: tavletta/server/main.py:297
+#: tavletta/server/main.py:299
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "令牌仅显示这一次；%s 只保存其哈希。"
 
-#: tavletta/server/main.py:308
+#: tavletta/server/main.py:310
 msgid "Access token: "
 msgstr "访问令牌："
 
-#: tavletta/server/main.py:323
+#: tavletta/server/main.py:325
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "自选令牌不得看起来像生成的令牌（tav_…）"
 
-#: tavletta/server/main.py:373
+#: tavletta/server/main.py:375
 #, python-format
 msgid "A token named %s exists already"
 msgstr "名为 %s 的令牌已存在"
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:402
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "此令牌已在文件中，名为 %s"
 
-#: tavletta/server/paths.py:39
+#: tavletta/server/paths.py:45 tavletta/server/service.py:808
 #, python-format
 msgid "No such label: %s"
 msgstr "没有此标签：%s"
 
-#: tavletta/server/paths.py:46
+#: tavletta/server/paths.py:64
 #, python-format
 msgid "No such data file: %s"
 msgstr "没有此数据文件：%s"
 
-#: tavletta/server/requests.py:95
+#: tavletta/server/requests.py:127
 msgid "The request must be a JSON object"
 msgstr "请求必须是 JSON 对象"
 
-#: tavletta/server/requests.py:97
+#: tavletta/server/requests.py:129
 #, python-format
 msgid "Unknown field: %s"
 msgstr "未知字段：%s"
 
-#: tavletta/server/requests.py:104
+#: tavletta/server/requests.py:136
 msgid "Give the label either by name or as content"
 msgstr "请通过名称或以内容形式提供标签，二者选一"
 
-#: tavletta/server/requests.py:109
+#: tavletta/server/requests.py:141
 msgid "Give data rows or a data file, not both"
 msgstr "请提供数据行或数据文件，不能同时提供"
 
-#: tavletta/server/requests.py:196
+#: tavletta/server/requests.py:228
 #, python-format
 msgid "Too many data rows: at most %d"
 msgstr "数据行过多：最多 %d 行"
 
-#: tavletta/server/requests.py:204
+#: tavletta/server/requests.py:236
 #, python-format
 msgid "Too many columns: at most %d"
 msgstr "列过多：最多 %d 列"
 
-#: tavletta/server/requests.py:207
+#: tavletta/server/requests.py:239
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "单元格过多：最多 %d 个"
 
-#: tavletta/server/service.py:541
+#: tavletta/server/service.py:559
 msgid "Choose a printer by its name"
 msgstr "请按名称选择打印机"
 
-#: tavletta/server/service.py:605 tavletta/server/service.py:1361
-msgid "This access token may not do this"
-msgstr "此访问令牌无权执行此操作"
-
-#: tavletta/server/service.py:662
+#: tavletta/server/service.py:681
 msgid "No printer address: give it as host"
 msgstr "没有打印机地址：请以 host 提供"
 
-#: tavletta/server/service.py:671
+#: tavletta/server/service.py:690
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "不允许此打印机地址：%s"
 
-#: tavletta/server/service.py:766
+#: tavletta/server/service.py:774 tavletta/server/service.py:907
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content 中不允许文档页面（--allow-pdf-pages）"
 
-#: tavletta/server/service.py:799
+#: tavletta/server/service.py:940
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s 是数据列 ({%(name)s}) – 请在 data_rows 中发送"
 
-#: tavletta/server/service.py:857
+#: tavletta/server/service.py:998
 msgid "A sheet needs a data file"
 msgstr "工作表需要数据文件"
 
-#: tavletta/server/service.py:863
+#: tavletta/server/service.py:1004
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "标签使用了标签文件夹之外的数据文件：请随请求一起发送其数据行"
 
-#: tavletta/server/service.py:1033
-#, python-format
-msgid "At most %d labels in one print job"
-msgstr "一个打印作业中最多 %d 个标签"
-
-#: tavletta/server/service.py:1059
+#: tavletta/server/service.py:1204
 msgid "Too many print jobs are waiting – try again later"
 msgstr "等待中的打印作业过多，请稍后重试"
 
-#: tavletta/server/service.py:1323
+#: tavletta/server/service.py:1473
 #, python-format
 msgid "No such print job: %s"
 msgstr "没有此打印作业：%s"
 
-#: tavletta/server/service.py:1335
+#: tavletta/server/service.py:1485
 msgid "The print job has already finished"
 msgstr "打印作业已完成"
 
-#: tavletta/server/service.py:1392
+#: tavletta/server/service.py:1535
+#, python-format
+msgid "A label named %s exists already"
+msgstr "名为 %s 的标签已存在"
+
+#: tavletta/server/service.py:1540
+msgid "The label could not be saved in the labels folder"
+msgstr "无法将标签保存到标签文件夹"
+
+#: tavletta/server/service.py:1598
 msgid "The label is too large to render"
 msgstr "标签过大，无法渲染"
 
-#: tavletta/server/service.py:1406
+#: tavletta/server/service.py:1612
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "标签过大：图像和二维码／条形码最多 %d 个"
 
-#: tavletta/server/service.py:1429
+#: tavletta/server/service.py:1635
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "标签过大：最多 %(elements)d 个元素，每段文本最多 %(chars)d 个字符"
 
-#: tavletta/server/service.py:1448
+#: tavletta/server/service.py:1654
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "此打印机最多 %d 份"
 
-#: tavletta/server/service.py:1453
+#: tavletta/server/service.py:1659
 msgid "Printers are chosen by name: leave out host"
 msgstr "打印机按名称选择：请省略 host"
+
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:477
+msgid "No connection to the server. Your input is kept."
+msgstr "无法连接服务器。您的输入已保留。"
+
+#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:205
+msgid "Printers"
+msgstr "打印机"
+
+#: tavletta/server/web/app.js:51
+msgid "Main"
+msgstr "主导航"
+
+#: tavletta/server/web/app.js:74
+msgid "Language"
+msgstr "语言"
+
+#: tavletta/server/web/app.js:81
+msgid "Sign out"
+msgstr "退出登录"
+
+#: tavletta/server/web/app.js:84
+msgid "Skip to content"
+msgstr "跳到内容"
+
+#: tavletta/server/web/app.js:155
+msgid "Access token"
+msgstr "访问令牌"
+
+#: tavletta/server/web/app.js:156
+msgid ""
+"The administrator gives it to you. It is kept in this tab only and forgotten "
+"when the tab is closed."
+msgstr "由管理员提供。令牌只保存在此标签页中，关闭标签页后即被清除。"
+
+#: tavletta/server/web/app.js:161 tavletta/server/web/app.js:197
+msgid "Sign in"
+msgstr "登录"
+
+#: tavletta/server/web/app.js:167
+msgid "Show token"
+msgstr "显示令牌"
+
+#: tavletta/server/web/app.js:175
+msgid "Enter the access token."
+msgstr "请输入访问令牌。"
+
+#: tavletta/server/web/app.js:190
+msgid ""
+"The token was not accepted. Check it, or ask the administrator for a new one."
+msgstr "令牌未被接受。请检查令牌，或向管理员索取新令牌。"
+
+#: tavletta/server/web/app.js:204
+msgid "Check again"
+msgstr "重新检查"
+
+#: tavletta/server/web/app.js:216 tavletta/server/web/print.js:74
+msgid "No printer this token may use. Ask the administrator."
+msgstr "此令牌没有可用的打印机。请联系管理员。"
+
+#: tavletta/server/web/app.js:229
+msgid "Location: {place}"
+msgstr "位置：{place}"
+
+#: tavletta/server/web/app.js:230
+msgid "Meant for: {media}"
+msgstr "适用于：{media}"
+
+#: tavletta/server/web/app.js:231
+msgid "Model: {model}"
+msgstr "型号：{model}"
+
+#: tavletta/server/web/app.js:237
+msgid "Default"
+msgstr "默认"
+
+#: tavletta/server/web/app.js:251
+msgid "Asking the printer…"
+msgstr "正在询问打印机…"
+
+#: tavletta/server/web/app.js:262
+msgid "Ask for its state"
+msgstr "查询状态"
+
+#: tavletta/server/web/app.js:268
+msgid "Address: {host}"
+msgstr "地址：{host}"
+
+#: tavletta/server/web/app.js:268
+msgid "No address set"
+msgstr "未设置地址"
+
+#: tavletta/server/web/app.js:299
+msgid "No templates yet. Upload one above."
+msgstr "还没有模板。请在上方上传。"
+
+#: tavletta/server/web/app.js:299
+msgid "No templates yet. Ask the administrator."
+msgstr "还没有模板。请联系管理员。"
+
+#: tavletta/server/web/app.js:326
+msgid "Series"
+msgstr "数据合并"
+
+#: tavletta/server/web/app.js:327
+msgid "Delete"
+msgstr "删除"
+
+#: tavletta/server/web/app.js:335
+msgid "Size: {width} × {height} mm"
+msgstr "尺寸：{width} × {height} mm"
+
+#: tavletta/server/web/app.js:336
+msgid "Fields: {count}"
+msgstr "字段：{count}"
+
+#: tavletta/server/web/app.js:337
+msgid "Printer model: {model}"
+msgstr "打印机型号：{model}"
+
+#: tavletta/server/web/app.js:343 tavletta/server/web/print.js:188
+msgid "Preview of {name}"
+msgstr "{name} 的预览"
+
+#: tavletta/server/web/app.js:354
+msgid "Delete template?"
+msgstr "删除模板？"
+
+#: tavletta/server/web/app.js:355
+msgid "The template {name} is deleted from the server. Its data file stays."
+msgstr "模板 {name} 将从服务器删除。其数据文件会保留。"
+
+#: tavletta/server/web/app.js:356
+msgid "Delete {name}"
+msgstr "删除 {name}"
+
+#: tavletta/server/web/app.js:363
+msgid "{name} deleted."
+msgstr "已删除 {name}。"
+
+#: tavletta/server/web/app.js:376
+msgid "Template file"
+msgstr "模板文件"
+
+#: tavletta/server/web/app.js:377
+msgid "A .tavletta file saved by Tavletta, at most {size} MB."
+msgstr "由 Tavletta 保存的 .tavletta 文件，最大 {size} MB。"
+
+#: tavletta/server/web/app.js:381
+msgid "Upload"
+msgstr "上传"
+
+#: tavletta/server/web/app.js:385
+msgid "Upload a template"
+msgstr "上传模板"
+
+#: tavletta/server/web/app.js:387
+msgid "Replace a template of the same name"
+msgstr "替换同名模板"
+
+#: tavletta/server/web/app.js:395
+msgid "Choose a template file."
+msgstr "请选择模板文件。"
+
+#: tavletta/server/web/app.js:400
+msgid "The file is too large: at most {size} MB."
+msgstr "文件过大：最大 {size} MB。"
+
+#: tavletta/server/web/app.js:411
+msgid "{name} uploaded."
+msgstr "已上传 {name}。"
+
+#: tavletta/server/web/app.js:415
+msgid ""
+"A template of this name exists. Choose \"Replace a template of the same "
+"name\" to replace it."
+msgstr "已存在同名模板。要替换它，请选择“替换同名模板”。"
+
+#: tavletta/server/web/app.js:417
+msgid ""
+"The file name can have letters, digits, spaces and . _ - ( ) + , and must "
+"not start with a dot. Rename the file."
+msgstr "文件名可包含字母、数字、空格及 . _ - ( ) + ,，且不能以点开头。请重命名文件。"
+
+#: tavletta/server/web/app.js:432
+msgid "Print job"
+msgstr "打印作业"
+
+#: tavletta/server/web/app.js:439 tavletta/server/web/batch.js:841
+#: tavletta/server/web/print.js:243
+msgid "Template: {name}"
+msgstr "模板：{name}"
+
+#: tavletta/server/web/app.js:439 tavletta/server/web/batch.js:842
+#: tavletta/server/web/print.js:243
+msgid "Printer: {name}"
+msgstr "打印机：{name}"
+
+#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:884
+msgid "Print job ended: {printed} of {total} labels printed."
+msgstr "打印作业已结束：已打印 {printed} / {total} 张标签。"
+
+#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:270
+msgid "Data"
+msgstr "数据"
+
+#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:396
+msgid "Assign"
+msgstr "分配"
+
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:463
+msgid "Choose"
+msgstr "选择"
+
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:704
+msgid "Check"
+msgstr "检查"
+
+#: tavletta/server/web/batch.js:84
+msgid "From needs a number."
+msgstr "“起始”需要一个数字。"
+
+#: tavletta/server/web/batch.js:85
+msgid "To needs a number."
+msgstr "“结束”需要一个数字。"
+
+#: tavletta/server/web/batch.js:86
+msgid "Step must be a whole number from 1."
+msgstr "“步长”必须是从 1 起的整数。"
+
+#: tavletta/server/web/batch.js:87
+msgid "From and To must be the same apart from the number ({from}, {to})."
+msgstr "“起始”和“结束”除数字外必须相同（{from}，{to}）。"
+
+#: tavletta/server/web/batch.js:88
+msgid ""
+"From has {from} digits, To {to}. Enter both with the same number of digits."
+msgstr "“起始”有 {from} 位数字，“结束”有 {to} 位。请以相同位数输入两者。"
+
+#: tavletta/server/web/batch.js:89
+msgid "To must be greater than or equal to From ({from})."
+msgstr "“结束”必须大于或等于“起始”（{from}）。"
+
+#: tavletta/server/web/batch.js:90
+msgid ""
+"The ranges make different numbers of labels: {counts}. Make them the same "
+"length."
+msgstr "各范围生成的标签数量不同：{counts}。请使它们长度相同。"
+
+#: tavletta/server/web/batch.js:99
+msgid "Series of {name}"
+msgstr "{name} 的数据合并"
+
+#: tavletta/server/web/batch.js:116
+msgid ""
+"This template has no data fields ({placeholder}). For many equal labels, set "
+"the copies when printing."
+msgstr "此模板没有数据字段（{placeholder}）。如需打印多张相同标签，请在打印时设置份数。"
+
+#: tavletta/server/web/batch.js:126
+msgid "Steps"
+msgstr "步骤"
+
+#: tavletta/server/web/batch.js:160 tavletta/server/web/batch.js:179
+msgid "Enter a range for at least one field."
+msgstr "请至少为一个字段输入范围。"
+
+#: tavletta/server/web/batch.js:189 tavletta/server/web/batch.js:639
+msgid "Row {n}"
+msgstr "第 {n} 行"
+
+#: tavletta/server/web/batch.js:205 tavletta/server/web/batch.js:516
+#: tavletta/server/web/batch.js:706
+msgid "No row selected."
+msgstr "未选择行。"
+
+#: tavletta/server/web/batch.js:209
+msgid "{count} labels ({span})"
+msgstr "{count} 张标签（{span}）"
+
+#: tavletta/server/web/batch.js:224
+msgid "not needed"
+msgstr "不需要"
+
+#: tavletta/server/web/batch.js:246 tavletta/server/web/batch.js:300
+msgid "Next"
+msgstr "下一步"
+
+#: tavletta/server/web/batch.js:250 tavletta/server/web/batch.js:757
+msgid "Back"
+msgstr "返回"
+
+#: tavletta/server/web/batch.js:274
+msgid "Where do the values come from?"
+msgstr "值从哪里来？"
+
+#: tavletta/server/web/batch.js:275
+msgid "A file (CSV, XLSX, ODS)"
+msgstr "文件（CSV、XLSX、ODS）"
+
+#: tavletta/server/web/batch.js:276
+msgid "A pasted list"
+msgstr "粘贴的列表"
+
+#: tavletta/server/web/batch.js:277
+msgid "No data: make numbers from ranges"
+msgstr "无数据：从范围生成编号"
+
+#: tavletta/server/web/batch.js:285
+msgid "Data file"
+msgstr "数据文件"
+
+#: tavletta/server/web/batch.js:285
+msgid ""
+"At most {size} MB. Every cell is read as the text it shows: leading zeros "
+"stay."
+msgstr "最大 {size} MB。每个单元格都按其显示的文本读取：前导零会保留。"
+
+#: tavletta/server/web/batch.js:287 tavletta/server/web/batch.js:294
+msgid "The first row holds the column names"
+msgstr "第一行为列名"
+
+#: tavletta/server/web/batch.js:288
+msgid "Last file read: {name}"
+msgstr "最后读取的文件：{name}"
+
+#: tavletta/server/web/batch.js:292 tavletta/server/web/batch.js:341
+msgid "List"
+msgstr "列表"
+
+#: tavletta/server/web/batch.js:292
+msgid ""
+"One label per line; columns separated by tab, semicolon or comma (as copied "
+"from a spreadsheet)."
+msgstr "每行一张标签；各列用制表符、分号或逗号分隔（与从电子表格复制的格式相同）。"
+
+#: tavletta/server/web/batch.js:296
+msgid ""
+"The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
+msgstr "后续步骤将从范围生成值，例如 3000–5685 或 00300–00450。"
+
+#: tavletta/server/web/batch.js:300
+msgid "Read and continue"
+msgstr "读取并继续"
+
+#: tavletta/server/web/batch.js:332
+msgid "Choose a data file."
+msgstr "请选择数据文件。"
+
+#: tavletta/server/web/batch.js:340
+msgid "Paste the list first."
+msgstr "请先粘贴列表。"
+
+#: tavletta/server/web/batch.js:345
+msgid "The data are too large: at most {size} MB."
+msgstr "数据过大：最大 {size} MB。"
+
+#: tavletta/server/web/batch.js:368
+msgid "semicolon"
+msgstr "分号"
+
+#: tavletta/server/web/batch.js:368
+msgid "comma"
+msgstr "逗号"
+
+#: tavletta/server/web/batch.js:368
+msgid "tab"
+msgstr "制表符"
+
+#: tavletta/server/web/batch.js:370
+msgid "{name}: {kind}"
+msgstr "{name}：{kind}"
+
+#: tavletta/server/web/batch.js:371
+msgid "Separated by {delimiter}"
+msgstr "分隔符：{delimiter}"
+
+#: tavletta/server/web/batch.js:372
+msgid "Sheet: {sheet}"
+msgstr "工作表：{sheet}"
+
+#: tavletta/server/web/batch.js:373
+msgid "{rows} rows, {columns} columns"
+msgstr "{rows} 行，{columns} 列"
+
+#: tavletta/server/web/batch.js:375
+msgid "The first {count} rows"
+msgstr "前 {count} 行"
+
+#: tavletta/server/web/batch.js:386 tavletta/server/web/batch.js:633
+msgid "Row"
+msgstr "行"
+
+#: tavletta/server/web/batch.js:411
+msgid "Choose the data column for each field of the template."
+msgstr "请为模板的每个字段选择数据列。"
+
+#: tavletta/server/web/batch.js:416
+msgid "– not assigned –"
+msgstr "– 未分配 –"
+
+#: tavletta/server/web/batch.js:417
+msgid "The same value for all"
+msgstr "全部使用相同的值"
+
+#: tavletta/server/web/batch.js:421
+msgid "Value for {name}"
+msgstr "{name} 的值"
+
+#: tavletta/server/web/batch.js:424
+msgid "Data field {placeholder} of the template, required"
+msgstr "模板的数据字段 {placeholder}，必填"
+
+#: tavletta/server/web/batch.js:441
+msgid "{name} has no data column. Choose one, or the same value for all."
+msgstr "{name} 没有数据列。请选择一列，或全部使用相同的值。"
+
+#: tavletta/server/web/batch.js:474
+msgid "Continuing: {count} rows left."
+msgstr "继续：剩余 {count} 行。"
+
+#: tavletta/server/web/batch.js:478
+msgid "Choose again"
+msgstr "重新选择"
+
+#: tavletta/server/web/batch.js:484 tavletta/server/web/batch.js:610
+msgid "All rows"
+msgstr "所有行"
+
+#: tavletta/server/web/batch.js:485
+msgid "Some rows"
+msgstr "部分行"
+
+#: tavletta/server/web/batch.js:486
+msgid "Ranges of a field"
+msgstr "字段的范围"
+
+#: tavletta/server/web/batch.js:492
+msgid "Which rows?"
+msgstr "哪些行？"
+
+#: tavletta/server/web/batch.js:527
+msgid ""
+"Several fields: their values are put together row by row (the first with the "
+"first), never every combination."
+msgstr "多个字段：其值按行逐一配对（第一个对第一个），绝不会生成所有组合。"
+
+#: tavletta/server/web/batch.js:528
+msgid ""
+"Several fields: a row is printed if its values lie in the ranges of all of "
+"them."
+msgstr "多个字段：只有当一行的值都落在所有字段的范围内时才会打印。"
+
+#: tavletta/server/web/batch.js:559
+msgid "From"
+msgstr "起始"
+
+#: tavletta/server/web/batch.js:559
+msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
+msgstr "例如 3000、00300 或 INV-0001；或整个范围 3000-5685"
+
+#: tavletta/server/web/batch.js:560
+msgid "To"
+msgstr "结束"
+
+#: tavletta/server/web/batch.js:566
+msgid "Remove range"
+msgstr "移除范围"
+
+#: tavletta/server/web/batch.js:588
+msgid "Add a range"
+msgstr "添加范围"
+
+#: tavletta/server/web/batch.js:596
+msgid "Or the same value for all"
+msgstr "或全部使用相同的值"
+
+#: tavletta/server/web/batch.js:596
+msgid "Used if no range is given for this field."
+msgstr "未给此字段指定范围时使用。"
+
+#: tavletta/server/web/batch.js:609 tavletta/server/web/batch.js:628
+msgid "Rows"
+msgstr "行"
+
+#: tavletta/server/web/batch.js:609
+msgid "For example 1-20, 25, 30-"
+msgstr "例如 1-20, 25, 30-"
+
+#: tavletta/server/web/batch.js:632
+msgid "Rows {first} to {last} of {total}"
+msgstr "第 {first} 至 {last} 行，共 {total} 行"
+
+#: tavletta/server/web/batch.js:668
+msgid "Page {page} of {pages}"
+msgstr "第 {page} 页，共 {pages} 页"
+
+#: tavletta/server/web/batch.js:674
+msgid "Previous page"
+msgstr "上一页"
+
+#: tavletta/server/web/batch.js:675
+msgid "Next page"
+msgstr "下一页"
+
+#: tavletta/server/web/batch.js:689
+msgid "Write the rows as numbers and ranges, such as 1-20, 25."
+msgstr "请用数字和范围填写行，例如 1-20, 25。"
+
+#: tavletta/server/web/batch.js:751
+msgid "The same for all labels"
+msgstr "所有标签相同"
+
+#: tavletta/server/web/batch.js:768 tavletta/server/web/print.js:203
+msgid "Printing needs a token with the role Print or Admin."
+msgstr "打印需要角色为“打印”或“管理员”的令牌。"
+
+#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:222
+msgid "Copies must be a whole number from 1."
+msgstr "份数必须是从 1 起的整数。"
+
+#: tavletta/server/web/batch.js:771 tavletta/server/web/print.js:223
+msgid "At most {max} copies on this printer."
+msgstr "此打印机最多 {max} 份。"
+
+#: tavletta/server/web/batch.js:772
+msgid "At most {max} rows in one print job."
+msgstr "一个打印作业最多 {max} 行。"
+
+#: tavletta/server/web/batch.js:773
+msgid ""
+"At most {max} labels in one print job. Choose fewer rows, or print them in "
+"several jobs."
+msgstr "一个打印作业最多 {max} 张标签。请选择较少的行，或分多个作业打印。"
+
+#: tavletta/server/web/batch.js:774 tavletta/server/web/print.js:204
+msgid "Confirm above that it should print on the labels loaded."
+msgstr "请在上方确认要在已装入的标签上打印。"
+
+#: tavletta/server/web/batch.js:781
+msgid "At most {max} labels in one print job; {left} more could be added."
+msgstr "一个打印作业最多 {max} 张标签；还可添加 {left} 张。"
+
+#: tavletta/server/web/batch.js:782 tavletta/server/web/batch.js:844
+#: tavletta/server/web/print.js:244
+msgid "Print {count} labels"
+msgstr "打印 {count} 张标签"
+
+#: tavletta/server/web/batch.js:804
+msgid "First: {value}"
+msgstr "第一张：{value}"
+
+#: tavletta/server/web/batch.js:805
+msgid "Last: {value}"
+msgstr "最后一张：{value}"
+
+#: tavletta/server/web/batch.js:808 tavletta/server/web/batch.js:809
+msgid "Preview of the label {value}"
+msgstr "标签 {value} 的预览"
+
+#: tavletta/server/web/batch.js:838 tavletta/server/web/print.js:242
+msgid "Print {count} labels?"
+msgstr "打印 {count} 张标签？"
+
+#: tavletta/server/web/batch.js:852
+msgid "Too much data for one print job ({size} MB). Choose fewer rows."
+msgstr "一个打印作业的数据过多（{size} MB）。请选择较少的行。"
+
+#: tavletta/server/web/batch.js:903
+msgid "First printed: {first}, last printed in full: {last}"
+msgstr "第一张已打印：{first}，最后一张完整打印：{last}"
+
+#: tavletta/server/web/batch.js:914
+msgid "Continue from {value}"
+msgstr "从 {value} 继续"
+
+#: tavletta/server/web/batch.js:916
+msgid "A label of a row that was printed in part is printed again in full."
+msgstr "某行只打印了一部分的标签会完整地重新打印。"
+
+#: tavletta/server/web/batch.js:924
+msgid "New series"
+msgstr "新的数据合并"
+
+#: tavletta/server/web/print.js:38
+msgid "Back to the templates"
+msgstr "返回模板"
+
+#: tavletta/server/web/print.js:47
+msgid "Printer: {model}, at the address set on the server"
+msgstr "打印机：{model}，使用服务器上设置的地址"
+
+#: tavletta/server/web/print.js:80
+msgid "No printer chosen."
+msgstr "未选择打印机。"
+
+#: tavletta/server/web/print.js:81
+msgid ""
+"The printer is unreachable. Check that it is on and connected, then reload "
+"the page."
+msgstr "无法连接打印机。请检查打印机已开机并已连接，然后重新加载页面。"
+
+#: tavletta/server/web/print.js:90
+msgid "Data field {placeholder}"
+msgstr "数据字段 {placeholder}"
+
+#: tavletta/server/web/print.js:93
+msgid "Variable {placeholder}"
+msgstr "变量 {placeholder}"
+
+#: tavletta/server/web/print.js:98
+msgid "Text of the element; changed here for this print only"
+msgstr "元素的文本；在此更改仅对本次打印有效"
+
+#: tavletta/server/web/print.js:105
+msgid "Print {name}"
+msgstr "打印 {name}"
+
+#: tavletta/server/web/print.js:121 tavletta/server/web/ui.js:62
+msgid "Preview"
+msgstr "预览"
+
+#: tavletta/server/web/print.js:145
+msgid "Start number"
+msgstr "起始编号"
+
+#: tavletta/server/web/print.js:145
+msgid ""
+"The counter {placeholder} starts here; next number saved in the template: "
+"{next}"
+msgstr "计数器 {placeholder} 从此处开始；模板中保存的下一个编号：{next}"
+
+#: tavletta/server/web/print.js:150
+msgid "At most {max}"
+msgstr "最多 {max}"
+
+#: tavletta/server/web/print.js:160
+msgid "Fields"
+msgstr "字段"
+
+#: tavletta/server/web/print.js:160
+msgid "This template has no fields to fill in."
+msgstr "此模板没有需要填写的字段。"
+
+#: tavletta/server/web/print.js:216
+msgid "{name} is empty. Enter a value."
+msgstr "{name} 为空。请输入一个值。"
+
+#: tavletta/server/web/print.js:219
+msgid "The start number must be a whole number from 0."
+msgstr "起始编号必须是从 0 起的整数。"
+
+#: tavletta/server/web/print.js:224
+msgid "At most {max} labels in one print job."
+msgstr "一个打印作业最多 {max} 张标签。"
+
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+msgid "There is a problem"
+msgstr "出现问题"
+
+#: tavletta/server/web/ui.js:48
+msgid "Busy"
+msgstr "忙碌"
+
+#: tavletta/server/web/ui.js:49
+msgid "Paused"
+msgstr "已暂停"
+
+#: tavletta/server/web/ui.js:50
+msgid "Problem"
+msgstr "问题"
+
+#: tavletta/server/web/ui.js:51
+msgid "Reachable, no status"
+msgstr "可连接，无状态"
+
+#: tavletta/server/web/ui.js:52
+msgid "Unreachable"
+msgstr "无法连接"
+
+#: tavletta/server/web/ui.js:62
+msgid "Admin"
+msgstr "管理员"
+
+#: tavletta/server/web/ui.js:66
+msgid "Code"
+msgstr "代码"
+
+#: tavletta/server/web/ui.js:66
+msgid "Element"
+msgstr "元素"
+
+#: tavletta/server/web/ui.js:71
+msgid "Something went wrong in the page."
+msgstr "页面出错了。"
+
+#: tavletta/server/web/ui.js:72
+msgid "This needs a token with more rights."
+msgstr "需要具有更多权限的令牌。"
+
+#: tavletta/server/web/ui.js:74
+msgid ""
+"Too many wrong tokens from this computer. Wait a minute, then sign in again."
+msgstr "此计算机输入错误令牌的次数过多。请等待一分钟，然后重新登录。"
+
+#: tavletta/server/web/ui.js:82
+msgid "Labels loaded: {width} × {height} mm"
+msgstr "已装入的标签：{width} × {height} mm"
+
+#: tavletta/server/web/ui.js:83
+msgid "Tape loaded: {width} mm"
+msgstr "已装入的色带：{width} mm"
+
+#: tavletta/server/web/ui.js:84
+msgid "Label distance measured: {length} mm"
+msgstr "测得的标签间距：{length} mm"
+
+#: tavletta/server/web/ui.js:85
+msgid "Left on the roll: {length} mm"
+msgstr "卷上剩余：{length} mm"
+
+#: tavletta/server/web/ui.js:92
+msgid "Unreachable (checked {time})"
+msgstr "无法连接（检查于 {time}）"
+
+#: tavletta/server/web/ui.js:106
+msgid "Loading…"
+msgstr "正在加载…"
+
+#: tavletta/server/web/ui.js:122
+msgid "Try again"
+msgstr "重试"
+
+#: tavletta/server/web/ui.js:149
+msgid "optional"
+msgstr "可选"
+
+#: tavletta/server/web/ui.js:258
+msgid "Other labels are loaded in the printer than the template needs."
+msgstr "打印机中装入的标签与模板所需的不同。"
+
+#: tavletta/server/web/ui.js:324
+msgid "Element {n}: {kind}"
+msgstr "元素 {n}：{kind}"
+
+#: tavletta/server/web/ui.js:383
+msgid "Cancel printing"
+msgstr "取消打印"
+
+#: tavletta/server/web/ui.js:384
+msgid "Labels already printed stay printed."
+msgstr "已打印的标签不受影响。"
+
+#: tavletta/server/web/ui.js:396
+msgid "{printed} of {total}"
+msgstr "{printed} / {total}"
+
+#: tavletta/server/web/ui.js:405
+msgid "About {minutes} min left"
+msgstr "约剩 {minutes} 分钟"
+
+#: tavletta/server/web/ui.js:407
+msgid "Waiting for the printer…"
+msgstr "正在等待打印机…"
+
+#: tavletta/server/web/ui.js:435
+msgid "Stopping after the label being printed…"
+msgstr "将在当前正在打印的标签之后停止…"
+
+#: tavletta/server/web/ui.js:454
+msgid "Canceled"
+msgstr "已取消"
+
+#: tavletta/server/web/ui.js:454
+msgid "Failed"
+msgstr "失败"
+
+#: tavletta/server/web/ui.js:466
+msgid "Copied"
+msgstr "已复制"
+
+#: tavletta/server/web/ui.js:472
+msgid "Copy"
+msgstr "复制"
+
+#: tavletta/server/web/ui.js:478
+msgid "{printed} of {total} labels printed."
+msgstr "已打印 {printed} / {total} 张标签。"
+
+#: tavletta/server/web/ui.js:481
+msgid "Took {seconds} s, finished at {time}."
+msgstr "耗时 {seconds} 秒，于 {time} 完成。"
+
+#: tavletta/server/web/ui.js:483
+msgid "Job number"
+msgstr "作业编号"

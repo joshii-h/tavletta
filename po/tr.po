@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-23 15:25+0100\n"
+"PO-Revision-Date: 2026-11-24 14:49+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: tr\n"
 "Language: tr\n"
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Box and frame"
 msgstr "Kutu ve çerçeve"
 
-#: tavletta/app.py:221 tavletta/cli.py:185
+#: tavletta/app.py:221 tavletta/cli.py:186
 msgid "Design and print labels"
 msgstr "Etiket tasarla ve yazdır"
 
@@ -64,55 +64,55 @@ msgstr "NAME=VALUE bekleniyordu: %s"
 msgid "expected a whole number from %(min)d to %(max)d: %(value)s"
 msgstr "%(min)d ile %(max)d arasında bir tam sayı bekleniyordu: %(value)s"
 
-#: tavletta/cli.py:179
+#: tavletta/cli.py:180
 #, python-format
 msgid "expected rows such as 3-10, 5 or 7-: %s"
 msgstr "3-10, 5 veya 7- gibi satırlar bekleniyordu: %s"
 
-#: tavletta/cli.py:186
+#: tavletta/cli.py:187
 msgid "Without a command the application starts; label files given open in it."
 msgstr "Komut olmadan uygulama başlar; verilen etiket dosyaları onda açılır."
 
-#: tavletta/cli.py:192
+#: tavletta/cli.py:193
 msgid "print a label file without opening a window"
 msgstr "pencere açmadan bir etiket dosyası yazdırır"
 
-#: tavletta/cli.py:193
+#: tavletta/cli.py:194
 msgid "Print a label file without opening a window."
 msgstr "Pencere açmadan bir etiket dosyası yazdırır."
 
-#: tavletta/cli.py:195
+#: tavletta/cli.py:196
 msgid "the label (.tavletta)"
 msgstr "etiket (.tavletta)"
 
-#: tavletta/cli.py:198
+#: tavletta/cli.py:199
 #, python-format
 msgid "printer model, by default the label's: %s"
 msgstr "yazıcı modeli, varsayılan olarak etiketinki: %s"
 
-#: tavletta/cli.py:201
+#: tavletta/cli.py:202
 msgid "printer address, by default the one set in the app"
 msgstr "yazıcı adresi, varsayılan olarak uygulamada ayarlanan adres"
 
-#: tavletta/cli.py:204
+#: tavletta/cli.py:205
 msgid "number of copies"
 msgstr "kopya sayısı"
 
-#: tavletta/cli.py:214
+#: tavletta/cli.py:215
 msgid ""
 "text of the element NAME, or value of the variable {=NAME}; variables in a "
 "text are filled in; repeatable"
 msgstr "NAME öğesinin metni veya {=NAME} değişkeninin değeri; metindeki değişkenler doldurulur; tekrarlanabilir"
 
-#: tavletta/cli.py:224
+#: tavletta/cli.py:225
 msgid "like --set, but the value is used as it is: braces are no variables"
 msgstr "--set gibi, ancak değer olduğu gibi kullanılır: süslü parantezler değişken değildir"
 
-#: tavletta/cli.py:230
+#: tavletta/cli.py:231
 msgid "counter of the first label, instead of the one saved in the label"
 msgstr "etikette kayıtlı olan yerine ilk etiketin sayacı"
 
-#: tavletta/cli.py:236
+#: tavletta/cli.py:237
 msgid ""
 "print with the printer model's defaults instead of the cut, colours, "
 "quality, extras (chain printing, high resolution, tape feed), printer "
@@ -120,7 +120,7 @@ msgid ""
 "the safety margin stay"
 msgstr "uygulamada en son seçilen kesim, renkler, kalite, ekler (zincirleme baskı, yüksek çözünürlük, bant besleme), yazıcı ayarları ve etiket sayfası dış çizgileri yerine yazıcı modelinin varsayılanlarıyla yazdır; adres ve güvenlik payı kalır"
 
-#: tavletta/cli.py:245
+#: tavletta/cli.py:246
 msgid ""
 "print method of a thermal printer that has the setting: printer (as set on "
 "the printer), transfer (with a ribbon) or direct (thermal direct, no "
@@ -128,326 +128,337 @@ msgid ""
 "one set on the printer"
 msgstr "bu ayara sahip bir termal yazıcının yazdırma yöntemi: printer (yazıcıda ayarlandığı gibi), transfer (ribonlu) veya direct (doğrudan termal, ribonsuz); varsayılan olarak uygulamada seçilen, --printer-defaults ile yazıcıda ayarlanan"
 
-#: tavletta/cli.py:254
+#: tavletta/cli.py:255
 msgid ""
 "do not ask the printer before rendering (its model, tape and resolution)"
 msgstr "işlemeden önce yazıcıyı sorgulama (modeli, bandı ve çözünürlüğü)"
 
-#: tavletta/cli.py:260
+#: tavletta/cli.py:261
 msgid ""
 "do not save the next counter value in the label (a read-only file); the next "
 "print starts from the same number"
 msgstr "sonraki sayaç değerini etikete kaydetme (salt okunur bir dosya); sonraki yazdırma aynı numaradan başlar"
 
-#: tavletta/cli.py:269
+#: tavletta/cli.py:270
 msgid ""
 "serial labels: one label for each row of this CSV, ODS or XLSX file; by "
 "default the data file of the label"
 msgstr "seri etiketler: bu CSV, ODS veya XLSX dosyasının her satırı için bir etiket; varsayılan olarak etiketin veri dosyası"
 
-#: tavletta/cli.py:274
+#: tavletta/cli.py:275
 msgid "the sheet of the data file, by default the first"
 msgstr "veri dosyasının sayfası, varsayılan olarak ilki"
 
-#: tavletta/cli.py:280
+#: tavletta/cli.py:281
 msgid "only these rows of the data file, e.g. 3-10, 5 or 7- (counted from 1)"
 msgstr "veri dosyasının yalnızca bu satırları, ör. 3-10, 5 veya 7- (1'den sayılır)"
 
-#: tavletta/cli.py:283
+#: tavletta/cli.py:284
 msgid "check and render only, do not print"
 msgstr "yalnızca denetle ve oluştur, yazdırma"
 
-#: tavletta/cli.py:289
+#: tavletta/cli.py:290
 msgid ""
 "with --dry-run: save each label as PNG as the window exports it, at most 600 "
 "dpi (- for stdout: the first only)"
 msgstr "--dry-run ile: her etiketi pencerenin dışa aktardığı biçimde, en fazla 600 dpi olarak PNG kaydeder (- stdout için: yalnızca ilki)"
 
-#: tavletta/cli.py:295
+#: tavletta/cli.py:296
 msgid "list the printers found on the network"
 msgstr "ağda bulunan yazıcıları listeler"
 
-#: tavletta/cli.py:296
+#: tavletta/cli.py:297
 msgid "List the printers found on the network: model, address, name."
 msgstr "Ağda bulunan yazıcıları listeler: model, adres, ad."
 
-#: tavletta/cli.py:298
+#: tavletta/cli.py:299
 #, python-format
 msgid "only this printer model: %s"
 msgstr "yalnızca bu yazıcı modeli: %s"
 
-#: tavletta/cli.py:310
+#: tavletta/cli.py:311
 #, python-format
 msgid "expected an address or network such as 172.16.0.0/12: %s"
 msgstr "172.16.0.0/12 gibi bir adres veya ağ bekleniyordu: %s"
 
-#: tavletta/cli.py:320
+#: tavletta/cli.py:321
 msgid "the folder with the label files the server may use"
 msgstr "sunucunun kullanabileceği etiket dosyalarının bulunduğu klasör"
 
-#: tavletta/cli.py:327
+#: tavletta/cli.py:328
 msgid "only print on this printer address (* matches anything); repeatable"
 msgstr "yalnızca bu yazıcı adresine yazdır (* her şeyle eşleşir); tekrarlanabilir"
 
-#: tavletta/cli.py:333
+#: tavletta/cli.py:334
 msgid "printers.toml: the printers clients may use, by name"
 msgstr "printers.toml: istemcilerin kullanabileceği yazıcılar, ada göre"
 
-#: tavletta/cli.py:340
+#: tavletta/cli.py:341
 msgid "most labels in one print job, copies times rows (default 10000)"
 msgstr "bir yazdırma işindeki en fazla etiket sayısı, kopya çarpı satır (varsayılan 10000)"
 
-#: tavletta/cli.py:345
+#: tavletta/cli.py:346
 msgid "search the network for printers (off by default)"
 msgstr "ağda yazıcı ara (varsayılan olarak kapalı)"
 
-#: tavletta/cli.py:351
+#: tavletta/cli.py:352
 msgid ""
 "allow document pages (PDF, images) in labels sent with the request; PDFs are "
 "then drawn in a separate process with limits (off by default)"
 msgstr "istekle gönderilen etiketlerde belge sayfalarına (PDF, görseller) izin ver; PDF'ler bu durumda sınırlı ayrı bir süreçte çizilir (varsayılan olarak kapalı)"
 
-#: tavletta/cli.py:360
+#: tavletta/cli.py:361
 msgid "run a print server with a REST API"
 msgstr "REST API ile bir yazdırma sunucusu çalıştırır"
 
-#: tavletta/cli.py:361
+#: tavletta/cli.py:362
 msgid "Run a print server: a REST API and, with --mcp, MCP for AI clients."
 msgstr "Bir yazdırma sunucusu çalıştırır: bir REST API ve --mcp ile yapay zekâ istemcileri için MCP."
 
-#: tavletta/cli.py:364
+#: tavletta/cli.py:365
 msgid "address to listen on (default 127.0.0.1)"
 msgstr "dinlenecek adres (varsayılan 127.0.0.1)"
 
-#: tavletta/cli.py:370
+#: tavletta/cli.py:371
 #, python-format
 msgid "port to listen on (default %d)"
 msgstr "dinlenecek bağlantı noktası (varsayılan %d)"
 
-#: tavletta/cli.py:376
+#: tavletta/cli.py:377
 msgid ""
 "file with the access token; else the environment variable TAVLETTA_TOKEN"
 msgstr "erişim belirtecini içeren dosya; yoksa TAVLETTA_TOKEN ortam değişkeni"
 
-#: tavletta/cli.py:382
+#: tavletta/cli.py:383
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml: rolleri olan adlandırılmış erişim belirteçleri"
 
-#: tavletta/cli.py:384
+#: tavletta/cli.py:385
 msgid "also serve MCP at /mcp"
 msgstr "MCP'yi /mcp altında da sun"
 
-#: tavletta/cli.py:390
+#: tavletta/cli.py:389
+msgid "do not serve the web page at /: only the REST API (and MCP)"
+msgstr "web sayfasını / adresinde sunma: yalnızca REST API (ve MCP)"
+
+#: tavletta/cli.py:396
 msgid "largest request body in MB (default 4)"
 msgstr "MB cinsinden en büyük istek gövdesi (varsayılan 4)"
 
-#: tavletta/cli.py:399
+#: tavletta/cli.py:405
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "X-Forwarded-For üst bilgisi istemciyi bildiren bir ters vekil sunucu, ör. 172.16.0.0/12; tekrarlanabilir"
 
-#: tavletta/cli.py:408
+#: tavletta/cli.py:414
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "bu kaynağın web sayfalarından gelen isteklere izin ver; tekrarlanabilir"
 
-#: tavletta/cli.py:413
+#: tavletta/cli.py:419
 msgid "serve MCP on standard input and output"
 msgstr "MCP'yi standart giriş ve çıkış üzerinden sunar"
 
-#: tavletta/cli.py:415
+#: tavletta/cli.py:421
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "MCP'yi standart giriş ve çıkış üzerinden sunar; Claude Desktop gibi yapay zekâ istemcileri için."
 
-#: tavletta/cli.py:425
+#: tavletta/cli.py:431
 msgid "manage the access tokens of the print server"
 msgstr "yazdırma sunucusunun erişim belirteçlerini yönetir"
 
-#: tavletta/cli.py:426
+#: tavletta/cli.py:432
 msgid "Manage the access tokens of the print server."
 msgstr "Yazdırma sunucusunun erişim belirteçlerini yönetir."
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:437
 msgid "make a token and add its hash to tokens.toml"
 msgstr "bir belirteç oluşturur ve karmasını tokens.toml dosyasına ekler"
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:438
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "Bir belirteç oluşturur, karmasını tokens.toml dosyasına ekler ve belirteci bir kez gösterir."
 
-#: tavletta/cli.py:434
+#: tavletta/cli.py:440
 msgid "name of the token, e.g. the device"
 msgstr "belirtecin adı, ör. cihaz"
 
-#: tavletta/cli.py:439
+#: tavletta/cli.py:445
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview: yalnızca görüntüleme; print: ayrıca yazdırma; admin: ayrıca tüm işler"
 
-#: tavletta/cli.py:441
+#: tavletta/cli.py:447
 msgid "tokens.toml to add it to"
 msgstr "eklenecek tokens.toml dosyası"
 
-#: tavletta/cli.py:447
+#: tavletta/cli.py:453
 msgid "only this printer of printers.toml; repeatable"
 msgstr "printers.toml içinden yalnızca bu yazıcı; tekrarlanabilir"
 
-#: tavletta/cli.py:450
+#: tavletta/cli.py:456
 msgid "printers.toml, to check --printer"
 msgstr "--printer denetimi için printers.toml"
 
-#: tavletta/cli.py:452
+#: tavletta/cli.py:458
 msgid "valid until, e.g. 2027-12-31"
 msgstr "geçerlilik sonu, ör. 2027-12-31"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:459
 msgid "a note for people"
 msgstr "insanlar için bir not"
 
-#: tavletta/cli.py:455
+#: tavletta/cli.py:461
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "karmayı SHA-256 yerine scrypt ile sakla"
 
-#: tavletta/cli.py:461
+#: tavletta/cli.py:467
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "yeni bir belirteç oluşturmak yerine kendi seçtiğiniz belirteci standart girişten alır (scrypt ile saklanır)"
 
-#: tavletta/cli.py:481 tavletta/server/config.py:219
-#: tavletta/server/service.py:590
+#: tavletta/cli.py:487 tavletta/server/config.py:219
+#: tavletta/server/service.py:608
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "Bilinmeyen yazıcı modeli: %s"
 
-#: tavletta/cli.py:488 tavletta/ui/files.py:84 tavletta/ui/files.py:137
-#: tavletta/ui/texts.py:319 tavletta/ui/texts.py:701
-#: tavletta/server/service.py:747
+#: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/ui/texts.py:340 tavletta/ui/texts.py:722
+#: tavletta/server/service.py:888
 #, python-format
 msgid "Cannot open %s"
 msgstr "%s açılamıyor"
 
-#: tavletta/cli.py:510 tavletta/server/main.py:260
+#: tavletta/cli.py:516 tavletta/server/main.py:262
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s bir tarih değil, örneğin 2026-12-31 veya 2026-12-31T08:30 bekleniyordu"
 
-#: tavletta/cli.py:558
+#: tavletta/cli.py:564
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} yazdırırken doldurulur ve ayarlanamaz"
 
-#: tavletta/cli.py:564
+#: tavletta/cli.py:570
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "Etikette %s adında bir öğe veya değişken yok"
 
-#: tavletta/cli.py:592 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1123
+#: tavletta/cli.py:599 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1273
 msgid "The label is empty"
 msgstr "Etiket boş"
 
-#: tavletta/cli.py:629
+#: tavletta/cli.py:636
 msgid "Cannot write the output"
 msgstr "Çıktı yazılamıyor"
 
-#: tavletta/cli.py:660
+#: tavletta/cli.py:667
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output PNG görüntüleri yazar: .png ile biten bir ad verin"
 
-#: tavletta/cli.py:685 tavletta/cli.py:894 tavletta/ui/printing.py:535
-#: tavletta/ui/printing.py:699 tavletta/server/service.py:989
-#: tavletta/server/service.py:1012 tavletta/server/service.py:1307
-#: tavletta/server/service.py:1477
+#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
+#: tavletta/ui/printing.py:705 tavletta/server/service.py:1132
+#: tavletta/server/service.py:1155 tavletta/server/service.py:1457
+#: tavletta/server/service.py:1683
 msgid "The label cannot be prepared for printing."
 msgstr "Etiket yazdırmaya hazırlanamıyor."
 
-#: tavletta/cli.py:772
+#: tavletta/cli.py:779
 msgid "No printer found – give its address with --host"
 msgstr "Yazıcı bulunamadı – adresini --host ile belirtin"
 
-#: tavletta/cli.py:774
+#: tavletta/cli.py:781
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Birden çok yazıcı bulundu – --host ile birini seçin (tavletta list-printers)"
 
-#: tavletta/cli.py:785 tavletta/ui/texts.py:744 tavletta/server/service.py:1467
+#: tavletta/cli.py:792 tavletta/ui/texts.py:765 tavletta/server/service.py:1673
 #, python-format
 msgid "Cannot save %s"
 msgstr "%s kaydedilemiyor"
 
-#: tavletta/cli.py:787 tavletta/server/service.py:1470
+#: tavletta/cli.py:794 tavletta/server/service.py:1676
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "etiketler yazdırıldı ancak sonraki sayaç değeri kaydedilmedi"
 
-#: tavletta/cli.py:802 tavletta/server/service.py:1152
+#: tavletta/cli.py:809 tavletta/server/service.py:1302
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "hiçbir şey yazdırılmadı: sonraki sayaç değeri kaydedilemeyecekti"
 
-#: tavletta/cli.py:862 tavletta/cli.py:889 tavletta/cli.py:1251
+#: tavletta/cli.py:869 tavletta/cli.py:896 tavletta/cli.py:1260
 msgid "Interrupted"
 msgstr "Kesildi"
 
-#: tavletta/cli.py:962
+#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/server/service.py:1178
+#, python-format
+msgid "At most %d labels in one print job"
+msgstr "Bir yazdırma işinde en fazla %d etiket"
+
+#: tavletta/cli.py:971
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method: bu yazıcı modelinin yazdırma yöntemi ayarı yok: %s"
 
-#: tavletta/cli.py:1004
+#: tavletta/cli.py:1013
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet ve --rows bir veri dosyası gerektirir (--data)"
 
-#: tavletta/cli.py:1013 tavletta/ui/printing.py:568
-#: tavletta/server/service.py:849
+#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/server/service.py:990
 msgid "No rows to print"
 msgstr "Yazdırılacak satır yok"
 
-#: tavletta/cli.py:1023
+#: tavletta/cli.py:1032
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "Etiket, klasörünün dışındaki bir veri dosyasını kullanıyor: --data ile belirtin"
 
-#: tavletta/cli.py:1050 tavletta/ui/window.py:849
-#: tavletta/server/service.py:906
+#: tavletta/cli.py:1059 tavletta/ui/window.py:849
+#: tavletta/server/service.py:1049
 #, python-format
 msgid "No such column: %s"
 msgstr "Böyle bir sütun yok: %s"
 
-#: tavletta/cli.py:1055 tavletta/ui/printing.py:648
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "Bu satırların barkodu veya QR kodu değerlerinden oluşturulamıyor, örneğin harf içeren bir EAN-13 veya boş bir hücre. Veri dosyasını düzeltip yeniden okuyun ya da bu satırlar olmadan yazdırın."
 
-#: tavletta/cli.py:1060 tavletta/ui/printing.py:653
+#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
 #, python-format
 msgid "Rows: %s"
 msgstr "Satırlar: %s"
 
-#: tavletta/cli.py:1068
+#: tavletta/cli.py:1077
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "%s dosyasının başka bir yazdırmasının bitmesi bekleniyor…"
 
-#: tavletta/cli.py:1075 tavletta/server/service.py:1301
+#: tavletta/cli.py:1084 tavletta/server/service.py:790
+#: tavletta/server/service.py:1451
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s hâlâ başka bir yazdırma tarafından kilitli – daha sonra yeniden deneyin"
 
-#: tavletta/cli.py:1081
+#: tavletta/cli.py:1090
 msgid "--output needs --dry-run"
 msgstr "--output için --dry-run gerekir"
 
-#: tavletta/cli.py:1098
+#: tavletta/cli.py:1107
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "Sonraki sayaç değeri kaydedilmiyor: sonraki yazdırma numaraları tekrarlar"
 
-#: tavletta/cli.py:1194
+#: tavletta/cli.py:1203
 msgid "Waiting for the printer's answer…"
 msgstr "Yazıcının yanıtı bekleniyor…"
 
-#: tavletta/cli.py:1222 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1231 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "Yazıcı bulunamadı"
 
@@ -460,7 +471,7 @@ msgid "Choose data file"
 msgstr "Veri dosyası seç"
 
 #: tavletta/ui/data.py:108 tavletta/ui/files.py:104 tavletta/ui/files.py:126
-#: tavletta/ui/files.py:207 tavletta/ui/texts.py:208
+#: tavletta/ui/files.py:207 tavletta/ui/texts.py:213
 msgid "Only local files can be used"
 msgstr "Yalnızca yerel dosyalar kullanılabilir"
 
@@ -542,7 +553,7 @@ msgstr "Başka bir dosya seç"
 msgid "Remove data file"
 msgstr "Veri dosyasını kaldır"
 
-#: tavletta/ui/data.py:337
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:399
 msgid "Sheet"
 msgstr "Sayfa"
 
@@ -562,8 +573,8 @@ msgstr "Henüz içerik yok"
 msgid "Add text, an image, a symbol or a code"
 msgstr "Metin, görüntü, sembol veya kod ekleyin"
 
-#: tavletta/ui/elements.py:104 tavletta/ui/texts.py:259
-#: tavletta/ui/window.py:961
+#: tavletta/ui/elements.py:104 tavletta/ui/texts.py:280
+#: tavletta/ui/window.py:961 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "Metin"
 
@@ -657,7 +668,7 @@ msgstr "Alan"
 msgid "Scale"
 msgstr "Ölçek"
 
-#: tavletta/ui/elements.py:344 tavletta/ui/texts.py:263
+#: tavletta/ui/elements.py:344 tavletta/ui/texts.py:284
 msgid "Symbol"
 msgstr "Sembol"
 
@@ -957,9 +968,10 @@ msgid "Drag to choose the part of the image to keep"
 msgstr "Görüntünün saklanacak kısmını seçmek için sürükleyin"
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:233
-#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:657
+#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
 #: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
 #: tavletta/ui/symbols.py:79 tavletta/ui/window.py:890
+#: tavletta/server/web/ui.js:220
 msgid "Cancel"
 msgstr "İptal"
 
@@ -968,11 +980,11 @@ msgstr "İptal"
 msgid "Apply"
 msgstr "Uygula"
 
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:111
+#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:113
 msgid "Left"
 msgstr "Sol"
 
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:162
+#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:164
 msgid "Top"
 msgstr "Üst"
 
@@ -1150,7 +1162,7 @@ msgstr "Son satır"
 msgid "Row %(n)d of %(total)d"
 msgstr "Satır %(n)d / %(total)d"
 
-#: tavletta/ui/printer.py:66
+#: tavletta/ui/printer.py:66 tavletta/server/web/print.js:71
 msgid "Printer"
 msgstr "Yazıcı"
 
@@ -1255,7 +1267,7 @@ msgstr "Kalan: %(left)s / %(total)s"
 msgid "Reachable · the printer reports no status"
 msgstr "Erişilebilir · yazıcı durum bildirmiyor"
 
-#: tavletta/ui/printer.py:390
+#: tavletta/ui/printer.py:390 tavletta/server/web/ui.js:387
 msgid "Printing"
 msgstr "Yazdırılıyor"
 
@@ -1264,7 +1276,7 @@ msgstr "Yazdırılıyor"
 msgid "Ready · a label every %s"
 msgstr "Hazır · etiketler arası %s"
 
-#: tavletta/ui/printer.py:393
+#: tavletta/ui/printer.py:393 tavletta/server/web/ui.js:47
 msgid "Ready"
 msgstr "Hazır"
 
@@ -1342,7 +1354,7 @@ msgstr "Seri numarası"
 msgid "Probably made"
 msgstr "Tahmini üretim"
 
-#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:755
+#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:761
 msgid "Close"
 msgstr "Kapat"
 
@@ -1354,8 +1366,8 @@ msgstr "Bu etiket sayfası bu sürümde bilinmiyor – başka birini seçin"
 msgid "The data file is still being read. Try again in a moment."
 msgstr "Veri dosyası hâlâ okunuyor. Biraz sonra yeniden deneyin."
 
-#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:478
-#: tavletta/ui/printing.py:503
+#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
+#: tavletta/ui/printing.py:509 tavletta/server/web/ui.js:260
 msgid "Print anyway"
 msgstr "Yine de yazdır"
 
@@ -1402,11 +1414,11 @@ msgstr "Düz kağıtta denemek için"
 msgid "Sheets: %d"
 msgstr "Sayfa: %d"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/batch.js:722
 msgid "Copies of each label"
 msgstr "Her etiketten kopya"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr "Kopya"
 
@@ -1463,20 +1475,23 @@ msgstr "Seri etiketleri yazdır"
 msgid "Print label"
 msgstr "Etiketi yazdır"
 
-#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:742
+#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
 #: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:184
+#: tavletta/server/web/app.js:325 tavletta/server/web/batch.js:54
+#: tavletta/server/web/batch.js:117 tavletta/server/web/batch.js:875
+#: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "Yazdır"
 
-#: tavletta/ui/printing.py:475
+#: tavletta/ui/printing.py:481
 msgid "Codes may not scan"
 msgstr "Kodlar taranamayabilir"
 
-#: tavletta/ui/printing.py:495
+#: tavletta/ui/printing.py:501
 msgid "Labels in the printer's margin"
 msgstr "Yazıcının kenar boşluğundaki etiketler"
 
-#: tavletta/ui/printing.py:497
+#: tavletta/ui/printing.py:503
 #, python-format
 msgid ""
 "The printer cannot print near the edges of the paper. The content of labels "
@@ -1484,63 +1499,63 @@ msgid ""
 "safety margin, or leave these positions out."
 msgstr "Yazıcı kağıdın kenarlarına yakın yazdıramaz. %(positions)s numaralı etiketlerin içeriği bu kenar boşluğuna taşıyor ve kesilir. Güvenlik payını artırın veya bu konumları atlayın."
 
-#: tavletta/ui/printing.py:515
+#: tavletta/ui/printing.py:521
 msgid "No printer yet – search for one or enter its address"
 msgstr "Henüz yazıcı yok – bir yazıcı arayın ya da adresini girin"
 
-#: tavletta/ui/printing.py:519
+#: tavletta/ui/printing.py:525
 msgid "Printing…"
 msgstr "Yazdırılıyor…"
 
-#: tavletta/ui/printing.py:587 tavletta/ui/printing.py:627
+#: tavletta/ui/printing.py:593 tavletta/ui/printing.py:633
 msgid "Printing serial labels"
 msgstr "Seri etiketler yazdırılıyor"
 
-#: tavletta/ui/printing.py:588
+#: tavletta/ui/printing.py:594
 msgid "Stop"
 msgstr "Durdur"
 
-#: tavletta/ui/printing.py:617
+#: tavletta/ui/printing.py:623
 msgid "Stopping after this label…"
 msgstr "Bu etiketten sonra durduruluyor…"
 
-#: tavletta/ui/printing.py:624 tavletta/ui/printing.py:710
+#: tavletta/ui/printing.py:630 tavletta/ui/printing.py:716
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "Yazdırılıyor %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:656
+#: tavletta/ui/printing.py:662
 msgid "Rows that cannot be printed"
 msgstr "Yazdırılamayan satırlar"
 
-#: tavletta/ui/printing.py:659
+#: tavletta/ui/printing.py:665
 msgid "Print without these rows"
 msgstr "Bu satırlar olmadan yazdır"
 
-#: tavletta/ui/printing.py:684
+#: tavletta/ui/printing.py:690
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "%(row)d. satırdan sonra durduruldu"
 
-#: tavletta/ui/printing.py:689
+#: tavletta/ui/printing.py:695
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "%(row)d. satır yazdırıldı"
 
-#: tavletta/ui/printing.py:691
+#: tavletta/ui/printing.py:697
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "%(first)d–%(last)d. satırlar yazdırıldı"
 
-#: tavletta/ui/printing.py:750
+#: tavletta/ui/printing.py:756
 msgid "Printing failed"
 msgstr "Yazdırma başarısız"
 
-#: tavletta/ui/printing.py:751
+#: tavletta/ui/printing.py:757 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "Ayrıntılar"
 
-#: tavletta/ui/printing.py:754 tavletta/ui/window.py:914
+#: tavletta/ui/printing.py:760 tavletta/ui/window.py:914
 msgid "Report"
 msgstr "Bildir"
 
@@ -1617,7 +1632,7 @@ msgstr "Bir etiketi atlamak veya yeniden üzerine yazdırmak için ona tıklayı
 msgid "Labels %s reach into the margin the printer cannot print on"
 msgstr "%s numaralı etiketler yazıcının yazdıramadığı kenar boşluğuna taşıyor"
 
-#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:276
+#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:297
 msgid "Shipping label"
 msgstr "Gönderi etiketi"
 
@@ -1904,7 +1919,7 @@ msgstr "Görüntü okunamıyor"
 msgid "Crop…"
 msgstr "Kırp…"
 
-#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:69
+#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:71
 msgid "Brightness"
 msgstr "Parlaklık"
 
@@ -2005,777 +2020,777 @@ msgstr "Son kullanılanlar"
 msgid "No symbol found"
 msgstr "Sembol bulunamadı"
 
-#: tavletta/ui/texts.py:34
+#: tavletta/ui/texts.py:36
 msgid "Full cut"
 msgstr "Tam kesim"
 
-#: tavletta/ui/texts.py:35
+#: tavletta/ui/texts.py:37
 msgid "Half cut"
 msgstr "Yarım kesim"
 
-#: tavletta/ui/texts.py:36
+#: tavletta/ui/texts.py:38
 msgid "Cut after the last label"
 msgstr "Son etiketten sonra kes"
 
-#: tavletta/ui/texts.py:37
+#: tavletta/ui/texts.py:39
 msgid "No cut"
 msgstr "Kesim yok"
 
-#: tavletta/ui/texts.py:43
+#: tavletta/ui/texts.py:45
 msgid "Chain printing"
 msgstr "Zincirleme yazdırma"
 
-#: tavletta/ui/texts.py:44
+#: tavletta/ui/texts.py:46
 msgid "Saves tape: the last label stays in the printer until the next print"
 msgstr "Şerit tasarrufu: son etiket bir sonraki yazdırmaya kadar yazıcıda kalır"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "High resolution"
 msgstr "Yüksek çözünürlük"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "Twice as fine along the tape, prints more slowly"
 msgstr "Şerit boyunca iki kat daha ince, daha yavaş yazdırır"
 
-#: tavletta/ui/texts.py:50
+#: tavletta/ui/texts.py:52
 msgid "Laminated tape"
 msgstr "Lamine şerit"
 
-#: tavletta/ui/texts.py:51
+#: tavletta/ui/texts.py:53
 msgid "Non-laminated tape"
 msgstr "Lamine olmayan şerit"
 
-#: tavletta/ui/texts.py:52
+#: tavletta/ui/texts.py:54
 msgid "Fabric tape"
 msgstr "Kumaş şerit"
 
-#: tavletta/ui/texts.py:53
+#: tavletta/ui/texts.py:55
 msgid "FLe tape"
 msgstr "FLe şerit"
 
-#: tavletta/ui/texts.py:54
+#: tavletta/ui/texts.py:56
 msgid "Flexible ID tape"
 msgstr "Esnek kimlik şeridi"
 
-#: tavletta/ui/texts.py:55
+#: tavletta/ui/texts.py:57
 msgid "Satin tape"
 msgstr "Saten şerit"
 
-#: tavletta/ui/texts.py:56
+#: tavletta/ui/texts.py:58
 msgid "Heat-shrink tube 2:1"
 msgstr "Isıyla daralan makaron 2:1"
 
-#: tavletta/ui/texts.py:57
+#: tavletta/ui/texts.py:59
 msgid "Heat-shrink tube 3:1"
 msgstr "Isıyla daralan makaron 3:1"
 
-#: tavletta/ui/texts.py:61
+#: tavletta/ui/texts.py:63
 msgid "Vivid"
 msgstr "Canlı"
 
-#: tavletta/ui/texts.py:62
+#: tavletta/ui/texts.py:64
 msgid "Normal"
 msgstr "Normal"
 
-#: tavletta/ui/texts.py:63
+#: tavletta/ui/texts.py:65
 msgid "Black and white (sharper)"
 msgstr "Siyah beyaz (daha keskin)"
 
-#: tavletta/ui/texts.py:64
+#: tavletta/ui/texts.py:66
 msgid "Black"
 msgstr "Siyah"
 
-#: tavletta/ui/texts.py:65
+#: tavletta/ui/texts.py:67
 msgid "Red and black"
 msgstr "Kırmızı ve siyah"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "Standard"
 msgstr "Standart"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "High resolution (600 dpi)"
 msgstr "Yüksek çözünürlük (600 dpi)"
 
-#: tavletta/ui/texts.py:70
+#: tavletta/ui/texts.py:72
 msgid "Red"
 msgstr "Kırmızı"
 
-#: tavletta/ui/texts.py:71
+#: tavletta/ui/texts.py:73
 msgid "Green"
 msgstr "Yeşil"
 
-#: tavletta/ui/texts.py:72
+#: tavletta/ui/texts.py:74
 msgid "Blue"
 msgstr "Mavi"
 
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "Start"
 msgstr "Baş"
 
-#: tavletta/ui/texts.py:74 tavletta/ui/texts.py:111
+#: tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
 msgid "Centre"
 msgstr "Orta"
 
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "End"
 msgstr "Son"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Across the roll"
 msgstr "Rulo genişliği boyunca"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Along the roll"
 msgstr "Rulo uzunluğu boyunca"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Single label"
 msgstr "Tek etiket"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Label sheet"
 msgstr "Etiket sayfası"
 
-#: tavletta/ui/texts.py:80
+#: tavletta/ui/texts.py:82
 msgid "Resolution"
 msgstr "Çözünürlük"
 
-#: tavletta/ui/texts.py:81
+#: tavletta/ui/texts.py:83
 msgid "Label sensor"
 msgstr "Etiket algılayıcı"
 
-#: tavletta/ui/texts.py:82
+#: tavletta/ui/texts.py:84
 msgid "After printing"
 msgstr "Yazdırdıktan sonra"
 
-#: tavletta/ui/texts.py:83
+#: tavletta/ui/texts.py:85
 msgid "Darkness"
 msgstr "Koyuluk"
 
-#: tavletta/ui/texts.py:84
+#: tavletta/ui/texts.py:86
 msgid "Print density"
 msgstr "Baskı yoğunluğu"
 
-#: tavletta/ui/texts.py:85
+#: tavletta/ui/texts.py:87
 msgid "Speed"
 msgstr "Hız"
 
-#: tavletta/ui/texts.py:86
+#: tavletta/ui/texts.py:88
 msgid "Print upside down"
 msgstr "Ters yazdır"
 
-#: tavletta/ui/texts.py:87
+#: tavletta/ui/texts.py:89
 msgid "Print method"
 msgstr "Yazdırma yöntemi"
 
-#: tavletta/ui/texts.py:91
+#: tavletta/ui/texts.py:93
 msgid "As reported by the printer"
 msgstr "Yazıcının bildirdiği gibi"
 
-#: tavletta/ui/texts.py:92
+#: tavletta/ui/texts.py:94
 msgid "As set on the printer"
 msgstr "Yazıcıda ayarlandığı gibi"
 
-#: tavletta/ui/texts.py:93
+#: tavletta/ui/texts.py:95
 msgid "Gap between labels"
 msgstr "Etiketler arası boşluk"
 
-#: tavletta/ui/texts.py:94
+#: tavletta/ui/texts.py:96
 msgid "Black mark"
 msgstr "Siyah işaret"
 
-#: tavletta/ui/texts.py:95
+#: tavletta/ui/texts.py:97
 msgid "Continuous media"
 msgstr "Sürekli malzeme"
 
-#: tavletta/ui/texts.py:96
+#: tavletta/ui/texts.py:98
 msgid "Transparent labels"
 msgstr "Şeffaf etiketler"
 
-#: tavletta/ui/texts.py:97
+#: tavletta/ui/texts.py:99
 msgid "Tear off"
 msgstr "Yırtma"
 
-#: tavletta/ui/texts.py:98
+#: tavletta/ui/texts.py:100
 msgid "Peel off"
 msgstr "Soyma"
 
-#: tavletta/ui/texts.py:99
+#: tavletta/ui/texts.py:101
 msgid "Cut off"
 msgstr "Kesme"
 
-#: tavletta/ui/texts.py:100
+#: tavletta/ui/texts.py:102
 msgid "Thermal transfer (ribbon)"
 msgstr "Termal transfer (ribon)"
 
-#: tavletta/ui/texts.py:101
+#: tavletta/ui/texts.py:103
 msgid "Thermal direct"
 msgstr "Doğrudan termal"
 
-#: tavletta/ui/texts.py:111
+#: tavletta/ui/texts.py:113
 msgid "Right"
 msgstr "Sağ"
 
-#: tavletta/ui/texts.py:116
+#: tavletta/ui/texts.py:118
 msgid "2D codes"
 msgstr "2D kodlar"
 
-#: tavletta/ui/texts.py:118
+#: tavletta/ui/texts.py:120
 msgid "QR code"
 msgstr "QR kodu"
 
-#: tavletta/ui/texts.py:125
+#: tavletta/ui/texts.py:127
 msgid "Linear barcodes"
 msgstr "Doğrusal barkodlar"
 
-#: tavletta/ui/texts.py:140
+#: tavletta/ui/texts.py:142
 msgid ""
 "Application identifiers in brackets, e.g. "
 "(01)09501101530003(17)261231(10)AB12"
 msgstr "Parantez içinde uygulama tanımlayıcıları, ör. (01)09501101530003(17)261231(10)AB12"
 
-#: tavletta/ui/texts.py:143
+#: tavletta/ui/texts.py:145
 msgid "Links, text, Wi-Fi access; phones read it"
 msgstr "Bağlantılar, metin, Wi-Fi erişimi; telefonlar okur"
 
-#: tavletta/ui/texts.py:144
+#: tavletta/ui/texts.py:146
 msgid "Text or numbers in little space, e.g. on small parts"
 msgstr "Az yerde metin veya sayılar, ör. küçük parçalarda"
 
-#: tavletta/ui/texts.py:145
+#: tavletta/ui/texts.py:147
 msgid "Much text, e.g. an address or a document number"
 msgstr "Çok metin, ör. bir adres veya belge numarası"
 
-#: tavletta/ui/texts.py:146
+#: tavletta/ui/texts.py:148
 msgid "Text or numbers; needs no blank margin, e.g. on tickets"
 msgstr "Metin veya sayılar; boş kenar gerektirmez, ör. biletlerde"
 
-#: tavletta/ui/texts.py:147
+#: tavletta/ui/texts.py:149
 msgid "Latin letters, digits and punctuation"
 msgstr "Latin harfleri, rakamlar ve noktalama işaretleri"
 
-#: tavletta/ui/texts.py:148
+#: tavletta/ui/texts.py:150
 msgid "Capital letters, digits, spaces and - . $ / + %"
 msgstr "Büyük harfler, rakamlar, boşluklar ve - . $ / + %"
 
-#: tavletta/ui/texts.py:149
+#: tavletta/ui/texts.py:151
 msgid "Latin letters, digits and punctuation; shorter than Code 39"
 msgstr "Latin harfleri, rakamlar ve noktalama işaretleri; Code 39'dan kısa"
 
-#: tavletta/ui/texts.py:150
+#: tavletta/ui/texts.py:152
 msgid "12 digits, the check digit is added (or 13 with it)"
 msgstr "12 rakam, denetim basamağı eklenir (veya onunla birlikte 13)"
 
-#: tavletta/ui/texts.py:151
+#: tavletta/ui/texts.py:153
 msgid "7 digits, the check digit is added (or 8 with it)"
 msgstr "7 rakam, denetim basamağı eklenir (veya onunla birlikte 8)"
 
-#: tavletta/ui/texts.py:152
+#: tavletta/ui/texts.py:154
 msgid "11 digits, the check digit is added (or 12 with it)"
 msgstr "11 rakam, denetim basamağı eklenir (veya onunla birlikte 12)"
 
-#: tavletta/ui/texts.py:153
+#: tavletta/ui/texts.py:155
 msgid "7 digits starting with 0 or 1, the check digit is added (or 8 with it)"
 msgstr "0 veya 1 ile başlayan 7 rakam, denetim basamağı eklenir (veya onunla birlikte 8)"
 
-#: tavletta/ui/texts.py:154
+#: tavletta/ui/texts.py:156
 msgid ""
 "13 digits of a shipping carton's GTIN, the check digit is added (or 14 with "
 "it)"
 msgstr "Bir sevkiyat kolisinin GTIN'inin 13 rakamı, denetim basamağı eklenir (veya onunla birlikte 14)"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:162
 msgid "Whole area, centred"
 msgstr "Tüm alan, ortalanmış"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:162
 msgid "Fill the label, edges cut off"
 msgstr "Etiketi doldur, kenarlar kesilir"
 
-#: tavletta/ui/texts.py:162
+#: tavletta/ui/texts.py:164
 msgid "Middle"
 msgstr "Orta"
 
-#: tavletta/ui/texts.py:162
+#: tavletta/ui/texts.py:164
 msgid "Bottom"
 msgstr "Alt"
 
-#: tavletta/ui/texts.py:164
+#: tavletta/ui/texts.py:166
 msgid "Automatic"
 msgstr "Otomatik"
 
-#: tavletta/ui/texts.py:165
+#: tavletta/ui/texts.py:167
 msgid "Threshold (drawings, logos)"
 msgstr "Eşik (çizimler, logolar)"
 
-#: tavletta/ui/texts.py:166
+#: tavletta/ui/texts.py:168
 msgid "Dithering (photos)"
 msgstr "Titreklik (fotoğraflar)"
 
-#: tavletta/ui/texts.py:167
+#: tavletta/ui/texts.py:169
 msgid "Ordered pattern"
 msgstr "Düzenli desen"
 
-#: tavletta/ui/texts.py:170
+#: tavletta/ui/texts.py:172
 msgctxt "line style"
 msgid "Solid"
 msgstr "Düz"
 
-#: tavletta/ui/texts.py:171
+#: tavletta/ui/texts.py:173
 msgid "Dashed"
 msgstr "Kesik çizgili"
 
-#: tavletta/ui/texts.py:172 tavletta/ui/texts.py:197
+#: tavletta/ui/texts.py:174 tavletta/ui/texts.py:199
 msgid "Dotted"
 msgstr "Noktalı"
 
-#: tavletta/ui/texts.py:174
+#: tavletta/ui/texts.py:176
 msgid "Double"
 msgstr "Çift"
 
-#: tavletta/ui/texts.py:176
+#: tavletta/ui/texts.py:178
 msgid "Line"
 msgstr "Çizgi"
 
-#: tavletta/ui/texts.py:177
+#: tavletta/ui/texts.py:179
 msgid "Rectangle"
 msgstr "Dikdörtgen"
 
-#: tavletta/ui/texts.py:178
+#: tavletta/ui/texts.py:180
 msgid "Ellipse"
 msgstr "Elips"
 
-#: tavletta/ui/texts.py:179
+#: tavletta/ui/texts.py:181
 msgid "Separator"
 msgstr "Ayırıcı"
 
-#: tavletta/ui/texts.py:182
+#: tavletta/ui/texts.py:184
 msgid "Horizontal"
 msgstr "Yatay"
 
-#: tavletta/ui/texts.py:183
+#: tavletta/ui/texts.py:185
 msgid "Vertical"
 msgstr "Dikey"
 
-#: tavletta/ui/texts.py:184
+#: tavletta/ui/texts.py:186
 msgid "Diagonal, rising"
 msgstr "Çapraz, yükselen"
 
-#: tavletta/ui/texts.py:185
+#: tavletta/ui/texts.py:187
 msgid "Diagonal, falling"
 msgstr "Çapraz, alçalan"
 
-#: tavletta/ui/texts.py:188
+#: tavletta/ui/texts.py:190
 msgctxt "arrows"
 msgid "None"
 msgstr "Yok"
 
-#: tavletta/ui/texts.py:189
+#: tavletta/ui/texts.py:191
 msgid "At the start"
 msgstr "Başta"
 
-#: tavletta/ui/texts.py:190
+#: tavletta/ui/texts.py:192
 msgid "At the end"
 msgstr "Sonda"
 
-#: tavletta/ui/texts.py:191
+#: tavletta/ui/texts.py:193
 msgid "At both ends"
 msgstr "Her iki uçta"
 
-#: tavletta/ui/texts.py:194
+#: tavletta/ui/texts.py:196
 msgctxt "fill"
 msgid "None"
 msgstr "Yok"
 
-#: tavletta/ui/texts.py:195
+#: tavletta/ui/texts.py:197
 msgctxt "fill"
 msgid "Solid"
 msgstr "Düz"
 
-#: tavletta/ui/texts.py:196
+#: tavletta/ui/texts.py:198
 msgid "Hatched"
 msgstr "Taralı"
 
-#: tavletta/ui/texts.py:198
+#: tavletta/ui/texts.py:200
 msgid "Grid"
 msgstr "Izgara"
-
-#. translators: %(formats)s is a list of file formats: PNG, JPEG, …
-#: tavletta/ui/texts.py:219
-#, python-format
-msgid ""
-"%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
-msgstr "%(name)s, Tavletta'nın kullanabileceği bir görüntü değil. %(formats)s biçimindeki görüntüler kullanılabilir."
 
 #: tavletta/ui/texts.py:232
 #, python-format
 msgid "%(name)s is too large to put on a label: at most %(size)d MB."
 msgstr "%(name)s bir etikete koymak için çok büyük: en fazla %(size)d MB."
 
-#: tavletta/ui/texts.py:227
+#. translators: %(formats)s is a list of file formats: PNG, JPEG, …
+#: tavletta/ui/texts.py:240
+#, python-format
+msgid ""
+"%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
+msgstr "%(name)s, Tavletta'nın kullanabileceği bir görüntü değil. %(formats)s biçimindeki görüntüler kullanılabilir."
+
+#: tavletta/ui/texts.py:248
 #, python-format
 msgid "%(name)s is not a label, an image or a data file"
 msgstr "%(name)s bir etiket, görüntü veya veri dosyası değil"
 
 #. translators: the print density a NIIMBOT model uses by default
-#: tavletta/ui/texts.py:245
+#: tavletta/ui/texts.py:266
 msgctxt "print density"
 msgid "Default"
 msgstr "Varsayılan"
 
-#: tavletta/ui/texts.py:249
+#: tavletta/ui/texts.py:270
 #, python-format
 msgid "%d %%"
 msgstr "%%%d"
 
 #. translators: print speed in inches per second, as label printers state it
-#: tavletta/ui/texts.py:252
+#: tavletta/ui/texts.py:273
 #, python-format
 msgid "%d in/s"
 msgstr "%d inç/sn"
 
-#: tavletta/ui/texts.py:261
+#: tavletta/ui/texts.py:282 tavletta/server/web/ui.js:66
 msgid "Image"
 msgstr "Görüntü"
 
-#: tavletta/ui/texts.py:296
+#: tavletta/ui/texts.py:317
 #, python-format
 msgid "Endless, %(width)s wide"
 msgstr "Sürekli, %(width)s genişliğinde"
 
-#: tavletta/ui/texts.py:306
+#: tavletta/ui/texts.py:327
 msgid ""
 "Check that all of the label is inside the selection. Drag to move it or its "
 "edges, or draw a new one."
 msgstr "Etiketin tamamının seçimin içinde olduğunu denetleyin. Seçimi veya kenarlarını taşımak için sürükleyin ya da yenisini çizin."
 
-#: tavletta/ui/texts.py:310
+#: tavletta/ui/texts.py:331
 msgid ""
 "Several areas could be the label. Check the selection or try the next one."
 msgstr "Birden çok alan etiket olabilir. Seçimi denetleyin veya sonrakini deneyin."
 
-#: tavletta/ui/texts.py:312
+#: tavletta/ui/texts.py:333
 msgid "Everything printed on the page is selected. Drag to choose the label."
 msgstr "Sayfada basılı olan her şey seçili. Etiketi seçmek için sürükleyin."
 
-#: tavletta/ui/texts.py:313
+#: tavletta/ui/texts.py:334
 msgid "Nothing is printed on this page."
 msgstr "Bu sayfada basılı hiçbir şey yok."
 
-#: tavletta/ui/texts.py:318
+#: tavletta/ui/texts.py:339
 msgid "PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "PDF dosyaları için Poppler (poppler-glib) gerekir, ancak kurulu değil"
 
-#: tavletta/ui/texts.py:329
+#: tavletta/ui/texts.py:350
 msgid "System printer (CUPS, IPP)"
 msgstr "Sistem yazıcısı (CUPS, IPP)"
 
-#: tavletta/ui/texts.py:330
+#: tavletta/ui/texts.py:351
 msgid "Receipt printer (ESC/POS)"
 msgstr "Fiş yazıcısı (ESC/POS)"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:332
+#: tavletta/ui/texts.py:353
 #, python-format
 msgid "%s, continuous rolls"
 msgstr "%s, sürekli rulolar"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:334
+#: tavletta/ui/texts.py:355
 #, python-format
 msgid "%s, die-cut labels"
 msgstr "%s, kesimli etiketler"
 
-#: tavletta/ui/texts.py:357
+#: tavletta/ui/texts.py:378
 #, python-format
 msgid "Element %(n)d: the code is empty"
 msgstr "Öge %(n)d: kod boş"
 
-#: tavletta/ui/texts.py:358
+#: tavletta/ui/texts.py:379
 #, python-format
 msgid "Element %(n)d: EAN-13 needs exactly 12 digits"
 msgstr "Öge %(n)d: EAN-13 tam olarak 12 rakam gerektirir"
 
-#: tavletta/ui/texts.py:359
+#: tavletta/ui/texts.py:380
 #, python-format
 msgid "Element %(n)d: the EAN-13 check digit is wrong"
 msgstr "Öge %(n)d: EAN-13 denetim basamağı yanlış"
 
-#: tavletta/ui/texts.py:360
+#: tavletta/ui/texts.py:381
 #, python-format
 msgid "Element %(n)d: Code 128 holds at most %(max)d characters"
 msgstr "Öge %(n)d: Code 128 en fazla %(max)d karakter alabilir"
 
-#: tavletta/ui/texts.py:362
+#: tavletta/ui/texts.py:383
 #, python-format
 msgid ""
 "Element %(n)d: the bars are too thin to scan reliably – use a longer or "
 "larger label, or shorter content"
 msgstr "Öge %(n)d: çubuklar güvenilir biçimde taranamayacak kadar ince – daha uzun veya daha büyük bir etiket ya da daha kısa içerik kullanın"
 
-#: tavletta/ui/texts.py:366
+#: tavletta/ui/texts.py:387
 #, python-format
 msgid ""
 "Element %(n)d: Code 128 only accepts Latin letters, digits and punctuation"
 msgstr "Öge %(n)d: Code 128 yalnızca Latin harfleri, rakamlar ve noktalama işaretleri kabul eder"
 
-#: tavletta/ui/texts.py:368
+#: tavletta/ui/texts.py:389
 #, python-format
 msgid "Element %(n)d: EAN-8 needs 7 digits, or 8 with the check digit"
 msgstr "Öge %(n)d: EAN-8 7 rakam veya denetim basamağıyla 8 rakam gerektirir"
 
-#: tavletta/ui/texts.py:369
+#: tavletta/ui/texts.py:390
 #, python-format
 msgid "Element %(n)d: UPC-A needs 11 digits, or 12 with the check digit"
 msgstr "Öge %(n)d: UPC-A 11 rakam veya denetim basamağıyla 12 rakam gerektirir"
 
-#: tavletta/ui/texts.py:371
+#: tavletta/ui/texts.py:392
 #, python-format
 msgid ""
 "Element %(n)d: UPC-E needs 7 digits starting with 0 or 1, or 8 with the "
 "check digit"
 msgstr "Öge %(n)d: UPC-E 0 veya 1 ile başlayan 7 rakam ya da denetim basamağıyla 8 rakam gerektirir"
 
-#: tavletta/ui/texts.py:373
+#: tavletta/ui/texts.py:394
 #, python-format
 msgid "Element %(n)d: ITF-14 needs 13 digits, or 14 with the check digit"
 msgstr "Öge %(n)d: ITF-14 13 rakam veya denetim basamağıyla 14 rakam gerektirir"
 
-#: tavletta/ui/texts.py:374
+#: tavletta/ui/texts.py:395
 #, python-format
 msgid "Element %(n)d: the check digit is wrong"
 msgstr "Öge %(n)d: denetim basamağı yanlış"
 
-#: tavletta/ui/texts.py:376
+#: tavletta/ui/texts.py:397
 #, python-format
 msgid ""
 "Element %(n)d: Code 39 only accepts capital letters, digits, spaces and - . "
 "$ / + %%"
 msgstr "Öge %(n)d: Code 39 yalnızca büyük harfler, rakamlar, boşluklar ve - . $ / + %% kabul eder"
 
-#: tavletta/ui/texts.py:379
+#: tavletta/ui/texts.py:400
 #, python-format
 msgid ""
 "Element %(n)d: Code 93 only accepts Latin letters, digits and punctuation"
 msgstr "Öge %(n)d: Code 93 yalnızca Latin harfleri, rakamlar ve noktalama işaretleri kabul eder"
 
-#: tavletta/ui/texts.py:382
+#: tavletta/ui/texts.py:403
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data only accepts Latin letters, digits and punctuation"
 msgstr "Öge %(n)d: GS1 verileri yalnızca Latin harfleri, rakamlar ve noktalama işaretleri kabul eder"
 
-#: tavletta/ui/texts.py:385
+#: tavletta/ui/texts.py:406
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data must be application identifiers in brackets, each "
 "followed by its value, e.g. (01)09501101530003(10)AB12"
 msgstr "Öge %(n)d: GS1 verileri, her birinin ardından değeri gelen, parantez içindeki uygulama tanımlayıcılarından oluşmalıdır, ör. (01)09501101530003(10)AB12"
 
-#: tavletta/ui/texts.py:388
+#: tavletta/ui/texts.py:409
 #, python-format
 msgid "Element %(n)d: (%(ai)s) is not a GS1 application identifier"
 msgstr "Öge %(n)d: (%(ai)s) bir GS1 uygulama tanımlayıcısı değil"
 
-#: tavletta/ui/texts.py:390
+#: tavletta/ui/texts.py:411
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) has the wrong "
 "length"
 msgstr "Öge %(n)d: uygulama tanımlayıcısı (%(ai)s) değerinin uzunluğu yanlış"
 
-#: tavletta/ui/texts.py:393
+#: tavletta/ui/texts.py:414
 #, python-format
 msgid ""
 "Element %(n)d: the check digit of application identifier (%(ai)s) is wrong"
 msgstr "Öge %(n)d: uygulama tanımlayıcısı (%(ai)s) denetim basamağı yanlış"
 
-#: tavletta/ui/texts.py:396
+#: tavletta/ui/texts.py:417
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) is not valid: a "
 "date, number or character it does not allow"
 msgstr "Öge %(n)d: uygulama tanımlayıcısı (%(ai)s) değeri geçersiz: izin vermediği bir tarih, sayı veya karakter"
 
-#: tavletta/ui/texts.py:400
+#: tavletta/ui/texts.py:421
 #, python-format
 msgid ""
 "Element %(n)d: no UPC-A number shortens to these UPC-E digits – check them "
 "or use UPC-A"
 msgstr "Öge %(n)d: hiçbir UPC-A numarası bu UPC-E rakamlarına kısalmıyor – rakamları denetleyin veya UPC-A kullanın"
 
-#: tavletta/ui/texts.py:404
+#: tavletta/ui/texts.py:425
 #, python-format
 msgid ""
 "Element %(n)d: scanners set to Full ASCII read a $, /, + or %% before a "
 "capital letter as another character"
 msgstr "Öge %(n)d: Full ASCII'ye ayarlı tarayıcılar büyük harften önceki $, /, + veya %% işaretini başka bir karakter olarak okur"
 
-#: tavletta/ui/texts.py:407
+#: tavletta/ui/texts.py:428
 #, python-format
 msgid "Element %(n)d: the content is too long for this type of code"
 msgstr "Öge %(n)d: içerik bu kod türü için çok uzun"
 
-#: tavletta/ui/texts.py:408
+#: tavletta/ui/texts.py:429
 #, python-format
 msgid "Element %(n)d: the content cannot be encoded in this type of code"
 msgstr "Öge %(n)d: içerik bu kod türünde kodlanamıyor"
 
-#: tavletta/ui/texts.py:410
+#: tavletta/ui/texts.py:431
 #, python-format
 msgid ""
 "Element %(n)d: this type of code needs the Zint library (zint-bindings), "
 "which is not installed"
 msgstr "Öge %(n)d: bu kod türü, yüklü olmayan Zint kitaplığını (zint-bindings) gerektirir"
 
-#: tavletta/ui/texts.py:413
+#: tavletta/ui/texts.py:434
 #, python-format
 msgid "Element %(n)d: the image cannot be read"
 msgstr "Öge %(n)d: görüntü okunamıyor"
 
-#: tavletta/ui/texts.py:414
+#: tavletta/ui/texts.py:435
 #, python-format
 msgid "Element %(n)d: this symbol is not in the symbol library"
 msgstr "Öge %(n)d: bu sembol sembol kitaplığında yok"
 
-#: tavletta/ui/texts.py:415
+#: tavletta/ui/texts.py:436
 #, python-format
 msgid "Element %(n)d: the document cannot be read"
 msgstr "Öge %(n)d: belge okunamıyor"
 
-#: tavletta/ui/texts.py:417
+#: tavletta/ui/texts.py:438
 #, python-format
 msgid ""
 "Element %(n)d: PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "Öge %(n)d: PDF dosyaları için Poppler (poppler-glib) gerekir, ancak kurulu değil"
 
-#: tavletta/ui/texts.py:419
+#: tavletta/ui/texts.py:440
 #, python-format
 msgid "Element %(n)d cannot be drawn"
 msgstr "Öge %(n)d çizilemiyor"
 
-#: tavletta/ui/texts.py:421
+#: tavletta/ui/texts.py:442
 #, python-format
 msgid ""
 "Element %(n)d: the text is too long to be drawn in one line – break it into "
 "lines or shorten it"
 msgstr "Öge %(n)d: metin tek satırda çizilemeyecek kadar uzun – satırlara bölün ya da kısaltın"
 
-#: tavletta/ui/texts.py:425
+#: tavletta/ui/texts.py:446
 #, python-format
 msgid ""
 "Element %(n)d: the text is too tall to be drawn – use fewer lines or a "
 "smaller size"
 msgstr "Öge %(n)d: metin çizilemeyecek kadar yüksek – daha az satır ya da daha küçük bir boyut kullanın"
 
-#: tavletta/ui/texts.py:428
+#: tavletta/ui/texts.py:449
 #, python-format
 msgid ""
 "Element %(n)d: the font %(font)s is not installed – another font is used"
 msgstr "Öge %(n)d: %(font)s yazı tipi yüklü değil – başka bir yazı tipi kullanılıyor"
 
-#: tavletta/ui/texts.py:431
+#: tavletta/ui/texts.py:452
 msgid ""
 "Safety margin, border, its inset and edge spacing leave no room – reduce them"
 msgstr "Güvenlik payı, kenarlık, kenarlığın içe kaydırması ve kenar aralığı yer bırakmıyor – bunları azaltın"
 
-#: tavletta/ui/texts.py:433
+#: tavletta/ui/texts.py:454
 msgid "The fixed length is shorter than the spacing – increase it"
 msgstr "Sabit uzunluk aralıktan kısa – uzunluğu artırın"
 
-#: tavletta/ui/texts.py:434
+#: tavletta/ui/texts.py:455
 msgid "The background image cannot be read"
 msgstr "Arka plan görüntüsü okunamıyor"
 
-#: tavletta/ui/texts.py:436
+#: tavletta/ui/texts.py:457
 #, python-format
 msgid ""
 "Element %(n)d: the code's modules are only one printer dot wide and may not "
 "scan – make the code larger"
 msgstr "Öge %(n)d: kodun modülleri yalnızca bir yazıcı noktası genişliğinde ve taranamayabilir – kodu büyütün"
 
-#: tavletta/ui/texts.py:440
+#: tavletta/ui/texts.py:461
 #, python-format
 msgid ""
 "Element %(n)d: the blank space the code needs around it does not fit – make "
 "the code larger"
 msgstr "Öge %(n)d: kodun çevresinde gereken boşluk sığmıyor – kodu büyütün"
 
-#: tavletta/ui/texts.py:444
+#: tavletta/ui/texts.py:465
 #, python-format
 msgid ""
 "Element %(n)d: the code does not fit in its space, even at one printer dot "
 "per module – make the label larger or the content shorter"
 msgstr "Öge %(n)d: kod, modül başına bir yazıcı noktasıyla bile kendi alanına sığmıyor – etiketi büyütün veya içeriği kısaltın"
 
-#: tavletta/ui/texts.py:447
+#: tavletta/ui/texts.py:468
 #, python-format
 msgid "Element %(n)d: %(name)s is not a known variable"
 msgstr "Öge %(n)d: %(name)s bilinen bir değişken değil"
 
-#: tavletta/ui/texts.py:449
+#: tavletta/ui/texts.py:470
 #, python-format
 msgid "Element %(n)d: the date of %(name)s is before the year 1 or after 9999"
 msgstr "Öge %(n)d: %(name)s tarihi 1. yıldan önce veya 9999'dan sonra"
 
-#: tavletta/ui/texts.py:452
+#: tavletta/ui/texts.py:473
 #, python-format
 msgid "Element %(n)d: the variable %(name)s… is not closed – end it with }"
 msgstr "Öge %(n)d: %(name)s… değişkeni kapatılmamış – } ile bitirin"
 
-#: tavletta/ui/texts.py:455
+#: tavletta/ui/texts.py:476
 #, python-format
 msgid ""
 "Element %(n)d: on a black-and-white printer it hardly stands out from what "
 "lies behind it, as a whole or in part – choose another colour or move it"
 msgstr "Öge %(n)d: siyah beyaz yazıcıda tamamen veya kısmen arkasındakinden neredeyse hiç ayırt edilmiyor – başka bir renk seçin veya ögeyi taşıyın"
 
-#: tavletta/ui/texts.py:458
+#: tavletta/ui/texts.py:479
 #, python-format
 msgid "Element %(n)d: the shape has neither a line nor a fill"
 msgstr "Öge %(n)d: şeklin ne çizgisi ne de dolgusu var"
 
-#: tavletta/ui/texts.py:460
+#: tavletta/ui/texts.py:481
 #, python-format
 msgid ""
 "Element %(n)d reaches beyond the edge of the label and is cut off there – "
 "move it or make it smaller"
 msgstr "%(n)d. öğe etiketin kenarını aşıyor ve orada kesiliyor – taşıyın veya küçültün"
 
-#: tavletta/ui/texts.py:464
+#: tavletta/ui/texts.py:485
 #, python-format
 msgid ""
 "Element %(n)d: the padding, frame, outline or shadow leave no room for the "
 "text – make them smaller"
 msgstr "Öge %(n)d: iç boşluk, çerçeve, kontur veya gölge metne yer bırakmıyor – bunları küçültün"
 
-#: tavletta/ui/texts.py:479
+#: tavletta/ui/texts.py:500
 #, python-format
 msgid "Sheets already printed: %(n)d of %(total)d."
 msgstr "Zaten yazdırılan sayfalar: %(total)d sayfadan %(n)d."
 
-#: tavletta/ui/texts.py:481
+#: tavletta/ui/texts.py:502
 #, python-format
 msgid "Labels already printed: %(n)d of %(total)d."
 msgstr "Zaten yazdırılan etiketler: %(total)d etiketten %(n)d."
 
-#: tavletta/ui/texts.py:485
+#: tavletta/ui/texts.py:506
 msgid "The sheets still waiting in the queue were canceled."
 msgstr "Kuyrukta hâlâ bekleyen sayfalar iptal edildi."
 
-#: tavletta/ui/texts.py:487
+#: tavletta/ui/texts.py:508
 msgid "The labels still waiting in the queue were canceled."
 msgstr "Kuyrukta hâlâ bekleyen etiketler iptal edildi."
 
-#: tavletta/ui/texts.py:498
+#: tavletta/ui/texts.py:519
 #, python-format
 msgid ""
 "The label is %(size)s, but labels of %(loaded)s are loaded. Check the label "
 "size, or load the matching roll."
 msgstr "Etiket %(size)s, ancak takılı etiketler %(loaded)s. Etiket boyutunu denetleyin ya da uygun ruloyu takın."
 
-#: tavletta/ui/texts.py:506
+#: tavletta/ui/texts.py:527
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2783,7 +2798,7 @@ msgid ""
 "size and the gap, or calibrate the printer."
 msgstr "Etiket boyutu %(size)s, boşluk %(gap)s; yani yeni bir etiket her %(pitch)s mesafede başlar. Yazıcı etiketler arasında %(measured)s ölçtü. Etiket boyutunu ve boşluğu kontrol edin ya da yazıcıyı kalibre edin."
 
-#: tavletta/ui/texts.py:512
+#: tavletta/ui/texts.py:533
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2791,92 +2806,92 @@ msgid ""
 "size and the gap."
 msgstr "Etiket boyutu %(size)s, boşluk %(gap)s; yani yeni bir etiket her %(pitch)s mesafede başlar. Yazıcı etiketler arasında %(measured)s ölçtü. Etiket boyutunu ve boşluğu kontrol edin."
 
-#: tavletta/ui/texts.py:529
+#: tavletta/ui/texts.py:550
 msgid ""
 "The printer cannot be found. Check that it is switched on and in the same "
 "network, or enter its IP address."
 msgstr "Yazıcı bulunamıyor. Açık ve aynı ağda olduğunu denetleyin ya da IP adresini girin."
 
-#: tavletta/ui/texts.py:533
+#: tavletta/ui/texts.py:554
 msgid ""
 "The printer cannot be found on USB. Check the cable and that the printer is "
 "switched on and awake, then search again."
 msgstr "Yazıcı USB üzerinden bulunamıyor. Kabloyu ve yazıcının açık ve uyanık olduğunu denetleyin, ardından yeniden arayın."
 
-#: tavletta/ui/texts.py:536
+#: tavletta/ui/texts.py:557
 msgid "The printer does not answer. Check that it is switched on and awake."
 msgstr "Yazıcı yanıt vermiyor. Açık ve uyanık olduğunu denetleyin."
 
-#: tavletta/ui/texts.py:538
+#: tavletta/ui/texts.py:559
 msgid ""
 "The printer stopped taking data. Check whether it shows a problem, such as "
 "no labels or an open cover, then try again."
 msgstr "Yazıcı veri almayı bıraktı. Etiketin bitmesi veya kapağın açık olması gibi bir sorun gösterip göstermediğini kontrol edin, ardından yeniden deneyin."
 
-#: tavletta/ui/texts.py:542
+#: tavletta/ui/texts.py:563
 msgid ""
 "The printer refuses the connection. Switch it off and on again. If its web "
 "interface offers a “Port 9100” option, turn it on."
 msgstr "Yazıcı bağlantıyı reddediyor. Kapatıp yeniden açın. Web arayüzünde “Port 9100” seçeneği varsa etkinleştirin."
 
-#: tavletta/ui/texts.py:545
+#: tavletta/ui/texts.py:566
 msgid "No cassette is inserted. Insert one and try again."
 msgstr "Kaset takılı değil. Bir kaset takıp yeniden deneyin."
 
-#: tavletta/ui/texts.py:546
+#: tavletta/ui/texts.py:567
 msgid "The printer's cover is open. Close it and try again."
 msgstr "Yazıcının kapağı açık. Kapatıp yeniden deneyin."
 
-#: tavletta/ui/texts.py:547
+#: tavletta/ui/texts.py:568
 msgid "The label is jammed. Open the cover, remove it and try again."
 msgstr "Etiket sıkıştı. Kapağı açın, etiketi çıkarın ve yeniden deneyin."
 
-#: tavletta/ui/texts.py:548
+#: tavletta/ui/texts.py:569
 msgid "The cassette is not recognised. Insert it again or try another one."
 msgstr "Kaset tanınmıyor. Yeniden takın ya da başka bir kaset deneyin."
 
-#: tavletta/ui/texts.py:549
+#: tavletta/ui/texts.py:570
 msgid "The printer is busy. Wait a moment and try again."
 msgstr "Yazıcı meşgul. Biraz bekleyip yeniden deneyin."
 
-#: tavletta/ui/texts.py:550
+#: tavletta/ui/texts.py:571
 #, python-format
 msgid "The label is too long for this printer: at most %(max)s."
 msgstr "Etiket bu yazıcı için çok uzun: en fazla %(max)s."
 
-#: tavletta/ui/texts.py:551
+#: tavletta/ui/texts.py:572
 #, python-format
 msgid "The label is too wide for this printer: at most %(max)s."
 msgstr "Etiket bu yazıcı için çok geniş: en fazla %(max)s."
 
-#: tavletta/ui/texts.py:552
+#: tavletta/ui/texts.py:573
 msgid "The printer is out of labels. Load a new roll and try again."
 msgstr "Yazıcının etiketi bitti. Yeni bir rulo takın ve yeniden deneyin."
 
-#: tavletta/ui/texts.py:553
+#: tavletta/ui/texts.py:574
 msgid "The print head is open. Close it and try again."
 msgstr "Yazdırma kafası açık. Kapatın ve yeniden deneyin."
 
-#: tavletta/ui/texts.py:555
+#: tavletta/ui/texts.py:576
 msgid ""
 "The printer cannot find the next label. Check that the labels are loaded "
 "correctly and run through the label sensor."
 msgstr "Yazıcı sonraki etiketi bulamıyor. Etiketlerin doğru takıldığını ve etiket sensöründen geçtiğini kontrol edin."
 
-#: tavletta/ui/texts.py:559
+#: tavletta/ui/texts.py:580
 msgid ""
 "There is a problem with the ribbon. Check that it is inserted correctly and "
 "matches the print method set on the printer."
 msgstr "Ribonda bir sorun var. Doğru takıldığını ve yazıcıda ayarlanan yazdırma yöntemine uygun olduğunu kontrol edin."
 
-#: tavletta/ui/texts.py:565
+#: tavletta/ui/texts.py:586
 #, python-format
 msgid ""
 "The printer finds no ribbon. Load a ribbon and try again. Labels that print "
 "without one need “%(direct)s” under “%(method)s”."
 msgstr "Yazıcı ribon bulamıyor. Bir ribon takın ve yeniden deneyin. Ribonsuz yazdırılan etiketler için “%(method)s” altında “%(direct)s” gerekir."
 
-#: tavletta/ui/texts.py:572
+#: tavletta/ui/texts.py:593
 #, python-format
 msgid ""
 "A ribbon is loaded, but the printer prints without it (thermal direct). For "
@@ -2884,239 +2899,239 @@ msgid ""
 "remove the ribbon."
 msgstr "Ribon takılı, ancak yazıcı onsuz yazdırıyor (doğrudan termal). Ribon gerektiren etiketler için “%(method)s” altında “%(transfer)s” seçin veya ribonu çıkarın."
 
-#: tavletta/ui/texts.py:577
+#: tavletta/ui/texts.py:598
 msgid "The printer is paused. Resume it on its display and try again."
 msgstr "Yazıcı duraklatıldı. Ekranından devam ettirin ve yeniden deneyin."
 
-#: tavletta/ui/texts.py:578
+#: tavletta/ui/texts.py:599
 msgid "The printer is out of paper. Load paper and try again."
 msgstr "Yazıcının kağıdı bitti. Kağıt yükleyip yeniden deneyin."
 
-#: tavletta/ui/texts.py:580
+#: tavletta/ui/texts.py:601
 msgid ""
 "The paper is jammed. Remove it as the printer's display shows and try again."
 msgstr "Kağıt sıkıştı. Yazıcının ekranında gösterildiği gibi çıkarıp yeniden deneyin."
 
-#: tavletta/ui/texts.py:582
+#: tavletta/ui/texts.py:603
 msgid "The printer is out of toner or ink. Replace it and try again."
 msgstr "Yazıcının toneri veya mürekkebi bitti. Değiştirip yeniden deneyin."
 
-#: tavletta/ui/texts.py:583
+#: tavletta/ui/texts.py:604
 msgid "The printer cannot print this size. Choose a paper size it offers."
 msgstr "Yazıcı bu boyutu yazdıramıyor. Yazıcının sunduğu bir kağıt boyutu seçin."
 
-#: tavletta/ui/texts.py:585
+#: tavletta/ui/texts.py:606
 msgid ""
 "The printer takes none of the formats Tavletta can send (PDF, PWG Raster, "
 "JPEG)."
 msgstr "Yazıcı, Tavletta'nın gönderebildiği biçimlerin (PDF, PWG Raster, JPEG) hiçbirini kabul etmiyor."
 
-#: tavletta/ui/texts.py:588
+#: tavletta/ui/texts.py:609
 msgid ""
 "The printer's queue is paused. Resume it in the system's printer settings "
 "and try again."
 msgstr "Yazıcının kuyruğu duraklatıldı. Sistemin yazıcı ayarlarından devam ettirin ve yeniden deneyin."
 
-#: tavletta/ui/texts.py:592
+#: tavletta/ui/texts.py:613
 msgid ""
 "The print job was held in the queue, for example until it is released or a "
 "password is entered. Check the queue in the system's printer settings and "
 "try again."
 msgstr "Yazdırma işi kuyrukta bekletildi, örneğin serbest bırakılana veya bir parola girilene kadar. Sistemin yazıcı ayarlarında kuyruğu kontrol edin ve yeniden deneyin."
 
-#: tavletta/ui/texts.py:596
+#: tavletta/ui/texts.py:617
 msgid "The print job was canceled at the printer or in the queue."
 msgstr "Yazdırma işi yazıcıda veya kuyrukta iptal edildi."
 
-#: tavletta/ui/texts.py:597
+#: tavletta/ui/texts.py:618
 #, python-format
 msgid ""
 "The printer did not report its resolution in time. Choose it under “%s”."
 msgstr "Yazıcı çözünürlüğünü zamanında bildirmedi. “%s” altında seçin."
 
-#: tavletta/ui/texts.py:600
+#: tavletta/ui/texts.py:621
 msgid ""
 "The loaded roll does not match the label. Load a matching roll, or choose "
 "the label size or printer model of the roll that is loaded."
 msgstr "Takılı rulo etikete uymuyor. Uygun bir rulo takın ya da takılı rulonun etiket boyutunu veya yazıcı modelini seçin."
 
-#: tavletta/ui/texts.py:603
+#: tavletta/ui/texts.py:624
 msgid "The printer's battery is low – charge it or connect the power adapter."
 msgstr "Yazıcının pili zayıf – şarj edin veya güç adaptörünü takın."
 
-#: tavletta/ui/texts.py:604
+#: tavletta/ui/texts.py:625
 msgid ""
 "The print head is too hot. Wait until it has cooled down, then try again."
 msgstr "Yazdırma kafası çok sıcak. Soğuyana kadar bekleyin, ardından yeniden deneyin."
 
-#: tavletta/ui/texts.py:606
+#: tavletta/ui/texts.py:627
 msgid ""
 "Tavletta cannot print on this printer model: it does not take the raster "
 "images Tavletta sends."
 msgstr "Tavletta bu yazıcı modelinde yazdıramaz: Tavletta'nın gönderdiği raster görüntüleri kabul etmez."
 
-#: tavletta/ui/texts.py:610
+#: tavletta/ui/texts.py:631
 msgid "Tavletta does not know this printer model and cannot print on it yet."
 msgstr "Tavletta bu yazıcı modelini tanımıyor ve henüz bu modelde yazdıramıyor."
 
-#: tavletta/ui/texts.py:613
+#: tavletta/ui/texts.py:634
 msgid ""
 "The printer is in Editor Lite mode and shows up as a USB drive. Switch "
 "Editor Lite off on the printer (its lamp goes out), then search again."
 msgstr "Yazıcı Editor Lite modunda ve USB sürücüsü olarak görünüyor. Yazıcıda Editor Lite'ı kapatın (ışığı söner), ardından yeniden arayın."
 
-#: tavletta/ui/texts.py:617
+#: tavletta/ui/texts.py:638
 msgid ""
 "Tavletta is not allowed to use the printer's USB port. Add your user to the "
 "group “lp” (sudo usermod -aG lp $USER), then log out and in again."
 msgstr "Tavletta yazıcının USB bağlantı noktasını kullanma iznine sahip değil. Kullanıcınızı “lp” grubuna ekleyin (sudo usermod -aG lp $USER), ardından oturumu kapatıp yeniden açın."
 
-#: tavletta/ui/texts.py:621
+#: tavletta/ui/texts.py:642
 msgid ""
 "The page is too large to make at the resolution the printer takes. Choose a "
 "smaller paper size, or print on a printer that takes PDF."
 msgstr "Sayfa, yazıcının kabul ettiği çözünürlükte oluşturulamayacak kadar büyük. Daha küçük bir kâğıt boyutu seçin veya PDF kabul eden bir yazıcıda yazdırın."
 
-#: tavletta/ui/texts.py:625
+#: tavletta/ui/texts.py:646
 msgid ""
 "A code does not fit on the label at this printer's resolution and would be "
 "cut off. Make the label larger or the code's content shorter."
 msgstr "Bu yazıcının çözünürlüğünde kod etikete sığmıyor ve kesilir. Etiketi büyütün veya kodun içeriğini kısaltın."
 
-#: tavletta/ui/texts.py:629
+#: tavletta/ui/texts.py:650
 msgid ""
 "Tavletta is not allowed to use the printer's serial port. Add your user to "
 "the group “dialout” (sudo usermod -aG dialout $USER; on Arch Linux the group "
 "is “uucp”), then log out and in again."
 msgstr "Tavletta yazıcının seri bağlantı noktasını kullanma iznine sahip değil. Kullanıcınızı “dialout” grubuna ekleyin (sudo usermod -aG dialout $USER; Arch Linux'ta grubun adı “uucp”), ardından oturumu kapatıp yeniden açın."
 
-#: tavletta/ui/texts.py:634
+#: tavletta/ui/texts.py:655
 msgid ""
 "The printer reported a problem. Switch it off and on again, then try once "
 "more."
 msgstr "Yazıcı bir sorun bildirdi. Kapatıp yeniden açın, ardından bir kez daha deneyin."
 
-#: tavletta/ui/texts.py:645
+#: tavletta/ui/texts.py:666 tavletta/server/web/ui.js:454
 msgid "Printed"
 msgstr "Yazdırıldı"
 
-#: tavletta/ui/texts.py:651
+#: tavletta/ui/texts.py:672
 msgid "Sent to the printer – it prints when its turn comes"
 msgstr "Yazıcıya gönderildi – sırası geldiğinde yazdırılacak"
 
-#: tavletta/ui/texts.py:653
+#: tavletta/ui/texts.py:674
 msgid "Sent to the printer – it did not confirm printing"
 msgstr "Yazıcıya gönderildi – yazıcı yazdırmayı onaylamadı"
 
-#: tavletta/ui/texts.py:657
+#: tavletta/ui/texts.py:678
 #, python-format
 msgid "Printed with “%(used)s”, as the loaded roll needs it"
 msgstr "Takılı rulo gerektirdiği için “%(used)s” ile yazdırıldı"
 
-#: tavletta/ui/texts.py:661
+#: tavletta/ui/texts.py:682
 #, python-format
 msgid ""
 "Colour mode “%(wanted)s” is not available on this printer, printed with "
 "“%(used)s”"
 msgstr "“%(wanted)s” renk modu bu yazıcıda kullanılamıyor, “%(used)s” ile yazdırıldı"
 
-#: tavletta/ui/texts.py:671
+#: tavletta/ui/texts.py:692
 msgid "Warming up…"
 msgstr "Isınıyor…"
 
-#: tavletta/ui/texts.py:672
+#: tavletta/ui/texts.py:693
 msgid "Cooling down…"
 msgstr "Soğuyor…"
 
-#: tavletta/ui/texts.py:673
+#: tavletta/ui/texts.py:694
 msgid "Cleaning…"
 msgstr "Temizleniyor…"
 
-#: tavletta/ui/texts.py:674
+#: tavletta/ui/texts.py:695
 msgid "Swipe the printer's panel to cut the label"
 msgstr "Etiketi kesmek için yazıcının paneli üzerinde kaydırın"
 
-#: tavletta/ui/texts.py:676
+#: tavletta/ui/texts.py:697
 msgid "Out of paper – load paper to continue"
 msgstr "Kağıt bitti – devam etmek için kağıt yükleyin"
 
-#: tavletta/ui/texts.py:677
+#: tavletta/ui/texts.py:698
 msgid "Cover open – close it to continue"
 msgstr "Kapak açık – devam etmek için kapatın"
 
-#: tavletta/ui/texts.py:678
+#: tavletta/ui/texts.py:699
 msgid "Paper jammed – remove it to continue"
 msgstr "Kağıt sıkıştı – devam etmek için çıkarın"
 
-#: tavletta/ui/texts.py:689
+#: tavletta/ui/texts.py:710
 msgid "This label needs a newer version of Tavletta"
 msgstr "Bu etiket için Tavletta'nın daha yeni bir sürümü gerekiyor"
 
-#: tavletta/ui/texts.py:691
+#: tavletta/ui/texts.py:712
 #, python-format
 msgid "%s is not a Tavletta label"
 msgstr "%s bir Tavletta etiketi değil"
 
-#: tavletta/ui/texts.py:692 tavletta/ui/texts.py:712
-#: tavletta/server/service.py:758
+#: tavletta/ui/texts.py:713 tavletta/ui/texts.py:733
+#: tavletta/server/service.py:899
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "Dosya bozuk: %s"
 
-#: tavletta/ui/texts.py:699
+#: tavletta/ui/texts.py:720
 #, python-format
 msgid "The data file %s is not there any more. Choose it again or remove it."
 msgstr "%s veri dosyası artık yok. Yeniden seçin ya da kaldırın."
 
-#: tavletta/ui/texts.py:703
+#: tavletta/ui/texts.py:724
 #, python-format
 msgid "%(file)s has no sheet named %(sheet)s"
 msgstr "%(file)s içinde %(sheet)s adlı sayfa yok"
 
-#: tavletta/ui/texts.py:705
+#: tavletta/ui/texts.py:726
 #, python-format
 msgid "%s is not a table. Use a CSV, ODS or XLSX file."
 msgstr "%s bir tablo değil. CSV, ODS veya XLSX dosyası kullanın."
 
-#: tavletta/ui/texts.py:707
+#: tavletta/ui/texts.py:728
 #, python-format
 msgid ""
 "%s is too large for serial labels. Split it into smaller files or remove "
 "rows and columns that are not needed."
 msgstr "%s seri etiketler için çok büyük. Daha küçük dosyalara bölün ya da gerekmeyen satır ve sütunları kaldırın."
 
-#: tavletta/ui/texts.py:710
+#: tavletta/ui/texts.py:731
 #, python-format
 msgid "%s contains no data."
 msgstr "%s veri içermiyor."
 
-#: tavletta/ui/texts.py:721
+#: tavletta/ui/texts.py:742
 #, python-format
 msgid ""
 "Printing stopped at row %(row)d. To continue, print again from row %(row)d."
 msgstr "Yazdırma %(row)d. satırda durdu. Devam etmek için %(row)d. satırdan itibaren yeniden yazdırın."
 
-#: tavletta/ui/texts.py:725
+#: tavletta/ui/texts.py:746
 #, python-format
 msgid "Copies of row %(row)d already printed: %(copies)d."
 msgstr "%(row)d. satırın zaten yazdırılan kopyaları: %(copies)d."
 
-#: tavletta/ui/texts.py:730
+#: tavletta/ui/texts.py:751
 #, python-format
 msgid "Row %(row)d goes at position %(position)d of sheet %(sheet)d."
 msgstr "%(row)d. satır %(sheet)d. sayfanın %(position)d. konumuna gelir."
 
-#: tavletta/ui/texts.py:741
+#: tavletta/ui/texts.py:762
 #, python-format
 msgid "Cannot save %s: no permission to write there"
 msgstr "%s kaydedilemiyor: oraya yazma izni yok"
 
-#: tavletta/ui/texts.py:743
+#: tavletta/ui/texts.py:764
 #, python-format
 msgid "Cannot save %s: the disk is full"
 msgstr "%s kaydedilemiyor: disk dolu"
 
-#: tavletta/ui/texts.py:753
+#: tavletta/ui/texts.py:774
 #, python-format
 msgid ""
 "This cassette seems to be from %(month)s %(year)d. Old ZINK paper prints "
@@ -3178,11 +3193,12 @@ msgstr "Basılan her etiketle birlikte adım kadar artar"
 msgid "Next number"
 msgstr "Sonraki sayı"
 
-#: tavletta/ui/variables.py:122
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:561
 msgid "Step"
 msgstr "Adım"
 
-#: tavletta/ui/window.py:163
+#: tavletta/ui/window.py:163 tavletta/server/web/app.js:45
+#: tavletta/server/web/app.js:283
 msgid "Templates"
 msgstr "Şablonlar"
 
@@ -3255,7 +3271,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:88 tavletta/server/config.py:92
-#: tavletta/server/config.py:98 tavletta/server/main.py:342
+#: tavletta/server/config.py:98 tavletta/server/main.py:344
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "%(file)s okunamıyor: %(reason)s"
@@ -3339,11 +3355,11 @@ msgstr "belirteç karması değil: sha256:… veya scrypt:… bekleniyordu"
 msgid "expected a list of printer names"
 msgstr "yazıcı adlarından oluşan bir liste bekleniyordu"
 
-#: tavletta/server/config.py:477 tavletta/server/main.py:368
+#: tavletta/server/config.py:477 tavletta/server/main.py:370
 msgid "printers can only be limited with --printers"
 msgstr "yazıcılar yalnızca --printers ile sınırlandırılabilir"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:529
+#: tavletta/server/config.py:479 tavletta/server/service.py:547
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "Bilinmeyen yazıcı: %s"
@@ -3353,68 +3369,74 @@ msgstr "Bilinmeyen yazıcı: %s"
 msgid "Invalid value for %s"
 msgstr "%s için geçersiz değer"
 
-#: tavletta/server/http.py:464 tavletta/server/http.py:513
+#: tavletta/server/http.py:469 tavletta/server/http.py:518
 msgid "The request took too long"
 msgstr "İstek çok uzun sürdü"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1388
+#: tavletta/server/http.py:478 tavletta/server/service.py:1594
 msgid "The server is busy – try again later"
 msgstr "Sunucu meşgul – daha sonra yeniden deneyin"
 
-#: tavletta/server/http.py:516
+#: tavletta/server/http.py:521
 msgid "Internal error"
 msgstr "İç hata"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:526
 msgid "This server only answers on its local address"
 msgstr "Bu sunucu yalnızca yerel adresinde yanıt verir"
 
-#: tavletta/server/http.py:525
+#: tavletta/server/http.py:530
 msgid "Requests from this web page are not allowed"
 msgstr "Bu web sayfasından gelen isteklere izin verilmiyor"
 
-#: tavletta/server/http.py:543
+#: tavletta/server/http.py:557
 msgid "Too many requests – try again later"
 msgstr "Çok fazla istek – daha sonra yeniden deneyin"
 
-#: tavletta/server/http.py:545
+#: tavletta/server/http.py:559
 msgid "Access token missing or wrong"
 msgstr "Erişim belirteci eksik veya yanlış"
 
-#: tavletta/server/http.py:586 tavletta/server/http.py:591
+#: tavletta/server/http.py:600 tavletta/server/http.py:605
 msgid "The request needs a Content-Length"
 msgstr "İstek bir Content-Length gerektiriyor"
 
-#: tavletta/server/http.py:588
+#: tavletta/server/http.py:602
 msgid "The request has more than one Content-Length"
 msgstr "İstekte birden fazla Content-Length var"
 
-#: tavletta/server/http.py:594
+#: tavletta/server/http.py:608
 msgid "The request is too large"
 msgstr "İstek çok büyük"
 
-#: tavletta/server/http.py:599
+#: tavletta/server/http.py:613
 msgid "The request body is incomplete"
 msgstr "İstek gövdesi eksik"
 
-#: tavletta/server/http.py:606
+#: tavletta/server/http.py:620
 msgid "Send the request as application/json"
 msgstr "İsteği application/json olarak gönderin"
 
-#: tavletta/server/http.py:635 tavletta/server/http.py:645
+#: tavletta/server/http.py:652 tavletta/server/http.py:662
+#: tavletta/server/http.py:783
 msgid "Not found"
 msgstr "Bulunamadı"
 
-#: tavletta/server/http.py:644
+#: tavletta/server/http.py:661 tavletta/server/http.py:774
 msgid "Method not allowed"
 msgstr "Yönteme izin verilmiyor"
 
-#: tavletta/server/http.py:661
+#: tavletta/server/http.py:678
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Bu istekle birlikte %s başlığını gönderin"
 
-#: tavletta/server/http.py:816
+#: tavletta/server/http.py:721 tavletta/server/service.py:623
+#: tavletta/server/service.py:1567
+msgid "This access token may not do this"
+msgstr "Bu erişim belirtecinin buna izni yok"
+
+#: tavletta/server/http.py:897
 msgid "The request is not valid JSON"
 msgstr "İstek geçerli bir JSON değil"
 
@@ -3428,12 +3450,12 @@ msgstr "%s etiket klasörü mevcut değil"
 msgid "Cannot read the token file %s"
 msgstr "%s belirteç dosyası okunamıyor"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:313
+#: tavletta/server/main.py:54 tavletta/server/main.py:315
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "Erişim belirteci yalnızca boşluksuz, yazdırılabilir ASCII karakterleri içerebilir"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:318
+#: tavletta/server/main.py:59 tavletta/server/main.py:320
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "Erişim belirteci en az %d karakter uzunluğunda olmalıdır"
@@ -3458,164 +3480,960 @@ msgid ""
 "--token-file"
 msgstr "Erişim belirteci olmadan %s üzerinde dinleme reddediliyor: TAVLETTA_TOKEN ayarlayın veya --token-file kullanın"
 
-#: tavletta/server/main.py:140
+#: tavletta/server/main.py:141
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "%(address)s üzerinde dinlenemiyor: %(reason)s"
 
-#: tavletta/server/main.py:272
+#: tavletta/server/main.py:274
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "Geçerli bir ad değil: harfler, rakamlar, . _ - (en fazla 64)"
 
-#: tavletta/server/main.py:283
+#: tavletta/server/main.py:285
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s başka bir program tarafından kullanılıyor – daha sonra yeniden deneyin"
 
-#: tavletta/server/main.py:290
+#: tavletta/server/main.py:292
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "%(name)s belirteci %(file)s dosyasına eklendi."
 
-#: tavletta/server/main.py:297
+#: tavletta/server/main.py:299
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "Belirteç yalnızca bu kez gösterilir; %s yalnızca karmasını saklar."
 
-#: tavletta/server/main.py:308
+#: tavletta/server/main.py:310
 msgid "Access token: "
 msgstr "Erişim belirteci: "
 
-#: tavletta/server/main.py:323
+#: tavletta/server/main.py:325
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "Seçilen belirteç, oluşturulmuş bir belirtece benzememelidir (tav_…)"
 
-#: tavletta/server/main.py:373
+#: tavletta/server/main.py:375
 #, python-format
 msgid "A token named %s exists already"
 msgstr "%s adlı bir belirteç zaten var"
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:402
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "Bu belirteç dosyada zaten %s adıyla var"
 
-#: tavletta/server/paths.py:39
+#: tavletta/server/paths.py:45 tavletta/server/service.py:808
 #, python-format
 msgid "No such label: %s"
 msgstr "Böyle bir etiket yok: %s"
 
-#: tavletta/server/paths.py:46
+#: tavletta/server/paths.py:64
 #, python-format
 msgid "No such data file: %s"
 msgstr "Böyle bir veri dosyası yok: %s"
 
-#: tavletta/server/requests.py:95
+#: tavletta/server/requests.py:127
 msgid "The request must be a JSON object"
 msgstr "İstek bir JSON nesnesi olmalıdır"
 
-#: tavletta/server/requests.py:97
+#: tavletta/server/requests.py:129
 #, python-format
 msgid "Unknown field: %s"
 msgstr "Bilinmeyen alan: %s"
 
-#: tavletta/server/requests.py:104
+#: tavletta/server/requests.py:136
 msgid "Give the label either by name or as content"
 msgstr "Etiketi ya adıyla ya da içerik olarak verin"
 
-#: tavletta/server/requests.py:109
+#: tavletta/server/requests.py:141
 msgid "Give data rows or a data file, not both"
 msgstr "Veri satırları ya da bir veri dosyası verin, ikisini birden değil"
 
-#: tavletta/server/requests.py:196
+#: tavletta/server/requests.py:228
 #, python-format
 msgid "Too many data rows: at most %d"
 msgstr "Çok fazla veri satırı: en fazla %d"
 
-#: tavletta/server/requests.py:204
+#: tavletta/server/requests.py:236
 #, python-format
 msgid "Too many columns: at most %d"
 msgstr "Çok fazla sütun: en fazla %d"
 
-#: tavletta/server/requests.py:207
+#: tavletta/server/requests.py:239
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "Çok fazla hücre: en fazla %d"
 
-#: tavletta/server/service.py:541
+#: tavletta/server/service.py:559
 msgid "Choose a printer by its name"
 msgstr "Bir yazıcıyı adıyla seçin"
 
-#: tavletta/server/service.py:605 tavletta/server/service.py:1361
-msgid "This access token may not do this"
-msgstr "Bu erişim belirtecinin buna izni yok"
-
-#: tavletta/server/service.py:662
+#: tavletta/server/service.py:681
 msgid "No printer address: give it as host"
 msgstr "Yazıcı adresi yok: host olarak verin"
 
-#: tavletta/server/service.py:671
+#: tavletta/server/service.py:690
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "Bu yazıcı adresine izin verilmiyor: %s"
 
-#: tavletta/server/service.py:766
+#: tavletta/server/service.py:774 tavletta/server/service.py:907
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content içinde belge sayfalarına izin verilmez (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:799
+#: tavletta/server/service.py:940
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s bir veri sütunu ({%(name)s}) – bunu data_rows içinde gönderin"
 
-#: tavletta/server/service.py:857
+#: tavletta/server/service.py:998
 msgid "A sheet needs a data file"
 msgstr "Sayfa için bir veri dosyası gerekir"
 
-#: tavletta/server/service.py:863
+#: tavletta/server/service.py:1004
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "Etiket, etiket klasörünün dışındaki bir veri dosyasını kullanıyor: satırlarını da gönderin"
 
-#: tavletta/server/service.py:1033
-#, python-format
-msgid "At most %d labels in one print job"
-msgstr "Bir yazdırma işinde en fazla %d etiket"
-
-#: tavletta/server/service.py:1059
+#: tavletta/server/service.py:1204
 msgid "Too many print jobs are waiting – try again later"
 msgstr "Çok fazla yazdırma işi bekliyor – daha sonra yeniden deneyin"
 
-#: tavletta/server/service.py:1323
+#: tavletta/server/service.py:1473
 #, python-format
 msgid "No such print job: %s"
 msgstr "Böyle bir yazdırma işi yok: %s"
 
-#: tavletta/server/service.py:1335
+#: tavletta/server/service.py:1485
 msgid "The print job has already finished"
 msgstr "Yazdırma işi zaten tamamlandı"
 
-#: tavletta/server/service.py:1392
+#: tavletta/server/service.py:1535
+#, python-format
+msgid "A label named %s exists already"
+msgstr "%s adlı bir etiket zaten var"
+
+#: tavletta/server/service.py:1540
+msgid "The label could not be saved in the labels folder"
+msgstr "Etiket, etiketler klasörüne kaydedilemedi"
+
+#: tavletta/server/service.py:1598
 msgid "The label is too large to render"
 msgstr "Etiket işlenemeyecek kadar büyük"
 
-#: tavletta/server/service.py:1406
+#: tavletta/server/service.py:1612
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "Etiket çok büyük: en fazla %d görsel ve kod"
 
-#: tavletta/server/service.py:1429
+#: tavletta/server/service.py:1635
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "Etiket çok büyük: en fazla %(elements)d öge ve bir metinde en fazla %(chars)d karakter"
 
-#: tavletta/server/service.py:1448
+#: tavletta/server/service.py:1654
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "Bu yazıcıda en fazla %d kopya"
 
-#: tavletta/server/service.py:1453
+#: tavletta/server/service.py:1659
 msgid "Printers are chosen by name: leave out host"
 msgstr "Yazıcılar adla seçilir: host alanını belirtmeyin"
+
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:477
+msgid "No connection to the server. Your input is kept."
+msgstr "Sunucuyla bağlantı yok. Girdikleriniz korunuyor."
+
+#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:205
+msgid "Printers"
+msgstr "Yazıcılar"
+
+#: tavletta/server/web/app.js:51
+msgid "Main"
+msgstr "Ana menü"
+
+#: tavletta/server/web/app.js:74
+msgid "Language"
+msgstr "Dil"
+
+#: tavletta/server/web/app.js:81
+msgid "Sign out"
+msgstr "Oturumu kapat"
+
+#: tavletta/server/web/app.js:84
+msgid "Skip to content"
+msgstr "İçeriğe geç"
+
+#: tavletta/server/web/app.js:155
+msgid "Access token"
+msgstr "Erişim belirteci"
+
+#: tavletta/server/web/app.js:156
+msgid ""
+"The administrator gives it to you. It is kept in this tab only and forgotten "
+"when the tab is closed."
+msgstr "Bunu size yönetici verir. Yalnızca bu sekmede saklanır ve sekme kapatıldığında unutulur."
+
+#: tavletta/server/web/app.js:161 tavletta/server/web/app.js:197
+msgid "Sign in"
+msgstr "Oturum aç"
+
+#: tavletta/server/web/app.js:167
+msgid "Show token"
+msgstr "Belirteci göster"
+
+#: tavletta/server/web/app.js:175
+msgid "Enter the access token."
+msgstr "Erişim belirtecini girin."
+
+#: tavletta/server/web/app.js:190
+msgid ""
+"The token was not accepted. Check it, or ask the administrator for a new one."
+msgstr "Belirteç kabul edilmedi. Belirteci denetleyin veya yöneticiden yenisini isteyin."
+
+#: tavletta/server/web/app.js:204
+msgid "Check again"
+msgstr "Yeniden denetle"
+
+#: tavletta/server/web/app.js:216 tavletta/server/web/print.js:74
+msgid "No printer this token may use. Ask the administrator."
+msgstr "Bu belirtecin kullanabileceği yazıcı yok. Yöneticiye sorun."
+
+#: tavletta/server/web/app.js:229
+msgid "Location: {place}"
+msgstr "Konum: {place}"
+
+#: tavletta/server/web/app.js:230
+msgid "Meant for: {media}"
+msgstr "Baskı malzemesi: {media}"
+
+#: tavletta/server/web/app.js:231
+msgid "Model: {model}"
+msgstr "Model: {model}"
+
+#: tavletta/server/web/app.js:237
+msgid "Default"
+msgstr "Varsayılan"
+
+#: tavletta/server/web/app.js:251
+msgid "Asking the printer…"
+msgstr "Yazıcı sorgulanıyor…"
+
+#: tavletta/server/web/app.js:262
+msgid "Ask for its state"
+msgstr "Durumunu sorgula"
+
+#: tavletta/server/web/app.js:268
+msgid "Address: {host}"
+msgstr "Adres: {host}"
+
+#: tavletta/server/web/app.js:268
+msgid "No address set"
+msgstr "Adres ayarlanmadı"
+
+#: tavletta/server/web/app.js:299
+msgid "No templates yet. Upload one above."
+msgstr "Henüz şablon yok. Yukarıdan bir şablon yükleyin."
+
+#: tavletta/server/web/app.js:299
+msgid "No templates yet. Ask the administrator."
+msgstr "Henüz şablon yok. Yöneticiye sorun."
+
+#: tavletta/server/web/app.js:326
+msgid "Series"
+msgstr "Seri"
+
+#: tavletta/server/web/app.js:327
+msgid "Delete"
+msgstr "Sil"
+
+#: tavletta/server/web/app.js:335
+msgid "Size: {width} × {height} mm"
+msgstr "Boyut: {width} × {height} mm"
+
+#: tavletta/server/web/app.js:336
+msgid "Fields: {count}"
+msgstr "Alanlar: {count}"
+
+#: tavletta/server/web/app.js:337
+msgid "Printer model: {model}"
+msgstr "Yazıcı modeli: {model}"
+
+#: tavletta/server/web/app.js:343 tavletta/server/web/print.js:188
+msgid "Preview of {name}"
+msgstr "Önizleme: {name}"
+
+#: tavletta/server/web/app.js:354
+msgid "Delete template?"
+msgstr "Şablon silinsin mi?"
+
+#: tavletta/server/web/app.js:355
+msgid "The template {name} is deleted from the server. Its data file stays."
+msgstr "{name} şablonu sunucudan silinir. Veri dosyası kalır."
+
+#: tavletta/server/web/app.js:356
+msgid "Delete {name}"
+msgstr "Sil: {name}"
+
+#: tavletta/server/web/app.js:363
+msgid "{name} deleted."
+msgstr "{name} silindi."
+
+#: tavletta/server/web/app.js:376
+msgid "Template file"
+msgstr "Şablon dosyası"
+
+#: tavletta/server/web/app.js:377
+msgid "A .tavletta file saved by Tavletta, at most {size} MB."
+msgstr "Tavletta ile kaydedilmiş bir .tavletta dosyası, en fazla {size} MB."
+
+#: tavletta/server/web/app.js:381
+msgid "Upload"
+msgstr "Yükle"
+
+#: tavletta/server/web/app.js:385
+msgid "Upload a template"
+msgstr "Şablon yükle"
+
+#: tavletta/server/web/app.js:387
+msgid "Replace a template of the same name"
+msgstr "Aynı adlı şablonu değiştir"
+
+#: tavletta/server/web/app.js:395
+msgid "Choose a template file."
+msgstr "Bir şablon dosyası seçin."
+
+#: tavletta/server/web/app.js:400
+msgid "The file is too large: at most {size} MB."
+msgstr "Dosya çok büyük: en fazla {size} MB."
+
+#: tavletta/server/web/app.js:411
+msgid "{name} uploaded."
+msgstr "{name} yüklendi."
+
+#: tavletta/server/web/app.js:415
+msgid ""
+"A template of this name exists. Choose \"Replace a template of the same "
+"name\" to replace it."
+msgstr "Bu adda bir şablon var. Değiştirmek için \"Aynı adlı şablonu değiştir\" seçeneğini seçin."
+
+#: tavletta/server/web/app.js:417
+msgid ""
+"The file name can have letters, digits, spaces and . _ - ( ) + , and must "
+"not start with a dot. Rename the file."
+msgstr "Dosya adı harf, rakam, boşluk ve . _ - ( ) + , içerebilir ve nokta ile başlayamaz. Dosyayı yeniden adlandırın."
+
+#: tavletta/server/web/app.js:432
+msgid "Print job"
+msgstr "Yazdırma işi"
+
+#: tavletta/server/web/app.js:439 tavletta/server/web/batch.js:841
+#: tavletta/server/web/print.js:243
+msgid "Template: {name}"
+msgstr "Şablon: {name}"
+
+#: tavletta/server/web/app.js:439 tavletta/server/web/batch.js:842
+#: tavletta/server/web/print.js:243
+msgid "Printer: {name}"
+msgstr "Yazıcı: {name}"
+
+#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:884
+msgid "Print job ended: {printed} of {total} labels printed."
+msgstr "Yazdırma işi bitti: {total} etiketten {printed} tanesi yazdırıldı."
+
+#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:270
+msgid "Data"
+msgstr "Veri"
+
+#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:396
+msgid "Assign"
+msgstr "Eşleştir"
+
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:463
+msgid "Choose"
+msgstr "Seç"
+
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:704
+msgid "Check"
+msgstr "Denetle"
+
+#: tavletta/server/web/batch.js:84
+msgid "From needs a number."
+msgstr "Başlangıç için bir sayı gerekir."
+
+#: tavletta/server/web/batch.js:85
+msgid "To needs a number."
+msgstr "Bitiş için bir sayı gerekir."
+
+#: tavletta/server/web/batch.js:86
+msgid "Step must be a whole number from 1."
+msgstr "Adım 1 veya daha büyük bir tam sayı olmalıdır."
+
+#: tavletta/server/web/batch.js:87
+msgid "From and To must be the same apart from the number ({from}, {to})."
+msgstr "Başlangıç ve Bitiş, sayı dışında aynı olmalıdır ({from}, {to})."
+
+#: tavletta/server/web/batch.js:88
+msgid ""
+"From has {from} digits, To {to}. Enter both with the same number of digits."
+msgstr "Başlangıçta {from}, Bitişte {to} basamak var. İkisini de aynı sayıda basamakla girin."
+
+#: tavletta/server/web/batch.js:89
+msgid "To must be greater than or equal to From ({from})."
+msgstr "Bitiş, Başlangıçtan ({from}) büyük veya ona eşit olmalıdır."
+
+#: tavletta/server/web/batch.js:90
+msgid ""
+"The ranges make different numbers of labels: {counts}. Make them the same "
+"length."
+msgstr "Aralıklar farklı sayıda etiket oluşturuyor: {counts}. Aynı uzunlukta yapın."
+
+#: tavletta/server/web/batch.js:99
+msgid "Series of {name}"
+msgstr "Seri: {name}"
+
+#: tavletta/server/web/batch.js:116
+msgid ""
+"This template has no data fields ({placeholder}). For many equal labels, set "
+"the copies when printing."
+msgstr "Bu şablonda veri alanı ({placeholder}) yok. Çok sayıda aynı etiket için yazdırırken kopya sayısını ayarlayın."
+
+#: tavletta/server/web/batch.js:126
+msgid "Steps"
+msgstr "Adımlar"
+
+#: tavletta/server/web/batch.js:160 tavletta/server/web/batch.js:179
+msgid "Enter a range for at least one field."
+msgstr "En az bir alan için bir aralık girin."
+
+#: tavletta/server/web/batch.js:189 tavletta/server/web/batch.js:639
+msgid "Row {n}"
+msgstr "Satır {n}"
+
+#: tavletta/server/web/batch.js:205 tavletta/server/web/batch.js:516
+#: tavletta/server/web/batch.js:706
+msgid "No row selected."
+msgstr "Satır seçilmedi."
+
+#: tavletta/server/web/batch.js:209
+msgid "{count} labels ({span})"
+msgstr "{count} etiket ({span})"
+
+#: tavletta/server/web/batch.js:224
+msgid "not needed"
+msgstr "gerekli değil"
+
+#: tavletta/server/web/batch.js:246 tavletta/server/web/batch.js:300
+msgid "Next"
+msgstr "İleri"
+
+#: tavletta/server/web/batch.js:250 tavletta/server/web/batch.js:757
+msgid "Back"
+msgstr "Geri"
+
+#: tavletta/server/web/batch.js:274
+msgid "Where do the values come from?"
+msgstr "Değerler nereden geliyor?"
+
+#: tavletta/server/web/batch.js:275
+msgid "A file (CSV, XLSX, ODS)"
+msgstr "Dosya (CSV, XLSX, ODS)"
+
+#: tavletta/server/web/batch.js:276
+msgid "A pasted list"
+msgstr "Yapıştırılmış liste"
+
+#: tavletta/server/web/batch.js:277
+msgid "No data: make numbers from ranges"
+msgstr "Veri yok: aralıklardan sayı oluştur"
+
+#: tavletta/server/web/batch.js:285
+msgid "Data file"
+msgstr "Veri dosyası"
+
+#: tavletta/server/web/batch.js:285
+msgid ""
+"At most {size} MB. Every cell is read as the text it shows: leading zeros "
+"stay."
+msgstr "En fazla {size} MB. Her hücre gösterdiği metin olarak okunur: baştaki sıfırlar korunur."
+
+#: tavletta/server/web/batch.js:287 tavletta/server/web/batch.js:294
+msgid "The first row holds the column names"
+msgstr "İlk satır sütun adlarını içerir"
+
+#: tavletta/server/web/batch.js:288
+msgid "Last file read: {name}"
+msgstr "Son okunan dosya: {name}"
+
+#: tavletta/server/web/batch.js:292 tavletta/server/web/batch.js:341
+msgid "List"
+msgstr "Liste"
+
+#: tavletta/server/web/batch.js:292
+msgid ""
+"One label per line; columns separated by tab, semicolon or comma (as copied "
+"from a spreadsheet)."
+msgstr "Satır başına bir etiket; sütunlar sekme, noktalı virgül veya virgülle ayrılır (bir elektronik tablodan kopyalandığı gibi)."
+
+#: tavletta/server/web/batch.js:296
+msgid ""
+"The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
+msgstr "Sonraki adımlar değerleri 3000–5685 veya 00300–00450 gibi aralıklardan oluşturur."
+
+#: tavletta/server/web/batch.js:300
+msgid "Read and continue"
+msgstr "Oku ve devam et"
+
+#: tavletta/server/web/batch.js:332
+msgid "Choose a data file."
+msgstr "Bir veri dosyası seçin."
+
+#: tavletta/server/web/batch.js:340
+msgid "Paste the list first."
+msgstr "Önce listeyi yapıştırın."
+
+#: tavletta/server/web/batch.js:345
+msgid "The data are too large: at most {size} MB."
+msgstr "Veriler çok büyük: en fazla {size} MB."
+
+#: tavletta/server/web/batch.js:368
+msgid "semicolon"
+msgstr "noktalı virgül"
+
+#: tavletta/server/web/batch.js:368
+msgid "comma"
+msgstr "virgül"
+
+#: tavletta/server/web/batch.js:368
+msgid "tab"
+msgstr "sekme"
+
+#: tavletta/server/web/batch.js:370
+msgid "{name}: {kind}"
+msgstr "{name}: {kind}"
+
+#: tavletta/server/web/batch.js:371
+msgid "Separated by {delimiter}"
+msgstr "Ayırıcı: {delimiter}"
+
+#: tavletta/server/web/batch.js:372
+msgid "Sheet: {sheet}"
+msgstr "Sayfa: {sheet}"
+
+#: tavletta/server/web/batch.js:373
+msgid "{rows} rows, {columns} columns"
+msgstr "{rows} satır, {columns} sütun"
+
+#: tavletta/server/web/batch.js:375
+msgid "The first {count} rows"
+msgstr "İlk {count} satır"
+
+#: tavletta/server/web/batch.js:386 tavletta/server/web/batch.js:633
+msgid "Row"
+msgstr "Satır"
+
+#: tavletta/server/web/batch.js:411
+msgid "Choose the data column for each field of the template."
+msgstr "Şablonun her alanı için veri sütununu seçin."
+
+#: tavletta/server/web/batch.js:416
+msgid "– not assigned –"
+msgstr "– atanmadı –"
+
+#: tavletta/server/web/batch.js:417
+msgid "The same value for all"
+msgstr "Tümü için aynı değer"
+
+#: tavletta/server/web/batch.js:421
+msgid "Value for {name}"
+msgstr "{name} için değer"
+
+#: tavletta/server/web/batch.js:424
+msgid "Data field {placeholder} of the template, required"
+msgstr "Şablonun {placeholder} veri alanı, zorunlu"
+
+#: tavletta/server/web/batch.js:441
+msgid "{name} has no data column. Choose one, or the same value for all."
+msgstr "{name} için veri sütunu yok. Bir sütun ya da tümü için aynı değeri seçin."
+
+#: tavletta/server/web/batch.js:474
+msgid "Continuing: {count} rows left."
+msgstr "Devam ediliyor: {count} satır kaldı."
+
+#: tavletta/server/web/batch.js:478
+msgid "Choose again"
+msgstr "Yeniden seç"
+
+#: tavletta/server/web/batch.js:484 tavletta/server/web/batch.js:610
+msgid "All rows"
+msgstr "Tüm satırlar"
+
+#: tavletta/server/web/batch.js:485
+msgid "Some rows"
+msgstr "Bazı satırlar"
+
+#: tavletta/server/web/batch.js:486
+msgid "Ranges of a field"
+msgstr "Bir alanın aralıkları"
+
+#: tavletta/server/web/batch.js:492
+msgid "Which rows?"
+msgstr "Hangi satırlar?"
+
+#: tavletta/server/web/batch.js:527
+msgid ""
+"Several fields: their values are put together row by row (the first with the "
+"first), never every combination."
+msgstr "Birden çok alan: değerleri satır satır birleştirilir (ilki ilkiyle), hiçbir zaman tüm kombinasyonlar oluşturulmaz."
+
+#: tavletta/server/web/batch.js:528
+msgid ""
+"Several fields: a row is printed if its values lie in the ranges of all of "
+"them."
+msgstr "Birden çok alan: bir satır, değerleri tüm alanların aralıklarına giriyorsa yazdırılır."
+
+#: tavletta/server/web/batch.js:559
+msgid "From"
+msgstr "Başlangıç"
+
+#: tavletta/server/web/batch.js:559
+msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
+msgstr "Örneğin 3000, 00300 veya INV-0001; ya da aralığın tamamı, 3000-5685"
+
+#: tavletta/server/web/batch.js:560
+msgid "To"
+msgstr "Bitiş"
+
+#: tavletta/server/web/batch.js:566
+msgid "Remove range"
+msgstr "Aralığı kaldır"
+
+#: tavletta/server/web/batch.js:588
+msgid "Add a range"
+msgstr "Aralık ekle"
+
+#: tavletta/server/web/batch.js:596
+msgid "Or the same value for all"
+msgstr "Ya da tümü için aynı değer"
+
+#: tavletta/server/web/batch.js:596
+msgid "Used if no range is given for this field."
+msgstr "Bu alan için aralık verilmezse kullanılır."
+
+#: tavletta/server/web/batch.js:609 tavletta/server/web/batch.js:628
+msgid "Rows"
+msgstr "Satırlar"
+
+#: tavletta/server/web/batch.js:609
+msgid "For example 1-20, 25, 30-"
+msgstr "Örneğin 1-20, 25, 30-"
+
+#: tavletta/server/web/batch.js:632
+msgid "Rows {first} to {last} of {total}"
+msgstr "Satır {first}–{last} / {total}"
+
+#: tavletta/server/web/batch.js:668
+msgid "Page {page} of {pages}"
+msgstr "Sayfa {page} / {pages}"
+
+#: tavletta/server/web/batch.js:674
+msgid "Previous page"
+msgstr "Önceki sayfa"
+
+#: tavletta/server/web/batch.js:675
+msgid "Next page"
+msgstr "Sonraki sayfa"
+
+#: tavletta/server/web/batch.js:689
+msgid "Write the rows as numbers and ranges, such as 1-20, 25."
+msgstr "Satırları 1-20, 25 gibi sayılar ve aralıklar olarak yazın."
+
+#: tavletta/server/web/batch.js:751
+msgid "The same for all labels"
+msgstr "Tüm etiketler için aynı"
+
+#: tavletta/server/web/batch.js:768 tavletta/server/web/print.js:203
+msgid "Printing needs a token with the role Print or Admin."
+msgstr "Yazdırmak için Yazdır veya Yönetici rolüne sahip bir belirteç gerekir."
+
+#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:222
+msgid "Copies must be a whole number from 1."
+msgstr "Kopya sayısı 1 veya daha büyük bir tam sayı olmalıdır."
+
+#: tavletta/server/web/batch.js:771 tavletta/server/web/print.js:223
+msgid "At most {max} copies on this printer."
+msgstr "Bu yazıcıda en fazla {max} kopya."
+
+#: tavletta/server/web/batch.js:772
+msgid "At most {max} rows in one print job."
+msgstr "Bir yazdırma işinde en fazla {max} satır."
+
+#: tavletta/server/web/batch.js:773
+msgid ""
+"At most {max} labels in one print job. Choose fewer rows, or print them in "
+"several jobs."
+msgstr "Bir yazdırma işinde en fazla {max} etiket. Daha az satır seçin veya birkaç işte yazdırın."
+
+#: tavletta/server/web/batch.js:774 tavletta/server/web/print.js:204
+msgid "Confirm above that it should print on the labels loaded."
+msgstr "Takılı etiketlere yazdırılacağını yukarıda onaylayın."
+
+#: tavletta/server/web/batch.js:781
+msgid "At most {max} labels in one print job; {left} more could be added."
+msgstr "Bir yazdırma işinde en fazla {max} etiket; {left} etiket daha eklenebilir."
+
+#: tavletta/server/web/batch.js:782 tavletta/server/web/batch.js:844
+#: tavletta/server/web/print.js:244
+msgid "Print {count} labels"
+msgstr "{count} etiket yazdır"
+
+#: tavletta/server/web/batch.js:804
+msgid "First: {value}"
+msgstr "İlk: {value}"
+
+#: tavletta/server/web/batch.js:805
+msgid "Last: {value}"
+msgstr "Son: {value}"
+
+#: tavletta/server/web/batch.js:808 tavletta/server/web/batch.js:809
+msgid "Preview of the label {value}"
+msgstr "{value} etiketinin önizlemesi"
+
+#: tavletta/server/web/batch.js:838 tavletta/server/web/print.js:242
+msgid "Print {count} labels?"
+msgstr "{count} etiket yazdırılsın mı?"
+
+#: tavletta/server/web/batch.js:852
+msgid "Too much data for one print job ({size} MB). Choose fewer rows."
+msgstr "Bir yazdırma işi için çok fazla veri ({size} MB). Daha az satır seçin."
+
+#: tavletta/server/web/batch.js:903
+msgid "First printed: {first}, last printed in full: {last}"
+msgstr "İlk yazdırılan: {first}, tamamen yazdırılan son: {last}"
+
+#: tavletta/server/web/batch.js:914
+msgid "Continue from {value}"
+msgstr "Şuradan devam et: {value}"
+
+#: tavletta/server/web/batch.js:916
+msgid "A label of a row that was printed in part is printed again in full."
+msgstr "Kısmen yazdırılmış bir satırın etiketi yeniden tamamen yazdırılır."
+
+#: tavletta/server/web/batch.js:924
+msgid "New series"
+msgstr "Yeni seri"
+
+#: tavletta/server/web/print.js:38
+msgid "Back to the templates"
+msgstr "Şablonlara dön"
+
+#: tavletta/server/web/print.js:47
+msgid "Printer: {model}, at the address set on the server"
+msgstr "Yazıcı: {model}, sunucuda ayarlanan adreste"
+
+#: tavletta/server/web/print.js:80
+msgid "No printer chosen."
+msgstr "Yazıcı seçilmedi."
+
+#: tavletta/server/web/print.js:81
+msgid ""
+"The printer is unreachable. Check that it is on and connected, then reload "
+"the page."
+msgstr "Yazıcıya ulaşılamıyor. Açık ve bağlı olduğunu denetleyin, ardından sayfayı yeniden yükleyin."
+
+#: tavletta/server/web/print.js:90
+msgid "Data field {placeholder}"
+msgstr "Veri alanı {placeholder}"
+
+#: tavletta/server/web/print.js:93
+msgid "Variable {placeholder}"
+msgstr "Değişken {placeholder}"
+
+#: tavletta/server/web/print.js:98
+msgid "Text of the element; changed here for this print only"
+msgstr "Ögenin metni; burada yalnızca bu yazdırma için değiştirilir"
+
+#: tavletta/server/web/print.js:105
+msgid "Print {name}"
+msgstr "Yazdır: {name}"
+
+#: tavletta/server/web/print.js:121 tavletta/server/web/ui.js:62
+msgid "Preview"
+msgstr "Önizleme"
+
+#: tavletta/server/web/print.js:145
+msgid "Start number"
+msgstr "Başlangıç numarası"
+
+#: tavletta/server/web/print.js:145
+msgid ""
+"The counter {placeholder} starts here; next number saved in the template: "
+"{next}"
+msgstr "{placeholder} sayacı burada başlar; şablonda kayıtlı sonraki numara: {next}"
+
+#: tavletta/server/web/print.js:150
+msgid "At most {max}"
+msgstr "En fazla {max}"
+
+#: tavletta/server/web/print.js:160
+msgid "Fields"
+msgstr "Alanlar"
+
+#: tavletta/server/web/print.js:160
+msgid "This template has no fields to fill in."
+msgstr "Bu şablonda doldurulacak alan yok."
+
+#: tavletta/server/web/print.js:216
+msgid "{name} is empty. Enter a value."
+msgstr "{name} boş. Bir değer girin."
+
+#: tavletta/server/web/print.js:219
+msgid "The start number must be a whole number from 0."
+msgstr "Başlangıç numarası 0 veya daha büyük bir tam sayı olmalıdır."
+
+#: tavletta/server/web/print.js:224
+msgid "At most {max} labels in one print job."
+msgstr "Bir yazdırma işinde en fazla {max} etiket."
+
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+msgid "There is a problem"
+msgstr "Bir sorun var"
+
+#: tavletta/server/web/ui.js:48
+msgid "Busy"
+msgstr "Meşgul"
+
+#: tavletta/server/web/ui.js:49
+msgid "Paused"
+msgstr "Duraklatıldı"
+
+#: tavletta/server/web/ui.js:50
+msgid "Problem"
+msgstr "Sorun"
+
+#: tavletta/server/web/ui.js:51
+msgid "Reachable, no status"
+msgstr "Ulaşılabilir, durum yok"
+
+#: tavletta/server/web/ui.js:52
+msgid "Unreachable"
+msgstr "Ulaşılamıyor"
+
+#: tavletta/server/web/ui.js:62
+msgid "Admin"
+msgstr "Yönetici"
+
+#: tavletta/server/web/ui.js:66
+msgid "Code"
+msgstr "Kod"
+
+#: tavletta/server/web/ui.js:66
+msgid "Element"
+msgstr "Öge"
+
+#: tavletta/server/web/ui.js:71
+msgid "Something went wrong in the page."
+msgstr "Sayfada bir şeyler ters gitti."
+
+#: tavletta/server/web/ui.js:72
+msgid "This needs a token with more rights."
+msgstr "Bunun için daha fazla yetkiye sahip bir belirteç gerekir."
+
+#: tavletta/server/web/ui.js:74
+msgid ""
+"Too many wrong tokens from this computer. Wait a minute, then sign in again."
+msgstr "Bu bilgisayardan çok fazla yanlış belirteç girildi. Bir dakika bekleyin, sonra yeniden oturum açın."
+
+#: tavletta/server/web/ui.js:82
+msgid "Labels loaded: {width} × {height} mm"
+msgstr "Takılı etiketler: {width} × {height} mm"
+
+#: tavletta/server/web/ui.js:83
+msgid "Tape loaded: {width} mm"
+msgstr "Takılı şerit: {width} mm"
+
+#: tavletta/server/web/ui.js:84
+msgid "Label distance measured: {length} mm"
+msgstr "Ölçülen etiket mesafesi: {length} mm"
+
+#: tavletta/server/web/ui.js:85
+msgid "Left on the roll: {length} mm"
+msgstr "Ruloda kalan: {length} mm"
+
+#: tavletta/server/web/ui.js:92
+msgid "Unreachable (checked {time})"
+msgstr "Ulaşılamıyor (denetlendi: {time})"
+
+#: tavletta/server/web/ui.js:106
+msgid "Loading…"
+msgstr "Yükleniyor…"
+
+#: tavletta/server/web/ui.js:122
+msgid "Try again"
+msgstr "Yeniden dene"
+
+#: tavletta/server/web/ui.js:149
+msgid "optional"
+msgstr "isteğe bağlı"
+
+#: tavletta/server/web/ui.js:258
+msgid "Other labels are loaded in the printer than the template needs."
+msgstr "Yazıcıda şablonun gerektirdiğinden farklı etiketler takılı."
+
+#: tavletta/server/web/ui.js:324
+msgid "Element {n}: {kind}"
+msgstr "Öge {n}: {kind}"
+
+#: tavletta/server/web/ui.js:383
+msgid "Cancel printing"
+msgstr "Yazdırmayı iptal et"
+
+#: tavletta/server/web/ui.js:384
+msgid "Labels already printed stay printed."
+msgstr "Zaten yazdırılmış etiketler yazdırılmış olarak kalır."
+
+#: tavletta/server/web/ui.js:396
+msgid "{printed} of {total}"
+msgstr "{printed} / {total}"
+
+#: tavletta/server/web/ui.js:405
+msgid "About {minutes} min left"
+msgstr "Yaklaşık {minutes} dk kaldı"
+
+#: tavletta/server/web/ui.js:407
+msgid "Waiting for the printer…"
+msgstr "Yazıcı bekleniyor…"
+
+#: tavletta/server/web/ui.js:435
+msgid "Stopping after the label being printed…"
+msgstr "Yazdırılan etiketten sonra durduruluyor…"
+
+#: tavletta/server/web/ui.js:454
+msgid "Canceled"
+msgstr "İptal edildi"
+
+#: tavletta/server/web/ui.js:454
+msgid "Failed"
+msgstr "Başarısız"
+
+#: tavletta/server/web/ui.js:466
+msgid "Copied"
+msgstr "Kopyalandı"
+
+#: tavletta/server/web/ui.js:472
+msgid "Copy"
+msgstr "Kopyala"
+
+#: tavletta/server/web/ui.js:478
+msgid "{printed} of {total} labels printed."
+msgstr "{total} etiketten {printed} tanesi yazdırıldı."
+
+#: tavletta/server/web/ui.js:481
+msgid "Took {seconds} s, finished at {time}."
+msgstr "Süre: {seconds} sn, bitiş: {time}."
+
+#: tavletta/server/web/ui.js:483
+msgid "Job number"
+msgstr "İş numarası"
