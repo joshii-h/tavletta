@@ -15,7 +15,8 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 mapfile -t packages < <(find "$RPMS" -maxdepth 1 -name '*.rpm' ! -name '*.src.rpm')
-dnf install -y -q "${packages[@]}" > /dev/null
+# with their documentation (the container images install none: tsflags=nodocs)
+dnf install -y -q --setopt=tsflags= "${packages[@]}" > /dev/null
 
 # no display, no session bus: what a server or a script has
 unset DISPLAY WAYLAND_DISPLAY DBUS_SESSION_BUS_ADDRESS
