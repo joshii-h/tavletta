@@ -1,18 +1,33 @@
 # Copies a Forgejo release to GitHub (GitHub is a push mirror of
 # https://git.joshuahirsig.xyz/joshii/tavletta).
 #
-# Runs when a tag v* arrives through the mirror, waits for the Forgejo release
-# and its assets, and creates the same release here with the built-in,
-# repository-scoped GITHUB_TOKEN; no long-lived token is involved. Nothing from
-# the repository is checked out or executed.
+# Runs when a tag v* arrives through the mirror: waits for the Forgejo
+# release, creates the same release here with the built-in,
+# repository-scoped GITHUB_TOKEN (no long-lived token is involved) and
+# copies its files as they arrive, until each workflow that attaches files
+# there has attached its checksum file, which it uploads last:
+# SHA256SUMS (release.yml), SHA256SUMS-deb (deb.yml), SHA256SUMS-rpm
+# (rpm.yml). A file Forgejo has with other content than here (a rebuild) is
+# replaced. After WAIT_MINUTES without all of them it copies what is there
+# and fails, naming what is missing.
 #
-# Forgejo also reads .github/workflows, hence the server_url guard.
+# Manual run (Actions -> Mirror release from Forgejo -> Run workflow) with a
+# tag: copies that release again, once, without waiting; for files attached
+# or rebuilt on Forgejo later.
+#
+# Nothing from the repository is checked out or executed. Forgejo also
+# reads .github/workflows, hence the server_url guard.
 
 name: Mirror release from Forgejo
 
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag of the release to copy again, e.g. v1.1.2
+        required: true
 
 permissions:
   contents: write
@@ -21,11 +36,15 @@ jobs:
   mirror:
     if: github.server_url == 'https://github.com'
     runs-on: ubuntu-26.04
-    timeout-minutes: 30
+    timeout-minutes: 120
     env:
       FORGEJO_API: https://git.joshuahirsig.xyz/api/v1/repos/joshii/tavletta
-      TAG: ${{ github.ref_name }}
+      TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
       GH_TOKEN: ${{ github.token }}
+      # each workflow that attaches files uploads its checksum file last
+      COMPLETE: SHA256SUMS SHA256SUMS-deb SHA256SUMS-rpm
+      # the package builds take up to an hour; a manual run does not wait
+      WAIT_MINUTES: ${{ github.event_name == 'push' && '100' || '0' }}
     steps:
       - name: Copy the release
         run: |
@@ -33,37 +52,80 @@ jobs:
           if ! printf '%s' "$TAG" | grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'; then
             echo "::error::not a release tag: $TAG"; exit 1
           fi
-          # wait for the Forgejo release and its assets (built there, up to 25 minutes);
-          # once a minute: frequent polling looks like a crawler to the server's CrowdSec
-          for i in $(seq 25); do
-            if release="$(curl -sS --fail "$FORGEJO_API/releases/tags/$TAG")" &&
-               [ "$(jq '.assets | length' <<<"$release")" -gt 0 ]; then
-              break
-            fi
-            [ "$i" = 25 ] && { echo "::error::no Forgejo release for $TAG"; exit 1; }
-            sleep 60
-          done
-          jq -r '.body // ""' <<<"$release" > notes.md
-          title="$(jq -r --arg tag "$TAG" '.name // "" | if . == "" then $tag else . end' <<<"$release")"
-          pre=(); [ "$(jq -r '.prerelease' <<<"$release")" = true ] && pre=(--prerelease)
-          # create the release first, then add the files one by one
-          if ! gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+          mkdir assets
+          touch copied  # the Forgejo asset ids copied (a rebuilt file gets a new one)
+
+          create() {  # the GitHub release, once, from the Forgejo release
+            gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 && return
+            jq -r '.body // ""' <<<"$release" > notes.md
+            local title pre=()
+            title="$(jq -r --arg tag "$TAG" '.name // "" | if . == "" then $tag else . end' <<<"$release")"
+            [ "$(jq -r '.prerelease' <<<"$release")" = true ] && pre=(--prerelease)
             gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
               --title "$title" --notes-file notes.md --verify-tag "${pre[@]}"
-          fi
-          present="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name')"
-          mkdir assets
-          jq -r '.assets[] | [.name, .browser_download_url] | @tsv' <<<"$release" |
-          while IFS=$'\t' read -r name url; do
-            case "$name" in */*|..*) echo "::error::odd asset name"; exit 1 ;; esac
-            # flatpak-bundle.yml uploads the bundle here itself, and files that are
-            # already here stay: replacing them raced with that workflow (v1.0.1)
-            case "$name" in Tavletta-*.flatpak|Tavletta-*.flatpak.sha256) continue ;; esac
-            grep -qxF -- "$name" <<<"$present" && { echo "$name exists"; continue; }
-            curl -sS --fail -L -o "assets/$name" "$url"
-            for i in 1 2 3; do  # the GitHub API sometimes answers 500
-              gh release upload "$TAG" "assets/$name" -R "$GITHUB_REPOSITORY" && break
-              [ "$i" = 3 ] && exit 1
-              sleep 20
+          }
+
+          copy() {  # the files of the Forgejo release not copied yet
+            local here id name url digest ours mine
+            here="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" \
+              --jq '.assets[] | [.name, .id, (.digest // "")] | @tsv')"
+            while IFS=$'\t' read -r -u 3 id name url; do
+              grep -qxF -- "$id" copied && continue
+              case "$name" in ""|*/*|.*|*.) echo "::error::odd asset name: $name"; exit 1 ;; esac
+              # flatpak-bundle.yml uploads the bundle here itself: replacing it
+              # raced with that workflow (v1.0.1)
+              case "$name" in Tavletta-*.flatpak|Tavletta-*.flatpak.sha256) echo "$id" >> copied; continue ;; esac
+              curl -sS --fail -L -o "assets/$name" "$url"
+              ours="sha256:$(sha256sum "assets/$name" | cut -d' ' -f1)"
+              mine="$(awk -F'\t' -v n="$name" '$1 == n { print $2 "\t" $3 }' <<<"$here")"
+              if [ -n "$mine" ]; then
+                digest="${mine#*$'\t'}"
+                if [ -z "$digest" ]; then  # uploaded before GitHub kept digests
+                  digest="sha256:$(gh release download "$TAG" -R "$GITHUB_REPOSITORY" \
+                    --pattern "$name" --output - | sha256sum | cut -d' ' -f1)"
+                fi
+                if [ "$digest" = "$ours" ]; then
+                  echo "$name exists"; echo "$id" >> copied; continue
+                fi
+                gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/${mine%%$'\t'*}"
+                echo "$name replaced:"
+              fi
+              for i in 1 2 3; do  # the GitHub API sometimes answers 500
+                gh release upload "$TAG" "assets/$name" -R "$GITHUB_REPOSITORY" && break
+                [ "$i" = 3 ] && exit 1
+                sleep 20
+              done
+              # GitHub renames some names; the package workflows choose names it keeps
+              if ! gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' |
+                   grep -qxF -- "$name"; then
+                echo "::error::GitHub renamed $name"; exit 1
+              fi
+              echo "$name uploaded"; echo "$id" >> copied
+            done 3< <(jq -r '.assets[] | [.id, .name, .browser_download_url] | @tsv' <<<"$release")
+          }
+
+          missing() {  # the checksum files not on the Forgejo release yet
+            local f
+            for f in $COMPLETE; do
+              jq -e --arg n "$f" 'any(.assets[]?; .name == $n)' <<<"$release" > /dev/null || echo "$f"
             done
+          }
+
+          # once a minute: frequent polling looks like a crawler to the server's CrowdSec
+          for ((minute = 0; ; minute++)); do
+            if release="$(curl -sS --fail "$FORGEJO_API/releases/tags/$TAG")"; then
+              create
+              copy
+              [ -z "$(missing)" ] && break
+            fi
+            if [ "$minute" -ge "$WAIT_MINUTES" ]; then
+              if [ -z "${release:-}" ]; then
+                echo "::error::no Forgejo release for $TAG"; exit 1
+              fi
+              echo "::error::not on the Forgejo release yet: $(missing | xargs)." \
+                "Once there, run this workflow again (Run workflow, tag $TAG)."
+              exit 1
+            fi
+            sleep 60
           done
+          echo "https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG"
