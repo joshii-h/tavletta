@@ -113,10 +113,12 @@ def _value(xml: str, name: str) -> str:
 
 
 def _number(xml: str, name: str) -> float | None:
+    """A finite number; None for none, junk, NaN or infinity ("1e999")."""
     try:
-        return float(_value(xml, name))
+        number = float(_value(xml, name))
     except ValueError:
         return None
+    return number if math.isfinite(number) else None
 
 
 @dataclass

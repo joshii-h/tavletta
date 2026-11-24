@@ -429,10 +429,9 @@ class ColorAdjust:
             return cls()
         values = {}
         for name in cls.FIELDS:
-            value = data.get(name, 0)
-            if isinstance(value, bool) or not isinstance(value, (int, float)):
-                value = 0
-            values[name] = int(max(-cls.STEPS, min(cls.STEPS, round(value))))
+            # as a Level: NaN, infinity and other junk is 0
+            value = Level(name, -cls.STEPS, cls.STEPS).value(data.get(name, 0))
+            values[name] = value or 0
         return cls(**values)
 
     def to_dict(self) -> dict[str, int]:

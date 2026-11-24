@@ -144,6 +144,11 @@ def test_every_backend_has_a_contract_test():
         ({"brightness": 2, "red": -1}, ColorAdjust(2, -1, 0, 0)),
         ({"brightness": 9, "green": -7.4, "blue": 1.6}, ColorAdjust(3, 0, -3, 2)),
         ({"red": True, "green": "2", "blue": None}, ColorAdjust()),
+        # settings.json read by Python's json: NaN and Infinity are numbers
+        ({"brightness": float("nan"), "red": float("inf")}, ColorAdjust()),
+        ({"green": float("-inf"), "blue": 10**400}, ColorAdjust(0, 0, 0, 0)),
+        ({"brightness": 2.5, "red": -2.5}, ColorAdjust(2, -2, 0, 0)),  # rounded half to even
+        ({"brightness": 3, "red": -3}, ColorAdjust(3, -3, 0, 0)),
     ],
 )
 def test_color_adjust_from_dict(data, expected):
