@@ -219,8 +219,30 @@ def test_a_waiting_lock_follows_the_replaced_file(tmp_path, monkeypatch):
     assert len(calls) == 2  # locked again, the new file
 
 
-def _open_fds() -> int:
-    return len(os.listdir("/proc/self/fd"))
+def _opened_for_lock(monkeypatch) -> list[tuple[int, tuple[int, int]]]:
+    """The descriptors locked() opens, each with its file (device, inode)."""
+    opened = []
+    real = model._open_for_lock
+
+    def recording(target):
+        fd = real(target)
+        if fd is not None:
+            info = os.fstat(fd)
+            opened.append((fd, (info.st_dev, info.st_ino)))
+        return fd
+
+    monkeypatch.setattr(model, "_open_for_lock", recording)
+    return opened
+
+
+def _still_open(fd: int, file: tuple[int, int]) -> bool:
+    """Whether the descriptor still refers to that file (a closed number
+    may have been given to another file meanwhile)."""
+    try:
+        info = os.fstat(fd)
+    except OSError:
+        return False
+    return (info.st_dev, info.st_ino) == file
 
 
 def test_without_flock_it_goes_on(tmp_path, monkeypatch):
@@ -233,11 +255,10 @@ def test_without_flock_it_goes_on(tmp_path, monkeypatch):
         raise OSError("not supported")
 
     monkeypatch.setattr(model.fcntl, "flock", unsupported)
-    before = _open_fds()
+    opened = _opened_for_lock(monkeypatch)
     with model.locked(path):
-        inside.append(_open_fds())
-    assert tried and inside == [before]  # went on unlocked, the file closed at once
-    assert _open_fds() == before
+        inside.extend(_still_open(*each) for each in opened)
+    assert tried and len(opened) == 1 and inside == [False]  # went on unlocked, closed at once
 
 
 def test_a_read_only_file_is_not_replaced(tmp_path):
@@ -268,11 +289,12 @@ def test_a_lock_on_a_file_removed_meanwhile(tmp_path, monkeypatch):
         flock(fd, operation)
 
     monkeypatch.setattr(model.fcntl, "flock", counting)
-    before = _open_fds()
+    opened = _opened_for_lock(monkeypatch)
     with model.locked(path):
-        inside = _open_fds()
+        inside = [_still_open(*each) for each in opened]
     assert len(locks) == 1 and not path.exists()  # locked once, then the file was gone
-    assert inside == before and _open_fds() == before  # nothing left open
+    assert len(opened) == 1 and inside == [False]  # nothing left open
+    assert not _still_open(*opened[0])
 
 
 def test_the_file_lists_the_features_it_needs(tmp_path):
