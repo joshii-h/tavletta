@@ -35,7 +35,6 @@ from tavletta.server.oidc import (
     Provider,
     caller_for,
     local_url,
-    origin_of,
     user_name,
 )
 from tavletta.server.sessions import Logins, Session, Sessions
@@ -144,7 +143,7 @@ class WebLogin:
         login cookie) is replaced; TooManyLogins (sessions.py)."""
         back = after(asked)
         public = self.settings.public_url
-        if public and not moved and origin_of(site) != public:
+        if public and not moved and not _same_host(site, public):
             query = urlencode({"return": back, "moved": "1"})
             return _redirect(public + "/oidc/login?" + query)
         origin = self.origin(site)
@@ -242,6 +241,19 @@ class WebLogin:
         answer = Answer(200, body={"redirect": target})
         answer.cookies.append(self._cookie(origin, name, "", 0))
         return answer
+
+
+def _same_host(site: str, public: str) -> bool:
+    """Whether the request came to public_url's host and port (a port not
+    given: public_url's scheme's own, so "labels.example.com:443" through a
+    proxy that sends no scheme is public_url's https host)."""
+    here, there = urlsplit(site), urlsplit(public)
+    default = {"http": 80, "https": 443}.get(there.scheme)
+    try:
+        port = here.port
+    except ValueError:  # not a port at all
+        return False
+    return here.hostname == there.hostname and (port or default) == (there.port or default)
 
 
 def _one(query: Mapping[str, list[str]], key: str) -> str | None:

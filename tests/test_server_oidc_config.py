@@ -398,3 +398,20 @@ def test_a_full_session_store_drops_expired_then_the_least_used(monkeypatch):
     clock.now += 601
     sessions.create(Caller("u4"), "u4", "")
     assert len(sessions) == 1
+
+
+@pytest.mark.parametrize(
+    ("site", "same"),
+    [
+        ("http://labels.example.com", True),  # a TLS proxy not given: the host counts
+        ("https://Labels.Example.com:443", True),
+        ("http://labels.example.com:443", True),
+        ("https://labels.example.com:8443", False),
+        ("https://evil.example", False),
+        ("http://labels.example.com:x", False),
+    ],
+)
+def test_a_sign_in_at_public_urls_host_is_not_sent_there_again(site, same):
+    from tavletta.server.weblogin import _same_host
+
+    assert _same_host(site, "https://labels.example.com") is same
