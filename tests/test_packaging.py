@@ -347,8 +347,9 @@ def test_the_container_workflow_takes_only_semver_tags():
     check = next(s for s in workflow["jobs"]["check"]["steps"] if s.get("name") == "Check the tag")
     pattern = re.search(r"grep -Eq '([^']+)'", check["run"]).group(1)
     accepted = ("v1.1.1", "v1.2.3", "v1.10.0", "v0.1.0", "v2.0.0-rc.1", "v1.1.1-beta2")
-    accepted += ("v1.2.3-rc-1",)
-    refused = ("v1.1", "v1", "v1.1.1.1", "1.1.1", "v1.1.1-", "v1.1.x")
+    # no hyphen inside the pre-release: the Debian and RPM versions map the
+    # one after the patch number to ~ (_upstream_version)
+    refused = ("v1.2.3-rc-1", "v1.1", "v1", "v1.1.1.1", "1.1.1", "v1.1.1-", "v1.1.x")
     refused += ("v01.2.3", "v1.02.3", "v1.2.03", "v1.2.3-rc..1", "v1.2.3-rc.", "v1.2.3-.rc")
     assert all(re.fullmatch(pattern, tag) for tag in accepted)
     assert not any(re.fullmatch(pattern, tag) for tag in refused)
@@ -503,7 +504,7 @@ def test_every_tag_check_takes_the_same_semver_tags():
     assert len(set(checks.values())) == 1, checks
     pattern = checks[".github/docker.yml"]
     flathub = _flathub()
-    for tag in ("v1.1.2", "v2.0.0-rc.1", "v1.1", "v1.1.2.1", "v01.1.2", "1.1.2"):
+    for tag in ("v1.1.2", "v2.0.0-rc.1", "v2.0.0-rc-1", "v1.1", "v1.1.2.1", "v01.1.2", "1.1.2"):
         assert bool(re.fullmatch(pattern, tag)) == bool(flathub.TAG.fullmatch(tag)), tag
 
 

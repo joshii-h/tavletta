@@ -37,8 +37,9 @@ MANIFEST = HERE / f"{APP_ID}.yml"
 REPO_URL = "https://github.com/joshii-h/tavletta.git"
 # the line that starts the development source, the last source of the manifest
 DIR_MARKER = "      # local checkout, for development builds"
-# semver, as the release workflows take it (.forgejo/workflows/release.yml)
-TAG = re.compile(r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?")
+# semver, as the release workflows take it (.forgejo/workflows/release.yml):
+# no hyphen inside the pre-release, which the packages could not map
+TAG = re.compile(r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?")
 COMMIT = re.compile(r"[0-9a-f]{40}")
 
 GIT_SOURCE = """\
