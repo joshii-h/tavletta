@@ -6,6 +6,7 @@ import copy
 import os
 import threading
 from collections.abc import Callable
+from dataclasses import fields
 from datetime import datetime
 from functools import partial
 from pathlib import Path
@@ -45,7 +46,7 @@ from tavletta.shipping.source import (  # noqa: E402
     drop_stale_documents,
     drop_thread_documents,
 )
-from tavletta.ui import shortcuts  # noqa: E402
+from tavletta.ui import editor, shortcuts  # noqa: E402
 from tavletta.ui.data import DATA_SUFFIXES, STEPS, DataGroup, DataSource  # noqa: E402
 from tavletta.ui.elements import ElementsGroup  # noqa: E402
 from tavletta.ui.files import Files  # noqa: E402
@@ -82,6 +83,9 @@ class Window(Adw.ApplicationWindow):
         self._geometries: dict[str, dict] = {}  # label size per printer model
         self._last_sheet: SheetChoice | None = None  # back to it after a single label
         self.rendered: Rendered | None = None
+        # the elements the preview shows, by identity (model.element_id): the
+        # render's boxes are theirs (the preview's editor)
+        self.rendered_ids: tuple[int, ...] = ()
         # the resolution of the render the preview shows: its code
         # warnings hold for that one
         self.rendered_dpi: float | None = None
@@ -176,6 +180,7 @@ class Window(Adw.ApplicationWindow):
         ):
             button = Gtk.Button(icon_name=icon, tooltip_text=tip, action_name=action)
             header.pack_start(button)
+        header.pack_start(editor.arrange_button(self))
 
         header.pack_end(
             Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=self._main_menu())
@@ -211,6 +216,7 @@ class Window(Adw.ApplicationWindow):
         paned.set_position(720)
 
         self.preview = Preview()
+        self.editor = editor.PreviewEditor(self)
         paned.set_start_child(self.preview)
 
         side_scroller = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
@@ -333,6 +339,7 @@ class Window(Adw.ApplicationWindow):
         self.dirty = True
         if record:
             self.history.record(self.label, key)
+        self.editor.label_changed()
         self.update_history_actions()
         self.update_title()
         self.counter_group.update()
@@ -543,9 +550,46 @@ class Window(Adw.ApplicationWindow):
         self._structure_changed()
 
     def remove_element(self, index: int) -> None:
-        del self.label.elements[index]
+        self.remove_elements([index])
+
+    def remove_elements(self, indices) -> None:
+        """Remove some elements, one step of undo (the preview's selection)."""
+        for index in sorted(set(indices), reverse=True):
+            del self.label.elements[index]
         self.expand_index = -1
         self._structure_changed()
+
+    def edited(self, label: Label, indices: list[int], sizes: bool = False) -> None:
+        """The preview's editor changed some elements (its step of undo
+        recorded): their fields taken over in place, so the sidebar's rows
+        keep their elements and need not be built again (that takes seconds
+        for a label of 50 elements). sizes: their sizes changed, their rows
+        are built again. An open page of one of them opens again; the focus
+        stays where it was."""
+        focus = self.get_focus()
+        for index in indices:
+            target, source = self.label.elements[index], label.elements[index]
+            for name in (f.name for f in fields(source)):
+                setattr(target, name, getattr(source, name))
+        if sizes:
+            for row in self.elements_group.refresh(indices):
+                no_field_undo(row)
+        self._reopen_page(indices)
+        self.mark_changed(record=False)
+        if focus is not None and self.get_focus() is not focus and focus.get_root() is self:
+            focus.grab_focus()
+
+    def _reopen_page(self, indices: list[int]) -> None:
+        """The open page of options, if it belongs to one of these elements,
+        opened again: it shows their values of now."""
+        ident, title = self._subpage
+        ids = [element_id(self.label.elements[i]) for i in indices]
+        if self.sidebar_nav.get_visible_page() is self.sidebar_root or ident not in ids:
+            return
+        self.sidebar_nav.set_animate_transitions(False)
+        self.sidebar_nav.pop_to_page(self.sidebar_root)
+        self.elements_group.open_page(indices[ids.index(ident)], title)
+        self.sidebar_nav.set_animate_transitions(True)
 
     def set_background_image(self, image) -> None:
         self.label.background_image = image
@@ -568,6 +612,8 @@ class Window(Adw.ApplicationWindow):
         self.update_history_actions()
         self._geometries = {}
         self.expand_index = -1
+        self.editor.selection = []  # another label: nothing chosen in it
+        self.editor.label_changed()
         self.rebuild_sidebar()
         self.update_title()
         self.data.follow_label()
@@ -724,10 +770,12 @@ class Window(Adw.ApplicationWindow):
         sheet = self.sheet if choice else None  # round labels and CDs: their shape
         rotated = bool(choice and choice.rotated)
 
+        ids = tuple(element_id(e) for e in label.elements)  # a deep copy keeps them
+
         def work() -> PreviewResult:
             rendered, image, dpi = preview_image(backend, label, options, safe_mm, sheet, rotated)
             rendered.warnings[:0] = warnings
-            return PreviewResult(rendered, image, label.tape_mm, dpi)
+            return PreviewResult(rendered, image, label.tape_mm, dpi, ids)
 
         return work
 
@@ -780,6 +828,12 @@ class Window(Adw.ApplicationWindow):
         self._render_source = GLib.timeout_add(120, self.render_preview)
 
     @property
+    def render_generation(self) -> int:
+        """The latest render asked for: a render shown with a greater one
+        was made after it."""
+        return self._render_generation
+
+    @property
     def preview_current(self) -> bool:
         """The preview (and `rendered`) shows the label as it is now."""
         return self.rendered is not None and self._shown_generation == self._render_generation
@@ -827,6 +881,7 @@ class Window(Adw.ApplicationWindow):
             self._render_failed(error)
             return False
         self.rendered, self.rendered_dpi = result.rendered, result.dpi
+        self.rendered_ids = result.ids
         self._render_error = None
         self.preview.show_image(
             result.image,
@@ -834,6 +889,7 @@ class Window(Adw.ApplicationWindow):
             result.tape_mm,
             self._status_text(self.rendered),
         )
+        self.editor.rendered(generation)
         return False
 
     def _status_text(self, rendered: Rendered) -> str:
@@ -873,6 +929,7 @@ class Window(Adw.ApplicationWindow):
         self.rendered = None
         message = _("The preview cannot be drawn")
         self.preview.clear(message)
+        self.editor.rendered(self._render_generation)
         details = error_details(error)
         if details != self._render_error:  # once, not on every keystroke
             self._render_error = details
@@ -985,6 +1042,7 @@ class Window(Adw.ApplicationWindow):
         self.data.update_forget_action()
         self.update_history_actions()
         self.lookup_action("shortcuts").set_enabled(shortcuts.available())
+        editor.install_actions(self, self.editor)
         shortcuts.install(self)
         template = Gio.SimpleAction.new("open-template", GLib.VariantType.new("s"))
         template.connect("activate", self.files.open_template)
@@ -1215,6 +1273,7 @@ class PreviewResult(NamedTuple):
     image: Image.Image
     tape_mm: float
     dpi: float
+    ids: tuple[int, ...] = ()  # its elements' identities (model.element_id)
 
 
 def _run(work: Callable[[], PreviewResult]) -> tuple:

@@ -101,6 +101,9 @@ class App(Adw.Application):
         css = Gtk.CssProvider()
         css.load_from_string(
             ".label-preview { border-radius: 0; box-shadow: 0 1px 4px alpha(black, 0.5); }"
+            # the rows of the elements selected in the preview (ui/editor.py)
+            " .selected-element > box > list > row.header"
+            " { box-shadow: inset 4px 0 @accent_bg_color; }"
         )
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION

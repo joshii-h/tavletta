@@ -36,6 +36,7 @@ def migrate(data: dict) -> dict:
 
 
 MAX_TRUSTED_DATA = 200  # label and data file pairs the user agreed to read
+MAX_GRID_MM = 50.0  # the coarsest snapping grid
 
 
 def _data_pair(label_file: Path, data_file: Path) -> list[str]:
@@ -73,6 +74,27 @@ class Settings:
 
     def set_units(self, value) -> None:
         self.data["units"] = value
+        self.save()
+
+    @property
+    def snap(self) -> bool:
+        """Whether a dragged element snaps to guides (on unless turned off)."""
+        return self.data.get("snap") is not False
+
+    def set_snap(self, value: bool) -> None:
+        self.data["snap"] = bool(value)
+        self.save()
+
+    @property
+    def grid_mm(self) -> float:
+        """The snapping grid's spacing in mm, 0: no grid."""
+        value = self.data.get("grid_mm")
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            return 0.0
+        return float(value) if 0 < value <= MAX_GRID_MM else 0.0
+
+    def set_grid_mm(self, value: float) -> None:
+        self.data["grid_mm"] = value
         self.save()
 
     def trusts_data(self, label_file: Path, data_file: Path) -> bool:

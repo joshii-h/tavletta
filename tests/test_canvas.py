@@ -1,5 +1,6 @@
 """The mouse editor's arithmetic of pixels (ui/canvas.py): the view, the
-handles, a box resized by one of them, a drag kept to one axis."""
+handles, a box resized by one of them, a drag kept to one axis; and the
+settings of snapping."""
 
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ gi = pytest.importorskip("gi")
 gi.require_version("Gtk", "4.0")
 
 from tavletta.ui import canvas  # noqa: E402
+from tavletta.ui.settings import Settings  # noqa: E402
 
 VIEW = canvas.View(20.0, 30.0, 10.0, 10.0)  # 10 px per mm, the label at 20, 30
 BOX = (2.0, 3.0, 12.0, 8.0)  # 100 x 50 px at 40, 60
@@ -84,3 +86,16 @@ def test_constrained():
     assert canvas.constrained(5, 2) == (5, 0)
     assert canvas.constrained(-1, 3) == (0, 3)
 
+
+def test_snapping_settings():
+    settings = Settings()
+    settings.save = lambda: None
+    assert settings.snap and settings.grid_mm == 0
+    settings.set_snap(False)
+    settings.set_grid_mm(2.5)
+    assert not settings.snap and settings.grid_mm == 2.5
+    for junk in ("1", True, -1, 0, 999, None):
+        settings.data["grid_mm"] = junk
+        assert settings.grid_mm == 0
+    settings.data["snap"] = "no"  # anything but false: on
+    assert settings.snap
