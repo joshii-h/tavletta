@@ -242,6 +242,14 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
 - Out of memory: the printer had no room for the labels of a job. Lower
   [[ui:Labels per job]], then print again from the row the message
   names.
+- "The job was sent, but its outcome is unknown": the connection to the
+  printer broke while it printed (or the printer could not tell how far it
+  got). Tavletta counts the labels it knows were printed; the printer may
+  have printed more. Check the labels that came out: printing again from
+  the row the message names may print some twice, but leaves none out.
+  With the printer's web interface reachable on the network (the
+  default), Tavletta reads its label counter and knows the number
+  exactly.
 - Labels with a ribbon print blank or smeared, the ribbon does not move:
   the printer is set to thermal direct. Choose
   [[ui:Thermal transfer (ribbon)]] under [[ui:Print method]].

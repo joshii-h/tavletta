@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 18:40+0100\n"
+"POT-Creation-Date: 2026-11-24 19:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -756,6 +756,7 @@ msgid ""
 "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
 "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
 "| 409 | `label_exists` | A label of that name exists: upload with replace=true. |\n"
+"| 409 | `label_in_use` | Jobs of the label wait or print: retry when they are done. |\n"
 "| 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |\n"
 "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
 "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
@@ -776,6 +777,7 @@ msgid ""
 "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
 "| 500 | `internal` | An error of the server; it is logged. |\n"
 "| 500 | `not_saved` | The labels folder could not be written (507: it is full). |\n"
+"| 500 | `not_deleted` | The label file could not be deleted (a read-only folder). |\n"
 "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
 "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
 msgstr ""
@@ -1156,7 +1158,7 @@ msgid ""
 "| 200 | Replaced (replace=true) |  |\n"
 "| 201 | Added |  |\n"
 "| 400 | Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to 100), in the folder itself | `invalid_field`, `not_json` |\n"
-"| 409 | A label of that name exists (send replace=true), or a print of it holds the file | `label_exists`, `label_locked` |\n"
+"| 409 | A label of that name exists (send replace=true), jobs of it wait or print (label_in_use), or another program's print holds the file | `label_exists`, `label_in_use`, `label_locked` |\n"
 "| 413 | Over `--max-body`, or a label too large to render | `too_large`, `label_too_large` |\n"
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
@@ -1194,7 +1196,7 @@ msgid ""
 "| 204 | Deleted |  |\n"
 "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
 "| 404 | No such label | `label_not_found` |\n"
-"| 409 | A print of it holds the file | `label_locked` |\n"
+"| 409 | Jobs of it wait or print (label_in_use), or another program's print holds the file | `label_in_use`, `label_locked` |\n"
 msgstr ""
 
 #. type: Fenced code block (sh)
@@ -1475,7 +1477,8 @@ msgid ""
 "| `host` | string | The printer's address. |\n"
 "| `owner` | string or null | Name of the token. |\n"
 "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-"| `printed` | integer | Labels printed so far. |\n"
+"| `printed` | integer | Labels printed so far, for certain; rises label by label while the job prints, as far as the printer tells. |\n"
+"| `printed_max` | integer or null | After a failure whose outcome the printer could not tell (the connection was lost while it printed): up to this many labels may have printed. The counter goes on after them; rows_printed counts the rows printed for certain, so printing again from the next one may print labels twice. null otherwise. |\n"
 "| `total` | integer | Labels to print: copies x rows. |\n"
 "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
 "| `cancel_requested` | boolean | DELETE was sent. |\n"
@@ -1673,6 +1676,7 @@ msgid ""
 "  \"owner\": \"inventory-tool\",\n"
 "  \"label\": \"asset-tag.tavletta\",\n"
 "  \"printed\": 20,\n"
+"  \"printed_max\": null,\n"
 "  \"total\": 20,\n"
 "  \"rows_printed\": 20,\n"
 "  \"cancel_requested\": false,\n"
@@ -2386,6 +2390,12 @@ msgstr ""
 #: docs/printer.md
 #, markdown-text
 msgid "Out of memory: the printer had no room for the labels of a job. Lower [[ui:Labels per job]], then print again from the row the message names."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+#, markdown-text
+msgid "\"The job was sent, but its outcome is unknown\": the connection to the printer broke while it printed (or the printer could not tell how far it got). Tavletta counts the labels it knows were printed; the printer may have printed more. Check the labels that came out: printing again from the row the message names may print some twice, but leaves none out.  With the printer's web interface reachable on the network (the default), Tavletta reads its label counter and knows the number exactly."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4004,7 +4014,13 @@ msgstr ""
 #. type: Bullet: '3. '
 #: docs/server-install.md
 #, markdown-text
-msgid "Add `\"--oidc\"` and `\"/config/oidc.toml\"` to `command:` in `compose.yaml` (native: to `ExecStart`, with `/etc/tavletta/...`), keep `--trusted-proxy`, and restart."
+msgid "Add `\"--oidc\"` and `\"/config/oidc.toml\"` to `command:` in `compose.yaml` (native: to `ExecStart`, with `/etc/tavletta/...`), keep `--trusted-proxy`, and restart. With `--trusted-proxy` the server needs `public_url` and does not start without it."
+msgstr ""
+
+#. type: Plain text
+#: docs/server-install.md
+#, markdown-text
+msgid "Signing in needs PyJWT, which the container image and the deb and rpm packages have; the Flatpak has not, and nothing can be installed into it: run the server from one of the others for `--oidc`."
 msgstr ""
 
 #. type: Plain text
@@ -4141,7 +4157,7 @@ msgid ""
 "|---|---|\n"
 "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
 "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
+"| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. On `/oidc/login`: 30 sign ins started from this address within a minute, counted apart from wrong tokens; behind a reverse proxy not given with `--trusted-proxy` everyone shares the proxy's address. |\n"
 "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
 "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
 "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
