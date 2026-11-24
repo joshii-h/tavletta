@@ -127,6 +127,8 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 # LICENSE, THIRD_PARTY_NOTICES.md, CREDITS.md and the data licences are
 # the package's license files (pyproject.toml), %%license through -l above
 %doc README.md
+# the example labels, as in the Debian package
+%doc docs/examples
 %{_bindir}/tavletta
 %{_mandir}/man1/tavletta.1*
 %{_datadir}/applications/%{app_id}.desktop
