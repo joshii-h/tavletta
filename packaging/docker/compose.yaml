@@ -43,6 +43,8 @@ services:
       - "/config/printers.toml"
       - "--tokens"
       - "/config/tokens.toml"
+      # only programs print, no one from a browser: no web page at /
+      # - "--no-web-ui"
       # behind a reverse proxy in a Docker network: its X-Forwarded-For
       # names the clients (the rate limit and the log use them). Give the
       # proxy's own address (a fixed one in the network, /32), never a whole

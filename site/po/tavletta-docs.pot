@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 13:42+0100\n"
+"POT-Creation-Date: 2026-11-24 14:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -755,6 +755,8 @@ msgid ""
 "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
 "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
 "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
+"| 409 | `label_exists` | A label of that name exists: upload with replace=true. |\n"
+"| 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |\n"
 "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
 "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
 "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
@@ -773,6 +775,7 @@ msgid ""
 "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
 "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
 "| 500 | `internal` | An error of the server; it is logged. |\n"
+"| 500 | `not_saved` | The labels folder could not be written (507: it is full). |\n"
 "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
 "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
 msgstr ""
@@ -846,10 +849,14 @@ msgid ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | The token's name, role and printers, and the limits of a request (for the web page) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Delete a label file (admin); its data file stays |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
@@ -922,6 +929,35 @@ msgstr ""
 msgid ""
 "curl -H \"Authorization: Bearer $TOKEN\" \\\n"
 "     \"$TAVLETTA/openapi.json\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid "`GET /api/v1/me` { #get-me }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "The token's name, role and printers, and the limits of a request (for the web page)."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 200 | Who |  |\n"
+msgstr ""
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     \"$TAVLETTA/me\"\n"
 msgstr ""
 
 #. type: Title ###
@@ -1080,6 +1116,150 @@ msgstr ""
 #. type: Title ###
 #: docs/api.md
 #, markdown-text, no-wrap
+msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/api.md
+#, markdown-text
+msgid "Role: `admin`"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Parameter | In | Meaning |\n"
+"|---|---|---|\n"
+"| `name` | path | The file's name, without folder; '`.tavletta`' may be left out. |\n"
+"| `replace` | query | Replace a label of that name. default `false` |\n"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "Body: The content of a `.tavletta` file."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 200 | Replaced (replace=true) |  |\n"
+"| 201 | Added |  |\n"
+"| 400 | Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to 100), in the folder itself | `invalid_field`, `not_json` |\n"
+"| 409 | A label of that name exists (send replace=true), or a print of it holds the file | `label_exists`, `label_locked` |\n"
+"| 413 | Over `--max-body`, or a label too large to render | `too_large`, `label_too_large` |\n"
+"| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | No space left in the labels folder | `not_saved` |\n"
+msgstr ""
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     -X PUT \\\n"
+"     -H 'Content-Type: application/json' \\\n"
+"     --data-binary @asset-tag.tavletta \\\n"
+"     \"$TAVLETTA/labels/asset-tag\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "Delete a label file (admin); its data file stays."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 204 | Deleted |  |\n"
+"| 400 | Not a name inside the labels folder | `invalid_field` |\n"
+"| 404 | No such label | `label_not_found` |\n"
+"| 409 | A print of it holds the file | `label_locked` |\n"
+msgstr ""
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     -X DELETE \\\n"
+"     \"$TAVLETTA/labels/asset-tag\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid "`POST /api/v1/data` { #post-data }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "Body fields:"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `content` | string | The file: CSV (any delimiter, UTF-8, UTF-16 or Windows-1252), ODS or XLSX, told apart by content. Pasted text is a CSV file. |\n"
+"| `name` | string | The file's name, for messages. |\n"
+"| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
+"| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 200 | The rows |  |\n"
+"| 400 | Invalid request | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Not a table, damaged or empty | `data_problem` |\n"
+msgstr ""
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     -H 'Content-Type: application/json' \\\n"
+"     -d '{\"name\": \"assets.csv\", \"content\": \"QXNzZXROdW1iZXIKMDAzMDAKMDAzMDEK\"}' \\\n"
+"     \"$TAVLETTA/data\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
 msgid "`POST /api/v1/preview` { #post-preview }"
 msgstr ""
 
@@ -1087,12 +1267,6 @@ msgstr ""
 #: docs/api.md
 #, markdown-text
 msgid "The label filled in, as an image; nothing is printed."
-msgstr ""
-
-#. type: Plain text
-#: docs/api.md
-#, markdown-text
-msgid "Body fields:"
 msgstr ""
 
 #. type: Plain text
@@ -1337,6 +1511,7 @@ msgid ""
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Printed on label sheets: at most 999 labels in one job. |\n"
 msgstr ""
 
 #. type: Title ###
@@ -1409,6 +1584,71 @@ msgid ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Where the elements are in the image; null for view=printer and a label turned onto its sheet. |\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid "Geometry { #geometry }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text
+msgid "The elements' boxes in the preview image, in mm from its top left corner (tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / 25.4."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Along the tape: the length. |\n"
+"| `height_mm` | number | Across: tape or label height. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | The image's resolution. |\n"
+"| `elements` | array of object |  |\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid "Me { #me }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | The printers the token may use; null: all. |\n"
+"| `token_required` | boolean | false: the server has no token (loopback only). |\n"
+"| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid "Data { #data }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, markdown-text, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: the delimiter found; null for one column and spreadsheets. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | The sheet read. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
 
 #. type: Plain text
@@ -2791,7 +3031,13 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server-install.md
 #, markdown-text
-msgid "One small service: a REST API (and MCP for AI assistants) on port 8790.  It renders the labels itself and sends them to the printers over the network; no desktop, no browser, no database."
+msgid "One small service: a REST API (and MCP for AI assistants) on port 8790.  It renders the labels itself and sends them to the printers over the network; no desktop, no database."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server-install.md
+#, markdown-text
+msgid "A web page at the same address for people: sign in with a token, see the printers, print a template or a series (from a CSV, XLSX or ODS file, a pasted list or number ranges such as 3000–5685), upload and delete templates with an admin token. `--no-web-ui` turns it off."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -3148,6 +3394,10 @@ msgstr ""
 msgid ""
 "  Each printer is listed with its state; `UNREACHABLE` with a message if\n"
 "  the server cannot reach it.\n"
+"- Open `http://127.0.0.1:8790/` in a browser on the server (others use\n"
+"  the proxy's address, see [Reverse proxy](#proxy)) and sign in with a\n"
+"  token: the web page shows what its role may do. The page keeps the\n"
+"  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
 
 #. type: Title ###
@@ -3751,6 +4001,12 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server-install.md
 #, markdown-text
+msgid "No one prints from a browser: `--no-web-ui` (the web page needs no token to load, but shows nothing without one)."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server-install.md
+#, markdown-text
 msgid "Updates: watch the releases and update within weeks; the image of each release brings Debian's security updates of its day (`docker compose pull`)."
 msgstr ""
 
@@ -3803,7 +4059,7 @@ msgstr ""
 #. type: Plain text
 #: docs/server.md
 #, markdown-text
-msgid "Other programs and AI assistants can print labels through Tavletta without opening the window: `tavletta serve` offers a web interface for programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
+msgid "Other programs, AI assistants and people in a browser can print labels through Tavletta without opening the window: `tavletta serve` offers a web page for people and a web interface for programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -3852,6 +4108,12 @@ msgstr ""
 #: docs/server.md
 #, markdown-text
 msgid "Printer address, safety margin and print settings are those set in the app."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4015,7 +4277,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "`preview` only lists and shows previews, `print` also prints and follows its own jobs, `admin` sees and cancels all jobs."
+msgid "`preview` only lists and shows previews, `print` also prints and follows its own jobs, `admin` sees and cancels all jobs and uploads and deletes templates."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4028,6 +4290,84 @@ msgstr ""
 #: docs/server.md
 #, markdown-text
 msgid "To take a token back, delete its entry in `tokens.toml`. The server notices it at once."
+msgstr ""
+
+#. type: Title ##
+#: docs/server.md
+#, markdown-text, no-wrap
+msgid "Web page { #web-page }"
+msgstr ""
+
+#. type: Plain text
+#: docs/server.md
+#, markdown-text
+msgid "The server's own page, at its address (`http://127.0.0.1:8790/`, or the address of the [reverse proxy](server-install.md#proxy)):"
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "**Sign in** with an access token (without a token on the server there is nothing to sign in to). The browser keeps it in this tab only; \"Sign out\" forgets it."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "**Printers**: their state, the labels or tape loaded and problems, in words."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "**Templates**: the label files of the labels folder with a preview.  \"Print\" fills in the fields of one label and shows the preview as it is typed; the elements a field fills are outlined in it. With an `admin` token, templates are uploaded (`.tavletta` files) and deleted here."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "**Series**, step by step:"
+msgstr ""
+
+#. type: Bullet: '  1. '
+#: docs/server.md
+#, markdown-text
+msgid "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data at all. Leading zeros stay (`00300`)."
+msgstr ""
+
+#. type: Bullet: '  2. '
+#: docs/server.md
+#, markdown-text
+msgid "Assign: which column fills which field of the template (the same names are assigned already)."
+msgstr ""
+
+#. type: Bullet: '  3. '
+#: docs/server.md
+#, markdown-text
+msgid "Choose: all rows, some rows (`1-20, 25, 30-`), or by ranges of a field. Without data, ranges make the values: Inventory number from `3000` to `5685` is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every second or tenth number; `3000-5685` can be typed or pasted at once."
+msgstr ""
+
+#. type: Bullet: '  4. '
+#: docs/server.md
+#, markdown-text
+msgid "Check: the number of labels, the first and the last one, the limits of the server and the printer."
+msgstr ""
+
+#. type: Bullet: '  5. '
+#: docs/server.md
+#, markdown-text
+msgid "Print: from 100 labels on, the page asks first. The progress shows how many are printed; Cancel stops after the current label. After a cancel or a printer problem, \"Continue from …\" prints the rest."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "The page speaks the language of the browser, or the one chosen at the top."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+#, markdown-text
+msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
 
 #. type: Title ##

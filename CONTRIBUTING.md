@@ -525,7 +525,13 @@ Thai (`th`), Vietnamese (`vi`), Indonesian (`id`), Malay (`ms`), Korean
       --package-name=tavletta -o po/tavletta.pot tavletta/*.py tavletta/ui/*.py \
       tavletta/backends/*.py tavletta/merge/*.py tavletta/sheets/*.py \
       tavletta/shipping/*.py tavletta/symbols/*.py tavletta/server/*.py
+  xgettext --language=JavaScript --keyword=t --add-comments=translators: --from-code=UTF-8 \
+      --package-name=tavletta -j -o po/tavletta.pot tavletta/server/web/*.js
   ```
+
+  The second command adds the texts of the print server's web page:
+  `t("…")` with a plain string (named values in braces, `{count}`), which
+  the server also finds to translate them.
 
   then add the translations to `tools/strings_<lang>.py` and run
   `python3 tools/fill_po.py` (all languages, or name some: `de fr`).

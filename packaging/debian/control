@@ -84,8 +84,9 @@ Description: print server of the Tavletta label designer, as a system service
  DYMO, NIIMBOT and printers with ZPL, EPL2, TSPL or ESC/POS) and office
  printers.
  .
- This package runs its print server, with a REST API and MCP, as the
- system service tavletta-server: as the user tavletta (made by the
- package), sandboxed, on 127.0.0.1:8790, with its printers and access
- tokens in /etc/tavletta and the labels in /var/lib/tavletta/labels. It is
- installed but neither enabled nor started.
+ This package runs its print server, with a REST API, MCP and a web
+ page, as the system service tavletta-server: as the user tavletta (made
+ by the package), sandboxed, on 127.0.0.1:8790, with its printers and
+ access tokens in /etc/tavletta and the labels in
+ /var/lib/tavletta/labels. It is installed but neither enabled nor
+ started.

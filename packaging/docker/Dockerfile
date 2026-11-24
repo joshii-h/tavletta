@@ -1,4 +1,4 @@
-# Tavletta print server: REST API and MCP, no window (docs/server.md).
+# Tavletta print server: REST API, MCP and a web page, no window (docs/server.md).
 #
 #   docker build -f packaging/docker/Dockerfile -t tavletta-server .
 #   docker run -e TAVLETTA_TOKEN=... -v ./labels:/labels -p 127.0.0.1:8790:8790 tavletta-server

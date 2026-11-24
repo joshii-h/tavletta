@@ -1,4 +1,4 @@
-# Print server: REST API and MCP
+# Print server: REST API, MCP and web page
 
 `tavletta serve` prints labels without a window, for other programs and
 for AI clients. It renders with Pango and Cairo like the command line and
@@ -19,9 +19,10 @@ state, render a preview, and print with values, data rows and copies,
 with each named printer's settings (print method, print upside down,
 quality …) from `printers.toml`. Jobs
 are queued, one per printer at a time, and can be canceled between two
-labels; counters are saved as on the command line. `--mcp` serves the same
-as MCP tools at `/mcp`; `tavletta mcp` speaks MCP on standard input and
-output for Claude Desktop and Claude Code:
+labels; counters are saved as on the command line. A web page at `/`
+does the same for people in a browser ([Web page](#web-page)). `--mcp`
+serves the same as MCP tools at `/mcp`; `tavletta mcp` speaks MCP on
+standard input and output for Claude Desktop and Claude Code:
 
 ```sh
 tavletta serve --labels-dir ~/Labels --token-file ~/.config/tavletta/token --mcp
@@ -54,6 +55,7 @@ tavletta serve [--host 127.0.0.1] [--port 8790] [--labels-dir DIR] [--mcp]
                [--printers printers.toml | --allow-printer ADDR] [--discover]
                [--tokens tokens.toml | --token-file FILE] [--allow-origin URL]
                [--max-body MB] [--max-labels N] [--trusted-proxy CIDR]
+               [--no-web-ui]
 tavletta mcp [--labels-dir DIR] [--printers printers.toml | --allow-printer ADDR]
              [--discover] [--max-labels N]
 tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
@@ -71,9 +73,10 @@ tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
 | `--token-file` | one access token for everything (role admin); else the variable `TAVLETTA_TOKEN`; at least 16 characters |
 | `--labels-dir` | the only folder label and data files are read from; `~/.local/share/tavletta/labels` by default (made if missing) |
 | `--mcp` | MCP (Streamable HTTP) at `/mcp` as well |
+| `--no-web-ui` | no web page at `/` (and `/ui/`): those paths answer 404, as before there was one; for servers that only serve programs |
 | `--allow-origin` | web origin whose pages may call the server (`https://app.example`): CORS preflights are answered and the answers carry `Access-Control-Allow-Origin`; repeatable |
 | `--allow-printer` | without a printer list: only these printers, compared with the host of the address (never the whole address). A pattern of only digits, dots and `*` is an address pattern: four IPv4 parts, `*` standing for whole parts (`192.168.1.*`, `10.*`, `*.5`, `*.*`); a network as Python's ipaddress reads it (`192.168.1.0/24`, `2001:db8::/32`) is one too. Address patterns match IP addresses only, a host name if every address it resolves to matches one of them (so `192.168.1.evil.example` is not in `192.168.1.*`, and `*.*` matches `printer.local` only by the addresses it resolves to, not by its name). Any other pattern is a name pattern (`*.local`, `cups.example.com`) and matches host names. The server then prints on the first address the resolver gives (only that one; there is no trying the others), not on the name (a name looked up again could point elsewhere; an `ipps` printer must then accept its IP address). `*` alone allows everything without a lookup. A pattern that can never match is refused at startup: a network that is none (`10.0.0.0/33`), an address pattern with a part over 255 or a leading zero (`010.1.1.1`), a `*` within a part (`10*`), more than four parts, or fewer than four without a `*` (`1.2.3`, `10`); repeatable |
-| `--max-body` | largest request body in MB, 4 by default (parsed JSON takes many times its size) |
+| `--max-body` | largest request body in MB, 4 by default (parsed JSON takes many times its size); also the largest label file to upload and data file to read (base64: three quarters of it) |
 | `--max-labels` | most labels in one print job, copies times rows; 10 000 by default, on label sheets at most 999 (413 `too_many_labels`) |
 | `--trusted-proxy` | a reverse proxy, best its own address (`172.30.0.10/32`), whose `X-Forwarded-For` names the client: the rate limit, the 8 requests per client and the log use that address (all header lines together, ports taken off; anything that is no address stops the search at the proxy), the proxy itself is not held to 8 connections. `0.0.0.0/0` or `::/0` (everyone) is warned about. With a proxy, publish the server's port nowhere else; repeatable |
 
@@ -239,14 +242,18 @@ reference page `site/docs/api.md` are written from it by
 
 | Request | Answer |
 |---|---|
-| `GET /health` | `{"status": "ok", "version": …}`; the only request without a token |
+| `GET /health` | `{"status": "ok", "version": …}`; the only request without a token (besides the files of the web page) |
 | `GET /openapi.json` | the OpenAPI description |
+| `GET /me` | the token's `name`, `role` and `printers`, whether the server needs a token, and the `limits` of a request (labels in one job, on sheets, copies, data rows, columns, cells, body bytes) |
 | `GET /printers?status=false` | with `printers.toml`: its printers the token may use, with `name`, `printer` (model), `host`, `description`, `location`, `media`, `default`, `max_copies` and `status` |
 | `GET /printers?discover=false` | without it: printer models: id, name, kind (`tape`, `labels`, `pages`), resolution, tape widths or label sizes, the address set in the app (`configured_host`) and, with `--discover`, the printers found on the network (`found`; remembered for 30 s) |
-| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, print width, print method and media type set on the printer, cassette; from the server's settings for the printer: `job_print_method` and `job_media_type`, what the server's jobs print with and how they find the labels, which the printer's `method` and `media` settings may choose for each job, else as set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
+| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, the size of the labels loaded (`label_mm`, if the printer tells it), print width, print method and media type set on the printer, cassette; from the server's settings for the printer: `job_print_method` and `job_media_type`, what the server's jobs print with and how they find the labels, which the printer's `method` and `media` settings may choose for each job, else as set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
 | `GET /labels` | label files in the labels folder and below: `name`, `bytes`, `modified` |
-| `GET /labels/{name}` | elements with their names (what `set` fills in), `variables`, `builtin_variables`, `columns` of the placeholders, `data_file` (if usable), size, counter, features |
-| `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings and the PNG in base64; `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |
+| `GET /labels/{name}` | elements with their names (what `set` fills in), `variables`, `builtin_variables`, `columns` of the placeholders, `data_file` (if usable), size, counter, features, `on_sheet` (printed on label sheets: at most 999 labels in one job) |
+| `PUT /labels/{name}` | admin: upload a label file (the body is the `.tavletta` file, `Content-Type: application/json`); 201, or 200 with `?replace=true` for an existing one; 409 `label_exists`. See [Uploading labels](#uploading-labels) |
+| `DELETE /labels/{name}` | admin: delete a label file (its data file stays); 204 |
+| `POST /data` | read a data file sent along (`{"content": base64, "name", "sheet", "header"}`): `kind` (`csv`, `ods`, `xlsx`), `delimiter`, `sheets`, `sheet`, `columns`, `rows`, every cell as the text it shows (leading zeros and number formats kept). Nothing is kept on the server; the web page sends the rows it chose as `data_rows` |
+| `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings, the PNG in base64 and `geometry`: where the elements are (boxes in mm, `tavletta/editing.py`) and the image's resolution (`null` for `"view": "printer"`); `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |
 | `POST /print` | 202 and the job (`Location: /api/v1/jobs/{id}`); 200 if it finished within `wait` seconds |
 | `GET /jobs/{id}` | `state` (`queued`, `waiting` for the label file, `printing`, `done`, `failed`, `canceled`), `printed` of `total` labels, `rows_printed`, `printer_name`, `owner`, `error` (code, message), `remark`, `warnings`, times |
 | `DELETE /jobs/{id}` | cancel: a waiting job at once, a printing one after the label being printed. 409 if it has finished |
@@ -366,6 +373,109 @@ restored backup cannot hand out a number twice.
   be stopped.
 - `SIGTERM` (systemd, `docker stop`): waiting jobs are canceled, a printing
   one stops after its label and saves its counter.
+
+## Web page
+
+`tavletta serve` also serves a web page at `/` for people who print from a
+browser: no app to install, the same server, tokens and printers. It is
+plain HTML, CSS and JavaScript (`tavletta/server/web/`, about 110 KB, no
+framework, no build step) and is part of the Python package, so every
+installation has it (pip, the container image, the Debian and Fedora
+packages, Flatpak). `--no-web-ui` turns it off.
+
+- **Signing in**: with an access token. The page keeps it in the tab's
+  `sessionStorage` only (gone with the tab; never in `localStorage`, a
+  cookie or the address) and sends it as `Authorization: Bearer` with
+  every request. "Sign out" forgets it and everything shown or entered.
+  A 401 (token expired or revoked) asks for a token again and keeps what
+  was entered. Without a token on the server (loopback only) the page
+  needs no sign in.
+- **Roles**: the page asks `GET /me` and leaves out what the role may not
+  do: a `preview` token sees templates, printers and previews, the print
+  buttons say why they cannot be used; `print` prints; `admin` also
+  uploads and deletes templates. The server checks every request anyway.
+- **Printers**: their state (text and symbol, never colour alone), the
+  labels or tape loaded, problems; a printer that cannot be reached
+  cannot be chosen for printing.
+- **Templates**: the labels folder with a preview, size and fields of
+  each. Print one: the fields filled in (data columns, variables, named
+  elements), a preview that follows the input; the elements a field
+  fills are outlined in the preview, and pointing at an element names
+  it (the boxes come with the preview, `geometry`).
+- **Series**: values from a CSV, XLSX or ODS file (`POST /data` reads it
+  as the app does: cells as shown, `00300` stays `00300`) or a pasted
+  list, their columns assigned to the template's fields, and all rows,
+  some rows (`1-20, 25, 30-`, or checkboxes) or the rows whose values lie
+  in ranges of a field. Without data, ranges make the values: an
+  inventory number from 3000 to 5685 is 2686 labels; leading zeros keep
+  the width (`00300`–`00450`), text around the number stays
+  (`INV-0001`–`INV-0250`), a step is optional, and `3000-5685` typed
+  into "From" is split. Several fields are combined row by row, never
+  every combination. The count updates as one types; the first and last
+  label are shown before printing, and the limits (`--max-labels`, the
+  printer's `max_copies`, 999 on label sheets, `--max-body` for the rows
+  sent) before the request is sent. From 100 labels on, a dialog with
+  the number, template and printer asks first. The job shows its
+  progress and can be canceled (labels printed stay printed); after a
+  cancel or a failure it continues with the first row not printed in
+  full.
+- **Languages**: the texts come from the app's catalogs
+  (`/ui/messages.json?lang=de`, by default in the language of the
+  browser); numbers in Swiss German as `2'686`. The scripts' texts are
+  `t("…")` calls, which `xgettext --language=JavaScript --keyword=t`
+  extracts (see CONTRIBUTING.md).
+- **Accessibility**: one `<h1>` per view, focused after each change of
+  view, landmarks, a skip link, visible labels and hints, errors under
+  the field and in a summary at the top that links to them, live regions
+  for counts and progress (not for every label), `<dialog>` for
+  confirmations, everything by keyboard, focus visible, light and dark
+  from the system, forced colours, reduced motion, from 320 px wide.
+
+### Uploading labels
+
+`PUT /api/v1/labels/{name}` (role `admin`) takes a `.tavletta` file as it
+is, `Content-Type: application/json`. It is checked as the app opens a
+file (`Label.load()` of exactly these bytes, written to a hidden file in
+the labels folder that is never listed), held to the limits of a label
+sent with a request (200 elements, 50 images and codes; document pages
+only with `--allow-pdf-pages`) and of `--max-body`, then put in place in
+one step (a hard link, so a name taken meanwhile is not overwritten; a
+file system without hard links: the name is taken first). The name is
+one file in the folder itself: letters of any script, digits, spaces and
+`. _ - ( ) + ,`, up to 100 characters, not starting with a dot or a
+space; anything else (`..`, `/`, `\`, NUL) is 400. An existing label is
+replaced only with `?replace=true`, and only if it is a file (not a
+folder or link). `DELETE /api/v1/labels/{name}` removes a label file of
+the folder (links leading out of it are not found). Neither happens
+while a job of this server prints that label (409 `label_locked` after
+5 s): the job holds its counter. Both are logged with the token's name.
+
+The upload and `/data` are not MCP tools: an AI client fills in and
+prints the labels it is given; changing the labels everyone prints with
+is for an administrator, by the web page or the REST API with an admin
+token, not for a model that can be talked into it by the text it reads.
+A client of MCP sends rows as `data_rows` itself.
+
+### Security of the page
+
+- The page and its files (`/`, `/ui/…`) are answered without a token:
+  they are the program, the same for everyone. Only these files, by
+  name; nothing else of the package or the disk.
+- `Content-Security-Policy: default-src 'none'; script-src 'self';
+  style-src 'self'; img-src 'self' data: blob:; connect-src 'self';
+  frame-ancestors 'none'; base-uri 'none'; form-action 'none'`: no inline
+  script or style, no `eval`, no frames, requests to this server only.
+  Also `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`,
+  `Cross-Origin-Opener-Policy` and `-Resource-Policy: same-origin`,
+  `X-Content-Type-Options: nosniff`.
+- What the page shows from files and labels (CSV cells, names, messages)
+  is set as text (`textContent`), never as markup.
+- The page sends `X-Tavletta-Request` and JSON with every request: the
+  checks of the API against other web pages ([Security](#security))
+  apply to it unchanged.
+- The files are sent with an `ETag` and `Cache-Control: no-cache`: a
+  browser asks again and gets 304 while they are unchanged, and the new
+  files right after an update.
 
 ## MCP
 
