@@ -517,3 +517,23 @@ def test_the_screenshots_come_from_the_github_mirror_at_this_release():
     for url in images:
         assert url.startswith(prefix), url
         assert (ROOT / url.removeprefix(prefix)).is_file(), url
+
+
+def test_the_manual_page_names_every_command_and_printer():
+    """data/tavletta.1, installed by the Debian and RPM packages: the
+    version, every command and the printer models as the program has them."""
+    from tavletta import __version__
+    from tavletta.backends import backends
+    from tavletta.cli import parser
+
+    page = (ROOT / "data" / "tavletta.1").read_text(encoding="utf-8")
+    minor = ".".join(__version__.split(".")[:2])
+    assert re.search(
+        rf'^\.TH TAVLETTA 1 \d{{4}}-\d\d-\d\d "Tavletta {re.escape(minor)}" ', page, re.M
+    )
+    commands = next(a for a in parser()._actions if a.dest == "command").choices
+    for name in commands:
+        roff = re.escape(name.replace("-", "\\-"))  # list-printers: list\-printers
+        assert re.search(rf"^\.B tavletta {roff}\b", page, re.M), name
+    ids = ", ".join(b.id for b in backends())
+    assert ids in " ".join(page.split()), ids

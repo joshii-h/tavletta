@@ -78,6 +78,7 @@ grep -q '"labelprinter"' pyproject.toml
 %pyproject_install
 %pyproject_save_files -l tavletta
 %find_lang %{name}
+install -Dpm 0644 data/tavletta.1 %{buildroot}%{_mandir}/man1/tavletta.1
 
 
 %check
@@ -96,6 +97,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 %doc README.md CREDITS.md
 %license THIRD_PARTY_NOTICES.md
 %{_bindir}/tavletta
+%{_mandir}/man1/tavletta.1*
 %{_datadir}/applications/%{app_id}.desktop
 %{_metainfodir}/%{app_id}.metainfo.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{app_id}.svg
