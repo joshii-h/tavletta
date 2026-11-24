@@ -1,17 +1,26 @@
 # Copies a Forgejo release to GitHub (GitHub is a push mirror of
 # https://git.joshuahirsig.xyz/joshii/tavletta).
 #
-# Runs when a tag v* arrives through the mirror: waits for the Forgejo
-# release, creates the same release here with the built-in,
-# repository-scoped GITHUB_TOKEN (no long-lived token is involved) and
-# copies its files as they arrive, until each workflow that attaches files
-# there has attached its checksum file, which it uploads last:
-# SHA256SUMS (release.yml), SHA256SUMS-deb (deb.yml), SHA256SUMS-rpm
+# Runs when a tag v* arrives through the mirror: creates the GitHub release
+# right away with the built-in, repository-scoped GITHUB_TOKEN (no
+# long-lived token is involved), before Forgejo has any file, so
+# flatpak-bundle.yml can attach its bundle; then copies the Forgejo
+# release's notes and files as they arrive, until each workflow that
+# attaches files there has attached its checksum file, which it uploads
+# last: SHA256SUMS (release.yml), SHA256SUMS-deb (deb.yml), SHA256SUMS-rpm
 # (rpm.yml). A file Forgejo has with other content than here (a rebuild) is
 # replaced, one that disappears while it is copied (replaced again) is taken
-# again in the next pass, and the release notes follow Forgejo's, to which
-# the workflows add their downloads. After WAIT_MINUTES without all the
-# checksum files it fails, naming what is missing.
+# again in the next pass, and the release notes and title follow Forgejo's,
+# to which the workflows add their downloads. After WAIT_MINUTES without all
+# the checksum files it fails, naming what is missing; the release and the
+# files copied so far stay.
+#
+# Polling: CrowdSec on the Forgejo host bans an address that asks for
+# non-static pages often (scenario crowdsecurity/http-crawl-non_statics),
+# API requests and file downloads alike, and then answers 403. The mirror of
+# v1.2.0, which asked once a minute, got nothing but 403. So one request for
+# the release per pass, a pass every POLL_SECONDS (longer after a 403, up to
+# 15 minutes), and each file downloaded once.
 #
 # Manual run (Actions -> Mirror release from Forgejo -> Run workflow) with a
 # tag: copies that release again, once, without waiting; for files attached
@@ -47,6 +56,8 @@ jobs:
       COMPLETE: SHA256SUMS SHA256SUMS-deb SHA256SUMS-rpm
       # the package builds take up to an hour; a manual run does not wait
       WAIT_MINUTES: ${{ github.event_name == 'push' && '100' || '0' }}
+      # between two passes (each one request for the Forgejo release)
+      POLL_SECONDS: "180"
     steps:
       - name: Copy the release
         run: |
@@ -57,14 +68,25 @@ jobs:
           mkdir assets
           touch copied  # the Forgejo asset ids copied (a rebuilt file gets a new one)
 
-          create() {  # the GitHub release, once, from the Forgejo release
+          create() {  # the GitHub release, right away: its notes and files follow from Forgejo
             gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 && return
-            jq -r '.body // ""' <<<"$release" > notes.md
-            local title pre=()
-            title="$(jq -r --arg tag "$TAG" '.name // "" | if . == "" then $tag else . end' <<<"$release")"
-            [ "$(jq -r '.prerelease' <<<"$release")" = true ] && pre=(--prerelease)
+            local pre=()
+            case "$TAG" in *-*) pre=(--prerelease) ;; esac
+            printf 'Tavletta %s\n\nThe release notes and files follow from %s.\n' \
+              "${TAG#v}" "https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/$TAG" > notes.md
             gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
-              --title "$title" --notes-file notes.md --verify-tag "${pre[@]}"
+              --title "Tavletta ${TAG#v}" --notes-file notes.md --verify-tag "${pre[@]}"
+          }
+
+          fetch() {  # the Forgejo release into $release, one request; $state: ok, none, refused, ...
+            local code
+            code="$(curl -sS -o forgejo.json -w '%{http_code}' "$FORGEJO_API/releases/tags/$TAG")" || code=000
+            case "$code" in
+              200) release="$(cat forgejo.json)"; state=ok ;;
+              404) state=none ;;
+              403|429) state=refused ;;
+              *) state="HTTP $code" ;;
+            esac
           }
 
           copy() {  # the files of the Forgejo release not copied yet
@@ -110,11 +132,14 @@ jobs:
             done 3< <(jq -r '.assets[] | [.id, .name, .browser_download_url] | @tsv' <<<"$release")
           }
 
-          notes() {  # the release notes as on Forgejo, where workflows add their lines
+          notes() {  # the release notes and title as on Forgejo, where workflows add their lines
+            local title
             jq -r '.body // ""' <<<"$release" > notes.md
+            title="$(jq -r --arg tag "$TAG" '.name // "" | if . == "" then $tag else . end' <<<"$release")"
             if [ "$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)" != \
-                 "$(cat notes.md)" ]; then
-              gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md > /dev/null
+                 "$(cat notes.md)" ] ||
+               [ "$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json name -q .name)" != "$title" ]; then
+              gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --title "$title" --notes-file notes.md > /dev/null
               echo "release notes updated"
             fi
           }
@@ -126,28 +151,46 @@ jobs:
             done
           }
 
-          # once a minute: frequent polling looks like a crawler to the server's CrowdSec
-          retries=0
-          for ((minute = 0; ; minute++)); do
+          give_up() {  # why the copy is not complete; the GitHub release stays as it is
+            local again="run this workflow again (Run workflow, tag $TAG)"
+            if [ "$state" = refused ]; then
+              echo "::error::git.joshuahirsig.xyz refused the requests (403): CrowdSec on the" \
+                "Forgejo host has probably banned this runner's address as a crawler. Once" \
+                "the ban is over (or lifted), $again."
+            elif [ -z "$release" ]; then
+              echo "::error::no Forgejo release for $TAG ($state): did release.yml fail? Once it is there, $again."
+            elif [ -z "$(missing)" ]; then
+              echo "::error::files of the Forgejo release not downloaded (see above): $again."
+            else
+              echo "::error::not on the Forgejo release yet: $(missing | xargs) (did deb.yml or" \
+                "rpm.yml fail?). The GitHub release has the files copied so far; once they are" \
+                "there, $again."
+            fi
+            exit 1
+          }
+
+          create
+          release="" state="" retries=0 wait="$POLL_SECONDS" start="$SECONDS"
+          while :; do
             failed=0
-            if release="$(curl -sS --fail "$FORGEJO_API/releases/tags/$TAG")"; then
-              create
+            fetch
+            if [ "$state" = ok ]; then
               copy
               notes
               [ -z "$(missing)" ] && [ "$failed" = 0 ] && break
+              wait="$POLL_SECONDS"
+            elif [ "$state" = refused ]; then
+              echo "::warning::git.joshuahirsig.xyz answers 403 (a CrowdSec ban?): asking less often"
+              wait=$((wait * 2 > 900 ? 900 : wait * 2))
+            else
+              echo "Forgejo release: $state"
             fi
-            # a download that failed: again soon, a few times, also in a manual run
-            if [ "$failed" = 1 ] && [ "$retries" -lt 5 ]; then
-              retries=$((retries + 1)); sleep 30; continue
+            # a download that failed (a file replaced meanwhile): again, also in a manual run
+            if [ "$failed" = 1 ] && [ "$retries" -lt 2 ]; then
+              retries=$((retries + 1))
+            elif [ $((SECONDS - start + wait)) -gt $((WAIT_MINUTES * 60)) ]; then
+              give_up
             fi
-            if [ "$minute" -ge "$WAIT_MINUTES" ]; then
-              if [ -z "${release:-}" ]; then
-                echo "::error::no Forgejo release for $TAG"; exit 1
-              fi
-              echo "::error::not on the Forgejo release yet: $(missing | xargs)." \
-                "Once there, run this workflow again (Run workflow, tag $TAG)."
-              exit 1
-            fi
-            sleep 60
+            sleep "$wait"
           done
           echo "https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG"
