@@ -43,6 +43,7 @@ German) is at <https://tavletta.joshuahirsig.xyz>, its sources are in
 | File | Content |
 |---|---|
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | development setup, checks, adding a printer, translations |
+| [editing.md](editing.md) | the editing core: element geometry, hit testing, snapping, edits and their undo |
 | [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | code of conduct |
 | [SECURITY.md](../SECURITY.md) | reporting a vulnerability |
 | [ACCESSIBILITY.md](../ACCESSIBILITY.md) | accessibility statement |
