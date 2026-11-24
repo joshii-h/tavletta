@@ -68,7 +68,8 @@ so; an answer in that time is used); what it brings later still sets the
 resolution the label is drawn at.
 `--no-query` skips the question. A label set up for a label sheet prints on it as in the
 window: each copy (with `--data`, each copy of each row) at the next of
-the chosen positions.
+the chosen positions; at most 999 labels in one job (more: exit 2,
+nothing printed).
 `--data` prints serial labels: one for each row of a CSV, ODS or XLSX file
 (by default the label's own data file, if it lies beside it), `--sheet`
 and `--rows 3-10` choose which; the counter goes on from row to row.
@@ -84,7 +85,8 @@ The label file is locked while printing, so two prints of one file never
 share a number; the window reads the saved counter again before printing
 and saving. The counter is saved also after a printer error, Ctrl+C,
 SIGTERM or SIGHUP. Exit codes: 0 printed, 1 printer problem, 2 wrong
-arguments, 3 file problem (also still locked after 60 s) or output not
+arguments (also `--rows "3 4"` without a dash, more than 999 labels on
+sheets), 3 file problem (also still locked after 60 s) or output not
 written, 4 label cannot be printed (empty, unknown or unclosed variable,
 date out of range, unknown column, a code a row cannot make), 5 the counter cannot be saved (checked before
 printing; or printed, but saving failed), 130 interrupted.
