@@ -1,7 +1,7 @@
 %global app_id xyz.joshuahirsig.Tavletta
 
 Name:           tavletta
-Version:        1.1.0
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Design and print labels on label printers
 
@@ -11,7 +11,8 @@ Summary:        Design and print labels on label printers
 # Apache-2.0: the symbols from Material Design Icons (tavletta/symbols/mdi.json.gz)
 License:        AGPL-3.0-or-later AND MIT AND Apache-2.0
 URL:            https://git.joshuahirsig.xyz/joshii/tavletta
-Source:         %{url}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+# a pre-release v1.2.0-rc.1 is Version 1.2.0~rc.1 (sorts before 1.2.0)
+Source:         %{url}/archive/v%{version_no_tilde}.tar.gz#/%{name}-%{version_no_tilde}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python3-devel
@@ -104,5 +105,5 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 
 
 %changelog
-* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 1.1.0-1
+* Mon Nov 23 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 1.1.2-1
 - Initial package

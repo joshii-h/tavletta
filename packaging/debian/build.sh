@@ -8,8 +8,9 @@
 # --tarball: the upstream source as `git archive --prefix=tavletta-X.Y.Z/`
 # writes it (or Forgejo's tag archive); by default it is made from the
 # checkout's HEAD with git archive, so an untagged commit builds too. The
-# version comes from tavletta/__init__.py; a version newer than
-# debian/changelog's gets an automatic changelog entry (and a warning).
+# version comes from tavletta/__init__.py and must be debian/changelog's
+# (a pre-release 1.2.0-rc.1 there is 1.2.0~rc.1 here, which sorts before
+# 1.2.0); tests/test_packaging.py checks that too.
 #
 # Installs what the builds need with apt (Build-Depends via mk-build-deps),
 # builds source and binary packages with dpkg-buildpackage, runs lintian
@@ -43,7 +44,6 @@ SRC="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 export DEBIAN_FRONTEND=noninteractive
-export DEBEMAIL="Joshua Hirsig <joshuahirsig@gmail.com>"
 
 grep -q "$LABELPRINTER_COMMIT" "$SRC/pyproject.toml" || {
   echo "error: pyproject.toml pins another labelprinter commit; update LABELPRINTER_* in $0" >&2
@@ -107,9 +107,16 @@ build "$WORK/labelprinter/src"
 
 VERSION="$(sed -n 's/^__version__ = "\([^"]*\)"$/\1/p' "$SRC/tavletta/__init__.py")"
 [ -n "$VERSION" ] || { echo "error: no __version__ in tavletta/__init__.py" >&2; exit 1; }
+UPSTREAM="${VERSION/-/\~}"  # the Debian upstream version: 1.2.0-rc.1 -> 1.2.0~rc.1
+packaged="$(dpkg-parsechangelog -l "$SRC/packaging/debian/changelog" -S Version)"
+if [ "$packaged" != "$UPSTREAM-1" ]; then
+  echo "error: packaging/debian/changelog is at $packaged, tavletta/__init__.py at $VERSION" >&2
+  echo "(add a changelog entry for $UPSTREAM-1)" >&2
+  exit 1
+fi
 echo "== tavletta $VERSION"
 mkdir -p "$WORK/tavletta/src"
-orig="$WORK/tavletta/tavletta_$VERSION.orig.tar.gz"
+orig="$WORK/tavletta/tavletta_$UPSTREAM.orig.tar.gz"
 if [ -n "$TARBALL" ]; then
   cp "$TARBALL" "$orig"
 else
@@ -123,15 +130,6 @@ grep -q "^__version__ = \"$VERSION\"$" "$WORK/tavletta/src/tavletta/__init__.py"
 cp -r "$SRC/packaging/debian" "$WORK/tavletta/src/debian"
 # build.sh and smoke-test.sh are tools of the repository, not the package's
 rm -f "$WORK/tavletta/src/debian/build.sh" "$WORK/tavletta/src/debian/smoke-test.sh"
-(
-  cd "$WORK/tavletta/src"
-  packaged="$(dpkg-parsechangelog -S Version)"
-  if [ "${packaged%-*}" != "$VERSION" ]; then
-    echo "warning: debian/changelog is at $packaged; adding an entry for $VERSION-1" >&2
-    dch --newversion "$VERSION-1" --distribution unstable --force-distribution \
-      "New upstream release $VERSION."
-  fi
-)
 build "$WORK/tavletta/src"
 
 echo "== built"

@@ -37,10 +37,12 @@ dnf_install() { "${SUDO[@]}" dnf install -y -q --setopt=install_weak_deps=False 
 # (glibc-langpack-en: rpmlint runs in en_US.UTF-8)
 dnf_install rpm-build rpmdevtools rpmlint python3-rpm-macros pyproject-rpm-macros git-core glibc-langpack-en
 
-# Tavletta's version: the spec must be at the version of the source
+# Tavletta's version: the spec must be at the version of the source (a
+# pre-release 1.2.0-rc.1 is Version 1.2.0~rc.1 there, as Fedora's
+# guidelines ask); tests/test_packaging.py checks that too
 version="$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' "$ROOT/tavletta/__init__.py")"
 spec_version="$(rpmspec -q --srpm --qf '%{version}' "$HERE/tavletta.spec")"
-if [ "$version" != "$spec_version" ]; then
+if [ "${version/-/\~}" != "$spec_version" ]; then
     echo "error: tavletta.spec has Version $spec_version, tavletta/__init__.py $version" >&2
     echo "(bump the spec's Version and add a %changelog entry)" >&2
     exit 1

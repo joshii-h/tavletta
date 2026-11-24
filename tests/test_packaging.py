@@ -402,3 +402,27 @@ def test_pngs_carry_no_dates():
             at += 12 + size
     screenshots = (ROOT / "tools" / "screenshots.sh").read_text(encoding="utf-8")
     assert "png:exclude-chunks=date,time" in screenshots
+
+
+def _upstream_version() -> str:
+    """__version__ as the Debian and RPM packages write it: a pre-release
+    1.2.0-rc.1 is 1.2.0~rc.1, which sorts before 1.2.0."""
+    from tavletta import __version__
+
+    # semver, its pre-release without hyphens: one hyphen to map, back and forth
+    assert re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[0-9A-Za-z.]+)?", __version__)
+    return __version__.replace("-", "~")
+
+
+def test_the_packages_are_at_the_version_of_the_source():
+    """Bumped with __version__: the RPM spec's Version and its newest
+    %changelog entry, debian/changelog's newest entry. The build scripts
+    refuse a mismatch too, this finds it before a tag."""
+    upstream = _upstream_version()
+    spec = (ROOT / "packaging" / "rpm" / "tavletta.spec").read_text(encoding="utf-8")
+    assert re.search(r"^Version: +(\S+)$", spec, re.M).group(1) == upstream
+    release = re.search(r"^Release: +(\d+)%\{\?dist\}$", spec, re.M).group(1)
+    newest = spec.split("%changelog\n", 1)[1].splitlines()[0]
+    assert newest.endswith(f" - {upstream}-{release}"), newest
+    changelog = (ROOT / "packaging" / "debian" / "changelog").read_text(encoding="utf-8")
+    assert re.match(rf"tavletta \({re.escape(upstream)}-\d+\) ", changelog), changelog[:40]
