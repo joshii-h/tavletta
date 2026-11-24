@@ -172,7 +172,13 @@
 
   <provides>
     <mediatype>application/x-tavletta</mediatype>
-    <!-- NIIMBOT printers (USB vendor 3513), as in packaging/udev/70-tavletta.rules -->
+    <!-- the printers of packaging/udev/70-tavletta.rules: the printer
+         interfaces (class 7) of those makers' USB devices, NIIMBOT's serial port -->
+    <modalias>usb:v04F9p*d*dc*dsc*dp*ic07isc01ip*in*</modalias>
+    <modalias>usb:v0985p*d*dc*dsc*dp*ic07isc01ip*in*</modalias>
+    <modalias>usb:v0922p*d*dc*dsc*dp*ic07isc01ip*in*</modalias>
+    <modalias>usb:v1203p*d*dc*dsc*dp*ic07isc01ip*in*</modalias>
+    <modalias>usb:v0A5Fp*d*dc*dsc*dp*ic07isc01ip*in*</modalias>
     <modalias>usb:v3513p*</modalias>
   </provides>
 

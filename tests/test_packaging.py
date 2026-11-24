@@ -587,19 +587,6 @@ def test_the_packages_install_the_print_server_disabled():
         "/var/lib/tavletta/labels/",
     ):
         assert f"`{path}`" in guide, path
-    udev = (ROOT / "packaging" / "udev" / "70-tavletta.rules").read_text(encoding="utf-8")
-    rules_lines = [line for line in udev.splitlines() if line and not line.startswith("#")]
-    assert all(line.endswith('TAG+="uaccess"') for line in rules_lines), rules_lines
-    assert 'SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*"' in udev
-    from tavletta.backends.niimbot import VENDOR_IDS
-
-    metainfo = (ROOT / "data" / "xyz.joshuahirsig.Tavletta.metainfo.xml").read_text(
-        encoding="utf-8"
-    )
-    for vendor in VENDOR_IDS:  # the only serial devices; software centres know them too
-        assert f'ATTRS{{idVendor}}=="{vendor:04x}"' in udev
-        assert f"<modalias>usb:v{vendor:04X}p*</modalias>" in metainfo
-    assert sum('SUBSYSTEM=="tty"' in line for line in rules_lines) == len(VENDOR_IDS)
 
 
 def test_release_assets_get_names_github_keeps_and_a_checksum_file(tmp_path):
@@ -978,3 +965,40 @@ def test_clean_container_labels_its_containers_and_removes_stale_ones(tmp_path):
     assert create.endswith("--workdir /work img@sha256:x ./smoke-test.sh out")
     assert f"cp {tmp_path / 'work'}/. new-id:/work" in calls
     assert calls[-1] == "rm -f new-id"
+
+
+# USB vendor IDs (usb.ids) of the makers the backends recognise by name
+USB_VENDORS = {"brother": 0x04F9, "cab": 0x0985, "dymo": 0x0922, "tsc": 0x1203, "zebra": 0x0A5F}
+
+
+def test_the_udev_rule_covers_the_makers_the_backends_recognise():
+    """packaging/udev/70-tavletta.rules gives the user at the computer the
+    USB printers of exactly the makers the backends find by name (their
+    makers and manufacturer checks), and NIIMBOT's serial port; the
+    metainfo names the same hardware for software centres."""
+    from tavletta.backends import backends
+    from tavletta.backends.niimbot import VENDOR_IDS
+    from tavletta.backends.ptouch import BROTHER
+
+    makers = {m.casefold() for b in backends() for m in getattr(b, "makers", ())}
+    for path in (ROOT / "tavletta" / "backends").glob("*.py"):
+        makers |= set(
+            re.findall(r'manufacturer\.casefold\(\)\.startswith\("(\w+)"\)', path.read_text())
+        )
+    assert makers == set(USB_VENDORS)
+    assert USB_VENDORS["brother"] == BROTHER
+    udev = (ROOT / "packaging" / "udev" / "70-tavletta.rules").read_text(encoding="utf-8")
+    rules = [line for line in udev.splitlines() if line and not line.startswith("#")]
+    assert all(line.endswith('TAG+="uaccess"') for line in rules), rules
+    lp = 'SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{{idVendor}}=="{:04x}", TAG+="uaccess"'
+    tty = 'SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", ATTRS{{idVendor}}=="{:04x}", TAG+="uaccess"'
+    assert sorted(rules) == sorted(
+        [lp.format(v) for v in USB_VENDORS.values()] + [tty.format(v) for v in VENDOR_IDS]
+    )
+    metainfo = (ROOT / "data" / "xyz.joshuahirsig.Tavletta.metainfo.xml").read_text(
+        encoding="utf-8"
+    )
+    aliases = set(re.findall(r"<modalias>([^<]+)</modalias>", metainfo))
+    assert aliases == {
+        f"usb:v{v:04X}p*d*dc*dsc*dp*ic07isc01ip*in*" for v in USB_VENDORS.values()
+    } | {f"usb:v{v:04X}p*" for v in VENDOR_IDS}
