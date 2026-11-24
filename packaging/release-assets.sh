@@ -19,8 +19,18 @@
 # (60; frequent polling looks like a crawler to the server's CrowdSec). A
 # file attached already with the same content is skipped, one with other
 # content (a rebuild) replaced, so re-runs are safe and the checksum file
-# always matches the files. Needs FORGEJO_URL, GITHUB_REPOSITORY and TOKEN,
-# curl, jq and sha256sum.
+# always matches the files.
+#
+#   packaging/release-assets.sh notes TAG LINE
+#
+# Adds LINE to the release notes, under **Downloads** (made if missing),
+# unless they have it: a workflow names its files only once they are
+# attached, and a re-run adds nothing twice. Another workflow may change
+# the notes at the same moment and drop the line again: it is checked again
+# after NOTES_RECHECK_SECONDS (30) and added again if missing.
+#
+# Both wait for the release as upload does. They need FORGEJO_URL,
+# GITHUB_REPOSITORY and TOKEN, curl, jq and sha256sum.
 set -euo pipefail
 
 collect() {
@@ -47,20 +57,22 @@ collect() {
   cat "$dir/$sums"
 }
 
-upload() {
-  local tag="$1" api release id f name asset url
-  shift
-  api="$FORGEJO_URL/api/v1/repos/$GITHUB_REPOSITORY"
-  local auth=(-H "Authorization: token $TOKEN")
+api() { echo "$FORGEJO_URL/api/v1/repos/$GITHUB_REPOSITORY"; }
+auth=(-H "Authorization: token ${TOKEN:-}")
+
+release_of() {  # TAG: the release's JSON, waiting for it; fails without it
   local tries="${RELEASE_WAIT_TRIES:-30}" i
   for ((i = 1; ; i++)); do
-    release="$(curl -sS --fail "${auth[@]}" "$api/releases/tags/$tag")" && break
-    if [ "$i" -ge "$tries" ]; then
-      echo "::error::no Forgejo release for $tag"
-      return 1
-    fi
+    curl -sS --fail "${auth[@]}" "$(api)/releases/tags/$1" && return
+    [ "$i" -lt "$tries" ] || return 1
     sleep "${RELEASE_WAIT_SECONDS:-60}"
   done
+}
+
+upload() {
+  local tag="$1" release id f name asset url
+  shift
+  release="$(release_of "$tag")" || { echo "::error::no Forgejo release for $tag"; return 1; }
   id="$(jq -r .id <<< "$release")"
   for f in "$@"; do
     name="$(basename "$f")"
@@ -73,18 +85,44 @@ upload() {
         continue
       fi
       curl -sS --fail-with-body "${auth[@]}" -X DELETE \
-        "$api/releases/$id/assets/$(jq -r .id <<< "$asset")" > /dev/null
+        "$(api)/releases/$id/assets/$(jq -r .id <<< "$asset")" > /dev/null
       echo "$name replaced:"
     fi
     curl -sS --fail-with-body "${auth[@]}" -F "attachment=@$f" \
-      "$api/releases/$id/assets?name=$(jq -rn --arg n "$name" '$n|@uri')" > /dev/null
+      "$(api)/releases/$id/assets?name=$(jq -rn --arg n "$name" '$n|@uri')" > /dev/null
     echo "$name uploaded"
   done
   echo "$FORGEJO_URL/$GITHUB_REPOSITORY/releases/tag/$tag"
 }
 
+notes() {
+  local tag="$1" line="$2" release body checked=0 i
+  for ((i = 0; i < 4; i++)); do
+    release="$(release_of "$tag")" || { echo "::error::no Forgejo release for $tag"; return 1; }
+    body="$(jq -r '.body // ""' <<< "$release")"
+    if grep -qxF -- "$line" <<< "$body"; then
+      if [ "$checked" = 1 ]; then
+        echo "release notes: $line"
+        return 0
+      fi
+      checked=1
+      sleep "${NOTES_RECHECK_SECONDS:-30}"
+      continue
+    fi
+    grep -qxF -- "**Downloads**" <<< "$body" || body="${body%$'\n'}"$'\n\n'"**Downloads**"$'\n\n'
+    body="${body%$'\n'}"$'\n'"$line"
+    curl -sS --fail-with-body "${auth[@]}" -X PATCH -H "Content-Type: application/json" \
+      --data "$(jq -n --arg b "$body" '{body: $b}')" \
+      "$(api)/releases/$(jq -r .id <<< "$release")" > /dev/null
+    checked=0
+  done
+  echo "::error::the release notes of $tag keep losing: $line"
+  return 1
+}
+
 case "${1:-}" in
   collect) [ $# -ge 4 ] || { echo "usage: $0 collect DIR SUMS FILE..." >&2; exit 2; }; shift; collect "$@" ;;
   upload) [ $# -ge 3 ] || { echo "usage: $0 upload TAG FILE..." >&2; exit 2; }; shift; upload "$@" ;;
-  *) echo "usage: $0 collect DIR SUMS FILE... | upload TAG FILE..." >&2; exit 2 ;;
+  notes) [ $# = 3 ] || { echo "usage: $0 notes TAG LINE" >&2; exit 2; }; shift; notes "$@" ;;
+  *) echo "usage: $0 collect DIR SUMS FILE... | upload TAG FILE... | notes TAG LINE" >&2; exit 2 ;;
 esac

@@ -13,9 +13,9 @@
 # (which says why not in a second job).
 #
 # Assets (packaging/release-assets.sh): names GitHub keeps (the ^ of a
-# snapshot version becomes a dot). The release notes name the distribution
-# and architectures (release.yml). The release itself comes from
-# release.yml; this workflow waits for it. GitHub copies the assets
+# snapshot version becomes a dot); then a line in the release notes that
+# names the distribution and architecture (NOTES). The release itself comes
+# from release.yml; this workflow waits for it. GitHub copies the assets
 # (release-mirror.yml).
 #
 # Manual run (Actions -> RPM -> Run workflow): `tag` empty builds and tries
@@ -130,8 +130,12 @@ jobs:
         if: env.PUBLISH == 'true'
         env:
           TOKEN: ${{ github.token }}
+          # the release notes name the files once they are attached
+          NOTES: '- Fedora 44 (`fc44`), x86_64: `tavletta-*.noarch.rpm`, and `tavletta-server-*.noarch.rpm` for the print server as a system service, with the Python packages Fedora lacks; their sources as `*.src.rpm`; checksums in `SHA256SUMS-rpm`'
         run: |
           set -euo pipefail
-          # the checksum file last: release-mirror.yml waits for it
           mapfile -t files < <(find assets -maxdepth 1 -type f ! -name SHA256SUMS-rpm | sort)
-          src/packaging/release-assets.sh upload "$TAG" "${files[@]}" assets/SHA256SUMS-rpm
+          src/packaging/release-assets.sh upload "$TAG" "${files[@]}"
+          src/packaging/release-assets.sh notes "$TAG" "$NOTES"
+          # the checksum file last: release-mirror.yml waits for it
+          src/packaging/release-assets.sh upload "$TAG" assets/SHA256SUMS-rpm

@@ -1,5 +1,6 @@
 # Builds a single-file Flatpak bundle for each release tag and attaches it to
-# the GitHub release and to the Forgejo release (main repository).
+# the GitHub release and to the Forgejo release (main repository), and names
+# it in both releases' notes.
 #
 # Runs on GitHub because Flatpak builds need a privileged container; the
 # Forgejo runner deliberately has none. Only maintainers can push tags v*,
@@ -91,3 +92,23 @@ jobs:
               "$FORGEJO_API/releases/$id/assets?name=$(jq -rn --arg n "$f" '$n|@uri')" > /dev/null
             echo "$f uploaded"
           done
+
+      - name: Name the bundle in the release notes
+        if: github.event_name == 'push'
+        env:
+          FORGEJO_URL: https://git.joshuahirsig.xyz
+          FORGEJO_REPOSITORY: joshii/tavletta
+          TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          line="- Any Linux distribution with Flatpak, x86-64: \`Tavletta-$TAG-x86_64.flatpak\`; checksum in \`.sha256\`"
+          # Forgejo's notes, which release-mirror.yml copies here, then this
+          # release's own, so the line is here also when the mirror has finished
+          GITHUB_REPOSITORY="$FORGEJO_REPOSITORY" packaging/release-assets.sh notes "$TAG" "$line"
+          body="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)"
+          if ! grep -qxF -- "$line" <<<"$body"; then
+            grep -qxF -- "**Downloads**" <<<"$body" || body="${body%$'\n'}"$'\n\n'"**Downloads**"$'\n\n'
+            printf '%s\n%s\n' "${body%$'\n'}" "$line" > notes.md
+            gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md
+          fi

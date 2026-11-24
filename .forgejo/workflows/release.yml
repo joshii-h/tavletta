@@ -2,7 +2,8 @@
 # (.github/workflows/release-mirror.yml) once the tag arrives via the mirror.
 #
 # Notes come from the matching <release> in the AppStream metainfo, otherwise
-# from the tag annotation, followed by which download is for which system. Assets: sdist, wheel and SHA256SUMS. The tag must
+# from the tag annotation, followed by this workflow's downloads; the package
+# workflows add theirs. Assets: sdist, wheel and SHA256SUMS. The tag must
 # match __version__ in tavletta/__init__.py (pyproject.toml reads it from there).
 #
 # Manual run (Actions -> Release -> Run workflow): `tag` picks an existing tag;
@@ -118,17 +119,12 @@ jobs:
               if ann:
                   notes.append(ann)
           body = "\n\n".join(notes) or f"Tavletta {version}"
-          # which file is for which system: the package workflows' images
-          # (deb.yml, rpm.yml) and the bundle's architecture (flatpak-bundle.yml);
-          # tests/test_packaging.py keeps these in step with them
+          # this workflow's files; the package workflows (deb.yml, rpm.yml,
+          # flatpak-bundle.yml) add a line each once their files are attached
           body += (
-              "\n\n**Downloads** (the packages are attached once their builds finish):\n\n"
-              f"- `Tavletta-{tag}-x86_64.flatpak`: any Linux distribution with Flatpak, x86-64\n"
-              "- `*.deb`: Debian 13 (trixie), amd64 (`_amd64`) and every architecture"
-              " (`_all`); the source packages as `*.debian-source.tar`\n"
-              "- `*.rpm`: Fedora 44 (`fc44`), x86_64 and noarch; the source packages as `*.src.rpm`\n"
-              "- `.tar.gz` and `.whl`: the Python source and wheel, for pip\n"
-              "- `SHA256SUMS`, `SHA256SUMS-deb`, `SHA256SUMS-rpm`: checksums"
+              "\n\n**Downloads**\n\n"
+              f"- pip: `tavletta-{version}.tar.gz` (the source) and the `.whl`;"
+              " checksums in `SHA256SUMS`"
           )
 
           pathlib.Path("../release-notes.md").write_text(body + "\n")
@@ -167,7 +163,10 @@ jobs:
               "$api/releases")"
           fi
           id="$(jq -r .id <<<"$release")"
-          for f in dist/*; do
+          # SHA256SUMS last, as the other workflows upload their checksum file:
+          # release-mirror.yml takes it for the sign that these files are there
+          mapfile -t files < <(find dist -maxdepth 1 -type f ! -name SHA256SUMS | sort)
+          for f in "${files[@]}" dist/SHA256SUMS; do
             name="$(basename "$f")"
             if jq -e --arg n "$name" 'any(.assets[]?; .name == $n)' <<<"$release" > /dev/null; then
               echo "$name exists"; continue

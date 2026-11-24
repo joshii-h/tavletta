@@ -679,6 +679,8 @@ class _FakeForgejo:
         self.next_id = 1
         self.hidden_for = hidden_for  # answers 404 for the release this often
         self.deleted: list[str] = []
+        self.body = "Fixes.\n\n**Downloads**\n\n- pip: the sdist and the wheel"
+        self.patches = 0
         fake = self
 
         class Handler(http.server.BaseHTTPRequestHandler):
@@ -709,7 +711,19 @@ class _FakeForgejo:
                     {"id": i, "name": n, "browser_download_url": f"{fake.url}/dl/{i}"}
                     for i, (n, _) in fake.assets.items()
                 ]
-                self._send(200, json.dumps({"id": 7, "assets": assets}).encode())
+                release = {"id": 7, "body": fake.body, "assets": assets}
+                self._send(200, json.dumps(release).encode())
+
+            def do_PATCH(self):
+                import json
+
+                assert self.headers["Authorization"] == "token secret"
+                assert self.path == "/api/v1/repos/o/r/releases/7"
+                fake.body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))[
+                    "body"
+                ]
+                fake.patches += 1
+                self._send(200, b"{}")
 
             def do_DELETE(self):
                 assert self.headers["Authorization"] == "token secret"
@@ -820,10 +834,15 @@ def test_the_package_workflows():
     """deb.yml and rpm.yml alike: the tag of a push or of a manual run
     (which then uploads too), an image pinned by digest for the job and the
     fresh container that tries the packages, uploads through
-    release-assets.sh with the checksum file last, which release-mirror.yml
-    waits for; release.yml's notes name the systems the images are."""
+    release-assets.sh, then a line in the release notes that names the
+    system the image is and the packages, then the checksum file, which
+    release-mirror.yml waits for. release.yml uploads its checksum file last
+    too and promises none of their files; flatpak-bundle.yml adds its line."""
     docs = _workflow("docs.yml", ".forgejo")
-    notes = (ROOT / ".forgejo" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    release = (ROOT / ".forgejo" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    assert 'for f in "${files[@]}" dist/SHA256SUMS; do' in release
+    for promise in (".deb", ".rpm", ".flatpak", "Debian", "Fedora"):
+        assert promise not in release.split("Version and release notes")[1].split("EOF")[0]
     mirror = _workflow("release-mirror.yml")
     for name, image, sums, system in (
         ("deb.yml", "debian:trixie", "SHA256SUMS-deb", "Debian 13 (trixie)"),
@@ -847,11 +866,19 @@ def test_the_package_workflows():
         assert f"release-assets.sh collect assets {sums} " in steps["Assets"]["run"]
         upload = steps["Attach to the Forgejo release"]
         assert upload["if"] == "env.PUBLISH == 'true'"
-        assert upload["run"].rstrip().endswith(f'"${{files[@]}}" assets/{sums}')
+        lines = [line.strip() for line in upload["run"].strip().splitlines()]
+        assert lines[-4:] == [
+            'src/packaging/release-assets.sh upload "$TAG" "${files[@]}"',
+            'src/packaging/release-assets.sh notes "$TAG" "$NOTES"',
+            "# the checksum file last: release-mirror.yml waits for it",
+            f'src/packaging/release-assets.sh upload "$TAG" assets/{sums}',
+        ]
+        note = upload["env"]["NOTES"]
+        assert note.startswith(f"- {system}, ") and sums in note, note
+        assert "tavletta-server" in note  # the server's package named too
         assert workflow["env"]["DOCKER_CLI_VERSION"] == docs["env"]["DOCKER_CLI_VERSION"]
         assert re.fullmatch(r"[0-9a-f]{64}", workflow["env"]["DOCKER_CLI_SHA256"])
         assert sums in mirror["jobs"]["mirror"]["env"]["COMPLETE"].split()
-        assert system in notes, system
     assert "SHA256SUMS" in mirror["jobs"]["mirror"]["env"]["COMPLETE"].split()
     assert "workflow_dispatch" in mirror["on"]
     bundle = (ROOT / ".github" / "workflows" / "flatpak-bundle.yml").read_text(encoding="utf-8")
@@ -859,12 +886,15 @@ def test_the_package_workflows():
         "Tavletta-${{ github.event_name == 'push' && github.ref_name || 'test' }}-x86_64.flatpak"
         in bundle
     )
-    assert "`Tavletta-{tag}-x86_64.flatpak`: any Linux distribution with Flatpak, x86-64" in notes
+    assert (
+        "Any Linux distribution with Flatpak, x86-64: \\`Tavletta-$TAG-x86_64.flatpak\\`" in bundle
+    )
+    assert 'packaging/release-assets.sh notes "$TAG" "$line"' in bundle
 
 
-def test_the_release_notes_say_which_download_is_for_which_system(tmp_path):
+def test_the_release_notes_name_this_workflows_downloads(tmp_path):
     """release.yml's notes step, run: the metainfo's notes of this version,
-    then the downloads."""
+    then its own downloads (the package workflows add theirs)."""
     import os
     import subprocess
 
@@ -895,7 +925,10 @@ def test_the_release_notes_say_which_download_is_for_which_system(tmp_path):
     assert done.returncode == 0, done.stderr
     body = (tmp_path / "release-notes.md").read_text()
     assert body.index("**Downloads**") > 0  # after the version's notes
-    assert f"`Tavletta-v{__version__}-x86_64.flatpak`" in body
+    assert body.endswith(
+        f"- pip: `tavletta-{__version__}.tar.gz` (the source) and the `.whl`;"
+        " checksums in `SHA256SUMS`\n"
+    )
     assert f"VERSION={__version__}\n" in env_file.read_text()
 
 
@@ -1035,3 +1068,50 @@ def test_the_udev_rule_covers_the_makers_the_backends_recognise():
     assert aliases == {
         f"usb:v{v:04X}p*d*dc*dsc*dp*ic07isc01ip*in*" for v in USB_VENDORS.values()
     } | {f"usb:v{v:04X}p*" for v in VENDOR_IDS}
+
+
+def test_release_assets_notes_add_a_line_once(tmp_path):
+    """packaging/release-assets.sh notes: the line under **Downloads**,
+    once; a re-run changes nothing; notes without the heading get it."""
+    import os
+    import shutil
+    import subprocess
+
+    if not all(shutil.which(tool) for tool in ("bash", "curl", "jq")):
+        pytest.skip("needs bash, curl and jq")
+    forgejo = _FakeForgejo()
+    env = {
+        "PATH": os.environ["PATH"],
+        "FORGEJO_URL": forgejo.url,
+        "GITHUB_REPOSITORY": "o/r",
+        "TOKEN": "secret",
+        "RELEASE_WAIT_SECONDS": "0",
+        "NOTES_RECHECK_SECONDS": "0",
+    }
+    deb = "- Debian 13 (trixie), amd64: `tavletta_*_all.deb`"
+    rpm = "- Fedora 44 (`fc44`), x86_64: `tavletta-*.noarch.rpm`"
+
+    def notes(line):
+        return subprocess.run(
+            ["bash", str(ROOT / "packaging" / "release-assets.sh"), "notes", "v1.0.0", line],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+
+    try:
+        assert notes(deb).returncode == 0
+        assert notes(rpm).returncode == 0
+        assert notes(deb).returncode == 0  # a re-run
+        assert forgejo.patches == 2
+        assert (
+            forgejo.body
+            == f"Fixes.\n\n**Downloads**\n\n- pip: the sdist and the wheel\n{deb}\n{rpm}"
+        )
+        forgejo.body = "Fixes."
+        assert notes(deb).returncode == 0
+        assert forgejo.body == f"Fixes.\n\n**Downloads**\n\n{deb}"
+    finally:
+        forgejo.server.shutdown()
