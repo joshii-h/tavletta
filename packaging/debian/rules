@@ -43,8 +43,9 @@ execute_before_dh_installtmpfiles:
 
 override_dh_installsystemd:
 	# installed, not enabled nor started: it needs printers.toml and tokens.toml.
-	# An upgrade restarts it if it runs: tavletta-server.postinst
-	dh_installsystemd -ptavletta-server --no-enable --no-start
+	# An upgrade does not stop it first (preinst), and restarts it if it runs:
+	# tavletta-server.postinst
+	dh_installsystemd -ptavletta-server --no-enable --no-start --no-stop-on-upgrade
 
 override_dh_compress:
 	# the example labels stay as they are, to open and print

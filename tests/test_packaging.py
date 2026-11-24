@@ -578,7 +578,7 @@ def test_the_packages_install_the_print_server_disabled():
         "usr/lib/tmpfiles.d/tavletta.conf": "tavletta-server",
         "usr/lib/udev/rules.d/70-tavletta.rules": "tavletta",
     }
-    assert "dh_installsystemd -ptavletta-server --no-enable --no-start" in rules
+    assert "dh_installsystemd -ptavletta-server --no-enable --no-start --no-stop-on-upgrade" in rules
     debian = ROOT / "packaging" / "debian"
     postinst = (debian / "tavletta-server.postinst").read_text(encoding="utf-8")
     assert '[ "$1" = "configure" ] && [ -n "$2" ]' in postinst  # an upgrade only
