@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Tarroja tulostettu {printed}/{total}.",
     "Took {seconds} s, finished at {time}.": "Kesti {seconds} s, valmis klo {time}.",
     "Job number": "Työn numero",
+    "Use loaded labels": "Käytä asetettuja tarroja",
+    "Label adapted to the loaded labels": "Tarra sovitettiin asetettuihin tarroihin",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Tarra sovitettiin asetettuihin tarroihin. Osa elementeistä ulottuu sen reunan yli.",
 }

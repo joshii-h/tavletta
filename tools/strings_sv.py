@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} av {total} etiketter utskrivna.",
     "Took {seconds} s, finished at {time}.": "Tog {seconds} s, klart {time}.",
     "Job number": "Jobbnummer",
+    "Use loaded labels": "Använd isatta etiketter",
+    "Label adapted to the loaded labels": "Etiketten anpassad till de isatta etiketterna",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Etiketten anpassad till de isatta etiketterna. Vissa element går utanför kanten.",
 }

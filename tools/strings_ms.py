@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} daripada {total} label dicetak.",
     "Took {seconds} s, finished at {time}.": "Mengambil masa {seconds} s, selesai pada {time}.",
     "Job number": "Nombor kerja",
+    "Use loaded labels": "Guna label yang dimuatkan",
+    "Label adapted to the loaded labels": "Label disesuaikan dengan label yang dimuatkan",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Label disesuaikan dengan label yang dimuatkan. Beberapa elemen melepasi tepinya.",
 }

@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "พิมพ์ฉลากแล้ว {printed} จาก {total} ดวง",
     "Took {seconds} s, finished at {time}.": "ใช้เวลา {seconds} วินาที เสร็จเมื่อ {time}",
     "Job number": "หมายเลขงาน",
+    "Use loaded labels": "ใช้ฉลากที่ใส่อยู่",
+    "Label adapted to the loaded labels": "ปรับฉลากให้ตรงกับฉลากที่ใส่อยู่แล้ว",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "ปรับฉลากให้ตรงกับฉลากที่ใส่อยู่แล้ว บางองค์ประกอบล้นขอบฉลาก",
 }

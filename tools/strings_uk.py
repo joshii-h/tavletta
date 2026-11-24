@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Надруковано етикеток: {printed} із {total}.",
     "Took {seconds} s, finished at {time}.": "Тривало {seconds} с, завершено о {time}.",
     "Job number": "Номер завдання",
+    "Use loaded labels": "Використати завантажені етикетки",
+    "Label adapted to the loaded labels": "Етикетку підлаштовано під завантажені етикетки",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Етикетку підлаштовано під завантажені етикетки. Деякі елементи виходять за її край.",
 }

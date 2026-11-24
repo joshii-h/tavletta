@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} von {total} Etiketten gedruckt.",
     "Took {seconds} s, finished at {time}.": "Dauer {seconds} s, beendet um {time}.",
     "Job number": "Auftragsnummer",
+    "Use loaded labels": "Eingelegte Etiketten übernehmen",
+    "Label adapted to the loaded labels": "Etikett an die eingelegten Etiketten angepasst",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Etikett an die eingelegten Etiketten angepasst. Einige Elemente ragen über seinen Rand hinaus.",
 }

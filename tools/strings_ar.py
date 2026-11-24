@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "طُبع {printed} من {total} ملصق.",
     "Took {seconds} s, finished at {time}.": "استغرقت {seconds} ث، وانتهت في {time}.",
     "Job number": "رقم المهمة",
+    "Use loaded labels": "استخدام الملصقات المحمّلة",
+    "Label adapted to the loaded labels": "تم تكييف الملصق مع الملصقات المحمّلة",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "تم تكييف الملصق مع الملصقات المحمّلة. بعض العناصر تتجاوز حافته.",
 }

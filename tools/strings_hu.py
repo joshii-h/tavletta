@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} / {total} címke kinyomtatva.",
     "Took {seconds} s, finished at {time}.": "Időtartam: {seconds} mp, befejezve: {time}.",
     "Job number": "Feladatszám",
+    "Use loaded labels": "A betöltött címkék használata",
+    "Label adapted to the loaded labels": "A címke a betöltött címkékhez igazítva",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "A címke a betöltött címkékhez igazítva. Néhány elem túlnyúlik a szélén.",
 }

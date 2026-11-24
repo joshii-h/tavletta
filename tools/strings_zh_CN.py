@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "已打印 {printed} / {total} 张标签。",
     "Took {seconds} s, finished at {time}.": "耗时 {seconds} 秒，于 {time} 完成。",
     "Job number": "作业编号",
+    "Use loaded labels": "使用装入的标签",
+    "Label adapted to the loaded labels": "已按装入的标签调整标签",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "已按装入的标签调整标签。部分元素超出了标签边缘。",
 }

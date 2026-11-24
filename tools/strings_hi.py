@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{total} में से {printed} लेबल प्रिंट हुए।",
     "Took {seconds} s, finished at {time}.": "{seconds} सेकंड लगे, {time} पर पूरा हुआ।",
     "Job number": "जॉब नंबर",
+    "Use loaded labels": "लगे हुए लेबल इस्तेमाल करें",
+    "Label adapted to the loaded labels": "लेबल को लगे हुए लेबलों के अनुसार बदला गया",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "लेबल को लगे हुए लेबलों के अनुसार बदला गया। कुछ तत्व उसके किनारे से बाहर जाते हैं।",
 }

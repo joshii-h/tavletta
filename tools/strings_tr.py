@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{total} etiketten {printed} tanesi yazdırıldı.",
     "Took {seconds} s, finished at {time}.": "Süre: {seconds} sn, bitiş: {time}.",
     "Job number": "İş numarası",
+    "Use loaded labels": "Takılı etiketleri kullan",
+    "Label adapted to the loaded labels": "Etiket takılı etiketlere uyarlandı",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Etiket takılı etiketlere uyarlandı. Bazı öğeler kenarının dışına taşıyor.",
 }

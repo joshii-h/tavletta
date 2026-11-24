@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{total} 枚中 {printed} 枚のラベルを印刷しました。",
     "Took {seconds} s, finished at {time}.": "所要時間 {seconds} 秒、{time} に完了しました。",
     "Job number": "ジョブ番号",
+    "Use loaded labels": "セットされたラベルに合わせる",
+    "Label adapted to the loaded labels": "ラベルをセットされたラベルに合わせました",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "ラベルをセットされたラベルに合わせました。一部の要素が端からはみ出しています。",
 }

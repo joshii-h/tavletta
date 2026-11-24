@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "라벨 {total}장 중 {printed}장 인쇄됨.",
     "Took {seconds} s, finished at {time}.": "{seconds}초 걸림, {time}에 완료됨.",
     "Job number": "작업 번호",
+    "Use loaded labels": "들어 있는 라벨 사용",
+    "Label adapted to the loaded labels": "라벨을 들어 있는 라벨에 맞췄습니다",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "라벨을 들어 있는 라벨에 맞췄습니다. 일부 요소가 가장자리를 벗어납니다.",
 }

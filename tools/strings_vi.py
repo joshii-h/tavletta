@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Đã in {printed} trên {total} nhãn.",
     "Took {seconds} s, finished at {time}.": "Mất {seconds} giây, hoàn tất lúc {time}.",
     "Job number": "Số lệnh in",
+    "Use loaded labels": "Dùng nhãn đã lắp",
+    "Label adapted to the loaded labels": "Đã điều chỉnh nhãn theo nhãn đã lắp",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Đã điều chỉnh nhãn theo nhãn đã lắp. Một số thành phần vượt ra ngoài mép nhãn.",
 }

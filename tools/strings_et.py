@@ -1024,4 +1024,7 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Prinditud silte: {printed}/{total}.",
     "Took {seconds} s, finished at {time}.": "Kestis {seconds} s, valmis kell {time}.",
     "Job number": "Töö number",
+    "Use loaded labels": "Kasuta sisestatud silte",
+    "Label adapted to the loaded labels": "Silt kohandati sisestatud siltidele",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Silt kohandati sisestatud siltidele. Mõni element ulatub üle sildi serva.",
 }
