@@ -44,6 +44,9 @@ SRC="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 export DEBIAN_FRONTEND=noninteractive
+# as on the CI runners: a test that would skip for a missing tool fails instead
+# (tests/test_icons.py), so a build dependency missing here shows locally too
+export CI=1
 
 grep -q "$LABELPRINTER_COMMIT" "$SRC/pyproject.toml" || {
   echo "error: pyproject.toml pins another labelprinter commit; update LABELPRINTER_* in $0" >&2

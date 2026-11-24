@@ -13,6 +13,8 @@ RPMS="$(realpath "$1")"
 EXPECT="${2:-}"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
+# as on the CI runners (see build.sh)
+export CI=1
 
 mapfile -t packages < <(find "$RPMS" -maxdepth 1 -name '*.rpm' ! -name '*.src.rpm')
 # with their documentation (the container images install none: tsflags=nodocs)

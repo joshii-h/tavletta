@@ -30,6 +30,8 @@ BuildRequires:  pango
 BuildRequires:  gtk4
 BuildRequires:  libadwaita
 BuildRequires:  dejavu-sans-fonts
+# tools/icons.py's tests: librsvg's GObject introspection (Rsvg 2.0)
+BuildRequires:  librsvg2
 # the print server's unit, user and the udev rule
 BuildRequires:  systemd-rpm-macros
 %{?systemd_requires}

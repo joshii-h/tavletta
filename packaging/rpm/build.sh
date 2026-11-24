@@ -19,6 +19,9 @@
 # As root, the build tools and build requirements are installed with dnf;
 # otherwise they must be there and sudo is used to install.
 set -euo pipefail
+# as on the CI runners: a test that would skip for a missing tool fails instead
+# (tests/test_icons.py), so a build dependency missing here shows locally too
+export CI=1
 
 if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     echo "usage: $0 OUTDIR [TARBALL]" >&2

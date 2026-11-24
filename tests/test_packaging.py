@@ -877,3 +877,19 @@ def test_the_release_notes_say_which_download_is_for_which_system(tmp_path):
     assert body.index("**Downloads**") > 0  # after the version's notes
     assert f"`Tavletta-v{__version__}-x86_64.flatpak`" in body
     assert f"VERSION={__version__}\n" in env_file.read_text()
+
+
+def test_the_package_builds_run_the_tests_as_the_ci_does():
+    """CI=1 in the build and smoke scripts: a test that would skip for a
+    missing tool fails instead, as on the runners (where the variable is
+    set), so a missing build dependency shows in a local build too. The
+    tool tests/test_icons.py needs, librsvg's introspection, is one."""
+    for script in ("debian/build.sh", "debian/smoke-test.sh", "rpm/build.sh", "rpm/smoke-test.sh"):
+        text = (ROOT / "packaging" / script).read_text(encoding="utf-8")
+        assert "\nexport CI=1\n" in text, script
+    unittests = (ROOT / "packaging" / "debian" / "tests" / "unittests").read_text(encoding="utf-8")
+    assert "CI=1 FONTCONFIG_FILE=" in unittests
+    control = (ROOT / "packaging" / "debian" / "control").read_text(encoding="utf-8")
+    assert " gir1.2-rsvg-2.0 <!nocheck>,\n" in control
+    spec = (ROOT / "packaging" / "rpm" / "tavletta.spec").read_text(encoding="utf-8")
+    assert "\nBuildRequires:  librsvg2\n" in spec

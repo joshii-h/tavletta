@@ -15,8 +15,9 @@ ln -s "$installed" "$src/tavletta"
 cd "$src"
 # Not those about the source tree rather than the program: test_packaging.py
 # (the repository's packaging files), and the data licences next to the data,
-# which this package keeps in /usr/share/doc/tavletta instead.
-FONTCONFIG_FILE="$src/tests/fonts.conf" python3 -m pytest -q -p no:cacheprovider -n auto -m "not gui" \
+# which this package keeps in /usr/share/doc/tavletta instead. CI=1: a test
+# that would skip for a missing tool fails, as on the CI runners.
+CI=1 FONTCONFIG_FILE="$src/tests/fonts.conf" python3 -m pytest -q -p no:cacheprovider -n auto -m "not gui" \
   --ignore=tests/test_packaging.py \
   --deselect tests/test_sheets.py::test_the_license_comes_with_the_data \
   --deselect tests/test_symbols.py::test_the_icon_data_and_its_license_are_packaged

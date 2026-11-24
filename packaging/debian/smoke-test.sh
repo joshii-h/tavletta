@@ -16,6 +16,8 @@ EXPECT="${2:-}"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 export DEBIAN_FRONTEND=noninteractive
+# as on the CI runners (see build.sh)
+export CI=1
 
 apt-get update -qq
 apt-get install -y -qq "$DEBS"/*.deb > /dev/null
