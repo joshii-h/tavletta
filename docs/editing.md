@@ -223,17 +223,18 @@ within a frame at 60 fps (16.7 ms). The preview renders after the drag,
 and its boxes are the new geometry.
 
 The window's editor on that label (VC-500W, 100 mm tape, 200 mm long, 320
-dpi; a headless KWin, software rendering), median and 95th percentile:
+dpi; a headless KWin, software rendering; zoom 0.55, 1 and 3; display
+scale 1 and 2 alike), median / 95th percentile over 120 motion events:
 
 | | ms |
 |---|---|
-| a motion event (snap, the overlay's scene), 1 or 10 elements dragged | 0.9 to 1.4 / 1.3 to 2.0 |
-| the overlay drawn (render nodes) | 0.3 to 0.7 / 0.8 to 2.4 |
-| from a motion event to the frame painted | 5 to 10 |
-| the drag's end: the edit, its step, the sidebar | 2.5 to 5 |
-| a resize's end (the element's row built again) | about 100 |
-| the render after it, in the preview's thread | 47 to 100 |
-| an arrow key | 1.7 |
+| a motion event (snap, the overlay's scene), 1 or 10 elements dragged | 0.7 to 2.5 / 1.1 to 3.2 |
+| the overlay drawn (render nodes) | 0.3 to 2.8 / 0.7 to 3.5 |
+| from a motion event to the frame painted | 4 to 11 |
+| the drag's end: the edit, its step, the sidebar | 2.5 to 12 |
+| a resize's end (the element's row built again) | 100 to 120 |
+| the render after it, in the preview's thread | 40 to 230 |
+| an arrow key | 2 to 6 |
 
 Building the whole sidebar again takes 2 to 2.5 s for 50 elements, which
 is why an edit of the preview takes its changes over in place.
