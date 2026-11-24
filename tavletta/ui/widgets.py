@@ -86,10 +86,12 @@ def spin_row(title, value, lower, upper, step, digits, on_change, subtitle=None)
 
 
 def length_row(
-    unit, title, mm, lower_mm, upper_mm, step_mm, on_change_mm, subtitle=None
+    unit, title, mm, lower_mm, upper_mm, step_mm, on_change_mm, subtitle=None, digits=None
 ) -> Adw.SpinRow:
-    """A spin row that shows a millimetre value in the chosen unit."""
-    digits = unit.digits if step_mm < 1 or unit.key == "in" else 0
+    """A spin row that shows a millimetre value in the chosen unit; digits:
+    at least as many as the unit shows."""
+    shown = unit.digits if step_mm < 1 or unit.key == "in" else 0
+    digits = shown if digits is None else max(shown, digits)
     return spin_row(
         title,
         unit.to_display(mm, digits),

@@ -19,6 +19,7 @@ chooses a printer by name and nothing else can be printed on:
     [printers.lager-cab.settings]   # the printer settings of the app
     method = "transfer"             # cab: print method (printer, transfer, direct)
     upside_down = true              # cab, ZPL, …: printed turned by 180 degrees
+    offset_mm = 1.25                # cab: the print moved along the feed (docs/cab.md)
 
 tokens.toml names the access tokens, with a role, never the token itself:
 
@@ -55,7 +56,7 @@ from pathlib import Path
 from typing import Any
 
 from tavletta.backends import get_backend
-from tavletta.backends.base import Backend, Choice, ColorAdjust, Level, Toggle
+from tavletta.backends.base import Backend, Choice, ColorAdjust, Distance, Level, Toggle
 from tavletta.ui.i18n import _
 
 log = logging.getLogger(__name__)
@@ -269,6 +270,8 @@ def _printer_settings(parent: _Table, backend: Backend, data: object) -> dict[st
             found[setting.key] = table.choice(setting.key, setting.choices)
         elif isinstance(setting, Level):
             found[setting.key] = table.number(setting.key, setting.lower, setting.upper, True)
+        elif isinstance(setting, Distance):
+            found[setting.key] = table.number(setting.key, setting.lower, setting.upper)
         elif isinstance(setting, Toggle) and setting.key in table.data:
             found[setting.key] = table.flag(setting.key)
     if caps.qualities:

@@ -13,12 +13,13 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from tavletta.backends import backends, get_backend  # noqa: E402
-from tavletta.backends.base import Choice, PrinterInfo, Setting, Toggle  # noqa: E402
+from tavletta.backends.base import Choice, Distance, PrinterInfo, Setting, Toggle  # noqa: E402
 from tavletta.job import OtherLabels, other_labels  # noqa: E402
 from tavletta.ui.i18n import _, isolate, month_year  # noqa: E402
 from tavletta.ui.texts import (  # noqa: E402
     CONNECTION_ERRORS,
     MEDIA_NAMES,
+    SETTING_HINTS,
     backend_name,
     cassette_age_hint,
     choice_name,
@@ -128,6 +129,18 @@ class Printer:
             return combo_row(
                 setting_title(key), items, current, lambda v: self._on_setting(key, v)
             )
+        if isinstance(setting, Distance):
+            return length_row(
+                self.window.unit,
+                setting_title(key),
+                setting.value(stored),
+                setting.lower,
+                setting.upper,
+                setting.step,
+                lambda mm: self._on_setting(key, mm),
+                SETTING_HINTS.get(key),
+                digits=2,  # a dot of a 300 dpi head is 0.08 mm
+            )
         level = setting.value(stored)
         values = sorted(set(setting.steps()) | ({level} if level is not None else set()))
         # a value off the steps (settings.json edited by hand) is shown as it is
@@ -144,6 +157,7 @@ class Printer:
         self.window.printer_settings.update(**{key: value})
         if key == "dpi":  # the preview at the resolution the label is printed at
             self.window.schedule_render()
+        # "offset_mm" changes only what is sent: the preview shows the label
 
     def _add_status_rows(self, group: Adw.PreferencesGroup) -> None:
         self.row = Adw.ActionRow(title=_("Searching…"))

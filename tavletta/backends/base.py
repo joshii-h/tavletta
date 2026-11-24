@@ -252,7 +252,45 @@ class Toggle:
         return raw is True
 
 
-Setting = Choice | Level | Toggle
+@dataclass(frozen=True)
+class Distance:
+    """A printer setting in millimetres, e.g. how far the print is moved
+    along the feed; 0 by default. The window offers it in steps of `step`
+    (in its units), printers.toml and settings.json take any value within
+    the range."""
+
+    key: str
+    lower: float
+    upper: float
+    step: float = 0.1
+
+    def value(self, raw: object) -> float:
+        """A stored value, clamped to the range; junk is 0."""
+        if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+            return 0.0
+        try:  # an int too large for a float
+            number = float(raw)
+        except OverflowError:
+            return 0.0
+        if not math.isfinite(number):
+            return 0.0
+        return max(self.lower, min(self.upper, number))
+
+
+Setting = Choice | Level | Toggle | Distance
+
+
+def shift_along(image: Image.Image, mm: float, dots_per_mm: float) -> Image.Image:
+    """The image's content moved `mm` along y (positive: down), as many
+    whole rows; what moves out is cut off, the rows it leaves are white
+    (no ink). The same image if that is no row."""
+    rows = round(mm * dots_per_mm)
+    if not rows:
+        return image
+    shifted = Image.new(image.mode, image.size, "white")
+    shifted.paste(image, (0, rows))
+    shifted.info.update(image.info)
+    return shifted
 
 
 @dataclass(frozen=True)

@@ -87,6 +87,13 @@ SETTING_TITLES = {
     "speed": _("Speed"),
     "upside_down": _("Print upside down"),
     "method": _("Print method"),
+    "offset_mm": _("Print offset"),
+}
+# what a Distance setting does, under its title; %(unit)s is the unit
+SETTING_HINTS = {
+    "offset_mm": _(
+        "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll"
+    ),
 }
 # their values by protocol name; resolutions are shown as "203 dpi"
 CHOICE_NAMES = {

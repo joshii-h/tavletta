@@ -6,7 +6,8 @@ Programming Manual"). A job downloads the rendered label as a PNG in base 64
 and places it on a die-cut label of the given size. The print method
 (thermal transfer with a ribbon, or thermal direct) is the printer's own
 setting unless the "method" setting chooses one for each job;
-"upside_down" turns the label by 180° (O R); heat, backfeed and tear-off
+"upside_down" turns the label by 180° (O R); "offset_mm" moves the print
+along the feed, for a printer that prints off the label's place; heat, backfeed and tear-off
 position stay as set on the printer. Status comes from the ESC
 commands, which the printer answers on the same connection; the setup of
 the web interface, if it answers, tells the print method and speed set on
@@ -33,6 +34,7 @@ from tavletta.backends.base import (
     Backend,
     Capabilities,
     Choice,
+    Distance,
     FoundPrinter,
     HeadOpen,
     HostMemory,
@@ -57,6 +59,7 @@ from tavletta.backends.base import (
     map_error,
     open_session,
     report_progress,
+    shift_along,
 )
 from tavletta.model import Label
 from tavletta.render import DEFAULT_SAFE_MM
@@ -84,6 +87,8 @@ DEFAULT_DOTS_PER_MM = DOTS_PER_MM[300]
 # widest label: the print width of a 4 inch head (manual); the EOS2/300's head
 # reports "106 mm", but the printer refuses S ...,106 as a syntax error
 MAX_WIDTH_MM = 105.6
+# how far the print may be moved along the feed ("offset_mm"), either way
+MAX_OFFSET_MM = 5.0
 
 # the "method" setting: as set on the printer (no H command), thermal
 # transfer with a ribbon (H ...,T) or thermal direct (H ...,D); the first is
@@ -466,7 +471,11 @@ class Cab(Backend):
         label_sizes=LABEL_SIZES,
         max_width_mm=MAX_WIDTH_MM,
         data_formats=("png",),
-        settings=(Choice("method", METHODS), Toggle("upside_down")),
+        settings=(
+            Choice("method", METHODS),
+            Toggle("upside_down"),
+            Distance("offset_mm", -MAX_OFFSET_MM, MAX_OFFSET_MM),
+        ),
     )
 
     def __init__(self, port: int = DEFAULT_PORT):
@@ -541,6 +550,9 @@ class Cab(Backend):
         image = super().prepare(replace(label, auto_length=False), options, safe_mm)
         if label.orientation == "along":
             image = image.rotate(-90, expand=True)
+        # where this printer puts the print along the feed, made up for:
+        # the label prints where the preview shows it
+        image = shift_along(image, float(self.setting(options, "offset_mm")), dots)
         image.info["dots_per_mm"] = dots
         # in printer orientation too: x across the print head (build_job)
         image.info["size_mm"] = label.media_size()
