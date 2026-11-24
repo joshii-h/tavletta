@@ -1390,7 +1390,7 @@ DESCRIPTION = (
     "jobs) or admin (also all jobs); x-tavletta-role names the least role of each "
     'operation. Errors are {"error": {"code", "message"}}: the code is stable, the '
     "message in the language of Accept-Language; x-tavletta-codes lists the codes of each "
-    "answer."
+    "answer. HEAD of a GET request answers with its status and headers."
 )
 
 

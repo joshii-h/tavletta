@@ -9,7 +9,8 @@ info:
     Bearer <token>'' when the server has a token. Named tokens (tokens.toml) have a role: preview (look
     only), print (also print and follow its own jobs) or admin (also all jobs); x-tavletta-role names
     the least role of each operation. Errors are {"error": {"code", "message"}}: the code is stable,
-    the message in the language of Accept-Language; x-tavletta-codes lists the codes of each answer.'
+    the message in the language of Accept-Language; x-tavletta-codes lists the codes of each answer.
+    HEAD of a GET request answers with its status and headers.'
   license:
     name: AGPL-3.0-or-later
     identifier: AGPL-3.0-or-later
