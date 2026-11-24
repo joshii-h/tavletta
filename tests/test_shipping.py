@@ -383,6 +383,8 @@ def test_cache_is_bounded_by_bytes():
     assert cache.bytes == 5
     cache.put("big", b"x" * 11)  # larger than all of it: not kept, nothing dropped
     assert cache.get("big") is None and len(cache) == 2
+    cache.put("c", b"x" * 11)  # a value too large replaces the old one: not kept either
+    assert cache.get("c") is None and len(cache) == 1 and cache.bytes == 4
     cache.clear()
     assert len(cache) == 0 and cache.bytes == 0
 

@@ -41,11 +41,11 @@ class Kept:
 
     def put(self, key: Any, value: Any) -> None:
         size = self.size(value)
-        if self.max_bytes and size > self.max_bytes:
-            return
         with self._lock:
-            if key in self._values:
+            if key in self._values:  # replaced, or gone if the new value is not kept
                 self._bytes -= self.size(self._values.pop(key))
+            if self.max_bytes and size > self.max_bytes:
+                return
             self._values[key] = value
             self._bytes += size
             while len(self._values) > self.items or (
