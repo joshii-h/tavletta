@@ -20,8 +20,8 @@ from __future__ import annotations
 
 import base64
 import http.client
-import io
 import json
+import math
 import re
 import socket
 import threading
@@ -45,6 +45,7 @@ from tavletta.backends.base import (
     LabelNotFound,
     LabelSize,
     OutOfLabels,
+    PackedImage,
     PrinterBusy,
     PrinterError,
     PrinterInfo,
@@ -344,14 +345,13 @@ def _mm(value: float) -> str:
     return ("%.2f" % value).rstrip("0").rstrip(".")
 
 
-def encode_png(image: Image.Image) -> bytes:
-    buf = io.BytesIO()
-    image.convert("1", dither=Image.Dither.NONE).save(buf, format="PNG", optimize=True)
-    return buf.getvalue()
+def encode_png(image: Image.Image | PackedImage) -> bytes:
+    """Black and white (a packed image is already)."""
+    return PackedImage.of(image).png
 
 
 def build_job(
-    image: Image.Image,
+    image: Image.Image | PackedImage,
     dots_per_mm: float,
     gap_mm: float,
     copies: int,
@@ -397,7 +397,7 @@ def build_job(
 
 
 def build_series_job(
-    images: list[Image.Image],
+    images: Sequence[Image.Image | PackedImage],
     dots_per_mm: float,
     gap_mm: float,
     copies: int,
@@ -651,7 +651,7 @@ class Cab(Backend):
 
     def print_batch(
         self,
-        images: Sequence[Image.Image],
+        images: Sequence[PackedImage],
         host: str,
         options: PrintOptions,
         progress: ProgressCallback | None = None,
@@ -660,7 +660,7 @@ class Cab(Backend):
 
     def _print(
         self,
-        images: list[Image.Image],
+        images: list[Image.Image | PackedImage],
         host: str,
         options: PrintOptions,
         progress: ProgressCallback | None,
@@ -689,7 +689,7 @@ class Cab(Backend):
                 dots = self.reported[host] = version.dots_per_mm
             size_mm = first.info.get("size_mm")
             # else rendered again (RenderAgain)
-            images = [for_resolution(image, rendered, dots) for image in images]
+            images = [_for_resolution(image, rendered, dots) for image in images]
             upside_down = self.setting(options, "upside_down") is True
             if len(images) == 1:
                 job = build_job(
@@ -730,6 +730,18 @@ class Cab(Backend):
         version = s.version()
         self._versions[host] = (now, version)
         return version
+
+
+def _for_resolution(
+    image: Image.Image | PackedImage, rendered: float, dots: float
+) -> Image.Image | PackedImage:
+    """for_resolution(); a packed image unpacked for it only if it is to
+    be scaled, and packed again."""
+    if not isinstance(image, PackedImage):
+        return for_resolution(image, rendered, dots)
+    if math.isclose(rendered, dots):
+        return image
+    return PackedImage.of(for_resolution(image.open(), rendered, dots))
 
 
 def _cab_name(model: str) -> str:

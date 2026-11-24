@@ -366,6 +366,13 @@ A 1
   2 KB in base 64: 250 labels take about 0.5 MB. [measured] A printer
   that runs out of memory reports `O` in `ESC s`: Tavletta cancels the
   job and says to lower "Labels per job" (`printer_out_of_memory`).
+- Tavletta holds a job's labels as PNG until it is sent, each packed as
+  soon as it is rendered (`PackedImage`): as images, 250 labels of
+  100 × 150 mm would take over 2 GB (four bytes a dot). A job takes fewer
+  labels than "Labels per job" once their PNGs reach 16 MB
+  (`serial.BATCH_BYTES`), which only labels with large dithered images
+  do. With the fake printer, 250 labels of 100 × 150 mm in one job: 2.3 GB
+  of memory before, 0.26 GB packed. [measured]
 - Tavletta takes `ESC s`'s labels to print as those of the whole job (all
   its `A`), counting down to 0. [assumed: the printout of 5 labels was
   reported as 5 of 5; a count while a longer job runs and the count at a

@@ -8,6 +8,7 @@ printer means adding one module (see CONTRIBUTING.md).
 
 from __future__ import annotations
 
+import io
 import math
 import socket
 import threading
@@ -721,6 +722,43 @@ def for_resolution(image: Image.Image, rendered: float, printer: float) -> Image
     return resized
 
 
+@dataclass(frozen=True, eq=False)
+class PackedImage:
+    """A black and white label image kept as PNG until it is sent: the
+    labels of a series' job wait for it together (Backend.print_batch()).
+    As an image each would take four bytes a dot (RGB), a 100 × 150 mm
+    label at 300 dpi 8.6 MB; as PNG a few KB. Size and info are the
+    image's; open() makes the image again."""
+
+    png: bytes
+    size: tuple[int, int]
+    info: dict
+
+    @classmethod
+    def of(cls, image: Image.Image | PackedImage) -> PackedImage:
+        """The image in black and white (below half brightness black, no
+        dithering: a mono backend's prepare() has dithered it already)."""
+        if isinstance(image, PackedImage):
+            return image
+        buffer = io.BytesIO()
+        image.convert("1", dither=Image.Dither.NONE).save(buffer, format="PNG", optimize=True)
+        return cls(buffer.getvalue(), image.size, dict(image.info))
+
+    @property
+    def width(self) -> int:
+        return self.size[0]
+
+    @property
+    def height(self) -> int:
+        return self.size[1]
+
+    def open(self) -> Image.Image:
+        image = Image.open(io.BytesIO(self.png))
+        image.load()
+        image.info.update(self.info)
+        return image
+
+
 class WrongMedia(PrinterError):
     """The loaded roll is of another kind or size than the label (a
     continuous roll for a die-cut label or the other way round)."""
@@ -1103,23 +1141,25 @@ class Backend(ABC):
         PrintResult if something differed from the request (or None)."""
 
     def series_batch(self, options: PrintOptions) -> int:
-        """How many labels of a series this backend prints as one job
-        (print_batch()), so the printer runs them through without stopping
-        between them; 0: one job per label (print_label())."""
+        """How many labels of a series this backend prints as one job at
+        most (print_batch()), so the printer runs them through without
+        stopping between them; 0: one job per label (print_label()). Only
+        for a mono backend: the images come packed in black and white. A
+        job may get fewer labels (serial.BATCH_BYTES)."""
         return 0
 
     def print_batch(
         self,
-        images: Sequence[Image.Image],
+        images: Sequence[PackedImage],
         host: str,
         options: PrintOptions,
         progress: ProgressCallback | None = None,
     ) -> PrintResult | None:
         """The labels of a series as one job, `options.copies` of each
-        image (made by prepare()); progress counts the labels of the whole
-        job. A PrinterError carries params["printed"], the labels done
-        before the problem. Only for a backend whose series_batch() is
-        not 0."""
+        image (made by prepare(), PackedImage.of()); progress counts the
+        labels of the whole job. A PrinterError carries params["printed"],
+        the labels done before the problem. Only for a backend whose
+        series_batch() is not 0."""
         raise NotImplementedError
 
     def print_pages(

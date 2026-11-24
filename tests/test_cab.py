@@ -1381,6 +1381,71 @@ def test_labels_varying_per_copy_are_printed_one_by_one(printer):
     assert all(job.startswith(b"d PNG;TAVLETTA\r\n") for job in printer.device.jobs)
 
 
+def test_a_series_job_holds_its_labels_packed(printer, monkeypatch):
+    """Each label of a series' job is packed (PNG) as soon as it is
+    rendered: no image of the job is kept until it is sent. The job's
+    bytes are those of the images themselves."""
+    from tavletta.backends.base import PackedImage
+    from tavletta.serial import print_series
+
+    batches = []
+    real = Cab.print_batch
+
+    def print_batch(self, images, host, options, progress=None):
+        batches.append(list(images))
+        return real(self, images, host, options, progress)
+
+    monkeypatch.setattr(Cab, "print_batch", print_batch)
+    series = _series(3)
+    print_series(Cab(), "h", series)
+    (images,) = batches
+    assert all(isinstance(image, PackedImage) for image in images)
+    rendered = [
+        Cab().prepare(_series(1, text=str(70000 + n)).label, PrintOptions(host="h"))
+        for n in range(3)
+    ]
+    gap = PrintOptions().gap_mm
+    assert printer.device.jobs[0] == cab.build_series_job(
+        rendered, 12.0, gap, 1, size_mm=(40, 18.6)
+    )
+    assert [image.size for image in images] == [image.size for image in rendered]
+    assert images[0].open().info["size_mm"] == (40, 18.6)
+
+
+def test_a_series_job_takes_fewer_labels_once_their_images_reach_the_budget(printer, monkeypatch):
+    """ "Labels per job" is the most a job takes: once its packed images
+    hold BATCH_BYTES, the next label goes into the next job (one each
+    at least)."""
+    from tavletta import serial
+
+    size = len(cab.encode_png(Cab().prepare(_series(1).label, PrintOptions(host="h"))))
+    monkeypatch.setattr(serial, "BATCH_BYTES", 3 * size)
+    outcome = serial.print_series(Cab(), "h", _series(7, labels_per_job=5))
+    assert outcome.printed == list(range(1, 8)) and outcome.labels == 7
+    assert [len(_series_parts(job)[0]) for job in printer.device.jobs] == [3, 3, 1]
+    monkeypatch.setattr(serial, "BATCH_BYTES", 1)
+    serial.print_series(Cab(), "h", _series(2, labels_per_job=5))
+    assert [len(_series_parts(job)[0]) for job in printer.device.jobs[3:]] == [1, 1]
+
+
+def test_a_packed_series_is_scaled_for_a_printer_of_twice_the_resolution(printer):
+    """Rendered for a /300, printed on a /600 (23.6 dots/mm, about twice:
+    rendered again) and on a printer of exactly twice: every dot a block
+    of two."""
+    from tavletta.backends.base import PackedImage, RenderAgain
+
+    image = Cab().prepare(_label(40, 18.6), PrintOptions())
+    packed = PackedImage.of(image)
+    backend = Cab()
+    printer.device.version = "5.40 (EOS2/600)"  # no such model: 23.6 dots/mm
+    backend.reported["h"] = 12.0
+    with pytest.raises(RenderAgain):
+        backend.print_batch([packed, packed], "h", PrintOptions())
+    scaled = cab._for_resolution(packed, 12.0, 24.0)
+    assert isinstance(scaled, PackedImage) and scaled.size == (2 * image.width, 2 * image.height)
+    assert cab._for_resolution(packed, 12.0, 12.0) is packed
+
+
 @pytest.mark.gui
 def test_the_window_offers_labels_per_job_in_the_printer_group(make_window):
     gi = pytest.importorskip("gi")

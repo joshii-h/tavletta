@@ -19,6 +19,7 @@ from datetime import datetime
 from tavletta import codes
 from tavletta.backends.base import (
     Backend,
+    PackedImage,
     PrinterError,
     PrintOptions,
     PrintResult,
@@ -38,6 +39,12 @@ from tavletta.variables import (
     uses_counter,
     varies_per_copy,
 )
+
+# what the images of a series' job may hold at most (PackedImage, PNG):
+# a job takes fewer labels than Backend.series_batch() once they reach it.
+# An inventory label is about 1.4 KB, a 100 × 150 mm label of text a few
+# KB, one with a dithered photo several hundred KB
+BATCH_BYTES = 16 * 1024 * 1024
 
 
 def filled(label: Label, row: Mapping[str, str], values: Values | None = None) -> Label:
@@ -316,37 +323,31 @@ def _print_in_batches(
     stop: threading.Event | None,
     outcome: SeriesResult,
 ) -> SeriesResult:
-    """The rows as jobs of `batch` labels each (Backend.print_batch()): the
-    printer runs a job's labels through without stopping between them.
-    `stop` is looked at between two jobs. A failure as SeriesError at the
-    first row not printed in full, the rows before it printed."""
+    """The rows as jobs of up to `batch` labels each (Backend.print_batch()):
+    the printer runs a job's labels through without stopping between them.
+    A job takes fewer once its images hold BATCH_BYTES. `stop` is looked
+    at between two jobs. A failure as SeriesError at the first row not
+    printed in full, the rows before it printed."""
     options = series.options if series.options.host else replace(series.options, host=host)
     copies = max(1, options.copies)
     counting = uses_counter(series.label)
     indexes = list(series.indexes)
     total = len(indexes)
-    for start in range(0, total, batch):
+    start = 0
+    while start < total:
         if outcome.printed and stop is not None and stop.is_set():
             outcome.stopped = True
             return outcome
-        chunk = indexes[start : start + batch]
-        jobs = []
-        for n, index in enumerate(chunk):
-            # the counter goes on from the labels before; UUID and ID are new
-            first = replace(
-                values, counter=values.counter + values.step * (outcome.labels + n * copies)
-            )
-            jobs.append(
-                Job(backend, series.label, options, series.safe_mm, first, series.rows[index])
-            )
+        jobs, images, unprepared = _next_batch(
+            backend, series, options, values, indexes[start:], batch, outcome
+        )
+        sent = indexes[start : start + len(images)]
 
-        def report(event: Progress, start=start, chunk=chunk) -> None:
+        def report(event: Progress, start=start, sent=sent) -> None:
             if progress:
-                n = min(len(chunk), (event.copy - 1) // copies + 1)
-                progress(SeriesProgress(start + n, total, chunk[n - 1] + 1, event))
+                n = min(len(sent), (event.copy - 1) // copies + 1)
+                progress(SeriesProgress(start + n, total, sent[n - 1] + 1, event))
 
-        images, unprepared = _images(jobs)
-        sent = chunk[: len(images)]
         try:
             if images:
                 outcome.result = merge_results(
@@ -356,9 +357,9 @@ def _print_in_batches(
             done = e.params.get("printed", 0) if isinstance(e, PrinterError) else 0
             done = done if isinstance(done, int) and not isinstance(done, bool) else 0
             rows, partial = divmod(max(0, min(done, copies * len(sent))), copies)
-            _done(outcome, chunk[:rows], done, values if counting else None)
+            _done(outcome, sent[:rows], done, values if counting else None)
             raise SeriesError(
-                chunk[min(rows, len(sent) - 1)] + 1,
+                sent[min(rows, len(sent) - 1)] + 1,
                 list(outcome.printed),
                 e,
                 False,
@@ -371,26 +372,51 @@ def _print_in_batches(
                 outcome.counter = values.counter + values.step * outcome.labels
             raise
         _done(outcome, sent, copies * len(sent), values if counting else None)
+        start += len(sent)
         if unprepared is not None:  # the rows before it are printed: on from that row
             cause = (
                 unprepared.__cause__ if isinstance(unprepared.__cause__, Exception) else unprepared
             )
             raise SeriesError(
-                chunk[len(images)] + 1, list(outcome.printed), cause, True, outcome
+                indexes[start] + 1, list(outcome.printed), cause, True, outcome
             ) from unprepared
     return outcome
 
 
-def _images(jobs: list[Job]) -> tuple[list, PrepareFailed | None]:
-    """The images of the jobs, up to the first that cannot be rendered
-    (and its error)."""
-    images = []
-    for job in jobs:
+def _next_batch(
+    backend: Backend,
+    series: Series,
+    options: PrintOptions,
+    values: Values,
+    indexes: Sequence[int],
+    batch: int,
+    outcome: SeriesResult,
+) -> tuple[list[Job], list[PackedImage], PrepareFailed | None]:
+    """The jobs and packed images of the next job of a series: up to
+    `batch` rows, fewer once the images hold BATCH_BYTES (one at least),
+    up to the first row that cannot be rendered (and its error). Each
+    image is packed as soon as it is rendered: only one at a time is held
+    as an image."""
+    copies = max(1, options.copies)
+    jobs: list[Job] = []
+    images: list[PackedImage] = []
+    held = 0
+    for n, index in enumerate(indexes[:batch]):
+        if held >= BATCH_BYTES:
+            break
+        # the counter goes on from the labels before; UUID and ID are new
+        first = replace(
+            values, counter=values.counter + values.step * (outcome.labels + n * copies)
+        )
+        job = Job(backend, series.label, options, series.safe_mm, first, series.rows[index])
         try:
-            images.append(job.image(job.expanded(1)[0]))
+            image = PackedImage.of(job.image(job.expanded(1)[0]))
         except PrepareFailed as e:
-            return images, e
-    return images, None
+            return jobs, images, e
+        jobs.append(job)
+        images.append(image)
+        held += len(image.png)
+    return jobs, images, None
 
 
 def _send_batch(backend: Backend, host: str, jobs: list[Job], images, options, report):
@@ -400,7 +426,10 @@ def _send_batch(backend: Backend, host: str, jobs: list[Job], images, options, r
     try:
         return backend.print_batch(images, host, options, report)
     except RenderAgain:
-        again = [job.image(job.expanded(1)[0], reported=True) for job in jobs[: len(images)]]
+        again = [
+            PackedImage.of(job.image(job.expanded(1)[0], reported=True))
+            for job in jobs[: len(images)]
+        ]
         return backend.print_batch(again, host, options, report)
 
 
