@@ -1237,6 +1237,27 @@ def test_printer_defaults_also_reset_the_sheet_outlines(tmp_path):
     assert printer.host == "office"  # the address stays
 
 
+def test_more_labels_on_sheets_than_a_job_takes_are_refused(tmp_path, rows_csv, capsys):
+    """Copies times rows over what one job of sheets takes: refused before
+    anything is printed, not cut short with all of them counted."""
+    from tavletta.model import SheetChoice
+    from tavletta.sheets.layout import MAX_LABELS
+
+    label = Label(printer="system", orientation="across", elements=[TextElement(text="x")])
+    label.sheet = SheetChoice("Avery L7160", [1])
+    path = tmp_path / "sheet.tavletta"
+    label.save(path)
+    settings = Settings({"printers": {"system": {"host": "office"}}})
+    args = cli.parser().parse_args(["print", str(path), "--copies", str(MAX_LABELS)])
+    assert cli._job(args, settings, NOW)[0].sheet.count == MAX_LABELS
+    for more in (["--copies", str(MAX_LABELS + 1)], ["--copies", "500", "--data", str(rows_csv)]):
+        args = cli.parser().parse_args(["print", str(path), *more])
+        with pytest.raises(cli.CliError) as caught:
+            cli._job(args, settings, NOW)
+        assert caught.value.code == cli.EXIT_USAGE
+        assert str(caught.value) == "At most %d labels in one print job" % MAX_LABELS
+
+
 def test_a_dry_run_output_renders_each_label_once(mono, label_file, tmp_path, monkeypatch):
     """--output: the check and the first label as the printer gets it (what
     would fail) render once each, then every label once for its PNG; not

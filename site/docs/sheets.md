@@ -37,7 +37,8 @@ positions are saved with the label.
 
 - [[ui:Labels]]: how many labels to print. At first as many as positions
   are chosen; more fill further sheets. The dialog shows how many sheets
-  that takes.
+  that takes. One print job takes at most 999 labels; with serial labels
+  that is the rows times the copies of each.
 - [[ui:Print outlines]]: prints the outline of every label. Print a test
   page on plain paper first and hold it against a label sheet in front of a
   light: if the content sits inside the outlines, the sheet fits.

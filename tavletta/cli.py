@@ -66,7 +66,7 @@ from tavletta.serial import (
     used_columns,
 )
 from tavletta.sheets import find as find_sheet
-from tavletta.sheets.layout import SheetJob
+from tavletta.sheets.layout import MAX_LABELS, SheetJob
 from tavletta.ui.i18n import _
 from tavletta.ui.settings import PrinterSettings, Settings
 from tavletta.ui.texts import (
@@ -941,6 +941,8 @@ def _job(args, settings: Settings | None, now: datetime | None):
     rows, indexes = _data(args, label)
     columns = rows[indexes[0]] if rows else None
     sheet = _sheet_job(label, backend, choices, args.copies * max(1, len(indexes)))
+    if sheet is not None and sheet.count > MAX_LABELS:  # refused by the job too
+        raise CliError(_("At most %d labels in one print job") % MAX_LABELS, EXIT_USAGE)
     job = Job(backend, label, options, printer.safe_mm, values, columns, sheet)
     series = None
     if rows:

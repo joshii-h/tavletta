@@ -322,8 +322,9 @@ def _print_on_sheets(
     """One job of label sheets (job.Job with a label for each position):
     the rows in order, each `copies` times on consecutive positions, from
     the chosen positions of the first sheet on, each position with its own
-    counter, copy number, UUID and ID. It cannot be stopped between rows. A
-    failure names the row to go on from, the copies of it printed and where
+    counter, copy number, UUID and ID. It cannot be stopped between rows.
+    More labels than one job of sheets takes (sheets.layout.MAX_LABELS)
+    are refused before the first (TooManyLabels). A failure names the row to go on from, the copies of it printed and where
     on the sheets it goes; the labels that came out count (also on Ctrl+C,
     see Job.run)."""
     assert series.sheet is not None
@@ -374,5 +375,5 @@ def _print_on_sheets(
     except BaseException:  # Ctrl+C: the labels that came out used their numbers
         count(job.printed)
         raise
-    count(total)
+    count(job.printed)
     return outcome

@@ -316,7 +316,10 @@ the gLabels template database says (`tavletta/sheets`, see below).
   every position another row; printing copies is the source that always
   returns the same label.
 - The positions to fill: the chosen ones on the first sheet (partly used
-  sheets), every position on the sheets after it. Up to 999 labels a job.
+  sheets), every position on the sheets after it. Up to 999 labels a job:
+  more (copies times rows of a serial label) are refused before the first
+  sheet, by the window, the command line and the server alike, not cut
+  short (`TooManyLabels`).
 - The pages go in `Print-Job`s of up to 10 pages each, every page once (no
   `copies`): a PDF with a page each, or PWG Raster or Apple Raster with
   the page count set; 23 sheets are jobs of 10, 10 and 3 pages. A job also

@@ -55,12 +55,24 @@ def first_positions(sheet: Sheet, positions: Iterable[int]) -> list[int]:
     return chosen or list(range(sheet.count))
 
 
+class TooManyLabels(ValueError):
+    """More labels than one job of sheets takes (MAX_LABELS): refused, not
+    cut short, so that no label is counted as printed that was not."""
+
+    def __init__(self, count: int):
+        super().__init__("%d labels on sheets, at most %d in one job" % (count, MAX_LABELS))
+        self.count = count
+
+
 def page_slots(sheet: Sheet, count: int, positions: Iterable[int]) -> list[list[int]]:
     """The positions to fill, page by page, for count labels: the chosen
     positions on the first sheet (a sheet that is partly used already),
-    every position on the sheets after it."""
+    every position on the sheets after it. TooManyLabels for more than
+    MAX_LABELS."""
+    if count > MAX_LABELS:
+        raise TooManyLabels(count)
     every = list(range(sheet.count))
-    slots, pages, left = first_positions(sheet, positions), [], max(0, min(count, MAX_LABELS))
+    slots, pages, left = first_positions(sheet, positions), [], max(0, count)
     while left > 0:
         page = slots[:left]
         pages.append(page)

@@ -12,6 +12,7 @@ from tavletta.sheets.layout import (
     MAX_LABELS,
     Pages,
     SheetJob,
+    TooManyLabels,
     clip_preview,
     compose_page,
     first_positions,
@@ -36,8 +37,20 @@ def test_slots_start_at_a_position_then_full_sheets():
     assert page_slots(sheet, 2, [7, 3, 3, 99, -1]) == [[3, 7]]
     assert page_slots(sheet, 0, []) == []
     assert page_slots(sheet, 2, []) == [[0, 1]]  # nothing chosen: all
-    assert sum(len(p) for p in page_slots(sheet, 10**6, [])) == MAX_LABELS
+    assert sum(len(p) for p in page_slots(sheet, MAX_LABELS, [])) == MAX_LABELS
     assert first_positions(sheet, [30]) == list(range(24))
+
+
+def test_more_labels_than_a_job_takes_are_refused_not_cut_short():
+    """Cut short, the labels left out were counted as printed (and their
+    serial numbers skipped)."""
+    sheet = _sheet()
+    for count in (MAX_LABELS + 1, 10**6):
+        with pytest.raises(TooManyLabels) as caught:
+            page_slots(sheet, count, [])
+        assert caught.value.count == count
+    with pytest.raises(TooManyLabels):
+        SheetJob(sheet, MAX_LABELS + 1).slots()
 
 
 def _label(width_mm, height_mm, color="red"):

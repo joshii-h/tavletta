@@ -78,7 +78,7 @@ from tavletta.server.errors import ApiError, bad_request, invalid_field, not_fou
 from tavletta.server.jobs import PRINTING, WAITING, Failure, JobQueue, PrintJob, QueueFull
 from tavletta.server.paths import LabelsDir
 from tavletta.server.requests import LabelRequest, PreviewRequest, PrintRequest
-from tavletta.sheets.layout import SheetJob
+from tavletta.sheets.layout import MAX_LABELS, SheetJob
 from tavletta.typeset import font_installed
 from tavletta.ui.i18n import _
 from tavletta.ui.settings import PrinterSettings, Settings
@@ -1029,11 +1029,13 @@ class Service:
         prepared = self.prepare(request, request.copies, request.rows, caller, printing=True)
         _check_copies(prepared, request.copies)
         total = request.copies * (len(prepared.indexes) if prepared.rows else 1)
-        if total > self.max_labels:
+        # a job of label sheets takes no more than MAX_LABELS (TooManyLabels)
+        limit = min(self.max_labels, MAX_LABELS) if prepared.sheet else self.max_labels
+        if total > limit:
             raise ApiError(
                 413,
                 "too_many_labels",
-                _("At most %d labels in one print job") % self.max_labels,
+                _("At most %d labels in one print job") % limit,
             )
         with self._rendering(prepared):
             warnings = self._check(prepared) + font_warnings(prepared.label)

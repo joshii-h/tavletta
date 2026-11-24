@@ -442,7 +442,8 @@ SCHEMAS: dict[str, Any] = {
                 "maximum": MAX_COPIES,
                 "default": 1,
                 "description": "Copies of each label (each row); at most the printer's "
-                "max_copies. Copies times rows: at most --max-labels (10000 by default).",
+                "max_copies. Copies times rows: at most --max-labels (10000 by default), "
+                "on label sheets at most 999.",
             },
             rows={
                 "type": "string",
@@ -1000,7 +1001,11 @@ ERROR_CODES: tuple[tuple[int, str, str], ...] = (
     (409, "counter_not_saved", "The label file is not writable: nothing was printed."),
     (411, "length_required", "No Content-Length (chunked bodies are not accepted)."),
     (413, "too_large", "Body over --max-body, or too many data rows, columns or cells."),
-    (413, "too_many_labels", "Copies times rows over --max-labels (10000 by default)."),
+    (
+        413,
+        "too_many_labels",
+        "Copies times rows over --max-labels (10000 by default); on label sheets over 999.",
+    ),
     (413, "label_too_large", "The label is too large to render (elements, text, pixels)."),
     (415, "not_json", "Send Content-Type: application/json."),
     (421, "wrong_host", "A loopback server asked for another host name."),

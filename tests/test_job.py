@@ -282,6 +282,15 @@ def test_a_failed_sheet_counts_the_labels_of_the_sheets_printed():
     assert job.printed == 21 and job.next_counter() == 22
 
 
+def test_more_labels_on_sheets_than_a_job_takes_print_nothing():
+    from tavletta.sheets.layout import MAX_LABELS, TooManyLabels
+
+    job = sheet_job("{=counter}", MAX_LABELS + 1)
+    with pytest.raises(TooManyLabels):
+        job.run("office.local")
+    assert job.backend.pages == [] and job.printed == 0 and job.next_counter() == 1
+
+
 def test_per_label_renders_on_sheets_render_again_at_another_resolution():
     from tavletta.job import _EachCopy
 

@@ -440,6 +440,9 @@ class PrintFlow:
             indexes = row_span(choices["first"], choices["last"], len(window.data.rows))
             if job:  # a position for each label of each row
                 job = replace(job, count=len(indexes) * options.copies)
+                if job.count > MAX_LABELS:  # one job of sheets takes no more
+                    window.toast(_("At most %d labels in one print job") % MAX_LABELS)
+                    return
 
             def series(sheet: SheetJob | None = None) -> None:
                 self.start_series(options, indexes, sheet)

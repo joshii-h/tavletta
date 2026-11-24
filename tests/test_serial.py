@@ -391,6 +391,33 @@ def test_serial_labels_fill_the_positions_of_label_sheets():
     assert [(e.label, e.labels, e.row) for e in events] == [(1, 1, 1)]
 
 
+def test_serial_labels_on_sheets_over_the_job_limit_print_nothing():
+    """Rows times copies over what one job of sheets takes: refused before
+    the first sheet, the counter where it was (no rows cut off silently
+    and counted as printed)."""
+    from tavletta.sheets.layout import MAX_LABELS, TooManyLabels
+
+    backend = SheetPrinter()
+    rows = [{"Name": "R%d" % n, "Code": "C", "Shelf": "S"} for n in range(MAX_LABELS + 1)]
+    label = Label(tape_mm=12, printer="fake-mono", elements=[TextElement(text="{=counter}")])
+    series = replace(sheet_series(label=label), rows=rows, indexes=range(len(rows)))
+    outcome = SeriesResult()
+    with pytest.raises(TooManyLabels):
+        print_series(backend, "office", series, outcome=outcome)
+    assert backend.pages == [] and outcome.labels == 0 and outcome.printed == []
+    assert outcome.counter == 1
+
+    class Counting(SheetPrinter):  # the sheets counted, not composed
+        def print_pages(self, pages, host, options, progress=None):
+            self.pages = [None] * len(pages)
+
+    # at the limit all of them, and the counter goes on by each label printed
+    backend = Counting()
+    outcome = print_series(backend, "office", replace(series, indexes=range(MAX_LABELS)))
+    assert outcome.labels == MAX_LABELS and len(outcome.printed) == MAX_LABELS
+    assert outcome.counter == MAX_LABELS + 1 and len(backend.pages) == 48  # 21 a sheet
+
+
 def test_serial_labels_on_sheets_count_per_position():
     """Variables that change per label: each position its own counter."""
     label = Label(

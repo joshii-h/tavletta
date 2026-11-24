@@ -105,7 +105,7 @@ x-tavletta-error-codes:
   meaning: Body over --max-body, or too many data rows, columns or cells.
 - status: 413
   code: too_many_labels
-  meaning: Copies times rows over --max-labels (10000 by default).
+  meaning: Copies times rows over --max-labels (10000 by default); on label sheets over 999.
 - status: 413
   code: label_too_large
   meaning: The label is too large to render (elements, text, pixels).
@@ -1900,7 +1900,7 @@ components:
           maximum: 9999
           default: 1
           description: 'Copies of each label (each row); at most the printer''s max_copies. Copies times
-            rows: at most --max-labels (10000 by default).'
+            rows: at most --max-labels (10000 by default), on label sheets at most 999.'
         rows:
           type: string
           maxLength: 50
