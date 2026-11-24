@@ -469,18 +469,16 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"대기열에 있는 작업은 즉시 취소되고, 인쇄 중인 작업은 인쇄 중인 라벨이 끝난 "
-"뒤 멈춥니다. 이미 끝난 경우에는 409 `job_finished`가 반환됩니다."
+"대기 중인 작업은 즉시 취소되고, 인쇄 중인 작업은 인쇄 중인 라벨 뒤에 멈춥니"
+"다. cab 프린터는 연속 인쇄를 최대 `labels_per_job`장(기본값 250)의 작업 단위"
+"로 인쇄하며, 인쇄 중인 작업 뒤에 멈춥니다. 이미 끝났다면 409 `job_finished`입"
+"니다."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -930,57 +928,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1067,6 +1015,10 @@ msgstr ""
 "| 408 | `timeout` | 요청을 보내는 데 30 s보다 오래 걸렸습니다. |\n"
 "| 409 | `job_finished` | 작업이 끝났습니다. 취소할 것이 없습니다. |\n"
 "| 409 | `counter_not_saved` | 라벨 파일에 쓸 수 없습니다. 아무것도 인쇄되지 않았습니다. |\n"
+"| 409 | `label_exists` | 그 이름의 라벨이 이미 있습니다. replace=true로 업로드하십시오. |\n"
+"| 409 | `label_in_use` | 그 라벨의 작업이 대기 중이거나 인쇄 중입니다. 끝난 뒤에 다시 시도하십시오. |\n"
+"| 409 | `label_changed` | 요청을 확인하는 동안 라벨 파일이 교체되었습니다. |\n"
+"| 409 | `label_locked` | 그 라벨의 인쇄가 파일을 붙들고 있습니다. 끝난 뒤에 다시 시도하십시오. |\n"
 "| 411 | `length_required` | Content-Length가 없습니다(청크 본문은 허용되지 않습니다). |\n"
 "| 413 | `too_large` | 본문이 `--max-body`를 초과했거나, 데이터 행, 열 또는 셀이 너무 많습니다. |\n"
 "| 413 | `too_many_labels` | 사본 수 곱하기 행 수가 `--max-labels`(기본값 10000)를 초과했습니다. 라벨 시트에서는 999를 초과했습니다. |\n"
@@ -1085,15 +1037,16 @@ msgstr ""
 "| 429 | `too_many_requests` | 이 주소에서 잘못된 토큰이 10번: 1분 기다리십시오. |\n"
 "| 429 | `queue_full` | 대기 중인 작업이 너무 많습니다. 나중에 다시 시도하십시오. |\n"
 "| 500 | `internal` | 서버의 오류입니다. 로그에 기록됩니다. |\n"
+"| 500 | `not_saved` | 라벨 폴더에 쓸 수 없었습니다(507: 가득 참). |\n"
+"| 500 | `not_deleted` | 라벨 파일을 삭제할 수 없었습니다(읽기 전용 폴더). |\n"
 "| 502 | `printer_<code>` | 프린터에 접근할 수 없거나 문제가 보고되었습니다. |\n"
 "| 503 | `busy` | 요청 또는 렌더링 슬롯이 모두 사용 중입니다. 잠시 후 다시 시도하십시오. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: 프린터의 문제이며, `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite` 중 하나입니다.\n"
+msgstr "`printer_<code>`: 프린터의 문제이며 `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite` 중 하나입니다.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1176,20 +1129,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1212,14 +1152,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | 없음 | 서버가 실행 중인지 확인. 토큰 불필요(상태 점검용) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | 이 설명(OpenAPI 3.1). 어떤 역할의 토큰이든 가능 |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | 토큰의 이름, 역할, 프린터와 요청의 제한(웹 페이지용) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | 토큰이 사용할 수 있는 `printers.toml`의 프린터와 그 상태. 토큰이 없으면 프린터 모델, 각각에 설정된 주소, 검색된 프린터(`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | 프린터의 상태(미디어, 문제, 해상도)를 조회 |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | 라벨 폴더와 그 하위 폴더의 라벨 파일 |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | 라벨에 채울 수 있는 내용: 요소, 변수, 데이터 열, 크기, 카운터 |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | 라벨 파일 업로드(admin): 앱이 파일을 여는 것과 같게 확인한 뒤 한 단계로 라벨 폴더에 넣습니다 |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | 라벨 파일 삭제(admin). 그 데이터 파일은 남습니다 |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | 요청과 함께 보낸 데이터 파일(CSV, ODS, XLSX)을 앱이 읽는 것과 같게 읽습니다. 그 행을 data_rows용으로 돌려주며 아무것도 저장하지 않습니다 |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | 데이터를 채운 라벨을 이미지로 반환. 아무것도 인쇄되지 않음 |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | 인쇄: 요청을 확인한 뒤 대기열에 넣음. 각 프린터는 한 번에 하나의 작업을 인쇄함 |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | 인쇄 작업의 상태(print 토큰: 자신의 작업, admin: 모두). 완료 후 24시간 보관 |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | 작업 취소: 대기 중이면 즉시, 인쇄 중이면 현재 라벨 뒤에 |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | 작업 취소: 대기 중이면 즉시, 인쇄 중이면 이미 프린터로 보낸 라벨 뒤에(cab: 최대 labels_per_job장의 작업) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1293,25 +1237,20 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
 msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
-msgstr ""
+msgstr "토큰의 이름, 역할, 프린터와 요청의 제한(웹 페이지용)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1319,7 +1258,7 @@ msgid ""
 msgstr ""
 "| Status | 응답 | 코드 |\n"
 "|---|---|---|\n"
-"| 200 | 라벨 |  |\n"
+"| 200 | 누구 |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1519,10 +1458,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1530,21 +1468,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"라벨 파일 업로드(admin): 앱이 파일을 여는 것과 같게 확인한 뒤 한 단계로 라벨 "
+"폴더에 넣습니다."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "역할: `print`"
+msgstr "역할: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1553,12 +1487,13 @@ msgid ""
 msgstr ""
 "| 매개변수 | 위치 | 의미 |\n"
 "|---|---|---|\n"
-"| `name` | path | 하위 폴더를 위한 슬래시를 포함할 수 있습니다. '`.tavletta`'는 생략할 수 있습니다. |\n"
+"| `name` | path | 폴더를 뺀 파일 이름. '`.tavletta`'는 생략할 수 있습니다. |\n"
+"| `replace` | query | 그 이름의 라벨을 교체합니다. 기본값 `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "본문: `.tavletta` 파일의 내용."
 
 #. type: Plain text
 #: docs/api.md
@@ -1574,6 +1509,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | 응답 | 코드 |\n"
+"|---|---|---|\n"
+"| 200 | 교체됨(replace=true) |  |\n"
+"| 201 | 추가됨 |  |\n"
+"| 400 | 새 라벨에 쓸 수 없는 이름: 문자, 숫자, 공백과 . _ - ( ) + , (100자까지), 폴더 바로 아래 | `invalid_field`, `not_json` |\n"
+"| 409 | 그 이름의 라벨이 이미 있음(replace=true를 보내십시오), 그 라벨의 작업이 대기 중이거나 인쇄 중임(label_in_use), 또는 다른 프로그램의 인쇄가 파일을 붙들고 있음 | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | `--max-body`를 초과했거나 라벨이 너무 커서 렌더링할 수 없음 | `too_large`, `label_too_large` |\n"
+"| 422 | Tavletta가 열 수 있는 라벨이 아님 | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | 라벨 폴더에 남은 공간이 없음 | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1588,26 +1532,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "라벨 파일 삭제(admin). 그 데이터 파일은 남습니다."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1618,10 +1554,10 @@ msgid ""
 msgstr ""
 "| Status | 응답 | 코드 |\n"
 "|---|---|---|\n"
-"| 200 | 라벨 |  |\n"
+"| 204 | 삭제됨 |  |\n"
 "| 400 | 라벨 폴더 안의 이름이 아님 | `invalid_field` |\n"
 "| 404 | 그러한 라벨이 없음 | `label_not_found` |\n"
-"| 422 | 파일이 라벨이 아니거나 손상됨 | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | 그 라벨의 작업이 대기 중이거나 인쇄 중임(label_in_use), 또는 다른 프로그램의 인쇄가 파일을 붙들고 있음 | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1634,10 +1570,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1645,6 +1580,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"요청과 함께 보낸 데이터 파일(CSV, ODS, XLSX)을 앱이 읽는 것과 같게 읽습니다. "
+"그 행을 data_rows용으로 돌려주며 아무것도 저장하지 않습니다."
 
 #. type: Plain text
 #: docs/api.md
@@ -1662,17 +1599,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| 필드 | 유형 | 의미 |\n"
+"|---|---|---|\n"
+"| `content` | string | 파일: CSV(구분 기호 무관, UTF-8, UTF-16 또는 Windows-1252), ODS 또는 XLSX이며 내용으로 구별합니다. 붙여 넣은 텍스트는 CSV 파일입니다. |\n"
+"| `name` | string | 메시지에 쓸 파일 이름. |\n"
+"| `sheet` | string | ODS, XLSX: 시트(기본값은 첫 번째 시트). |\n"
+"| `header` | boolean | false: 첫 행도 데이터이며 열 이름은 A, B, C … 입니다. 기본값 `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1682,10 +1618,9 @@ msgid ""
 msgstr ""
 "| Status | 응답 | 코드 |\n"
 "|---|---|---|\n"
-"| 200 | 라벨 |  |\n"
-"| 400 | 라벨 폴더 안의 이름이 아님 | `invalid_field` |\n"
-"| 404 | 그러한 라벨이 없음 | `label_not_found` |\n"
-"| 422 | 파일이 라벨이 아니거나 손상됨 | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | 행 |  |\n"
+"| 400 | 잘못된 요청 | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | 표가 아니거나 손상되었거나 비어 있음 | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1833,18 +1768,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1863,7 +1787,7 @@ msgstr ""
 "| 202 | 대기 중이거나 인쇄 중. Location에서 추적하십시오 |  |\n"
 "| 400 | 잘못된 요청 | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | 그러한 라벨, 프린터 또는 데이터 파일이 없거나, 토큰이 사용할 수 없는 프린터 | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | 라벨 파일에 쓸 수 없음: 다음 카운터 값을 저장할 수 없었고, 아무것도 인쇄되지 않음 | `counter_not_saved` |\n"
+"| 409 | 라벨 파일에 쓸 수 없습니다. 카운터의 다음 값을 저장할 수 없었고 아무것도 인쇄되지 않았습니다. 또는 요청을 확인하는 동안 교체되었습니다(label_changed). 다시 보내십시오 | `counter_not_saved`, `label_changed` |\n"
 "| 413 | 너무 큼: 본문, 데이터 행, 작업 하나의 라벨 또는 렌더링할 라벨 | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | 라벨이 잘못 인쇄될 것임 | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | 잘못된 토큰이 너무 많거나, 대기 중인 작업이 너무 많음(전체 100개, 이름 있는 토큰당 20개) | `too_many_requests`, `queue_full` |\n"
@@ -1935,26 +1859,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"작업을 취소합니다. 대기 중이면 즉시, 인쇄 중이면 현재 라벨이 끝난 뒤에 취소됩"
-"니다."
+"작업 취소: 대기 중이면 즉시, 인쇄 중이면 이미 프린터로 보낸 라벨 뒤에(cab: 최"
+"대 labels_per_job장의 작업)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1964,7 +1878,7 @@ msgid ""
 msgstr ""
 "| Status | 응답 | 코드 |\n"
 "|---|---|---|\n"
-"| 202 | 취소됨, 또는 현재 라벨 뒤에 중지됨 |  |\n"
+"| 202 | 취소됨, 또는 이미 보낸 라벨 뒤에 멈춤 |  |\n"
 "| 404 | 그러한 작업이 없음 | `job_not_found` |\n"
 "| 409 | 이미 끝남 | `job_finished` |\n"
 
@@ -1991,27 +1905,7 @@ msgstr "작업 { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2043,7 +1937,8 @@ msgstr ""
 "| `host` | string | 프린터의 주소. |\n"
 "| `owner` | string or null | 토큰의 이름. |\n"
 "| `label` | string or null | 라벨 폴더의 이름. label_content이면 null. |\n"
-"| `printed` | integer | 지금까지 인쇄된 라벨. |\n"
+"| `printed` | integer | 지금까지 확실히 인쇄된 라벨. 작업이 인쇄되는 동안 프린터가 알려 주는 범위에서 라벨 한 장씩 늘어납니다. |\n"
+"| `printed_max` | integer or null | 프린터가 결과를 알려 줄 수 없었던 실패(인쇄 중 연결이 끊김) 뒤: 이 수만큼까지 라벨이 인쇄되었을 수 있습니다. 카운터는 그 뒤에 이어집니다. rows_printed는 확실히 인쇄된 행을 세므로, 다음 행부터 다시 인쇄하면 라벨이 두 번 인쇄될 수 있습니다. 그 밖에는 null. |\n"
 "| `total` | integer | 인쇄할 라벨: 사본 수 x 행 수. |\n"
 "| `rows_printed` | integer | 완전히 인쇄된 데이터 행: 실패 후에는 rows를 다음 행(rows_printed + 첫 번째 행)으로 지정하여 다시 인쇄합니다. |\n"
 "| `cancel_requested` | boolean | DELETE가 전송되었습니다. |\n"
@@ -2062,22 +1957,7 @@ msgstr "라벨 { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2107,9 +1987,11 @@ msgstr ""
 "| `columns` | array of string | 플레이스홀더 `{Column}`: data_rows의 키. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file이 (더 이상) 없음: 행을 data_rows로 보내십시오. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used(라벨에 `{=counter}`가 있음), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | 라벨 시트에 인쇄: 한 작업에 최대 999장의 라벨. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2196,14 +2078,7 @@ msgstr "미리 보기 { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2219,12 +2094,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | 잘못 인쇄될 것. other_labels_loaded: `printers.toml`의 프린터에 라벨과 다른 라벨이 들어 있다고 보고합니다(그 크기, 또는 측정된 라벨 간격). 가장 최근의 응답은 최근 1분 이내의 것이면 반영되고, 오류는 아무것도 알 수 없는 것으로 취급됩니다(백그라운드에서 다시 질의함). 아직 알려지지 않은 프린터는 라벨 렌더링 후 최대 1초 동안 기다립니다. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | 이미지에서 요소가 있는 위치. view=printer와 시트에 맞춰 돌린 라벨에서는 null. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2233,6 +2109,9 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"미리보기 이미지에서 요소의 상자로, 왼쪽 위 모서리로부터 mm 단위입니다"
+"(tavletta/editing.py, docs/editing.md). 이미지의 한 픽셀은 mm * dpi / 25.4입"
+"니다."
 
 #. type: Plain text
 #: docs/api.md
@@ -2246,13 +2125,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| 필드 | 유형 | 의미 |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | 테이프를 따라: 길이. |\n"
+"| `height_mm` | number | 가로질러: 테이프 또는 라벨의 높이. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | 이미지의 해상도. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "이미지 { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2268,13 +2153,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| 필드 | 유형 | 의미 |\n"
+"|---|---|---|\n"
+"| `name` | string | tokens.toml에서의 토큰 이름. `--token-file`의 하나뿐인 토큰은 'token', 토큰이 없으면 'local', OpenID Connect로 웹 페이지에 로그인한 사람은 'oidc:<user>'. |\n"
+"| `display_name` | string | 공급자가 알려 주는 사람의 이름. 없으면 name과 같음. |\n"
+"| `session` | boolean | true: 토큰이 아니라 OpenID Connect(그 세션 쿠키)로 웹 페이지에 로그인함. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | 토큰이 사용할 수 있는 프린터. null: 전부. |\n"
+"| `token_required` | boolean | false: 서버에 토큰이 없고 `--oidc`도 없음(루프백 전용). |\n"
+"| `limits` | object | 한 요청이 최대로 요구할 수 있는 것: 한 작업의 라벨 수(`--max-labels`, 라벨 시트에서는 최대 999), 복사본, 데이터 행, 열과 셀, 그리고 바이트 단위의 본문(`--max-body`, 업로드할 수 있는 가장 큰 라벨 파일이기도 함). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "시작 { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2289,6 +2182,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| 필드 | 유형 | 의미 |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: 찾은 구분 기호. 열이 하나인 경우와 스프레드시트에서는 null. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | 읽은 시트. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | 각 셀은 표시되는 그대로의 텍스트: 앞의 0과 숫자 서식이 유지됩니다(00300은 00300 그대로). 채워진 셀이 없는 행은 빠집니다. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2584,19 +2485,14 @@ msgstr "첫 번째 라벨"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"프린터의 전원을 켜고 [[ui:Printer model]]에서 선택합니다. Tavletta는 네트워크"
-"(Bonjour)에서 프린터를 찾고, 넣은 것(테이프 폭 또는 라벨 간 간격)을 읽어 옵니"
-"다."
+"프린터를 켜고 [[ui:Printer model]]에서 선택하십시오. USB나 네트워크(Bonjour)"
+"에서 찾은 프린터는 목록 맨 위에 있습니다. Tavletta는 들어 있는 것, 즉 테이프 "
+"너비나 라벨 사이의 간격을 읽습니다."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2639,6 +2535,11 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"[[ui:Printer model]]에서 프린터를 선택하십시오. 각 프린터는 아래에 자기 섹션"
+"이 있습니다. Tavletta가 USB와 네트워크에서 찾은 프린터는 그 목록 맨 앞의 "
+"[[ui:Found]] 아래에 모델과 함께 나옵니다. 하나를 선택하면 그 모델과 주소를 가"
+"져옵니다. 모델은 [[ui:All models]] 아래에 이어집니다. Tavletta는 창을 열 때"
+"와 [[ui:Search for printers]]로 모든 모델을 동시에 백그라운드에서 검색합니다."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2743,6 +2644,14 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]](다이컷 라벨): 프린터가 다른 크기의 라벨을 알리"
+"거나, 라벨 사이에서 라벨의 높이에 [[ui:Gap]]을 더한 값과 다른 거리를 측정했습"
+"니다. [[ui:Use loaded labels]]는 라벨을 바꾸지만 아직 아무것도 인쇄하지 않습"
+"니다. 프린터가 알리는 크기를 가져오거나(Brother QL), 높이와 간격을 더한 값이 "
+"측정한 거리가 되도록 롤 방향의 높이를 설정합니다(cab, Zebra). 간격과 너비는 "
+"그대로 두며, Zebra의 인쇄 너비는 마지막 인쇄가 설정한 값이지 라벨의 너비가 아"
+"닙니다. 그 높이가 5 mm보다 작아지는 경우에는 대신 간격이 바뀌며, 어느 쪽으로"
+"도 라벨이 되지 않으면 [[ui:Print anyway]]만 제공됩니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2751,6 +2660,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"[[ui:Use loaded labels]] 뒤에는 미리보기에서 라벨을 확인한 다음 인쇄하십시"
+"오. 메시지의 [[ui:Undo]]로 변경을 되돌릴 수 있으며, 이제 요소가 라벨 가장자리"
+"를 넘으면 메시지가 그렇게 알려 줍니다."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3272,6 +3184,12 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: 라벨의 제자리에서 벗어나 인쇄하는 프린터(모든 라벨에서 "
+"인쇄가 미리보기보다 약간 높거나 낮은 경우)는 여기서 보정합니다. 인쇄된 라벨에"
+"서 인쇄가 얼마나 벗어났는지 재어 입력하십시오. 롤에 가로로 놓인 라벨에서는 양"
+"수이면 인쇄가 아래로, 음수이면 위로 움직입니다. 미리보기는 계속 라벨을 나와"
+"야 할 모습대로 보여 주며, 프린터로 보내는 내용만 움직입니다. 인쇄가 움직여 가"
+"는 쪽 가장자리에서 이 거리 안에 있는 내용은 잘립니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3283,6 +3201,11 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: 연속 인쇄의 라벨은 한 작업에 이 수까지(기본값 250, 1에"
+"서 1000) 함께 프린터로 가서 사이에 멈추지 않고 인쇄됩니다. [[ui:Stop]]은 두 "
+"작업 사이에서 적용되며, 시작된 작업은 끝까지 인쇄됩니다. 1은 다른 프린터가 받"
+"는 것처럼 모든 라벨을 각각 하나의 작업으로 보냅니다. 내용이 복사본마다 바뀌"
+"는 라벨은 항상 한 장씩 갑니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3297,12 +3220,6 @@ msgstr "문제 { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3310,10 +3227,11 @@ msgid ""
 "once after changing the roll so it measures again, then [[ui:Use loaded "
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
-"[[ui:Different labels loaded]]: 프린터가 측정한 라벨 사이의 거리가 라벨의 높"
-"이와 간격을 더한 값과 다릅니다. [[ui:Label size]]와 [[ui:Gap]]을 확인하거나 "
-"올바른 롤을 넣으십시오. 롤을 교체한 후에는 프린터가 다시 측정하도록 프린터의 "
-"Feed를 한 번 누르십시오."
+"[[ui:Different labels loaded]]: 프린터가 라벨 사이에서 라벨의 높이에 간격을 "
+"더한 값과 다른 거리를 측정했습니다. [[ui:Label size]]와 [[ui:Gap]]을 확인하거"
+"나 올바른 롤을 넣으십시오. 롤을 바꾼 뒤 프린터에서 Feed를 한 번 눌러 다시 측"
+"정하게 하면, [[ui:Use loaded labels]]가 라벨을 그에 맞춥니다([모든 프린터]"
+"(#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3323,6 +3241,10 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"모든 것이 모든 라벨에서 똑같이 조금 너무 높거나 낮게 인쇄되는데 미리보기에서"
+"는 제자리에 보이는 경우: [[ui:Print offset]]을 설정하십시오. 다른 프로그램에"
+"서 이를 보정하도록 배치한 라벨은 미리보기에서 제자리를 벗어나 인쇄됩니다. 내"
+"용을 제자리로 되돌리고 대신 오프셋을 설정하십시오."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3369,6 +3291,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"메모리 부족: 프린터에 작업의 라벨을 담을 공간이 없었습니다. [[ui:Labels per "
+"job]]를 줄인 다음 메시지에 나온 행부터 다시 인쇄하십시오."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3382,6 +3306,13 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"\"작업은 전송되었지만 결과를 알 수 없습니다\": 인쇄 중에 프린터와의 연결이 끊"
+"겼습니다(또는 프린터가 어디까지 갔는지 알려 줄 수 없었습니다). Tavletta는 인"
+"쇄된 것으로 아는 라벨을 세지만, 프린터는 더 많이 인쇄했을 수 있습니다. 나온 "
+"라벨을 확인하십시오. 메시지에 나온 행부터 다시 인쇄하면 일부가 두 번 인쇄될 "
+"수 있지만 빠지는 것은 없습니다. 프린터의 웹 인터페이스에 네트워크로 접근할 "
+"수 있으면(기본값) Tavletta는 그 수를 프린터의 라벨 카운터와도 대조하며, 둘이 "
+"다르면 메시지가 범위를 알려 줍니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3999,6 +3930,10 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]](Zebra ZPL): 프린터는 마지막으로 측정한 거리를 "
+"알리며, 이전 롤에서 측정한 것일 수도 있습니다. 롤을 바꾼 뒤 [[ui:Use loaded "
+"labels]]를 사용하기 전에 라벨을 다시 측정하게 하십시오(대부분의 프린터는 Feed"
+"를 길게 눌러 측정합니다)([모든 프린터](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4327,20 +4262,19 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"모든 라벨이 각각 하나의 인쇄 작업이므로 어떤 프린터에서나 동작합니다. cab 프"
+"린터는 최대 [[ui:Labels per job]]장의 라벨을 한 작업으로 받아 사이에 멈추지 "
+"않고 인쇄합니다([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"창 위쪽 막대의 [[ui:Stop]]은 인쇄 중인 라벨이 끝난 뒤 연속 인쇄를 종료합니"
-"다. 첫 번째 라벨은 항상 인쇄됩니다."
+"창 위쪽 막대의 [[ui:Stop]]은 인쇄 중인 라벨 뒤에 연속 인쇄를 끝냅니다(cab 프"
+"린터에서는 인쇄 중인 작업 뒤). 첫 번째 라벨은 항상 인쇄됩니다."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4411,19 +4345,14 @@ msgstr "개요 { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"작은 서비스 하나로, 포트 8790의 REST API(및 AI 어시스턴트용 MCP)입니다. 라벨"
-"을 직접 렌더링하여 네트워크를 통해 프린터로 보냅니다. 데스크톱, 브라우저, 데"
-"이터베이스가 필요하지 않습니다."
+"작은 서비스 하나: 포트 8790의 REST API(와 AI 어시스턴트용 MCP)입니다. 라벨을 "
+"직접 렌더링하여 네트워크로 프린터에 보내며, 데스크톱도 데이터베이스도 필요 없"
+"습니다."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4433,6 +4362,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"같은 주소의 사람을 위한 웹 페이지: 토큰으로 로그인하고, 프린터를 보고, 템플릿"
+"이나 연속 인쇄(CSV, XLSX, ODS 파일, 붙여 넣은 목록, 또는 3000–5685 같은 번호 "
+"범위에서)를 인쇄하고, admin 토큰으로 템플릿을 업로드하고 삭제합니다. `--no-"
+"web-ui`로 끌 수 있습니다."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4894,6 +4827,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  각 프린터는 상태와 함께 나열되며, 서버가 접근할 수 없으면\n"
+"  메시지와 함께 `UNREACHABLE`로 표시됩니다.\n"
+"- 서버의 브라우저에서 `http://127.0.0.1:8790/`을 열고(다른 사람은 프록시의\n"
+"  주소를 사용하며, [리버스 프록시](#proxy) 참조) 토큰으로 로그인합니다.\n"
+"  웹 페이지는 그 역할이 할 수 있는 것을 보여 줍니다. 페이지는 토큰을 브라우저\n"
+"  탭에만 보관하며, 탭을 닫거나 \"로그아웃\"할 때까지 유지됩니다.\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5517,7 +5456,7 @@ msgstr "서버를 인터넷에서 접근 가능하게 만들지 마십시오."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "OpenID Connect로 로그인 { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5528,6 +5467,10 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"액세스 토큰 대신 조직의 ID 공급자(Keycloak, Authentik, Microsoft Entra ID, "
+"Okta 등)로 웹 페이지에 로그인할 수 있습니다. 공급자에서의 역할이 Tavletta의 "
+"역할이 됩니다. 프로그램은 계속 토큰을 사용합니다. 리버스 프록시를 통한 HTTPS"
+"가 필요합니다(없이는 테스트용 `http://localhost`만 동작합니다)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5539,6 +5482,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"공급자에 클라이언트를 등록하십시오: confidential(시크릿 포함), authorization "
+"code 플로만, PKCE S256, 리디렉션 URI `https://labels.example.com/oidc/"
+"callback`, 로그아웃 후 리디렉션 URI `https://labels.example.com/`. 역할이나 "
+"그룹이 ID 토큰에 담기게 하십시오. Keycloak에서는 클라이언트에 *User Client "
+"Role*(또는 *User Realm Role*) 매퍼를 만들고 *Add to ID token*을 켭니다. "
+"Authentik은 `groups`를 보냅니다."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5547,6 +5496,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"시크릿을 `config/oidc-secret`에 넣고(시크릿만, 모드 600) `config/oidc.toml`"
+"을 작성하십시오(`cp oidc.example.toml config/oidc.toml`로 주석이 달린 시작본"
+"을 얻습니다):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5574,6 +5526,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"`compose.yaml`의 `command:`에 `\"--oidc\"`와 `\"/config/oidc.toml\"`을 추가하"
+"고(네이티브에서는 `ExecStart`에, `/etc/tavletta/...`로), `--trusted-proxy`는 "
+"그대로 두고 다시 시작하십시오. `--trusted-proxy`를 쓰면 서버에 `public_url`"
+"이 필요하며, 없으면 시작하지 않습니다."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5582,6 +5538,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"로그인에는 PyJWT가 필요하며 컨테이너 이미지와 deb, rpm 패키지에는 들어 있습니"
+"다. Flatpak에는 없고 아무것도 설치할 수 없으므로, `--oidc`를 쓰려면 나머지 "
+"중 하나로 서버를 실행하십시오."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5596,6 +5555,15 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"그러면 페이지에 \"Example ID로 로그인\"이 표시됩니다. 역할이 하나도 없는 사람"
+"은 \"접근 권한 없음\"을 받습니다. 세션은 8시간, 또는 사용하지 않으면 60분 지"
+"속됩니다(`session_hours`, `idle_minutes`). 공급자에서 제거된 역할이나 비활성"
+"화된 계정은 다음 로그인부터 반영되므로, 관리자가 로그인하는 곳에서는 세션을 "
+"짧게 유지하십시오. `token_login = false`로 하면 페이지의 토큰 입력란이 숨겨집"
+"니다. 프린터는 역할별(`[oidc.printers]`) 또는 클레임(`printers_claim`)으로 제"
+"한할 수 있습니다. 모든 키와 보안 세부 사항: [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#signing-"
+"in-with-openid-connect-oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5741,6 +5709,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"`--oidc` 사용 시: `public_url` 설정, PKCE를 쓰는 confidential 클라이언트, 사"
+"람들에게 필요한 역할만, 관리자가 로그인하는 곳의 짧은 세션, 모드 600의 `oidc-"
+"secret`."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5748,6 +5719,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"아무도 브라우저에서 인쇄하지 않는 경우: `--no-web-ui`(웹 페이지는 불러오는 "
+"데 토큰이 필요 없지만, 토큰 없이는 아무것도 보여 주지 않습니다)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5782,24 +5755,7 @@ msgstr "문제 해결 { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5823,7 +5779,7 @@ msgstr ""
 "|---|---|\n"
 "| 프린터가 `UNREACHABLE`(`printer_timeout`, `printer_not_found`) | 서버가 프린터에 접근할 수 없습니다. 서버에서 `nc -vz <printer> 9100`(IPP는 631)으로 테스트하고, 주소, 방화벽, 프린터가 켜져 있는지 확인하십시오. Docker에서는 컨테이너가 프린터의 네트워크에 접근할 수 있어야 합니다. |\n"
 "| `401 unauthorized` | 토큰이 없거나, 잘못 입력했거나, 만료되었거나, `tokens.toml`에서 제거되었습니다. 헤더는 `Authorization: Bearer <token>`입니다. |\n"
-"| `429 too_many_requests` | 이 주소에서 1분 안에 잘못된 토큰이 10번: 토큰을 수정하고 1분 기다리십시오. |\n"
+"| `429 too_many_requests` | 이 주소에서 1분 안에 잘못된 토큰이 10번 왔습니다: 토큰을 고치고 1분 기다리십시오. `--trusted-proxy`로 지정하지 않은 리버스 프록시 뒤에서는 모두가 프록시의 주소를 공유합니다. |\n"
 "| `429 queue_full` | 작업 100개(토큰당 20개)가 대기 중입니다: 프린터가 느리거나 멈췄습니다. 확인하고 나중에 다시 시도하십시오. |\n"
 "| `503 busy` | 요청 또는 렌더링 슬롯이 잠시 모두 사용 중입니다: 1~2초 후 다시 시도하십시오. |\n"
 "| `404 printer_not_found` | `printers.toml`에 없거나, 토큰이 사용할 수 없습니다(`--printer`). |\n"
@@ -5833,6 +5789,7 @@ msgstr ""
 "| 경고에 `other_labels_loaded`가 있음 | 프린터에 라벨과 다른 라벨이 들어 있습니다: 맞는 롤을 넣거나 라벨의 크기와 간격을 확인하십시오. ZPL 프린터는 이전 롤에서 측정한 거리를 보고할 수 있습니다: 보정하십시오. |\n"
 "| `409 counter_not_saved` | 서버의 사용자가 라벨 파일에 쓸 수 없습니다: 그 사용자에게 `chown`하십시오(Docker: 1000, 네이티브: `tavletta`). |\n"
 "| 라벨의 날짜나 시간이 한두 시간 어긋남 | 컨테이너가 UTC로 실행됩니다: `.env`에 `TAVLETTA_TZ=Europe/Zurich`를 설정한 다음 `docker compose up -d`를 실행하십시오. |\n"
+"| 웹 페이지에서 \"로그인이 되지 않음\" | 로그에 이유가 나옵니다: 공급자에 접근할 수 없거나, 공급자에서 리디렉션 URI나 시크릿이 잘못되었거나, 페이지에 일반 HTTP로 접속하고 있습니다(`public_url`, `--trusted-proxy`를 설정하십시오). \"접근 권한 없음\": 역할이 ID 토큰에 담기지 않거나(매퍼가 없음) `[oidc.roles]`에 매핑된 것이 없습니다. |\n"
 "| 서버가 시작되지 않음 | `docker compose logs` 또는 `journalctl -u tavletta-server`: `printers.toml` 또는 `tokens.toml`의 오류는 해당 키와 함께 표시됩니다. |\n"
 "| 폴더에 대한 권한이 거부됨(SELinux와 Podman을 사용하는 Fedora, RHEL) | `compose.yaml`의 볼륨에 `:Z`를 추가하십시오. |\n"
 
@@ -5844,20 +5801,16 @@ msgstr "인쇄 서버"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"다른 프로그램과 AI 어시스턴트는 창을 열지 않고도 Tavletta를 통해 라벨을 인쇄"
-"할 수 있습니다. `tavletta serve`는 프로그램용 웹 인터페이스(REST API)를 제공"
-"하고, `tavletta mcp`는 Claude 같은 AI 어시스턴트를 연결합니다."
+"다른 프로그램, AI 어시스턴트, 브라우저의 사람은 창을 열지 않고도 Tavletta로 "
+"라벨을 인쇄할 수 있습니다. `tavletta serve`는 사람을 위한 웹 페이지와 프로그"
+"램을 위한 웹 인터페이스(REST API)를 제공하고, `tavletta mcp`는 Claude 같은 "
+"AI 어시스턴트를 연결합니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5920,6 +5873,7 @@ msgstr "프린터 주소, 안전 여백, 인쇄 설정은 앱에서 설정한 �
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
+"브라우저에서 `http://127.0.0.1:8790/`을 여십시오: [웹 페이지](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5994,13 +5948,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6009,11 +5956,12 @@ msgid ""
 "`media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/"
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
-"`method`는 [[ui:Print method]] (`printer`, `transfer`, `direct`)이고, "
-"`upside_down`은 [[ui:Print upside down]]입니다. 그 밖에 `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media`, `outlines`가 있으며, [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)를 참조하십시오."
+"`method`는 [[ui:Print method]](`printer`, `transfer`, `direct`), "
+"`upside_down`은 [[ui:Print upside down]], `offset_mm`은 [[ui:Print offset]]"
+"(−5에서 5), `labels_per_job`은 [[ui:Labels per job]](1에서 1000, 기본값 250)"
+"입니다. 그 밖에 `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, "
+"`media`, `outlines`가 있으며, [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#printers)를 참조하십시오."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6119,17 +6067,13 @@ msgstr "토큰은 한 번만 표시되며, 파일에는 그 지문(해시)만 �
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview`는 목록과 미리 보기만 보여 주고, `print`는 인쇄와 자신의 작업 추적"
-"도 할 수 있으며, `admin`은 모든 작업을 보고 취소할 수 있습니다."
+"`preview`는 목록과 미리보기만 보여 주고, `print`는 인쇄와 자신의 작업 추적도 "
+"하며, `admin`은 모든 작업을 보고 취소하고 템플릿을 업로드하고 삭제합니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6151,10 +6095,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "이미지 { #images }"
+msgstr "웹 페이지 { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6162,6 +6105,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"서버 자체의 페이지이며 그 주소(`http://127.0.0.1:8790/` 또는 [리버스 프록시]"
+"(server-install.md#proxy)의 주소)에 있습니다:"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6171,12 +6116,16 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**로그인**은 액세스 토큰으로 합니다(서버에 토큰이 없으면 로그인할 것이 없습니"
+"다). 브라우저는 토큰을 이 탭에만 보관하며, \"로그아웃\"하면 잊습니다. 서버가 "
+"그렇게 설정되어 있으면 \"…로 로그인\"이 대신 조직의 계정을 사용합니다"
+"([OpenID Connect](server-install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
-msgstr ""
+msgstr "**프린터**: 상태, 들어 있는 라벨이나 테이프, 문제를 말로 보여 줍니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6188,11 +6137,17 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**템플릿**: 라벨 폴더의 라벨 파일을 미리보기와 함께 보여 줍니다. 데이터 필드"
+"에는 템플릿의 데이터 파일 첫 행이 표시되며, 데이터 파일이 없거나 찾을 수 없으"
+"면 샘플 값이 표시됩니다. \"인쇄\"는 라벨 한 장의 필드를 채우고 입력하는 대로 "
+"미리보기를 보여 주며, 필드가 채우는 요소는 미리보기에서 윤곽선으로 표시됩니"
+"다. `admin` 토큰으로는 여기서 템플릿(`.tavletta` 파일)을 업로드하고 삭제합니"
+"다."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**연속 인쇄**, 단계별로:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6200,6 +6155,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"데이터: CSV, XLSX 또는 ODS 파일, 스프레드시트에서 붙여 넣은 목록, 또는 데이"
+"터 없음. 앞의 0은 유지됩니다(`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6209,6 +6166,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"지정: 어느 열이 템플릿의 어느 필드를 채울지(같은 이름은 이미 지정되어 있으"
+"며, 대소문자와 공백은 무시합니다). 옆의 첫 번째 라벨 미리보기에는 사용 중인 "
+"필드가 윤곽선으로 표시되며, 각 필드는 그 값을, 각 열은 처음 몇 개의 값을 보"
+"여 줍니다."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6218,13 +6179,18 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"선택: 모든 행, 일부 행(`1-20, 25, 30-`), 또는 필드의 범위로 지정합니다. 데이"
+"터가 없으면 범위가 값을 만듭니다. 재고 번호 `3000`에서 `5685`까지는 2686장의 "
+"라벨이고, `00300`에서 `00450`까지는 0이 유지되며, 간격을 지정하면 하나 걸러 "
+"또는 열 개 걸러 번호가 만들어집니다. `3000-5685`는 한 번에 입력하거나 붙여 넣"
+"을 수 있습니다."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
 msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
-msgstr ""
+msgstr "확인: 라벨 수, 첫 번째와 마지막 라벨, 서버와 프린터의 제한."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6234,6 +6200,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"인쇄: 라벨 100장부터는 페이지가 먼저 묻습니다. 진행 상황에 몇 장이 인쇄되었는"
+"지 표시되며, 취소는 인쇄 중인 라벨 뒤에 멈춥니다(cab 프린터: 최대 "
+"[[ui:Labels per job]]장인 현재 작업 뒤). 취소나 프린터 문제 뒤에는 \"…부터 계"
+"속\"이 나머지를 인쇄합니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6242,11 +6212,13 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"페이지는 브라우저의 언어, 또는 위에서 선택한 언어로 표시됩니다. 앱의 모든 언"
+"어를 지원하며 아랍어는 오른쪽에서 왼쪽으로 표시됩니다. 시간은 24시간제입니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
-msgstr ""
+msgstr "`--no-web-ui`는 페이지를 끕니다. 프로그램만 사용하는 서버용입니다."
 
 #. type: Title ##
 #: docs/server.md
@@ -6281,17 +6253,14 @@ msgstr "`POST /api/v1/preview`는 라벨을 PNG 이미지로 반환합니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
-"`POST /api/v1/print`는 인쇄 작업을 대기열에 넣습니다. `GET /api/v1/jobs/<id>`"
-"는 그 상태를 보여 주고, `DELETE`는 라벨 두 장 사이에서 취소합니다."
+"`POST /api/v1/print`는 인쇄 작업을 대기열에 넣고, `GET /api/v1/jobs/<id>`는 "
+"그 상태를 보여 주며, `DELETE`는 두 라벨 사이에서 취소합니다(cab 프린터: 연속 "
+"인쇄의 두 작업 사이)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6501,15 +6470,11 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2`는 릴리스이고, `1.1`은 1.1의 최신 버그 수정 릴리스이며, `latest`는 최"
+"`1.2.1`은 릴리스이고, `1.2`는 1.2의 최신 버그 수정 릴리스이며, `latest`는 최"
 "신 릴리스입니다. `edge`는 개발 중인 상태이며 릴리스가 아닙니다."
 
 #. type: Bullet: '- '
@@ -7194,7 +7159,7 @@ msgstr "자유 레이아웃의 라벨은 이전 버전의 Tavletta에서 열리�
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "미리보기에서 배치하기 { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7202,6 +7167,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"자유 레이아웃에서는 마우스, 손가락, 펜으로 미리보기에서 요소를 배치할 수 있습"
+"니다:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7212,6 +7179,11 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"요소를 클릭하면 선택되며, [[ui:Content]]에서 그 행이 열립니다. Shift나 Ctrl"
+"을 누른 채 클릭하면 요소를 선택에 추가하거나 선택에서 뺄 수 있습니다. 빈 부분"
+"을 가로질러 끌면 선택 상자에 닿는 모든 요소가 선택됩니다(Alt를 누른 채로는 상"
+"자 안에 있는 것만). 빈 부분을 클릭하면 아무것도 선택되지 않습니다. 요소의 행"
+"을 여는 것도 그 요소를 선택합니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7222,6 +7194,11 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"선택을 끌어 옮기십시오. 라벨의 가장자리와 가운데, 다른 요소의 가장자리와 가운"
+"데에 맞춰지며, 빨간 선이 그 위치를 보여 줍니다. Alt나 Ctrl을 누르면 자유롭게 "
+"놓을 수 있습니다(끄는 동안 Alt를 누르면 창이 움직이는 데스크톱도 있으며, 그"
+"런 경우에는 Ctrl을 사용하십시오). Shift를 누르면 한 축으로만 움직입니다. 끄"
+"는 도중 Esc를 누르면 원래대로 돌아갑니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7232,6 +7209,10 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"하나만 선택한 요소에는 모서리와 가장자리에 핸들이 있으며, 하나를 끌어 크기를 "
+"바꿉니다. 선이나 도형은 너비와 높이를 따로 바꾸고(Shift는 비율을 유지), 텍스"
+"트, 이미지, 기호, QR 코드는 비율을 유지하며, 바코드는 막대가 길어지거나 모듈"
+"이 넓어집니다. 배송 라벨은 이동만 됩니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7241,6 +7222,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"헤더 막대의 [[ui:Arrange]]는 선택한 요소를 정렬합니다. 요소 하나는 라벨의 가"
+"장자리나 가운데에, 여러 개는 서로에게 맞춥니다. 세 개 이상은 균등하게 배치하"
+"고([[ui:Distribute]]), 스냅을 켜고 끄며([[ui:Snap to guides]]), 맞출 격자를 "
+"추가합니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7250,6 +7235,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"미리보기에 포커스가 있을 때(클릭하거나 Tab으로 이동), 화살표 키는 선택을 0.1 "
+"mm, Shift를 누르면 1 mm씩 옮기고, Delete는 삭제하며, Ctrl+A는 모든 요소를 선"
+"택하고, Shift+Ctrl+A와 Esc는 선택을 해제합니다. 크기는 요소의 행과 그 "
+"[[ui:Position and size]] 페이지에서 설정합니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7257,6 +7246,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"끌기 한 번, 크기 조정 한 번, 화살표 키의 연속 입력은 각각 [[ui:Undo]]의 한 단"
+"계이며, 사이드바에서 한 변경과 번갈아 기록됩니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7264,6 +7255,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"[[ui:One after another]] 레이아웃에서는 요소를 선택할 수는 있지만 옮길 수는 "
+"없으며, 요소를 끌면 [[ui:Use free layout]]이 제안됩니다."
 
 #. type: Title ##
 #: docs/use.md
@@ -7419,6 +7412,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"미리보기에 포커스가 있을 때: 화살표 키는 선택한 요소를 옮기고(Shift: 1 mm), "
+"Delete는 삭제하며, Ctrl+A와 Shift+Ctrl+A는 모두 선택하거나 선택을 해제합니다"
+"([위 참조](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

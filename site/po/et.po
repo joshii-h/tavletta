@@ -469,18 +469,16 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"Järjekorras olev töö tühistatakse kohe; printiv peatub pärast praegu "
-"prinditavat silti. 409 `job_finished`, kui see oli juba lõppenud."
+"Järjekorras olev töö tühistatakse kohe; prinditav töö peatub prinditava "
+"sildi järel. cab-printer prindib seeria töödena, kus on kuni "
+"`labels_per_job` silti (vaikimisi 250): see peatub prinditava töö järel. 409 "
+"`job_finished`, kui töö oli juba lõppenud."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -930,57 +928,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1067,6 +1015,10 @@ msgstr ""
 "| 408 | `timeout` | Päringu saatmine võttis kauem kui 30 s. |\n"
 "| 409 | `job_finished` | Töö on lõppenud: pole midagi tühistada. |\n"
 "| 409 | `counter_not_saved` | Sildifaili ei saa kirjutada: midagi ei prinditud. |\n"
+"| 409 | `label_exists` | Selle nimega silt on olemas: laadi üles valikuga replace=true. |\n"
+"| 409 | `label_in_use` | Sildi töid ootab või prinditakse: proovi uuesti, kui need on lõppenud. |\n"
+"| 409 | `label_changed` | Sildifail asendati päringu kontrollimise ajal. |\n"
+"| 409 | `label_locked` | Sildi print hoiab faili: proovi uuesti, kui see on lõppenud. |\n"
 "| 411 | `length_required` | Content-Length puudub (tükeldatud kehasid ei aktsepteerita). |\n"
 "| 413 | `too_large` | Keha ületab `--max-body` või liiga palju andmeridu, veerge või lahtreid. |\n"
 "| 413 | `too_many_labels` | Koopiad korda read ületavad `--max-labels` (vaikimisi 10000); sildilehtedel üle 999. |\n"
@@ -1085,15 +1037,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Kümme valet tokenit sellelt aadressilt: oota minut. |\n"
 "| 429 | `queue_full` | Liiga palju töid ootab: proovi hiljem uuesti. |\n"
 "| 500 | `internal` | Serveri viga; see logitakse. |\n"
+"| 500 | `not_saved` | Siltide kausta ei saanud kirjutada (507: see on täis). |\n"
+"| 500 | `not_deleted` | Sildifaili ei saanud kustutada (kirjutuskaitstud kaust). |\n"
 "| 502 | `printer_<code>` | Printer ei ole kättesaadav või teatab probleemist. |\n"
 "| 503 | `busy` | Kõik päringu- või renderduskohad on hõivatud: proovi hetke pärast uuesti. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: printeri probleem, üks järgmistest: `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: printeri probleem, üks väärtustest `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1177,20 +1130,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1213,14 +1153,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | puudub | Kas server töötab; tokenit pole vaja (tervisekontrollide jaoks) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | See kirjeldus (OpenAPI 3.1); mis tahes rolliga token |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | Tokeni nimi, roll ja printerid ning päringu piirangud (veebilehe jaoks) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | Printerid failist `printers.toml`, mida token tohib kasutada, koos olekuga; ilma selleta printerimudelid, igaühele seatud aadress ja leitud printerid (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Päri printeri olekut: andmekandja, probleemid, eraldusvõime |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | Siltide kaustas ja selle alamkaustades olevad sildifailid |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Millega silti saab täita: elemendid, muutujad, andmeveerud, suurus, loendur |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Sildifaili üleslaadimine (admin): kontrollitakse nii, nagu rakendus faili avab, ja pannakse siis ühe sammuga siltide kausta |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Sildifaili kustutamine (admin); selle andmefail jääb alles |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Päringuga kaasa saadetud andmefaili (CSV, ODS, XLSX) lugemine nii, nagu rakendus seda loeb: selle read väljale data_rows; midagi ei salvestata |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | Täidetud silt pildina; midagi ei prindita |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Printimine: päring kontrollitakse, seejärel pannakse järjekorda; iga printer prindib ühe töö korraga |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Printimistöö olek (print-token: oma tööd; admin: kõik). Hoitakse 24 tundi pärast lõppemist |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Tühista töö: kohe, kui see ootab; pärast praegust silti, kui see prindib |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Töö tühistamine: kohe, kui see ootab, printerisse juba saadetud siltide järel, kui see prindib (cab: kuni labels_per_job sildiga töö) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1294,10 +1238,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1305,14 +1248,11 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"Tokeni nimi, roll ja printerid ning päringu piirangud (veebilehe jaoks)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1320,7 +1260,7 @@ msgid ""
 msgstr ""
 "| Status | Vastus | Koodid |\n"
 "|---|---|---|\n"
-"| 200 | Sildid |  |\n"
+"| 200 | Kes |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1521,10 +1461,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1532,21 +1471,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Sildifaili üleslaadimine (admin): kontrollitakse nii, nagu rakendus faili "
+"avab, ja pannakse siis ühe sammuga siltide kausta."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Roll: `print`"
+msgstr "Roll: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1555,12 +1490,13 @@ msgid ""
 msgstr ""
 "| Parameeter | Asukoht | Tähendus |\n"
 "|---|---|---|\n"
-"| `name` | path | Võib sisaldada kaldkriipse alamkaustade jaoks; '`.tavletta`' võib ära jätta. |\n"
+"| `name` | path | Faili nimi ilma kaustata; '`.tavletta`' võib ära jätta. |\n"
+"| `replace` | query | Asenda selle nimega silt. Vaikimisi `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Keha: `.tavletta`-faili sisu."
 
 #. type: Plain text
 #: docs/api.md
@@ -1576,6 +1512,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | Vastus | Koodid |\n"
+"|---|---|---|\n"
+"| 200 | Asendatud (replace=true) |  |\n"
+"| 201 | Lisatud |  |\n"
+"| 400 | Uue sildi jaoks sobimatu nimi: tähed, numbrid, tühikud ja . _ - ( ) + , (kuni 100), kaustas endas | `invalid_field`, `not_json` |\n"
+"| 409 | Selle nimega silt on olemas (saada replace=true), sildi töid ootab või prinditakse (label_in_use) või teise programmi print hoiab faili | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Üle `--max-body` või liiga suur silt renderdamiseks | `too_large`, `label_too_large` |\n"
+"| 422 | Silt, mida Tavletta ei saa avada | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | Siltide kaustas pole ruumi enam | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1590,26 +1535,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Sildifaili kustutamine (admin); selle andmefail jääb alles."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1620,10 +1557,10 @@ msgid ""
 msgstr ""
 "| Status | Vastus | Koodid |\n"
 "|---|---|---|\n"
-"| 200 | Silt |  |\n"
+"| 204 | Kustutatud |  |\n"
 "| 400 | Pole nimi siltide kausta sees | `invalid_field` |\n"
 "| 404 | Sellist silti pole | `label_not_found` |\n"
-"| 422 | Fail ei ole silt või on kahjustatud | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | Sildi töid ootab või prinditakse (label_in_use) või teise programmi print hoiab faili | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1636,10 +1573,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1647,6 +1583,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"Päringuga kaasa saadetud andmefaili (CSV, ODS, XLSX) lugemine nii, nagu "
+"rakendus seda loeb: selle read väljale data_rows; midagi ei salvestata."
 
 #. type: Plain text
 #: docs/api.md
@@ -1664,17 +1602,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Väli | Tüüp | Tähendus |\n"
+"|---|---|---|\n"
+"| `content` | string | Fail: CSV (mis tahes eraldaja, UTF-8, UTF-16 või Windows-1252), ODS või XLSX, eristatakse sisu järgi. Kleebitud tekst on CSV-fail. |\n"
+"| `name` | string | Faili nimi teadete jaoks. |\n"
+"| `sheet` | string | ODS, XLSX: leht (vaikimisi esimene). |\n"
+"| `header` | boolean | false: esimene rida on samuti andmed; veerud on nimega A, B, C … Vaikimisi `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1684,10 +1621,9 @@ msgid ""
 msgstr ""
 "| Status | Vastus | Koodid |\n"
 "|---|---|---|\n"
-"| 200 | Silt |  |\n"
-"| 400 | Pole nimi siltide kausta sees | `invalid_field` |\n"
-"| 404 | Sellist silti pole | `label_not_found` |\n"
-"| 422 | Fail ei ole silt või on kahjustatud | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | Read |  |\n"
+"| 400 | Vigane päring | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Pole tabel, on kahjustatud või tühi | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1835,18 +1771,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1865,7 +1790,7 @@ msgstr ""
 "| 202 | Järjekorras või prindib; jälgi seda aadressil Location |  |\n"
 "| 400 | Vigane päring | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Sellist silti, printerit või andmefaili pole, või printer, mida token ei tohi kasutada | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | Sildifaili ei saa kirjutada: järgmist loenduri väärtust ei saanud salvestada, midagi ei prinditud | `counter_not_saved` |\n"
+"| 409 | Sildifaili ei saa kirjutada: loenduri järgmist väärtust ei saanud salvestada, midagi ei prinditud; või see asendati päringu kontrollimise ajal (label_changed): saada uuesti | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Liiga suur: keha, andmeread, sildid ühes töös või renderdatav silt | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | Silt prinditaks valesti | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Liiga palju valesid tokeneid või liiga palju ootavaid töid (100 kokku, 20 nimetatud tokeni kohta) | `too_many_requests`, `queue_full` |\n"
@@ -1937,25 +1862,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Tühista töö: kohe, kui see ootab; pärast praegust silti, kui see prindib."
+"Töö tühistamine: kohe, kui see ootab, printerisse juba saadetud siltide "
+"järel, kui see prindib (cab: kuni labels_per_job sildiga töö)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1965,7 +1881,7 @@ msgid ""
 msgstr ""
 "| Status | Vastus | Koodid |\n"
 "|---|---|---|\n"
-"| 202 | Tühistatud või peatub pärast praegust silti |  |\n"
+"| 202 | Tühistatud või peatub juba saadetud siltide järel |  |\n"
 "| 404 | Sellist tööd pole | `job_not_found` |\n"
 "| 409 | On juba lõppenud | `job_finished` |\n"
 
@@ -1992,27 +1908,7 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2044,7 +1940,8 @@ msgstr ""
 "| `host` | string | Printeri aadress. |\n"
 "| `owner` | string or null | Tokeni nimi. |\n"
 "| `label` | string or null | Nimi siltide kaustas; null väljal label_content. |\n"
-"| `printed` | integer | Seni prinditud sildid. |\n"
+"| `printed` | integer | Seni prinditud sildid, kindlasti; kasvab silt-silt haaval, kui töö prindib, niivõrd kui printer teatab. |\n"
+"| `printed_max` | integer or null | Pärast tõrget, mille tulemust printer ei osanud öelda (ühendus katkes printimise ajal): kuni nii palju silte võib olla prinditud. Loendur jätkub nende järel; rows_printed loeb kindlasti prinditud read, nii et järgmisest reast uuesti printimine võib printida silte kaks korda. Muidu null. |\n"
 "| `total` | integer | Prinditavad sildid: koopiad x read. |\n"
 "| `rows_printed` | integer | Täielikult prinditud andmeread: pärast ebaõnnestumist prindi uuesti, kus rows on järgmine (rows_printed + esimene rida). |\n"
 "| `cancel_requested` | boolean | DELETE saadeti. |\n"
@@ -2063,22 +1960,7 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2108,9 +1990,11 @@ msgstr ""
 "| `columns` | array of string | Kohatäited `{Column}`: data_rows võtmed. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file puudub (enam): saada read väljal data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (sildil on `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Prinditud sildilehtedele: kuni 999 silti ühes töös. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2197,14 +2081,7 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2220,12 +2097,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Mis prinditaks valesti. other_labels_loaded: `printers.toml`-i printer teatab, et sinna on laaditud teised sildid kui sildil (nende suurus või mõõdetud siltidevaheline kaugus). Selle viimast vastust arvestatakse, kui see on viimasest minutist, viga kui mitte midagi teada (küsitakse uuesti taustal); printerit, mida veel ei tunta, oodatakse kuni sekund pärast sildi renderdamist. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Kus elemendid pildil asuvad; null väärtuse view=printer ja oma lehele pööratud sildi korral. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2234,6 +2112,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"Elementide kastid eelvaatepildil, mm vasakust ülanurgast (tavletta/"
+"editing.py, docs/editing.md); pildi piksel on mm * dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2247,13 +2127,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Väli | Tüüp | Tähendus |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Lindi sihis: pikkus. |\n"
+"| `height_mm` | number | Risti: lindi või sildi kõrgus. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | Pildi eraldusvõime. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Pildid { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2269,13 +2155,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Väli | Tüüp | Tähendus |\n"
+"|---|---|---|\n"
+"| `name` | string | Tokeni nimi failis tokens.toml; 'token' valiku `--token-file` ainsa tokeni korral, 'local' ilma tokenita; 'oidc:<user>' veebilehele OpenID Connectiga sisse logitud isiku korral. |\n"
+"| `display_name` | string | Isiku nimi pakkujalt; muidu sama mis name. |\n"
+"| `session` | boolean | true: veebilehele sisse logitud OpenID Connectiga (selle seansiküpsis), mitte tokeniga. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | Printerid, mida token võib kasutada; null: kõik. |\n"
+"| `token_required` | boolean | false: serveril pole tokenit ega `--oidc` (ainult loopback). |\n"
+"| `limits` | object | Mida üks päring võib enim küsida: silte ühes töös (`--max-labels`; sildilehtedel kuni 999), koopiaid, andmeridu, -veerge ja -lahtreid ning keha baitides (`--max-body`; ka suurim üleslaaditav sildifail). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Käivitamine { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2290,6 +2184,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Väli | Tüüp | Tähendus |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: leitud eraldaja; null ühe veeru ja tabelarvutuste korral. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | Loetud leht. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Iga lahter tekstina, mida see näitab: algnullid ja arvuvormingud säilivad (00300 jääb 00300). Ilma täidetud lahtriteta read jäetakse välja. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2587,19 +2489,14 @@ msgstr "Esimene silt"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Lülita printer sisse ja vali see valikust [[ui:Printer model]]. Tavletta "
-"leiab selle võrgust (Bonjour) ja loeb, mis on laaditud: lindi laiuse või "
-"siltide vahekauguse."
+"Lülita printer sisse ja vali see valikust [[ui:Printer model]]: USB kaudu "
+"või võrgus (Bonjour) leitud printer on nimekirja ülaosas. Tavletta loeb, mis "
+"on sisestatud: lindi laiuse või siltide vahekauguse."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2642,6 +2539,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Vali printer valikust [[ui:Printer model]]; igaühel on all oma jaotis. "
+"Printerid, mille Tavletta leiab USB kaudu ja võrgust, on selles nimekirjas "
+"esimesena, jaotises [[ui:Found]], koos mudeliga: ühe valimine võtab selle "
+"mudeli ja aadressi. Mudelid järgnevad jaotises [[ui:All models]]. Tavletta "
+"otsib neid akna avamisel ja nupuga [[ui:Search for printers]], kõiki "
+"mudeleid korraga, taustal."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2746,6 +2649,15 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (väljalõigatud sildid): printer teatab teise "
+"suurusega siltidest või mõõtis siltide vahel muu vahekauguse kui sinu sildi "
+"kõrgus pluss [[ui:Gap]]. [[ui:Use loaded labels]] muudab silti ja ei prindi "
+"veel midagi: see võtab printeri teatatud suuruse (Brother QL) või seab "
+"kõrguse rulli sihis nii, et kõrgus pluss vahe annavad mõõdetud vahekauguse "
+"(cab, Zebra). Vahe ja laius jäävad; Zebra prindilaius on see, mille viimane "
+"print seadis, mitte siltide laius. Kui see kõrgus oleks alla 5 mm, "
+"muudetakse selle asemel vahet; kui kumbki ei anna silti, pakutakse ainult "
+"[[ui:Print anyway]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2754,6 +2666,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"Pärast [[ui:Use loaded labels]] kontrolli silti eelvaates ja prindi siis. "
+"[[ui:Undo]] teates võtab muudatuse tagasi; teade ütleb seda, kui elemendid "
+"ulatuvad nüüd üle sildi serva."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3277,6 +3192,13 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: printer, mis prindib sildil valesse kohta (print on "
+"igal sildil veidi kõrgemal või madalamal, kui eelvaade näitab), "
+"korrigeeritakse siin: mõõda prinditud sildil, kui kaugel print on, ja "
+"sisesta see, positiivne liigutab printi rulli suhtes risti olevatel siltidel "
+"alla, negatiivne üles. Eelvaade näitab silti endiselt nii, nagu see peab "
+"välja tulema; liigub ainult see, mis printerisse saadetakse. Sisu, mis jääb "
+"sellel kaugusel serva lähedale, kuhu print liigub, lõigatakse ära."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3288,6 +3210,12 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: seeria sildid lähevad printerisse koos, kuni nii "
+"palju (vaikimisi 250, 1 kuni 1000) ühes töös, ja jooksevad läbi nende vahel "
+"peatumata. [[ui:Stop]] jõustub kahe töö vahel: alanud töö prinditakse "
+"täielikult. 1 saadab iga sildi omaette tööna, nagu teised printerid neid "
+"saavad. Silte, mille sisu muutub koopiast koopiani, saadetakse alati "
+"ükshaaval."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3302,12 +3230,6 @@ msgstr "Probleemid { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3315,10 +3237,11 @@ msgid ""
 "once after changing the roll so it measures again, then [[ui:Use loaded "
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
-"[[ui:Different labels loaded]]: printer mõõtis siltide vahele teise kauguse "
+"[[ui:Different labels loaded]]: printer mõõtis siltide vahel muu vahekauguse "
 "kui sinu sildi kõrgus pluss vahe. Kontrolli [[ui:Label size]] ja [[ui:Gap]] "
-"või lae õige rull. Vajuta pärast rulli vahetamist printeril üks kord Feed, "
-"et see mõõdaks uuesti."
+"või pane õige rull. Vajuta printeril pärast rulli vahetamist üks kord Feed, "
+"et see mõõdaks uuesti, siis kohandab [[ui:Use loaded labels]] sildi selle "
+"järgi ([Kõik printerid](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3328,6 +3251,10 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Kõik prinditakse veidi liiga kõrgele või liiga madalale, igal sildil "
+"ühtemoodi, kuigi eelvaade näitab seda õiges kohas: sea [[ui:Print offset]]. "
+"Teises programmis seda tasakaalustama kujundatud silt prindib eelvaates "
+"valesse kohta; pane selle sisu tagasi oma kohale ja sea selle asemel nihe."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3375,6 +3302,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Mälu otsas: printeril polnud ruumi töö siltide jaoks. Vähenda [[ui:Labels "
+"per job]] ja prindi uuesti teates nimetatud reast."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3388,6 +3317,13 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"„Töö saadeti, kuid selle tulemus pole teada”: ühendus printeriga katkes "
+"printimise ajal (või printer ei osanud öelda, kui kaugele jõudis). Tavletta "
+"loeb sildid, mille ta teab prinditud olevat; printer võib olla printinud "
+"rohkem. Kontrolli välja tulnud silte: teates nimetatud reast uuesti "
+"printimine võib mõned kaks korda printida, kuid ei jäta ühtegi välja. Kui "
+"printeri veebiliides on võrgus kättesaadav (vaikimisi), võrdleb Tavletta "
+"arvu ka printeri siltide loenduriga; kui need erinevad, annab teade vahemiku."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4003,6 +3939,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): printer teatab viimati mõõdetud "
+"vahekauguse, võib-olla varasemalt rullilt. Pärast rulli vahetamist lase "
+"sellel silte uuesti mõõta (enamik printereid teeb seda Feed pika "
+"vajutusega), enne kui kasutad [[ui:Use loaded labels]] ([Kõik printerid]"
+"(#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4333,20 +4274,19 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Iga silt on omaette prinditöö, nii et see töötab igal printeril. cab-printer "
+"saab kuni [[ui:Labels per job]] silti ühe tööna, mille see prindib nende "
+"vahel peatumata ([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"[[ui:Stop]] akna kohal olevas ribal lõpetab seeria pärast praegu prinditavat "
-"silti; esimene silt prinditakse alati."
+"[[ui:Stop]] akna kohal olevas ribas lõpetab seeria prinditava sildi järel "
+"(cab-printeril: prinditava töö järel); esimene silt prinditakse alati."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4418,19 +4358,14 @@ msgstr "Ülevaade { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"Üks väike teenus: REST API (ja MCP tehisintellekti assistentidele) pordis "
-"8790. See renderdab sildid ise ja saadab need printeritele võrgu kaudu; ei "
-"mingit töölauda, brauserit ega andmebaasi."
+"Üks väike teenus: REST API (ja MCP tehisintellekti assistentidele) pordil "
+"8790. See renderdab sildid ise ja saadab need võrgu kaudu printeritesse; "
+"ilma töölauata, ilma andmebaasita."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4440,6 +4375,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Veebileht samal aadressil inimestele: logi sisse tokeniga, vaata printereid, "
+"prindi mall või seeria (CSV-, XLSX- või ODS-failist, kleebitud loendist või "
+"arvuvahemikest nagu 3000–5685), laadi üles ja kustuta malle admin-tokeniga. "
+"`--no-web-ui` lülitab selle välja."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4904,6 +4843,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Iga printer on loetletud oma olekuga; `UNREACHABLE` koos teatega, kui\n"
+"  server ei saa seda kätte.\n"
+"- Ava `http://127.0.0.1:8790/` serveris brauseris (teised kasutavad\n"
+"  proksi aadressi, vt [Pöördvaheserver](#proxy)) ja logi sisse\n"
+"  tokeniga: veebileht näitab, mida tema roll lubab. Leht hoiab\n"
+"  tokenit ainult brauseri vahekaardil, kuni vahekaart suletakse või \"Logi välja\".\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5528,7 +5473,7 @@ msgstr "Ära kunagi tee serverit internetist kättesaadavaks."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Sisselogimine OpenID Connectiga { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5539,6 +5484,11 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Inimesed saavad veebilehele sisse logida oma organisatsiooni "
+"identiteedipakkujaga (Keycloak, Authentik, Microsoft Entra ID, Okta …) "
+"pääsutokeni asemel; nende rollid pakkujal muutuvad Tavletta rollideks. "
+"Programmid kasutavad edasi tokeneid. See vajab HTTPS-i pöördvaheserveri "
+"kaudu (ilma selleta töötab testimiseks ainult `http://localhost`)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5550,6 +5500,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Registreeri pakkujal klient: confidential (saladusega), ainult authorization "
+"code flow, PKCE S256, ümbersuunamise URI `https://labels.example.com/oidc/"
+"callback`, väljalogimisjärgne ümbersuunamise URI `https://labels.example.com/"
+"`. Too rollid või grupid ID-tokenisse: Keycloakis klient-mapper *User Client "
+"Role* (või *User Realm Role*) sisselülitatud *Add to ID token*-iga; "
+"Authentik saadab `groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5558,6 +5514,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Pane saladus faili `config/oidc-secret` (ainult saladus, õigused 600) ja "
+"kirjuta `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` annab "
+"kommenteeritud alguse):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5585,6 +5544,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Lisa `\"--oidc\"` ja `\"/config/oidc.toml\"` failis `compose.yaml` "
+"väärtusele `command:` (natiivselt: väärtusele `ExecStart`, koos `/etc/"
+"tavletta/...`), jäta `--trusted-proxy` alles ja taaskäivita. Valikuga `--"
+"trusted-proxy` vajab server `public_url` ja ilma selleta ei käivitu."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5593,6 +5556,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"Sisselogimine vajab PyJWT-d, mis on konteineri pildil ning deb- ja rpm-"
+"pakettidel; Flatpakil seda pole ja sinna ei saa midagi paigaldada: valiku `--"
+"oidc` jaoks käivita server ühest teisest."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5607,6 +5573,15 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"Leht näitab siis „Logi sisse: Example ID”. Isik, kellel pole ühtegi rolli, "
+"saab „pole juurdepääsu”. Seanss kestab 8 tundi või 60 minutit kasutamata "
+"(`session_hours`, `idle_minutes`); pakkujal eemaldatud roll või keelatud "
+"konto jõustub alates järgmisest sisselogimisest, nii et hoia seansid "
+"lühikesed seal, kus administraatorid sisse logivad. `token_login = false` "
+"peidab lehel tokeni välja. Printereid saab piirata rolli järgi "
+"(`[oidc.printers]`) või claimiga (`printers_claim`). Iga võti ja "
+"turvadetailid: [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"src/branch/main/docs/server.md#signing-in-with-openid-connect-oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5752,6 +5727,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"Valikuga `--oidc`: `public_url` seatud, klient confidential koos PKCE-ga, "
+"ainult rollid, mida inimesed vajavad, lühikesed seansid seal, kus "
+"administraatorid sisse logivad, `oidc-secret` õigustega 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5759,6 +5737,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Keegi ei prindi brauserist: `--no-web-ui` (veebileht ei vaja laadimiseks "
+"tokenit, kuid ilma selleta ei näita midagi)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5793,24 +5773,7 @@ msgstr "Tõrkeotsing { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5834,7 +5797,7 @@ msgstr ""
 "|---|---|\n"
 "| Printer on `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | Server ei pääse sellele ligi: testi serverist käsuga `nc -vz <printer> 9100` (631 IPP jaoks); kontrolli aadressi, tulemüüri ja seda, et printer on sisse lülitatud. Dockeris peab konteiner printeri võrku ulatuma. |\n"
 "| `401 unauthorized` | Token puudub, on valesti tipitud, aegunud või eemaldatud failist `tokens.toml`. Päis on `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Kümme valet tokenit sellelt aadressilt minuti jooksul: paranda token, oota minut. |\n"
+"| `429 too_many_requests` | Kümme valet tokenit sellelt aadressilt minuti jooksul: paranda token, oota minut. Pöördvaheserveri taga, mida pole antud valikuga `--trusted-proxy`, jagavad kõik proksi aadressi. |\n"
 "| `429 queue_full` | 100 tööd (20 tokeni kohta) ootab: printer on aeglane või peatunud; kontrolli seda, proovi hiljem uuesti. |\n"
 "| `503 busy` | Kõik päringu- või renderduskohad on hetkeks hõivatud: proovi uuesti sekundi või kahe pärast. |\n"
 "| `404 printer_not_found` | Pole failis `printers.toml` või token ei tohi seda kasutada (`--printer`). |\n"
@@ -5844,6 +5807,7 @@ msgstr ""
 "| `other_labels_loaded` hoiatustes | Printerisse on laaditud teised sildid kui sildil: lae sobiv rull või kontrolli sildi suurust ja vahet. ZPL-printer võib teatada kauguse, mille ta mõõtis varasemal rullil: kalibreeri see. |\n"
 "| `409 counter_not_saved` | Sildifaili ei saa serveri kasutajana kirjutada: `chown` see kasutajale (Docker: 1000, natiivne: `tavletta`). |\n"
 "| Siltide kuupäev või kellaaeg on tunni või kahe võrra eksinud | Konteiner töötab UTC-s: sea `TAVLETTA_TZ=Europe/Zurich` failis `.env`, seejärel `docker compose up -d`. |\n"
+"| „Sisselogimine ei õnnestunud” veebilehel | Logi ütleb miks: pakkujat ei saa kätte, ümbersuunamise URI või saladus on pakkujal vale või lehele pääsetakse lihtsa HTTP kaudu (sea `public_url`, `--trusted-proxy`). „Pole juurdepääsu”: rollid ei jõua ID-tokenisse (mapper puudub) või ühtegi pole `[oidc.roles]` all seotud. |\n"
 "| Server ei käivitu | `docker compose logs` või `journalctl -u tavletta-server`: viga failis `printers.toml` või `tokens.toml` nimetatakse koos võtmega. |\n"
 "| Juurdepääs kaustadele keelatud (Fedora, RHEL SELinuxi ja Podmaniga) | Lisa `:Z` faili `compose.yaml` volume'idele. |\n"
 
@@ -5855,21 +5819,16 @@ msgstr "Prindiserver"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Teised programmid ja tehisintellekti assistendid saavad Tavletta kaudu silte "
-"printida ilma akent avamata: `tavletta serve` pakub programmidele "
-"veebiliidest (REST API), `tavletta mcp` ühendab tehisintellekti assistente "
-"nagu Claude."
+"Teised programmid, tehisintellekti assistendid ja inimesed brauseris saavad "
+"Tavletta kaudu silte printida ilma akent avamata: `tavletta serve` pakub "
+"veebilehte inimestele ja veebiliidest programmidele (REST API), `tavletta "
+"mcp` ühendab tehisintellekti assistente nagu Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5932,7 +5891,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "Ava `http://127.0.0.1:8790/` brauseris: [veebileht](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6007,13 +5966,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6023,10 +5975,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` on [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` on [[ui:Print upside down]]; teised on `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` ja `outlines`, vaata [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)."
+"`upside_down` [[ui:Print upside down]], `offset_mm` [[ui:Print offset]] (−5 "
+"kuni 5), `labels_per_job` [[ui:Labels per job]] (1 kuni 1000, vaikimisi "
+"250); teised on `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, "
+"`media` ja `outlines`, vt [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#printers)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6135,17 +6088,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview` ainult loetleb ja näitab eelvaateid, `print` prindib ka ja jälgib "
-"oma töid, `admin` näeb ja tühistab kõik tööd."
+"`preview` ainult loetleb ja näitab eelvaateid, `print` ka prindib ja jälgib "
+"oma töid, `admin` näeb ja tühistab kõiki töid ning laadib üles ja kustutab "
+"malle."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6167,10 +6117,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Pildid { #images }"
+msgstr "Veebileht { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6178,6 +6127,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"Serveri enda leht selle aadressil (`http://127.0.0.1:8790/` või "
+"[pöördvaheserveri](server-install.md#proxy) aadress):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6187,12 +6138,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Logi sisse** pääsutokeniga (ilma tokenita serveris pole kuhugi sisse "
+"logida). Brauser hoiab seda ainult sellel vahekaardil; „Logi välja” unustab "
+"selle. Kui server on selleks seadistatud, kasutab „Logi sisse: …” selle "
+"asemel sinu organisatsiooni kontot ([OpenID Connect](server-"
+"install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Printerid**: nende olek, sisestatud sildid või lint ja probleemid sõnadega."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6204,11 +6161,16 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Mallid**: siltide kausta sildifailid eelvaatega. Andmeväljad näitavad "
+"malli andmefaili esimest rida või näidisväärtusi, kui andmefaili pole või "
+"see puudub. „Prindi” täidab ühe sildi väljad ja näitab eelvaadet sisestamise "
+"ajal; elemendid, mida väli täidab, on selles ääristatud. Admin-tokeniga "
+"(`admin`) laaditakse siin malle üles (`.tavletta`-failid) ja kustutatakse."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Seeria**, samm-sammult:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6216,6 +6178,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Andmed: CSV-, XLSX- või ODS-fail, tabelarvutusest kleebitud loend või üldse "
+"mitte andmeid. Algnullid jäävad (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6225,6 +6189,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Seo: milline veerg täidab malli millist välja (samad nimed on juba seotud, "
+"tähesuuruse ja tühikuteta). Kõrvalolev esimese sildi eelvaade ääristab "
+"kasutatavat välja; iga väli näitab oma väärtust, iga veerg oma esimesi "
+"väärtusi."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6234,6 +6202,10 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Vali: kõik read, mõned read (`1-20, 25, 30-`) või välja vahemike järgi. Ilma "
+"andmeteta annavad vahemikud väärtused: Inventarinumber `3000` kuni `5685` on "
+"2686 silti, `00300` kuni `00450` säilitab nullid, samm annab iga teise või "
+"kümnenda numbri; `3000-5685` saab korraga sisestada või kleepida."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6241,6 +6213,7 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Kontrolli: siltide arv, esimene ja viimane, serveri ja printeri piirangud."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6250,6 +6223,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"Prindi: alates 100 sildist küsib leht enne. Edenemine näitab, mitu on "
+"prinditud; Loobu peatub praeguse sildi järel (cab-printer: praeguse kuni "
+"[[ui:Labels per job]] sildiga töö järel). Pärast tühistamist või printeri "
+"probleemi prindib „Jätka kohast …” ülejäänu."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6258,11 +6235,15 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"Leht räägib brauseri keelt või üleval valitut: kõik rakenduse keeled, "
+"araabia keel paremalt vasakule. Kellaajad on 24-tunnise kellaga."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` lülitab lehe välja serveritele, mida kasutavad ainult "
+"programmid."
 
 #. type: Title ##
 #: docs/server.md
@@ -6297,17 +6278,14 @@ msgstr "`POST /api/v1/preview` tagastab sildi PNG-pildina."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
-"`POST /api/v1/print` paneb printimistöö järjekorda; `GET /api/v1/jobs/<id>` "
-"näitab selle olekut, `DELETE` tühistab selle kahe sildi vahel."
+"`POST /api/v1/print` paneb prinditöö järjekorda; `GET /api/v1/jobs/<id>` "
+"näitab selle olekut, `DELETE` tühistab selle kahe sildi vahel (cab-printer: "
+"seeria kahe töö vahel)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6517,16 +6495,12 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` on väljalase, `1.1` versiooni 1.1 viimane veaparanduse väljalase, "
-"`latest` viimane väljalase. `edge` on arendusseis, mitte väljalase."
+"`1.2.1` on väljalase, `1.2` versiooni 1.2 viimane veaparandusväljalase, "
+"`latest` viimane väljalase. `edge` on arenduse seis, mitte väljalase."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -7213,7 +7187,7 @@ msgstr "Vabas paigutuses sildid ei avane Tavletta varasemates versioonides."
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Paigutamine eelvaates { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7221,6 +7195,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"Vabas paigutuses saab elemente eelvaates paigutada hiire, sõrme või "
+"pliiatsiga:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7231,6 +7207,11 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Klõpsa elemendil, et see valida; selle rida jaotises [[ui:Content]] avaneb. "
+"Klõpsa Shiftiga või Ctrliga, et element valikusse lisada või sealt "
+"eemaldada. Lohista üle tühja koha, et valida iga element, mida valikuraam "
+"puudutab (Alt all hoides: ainult need, mis on selle sees). Klõps tühjal "
+"kohal ei vali midagi. Elemendi rea avamine valib selle samuti."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7241,6 +7222,11 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Lohista valikut, et seda liigutada. See kinnitub sildi servadele ja keskele "
+"ning teiste elementide servadele ja keskpunktidele; punane joon näitab kuhu. "
+"Hoia Alti või Ctrli, et paigutada see vabalt (mõned töölauad liigutavad "
+"akent, kui lohistamisel hoitakse Alti: siis kasuta Ctrli). Hoia Shifti, et "
+"liigutada ainult ühe telje sihis. Escape lohistamise ajal viib selle tagasi."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7251,6 +7237,11 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Ühel valitud elemendil on käepidemed nurkades ja servadel: lohista üht, et "
+"muuta suurust. Joon või kujund muudab laiust ja kõrgust eraldi (Shift "
+"säilitab proportsioonid); tekst, pilt, sümbol ja QR-kood säilitavad "
+"proportsioonid; vöötkood saab pikemad ribad või laiemad moodulid. Saatesilti "
+"ainult liigutatakse."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7260,6 +7251,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] päiseribas joondab valitud elemente: üks element sildi serva "
+"või keskpunkti suhtes, mitu üksteise suhtes. See jaotab kolm või enam "
+"ühtlaselt ([[ui:Distribute]]), lülitab kinnitumise sisse ja välja ([[ui:Snap "
+"to guides]]) ning lisab ruudustiku, millele kinnituda."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7269,6 +7264,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Kui eelvaade on fookuses (klõpsa sellel või mine Tabiga), liigutavad "
+"nooleklahvid valikut 0,1 mm, Shiftiga 1 mm; Delete eemaldab selle; Ctrl+A "
+"valib kõik elemendid, Shift+Ctrl+A ja Escape mitte ühtegi. Mõõtmed seatakse "
+"elemendi real ja selle leheküljel [[ui:Position and size]]."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7276,6 +7275,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Iga lohistamine, iga suuruse muutmine ja nooleklahvide vajutuste jada on üks "
+"[[ui:Undo]] samm, vaheldumisi külgribal tehtud muudatustega."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7283,6 +7284,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"Paigutuses [[ui:One after another]] saab elemente valida, kuid mitte "
+"liigutada: ühe lohistamine pakub [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7439,6 +7442,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Kui eelvaade on fookuses: nooleklahvid liigutavad valitud elemente (Shift: 1 "
+"mm), Delete eemaldab need, Ctrl+A ja Shift+Ctrl+A valivad kõik või mitte "
+"ühtegi ([vt eespool](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

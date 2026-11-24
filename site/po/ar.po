@@ -458,18 +458,16 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"تُلغى المهمة المنتظرة في الطابور فورًا؛ أما التي تُطبع فتتوقف بعد الملصق الجاري "
-"طباعته. الخطأ 409 `job_finished` إن كانت قد انتهت أصلًا."
+"تُلغى المهمة المنتظرة في الحال؛ وتتوقف المهمة قيد الطباعة بعد الملصق الجاري "
+"طباعته. تطبع طابعة cab السلسلة في مهام تضم كل منها حتى `labels_per_job` ملصق "
+"(250 افتراضيًا): فتتوقف بعد المهمة الجاري طباعتها. 409 `job_finished` إذا "
+"كانت قد انتهت أصلًا."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -913,57 +911,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1050,6 +998,10 @@ msgstr ""
 "| 408 | `timeout` | استغرق إرسال الطلب أكثر من 30 ث. |\n"
 "| 409 | `job_finished` | انتهت المهمة: لا شيء للإلغاء. |\n"
 "| 409 | `counter_not_saved` | ملف الملصق غير قابل للكتابة: لم يُطبع شيء. |\n"
+"| 409 | `label_exists` | يوجد ملصق بهذا الاسم: ارفعه مع replace=true. |\n"
+"| 409 | `label_in_use` | مهام الملصق منتظرة أو قيد الطباعة: أعد المحاولة عند انتهائها. |\n"
+"| 409 | `label_changed` | استُبدل ملف الملصق أثناء فحص الطلب. |\n"
+"| 409 | `label_locked` | طباعة للملصق تمسك بالملف: أعد المحاولة عند انتهائها. |\n"
 "| 411 | `length_required` | لا Content-Length (الأجسام المجزّأة غير مقبولة). |\n"
 "| 413 | `too_large` | الجسم أكبر من `--max-body`، أو صفوف بيانات أو أعمدة أو خلايا أكثر من اللازم. |\n"
 "| 413 | `too_many_labels` | النسخ في الصفوف تتجاوز `--max-labels` (10000 افتراضيًا)؛ وعلى أوراق الملصقات تتجاوز 999. |\n"
@@ -1068,15 +1020,16 @@ msgstr ""
 "| 429 | `too_many_requests` | عشرة رموز خاطئة من هذا العنوان: انتظر دقيقة. |\n"
 "| 429 | `queue_full` | مهام منتظرة كثيرة: أعد المحاولة لاحقًا. |\n"
 "| 500 | `internal` | خطأ في الخادم؛ وهو مسجَّل. |\n"
+"| 500 | `not_saved` | تعذّرت الكتابة في مجلد الملصقات (507: إنه ممتلئ). |\n"
+"| 500 | `not_deleted` | تعذّر حذف ملف الملصق (مجلد للقراءة فقط). |\n"
 "| 502 | `printer_<code>` | الطابعة لا يمكن الوصول إليها أو تبلغ عن مشكلة. |\n"
 "| 503 | `busy` | كل خانات الطلب أو الرسم مشغولة: أعد المحاولة بعد لحظة. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: مشكلة الطابعة، وهي إحدى `generic` و`not_found` و`timeout` و`stalled` و`port_closed` و`busy` و`paused` و`cover_open` و`head_open` و`jam` و`media_jam` و`out_of_labels` و`out_of_paper` و`label_not_found` و`wrong_media` و`paper_size` و`page_too_large` و`too_long` و`too_wide` و`code_too_large` و`ribbon` و`ribbon_out` و`ribbon_direct` و`no_cassette` و`bad_cassette` و`supplies` و`format` و`resolution` و`queue_paused` و`job_held` و`job_canceled` و`usb_not_found` و`usb_permission` و`serial_permission` و`battery` و`overheat` و`unsupported_model` و`unknown_model` و`editor_lite`.\n"
+msgstr "`printer_<code>`: مشكلة الطابعة، واحدة من `generic` و`not_found` و`timeout` و`stalled` و`port_closed` و`busy` و`paused` و`out_of_memory` و`cover_open` و`head_open` و`jam` و`media_jam` و`out_of_labels` و`out_of_paper` و`label_not_found` و`wrong_media` و`paper_size` و`page_too_large` و`too_long` و`too_wide` و`code_too_large` و`ribbon` و`ribbon_out` و`ribbon_direct` و`no_cassette` و`bad_cassette` و`supplies` و`format` و`resolution` و`queue_paused` و`job_held` و`job_canceled` و`usb_not_found` و`usb_permission` و`serial_permission` و`battery` و`overheat` و`unsupported_model` و`unknown_model` و`editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1159,20 +1112,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1195,14 +1135,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | لا شيء | هل الخادم يعمل؛ لا حاجة إلى رمز (لفحوص الصحة) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | هذا الوصف (OpenAPI 3.1)؛ رمز بأي دور |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | اسم الرمز ودوره وطابعاته، وحدود الطلب (لصفحة الويب) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | طابعات `printers.toml` التي يجوز للرمز استخدامها، مع حالتها؛ وبدونه: طرازات الطابعات والعنوان المعيّن لكل منها والطابعات المكتشفة (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | اسأل طابعة عن حالتها: الوسائط والمشكلات والدقة |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | ملفات الملصقات في مجلد الملصقات ومجلداته الفرعية |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | ما يمكن ملء الملصق به: العناصر والمتغيرات وأعمدة البيانات والحجم والعدّاد |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | رفع ملف ملصق (admin): يُفحص كما يفتح التطبيق الملف، ثم يوضع في مجلد الملصقات في خطوة واحدة |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | حذف ملف ملصق (admin)؛ ويبقى ملف بياناته |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | قراءة ملف بيانات أُرسل مع الطلب (CSV وODS وXLSX) كما يقرأه التطبيق: صفوفه لـ data_rows؛ ولا يُحفظ شيء |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | الملصق بعد ملئه، صورةً؛ ولا يُطبع شيء |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | الطباعة: يُفحص الطلب ثم يوضع في الطابور؛ وتطبع كل طابعة مهمة واحدة في كل مرة |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | حالة مهمة طباعة (رمز print: مهامه فقط؛ وadmin: الجميع). تُحفظ 24 ساعة بعد انتهائها |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | إلغاء مهمة: فورًا ما دامت منتظرة، وبعد الملصق الجاري أثناء الطباعة |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | إلغاء مهمة: في الحال أثناء انتظارها، وبعد الملصقات المرسلة إلى الطابعة أصلًا أثناء طباعتها (cab: المهمة التي تضم حتى labels_per_job ملصق) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1276,25 +1220,20 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
 msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
-msgstr ""
+msgstr "اسم الرمز ودوره وطابعاته، وحدود الطلب (لصفحة الويب)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1302,7 +1241,7 @@ msgid ""
 msgstr ""
 "| Status | الإجابة | الرموز |\n"
 "|---|---|---|\n"
-"| 200 | الملصقات |  |\n"
+"| 200 | من |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1502,10 +1441,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1513,21 +1451,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"رفع ملف ملصق (admin): يُفحص كما يفتح التطبيق الملف، ثم يوضع في مجلد الملصقات "
+"في خطوة واحدة."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "الدور: `print`"
+msgstr "الدور: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1536,12 +1470,13 @@ msgid ""
 msgstr ""
 "| المعامل | في | المعنى |\n"
 "|---|---|---|\n"
-"| `name` | path | قد يحتوي شرطات مائلة للمجلدات الفرعية؛ ويمكن حذف '`.tavletta`'. |\n"
+"| `name` | path | اسم الملف بلا مجلد؛ ويمكن حذف '`.tavletta`'. |\n"
+"| `replace` | query | استبدال ملصق بهذا الاسم. الافتراضي `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "الجسم: محتوى ملف `.tavletta`."
 
 #. type: Plain text
 #: docs/api.md
@@ -1557,6 +1492,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | الإجابة | الرموز |\n"
+"|---|---|---|\n"
+"| 200 | تم الاستبدال (replace=true) |  |\n"
+"| 201 | تمت الإضافة |  |\n"
+"| 400 | اسم غير صالح لملصق جديد: أحرف وأرقام ومسافات و. _ - ( ) + , (حتى 100)، في المجلد نفسه | `invalid_field`, `not_json` |\n"
+"| 409 | يوجد ملصق بهذا الاسم (أرسل replace=true)، أو مهام الملصق منتظرة أو قيد الطباعة (label_in_use)، أو طباعة برنامج آخر تمسك بالملف | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | أكبر من `--max-body`، أو ملصق أكبر من أن يُرسم | `too_large`, `label_too_large` |\n"
+"| 422 | ليس ملصقًا يستطيع Tavletta فتحه | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | لا مساحة متبقية في مجلد الملصقات | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1571,26 +1515,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "حذف ملف ملصق (admin)؛ ويبقى ملف بياناته."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1601,10 +1537,10 @@ msgid ""
 msgstr ""
 "| Status | الإجابة | الرموز |\n"
 "|---|---|---|\n"
-"| 200 | الملصق |  |\n"
+"| 204 | تم الحذف |  |\n"
 "| 400 | ليس اسمًا داخل مجلد الملصقات | `invalid_field` |\n"
 "| 404 | لا يوجد ملصق كهذا | `label_not_found` |\n"
-"| 422 | الملف ليس ملصقًا أو تالف | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | مهام الملصق منتظرة أو قيد الطباعة (label_in_use)، أو طباعة برنامج آخر تمسك بالملف | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1617,10 +1553,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1628,6 +1563,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"قراءة ملف بيانات أُرسل مع الطلب (CSV وODS وXLSX) كما يقرأه التطبيق: صفوفه لـ "
+"data_rows؛ ولا يُحفظ شيء."
 
 #. type: Plain text
 #: docs/api.md
@@ -1645,17 +1582,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| الحقل | النوع | المعنى |\n"
+"|---|---|---|\n"
+"| `content` | string | الملف: CSV (أي فاصل، UTF-8 أو UTF-16 أو Windows-1252) أو ODS أو XLSX، يُميَّز بالمحتوى. النص الملصوق هو ملف CSV. |\n"
+"| `name` | string | اسم الملف، للرسائل. |\n"
+"| `sheet` | string | ODS وXLSX: الورقة (الأولى افتراضيًا). |\n"
+"| `header` | boolean | false: الصف الأول بيانات أيضًا؛ وتُسمى الأعمدة A وB وC … الافتراضي `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1665,10 +1601,9 @@ msgid ""
 msgstr ""
 "| Status | الإجابة | الرموز |\n"
 "|---|---|---|\n"
-"| 200 | الملصق |  |\n"
-"| 400 | ليس اسمًا داخل مجلد الملصقات | `invalid_field` |\n"
-"| 404 | لا يوجد ملصق كهذا | `label_not_found` |\n"
-"| 422 | الملف ليس ملصقًا أو تالف | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | الصفوف |  |\n"
+"| 400 | طلب غير صالح | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | ليس جدولًا، أو تالف، أو فارغ | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1815,18 +1750,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1845,7 +1769,7 @@ msgstr ""
 "| 202 | في الطابور أو قيد الطباعة؛ تابعها عند Location |  |\n"
 "| 400 | طلب غير صالح | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | لا يوجد ملصق أو طابعة أو ملف بيانات كهذا، أو طابعة لا يجوز للرمز استخدامها | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | ملف الملصق غير قابل للكتابة: تعذّر حفظ قيمة العدّاد التالية، ولم يُطبع شيء | `counter_not_saved` |\n"
+"| 409 | ملف الملصق غير قابل للكتابة: تعذّر حفظ القيمة التالية للعدّاد، ولم يُطبع شيء؛ أو استُبدل أثناء فحص الطلب (label_changed): أرسله مجددًا | `counter_not_saved`, `label_changed` |\n"
 "| 413 | كبير جدًا: الجسم أو صفوف البيانات أو الملصقات في مهمة واحدة أو الملصق المراد رسمه | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | سيُطبع الملصق خطأً | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | رموز خاطئة كثيرة، أو مهام منتظرة كثيرة (100 في المجموع، و20 لكل رمز مسمّى) | `too_many_requests`, `queue_full` |\n"
@@ -1917,24 +1841,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
-msgstr "إلغاء مهمة: فورًا ما دامت منتظرة، وبعد الملصق الجاري أثناء الطباعة."
+msgstr ""
+"إلغاء مهمة: في الحال أثناء انتظارها، وبعد الملصقات المرسلة إلى الطابعة أصلًا "
+"أثناء طباعتها (cab: المهمة التي تضم حتى labels_per_job ملصق)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1944,7 +1860,7 @@ msgid ""
 msgstr ""
 "| Status | الإجابة | الرموز |\n"
 "|---|---|---|\n"
-"| 202 | أُلغيت، أو تتوقف بعد الملصق الجاري |  |\n"
+"| 202 | أُلغيت، أو تتوقف بعد الملصقات المرسلة أصلًا |  |\n"
 "| 404 | لا توجد مهمة كهذه | `job_not_found` |\n"
 "| 409 | انتهت بالفعل | `job_finished` |\n"
 
@@ -1971,27 +1887,7 @@ msgstr "المهمة { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2023,7 +1919,8 @@ msgstr ""
 "| `host` | string | عنوان الطابعة. |\n"
 "| `owner` | string or null | اسم الرمز. |\n"
 "| `label` | string or null | الاسم في مجلد الملصقات؛ وnull لـ label_content. |\n"
-"| `printed` | integer | الملصقات المطبوعة حتى الآن. |\n"
+"| `printed` | integer | الملصقات المطبوعة حتى الآن بيقين؛ ويزداد ملصقًا ملصقًا أثناء طباعة المهمة، بقدر ما تبلغ به الطابعة. |\n"
+"| `printed_max` | integer or null | بعد فشل لم تستطع الطابعة معرفة نتيجته (انقطع الاتصال أثناء الطباعة): ربما طُبع حتى هذا العدد من الملصقات. يتابع العدّاد بعدها؛ ويحسب rows_printed الصفوف المطبوعة بيقين، فقد تؤدي إعادة الطباعة من الصف التالي إلى طباعة ملصقات مرتين. وإلا فـ null. |\n"
 "| `total` | integer | الملصقات المراد طباعتها: النسخ × الصفوف. |\n"
 "| `rows_printed` | integer | صفوف البيانات المطبوعة كاملة: بعد الفشل اطبع من جديد بـ rows مضبوطًا على التالي (rows_printed + الصف الأول). |\n"
 "| `cancel_requested` | boolean | أُرسل DELETE. |\n"
@@ -2042,22 +1939,7 @@ msgstr "الملصق { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2087,9 +1969,11 @@ msgstr ""
 "| `columns` | array of string | العناصر النائبة `{Column}`: مفاتيح data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file غير موجود (بعد الآن): أرسل الصفوف في data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (للملصق `{=counter}`)، وnext، وstep. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | طُبع على أوراق ملصقات: 999 ملصقًا على الأكثر في مهمة واحدة. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2176,14 +2060,7 @@ msgstr "المعاينة { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2199,12 +2076,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | ما سيُطبع خطأً. other_labels_loaded: تبلغ طابعة `printers.toml` بأن ملصقات أخرى محمّلة غير ملصق الطلب (حجمها، أو مسافة الملصقات التي قاستها). تُعتمد آخر إجابة منها إن كانت خلال الدقيقة الأخيرة، والخطأ كأن لا شيء معروف (يُسأل من جديد في الخلفية)؛ وتُنتظر الطابعة غير المعروفة بعد حتى ثانية واحدة بعد رسم الملصق. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | أين العناصر في الصورة؛ وnull لـ view=printer ولملصق مُدار على ورقته. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2213,6 +2091,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"مربعات العناصر في صورة المعاينة، بالمليمتر من زاويتها العليا اليسرى "
+"(tavletta/editing.py وdocs/editing.md)؛ وبكسل الصورة يساوي mm * dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2226,13 +2106,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| الحقل | النوع | المعنى |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | على طول الشريط: الطول. |\n"
+"| `height_mm` | number | عرضيًا: ارتفاع الشريط أو الملصق. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | دقة الصورة. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "الصور { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2248,13 +2134,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| الحقل | النوع | المعنى |\n"
+"|---|---|---|\n"
+"| `name` | string | اسم الرمز في tokens.toml؛ و'token' للرمز الوحيد في `--token-file`، و'local' بلا رمز؛ و'oidc:<user>' لمن سجّل الدخول إلى صفحة الويب عبر OpenID Connect. |\n"
+"| `display_name` | string | اسم الشخص لدى المزوّد؛ وإلا فمثل name. |\n"
+"| `session` | boolean | true: سُجّل الدخول إلى صفحة الويب عبر OpenID Connect (بكعكة جلسته) لا برمز. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | الطابعات التي يجوز للرمز استخدامها؛ وnull: كلها. |\n"
+"| `token_required` | boolean | false: لا رمز على الخادم ولا `--oidc` (الحلقة المحلية فقط). |\n"
+"| `limits` | object | أقصى ما يجوز أن يطلبه طلب واحد: الملصقات في مهمة (`--max-labels`؛ وعلى أوراق الملصقات 999 على الأكثر)، والنسخ، وصفوف البيانات وأعمدتها وخلاياها، والجسم بالبايت (`--max-body`؛ وهو أيضًا أكبر ملف ملصق يمكن رفعه). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "البدء { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2269,6 +2163,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| الحقل | النوع | المعنى |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: الفاصل الذي وُجد؛ وnull لعمود واحد وجداول البيانات. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | الورقة المقروءة. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | كل خلية كالنص الذي تعرضه: تبقى الأصفار البادئة وتنسيقات الأرقام (يبقى 00300 كما هو 00300). تُحذف الصفوف التي لا خلية معبأة فيها. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2558,18 +2460,14 @@ msgstr "الملصق الأول"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"شغّل الطابعة واخترها في [[ui:Printer model]]. يعثر Tavletta عليها في الشبكة "
-"(Bonjour) ويقرأ ما هو محمّل: عرض الشريط أو المسافة بين الملصقات."
+"شغّل الطابعة واخترها تحت [[ui:Printer model]]: الطابعة التي وُجدت عبر USB أو "
+"في الشبكة (Bonjour) في أعلى القائمة. يقرأ Tavletta ما هو محمّل: عرض الشريط أو "
+"المسافة بين الملصقات."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2612,6 +2510,11 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"اختر الطابعة تحت [[ui:Printer model]]؛ ولكل واحدة قسمها الخاص أدناه. "
+"الطابعات التي يجدها Tavletta عبر USB وفي الشبكة تأتي أولًا في تلك القائمة، "
+"تحت [[ui:Found]]، مع طرازها: واختيار إحداها يأخذ طرازها وعنوانها. وتأتي "
+"الطرازات بعد ذلك تحت [[ui:All models]]. يبحث Tavletta عنها عند فتح النافذة "
+"وبـ [[ui:Search for printers]]، كل الطرازات في آن واحد، في الخلفية."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2710,6 +2613,14 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (ملصقات مقصوصة): تبلغ الطابعة عن ملصقات بحجم "
+"آخر، أو قاست بين ملصق وآخر مسافة غير ارتفاع ملصقك زائد [[ui:Gap]]. يغيّر "
+"[[ui:Use loaded labels]] الملصق ولا يطبع شيئًا بعد: فيأخذ الحجم الذي تبلغ به "
+"الطابعة (Brother QL)، أو يضبط الارتفاع على طول اللفة بحيث يعطي الارتفاع زائد "
+"الفراغ المسافة المقاسة (cab وZebra). يبقى الفراغ والعرض؛ وعرض الطباعة في "
+"Zebra هو ما ضبطته الطباعة الأخيرة، لا عرض الملصقات. وحيث يقل ذلك الارتفاع عن "
+"5 مم يتغير الفراغ بدلًا منه؛ وحيث لا يعطي أيٌّ منهما ملصقًا، لا يُعرض إلا "
+"[[ui:Print anyway]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2718,6 +2629,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"بعد [[ui:Use loaded labels]] افحص الملصق في المعاينة، ثم اطبع. يتراجع "
+"[[ui:Undo]] في الرسالة عن التغيير؛ وتذكر الرسالة ذلك إذا صارت العناصر تتجاوز "
+"حافة الملصق."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3229,6 +3143,12 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: الطابعة التي تطبع بعيدًا عن مكان الملصق (تأتي الطباعة "
+"أعلى قليلًا أو أدنى قليلًا على كل ملصق مما تعرضه المعاينة) يُعوَّض عنها هنا: قِس "
+"على ملصق مطبوع مقدار انحراف الطباعة وأدخله، موجبًا لإنزال الطباعة على "
+"الملصقات المعترضة للفة، وسالبًا لرفعها. تظل المعاينة تعرض الملصق كما ينبغي أن "
+"يخرج؛ ولا يتحرك إلا ما يُرسل إلى الطابعة. المحتوى الواقع ضمن هذه المسافة من "
+"الحافة التي تتحرك الطباعة نحوها يُقصّ."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3240,6 +3160,11 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: ملصقات السلسلة تذهب إلى الطابعة معًا، حتى هذا العدد "
+"(250 افتراضيًا، من 1 إلى 1000) في مهمة واحدة، وتمر دون توقف بينها. يسري "
+"[[ui:Stop]] بين مهمتين: المهمة التي بدأت تُطبع كاملة. 1 يرسل كل ملصق مهمةً "
+"قائمة بذاتها، كما تتلقاها الطابعات الأخرى. أما الملصقات التي يتغير محتواها "
+"من نسخة إلى أخرى فتُرسل دائمًا واحدًا واحدًا."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3254,12 +3179,6 @@ msgstr "المشكلات { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3267,9 +3186,10 @@ msgid ""
 "once after changing the roll so it measures again, then [[ui:Use loaded "
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
-"[[ui:Different labels loaded]]: قاست الطابعة مسافة بين الملصقات تخالف ارتفاع "
-"ملصقك زائد الفاصل. تحقق من [[ui:Label size]] و[[ui:Gap]]، أو حمّل اللفة "
-"الصحيحة. اضغط Feed على الطابعة مرة واحدة بعد تغيير اللفة لتقيس من جديد."
+"[[ui:Different labels loaded]]: قاست الطابعة بين الملصقات مسافة غير ارتفاع "
+"ملصقك زائد الفراغ. تحقق من [[ui:Label size]] و[[ui:Gap]]، أو حمّل اللفة "
+"الصحيحة. اضغط Feed على الطابعة مرة واحدة بعد تغيير اللفة لتقيس من جديد، ثم "
+"يكيّف [[ui:Use loaded labels]] الملصق معها ([كل الطابعات](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3279,6 +3199,10 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"كل شيء يُطبع أعلى قليلًا أو أدنى قليلًا، بالقدر نفسه على كل ملصق، بينما تعرضه "
+"المعاينة في مكانه: اضبط [[ui:Print offset]]. الملصق المصمم في برنامج آخر "
+"للتعويض عن ذلك يُطبع في المعاينة بعيدًا عن مكانه؛ أعد محتواه إلى مكانه واضبط "
+"الإزاحة بدلًا من ذلك."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3324,6 +3248,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"نفدت الذاكرة: لم يكن في الطابعة مكان لملصقات المهمة. خفّض [[ui:Labels per "
+"job]]، ثم اطبع من جديد من الصف الذي تسميه الرسالة."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3337,6 +3263,13 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"\"أُرسلت المهمة لكن نتيجتها مجهولة\": انقطع الاتصال بالطابعة أثناء الطباعة "
+"(أو لم تستطع الطابعة أن تبلغ إلى أي مدى وصلت). يحسب Tavletta الملصقات التي "
+"يعرف أنها طُبعت؛ وقد تكون الطابعة طبعت أكثر. افحص الملصقات التي خرجت: قد تؤدي "
+"إعادة الطباعة من الصف الذي تسميه الرسالة إلى طباعة بعضها مرتين، لكنها لا "
+"تترك أيًّا منها. وإذا كانت واجهة الويب للطابعة قابلة للوصول في الشبكة "
+"(الافتراضي)، يقارن Tavletta العدد أيضًا بعدّاد الملصقات في الطابعة؛ وإذا اختلف "
+"الاثنان تذكر الرسالة النطاق."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3937,6 +3870,10 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): تبلغ الطابعة عن آخر مسافة "
+"قاستها، ربما على لفة سابقة. بعد تغيير اللفة دعها تقيس الملصقات من جديد (تفعل "
+"معظم الطابعات ذلك بضغطة طويلة على Feed) قبل أن تستخدم [[ui:Use loaded "
+"labels]] ([كل الطابعات](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4255,20 +4192,19 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"كل ملصق مهمة طباعة قائمة بذاتها، لذلك يعمل هذا على كل طابعة. وتتلقى طابعة "
+"cab حتى [[ui:Labels per job]] ملصق في مهمة واحدة، تطبعها دون توقف بينها "
+"([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"[[ui:Stop]] في الشريط أعلى النافذة ينهي السلسلة بعد الملصق الجاري طباعته؛ "
-"ويُطبع الملصق الأول دائمًا."
+"[[ui:Stop]] في الشريط أعلى النافذة ينهي السلسلة بعد الملصق الجاري طباعته "
+"(على طابعة cab: بعد المهمة الجاري طباعتها)؛ ويُطبع الملصق الأول دائمًا."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4337,19 +4273,14 @@ msgstr "نظرة عامة { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"خدمة صغيرة واحدة: واجهة REST API (وMCP لمساعدي الذكاء الاصطناعي) على المنفذ "
-"8790.  ترسم الملصقات بنفسها وترسلها إلى الطابعات عبر الشبكة؛ بلا سطح مكتب "
-"ولا متصفح ولا قاعدة بيانات."
+"خدمة صغيرة واحدة: REST API (وMCP لمساعدي الذكاء الاصطناعي) على المنفذ 8790. "
+"ترسم الملصقات بنفسها وترسلها إلى الطابعات عبر الشبكة؛ بلا سطح مكتب وبلا "
+"قاعدة بيانات."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4359,6 +4290,9 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"صفحة ويب على العنوان نفسه للناس: سجّل الدخول برمز، وشاهد الطابعات، واطبع "
+"قالبًا أو سلسلة (من ملف CSV أو XLSX أو ODS، أو قائمة ملصوقة، أو نطاقات أرقام "
+"مثل 3000–5685)، وارفع القوالب واحذفها برمز admin. يوقفها `--no-web-ui`."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4816,6 +4750,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  تُدرج كل طابعة مع حالتها؛ و`UNREACHABLE` مع رسالة إذا\n"
+"  تعذّر على الخادم الوصول إليها.\n"
+"- افتح `http://127.0.0.1:8790/` في متصفح على الخادم (يستخدم الآخرون\n"
+"  عنوان الوكيل، انظر [الوكيل العكسي](#proxy)) وسجّل الدخول برمز:\n"
+"  تعرض صفحة الويب ما يسمح به دوره. وتحتفظ الصفحة بالرمز في\n"
+"  علامة تبويب المتصفح فقط، حتى تُغلق العلامة أو \"تسجيل الخروج\".\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5428,7 +5368,7 @@ msgstr "لا تجعل الخادم قابلًا للوصول من الإنترن
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "تسجيل الدخول عبر OpenID Connect { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5439,6 +5379,10 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"يستطيع الناس تسجيل الدخول إلى صفحة الويب عبر مزوّد الهوية في مؤسستك (Keycloak "
+"وAuthentik وMicrosoft Entra ID وOkta …) بدلًا من رمز وصول؛ وتصبح أدوارهم لدى "
+"المزوّد أدوار Tavletta. وتواصل البرامج استخدام الرموز. ويلزم HTTPS عبر الوكيل "
+"العكسي (لا يعمل بدونه إلا `http://localhost`، للاختبار)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5450,6 +5394,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"سجّل عميلًا لدى المزوّد: سريًّا (confidential، بسرّ)، وبتدفق authorization code "
+"فقط، وPKCE S256، وعنوان إعادة التوجيه `https://labels.example.com/oidc/"
+"callback`، وعنوان إعادة التوجيه بعد الخروج `https://labels.example.com/`. "
+"اجعل الأدوار أو المجموعات تصل إلى ID token: في Keycloak مُعيِّن (mapper) باسم "
+"*User Client Role* (أو *User Realm Role*) على العميل مع تفعيل *Add to ID "
+"token*؛ ويرسل Authentik القيمة `groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5458,6 +5408,8 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"ضع السرّ في `config/oidc-secret` (السرّ وحده، بصلاحيات 600) واكتب `config/"
+"oidc.toml` (يعطيك `cp oidc.example.toml config/oidc.toml` بداية معلَّقًا عليها):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5485,6 +5437,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"أضف `\"--oidc\"` و`\"/config/oidc.toml\"` إلى `command:` في `compose.yaml` "
+"(في النمط الأصلي: إلى `ExecStart`، مع `/etc/tavletta/...`)، وأبقِ `--trusted-"
+"proxy`، ثم أعد التشغيل. ومع `--trusted-proxy` يحتاج الخادم إلى `public_url` "
+"ولا يبدأ بدونه."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5493,6 +5449,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"يتطلب تسجيل الدخول PyJWT، وهو موجود في صورة الحاوية وحزمتي deb وrpm؛ أما "
+"Flatpak فلا يملكه ولا يمكن تثبيت شيء فيه: لاستخدام `--oidc` شغّل الخادم من "
+"أحد الباقي."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5507,6 +5466,15 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"تعرض الصفحة حينئذ \"تسجيل الدخول عبر Example ID\". ومن لا يملك أيًّا من "
+"الأدوار يحصل على \"لا وصول\". تدوم الجلسة 8 ساعات، أو 60 دقيقة دون استخدام "
+"(`session_hours` و`idle_minutes`)؛ والدور المسحوب أو الحساب المعطَّل لدى "
+"المزوّد يُحتسب من تسجيل الدخول التالي، فأبقِ الجلسات قصيرة حيث يسجّل المديرون "
+"الدخول. يخفي `token_login = false` حقل الرمز في الصفحة. ويمكن تقييد الطابعات "
+"بحسب الدور (`[oidc.printers]`) أو بمطالبة (claim) (`printers_claim`). كل "
+"مفتاح وتفاصيل الأمان: [docs/server.md](https://git.joshuahirsig.xyz/joshii/"
+"tavletta/src/branch/main/docs/server.md#signing-in-with-openid-connect-"
+"oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5648,6 +5616,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"مع `--oidc`: `public_url` مضبوط، والعميل سرّي (confidential) مع PKCE، وفقط "
+"الأدوار التي يحتاجها الناس، وجلسات قصيرة حيث يسجّل المديرون الدخول، و`oidc-"
+"secret` بصلاحيات 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5655,6 +5626,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"لا أحد يطبع من متصفح: `--no-web-ui` (لا تحتاج صفحة الويب إلى رمز لتحميلها، "
+"لكنها لا تعرض شيئًا بدونه)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5689,24 +5662,7 @@ msgstr "استكشاف الأخطاء { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5730,7 +5686,7 @@ msgstr ""
 "|---|---|\n"
 "| طابعة `UNREACHABLE` (`printer_timeout` و`printer_not_found`) | لا يستطيع الخادم الوصول إليها: اختبر من الخادم بـ `nc -vz <printer> 9100` (631 لـ IPP)؛ وتحقق من العنوان وجدار الحماية وأن الطابعة قيد التشغيل. في Docker يجب أن تصل الحاوية إلى شبكة الطابعة. |\n"
 "| `401 unauthorized` | الرمز مفقود أو مكتوب خطأ أو منتهي أو محذوف من `tokens.toml`. الترويسة هي `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | عشرة رموز خاطئة من هذا العنوان خلال دقيقة: صحّح الرمز وانتظر دقيقة. |\n"
+"| `429 too_many_requests` | عشرة رموز خاطئة من هذا العنوان خلال دقيقة: صحّح الرمز وانتظر دقيقة. خلف وكيل عكسي لم يُعطَ بـ `--trusted-proxy` يتشارك الجميع عنوان الوكيل. |\n"
 "| `429 queue_full` | 100 مهمة (20 لكل رمز) منتظرة: الطابعة بطيئة أو متوقفة؛ افحصها وأعد المحاولة لاحقًا. |\n"
 "| `503 busy` | كل خانات الطلب أو الرسم مشغولة للحظة: أعد المحاولة بعد ثانية أو ثانيتين. |\n"
 "| `404 printer_not_found` | ليست في `printers.toml`، أو لا يجوز للرمز استخدامها (`--printer`). |\n"
@@ -5740,6 +5696,7 @@ msgstr ""
 "| `other_labels_loaded` في التحذيرات | في الطابعة ملصقات غير ملصق التصميم: حمّل اللفة المناسبة، أو تحقق من حجم الملصق والفاصل. قد تبلغ طابعة ZPL عن مسافة قاستها على لفة سابقة: عايرها. |\n"
 "| `409 counter_not_saved` | ملف الملصق غير قابل للكتابة لمستخدم الخادم: نفّذ `chown` له (Docker: 1000، أصلي: `tavletta`). |\n"
 "| التاريخ أو الوقت على الملصقات متقدم أو متأخر بساعة أو ساعتين | تعمل الحاوية على UTC: اضبط `TAVLETTA_TZ=Europe/Zurich` في `.env` ثم `docker compose up -d`. |\n"
+"| \"لم ينجح تسجيل الدخول\" في صفحة الويب | يذكر السجل السبب: تعذّر الوصول إلى المزوّد، أو عنوان إعادة التوجيه أو السرّ خاطئ لدى المزوّد، أو تُفتح الصفحة عبر HTTP عادي (اضبط `public_url` و`--trusted-proxy`). \"لا وصول\": الأدوار لا تصل إلى ID token (مُعيِّن مفقود) أو لا دور مربوط في `[oidc.roles]`. |\n"
 "| الخادم لا يبدأ | `docker compose logs` أو `journalctl -u tavletta-server`: يُسمّى الخطأ في `printers.toml` أو `tokens.toml` مع مفتاحه. |\n"
 "| رفض الإذن على المجلدات (Fedora وRHEL مع SELinux وPodman) | أضف `:Z` إلى الأحجام (volumes) في `compose.yaml`. |\n"
 
@@ -5751,20 +5708,15 @@ msgstr "خادم الطباعة"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"تستطيع البرامج الأخرى ومساعدو الذكاء الاصطناعي طباعة الملصقات عبر Tavletta "
-"دون فتح النافذة: `tavletta serve` يقدّم واجهة ويب للبرامج (REST API)، "
-"و`tavletta mcp` يصل مساعدي الذكاء الاصطناعي مثل Claude."
+"يمكن لبرامج أخرى ومساعدي الذكاء الاصطناعي والناس في متصفح طباعة الملصقات عبر "
+"Tavletta دون فتح النافذة: يقدّم `tavletta serve` صفحة ويب للناس وواجهة ويب "
+"للبرامج (REST API)، ويربط `tavletta mcp` مساعدي الذكاء الاصطناعي مثل Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5823,7 +5775,7 @@ msgstr "عنوان الطابعة وهامش الأمان وإعدادات ال�
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "افتح `http://127.0.0.1:8790/` في متصفح: [صفحة الويب](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5898,13 +5850,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -5914,9 +5859,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` هو [[ui:Print method]] (`printer` و`transfer` و`direct`)، "
-"و`upside_down` هو [[ui:Print upside down]]؛ والأخرى هي `quality` و`chain` "
-"و`high_res` و`feed_mm` و`darkness` و`media` و`outlines`، انظر [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"و`upside_down` هو [[ui:Print upside down]]، و`offset_mm` هو [[ui:Print "
+"offset]] (من −5 إلى 5)، و`labels_per_job` هو [[ui:Labels per job]] (من 1 إلى "
+"1000، و250 افتراضيًا)؛ وغيرها `quality` و`chain` و`high_res` و`feed_mm` "
+"و`darkness` و`media` و`outlines`، انظر [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
 
 #. type: Bullet: '- '
@@ -6021,17 +5968,13 @@ msgstr "يُعرض الرمز مرة واحدة فقط؛ ولا يحتفظ ال�
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview` يسرد المعاينات ويعرضها فقط، و`print` يطبع أيضًا ويتابع مهامه، "
-"و`admin` يرى كل المهام ويلغيها."
+"`preview` يعرض القوائم والمعاينات فقط، و`print` يطبع أيضًا ويتابع مهامه، "
+"و`admin` يرى كل المهام ويلغيها ويرفع القوالب ويحذفها."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6051,10 +5994,9 @@ msgstr "لسحب رمز احذف مدخله في `tokens.toml`. يلاحظ ال�
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "الصور { #images }"
+msgstr "صفحة الويب { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6062,6 +6004,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"صفحة الخادم نفسه، على عنوانه (`http://127.0.0.1:8790/`، أو عنوان [الوكيل "
+"العكسي](server-install.md#proxy)):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6071,12 +6015,16 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**تسجيل الدخول** برمز وصول (بلا رمز على الخادم لا شيء لتسجيل الدخول إليه). "
+"يحتفظ به المتصفح في علامة التبويب هذه فقط؛ و\"تسجيل الخروج\" ينساه. وحيث "
+"يكون الخادم مهيأً لذلك، يستخدم \"تسجيل الدخول عبر …\" حساب مؤسستك بدلًا منه "
+"([OpenID Connect](server-install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
-msgstr ""
+msgstr "**الطابعات**: حالتها، والملصقات أو الشريط المحمّل، والمشكلات، بالكلمات."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6088,11 +6036,16 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**القوالب**: ملفات الملصقات في مجلد الملصقات مع معاينة. تعرض حقول البيانات "
+"الصف الأول من ملف بيانات القالب، أو قيمًا نموذجية إن لم يكن له ملف أو كان "
+"مفقودًا. \"طباعة\" تملأ حقول ملصق واحد وتعرض المعاينة أثناء الكتابة؛ وتُحاط "
+"فيها العناصر التي يملؤها الحقل بإطار. وبرمز `admin` تُرفع القوالب (ملفات "
+"`.tavletta`) وتُحذف من هنا."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**السلسلة**، خطوة بخطوة:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6100,6 +6053,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"البيانات: ملف CSV أو XLSX أو ODS، أو قائمة ملصوقة من جدول بيانات، أو بلا "
+"بيانات إطلاقًا. تبقى الأصفار البادئة (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6109,6 +6064,9 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"الإسناد: أي عمود يملأ أي حقل في القالب (الأسماء المتطابقة مُسندة أصلًا، بصرف "
+"النظر عن حالة الأحرف والمسافات). تحيط معاينة الملصق الأول بجانبه الحقل "
+"المستخدم بإطار؛ ويعرض كل حقل قيمته، وكل عمود أولى قيمه."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6118,13 +6076,17 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"الاختيار: كل الصفوف، أو بعض الصفوف (`1-20, 25, 30-`)، أو بنطاقات حقل. وبلا "
+"بيانات تنتج النطاقات القيم: رقم الجرد من `3000` إلى `5685` يعطي 2686 ملصقًا، "
+"ومن `00300` إلى `00450` تبقى الأصفار، والخطوة تنتج كل رقم ثانٍ أو عاشر؛ ويمكن "
+"كتابة `3000-5685` أو لصقه دفعة واحدة."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
 msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
-msgstr ""
+msgstr "الفحص: عدد الملصقات، والأول والأخير، وحدود الخادم والطابعة."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6134,6 +6096,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"الطباعة: ابتداءً من 100 ملصق تسأل الصفحة أولًا. يعرض التقدم كم طُبع؛ ويتوقف "
+"\"إلغاء\" بعد الملصق الجاري (طابعة cab: بعد المهمة الجارية التي تضم حتى "
+"[[ui:Labels per job]] ملصق). وبعد إلغاء أو مشكلة في الطابعة تطبع \"متابعة من "
+"…\" الباقي."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6142,11 +6108,13 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"تتحدث الصفحة بلغة المتصفح، أو بالتي تُختار في الأعلى: كل لغات التطبيق، "
+"والعربية من اليمين إلى اليسار. والأوقات بنظام 24 ساعة."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
-msgstr ""
+msgstr "يوقف `--no-web-ui` الصفحة، للخوادم التي تستخدمها البرامج وحدها."
 
 #. type: Title ##
 #: docs/server.md
@@ -6180,17 +6148,14 @@ msgstr "`POST /api/v1/preview` يعيد الملصق صورة PNG."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
-"`POST /api/v1/print` يضع مهمة طباعة في الطابور؛ و`GET /api/v1/jobs/<id>` "
-"يعرض حالتها، و`DELETE` يلغيها بين ملصقين."
+"`POST /api/v1/print` يضع مهمة طباعة في قائمة الانتظار؛ و`GET /api/v1/jobs/"
+"<id>` يعرض حالتها، و`DELETE` يلغيها بين ملصقين (طابعة cab: بين مهمتين من "
+"سلسلة)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6398,15 +6363,11 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` إصدار، و`1.1` آخر إصدار إصلاحات للإصدار 1.1، و`latest` آخر إصدار. "
+"`1.2.1` إصدار، و`1.2` آخر إصدار لإصلاح الأخطاء من 1.2، و`latest` آخر إصدار. "
 "و`edge` حالة التطوير، وليس إصدارًا."
 
 #. type: Bullet: '- '
@@ -7071,7 +7032,7 @@ msgstr "الملصقات بالتخطيط الحر لا تُفتح في الإص
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "الترتيب في المعاينة { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7079,6 +7040,7 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"في التخطيط الحر يمكن ترتيب العناصر في المعاينة بالفأرة أو بإصبع أو بقلم:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7089,6 +7051,10 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"انقر على عنصر لتحديده؛ فيُفتح صفه في [[ui:Content]]. انقر مع Shift أو Ctrl "
+"لإضافة عنصر إلى التحديد أو إخراجه منه. اسحب عبر جزء فارغ لتحديد كل عنصر "
+"يلامسه إطار التحديد (مع إبقاء Alt مضغوطًا: فقط ما هو داخله). والنقر على جزء "
+"فارغ لا يحدد شيئًا. وفتح صف عنصر يحدده أيضًا."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7099,6 +7065,11 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"اسحب التحديد لتحريكه. يلتصق بحواف الملصق ووسطه وبحواف العناصر الأخرى "
+"وأوساطها؛ ويبيّن خط أحمر موضع ذلك. أبقِ Alt أو Ctrl مضغوطًا لوضعه بحرية (بعض "
+"أسطح المكتب تحرّك النافذة عند إبقاء Alt مضغوطًا أثناء السحب: عندئذ استخدم "
+"Ctrl). أبقِ Shift مضغوطًا لتحريكه على محور واحد فقط. وEscape أثناء السحب يعيده "
+"إلى مكانه."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7109,6 +7080,10 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"للعنصر الواحد المحدد مقابض عند زواياه وحوافه: اسحب أحدها لتغيير الحجم. يغيّر "
+"الخط أو الشكل عرضه وارتفاعه كلًّا على حدة (يحافظ Shift على نسبته)؛ ويحافظ النص "
+"والصورة والرمز وكود QR على نسبها؛ ويحصل الباركود على أعمدة أطول أو وحدات "
+"أعرض. أما ملصق الشحن فيُحرَّك فقط."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7118,6 +7093,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] في شريط الرأس يحاذي العناصر المحددة: عنصر واحد مع حافة الملصق "
+"أو وسطه، وعدة عناصر بعضها مع بعض. ويوزّع ثلاثة عناصر أو أكثر بالتساوي "
+"([[ui:Distribute]])، ويشغّل الالتصاق ويوقفه ([[ui:Snap to guides]])، ويضيف "
+"شبكة للالتصاق بها."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7127,6 +7106,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"مع تركيز المعاينة (انقر عليها، أو انتقل إليها بـ Tab) تحرّك مفاتيح الأسهم "
+"التحديد بمقدار 0.1 مم، ومع Shift بمقدار 1 مم؛ ويحذفه Delete؛ ويحدد Ctrl+A كل "
+"العناصر، وShift+Ctrl+A وEscape لا شيء. وتُضبط الأحجام في صف العنصر وفي صفحة "
+"[[ui:Position and size]] الخاصة به."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7134,6 +7117,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"كل سحب وكل تغيير حجم وسلسلة من ضغطات الأسهم هي خطوة واحدة من [[ui:Undo]]، "
+"بالتناوب مع التغييرات المجراة في الشريط الجانبي."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7141,6 +7126,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"في التخطيط [[ui:One after another]] يمكن تحديد العناصر لكن لا تحريكها: وسحب "
+"أحدها يعرض [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7296,6 +7283,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"مع تركيز المعاينة: تحرّك مفاتيح الأسهم العناصر المحددة (Shift: بمقدار 1 مم)، "
+"ويحذفها Delete، ويحدد Ctrl+A وShift+Ctrl+A الكل أو لا شيء ([انظر أعلاه]"
+"(#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

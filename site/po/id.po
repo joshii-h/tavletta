@@ -472,18 +472,17 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"Pekerjaan dalam antrean dibatalkan seketika; yang sedang dicetak berhenti "
-"setelah label yang sedang dicetak. 409 `job_finished` jika sudah selesai."
+"Pekerjaan yang antre dibatalkan seketika; yang sedang dicetak berhenti "
+"setelah label yang sedang dicetak. Pencetak cab mencetak satu seri dalam "
+"pekerjaan berisi paling banyak `labels_per_job` label (250 secara bawaan): "
+"ia berhenti setelah pekerjaan yang sedang dicetak. 409 `job_finished` jika "
+"sudah selesai."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -937,57 +936,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1074,6 +1023,10 @@ msgstr ""
 "| 408 | `timeout` | Pengiriman permintaan memakan waktu lebih dari 30 dtk. |\n"
 "| 409 | `job_finished` | Pekerjaan sudah selesai: tidak ada yang dibatalkan. |\n"
 "| 409 | `counter_not_saved` | File label tidak dapat ditulis: tidak ada yang dicetak. |\n"
+"| 409 | `label_exists` | Label dengan nama itu sudah ada: unggah dengan replace=true. |\n"
+"| 409 | `label_in_use` | Pekerjaan dari label itu menunggu atau sedang dicetak: coba lagi setelah selesai. |\n"
+"| 409 | `label_changed` | File label diganti saat permintaan diperiksa. |\n"
+"| 409 | `label_locked` | Pencetakan label itu menahan file: coba lagi setelah selesai. |\n"
 "| 411 | `length_required` | Tidak ada Content-Length (isi chunked tidak diterima). |\n"
 "| 413 | `too_large` | Isi melebihi `--max-body`, atau terlalu banyak baris, kolom, atau sel data. |\n"
 "| 413 | `too_many_labels` | Salinan kali baris melebihi `--max-labels` (10000 secara bawaan); pada lembar label melebihi 999. |\n"
@@ -1092,15 +1045,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Sepuluh token salah dari alamat ini: tunggu semenit. |\n"
 "| 429 | `queue_full` | Terlalu banyak pekerjaan menunggu: coba lagi nanti. |\n"
 "| 500 | `internal` | Kesalahan server; dicatat di log. |\n"
+"| 500 | `not_saved` | Folder label tidak dapat ditulisi (507: penuh). |\n"
+"| 500 | `not_deleted` | File label tidak dapat dihapus (folder hanya-baca). |\n"
 "| 502 | `printer_<code>` | Pencetak tidak dapat dijangkau atau melaporkan masalah. |\n"
 "| 503 | `busy` | Semua slot permintaan atau render terpakai: coba lagi sebentar lagi. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: masalah pada pencetak, salah satu dari `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: masalah pada pencetak, salah satu dari `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1185,20 +1139,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1221,14 +1162,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | tidak ada | Apakah server berjalan; tidak perlu token (untuk pemeriksaan kesehatan) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | Deskripsi ini (OpenAPI 3.1); token dengan peran apa pun |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | Nama, peran, dan pencetak token, serta batas sebuah permintaan (untuk halaman web) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | Pencetak di `printers.toml` yang boleh dipakai token, beserta statusnya; tanpa file itu: model pencetak, alamat yang diatur untuk masing-masing, dan pencetak yang ditemukan (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Menanyakan status pencetak: media, masalah, resolusi |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | File label di folder label dan subfoldernya |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Apa yang dapat diisikan ke label: elemen, variabel, kolom data, ukuran, penghitung |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Mengunggah file label (admin): diperiksa seperti saat aplikasi membuka file, lalu ditempatkan di folder label dalam satu langkah |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Menghapus file label (admin); file datanya tetap ada |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Membaca file data yang dikirim bersama permintaan (CSV, ODS, XLSX) seperti yang dibaca aplikasi: barisnya untuk data_rows; tidak ada yang disimpan |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | Label yang telah diisi, sebagai gambar; tidak ada yang dicetak |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Cetak: permintaan diperiksa, lalu dimasukkan ke antrean; setiap pencetak mengerjakan satu pekerjaan dalam satu waktu |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Status pekerjaan cetak (token print: pekerjaannya sendiri; admin: semua). Disimpan 24 jam setelah selesai |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Membatalkan pekerjaan: seketika saat menunggu, setelah label saat ini saat sedang dicetak |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Membatalkan pekerjaan: seketika selama menunggu, setelah label yang sudah dikirim ke pencetak selama dicetak (cab: pekerjaan berisi paling banyak labels_per_job label) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1303,10 +1248,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1314,14 +1258,12 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"Nama, peran, dan pencetak token, serta batas sebuah permintaan (untuk "
+"halaman web)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1329,7 +1271,7 @@ msgid ""
 msgstr ""
 "| Status | Jawaban | Kode |\n"
 "|---|---|---|\n"
-"| 200 | Label |  |\n"
+"| 200 | Siapa |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1531,10 +1473,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1542,21 +1483,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Mengunggah file label (admin): diperiksa seperti saat aplikasi membuka file, "
+"lalu ditempatkan di folder label dalam satu langkah."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Peran: `print`"
+msgstr "Peran: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1565,12 +1502,13 @@ msgid ""
 msgstr ""
 "| Parameter | Di | Arti |\n"
 "|---|---|---|\n"
-"| `name` | path | Boleh berisi garis miring untuk subfolder; '`.tavletta`' boleh dihilangkan. |\n"
+"| `name` | path | Nama file, tanpa folder; '`.tavletta`' boleh dihilangkan. |\n"
+"| `replace` | query | Mengganti label dengan nama itu. Bawaan `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Isi: konten file `.tavletta`."
 
 #. type: Plain text
 #: docs/api.md
@@ -1586,6 +1524,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | Jawaban | Kode |\n"
+"|---|---|---|\n"
+"| 200 | Diganti (replace=true) |  |\n"
+"| 201 | Ditambahkan |  |\n"
+"| 400 | Bukan nama yang valid untuk label baru: huruf, angka, spasi, dan . _ - ( ) + , (hingga 100), di folder itu sendiri | `invalid_field`, `not_json` |\n"
+"| 409 | Label dengan nama itu sudah ada (kirim replace=true), pekerjaan dari label itu menunggu atau sedang dicetak (label_in_use), atau pencetakan program lain menahan file | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Melebihi `--max-body`, atau label terlalu besar untuk dirender | `too_large`, `label_too_large` |\n"
+"| 422 | Bukan label yang dapat dibuka Tavletta | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | Tidak ada ruang tersisa di folder label | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1600,26 +1547,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Menghapus file label (admin); file datanya tetap ada."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1630,10 +1569,10 @@ msgid ""
 msgstr ""
 "| Status | Jawaban | Kode |\n"
 "|---|---|---|\n"
-"| 200 | Label |  |\n"
+"| 204 | Dihapus |  |\n"
 "| 400 | Bukan nama di dalam folder label | `invalid_field` |\n"
 "| 404 | Label tidak ada | `label_not_found` |\n"
-"| 422 | File bukan label atau rusak | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | Pekerjaan dari label itu menunggu atau sedang dicetak (label_in_use), atau pencetakan program lain menahan file | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1646,10 +1585,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1657,6 +1595,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"Membaca file data yang dikirim bersama permintaan (CSV, ODS, XLSX) seperti "
+"yang dibaca aplikasi: barisnya untuk data_rows; tidak ada yang disimpan."
 
 #. type: Plain text
 #: docs/api.md
@@ -1674,17 +1614,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Bidang | Tipe | Arti |\n"
+"|---|---|---|\n"
+"| `content` | string | File-nya: CSV (pemisah apa pun, UTF-8, UTF-16 atau Windows-1252), ODS atau XLSX, dibedakan dari isinya. Teks yang ditempel adalah file CSV. |\n"
+"| `name` | string | Nama file, untuk pesan. |\n"
+"| `sheet` | string | ODS, XLSX: lembarnya (bawaan yang pertama). |\n"
+"| `header` | boolean | false: baris pertama juga data; kolomnya bernama A, B, C … Bawaan `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1694,10 +1633,9 @@ msgid ""
 msgstr ""
 "| Status | Jawaban | Kode |\n"
 "|---|---|---|\n"
-"| 200 | Label |  |\n"
-"| 400 | Bukan nama di dalam folder label | `invalid_field` |\n"
-"| 404 | Label tidak ada | `label_not_found` |\n"
-"| 422 | File bukan label atau rusak | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | Barisnya |  |\n"
+"| 400 | Permintaan tidak valid | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Bukan tabel, rusak, atau kosong | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1845,18 +1783,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1875,7 +1802,7 @@ msgstr ""
 "| 202 | Menunggu atau mencetak; pantau di Location |  |\n"
 "| 400 | Permintaan tidak valid | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Label, pencetak, atau file data tidak ada, atau pencetak yang tidak boleh dipakai token | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | File label tidak dapat ditulis: nilai penghitung berikutnya tidak dapat disimpan, tidak ada yang dicetak | `counter_not_saved` |\n"
+"| 409 | File label tidak dapat ditulis: nilai penghitung berikutnya tidak dapat disimpan, tidak ada yang dicetak; atau file diganti saat permintaan diperiksa (label_changed): kirim lagi | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Terlalu besar: isi, baris data, label dalam satu pekerjaan, atau label yang dirender | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | Label akan tercetak salah | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Terlalu banyak token salah, atau terlalu banyak pekerjaan menunggu (100 secara total, 20 per token bernama) | `too_many_requests`, `queue_full` |\n"
@@ -1947,26 +1874,17 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Membatalkan pekerjaan: seketika saat menunggu, setelah label saat ini saat "
-"sedang dicetak."
+"Membatalkan pekerjaan: seketika selama menunggu, setelah label yang sudah "
+"dikirim ke pencetak selama dicetak (cab: pekerjaan berisi paling banyak "
+"labels_per_job label)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1976,7 +1894,7 @@ msgid ""
 msgstr ""
 "| Status | Jawaban | Kode |\n"
 "|---|---|---|\n"
-"| 202 | Dibatalkan, atau berhenti setelah label saat ini |  |\n"
+"| 202 | Dibatalkan, atau berhenti setelah label yang sudah dikirim |  |\n"
 "| 404 | Pekerjaan tidak ada | `job_not_found` |\n"
 "| 409 | Sudah selesai | `job_finished` |\n"
 
@@ -2003,27 +1921,7 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2055,7 +1953,8 @@ msgstr ""
 "| `host` | string | Alamat pencetak. |\n"
 "| `owner` | string or null | Nama token. |\n"
 "| `label` | string or null | Nama di folder label; null untuk label_content. |\n"
-"| `printed` | integer | Label yang sudah tercetak sejauh ini. |\n"
+"| `printed` | integer | Label yang sudah dicetak sejauh ini, dipastikan; naik label demi label selama pekerjaan dicetak, sejauh pencetak memberi tahu. |\n"
+"| `printed_max` | integer or null | Setelah kegagalan yang hasilnya tidak dapat dipastikan pencetak (koneksi terputus saat mencetak): hingga sejumlah ini label mungkin sudah tercetak. Penghitung berlanjut setelahnya; rows_printed menghitung baris yang dipastikan tercetak, jadi mencetak ulang dari baris berikutnya dapat mencetak label dua kali. null untuk selainnya. |\n"
 "| `total` | integer | Label yang akan dicetak: salinan x baris. |\n"
 "| `rows_printed` | integer | Baris data yang tercetak penuh: setelah kegagalan, cetak lagi dengan rows diatur ke baris berikutnya (rows_printed + baris pertama). |\n"
 "| `cancel_requested` | boolean | DELETE telah dikirim. |\n"
@@ -2074,22 +1973,7 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2119,9 +2003,11 @@ msgstr ""
 "| `columns` | array of string | Placeholder `{Column}`: kunci data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file tidak ada (lagi): kirim barisnya di data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (label memiliki `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Dicetak pada lembar label: paling banyak 999 label dalam satu pekerjaan. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2208,14 +2094,7 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2231,12 +2110,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Apa yang akan tercetak salah. other_labels_loaded: pencetak di `printers.toml` melaporkan label yang dimuat berbeda dari label Anda (ukurannya, atau jarak label yang diukurnya). Jawaban terakhirnya dihitung jika berumur kurang dari semenit, kesalahan dianggap tidak diketahui (ditanyakan ulang di latar belakang); pencetak yang belum dikenal ditunggu hingga satu detik setelah label dirender. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Letak elemen dalam gambar; null untuk view=printer dan label yang diputar pada lembarnya. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2245,6 +2125,9 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"Kotak elemen dalam gambar pratinjau, dalam mm dari sudut kiri atasnya "
+"(tavletta/editing.py, docs/editing.md); satu piksel gambar adalah mm * dpi / "
+"25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2258,13 +2141,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Bidang | Tipe | Arti |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Sepanjang pita: panjangnya. |\n"
+"| `height_mm` | number | Melintang: tinggi pita atau label. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | Resolusi gambar. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Gambar { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2280,13 +2169,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Bidang | Tipe | Arti |\n"
+"|---|---|---|\n"
+"| `name` | string | Nama token di tokens.toml; 'token' untuk satu-satunya token `--token-file`, 'local' tanpa token; 'oidc:<user>' untuk orang yang masuk ke halaman web dengan OpenID Connect. |\n"
+"| `display_name` | string | Nama seseorang dari penyedia; jika tidak, sama dengan name. |\n"
+"| `session` | boolean | true: masuk ke halaman web dengan OpenID Connect (cookie sesinya), bukan dengan token. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | Pencetak yang boleh dipakai token; null: semuanya. |\n"
+"| `token_required` | boolean | false: server tidak memiliki token dan tidak ada `--oidc` (hanya loopback). |\n"
+"| `limits` | object | Paling banyak yang boleh diminta satu permintaan: label dalam satu pekerjaan (`--max-labels`; pada lembar label paling banyak 999), salinan, baris, kolom, dan sel data, serta isi dalam byte (`--max-body`; juga file label terbesar yang boleh diunggah). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Mulai { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2301,6 +2198,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Bidang | Tipe | Arti |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: pemisah yang ditemukan; null untuk satu kolom dan spreadsheet. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | Lembar yang dibaca. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Setiap sel sebagai teks yang ditampilkannya: nol di depan dan format angka dipertahankan (00300 tetap 00300). Baris tanpa sel terisi dihilangkan. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2598,19 +2503,14 @@ msgstr "Label pertama"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Nyalakan pencetak dan pilih di [[ui:Printer model]]. Tavletta menemukannya "
-"di jaringan (Bonjour) dan membaca apa yang dimuat: lebar pita atau jarak "
-"antarlabel."
+"Nyalakan pencetak dan pilih di [[ui:Printer model]]: pencetak yang ditemukan "
+"lewat USB atau di jaringan (Bonjour) ada di bagian atas daftar. Tavletta "
+"membaca apa yang terpasang: lebar pita atau jarak antar label."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2653,6 +2553,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Pilih pencetak di [[ui:Printer model]]; masing-masing punya bagian sendiri "
+"di bawah. Pencetak yang ditemukan Tavletta lewat USB dan di jaringan muncul "
+"lebih dulu dalam daftar itu, di bawah [[ui:Found]], beserta modelnya: "
+"memilih salah satunya mengambil model dan alamatnya. Model-model menyusul di "
+"bawah [[ui:All models]]. Tavletta mencarinya saat jendela dibuka dan dengan "
+"[[ui:Search for printers]], semua model sekaligus, di latar belakang."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2756,6 +2662,16 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (label potong-cetak): pencetak melaporkan "
+"label dengan ukuran lain, atau mengukur jarak antar label yang berbeda dari "
+"tinggi ditambah [[ui:Gap]] label Anda. [[ui:Use loaded labels]] mengubah "
+"label tanpa mencetak apa pun dahulu: ia mengambil ukuran yang dilaporkan "
+"pencetak (Brother QL), atau mengatur tinggi sepanjang gulungan sehingga "
+"tinggi ditambah celah sama dengan jarak yang terukur (cab, Zebra). Celah dan "
+"lebar tetap; lebar cetak Zebra adalah yang ditetapkan pencetakan terakhir, "
+"bukan lebar label. Jika tinggi itu kurang dari 5 mm, celahlah yang diubah; "
+"jika keduanya tidak menghasilkan label, hanya [[ui:Print anyway]] yang "
+"ditawarkan."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2764,6 +2680,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"Setelah [[ui:Use loaded labels]], periksa label di pratinjau, lalu cetak. "
+"[[ui:Undo]] di pesan membatalkan perubahan; pesan menyebutkannya jika kini "
+"ada elemen yang melewati tepi label."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3294,6 +3213,14 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: pencetak yang mencetak tidak pada tempat label (hasil "
+"cetak sedikit lebih tinggi atau lebih rendah pada setiap label daripada yang "
+"ditunjukkan pratinjau) dikompensasi di sini: ukur pada label yang tercetak "
+"seberapa jauh hasil cetak bergeser, lalu masukkan, positif untuk menggeser "
+"hasil cetak ke bawah pada label yang melintang gulungan, negatif untuk "
+"menggesernya ke atas. Pratinjau tetap menampilkan label sebagaimana "
+"seharusnya keluar; hanya yang dikirim ke pencetak yang bergeser. Konten "
+"dalam jarak ini dari tepi tujuan pergeseran akan terpotong."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3305,6 +3232,13 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: label dalam satu seri dikirim ke pencetak bersama-"
+"sama, hingga sejumlah ini (250 secara bawaan, 1 sampai 1000) dalam satu "
+"pekerjaan, dan berjalan tanpa berhenti di antaranya. [[ui:Stop]] berlaku di "
+"antara dua pekerjaan: pekerjaan yang sudah dimulai dicetak sampai selesai. 1 "
+"mengirim setiap label sebagai pekerjaan tersendiri, seperti yang diterima "
+"pencetak lain. Label yang isinya berubah dari salinan ke salinan selalu "
+"dikirim satu per satu."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3319,12 +3253,6 @@ msgstr "Masalah { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3332,10 +3260,11 @@ msgid ""
 "once after changing the roll so it measures again, then [[ui:Use loaded "
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
-"[[ui:Different labels loaded]]: pencetak mengukur jarak antarlabel yang "
+"[[ui:Different labels loaded]]: pencetak mengukur jarak antar label yang "
 "berbeda dari tinggi ditambah celah label Anda. Periksa [[ui:Label size]] dan "
-"[[ui:Gap]], atau muat gulungan yang tepat. Tekan Feed pada pencetak satu "
-"kali setelah mengganti gulungan agar pencetak mengukur ulang."
+"[[ui:Gap]], atau pasang gulungan yang benar. Tekan Feed pada pencetak sekali "
+"setelah mengganti gulungan agar ia mengukur lagi, lalu [[ui:Use loaded "
+"labels]] menyesuaikan label dengannya ([Semua pencetak](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3345,6 +3274,11 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Semuanya tercetak sedikit terlalu tinggi atau terlalu rendah, sama pada "
+"setiap label, sementara pratinjau menampilkannya pada tempatnya: atur "
+"[[ui:Print offset]]. Label yang ditata di program lain untuk mengompensasi "
+"hal ini tercetak tidak pada tempatnya di pratinjau; kembalikan kontennya ke "
+"tempat semula dan atur pergeseran sebagai gantinya."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3394,6 +3328,9 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Memori habis: pencetak tidak punya ruang untuk label dalam satu pekerjaan. "
+"Turunkan [[ui:Labels per job]], lalu cetak lagi dari baris yang disebut "
+"pesan."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3407,6 +3344,14 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"\"Pekerjaan telah dikirim, tetapi hasilnya tidak diketahui\": koneksi ke "
+"pencetak terputus saat mencetak (atau pencetak tidak dapat memberi tahu "
+"sudah sejauh mana). Tavletta menghitung label yang diketahuinya tercetak; "
+"pencetak mungkin mencetak lebih banyak. Periksa label yang keluar: mencetak "
+"ulang dari baris yang disebut pesan dapat mencetak beberapa label dua kali, "
+"tetapi tidak ada yang terlewat. Jika antarmuka web pencetak dapat dijangkau "
+"di jaringan (bawaan), Tavletta juga memeriksa jumlahnya terhadap penghitung "
+"label pencetak; jika keduanya berbeda, pesan menyebutkan rentangnya."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4032,6 +3977,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): pencetak melaporkan jarak yang "
+"terakhir diukurnya, mungkin pada gulungan sebelumnya. Setelah mengganti "
+"gulungan, biarkan ia mengukur label lagi (sebagian besar pencetak "
+"melakukannya dengan menekan lama Feed) sebelum Anda memakai [[ui:Use loaded "
+"labels]] ([Semua pencetak](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4361,20 +4311,21 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Setiap label adalah pekerjaan cetak tersendiri, sehingga ini berfungsi pada "
+"setiap pencetak. Pencetak cab menerima hingga [[ui:Labels per job]] label "
+"sebagai satu pekerjaan, yang dicetaknya tanpa berhenti di antaranya ([cab]"
+"(printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"[[ui:Stop]] di bilah di atas jendela mengakhiri rangkaian setelah label yang "
-"sedang dicetak; label pertama selalu dicetak."
+"[[ui:Stop]] di bilah di atas jendela mengakhiri seri setelah label yang "
+"sedang dicetak (pada pencetak cab: setelah pekerjaan yang sedang dicetak); "
+"label pertama selalu dicetak."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4446,19 +4397,14 @@ msgstr "Ikhtisar { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"Satu layanan kecil: REST API (dan MCP untuk asisten AI) di port 8790. "
-"Layanan ini merender label sendiri dan mengirimkannya ke pencetak lewat "
-"jaringan; tanpa desktop, tanpa peramban, tanpa basis data."
+"Satu layanan kecil: REST API (dan MCP untuk asisten AI) di port 8790. Ia "
+"merender label sendiri dan mengirimnya ke pencetak melalui jaringan; tanpa "
+"desktop, tanpa basis data."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4468,6 +4414,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Halaman web di alamat yang sama untuk manusia: masuk dengan token, lihat "
+"pencetak, cetak templat atau seri (dari file CSV, XLSX atau ODS, daftar yang "
+"ditempel, atau rentang angka seperti 3000–5685), unggah dan hapus templat "
+"dengan token admin. `--no-web-ui` mematikannya."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4931,6 +4881,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Setiap pencetak dicantumkan dengan statusnya; `UNREACHABLE` dengan pesan jika\n"
+"  server tidak dapat menjangkaunya.\n"
+"- Buka `http://127.0.0.1:8790/` di browser pada server (yang lain memakai\n"
+"  alamat proxy, lihat [Reverse proxy](#proxy)) dan masuk dengan\n"
+"  token: halaman web menampilkan apa yang boleh dilakukan perannya. Halaman\n"
+"  menyimpan token hanya di tab browser, sampai tab ditutup atau \"Keluar\".\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5557,7 +5513,7 @@ msgstr "Jangan pernah membuat server dapat dijangkau dari internet."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Masuk dengan OpenID Connect { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5568,6 +5524,11 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Orang dapat masuk ke halaman web dengan penyedia identitas organisasi Anda "
+"(Keycloak, Authentik, Microsoft Entra ID, Okta …) sebagai ganti token akses; "
+"peran mereka di penyedia menjadi peran Tavletta. Program tetap memakai "
+"token. Ini memerlukan HTTPS melalui reverse proxy (hanya `http://localhost` "
+"yang berfungsi tanpanya, untuk pengujian)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5579,6 +5540,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Daftarkan klien di penyedia: confidential (dengan secret), hanya alur "
+"authorization code, PKCE S256, redirect URI `https://labels.example.com/oidc/"
+"callback`, post-logout redirect URI `https://labels.example.com/`. Pastikan "
+"peran atau grup sampai ke ID token: di Keycloak sebuah mapper *User Client "
+"Role* (atau *User Realm Role*) pada klien dengan *Add to ID token* aktif; "
+"Authentik mengirim `groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5587,6 +5554,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Letakkan secret di `config/oidc-secret` (secret saja, mode 600) dan tulis "
+"`config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` memberi awal "
+"yang berkomentar):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5614,6 +5584,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Tambahkan `\"--oidc\"` dan `\"/config/oidc.toml\"` ke `command:` di "
+"`compose.yaml` (native: ke `ExecStart`, dengan `/etc/tavletta/...`), "
+"pertahankan `--trusted-proxy`, lalu mulai ulang. Dengan `--trusted-proxy` "
+"server membutuhkan `public_url` dan tidak mau mulai tanpanya."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5622,6 +5596,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"Masuk membutuhkan PyJWT, yang dimiliki image kontainer serta paket deb dan "
+"rpm; Flatpak tidak memilikinya, dan tidak ada yang dapat dipasang ke "
+"dalamnya: untuk `--oidc`, jalankan server dari salah satu pilihan lainnya."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5636,6 +5613,16 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"Halaman kemudian menampilkan \"Masuk dengan Example ID\". Orang tanpa salah "
+"satu peran mendapat \"tidak ada akses\". Sesi berlangsung 8 jam, atau 60 "
+"menit tanpa penggunaan (`session_hours`, `idle_minutes`); peran yang dicabut "
+"atau akun yang dinonaktifkan di penyedia baru berlaku mulai masuk "
+"berikutnya, jadi pertahankan sesi tetap singkat di tempat admin masuk. "
+"`token_login = false` menyembunyikan kolom token di halaman. Pencetak dapat "
+"dibatasi per peran (`[oidc.printers]`) atau dengan sebuah claim "
+"(`printers_claim`). Setiap kunci dan detail keamanannya: [docs/server.md]"
+"(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#signing-in-with-openid-connect-oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5781,6 +5768,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"Dengan `--oidc`: `public_url` diatur, klien confidential dengan PKCE, hanya "
+"peran yang dibutuhkan orang, sesi singkat di tempat admin masuk, `oidc-"
+"secret` mode 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5788,6 +5778,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Tidak seorang pun mencetak dari browser: `--no-web-ui` (halaman web tidak "
+"memerlukan token untuk dimuat, tetapi tidak menampilkan apa pun tanpanya)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5822,24 +5814,7 @@ msgstr "Pemecahan masalah { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5863,7 +5838,7 @@ msgstr ""
 "|---|---|\n"
 "| Pencetak `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | Server tidak dapat menjangkaunya: uji dari server dengan `nc -vz <printer> 9100` (631 untuk IPP); periksa alamat, firewall, dan apakah pencetak menyala. Di Docker, kontainer harus dapat menjangkau jaringan pencetak. |\n"
 "| `401 unauthorized` | Token hilang, salah ketik, kedaluwarsa, atau dihapus dari `tokens.toml`. Headernya `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Sepuluh token salah dari alamat ini dalam semenit: perbaiki token, tunggu semenit. |\n"
+"| `429 too_many_requests` | Sepuluh token salah dari alamat ini dalam satu menit: perbaiki token, tunggu semenit. Di balik reverse proxy yang tidak diberikan dengan `--trusted-proxy`, semua orang berbagi alamat proxy. |\n"
 "| `429 queue_full` | 100 pekerjaan (20 per token) menunggu: pencetak lambat atau berhenti; periksa, coba lagi nanti. |\n"
 "| `503 busy` | Semua slot permintaan atau render terpakai sesaat: coba lagi setelah satu atau dua detik. |\n"
 "| `404 printer_not_found` | Tidak ada di `printers.toml`, atau token tidak boleh memakainya (`--printer`). |\n"
@@ -5873,6 +5848,7 @@ msgstr ""
 "| `other_labels_loaded` di peringatan | Pencetak memuat label yang berbeda dari label Anda: muat gulungan yang sesuai, atau periksa ukuran dan celah label. Pencetak ZPL dapat melaporkan jarak yang diukurnya pada gulungan sebelumnya: kalibrasi. |\n"
 "| `409 counter_not_saved` | File label tidak dapat ditulis oleh pengguna server: `chown` ke pengguna itu (Docker: 1000, native: `tavletta`). |\n"
 "| Tanggal atau waktu pada label selisih satu atau dua jam | Kontainer berjalan pada UTC: atur `TAVLETTA_TZ=Europe/Zurich` di `.env`, lalu `docker compose up -d`. |\n"
+"| \"Masuk tidak berhasil\" di halaman web | Log menjelaskan sebabnya: penyedia tidak dapat dijangkau, redirect URI atau secret salah di penyedia, atau halaman diakses lewat HTTP biasa (atur `public_url`, `--trusted-proxy`). \"Tidak ada akses\": peran tidak sampai ke ID token (mapper hilang) atau tidak ada yang dipetakan di `[oidc.roles]`. |\n"
 "| Server tidak mulai | `docker compose logs` atau `journalctl -u tavletta-server`: kesalahan di `printers.toml` atau `tokens.toml` disebutkan dengan kuncinya. |\n"
 "| Permission denied pada folder (Fedora, RHEL dengan SELinux dan Podman) | Tambahkan `:Z` pada volume di `compose.yaml`. |\n"
 
@@ -5884,20 +5860,16 @@ msgstr "Server cetak"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Program lain dan asisten AI dapat mencetak label lewat Tavletta tanpa "
-"membuka jendela: `tavletta serve` menyediakan antarmuka web untuk program "
-"(REST API), `tavletta mcp` menghubungkan asisten AI seperti Claude."
+"Program lain, asisten AI, dan orang di browser dapat mencetak label melalui "
+"Tavletta tanpa membuka jendela: `tavletta serve` menawarkan halaman web "
+"untuk manusia dan antarmuka web untuk program (REST API), `tavletta mcp` "
+"menghubungkan asisten AI seperti Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5959,7 +5931,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "Buka `http://127.0.0.1:8790/` di browser: [halaman web](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6034,13 +6006,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6050,10 +6015,12 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` adalah [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` adalah [[ui:Print upside down]]; yang lain adalah `quality`, "
-"`chain`, `high_res`, `feed_mm`, `darkness`, `media`, dan `outlines`, lihat "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/"
-"main/docs/server.md#printers)."
+"`upside_down` [[ui:Print upside down]], `offset_mm` [[ui:Print offset]] (−5 "
+"sampai 5), `labels_per_job` [[ui:Labels per job]] (1 sampai 1000, 250 secara "
+"bawaan); yang lain adalah `quality`, `chain`, `high_res`, `feed_mm`, "
+"`darkness`, `media` dan `outlines`, lihat [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#printers)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6164,18 +6131,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview` hanya mencantumkan dan menampilkan pratinjau, `print` juga "
-"mencetak dan memantau pekerjaannya sendiri, `admin` melihat dan membatalkan "
-"semua pekerjaan."
+"`preview` hanya mendaftar dan menampilkan pratinjau, `print` juga mencetak "
+"dan mengikuti pekerjaannya sendiri, `admin` melihat dan membatalkan semua "
+"pekerjaan serta mengunggah dan menghapus templat."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6197,10 +6160,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Gambar { #images }"
+msgstr "Halaman web { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6208,6 +6170,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"Halaman milik server sendiri, di alamatnya (`http://127.0.0.1:8790/`, atau "
+"alamat [reverse proxy](server-install.md#proxy)):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6217,12 +6181,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Masuk** dengan token akses (tanpa token di server tidak ada yang perlu "
+"dimasuki). Browser menyimpannya hanya di tab ini; \"Keluar\" melupakannya. "
+"Jika server diatur untuk itu, \"Masuk dengan …\" memakai akun organisasi "
+"Anda sebagai gantinya ([OpenID Connect](server-install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Pencetak**: statusnya, label atau pita yang terpasang, dan masalah, dalam "
+"kata-kata."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6234,11 +6204,17 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Templat**: file label di folder label beserta pratinjau. Kolom data "
+"menampilkan baris pertama file data templat, atau nilai contoh jika tidak "
+"ada atau hilang. \"Cetak\" mengisi kolom satu label dan menampilkan "
+"pratinjau saat diketik; elemen yang diisi sebuah kolom diberi garis tepi di "
+"dalamnya. Dengan token `admin`, templat diunggah (file `.tavletta`) dan "
+"dihapus di sini."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Seri**, langkah demi langkah:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6246,6 +6222,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Data: file CSV, XLSX atau ODS, daftar yang ditempel dari spreadsheet, atau "
+"tanpa data sama sekali. Nol di depan tetap ada (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6255,6 +6233,11 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Tetapkan: kolom mana mengisi kolom templat mana (nama yang sama sudah "
+"ditetapkan, tanpa memperhatikan huruf besar-kecil dan spasi). Pratinjau "
+"label pertama di sampingnya memberi garis tepi pada kolom yang dipakai; "
+"setiap kolom templat menampilkan nilainya, setiap kolom data nilai "
+"pertamanya."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6264,6 +6247,11 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Pilih: semua baris, beberapa baris (`1-20, 25, 30-`), atau menurut rentang "
+"suatu kolom. Tanpa data, rentang menghasilkan nilainya: Nomor inventaris "
+"dari `3000` sampai `5685` adalah 2686 label, `00300` sampai `00450` "
+"mempertahankan nol, sebuah langkah menghasilkan setiap angka kedua atau "
+"kesepuluh; `3000-5685` dapat diketik atau ditempel sekaligus."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6271,6 +6259,8 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Periksa: jumlah label, yang pertama dan yang terakhir, batas server dan "
+"pencetak."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6280,6 +6270,11 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"Cetak: mulai 100 label, halaman bertanya dulu. Kemajuan menunjukkan berapa "
+"yang sudah tercetak; Batal berhenti setelah label yang sedang dicetak "
+"(pencetak cab: setelah pekerjaan yang sedang berjalan berisi paling banyak "
+"[[ui:Labels per job]] label). Setelah pembatalan atau masalah pencetak, "
+"\"Lanjutkan dari …\" mencetak sisanya."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6288,11 +6283,14 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"Halaman berbicara dalam bahasa browser, atau yang dipilih di atas: setiap "
+"bahasa aplikasi, bahasa Arab dari kanan ke kiri. Waktu memakai format 24 jam."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` mematikan halaman, untuk server yang hanya dipakai program."
 
 #. type: Title ##
 #: docs/server.md
@@ -6327,18 +6325,14 @@ msgstr "`POST /api/v1/preview` mengembalikan label sebagai gambar PNG."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
-"`POST /api/v1/print` memasukkan pekerjaan cetak ke antrean; `GET /api/v1/"
-"jobs/<id>` menunjukkan statusnya, `DELETE` membatalkannya di antara dua "
-"label."
+"`POST /api/v1/print` mengantrekan pekerjaan cetak; `GET /api/v1/jobs/<id>` "
+"menampilkan statusnya, `DELETE` membatalkannya di antara dua label (pencetak "
+"cab: di antara dua pekerjaan dalam satu seri)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6548,16 +6542,12 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` adalah rilis, `1.1` rilis perbaikan bug terbaru dari 1.1, `latest` "
-"rilis terbaru. `edge` adalah keadaan pengembangan, bukan rilis."
+"`1.2.1` adalah sebuah rilis, `1.2` rilis perbaikan bug terbaru dari 1.2, "
+"`latest` rilis terbaru. `edge` adalah keadaan pengembangan, bukan rilis."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -7260,7 +7250,7 @@ msgstr ""
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Menata di pratinjau { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7268,6 +7258,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"Dalam tata letak bebas, elemen dapat ditata di pratinjau dengan mouse, jari, "
+"atau pena:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7278,6 +7270,12 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Klik sebuah elemen untuk memilihnya; barisnya di [[ui:Content]] terbuka. "
+"Klik dengan Shift atau Ctrl untuk menambah elemen ke pilihan atau "
+"mengeluarkannya. Seret melintasi bagian kosong untuk memilih setiap elemen "
+"yang disentuh kotak seleksi (dengan Alt ditahan: hanya yang berada di "
+"dalamnya). Klik pada bagian kosong tidak memilih apa pun. Membuka baris "
+"sebuah elemen juga memilihnya."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7288,6 +7286,12 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Seret pilihan untuk memindahkannya. Ia menempel ke tepi dan tengah label "
+"serta ke tepi dan tengah elemen lain; garis merah menunjukkan tempatnya. "
+"Tahan Alt, atau Ctrl, untuk menempatkannya dengan bebas (beberapa desktop "
+"memindahkan jendela jika Alt ditahan saat menyeret: gunakan Ctrl). Tahan "
+"Shift untuk memindahkannya hanya sepanjang satu sumbu. Escape saat menyeret "
+"mengembalikannya."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7298,6 +7302,11 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Satu elemen yang dipilih memiliki gagang di sudut dan tepinya: seret salah "
+"satunya untuk mengubah ukuran. Garis atau bentuk mengubah lebar dan "
+"tingginya sendiri-sendiri (Shift mempertahankan proporsinya); teks, gambar, "
+"simbol, dan kode QR mempertahankan proporsinya; barcode mendapat batang "
+"lebih panjang atau modul lebih lebar. Label pengiriman hanya dipindahkan."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7307,6 +7316,11 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] di bilah header meluruskan elemen yang dipilih: satu elemen "
+"pada tepi atau tengah label, beberapa elemen terhadap satu sama lain. Ia "
+"mengatur jarak tiga elemen atau lebih secara merata ([[ui:Distribute]]), "
+"menyalakan dan mematikan penempelan ([[ui:Snap to guides]]) dan menambahkan "
+"kisi sebagai tempat menempel."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7316,6 +7330,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Dengan pratinjau terfokus (klik, atau Tab ke sana), tombol panah memindahkan "
+"pilihan sebesar 0,1 mm, dengan Shift sebesar 1 mm; Delete menghapusnya; "
+"Ctrl+A memilih semua elemen, Shift+Ctrl+A dan Escape tidak memilih satu pun. "
+"Ukuran diatur di baris elemen dan di halaman [[ui:Position and size]]-nya."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7323,6 +7341,9 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Setiap seretan, setiap perubahan ukuran, dan serangkaian tombol panah adalah "
+"satu langkah [[ui:Undo]], bergantian dengan perubahan yang dibuat di bilah "
+"samping."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7330,6 +7351,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"Dalam tata letak [[ui:One after another]] elemen dapat dipilih, tetapi tidak "
+"dipindahkan: menyeret salah satunya menawarkan [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7490,6 +7513,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Dengan pratinjau terfokus: tombol panah memindahkan elemen yang dipilih "
+"(Shift: sebesar 1 mm), Delete menghapusnya, Ctrl+A dan Shift+Ctrl+A memilih "
+"semua atau tidak sama sekali ([lihat di atas](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

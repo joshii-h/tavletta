@@ -473,19 +473,16 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"キューに入っているジョブは直ちにキャンセルされます。印刷中のジョブは、印刷中"
-"のラベルの後で停止します。すでに完了している場合は 409 `job_finished` が返り"
-"ます。"
+"待機中のジョブはただちにキャンセルされます。印刷中のジョブは、印刷中のラベル"
+"のあとで停止します。cabプリンターは連続印刷を最大 `labels_per_job` 枚 (既定は"
+"250) のジョブに分けて印刷し、印刷中のジョブのあとで停止します。すでに完了して"
+"いた場合は 409 `job_finished` です。"
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -939,57 +936,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1076,6 +1023,10 @@ msgstr ""
 "| 408 | `timeout` | リクエストの送信に30 sを超える時間がかかりました。 |\n"
 "| 409 | `job_finished` | ジョブは完了しています。キャンセルするものはありません。 |\n"
 "| 409 | `counter_not_saved` | ラベルファイルに書き込めません。何も印刷されませんでした。 |\n"
+"| 409 | `label_exists` | その名前のラベルはすでに存在します。replace=true を付けてアップロードしてください。 |\n"
+"| 409 | `label_in_use` | そのラベルのジョブが待機中または印刷中です。完了してから再試行してください。 |\n"
+"| 409 | `label_changed` | リクエストの確認中にラベルファイルが置き換えられました。 |\n"
+"| 409 | `label_locked` | そのラベルの印刷がファイルを保持しています。終了してから再試行してください。 |\n"
 "| 411 | `length_required` | Content-Length がありません (チャンク形式の本文は受け付けません)。 |\n"
 "| 413 | `too_large` | 本文が `--max-body` を超えている、またはデータの行、列、セルが多すぎます。 |\n"
 "| 413 | `too_many_labels` | コピー数×行数が `--max-labels` (既定では10000) を超えています。ラベルシートでは999を超えています。 |\n"
@@ -1094,15 +1045,16 @@ msgstr ""
 "| 429 | `too_many_requests` | このアドレスからの誤ったトークンが10回: 1分待ってください。 |\n"
 "| 429 | `queue_full` | 待機中のジョブが多すぎます。後で再試行してください。 |\n"
 "| 500 | `internal` | サーバーのエラーです。ログに記録されます。 |\n"
+"| 500 | `not_saved` | ラベルフォルダーに書き込めませんでした (507: いっぱいです)。 |\n"
+"| 500 | `not_deleted` | ラベルファイルを削除できませんでした (読み取り専用のフォルダーです)。 |\n"
 "| 502 | `printer_<code>` | プリンターに到達できない、または問題が報告されています。 |\n"
 "| 503 | `busy` | リクエストまたはレンダリングのスロットがすべて使用中です。少し待って再試行してください。 |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: プリンターの問題で、`generic`、`not_found`、`timeout`、`stalled`、`port_closed`、`busy`、`paused`、`cover_open`、`head_open`、`jam`、`media_jam`、`out_of_labels`、`out_of_paper`、`label_not_found`、`wrong_media`、`paper_size`、`page_too_large`、`too_long`、`too_wide`、`code_too_large`、`ribbon`、`ribbon_out`、`ribbon_direct`、`no_cassette`、`bad_cassette`、`supplies`、`format`、`resolution`、`queue_paused`、`job_held`、`job_canceled`、`usb_not_found`、`usb_permission`、`serial_permission`、`battery`、`overheat`、`unsupported_model`、`unknown_model`、`editor_lite` のいずれかです。\n"
+msgstr "`printer_<code>`: プリンターの問題で、`generic`、`not_found`、`timeout`、`stalled`、`port_closed`、`busy`、`paused`、`out_of_memory`、`cover_open`、`head_open`、`jam`、`media_jam`、`out_of_labels`、`out_of_paper`、`label_not_found`、`wrong_media`、`paper_size`、`page_too_large`、`too_long`、`too_wide`、`code_too_large`、`ribbon`、`ribbon_out`、`ribbon_direct`、`no_cassette`、`bad_cassette`、`supplies`、`format`、`resolution`、`queue_paused`、`job_held`、`job_canceled`、`usb_not_found`、`usb_permission`、`serial_permission`、`battery`、`overheat`、`unsupported_model`、`unknown_model`、`editor_lite` のいずれか。\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1186,20 +1138,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1222,14 +1161,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | なし | サーバーが稼働しているかどうか。トークンは不要 (ヘルスチェック用) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | この記述 (OpenAPI 3.1)。任意のロールのトークン |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | トークンの名前、ロール、プリンター、およびリクエストの上限 (Webページ用) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | トークンが使用できる `printers.toml` のプリンターとその状態。トークンなしの場合は、プリンターの機種、それぞれに設定されたアドレス、検出されたプリンター (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | プリンターの状態 (メディア、問題、解像度) を問い合わせる |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | ラベルフォルダーとそのサブフォルダー内のラベルファイル |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | ラベルに入力できる内容: 要素、変数、データ列、サイズ、カウンター |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | ラベルファイルのアップロード (admin): アプリがファイルを開くときと同じように確認し、1ステップでラベルフォルダーに配置します |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | ラベルファイルの削除 (admin)。そのデータファイルは残ります |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | リクエストと一緒に送られたデータファイル (CSV、ODS、XLSX) を、アプリと同じように読み取ります。その行を data_rows 用に返し、何も保存しません |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | データを入力したラベルを画像として返す。何も印刷されない |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | 印刷: リクエストが検証され、キューに入る。各プリンターは一度に1つのジョブを印刷する |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | 印刷ジョブの状態 (printトークン: 自分のジョブ、admin: すべて)。完了後24時間保持される |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | ジョブのキャンセル: 待機中は直ちに、印刷中は現在のラベルの後 |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | ジョブのキャンセル: 待機中はただちに、印刷中はすでにプリンターに送られたラベルのあとで (cab: 最大 labels_per_job 枚のジョブ) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1305,10 +1248,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1316,14 +1258,11 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"トークンの名前、ロール、プリンター、およびリクエストの上限 (Webページ用)。"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1331,7 +1270,7 @@ msgid ""
 msgstr ""
 "| Status | レスポンス | コード |\n"
 "|---|---|---|\n"
-"| 200 | ラベル |  |\n"
+"| 200 | 誰か |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1532,10 +1471,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1543,21 +1481,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"ラベルファイルのアップロード (admin): アプリがファイルを開くときと同じように"
+"確認し、1ステップでラベルフォルダーに配置します。"
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "ロール: `print`"
+msgstr "ロール: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1566,12 +1500,13 @@ msgid ""
 msgstr ""
 "| パラメーター | 場所 | 意味 |\n"
 "|---|---|---|\n"
-"| `name` | path | サブフォルダー用のスラッシュを含められます。'`.tavletta`' は省略できます。 |\n"
+"| `name` | path | フォルダーを含まないファイル名。'`.tavletta`' は省略できます。 |\n"
+"| `replace` | query | 同じ名前のラベルを置き換えます。既定は `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "本文: `.tavletta` ファイルの内容。"
 
 #. type: Plain text
 #: docs/api.md
@@ -1587,6 +1522,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | レスポンス | コード |\n"
+"|---|---|---|\n"
+"| 200 | 置き換えました (replace=true) |  |\n"
+"| 201 | 追加しました |  |\n"
+"| 400 | 新しいラベルの名前として使えません: 英数字、スペース、および . _ - ( ) + , (100文字まで)、フォルダー直下 | `invalid_field`, `not_json` |\n"
+"| 409 | 同じ名前のラベルがすでに存在します (replace=true を送信)、そのラベルのジョブが待機中または印刷中です (label_in_use)、または別のプログラムの印刷がファイルを保持しています | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | `--max-body` を超えている、またはラベルが大きすぎて描画できません | `too_large`, `label_too_large` |\n"
+"| 422 | Tavletta が開けるラベルではありません | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | ラベルフォルダーに空き容量がありません | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1601,26 +1545,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "ラベルファイルの削除 (admin)。そのデータファイルは残ります。"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1631,10 +1567,10 @@ msgid ""
 msgstr ""
 "| Status | レスポンス | コード |\n"
 "|---|---|---|\n"
-"| 200 | ラベル |  |\n"
+"| 204 | 削除しました |  |\n"
 "| 400 | ラベルフォルダー内の名前ではありません | `invalid_field` |\n"
 "| 404 | そのようなラベルはありません | `label_not_found` |\n"
-"| 422 | ファイルがラベルではない、または破損しています | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | そのラベルのジョブが待機中または印刷中です (label_in_use)、または別のプログラムの印刷がファイルを保持しています | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1647,10 +1583,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1658,6 +1593,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"リクエストと一緒に送られたデータファイル (CSV、ODS、XLSX) を、アプリと同じよ"
+"うに読み取ります。その行を data_rows 用に返し、何も保存しません。"
 
 #. type: Plain text
 #: docs/api.md
@@ -1675,17 +1612,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| フィールド | 型 | 意味 |\n"
+"|---|---|---|\n"
+"| `content` | string | ファイル: CSV (任意の区切り文字、UTF-8、UTF-16 または Windows-1252)、ODS または XLSX。内容で判別します。貼り付けたテキストは CSV ファイルとして扱います。 |\n"
+"| `name` | string | メッセージ用のファイル名。 |\n"
+"| `sheet` | string | ODS、XLSX: シート (既定は最初のシート)。 |\n"
+"| `header` | boolean | false: 最初の行もデータとして扱い、列名は A、B、C … になります。既定は `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1695,10 +1631,9 @@ msgid ""
 msgstr ""
 "| Status | レスポンス | コード |\n"
 "|---|---|---|\n"
-"| 200 | ラベル |  |\n"
-"| 400 | ラベルフォルダー内の名前ではありません | `invalid_field` |\n"
-"| 404 | そのようなラベルはありません | `label_not_found` |\n"
-"| 422 | ファイルがラベルではない、または破損しています | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | 行 |  |\n"
+"| 400 | 無効なリクエスト | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | 表ではない、破損している、または空です | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1846,18 +1781,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1876,7 +1800,7 @@ msgstr ""
 "| 202 | キューに入っているか印刷中です。Location で追跡してください |  |\n"
 "| 400 | 無効なリクエスト | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | そのようなラベル、プリンター、データファイルはない、またはトークンが使用できないプリンターです | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | ラベルファイルに書き込めません: 次のカウンター値を保存できず、何も印刷されませんでした | `counter_not_saved` |\n"
+"| 409 | ラベルファイルに書き込めません: 次のカウンター値を保存できず、何も印刷されませんでした。または、リクエストの確認中に置き換えられました (label_changed): もう一度送信してください | `counter_not_saved`, `label_changed` |\n"
 "| 413 | 大きすぎます: 本文、データ行、1つのジョブ内のラベル、またはレンダリングするラベル | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | ラベルが正しく印刷されません | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | 誤ったトークンが多すぎる、または待機中のジョブが多すぎます (合計100、名前付きトークンごとに20) | `too_many_requests`, `queue_full` |\n"
@@ -1948,26 +1872,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"ジョブをキャンセルします。待機中は直ちに、印刷中は現在のラベルの後で行われま"
-"す。"
+"ジョブのキャンセル: 待機中はただちに、印刷中はすでにプリンターに送られたラベ"
+"ルのあとで (cab: 最大 labels_per_job 枚のジョブ)。"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1977,7 +1891,7 @@ msgid ""
 msgstr ""
 "| Status | レスポンス | コード |\n"
 "|---|---|---|\n"
-"| 202 | キャンセルされた、または現在のラベルの後で停止します |  |\n"
+"| 202 | キャンセルされました。またはすでに送られたラベルのあとで停止します |  |\n"
 "| 404 | そのようなジョブはありません | `job_not_found` |\n"
 "| 409 | すでに完了しています | `job_finished` |\n"
 
@@ -2004,27 +1918,7 @@ msgstr "ジョブ { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2056,7 +1950,8 @@ msgstr ""
 "| `host` | string | プリンターのアドレス。 |\n"
 "| `owner` | string or null | トークンの名前。 |\n"
 "| `label` | string or null | ラベルフォルダー内の名前。label_content の場合は null。 |\n"
-"| `printed` | integer | ここまでに印刷されたラベル。 |\n"
+"| `printed` | integer | ここまでに確実に印刷されたラベル。ジョブの印刷中は、プリンターが報告する範囲で1枚ずつ増えます。 |\n"
+"| `printed_max` | integer or null | プリンターが結果を報告できなかった失敗のあと (印刷中に接続が切れた場合): これだけの枚数までのラベルが印刷されている可能性があります。カウンターはそのあとから続きます。rows_printed は確実に印刷された行を数えるため、次の行から再印刷するとラベルが二重に印刷されることがあります。それ以外は null。 |\n"
 "| `total` | integer | 印刷するラベル: コピー数 x 行数。 |\n"
 "| `rows_printed` | integer | 完全に印刷されたデータ行: 失敗後は、rows に次の行 (rows_printed + 最初の行) を指定して再印刷します。 |\n"
 "| `cancel_requested` | boolean | DELETE が送信されました。 |\n"
@@ -2075,22 +1970,7 @@ msgstr "ラベル { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2120,9 +2000,11 @@ msgstr ""
 "| `columns` | array of string | プレースホルダー `{Column}`: data_rows のキー。 |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file が (もう) ありません: 行を data_rows で送信してください。 |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (ラベルに `{=counter}` がある)、next、step。 |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | ラベルシートに印刷: 1つのジョブで最大999枚のラベル。 |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2209,14 +2091,7 @@ msgstr "プレビュー { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2232,12 +2107,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | 正しく印刷されないもの。other_labels_loaded: `printers.toml` のプリンターに、ラベルと異なるラベルがセットされていると報告されています (そのサイズ、または測定されたラベル間隔)。その最新の応答は、直近1分以内のものであれば採用され、エラーは何も分からないものとして扱われます (バックグラウンドで再度問い合わせます)。まだ把握していないプリンターは、ラベルのレンダリング後に最大1秒待たれます。 |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | 画像内での要素の位置。view=printer と、シートに合わせて回転したラベルでは null。 |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2246,6 +2122,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"プレビュー画像内の要素の枠。左上隅からの mm 単位です (tavletta/editing.py、"
+"docs/editing.md)。画像の1ピクセルは mm * dpi / 25.4 です。"
 
 #. type: Plain text
 #: docs/api.md
@@ -2259,13 +2137,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| フィールド | 型 | 意味 |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | テープに沿った方向: 長さ。 |\n"
+"| `height_mm` | number | テープに交差する方向: テープまたはラベルの高さ。 |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | 画像の解像度。 |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "画像 { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2281,13 +2165,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| フィールド | 型 | 意味 |\n"
+"|---|---|---|\n"
+"| `name` | string | tokens.toml でのトークンの名前。`--token-file` の唯一のトークンは 'token'、トークンなしは 'local'、OpenID Connect でWebページにサインインした人は 'oidc:<user>'。 |\n"
+"| `display_name` | string | プロバイダーでの本人の名前。ない場合は name と同じ。 |\n"
+"| `session` | boolean | true: トークンではなく、OpenID Connect (そのセッションCookie) でWebページにサインインしています。 |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | トークンが使用できるプリンター。null: すべて。 |\n"
+"| `token_required` | boolean | false: サーバーにトークンがなく、`--oidc` もありません (ループバックのみ)。 |\n"
+"| `limits` | object | 1回のリクエストで求められる上限: 1つのジョブのラベル数 (`--max-labels`。ラベルシートでは最大999)、コピー数、データの行、列、セル、およびバイト単位の本文 (`--max-body`。アップロードできる最大のラベルファイルでもあります)。 |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "起動 { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2302,6 +2194,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| フィールド | 型 | 意味 |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: 見つかった区切り文字。1列の場合とスプレッドシートでは null。 |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | 読み取ったシート。 |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | 各セルは表示されているとおりのテキスト: 先頭のゼロと数値の書式が保たれます (00300 は 00300 のまま)。入力されたセルがない行は除かれます。 |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2600,19 +2500,15 @@ msgstr "最初のラベル"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"プリンターの電源を入れ、[[ui:Printer model]] で選択します。Tavlettaはネット"
-"ワーク (Bonjour) 上でプリンターを検出し、セットされているもの (テープ幅やラベ"
-"ル間隔) を読み取ります。"
+"プリンターの電源を入れ、[[ui:Printer model]] で選択します。USBまたはネット"
+"ワーク (Bonjour) で見つかったプリンターは、一覧の先頭に表示されます。"
+"Tavletta は、セットされているもの、つまりテープ幅またはラベルの間隔を読み取り"
+"ます。"
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2655,6 +2551,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"[[ui:Printer model]] でプリンターを選択します。それぞれに下に専用のセクション"
+"があります。Tavletta がUSBやネットワークで見つけたプリンターは、一覧の先頭の "
+"[[ui:Found]] の下に機種とともに表示されます。1つを選ぶと、その機種とアドレス"
+"が採用されます。機種は [[ui:All models]] の下に続きます。Tavletta は、ウィン"
+"ドウを開いたときと [[ui:Search for printers]] で、すべての機種を同時にバック"
+"グラウンドで検索します。"
 
 #. type: Title ##
 #: docs/printer.md
@@ -2762,6 +2664,15 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (ダイカットラベル): プリンターが別のサイズのラ"
+"ベルを報告した、またはラベル間の距離として、お使いのラベルの高さと "
+"[[ui:Gap]] の合計とは別の値を測定しました。[[ui:Use loaded labels]] はラベル"
+"を変更しますが、まだ何も印刷しません。プリンターが報告するサイズを採用するか "
+"(Brother QL)、高さと間隔の合計が測定した距離になるようにロール方向の高さを設"
+"定します (cab、Zebra)。間隔と幅はそのままです。Zebra の印刷幅は直前の印刷で設"
+"定された値であり、ラベルの幅ではありません。その高さが5 mm未満になる場合は、"
+"代わりに間隔が変更されます。どちらでもラベルにならない場合は、[[ui:Print "
+"anyway]] だけが表示されます。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2770,6 +2681,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"[[ui:Use loaded labels]] のあと、プレビューでラベルを確認してから印刷します。"
+"メッセージの [[ui:Undo]] で変更を元に戻せます。要素がラベルの端からはみ出すよ"
+"うになった場合は、メッセージでそのことが示されます。"
 
 #. type: Title ##
 #: docs/printer.md
@@ -3303,6 +3217,12 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: ラベルの位置からずれて印刷するプリンター (すべてのラベル"
+"で、プレビューの表示より少し上または下に印刷される場合) は、ここで補正しま"
+"す。印刷されたラベルでずれの大きさを測って入力します。ロールに対して横向きの"
+"ラベルでは、正の値で印刷が下へ、負の値で上へ動きます。プレビューは引き続きラ"
+"ベルを本来の出力どおりに表示し、プリンターに送られる内容だけが動きます。印刷"
+"が動く側の端からこの距離以内にある内容は切り取られます。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3314,6 +3234,11 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: 連続印刷のラベルは、1つのジョブにつきこの数まで (既定"
+"は250、1から1000) まとめてプリンターに送られ、途中で止まらずに印刷されます。"
+"[[ui:Stop]] は2つのジョブの間で有効になり、開始したジョブは最後まで印刷されま"
+"す。1 にすると、他のプリンターと同じように、すべてのラベルが個別のジョブとし"
+"て送られます。内容がコピーごとに変わるラベルは、常に1枚ずつ送られます。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3328,12 +3253,6 @@ msgstr "問題 { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3341,10 +3260,11 @@ msgid ""
 "once after changing the roll so it measures again, then [[ui:Use loaded "
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
-"[[ui:Different labels loaded]]: プリンターが測定したラベル間の距離が、ラベル"
-"の高さと間隔の合計と異なります。[[ui:Label size]] と [[ui:Gap]] を確認する"
-"か、正しいロールをセットしてください。ロールを交換した後は、プリンターが再測"
-"定するように、プリンターのFeedを一度押してください。"
+"[[ui:Different labels loaded]]: プリンターがラベル間の距離として、お使いのラ"
+"ベルの高さと間隔の合計とは別の値を測定しました。[[ui:Label size]] と "
+"[[ui:Gap]] を確認するか、正しいロールをセットしてください。ロールを交換したあ"
+"と、プリンターで Feed を1回押して測定し直させると、[[ui:Use loaded labels]] "
+"でラベルをそれに合わせられます ([すべてのプリンター](#common))。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3354,6 +3274,11 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"すべてがすべてのラベルで同じように少し高すぎる、または低すぎる位置に印刷さ"
+"れ、プレビューでは正しい位置に見える場合: [[ui:Print offset]] を設定してくだ"
+"さい。別のプログラムでこれを補正するようにレイアウトしたラベルは、プレビュー"
+"ではずれた位置に印刷されます。内容を元の位置に戻し、代わりにオフセットを設定"
+"してください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3403,6 +3328,9 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"メモリ不足: プリンターにジョブのラベルを受け入れる余裕がありませんでした。"
+"[[ui:Labels per job]] を減らし、メッセージに示された行から再印刷してくださ"
+"い。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3416,6 +3344,14 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"「ジョブは送信されましたが、結果は不明です」: 印刷中にプリンターとの接続が切"
+"れました (またはプリンターがどこまで進んだか報告できませんでした)。Tavletta "
+"は、印刷されたと分かっているラベルを数えますが、プリンターはそれより多く印刷"
+"した可能性があります。出てきたラベルを確認してください。メッセージに示された"
+"行から再印刷すると一部が二重に印刷されることがありますが、抜けるものはありま"
+"せん。プリンターのWebインターフェースにネットワークから到達できる場合 (既"
+"定)、Tavletta は枚数をプリンターのラベルカウンターとも照合し、両者が異なると"
+"きはメッセージに範囲を示します。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4044,6 +3980,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): プリンターは、直前に測定した距離 "
+"(以前のロールのものかもしれません) を報告します。ロールを交換したら、"
+"[[ui:Use loaded labels]] を使う前に、ラベルをもう一度測定させてください (ほと"
+"んどのプリンターでは Feed の長押しで測定します) ([すべてのプリンター]"
+"(#common))。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4375,20 +4316,20 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"すべてのラベルが個別の印刷ジョブになるため、これはどのプリンターでも動作しま"
+"す。cabプリンターは最大 [[ui:Labels per job]] 枚のラベルを1つのジョブとして受"
+"け取り、途中で止まらずに印刷します ([cab](printer.md#cab))。"
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"ウィンドウ上部のバーの [[ui:Stop]] は、印刷中のラベルの後で連続印刷を終了しま"
-"す。最初のラベルは必ず印刷されます。"
+"ウィンドウ上部のバーの [[ui:Stop]] は、印刷中のラベルのあとで連続印刷を終了し"
+"ます (cabプリンターでは、印刷中のジョブのあと)。最初のラベルは必ず印刷されま"
+"す。"
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4461,19 +4402,14 @@ msgstr "概要 { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"小さな1つのサービスで、ポート8790のREST API (およびAIアシスタント向けのMCP) "
-"です。ラベルを自身でレンダリングし、ネットワーク経由でプリンターに送信しま"
-"す。デスクトップ、ブラウザー、データベースは不要です。"
+"小さなサービスが1つ: ポート8790のREST API (およびAIアシスタント向けのMCP) で"
+"す。ラベルを自分で描画し、ネットワーク経由でプリンターに送ります。デスクトッ"
+"プもデータベースも不要です。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4483,6 +4419,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"同じアドレスで人が使うWebページ: トークンでサインインし、プリンターを確認し、"
+"テンプレートまたは連続印刷 (CSV、XLSX、ODSファイル、貼り付けたリスト、または "
+"3000–5685 のような番号範囲から) を印刷し、adminトークンでテンプレートをアップ"
+"ロード・削除できます。`--no-web-ui` でオフにできます。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4948,6 +4888,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  各プリンターは状態とともに一覧表示されます。サーバーが到達できない場合は、\n"
+"  メッセージ付きの `UNREACHABLE` になります。\n"
+"- サーバー上のブラウザーで `http://127.0.0.1:8790/` を開き (ほかの人はプロキシの\n"
+"  アドレスを使います。[リバースプロキシ](#proxy)を参照)、トークンでサインインします。\n"
+"  Webページには、そのロールで実行できることが表示されます。ページはトークンを\n"
+"  ブラウザーのタブにだけ保持し、タブを閉じるか「サインアウト」するまで保たれます。\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5578,7 +5524,7 @@ msgstr "サーバーをインターネットから到達可能にしないでく
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "OpenID Connect でサインインする { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5589,6 +5535,11 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"アクセストークンの代わりに、組織のIDプロバイダー (Keycloak、Authentik、"
+"Microsoft Entra ID、Okta など) で、人がWebページにサインインできます。プロバ"
+"イダーでのロールが Tavletta のロールになります。プログラムは引き続きトークン"
+"を使います。リバースプロキシ経由のHTTPSが必要です (なしで動くのは、テスト用"
+"の `http://localhost` だけです)。"
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5600,6 +5551,13 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"プロバイダーにクライアントを登録します: confidential (シークレット付き)、"
+"authorization code フローのみ、PKCE S256、リダイレクトURI `https://"
+"labels.example.com/oidc/callback`、ログアウト後のリダイレクトURI `https://"
+"labels.example.com/`。ロールまたはグループがIDトークンに届くようにします。"
+"Keycloak では、クライアントに *User Client Role* (または *User Realm Role*) "
+"のマッパーを作成し、*Add to ID token* をオンにします。Authentik は `groups` "
+"を送ります。"
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5608,6 +5566,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"シークレットを `config/oidc-secret` に置き (シークレットのみ、モード600)、"
+"`config/oidc.toml` を書きます (`cp oidc.example.toml config/oidc.toml` でコメ"
+"ント付きの雛形が得られます):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5635,6 +5596,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"`compose.yaml` の `command:` に `\"--oidc\"` と `\"/config/oidc.toml\"` を追"
+"加し (ネイティブの場合は `ExecStart` に、`/etc/tavletta/...` を使って)、`--"
+"trusted-proxy` は残したまま再起動します。`--trusted-proxy` を使うと、サーバー"
+"には `public_url` が必要で、なければ起動しません。"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5643,6 +5608,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"サインインには PyJWT が必要で、コンテナイメージと deb・rpm パッケージには含ま"
+"れています。Flatpak には含まれておらず、何もインストールできません。`--oidc` "
+"を使うには、それ以外のいずれかでサーバーを実行してください。"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5657,6 +5625,16 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"ページには「Example ID でサインイン」と表示されます。ロールをひとつも持たない"
+"人には「アクセス権なし」と表示されます。セッションは8時間、または未使用で60分"
+"続きます (`session_hours`、`idle_minutes`)。プロバイダーで削除されたロールや"
+"無効にされたアカウントは次のサインインから反映されるため、管理者がサインイン"
+"する環境ではセッションを短くしてください。`token_login = false` にすると、"
+"ページのトークン欄が非表示になります。プリンターはロール別 "
+"(`[oidc.printers]`) またはクレーム (`printers_claim`) で制限できます。すべて"
+"のキーとセキュリティの詳細: [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#signing-in-with-openid-"
+"connect-oidctoml)。"
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5808,6 +5786,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"`--oidc` を使う場合: `public_url` を設定し、クライアントは PKCE 付きの "
+"confidential にし、人が必要とするロールだけを割り当て、管理者がサインインする"
+"環境ではセッションを短くし、`oidc-secret` はモード600にします。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5815,6 +5796,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"ブラウザーからは誰も印刷しない場合: `--no-web-ui` (Webページは読み込みにトー"
+"クンを必要としませんが、トークンなしでは何も表示しません)。"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5849,24 +5832,7 @@ msgstr "トラブルシューティング { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5890,7 +5856,7 @@ msgstr ""
 "|---|---|\n"
 "| プリンターが `UNREACHABLE` (`printer_timeout`、`printer_not_found`) | サーバーがプリンターに到達できません。サーバーから `nc -vz <printer> 9100` (IPPでは631) でテストし、アドレス、ファイアウォール、プリンターの電源が入っているかを確認してください。Dockerでは、コンテナーがプリンターのネットワークに到達できる必要があります。 |\n"
 "| `401 unauthorized` | トークンがない、入力ミス、期限切れ、または `tokens.toml` から削除されています。ヘッダーは `Authorization: Bearer <token>` です。 |\n"
-"| `429 too_many_requests` | このアドレスからの誤ったトークンが1分以内に10回: トークンを修正し、1分待ってください。 |\n"
+"| `429 too_many_requests` | このアドレスから1分以内に10回誤ったトークンが送られました: トークンを修正し、1分待ってください。`--trusted-proxy` で指定していないリバースプロキシの背後では、全員がプロキシのアドレスを共有します。 |\n"
 "| `429 queue_full` | 100件のジョブ (トークンごとに20件) が待機中です: プリンターが遅いか停止しています。確認して、後で再試行してください。 |\n"
 "| `503 busy` | リクエストまたはレンダリングのスロットが一時的にすべて使用中です: 1～2秒待って再試行してください。 |\n"
 "| `404 printer_not_found` | `printers.toml` にない、またはトークンが使用できません (`--printer`)。 |\n"
@@ -5900,6 +5866,7 @@ msgstr ""
 "| 警告に `other_labels_loaded` がある | プリンターに、ラベルと異なるラベルがセットされています: 適合するロールをセットするか、ラベルのサイズと間隔を確認してください。ZPLプリンターは、以前のロールで測定した距離を報告する場合があります: キャリブレーションしてください。 |\n"
 "| `409 counter_not_saved` | ラベルファイルが、サーバーのユーザーによって書き込めません: ユーザーに `chown` してください (Docker: 1000、ネイティブ: `tavletta`)。 |\n"
 "| ラベルの日付や時刻が1～2時間ずれている | コンテナーはUTCで動作しています: `.env` に `TAVLETTA_TZ=Europe/Zurich` を設定してから、`docker compose up -d` を実行してください。 |\n"
+"| Webページで「サインインできませんでした」 | ログに理由が出ます: プロバイダーに到達できない、プロバイダーでリダイレクトURIまたはシークレットが誤っている、またはページにプレーンHTTPで接続している (`public_url` と `--trusted-proxy` を設定してください)。「アクセス権なし」: ロールがIDトークンに届いていない (マッパーがない)、または `[oidc.roles]` でどれもマッピングされていません。 |\n"
 "| サーバーが起動しない | `docker compose logs` または `journalctl -u tavletta-server`: `printers.toml` または `tokens.toml` の誤りは、そのキーとともに示されます。 |\n"
 "| フォルダーへのアクセスが拒否される (SELinuxとPodmanを使うFedora、RHEL) | `compose.yaml` のボリュームに `:Z` を追加してください。 |\n"
 
@@ -5911,21 +5878,16 @@ msgstr "印刷サーバー"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"ほかのプログラムやAIアシスタントは、ウィンドウを開かずに、Tavlettaを通じてラ"
-"ベルを印刷できます。`tavletta serve` はプログラム向けのWebインターフェース "
-"(REST API) を提供し、`tavletta mcp` はClaudeなどのAIアシスタントを接続しま"
-"す。"
+"ほかのプログラム、AIアシスタント、ブラウザーの人は、ウィンドウを開かずに "
+"Tavletta 経由でラベルを印刷できます。`tavletta serve` は人向けのWebページとプ"
+"ログラム向けのWebインターフェース (REST API) を提供し、`tavletta mcp` は "
+"Claude などのAIアシスタントを接続します。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5991,6 +5953,7 @@ msgstr ""
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
+"ブラウザーで `http://127.0.0.1:8790/` を開きます: [Webページ](#web-page)。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6065,13 +6028,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6081,10 +6037,12 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` は [[ui:Print method]] (`printer`、`transfer`、`direct`)、"
-"`upside_down` は [[ui:Print upside down]] です。そのほかに `quality`、"
-"`chain`、`high_res`、`feed_mm`、`darkness`、`media`、`outlines` があります。"
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/"
-"main/docs/server.md#printers) を参照してください。"
+"`upside_down` は [[ui:Print upside down]]、`offset_mm` は [[ui:Print "
+"offset]] (−5から5)、`labels_per_job` は [[ui:Labels per job]] (1から1000、既"
+"定は250) です。そのほかに `quality`、`chain`、`high_res`、`feed_mm`、"
+"`darkness`、`media`、`outlines` があります。[docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#printers) を参照してください。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6198,17 +6156,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview` は一覧とプレビューの表示のみ、`print` は印刷と自分のジョブの追跡も"
-"可能、`admin` はすべてのジョブを参照およびキャンセルできます。"
+"`preview` は一覧とプレビューの表示だけ、`print` は印刷と自分のジョブの追跡"
+"も、`admin` はすべてのジョブの表示とキャンセル、テンプレートのアップロードと"
+"削除もできます。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6230,10 +6185,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "画像 { #images }"
+msgstr "Webページ { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6241,6 +6195,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"サーバー自身のページで、そのアドレス (`http://127.0.0.1:8790/`、または[リバー"
+"スプロキシ](server-install.md#proxy)のアドレス) にあります:"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6250,12 +6206,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**サインイン**: アクセストークンで行います (サーバーにトークンがなければ、サ"
+"インインするものはありません)。ブラウザーはトークンをこのタブにだけ保持し、"
+"「サインアウト」で忘れます。サーバーが対応している場合、「…でサインイン」は代"
+"わりに組織のアカウントを使います ([OpenID Connect](server-install.md#oidc))。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**プリンター**: その状態、セットされているラベルやテープ、問題を言葉で表示し"
+"ます。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6267,11 +6229,18 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**テンプレート**: ラベルフォルダーのラベルファイルをプレビュー付きで表示しま"
+"す。データフィールドには、テンプレートのデータファイルの最初の行が表示され、"
+"データファイルがない場合や見つからない場合はサンプル値が表示されます。「印"
+"刷」は1枚のラベルのフィールドを入力し、入力するたびにプレビューを表示します。"
+"フィールドが入力する要素にはプレビュー内で枠が付きます。`admin` トークンで"
+"は、ここでテンプレート (`.tavletta` ファイル) をアップロードして削除できま"
+"す。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**連続印刷**の手順:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6279,6 +6248,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"データ: CSV、XLSX、ODSファイル、スプレッドシートから貼り付けたリスト、または"
+"データなし。先頭のゼロは保たれます (`00300`)。"
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6288,6 +6259,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"割り当て: どの列がテンプレートのどのフィールドを入力するか (同じ名前はすでに"
+"割り当てられています。大文字と小文字、スペースの違いは無視されます)。横にある"
+"最初のラベルのプレビューで、使用中のフィールドに枠が付きます。各フィールドに"
+"はその値、各列には最初の値が表示されます。"
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6297,13 +6272,18 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"選択: すべての行、一部の行 (`1-20, 25, 30-`)、またはフィールドの範囲で指定し"
+"ます。データがない場合は、範囲が値を作ります。たとえば、在庫番号を `3000` か"
+"ら `5685` にすると2686枚のラベル、`00300` から `00450` ではゼロが保たれ、ス"
+"テップを指定すると1つおきや10おきの番号になります。`3000-5685` はまとめて入力"
+"または貼り付けできます。"
 
 #. type: Bullet: '  4. '
 #: docs/server.md
 msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
-msgstr ""
+msgstr "確認: ラベルの枚数、最初と最後のラベル、サーバーとプリンターの上限。"
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6313,6 +6293,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"印刷: 100枚から、ページが先に確認します。進行状況には印刷された枚数が表示され"
+"ます。キャンセルは印刷中のラベルのあとで停止します (cabプリンター: 最大 "
+"[[ui:Labels per job]] 枚の現在のジョブのあと)。キャンセルやプリンターの問題の"
+"あとは、「…から続ける」で残りを印刷します。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6321,11 +6305,15 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"ページはブラウザーの言語、または上部で選んだ言語で表示されます。アプリのすべ"
+"ての言語に対応し、アラビア語は右から左に表示されます。時刻は24時間制です。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` でページをオフにできます。プログラムだけが使うサーバー向けで"
+"す。"
 
 #. type: Title ##
 #: docs/server.md
@@ -6360,17 +6348,14 @@ msgstr "`POST /api/v1/preview` は、ラベルをPNG画像として返します�
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` は印刷ジョブをキューに入れます。`GET /api/v1/jobs/<id>` "
-"はその状態を示し、`DELETE` は2枚のラベルの間でキャンセルします。"
+"はその状態を表示し、`DELETE` は2枚のラベルの間でキャンセルします (cabプリン"
+"ター: 連続印刷の2つのジョブの間)。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6582,16 +6567,12 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` はリリース、`1.1` は1.1の最新のバグ修正リリース、`latest` は最新のリ"
-"リースです。`edge` は開発中の状態であり、リリースではありません。"
+"`1.2.1` はリリース、`1.2` は 1.2 の最新のバグ修正リリース、`latest` は最新の"
+"リリースです。`edge` は開発中の状態で、リリースではありません。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -7280,7 +7261,7 @@ msgstr "自由レイアウトのラベルは、以前のバージョンのTavlet
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "プレビューでの配置 { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7288,6 +7269,7 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"自由レイアウトでは、マウス、指、ペンでプレビュー上の要素を配置できます:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7298,6 +7280,12 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"要素をクリックすると選択され、[[ui:Content]] のその行が開きます。Shift また"
+"は Ctrl を押しながらクリックすると、要素を選択に追加したり、選択から外したり"
+"できます。空いている部分をドラッグすると、選択範囲の枠が触れたすべての要素が"
+"選択されます (Alt を押しながらの場合は、枠の内側にあるものだけ)。空いている部"
+"分をクリックしても何も選択されません。要素の行を開くと、その要素も選択されま"
+"す。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7308,6 +7296,11 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"選択をドラッグすると移動できます。ラベルの端と中央、ほかの要素の端と中央にス"
+"ナップし、赤い線でその位置が示されます。Alt または Ctrl を押すと自由に配置で"
+"きます (ドラッグ中に Alt を押すとウィンドウが動くデスクトップもあります。その"
+"場合は Ctrl を使います)。Shift を押すと1つの軸方向だけに移動します。ドラッグ"
+"中に Esc を押すと元に戻ります。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7318,6 +7311,10 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"1つの要素を選択すると、角と辺にハンドルが表示されます。ドラッグするとサイズを"
+"変更できます。線や図形は幅と高さを別々に変更します (Shift で縦横比を保ちま"
+"す)。テキスト、画像、記号、QRコードは縦横比を保ちます。バーコードはバーが長く"
+"なるか、モジュールが広くなります。発送ラベルは移動だけできます。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7327,6 +7324,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"ヘッダーバーの [[ui:Arrange]] は、選択した要素を揃えます。1つの要素はラベルの"
+"端または中央に、複数の要素は互いに揃えます。3つ以上を等間隔に配置し "
+"([[ui:Distribute]])、スナップのオン・オフを切り替え ([[ui:Snap to guides]])、"
+"スナップ先のグリッドを追加します。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7336,6 +7337,10 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"プレビューにフォーカスがある状態 (クリックするか、Tab で移動) では、矢印キー"
+"で選択を0.1 mm、Shift を押すと1 mm移動します。Delete で削除し、Ctrl+A ですべ"
+"ての要素を選択し、Shift+Ctrl+A と Esc で選択を解除します。サイズは要素の行"
+"と、その [[ui:Position and size]] ページで設定します。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7343,6 +7348,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"ドラッグ1回、サイズ変更1回、矢印キーの連続操作は、それぞれ [[ui:Undo]] の1ス"
+"テップになり、サイドバーでの変更と交互に記録されます。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7350,6 +7357,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"[[ui:One after another]] のレイアウトでは、要素を選択できますが移動できませ"
+"ん。要素をドラッグすると [[ui:Use free layout]] が提案されます。"
 
 #. type: Title ##
 #: docs/use.md
@@ -7508,6 +7517,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"プレビューにフォーカスがある状態: 矢印キーで選択した要素を移動し (Shift: 1 "
+"mm)、Delete で削除し、Ctrl+A と Shift+Ctrl+A ですべて選択または選択解除しま"
+"す ([上記を参照](#arrange))。"
 
 #. type: Bullet: '- '
 #: docs/use.md

@@ -478,18 +478,17 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"A sorban álló feladat azonnal megszakad; a nyomtatás alatt álló az éppen "
-"nyomtatott címke után áll le. 409 `job_finished`, ha már befejeződött."
+"A sorban álló feladat azonnal megszakad; a nyomtatás alatt álló a most "
+"nyomtatott címke után áll le. A cab nyomtató a sorozatot legfeljebb "
+"`labels_per_job` címkés feladatokban nyomtatja (alapértelmezés szerint 250): "
+"a most nyomtatott feladat után áll le. 409 `job_finished`, ha már "
+"befejeződött."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -942,57 +941,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1079,6 +1028,10 @@ msgstr ""
 "| 408 | `timeout` | A kérés elküldése 30 másodpercnél tovább tartott. |\n"
 "| 409 | `job_finished` | A feladat befejeződött: nincs mit megszakítani. |\n"
 "| 409 | `counter_not_saved` | A címkefájl nem írható: semmi sem lett kinyomtatva. |\n"
+"| 409 | `label_exists` | Ilyen nevű címke már létezik: töltse fel replace=true megadásával. |\n"
+"| 409 | `label_in_use` | A címke feladatai várakoznak vagy nyomtatás alatt vannak: próbálja újra, ha végeztek. |\n"
+"| 409 | `label_changed` | A címkefájlt kicserélték a kérés ellenőrzése közben. |\n"
+"| 409 | `label_locked` | A címke egy nyomtatása fogja a fájlt: próbálja újra, ha véget ért. |\n"
 "| 411 | `length_required` | Nincs Content-Length (a darabolt törzseket nem fogadja el). |\n"
 "| 413 | `too_large` | A törzs meghaladja a `--max-body` értéket, vagy túl sok adatsor, oszlop vagy cella. |\n"
 "| 413 | `too_many_labels` | A másolatok szorozva a sorokkal meghaladják a `--max-labels` értéket (alapértelmezés 10000); címkeíveken 999 felett. |\n"
@@ -1097,15 +1050,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Tíz hibás token erről a címről: várjon egy percet. |\n"
 "| 429 | `queue_full` | Túl sok feladat vár: próbálja később újra. |\n"
 "| 500 | `internal` | A szerver hibája; naplózva van. |\n"
+"| 500 | `not_saved` | A címkemappába nem lehetett írni (507: tele van). |\n"
+"| 500 | `not_deleted` | A címkefájlt nem lehetett törölni (csak olvasható mappa). |\n"
 "| 502 | `printer_<code>` | A nyomtató nem érhető el, vagy problémát jelent. |\n"
 "| 503 | `busy` | Minden kérés- vagy megjelenítési hely foglalt: próbálja újra egy pillanat múlva. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: a nyomtató problémája, az alábbiak egyike: `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: a nyomtató problémája, a következők egyike: `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1191,20 +1145,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1227,14 +1168,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | nincs | Fut-e a szerver; token nem szükséges (állapotellenőrzésekhez) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | Ez a leírás (OpenAPI 3.1); bármely szerepkörű token |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | A token neve, szerepköre és nyomtatói, valamint egy kérés korlátai (a weboldalhoz) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | A `printers.toml` azon nyomtatói, amelyeket a token használhat, állapotukkal; enélkül a nyomtatómodellek, az egyenként beállított cím és a megtalált nyomtatók (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Egy nyomtató állapotának lekérdezése: média, problémák, felbontás |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | A címkemappában és almappáiban lévő címkefájlok |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Mivel tölthető ki egy címke: elemek, változók, adatoszlopok, méret, számláló |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Címkefájl feltöltése (admin): úgy ellenőrzi, ahogy az alkalmazás megnyitja a fájlt, majd egy lépésben a címkemappába kerül |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Címkefájl törlése (admin); az adatfájlja megmarad |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | A kéréssel küldött adatfájl (CSV, ODS, XLSX) beolvasása úgy, ahogy az alkalmazás olvassa: a sorai a data_rows számára; semmi sem tárolódik |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | A kitöltött címke képként; semmi sem nyomtatódik |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Nyomtatás: a kérést ellenőrzi, majd sorba állítja; minden nyomtató egyszerre egy feladatot nyomtat |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Egy nyomtatási feladat állapota (print token: a saját feladatai; admin: mind). A befejezés után 24 óráig őrzi |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Feladat megszakítása: azonnal, amíg vár; az aktuális címke után, amíg nyomtat |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Feladat megszakítása: azonnal, amíg vár; a nyomtatónak már elküldött címkék után, amíg nyomtat (cab: a legfeljebb labels_per_job címkés feladat) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1308,10 +1253,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1319,14 +1263,12 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"A token neve, szerepköre és nyomtatói, valamint egy kérés korlátai (a "
+"weboldalhoz)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1334,7 +1276,7 @@ msgid ""
 msgstr ""
 "| Status | Válasz | Kódok |\n"
 "|---|---|---|\n"
-"| 200 | Címkék |  |\n"
+"| 200 | Ki |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1535,10 +1477,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1546,21 +1487,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Címkefájl feltöltése (admin): úgy ellenőrzi, ahogy az alkalmazás megnyitja a "
+"fájlt, majd egy lépésben a címkemappába kerül."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Szerepkör: `print`"
+msgstr "Szerepkör: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1569,12 +1506,13 @@ msgid ""
 msgstr ""
 "| Paraméter | Hely | Jelentés |\n"
 "|---|---|---|\n"
-"| `name` | path | Almappákhoz tartalmazhat perjeleket; a '`.tavletta`' elhagyható. |\n"
+"| `name` | path | A fájl neve mappa nélkül; a '`.tavletta`' elhagyható. |\n"
+"| `replace` | query | Az ilyen nevű címke cseréje. Alapértelmezés: `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Törzs: egy `.tavletta` fájl tartalma."
 
 #. type: Plain text
 #: docs/api.md
@@ -1590,6 +1528,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | Válasz | Kódok |\n"
+"|---|---|---|\n"
+"| 200 | Kicserélve (replace=true) |  |\n"
+"| 201 | Hozzáadva |  |\n"
+"| 400 | Nem érvényes név új címkéhez: betűk, számjegyek, szóközök és . _ - ( ) + , (legfeljebb 100), magában a mappában | `invalid_field`, `not_json` |\n"
+"| 409 | Ilyen nevű címke már létezik (küldjön replace=true értéket), a címke feladatai várakoznak vagy nyomtatás alatt vannak (label_in_use), vagy egy másik program nyomtatása fogja a fájlt | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | `--max-body` fölött, vagy a címke túl nagy a megjelenítéshez | `too_large`, `label_too_large` |\n"
+"| 422 | Nem olyan címke, amelyet a Tavletta meg tud nyitni | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | Nincs több hely a címkemappában | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1604,26 +1551,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Címkefájl törlése (admin); az adatfájlja megmarad."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1634,10 +1573,10 @@ msgid ""
 msgstr ""
 "| Status | Válasz | Kódok |\n"
 "|---|---|---|\n"
-"| 200 | Címke |  |\n"
+"| 204 | Törölve |  |\n"
 "| 400 | Nem a címkemappán belüli név | `invalid_field` |\n"
 "| 404 | Nincs ilyen címke | `label_not_found` |\n"
-"| 422 | A fájl nem címke, vagy sérült | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | A címke feladatai várakoznak vagy nyomtatás alatt vannak (label_in_use), vagy egy másik program nyomtatása fogja a fájlt | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1650,10 +1589,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1661,6 +1599,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"A kéréssel küldött adatfájl (CSV, ODS, XLSX) beolvasása úgy, ahogy az "
+"alkalmazás olvassa: a sorai a data_rows számára; semmi sem tárolódik."
 
 #. type: Plain text
 #: docs/api.md
@@ -1678,17 +1618,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Mező | Típus | Jelentés |\n"
+"|---|---|---|\n"
+"| `content` | string | A fájl: CSV (bármilyen elválasztó, UTF-8, UTF-16 vagy Windows-1252), ODS vagy XLSX, a tartalom alapján megkülönböztetve. A beillesztett szöveg CSV-fájl. |\n"
+"| `name` | string | A fájl neve az üzenetekhez. |\n"
+"| `sheet` | string | ODS, XLSX: a munkalap (alapértelmezés szerint az első). |\n"
+"| `header` | boolean | false: az első sor is adat; az oszlopok neve A, B, C … Alapértelmezés: `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1698,10 +1637,9 @@ msgid ""
 msgstr ""
 "| Status | Válasz | Kódok |\n"
 "|---|---|---|\n"
-"| 200 | Címke |  |\n"
-"| 400 | Nem a címkemappán belüli név | `invalid_field` |\n"
-"| 404 | Nincs ilyen címke | `label_not_found` |\n"
-"| 422 | A fájl nem címke, vagy sérült | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | A sorok |  |\n"
+"| 400 | Érvénytelen kérés | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Nem táblázat, sérült vagy üres | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1849,18 +1787,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1879,7 +1806,7 @@ msgstr ""
 "| 202 | Sorban áll vagy nyomtat; kövesse a Location címen |  |\n"
 "| 400 | Érvénytelen kérés | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Nincs ilyen címke, nyomtató vagy adatfájl, vagy olyan nyomtató, amelyet a token nem használhat | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | A címkefájl nem írható: a következő számlálóértéket nem lehetett menteni, semmi sem lett kinyomtatva | `counter_not_saved` |\n"
+"| 409 | A címkefájl nem írható: a számláló következő értékét nem lehetett menteni, semmi sem lett kinyomtatva; vagy kicserélték a kérés ellenőrzése közben (label_changed): küldje el újra | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Túl nagy: törzs, adatsorok, címkék egy feladatban vagy a megjelenítendő címke | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | A címke hibásan nyomtatna | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Túl sok hibás token, vagy túl sok várakozó feladat (100 összesen, 20 megnevezett tokenenként) | `too_many_requests`, `queue_full` |\n"
@@ -1951,26 +1878,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Feladat megszakítása: azonnal, amíg vár; az aktuális címke után, amíg "
-"nyomtat."
+"Feladat megszakítása: azonnal, amíg vár; a nyomtatónak már elküldött címkék "
+"után, amíg nyomtat (cab: a legfeljebb labels_per_job címkés feladat)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1980,7 +1897,7 @@ msgid ""
 msgstr ""
 "| Status | Válasz | Kódok |\n"
 "|---|---|---|\n"
-"| 202 | Megszakítva, vagy az aktuális címke után leáll |  |\n"
+"| 202 | Megszakítva, vagy a már elküldött címkék után leáll |  |\n"
 "| 404 | Nincs ilyen feladat | `job_not_found` |\n"
 "| 409 | Már befejeződött | `job_finished` |\n"
 
@@ -2007,27 +1924,7 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2059,7 +1956,8 @@ msgstr ""
 "| `host` | string | A nyomtató címe. |\n"
 "| `owner` | string or null | A token neve. |\n"
 "| `label` | string or null | Név a címkemappában; null a label_content esetén. |\n"
-"| `printed` | integer | Eddig kinyomtatott címkék. |\n"
+"| `printed` | integer | Eddig biztosan kinyomtatott címkék; címkéről címkére nő, amíg a feladat nyomtat, amennyire a nyomtató jelzi. |\n"
+"| `printed_max` | integer or null | Olyan hiba után, amelynek kimenetelét a nyomtató nem tudta megmondani (a kapcsolat megszakadt nyomtatás közben): legfeljebb ennyi címke nyomtatódhatott ki. A számláló ezek után folytatódik; a rows_printed a biztosan kinyomtatott sorokat számolja, így a következőtől újranyomtatva egyes címkék kétszer nyomtatódhatnak. Egyébként null. |\n"
 "| `total` | integer | Nyomtatandó címkék: másolatok x sorok. |\n"
 "| `rows_printed` | integer | Teljesen kinyomtatott adatsorok: hiba után nyomtasson újra úgy, hogy a rows a következő legyen (rows_printed + első sor). |\n"
 "| `cancel_requested` | boolean | A DELETE el lett küldve. |\n"
@@ -2078,22 +1976,7 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2123,9 +2006,11 @@ msgstr ""
 "| `columns` | array of string | `{Column}` helyőrzők: a data_rows kulcsai. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | A data_file nincs (már) ott: küldje a sorokat a data_rows mezőben. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (a címkén van `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Címkeívre nyomtatva: legfeljebb 999 címke egy feladatban. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2212,14 +2097,7 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2235,12 +2113,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Mi nyomtatna hibásan. other_labels_loaded: a `printers.toml` nyomtatója azt jelenti, hogy a címkééitől eltérő címkék vannak betöltve (a méretük, vagy az általa mért címketávolság). A legutóbbi válasza akkor számít, ha az utolsó percből való, egy hiba pedig úgy, mintha semmi sem lenne ismert (a háttérben újra lekérdezi); egy még nem ismert nyomtatóra a címke megjelenítése után legfeljebb egy másodpercig vár. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Hol vannak az elemek a képen; null a view=printer és az ívére elforgatott címke esetén. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2249,6 +2128,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"Az elemek keretei az előnézeti képen, mm-ben a bal felső saroktól (tavletta/"
+"editing.py, docs/editing.md); a kép egy képpontja mm * dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2262,13 +2143,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Mező | Típus | Jelentés |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | A szalag mentén: a hossz. |\n"
+"| `height_mm` | number | Keresztben: a szalag vagy a címke magassága. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | A kép felbontása. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Képek { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2284,13 +2171,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Mező | Típus | Jelentés |\n"
+"|---|---|---|\n"
+"| `name` | string | A token neve a tokens.toml fájlban; 'token' a `--token-file` egyetlen tokenjéhez, 'local' token nélkül; 'oidc:<user>' a weboldalra OpenID Connecttel bejelentkezett személyhez. |\n"
+"| `display_name` | string | Egy személy neve a szolgáltatótól; különben megegyezik a name értékével. |\n"
+"| `session` | boolean | true: a weboldalra OpenID Connecttel (annak munkamenet-sütijével) jelentkeztek be, nem tokennel. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | A nyomtatók, amelyeket a token használhat; null: mind. |\n"
+"| `token_required` | boolean | false: a szervernek nincs tokenje és nincs `--oidc` (csak loopback). |\n"
+"| `limits` | object | Amit egy kérés legfeljebb kérhet: címkék egy feladatban (`--max-labels`; címkeíveken legfeljebb 999), másolatok, adatsorok, -oszlopok és -cellák, valamint a törzs bájtban (`--max-body`; egyben a legnagyobb feltölthető címkefájl). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Indítás { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2305,6 +2200,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Mező | Típus | Jelentés |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: a talált elválasztó; null egy oszlop és a táblázatkezelők esetén. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | A beolvasott munkalap. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Minden cella az általa mutatott szövegként: a kezdő nullák és a számformátumok megmaradnak (a 00300 marad 00300). A kitöltött cella nélküli sorok kimaradnak. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2605,19 +2508,15 @@ msgstr "Az első címke"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Kapcsolja be a nyomtatót, és válassza ki a [[ui:Printer model]] alatt. A "
-"Tavletta megtalálja a hálózaton (Bonjour), és beolvassa, mi van betöltve: a "
-"szalag szélességét vagy a címkék közötti távolságot."
+"Kapcsolja be a nyomtatót, és válassza ki a [[ui:Printer model]] alatt: az "
+"USB-n vagy a hálózaton (Bonjour) talált nyomtató a lista tetején van. A "
+"Tavletta beolvassa, mi van betöltve: a szalag szélességét vagy a címkék "
+"közötti távolságot."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2660,6 +2559,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Válassza ki a nyomtatót a [[ui:Printer model]] alatt; mindegyiknek külön "
+"szakasza van lejjebb. A nyomtatók, amelyeket a Tavletta USB-n és a hálózaton "
+"talál, a lista elején szerepelnek a [[ui:Found]] alatt a modelljükkel: egy "
+"kiválasztása átveszi a modelljét és a címét. A modellek a [[ui:All models]] "
+"alatt következnek. A Tavletta az ablak megnyitásakor és a [[ui:Search for "
+"printers]] gombbal keresi őket, minden modellt egyszerre, a háttérben."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2767,6 +2672,16 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (kivágott címkék): a nyomtató más méretű "
+"címkéket jelez, vagy a címkék között más távolságot mért, mint a címke "
+"magassága plusz [[ui:Gap]]. A [[ui:Use loaded labels]] megváltoztatja a "
+"címkét, és még nem nyomtat semmit: átveszi a nyomtató által jelzett méretet "
+"(Brother QL), vagy beállítja a magasságot a tekercs mentén úgy, hogy a "
+"magasság plusz a hézag a mért távolságot adja (cab, Zebra). A hézag és a "
+"szélesség marad; a Zebra nyomtatási szélessége az, amelyet az utolsó "
+"nyomtatás beállított, nem a címkék szélessége. Ahol ez a magasság 5 mm-nél "
+"kisebb lenne, a hézag változik helyette; ahol egyik sem ad címkét, csak a "
+"[[ui:Print anyway]] kínálkozik."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2775,6 +2690,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"A [[ui:Use loaded labels]] után ellenőrizze a címkét az előnézetben, majd "
+"nyomtasson. Az üzenetben az [[ui:Undo]] visszavonja a változtatást; az "
+"üzenet jelzi, ha az elemek most túlnyúlnak a címke szélén."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3310,6 +3228,14 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: az a nyomtató, amely nem a címke helyén nyomtat (a "
+"nyomat minden címkén kicsit magasabban vagy alacsonyabban van, mint ahogy az "
+"előnézet mutatja), itt kiegyenlíthető: mérje meg egy kinyomtatott címkén, "
+"mennyire tér el a nyomat, és adja meg, pozitív értékkel lejjebb kerül a "
+"nyomat a tekercsre keresztben álló címkéken, negatívval feljebb. Az előnézet "
+"továbbra is úgy mutatja a címkét, ahogy ki kell jönnie; csak az mozdul, ami "
+"a nyomtatóra megy. Az a tartalom, amely ilyen távolságra van attól a "
+"széltől, amerre a nyomat mozdul, levágódik."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3321,6 +3247,12 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: egy sorozat címkéi együtt mennek a nyomtatóra, "
+"legfeljebb ennyi (alapértelmezés szerint 250, 1-től 1000-ig) egy feladatban, "
+"és megállás nélkül futnak végig. A [[ui:Stop]] két feladat között lép "
+"életbe: a megkezdett feladat teljesen kinyomtatódik. Az 1 minden címkét "
+"külön feladatként küld, ahogy a többi nyomtató kapja őket. Azok a címkék, "
+"amelyek tartalma másolatról másolatra változik, mindig egyesével mennek."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3335,12 +3267,6 @@ msgstr "Problémák { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3351,7 +3277,9 @@ msgstr ""
 "[[ui:Different labels loaded]]: a nyomtató a címkék között más távolságot "
 "mért, mint a címke magassága plusz a hézag. Ellenőrizze a [[ui:Label size]] "
 "és a [[ui:Gap]] értékét, vagy töltse be a megfelelő tekercset. A tekercs "
-"cseréje után nyomja meg egyszer a Feed gombot a nyomtatón, hogy újra mérjen."
+"cseréje után nyomja meg egyszer a nyomtató Feed gombját, hogy újra mérjen, "
+"majd a [[ui:Use loaded labels]] ehhez igazítja a címkét ([Minden nyomtató]"
+"(#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3361,6 +3289,11 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Minden kicsit túl magasan vagy túl alacsonyan nyomtatódik, minden címkén "
+"ugyanúgy, miközben az előnézet a helyén mutatja: állítsa be a [[ui:Print "
+"offset]] értékét. Az a címke, amelyet egy másik programban ennek "
+"kiegyenlítésére alakítottak ki, az előnézetben nem a helyén nyomtatódik; "
+"tegye vissza a tartalmát a helyére, és állítsa be helyette az eltolást."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3411,6 +3344,9 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Elfogyott a memória: a nyomtatónak nem volt helye egy feladat címkéinek. "
+"Csökkentse a [[ui:Labels per job]] értékét, majd nyomtasson újra az "
+"üzenetben megnevezett sortól."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3424,6 +3360,15 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"„A feladat elküldve, de a kimenetele ismeretlen”: a nyomtatóval a kapcsolat "
+"megszakadt nyomtatás közben (vagy a nyomtató nem tudta megmondani, meddig "
+"jutott). A Tavletta azokat a címkéket számolja, amelyekről tudja, hogy "
+"kinyomtatódtak; a nyomtató többet is kinyomtathatott. Ellenőrizze a kijött "
+"címkéket: az üzenetben megnevezett sortól újranyomtatva egyes címkék kétszer "
+"nyomtatódhatnak, de egy sem marad ki. Ha a nyomtató webes felülete elérhető "
+"a hálózaton (alapértelmezés), a Tavletta a számot a nyomtató "
+"címkeszámlálójával is összeveti; ha a kettő eltér, az üzenet megadja a "
+"tartományt."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4060,6 +4005,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): a nyomtató az utoljára mért "
+"távolságot jelzi, talán egy korábbi tekercsről. A tekercs cseréje után "
+"hagyja, hogy újra megmérje a címkéket (a legtöbb nyomtató ezt a Feed hosszú "
+"megnyomására teszi), mielőtt a [[ui:Use loaded labels]] gombot használja "
+"([Minden nyomtató](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4394,20 +4344,20 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Minden címke külön nyomtatási feladat, így ez minden nyomtatón működik. A "
+"cab nyomtató legfeljebb [[ui:Labels per job]] címkét kap egyetlen "
+"feladatként, amelyet megállás nélkül nyomtat ki ([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"Az ablak feletti sávban lévő [[ui:Stop]] az éppen nyomtatott címke után "
-"befejezi a sorozatot; az első címke mindig kinyomtatódik."
+"A [[ui:Stop]] az ablak feletti sávban a sorozatot a most nyomtatott címke "
+"után fejezi be (cab nyomtatón: a most nyomtatott feladat után); az első "
+"címke mindig kinyomtatódik."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4480,19 +4430,14 @@ msgstr "Áttekintés { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"Egyetlen kis szolgáltatás: egy REST API (és MCP MI-asszisztensek számára) a "
-"8790-es porton. Maga jeleníti meg a címkéket, és a hálózaton küldi el a "
-"nyomtatóknak; nincs asztal, nincs böngésző, nincs adatbázis."
+"Egy kis szolgáltatás: REST API (és MCP MI-asszisztensekhez) a 8790-es "
+"porton. Maga rendereli a címkéket, és a hálózaton át küldi a nyomtatóknak; "
+"asztali környezet és adatbázis nélkül."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4502,6 +4447,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Weboldal ugyanazon a címen embereknek: bejelentkezés tokennel, a nyomtatók "
+"megtekintése, sablon vagy sorozat nyomtatása (CSV-, XLSX- vagy ODS-fájlból, "
+"beillesztett listából vagy számtartományokból, például 3000–5685), sablonok "
+"feltöltése és törlése admin tokennel. A `--no-web-ui` kikapcsolja."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4969,6 +4918,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Minden nyomtató az állapotával szerepel; `UNREACHABLE` üzenettel, ha\n"
+"  a szerver nem éri el.\n"
+"- Nyissa meg a `http://127.0.0.1:8790/` címet böngészőben a szerveren (mások\n"
+"  a proxy címét használják, lásd [Fordított proxy](#proxy)), és jelentkezzen be\n"
+"  tokennel: a weboldal azt mutatja, amit a szerepköre megenged. Az oldal\n"
+"  a tokent csak a böngészőlapon tartja, amíg a lapot be nem zárják vagy a „Kijelentkezés” meg nem történik.\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5604,7 +5559,7 @@ msgstr "Soha ne tegye a szervert elérhetővé az internetről."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Bejelentkezés OpenID Connecttel { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5615,6 +5570,11 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Az emberek a szervezetük identitásszolgáltatójával (Keycloak, Authentik, "
+"Microsoft Entra ID, Okta …) jelentkezhetnek be a weboldalra hozzáférési "
+"token helyett; a szolgáltatónál lévő szerepköreik lesznek a Tavletta "
+"szerepkörei. A programok továbbra is tokent használnak. HTTPS-t igényel a "
+"fordított proxyn át (nélküle csak a `http://localhost` működik, tesztelésre)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5626,6 +5586,13 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Regisztráljon egy klienst a szolgáltatónál: confidential (titokkal), csak az "
+"authorization code flow, PKCE S256, átirányítási URI `https://"
+"labels.example.com/oidc/callback`, kijelentkezés utáni átirányítási URI "
+"`https://labels.example.com/`. Juttassa el a szerepköröket vagy csoportokat "
+"az ID-tokenbe: Keycloakban egy *User Client Role* (vagy *User Realm Role*) "
+"mapper a kliensen bekapcsolt *Add to ID token* beállítással; az Authentik a "
+"`groups` értéket küldi."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5634,6 +5601,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Tegye a titkot a `config/oidc-secret` fájlba (csak a titok, 600-as mód), és "
+"írja meg a `config/oidc.toml` fájlt (a `cp oidc.example.toml config/"
+"oidc.toml` megjegyzésekkel ellátott kiindulást ad):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5661,6 +5631,11 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Adja hozzá a `\"--oidc\"` és a `\"/config/oidc.toml\"` értéket a "
+"`compose.yaml` fájl `command:` részéhez (natívan: az `ExecStart` részhez, `/"
+"etc/tavletta/...` útvonalakkal), tartsa meg a `--trusted-proxy` kapcsolót, "
+"és indítsa újra. A `--trusted-proxy` mellett a szervernek kell a "
+"`public_url`, nélküle nem indul el."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5669,6 +5644,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"A bejelentkezéshez PyJWT kell, amely a konténerképben, valamint a deb- és "
+"rpm-csomagokban megvan; a Flatpakban nincs, és semmi sem telepíthető bele: a "
+"`--oidc` használatához futtassa a szervert a többi változat egyikéből."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5683,6 +5661,17 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"Az oldal ekkor a „Bejelentkezés: Example ID” feliratot mutatja. Aki nem "
+"rendelkezik egyik szerepkörrel sem, „nincs hozzáférés” üzenetet kap. Egy "
+"munkamenet 8 óráig tart, vagy 60 percig használat nélkül (`session_hours`, "
+"`idle_minutes`); a szolgáltatónál visszavont szerepkör vagy letiltott fiók a "
+"következő bejelentkezéstől számít, ezért tartsa rövidre a munkameneteket "
+"ott, ahol rendszergazdák jelentkeznek be. A `token_login = false` elrejti a "
+"token mezőt az oldalon. A nyomtatók szerepkörönként (`[oidc.printers]`) vagy "
+"egy claim alapján (`printers_claim`) korlátozhatók. Minden kulcs és a "
+"biztonsági részletek: [docs/server.md](https://git.joshuahirsig.xyz/joshii/"
+"tavletta/src/branch/main/docs/server.md#signing-in-with-openid-connect-"
+"oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5830,6 +5819,10 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"`--oidc` esetén: a `public_url` beállítva, a kliens confidential PKCE-vel, "
+"csak azok a szerepkörök, amelyekre az embereknek szükségük van, rövid "
+"munkamenetek ott, ahol rendszergazdák jelentkeznek be, az `oidc-secret` 600-"
+"as módban."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5837,6 +5830,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Senki sem nyomtat böngészőből: `--no-web-ui` (a weboldal a betöltéshez nem "
+"kér tokent, de token nélkül nem mutat semmit)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5872,24 +5867,7 @@ msgstr "Hibaelhárítás { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5913,7 +5891,7 @@ msgstr ""
 "|---|---|\n"
 "| Egy nyomtató `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | A szerver nem éri el: tesztelje a szerverről az `nc -vz <printer> 9100` paranccsal (631 IPP-hez); ellenőrizze a címet, a tűzfalat és azt, hogy a nyomtató be van-e kapcsolva. Dockerben a konténernek el kell érnie a nyomtató hálózatát. |\n"
 "| `401 unauthorized` | A token hiányzik, el van gépelve, lejárt, vagy el lett távolítva a `tokens.toml` fájlból. A fejléc `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Tíz hibás token erről a címről egy percen belül: javítsa a tokent, várjon egy percet. |\n"
+"| `429 too_many_requests` | Tíz hibás token erről a címről egy percen belül: javítsa a tokent, várjon egy percet. A `--trusted-proxy` nélkül megadott fordított proxy mögött mindenki a proxy címét osztja. |\n"
 "| `429 queue_full` | 100 feladat (tokenenként 20) vár: a nyomtató lassú vagy leállt; ellenőrizze, próbálja később újra. |\n"
 "| `503 busy` | Minden kérés- vagy megjelenítési hely egy pillanatra foglalt: próbálja újra egy-két másodperc múlva. |\n"
 "| `404 printer_not_found` | Nincs a `printers.toml` fájlban, vagy a token nem használhatja (`--printer`). |\n"
@@ -5923,6 +5901,7 @@ msgstr ""
 "| `other_labels_loaded` a figyelmeztetésekben | A nyomtatóban más címkék vannak, mint a címkéé: töltse be a megfelelő tekercset, vagy ellenőrizze a címke méretét és hézagát. Egy ZPL-nyomtató jelenthet egy korábbi tekercsen mért távolságot: kalibrálja. |\n"
 "| `409 counter_not_saved` | A címkefájl nem írható a szerver felhasználója számára: állítsa a tulajdonosát a felhasználóra `chown`-nal (Docker: 1000, natív: `tavletta`). |\n"
 "| A címkék dátuma vagy ideje egy-két órát téved | A konténer UTC-ben fut: állítsa be a `TAVLETTA_TZ=Europe/Zurich` értéket a `.env` fájlban, majd `docker compose up -d`. |\n"
+"| „A bejelentkezés nem sikerült” a weboldalon | A napló megmondja az okát: a szolgáltató nem érhető el, az átirányítási URI vagy a titok hibás a szolgáltatónál, vagy az oldalt sima HTTP-n érik el (állítsa be a `public_url` értéket, `--trusted-proxy`). „Nincs hozzáférés”: a szerepkörök nem jutnak el az ID-tokenbe (hiányzik egy mapper), vagy egyik sincs hozzárendelve a `[oidc.roles]` alatt. |\n"
 "| A szerver nem indul | `docker compose logs` vagy `journalctl -u tavletta-server`: a `printers.toml` vagy `tokens.toml` hibáját a kulcsával együtt megnevezi. |\n"
 "| Hozzáférés megtagadva a mappákhoz (Fedora, RHEL SELinuxszal és Podmannal) | Adjon `:Z`-t a `compose.yaml` kötetekhez. |\n"
 
@@ -5934,21 +5913,16 @@ msgstr "Nyomtatószerver"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Más programok és MI-asszisztensek ablak megnyitása nélkül nyomtathatnak "
-"címkéket a Tavlettán keresztül: a `tavletta serve` webes felületet kínál "
-"programoknak (REST API), a `tavletta mcp` MI-asszisztenseket, például a "
-"Claude-ot köti be."
+"Más programok, MI-asszisztensek és böngészőben dolgozó emberek az ablak "
+"megnyitása nélkül is nyomtathatnak címkéket a Tavlettán át: a `tavletta "
+"serve` weboldalt kínál embereknek és webes felületet programoknak (REST "
+"API), a `tavletta mcp` MI-asszisztenseket, például a Claude-ot köti be."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6013,6 +5987,8 @@ msgstr ""
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
+"Nyissa meg a `http://127.0.0.1:8790/` címet böngészőben: a [weboldal](#web-"
+"page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6087,13 +6063,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6103,10 +6072,12 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "A `method` a [[ui:Print method]] (`printer`, `transfer`, `direct`), az "
-"`upside_down` a [[ui:Print upside down]]; további beállítások a `quality`, "
-"`chain`, `high_res`, `feed_mm`, `darkness`, `media` és `outlines`, lásd "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/"
-"main/docs/server.md#printers)."
+"`upside_down` a [[ui:Print upside down]], az `offset_mm` a [[ui:Print "
+"offset]] (−5-től 5-ig), a `labels_per_job` a [[ui:Labels per job]] (1-től "
+"1000-ig, alapértelmezés szerint 250); továbbiak: `quality`, `chain`, "
+"`high_res`, `feed_mm`, `darkness`, `media` és `outlines`, lásd [docs/"
+"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#printers)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6217,17 +6188,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"A `preview` csak listáz és előnézeteket mutat, a `print` nyomtat is és "
-"követi a saját feladatait, az `admin` minden feladatot lát és megszakít."
+"A `preview` csak listáz és előnézeteket mutat, a `print` nyomtat is, és "
+"követi a saját feladatait, az `admin` látja és megszakítja az összes "
+"feladatot, valamint sablonokat tölt fel és töröl."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6249,10 +6217,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Képek { #images }"
+msgstr "Weboldal { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6260,6 +6227,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"A szerver saját oldala a címén (`http://127.0.0.1:8790/`, vagy a [fordított "
+"proxy](server-install.md#proxy) címe):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6269,12 +6238,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Bejelentkezés** hozzáférési tokennel (token nélküli szerveren nincs mibe "
+"bejelentkezni). A böngésző csak ezen a lapon tartja meg; a „Kijelentkezés” "
+"elfelejteti. Ahol a szerver be van állítva rá, a „Bejelentkezés: …” helyette "
+"a szervezet fiókját használja ([OpenID Connect](server-install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Nyomtatók**: az állapotuk, a betöltött címkék vagy szalag és a problémák, "
+"szavakkal."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6286,11 +6261,17 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Sablonok**: a címkemappa címkefájljai előnézettel. Az adatmezők a sablon "
+"adatfájljának első sorát mutatják, vagy mintaértékeket, ha nincs ilyen, vagy "
+"hiányzik. A „Nyomtatás” kitölti egy címke mezőit, és gépelés közben mutatja "
+"az előnézetet; a mező által kitöltött elemek körvonallal jelennek meg benne. "
+"`admin` tokennel itt tölthetők fel (`.tavletta` fájlok) és törölhetők a "
+"sablonok."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Sorozat**, lépésről lépésre:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6298,6 +6279,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Adatok: egy CSV-, XLSX- vagy ODS-fájl, egy táblázatkezelőből beillesztett "
+"lista, vagy egyáltalán nincs adat. A kezdő nullák megmaradnak (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6307,6 +6290,11 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Hozzárendelés: melyik oszlop melyik sablonmezőt tölti ki (az azonos nevek "
+"már hozzá vannak rendelve, a kis- és nagybetűktől és a szóközöktől "
+"eltekintve). Az első címke mellette látható előnézete körvonalazza a "
+"használt mezőt; minden mező mutatja az értékét, minden oszlop az első "
+"értékeit."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6316,6 +6304,11 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Kiválasztás: minden sor, néhány sor (`1-20, 25, 30-`), vagy egy mező "
+"tartományai szerint. Adatok nélkül a tartományok adják az értékeket: a "
+"Leltári szám `3000`-től `5685`-ig 2686 címke, a `00300`-tól `00450`-ig "
+"megtartja a nullákat, egy lépésköz minden második vagy tizedik számot adja; "
+"a `3000-5685` egyben beírható vagy beilleszthető."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6323,6 +6316,8 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Ellenőrzés: a címkék száma, az első és az utolsó, a szerver és a nyomtató "
+"korlátai."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6332,6 +6327,11 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"Nyomtatás: 100 címkétől kezdve az oldal előbb rákérdez. Az előrehaladás "
+"mutatja, hány van kinyomtatva; a Mégse a most nyomtatott címke után áll le "
+"(cab nyomtató: a most folyó, legfeljebb [[ui:Labels per job]] címkés feladat "
+"után). Megszakítás vagy nyomtatóhiba után a „Folytatás innen: …” kinyomtatja "
+"a többit."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6340,11 +6340,16 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"Az oldal a böngésző nyelvén beszél, vagy azon, amelyet felül választottak: "
+"az alkalmazás minden nyelvén, az arab jobbról balra. Az időpontok 24 órás "
+"órával jelennek meg."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"A `--no-web-ui` kikapcsolja az oldalt azoknak a szervereknek, amelyeket csak "
+"programok használnak."
 
 #. type: Title ##
 #: docs/server.md
@@ -6379,17 +6384,14 @@ msgstr "A `POST /api/v1/preview` a címkét PNG-képként adja vissza."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "A `POST /api/v1/print` sorba állít egy nyomtatási feladatot; a `GET /api/v1/"
-"jobs/<id>` megmutatja az állapotát, a `DELETE` két címke között megszakítja."
+"jobs/<id>` mutatja az állapotát, a `DELETE` két címke között megszakítja "
+"(cab nyomtató: egy sorozat két feladata között)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6599,16 +6601,12 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"Az `1.1.2` egy kiadás, az `1.1` az 1.1 legutóbbi hibajavító kiadása, a "
-"`latest` a legutóbbi kiadás. Az `edge` a fejlesztési állapot, nem kiadás."
+"Az `1.2.1` egy kiadás, az `1.2` az 1.2 legutóbbi hibajavító kiadása, a "
+"`latest` a legújabb kiadás. Az `edge` a fejlesztés állapota, nem kiadás."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -7307,7 +7305,7 @@ msgstr ""
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Elrendezés az előnézetben { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7315,6 +7313,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"A szabad elrendezésben az elemek az előnézetben egérrel, ujjal vagy tollal "
+"rendezhetők:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7325,6 +7325,12 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Kattintson egy elemre a kijelöléséhez; megnyílik a sora a [[ui:Content]] "
+"alatt. Kattintson Shifttel vagy Ctrl-lal, hogy egy elemet hozzáadjon a "
+"kijelöléshez vagy kivegyen belőle. Húzzon egy üres részen át, hogy kijelölje "
+"az összes elemet, amelyet a kijelölőkeret érint (Alt nyomva tartva: csak a "
+"benne lévőket). Egy üres részre kattintás nem jelöl ki semmit. Egy elem "
+"sorának megnyitása is kijelöli azt."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7335,6 +7341,12 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Húzza a kijelölést az áthelyezéshez. Hozzáigazodik a címke széleihez és "
+"közepéhez, valamint a többi elem széleihez és közepeihez; egy piros vonal "
+"mutatja, hol. Tartsa nyomva az Altot vagy a Ctrl-t, hogy szabadon elhelyezze "
+"(egyes asztali környezetek mozgatják az ablakot, ha húzáskor Alt van nyomva: "
+"ilyenkor használja a Ctrl-t). Tartsa nyomva a Shiftet, hogy csak egy tengely "
+"mentén mozgassa. Az Escape húzás közben visszateszi."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7345,6 +7357,12 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Egyetlen kijelölt elemnek fogópontjai vannak a sarkain és a szélein: húzzon "
+"meg egyet az átméretezéshez. Egy vonal vagy alakzat külön változtatja a "
+"szélességét és a magasságát (a Shift megtartja az arányait); a szöveg, a "
+"kép, a szimbólum és a QR-kód megtartja az arányait; a vonalkód hosszabb "
+"sávokat vagy szélesebb modulokat kap. A szállítási címkét csak mozgatni "
+"lehet."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7354,6 +7372,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"Az [[ui:Arrange]] a fejlécsávban igazítja a kijelölt elemeket: egy elemet a "
+"címke szélére vagy közepére, többet egymáshoz. Három vagy több elemet "
+"egyenletesen oszt el ([[ui:Distribute]]), be- és kikapcsolja a rögzítést "
+"([[ui:Snap to guides]]), és rácsot ad, amelyhez igazodni lehet."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7363,6 +7385,11 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Ha az előnézet fókuszban van (kattintson rá, vagy Tabbal lépjen rá), a "
+"nyílbillentyűk 0,1 mm-rel mozgatják a kijelölést, Shifttel 1 mm-rel; a "
+"Delete eltávolítja; a Ctrl+A az összes elemet kijelöli, a Shift+Ctrl+A és az "
+"Escape egyiket sem. A méretek az elem sorában és a [[ui:Position and size]] "
+"oldalán állíthatók."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7370,6 +7397,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Minden húzás, minden átméretezés és a nyílbillentyű-lenyomások sorozata egy "
+"[[ui:Undo]] lépés, az oldalsávban végzett módosításokkal felváltva."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7377,6 +7406,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"Az [[ui:One after another]] elrendezésben az elemek kijelölhetők, de nem "
+"mozgathatók: egy elem húzása a [[ui:Use free layout]] lehetőséget kínálja."
 
 #. type: Title ##
 #: docs/use.md
@@ -7539,6 +7570,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Ha az előnézet fókuszban van: a nyílbillentyűk a kijelölt elemeket mozgatják "
+"(Shift: 1 mm-rel), a Delete eltávolítja őket, a Ctrl+A és a Shift+Ctrl+A "
+"mindet vagy egyiket sem jelöli ki ([lásd fent](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

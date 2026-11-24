@@ -481,10 +481,6 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
@@ -492,7 +488,9 @@ msgid ""
 "`job_finished` if it had finished already."
 msgstr ""
 "Un lavoro in coda viene annullato subito; uno in stampa si ferma dopo "
-"l'etichetta in corso. 409 `job_finished` se era già terminato."
+"l'etichetta in corso. Una stampante cab stampa una serie in lavori di al "
+"massimo `labels_per_job` etichette (250 per impostazione predefinita): si "
+"ferma dopo il lavoro in corso. 409 `job_finished` se era già terminato."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -948,57 +946,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1064,7 +1012,7 @@ msgstr ""
 "| 400 | `unknown_field` | Un campo che la richiesta non prevede (un errore di battitura): non viene eseguito nulla. |\n"
 "| 400 | `no_label` | Indicare label oppure label_content. |\n"
 "| 400 | `data_conflict` | Indicare data_rows oppure data_file, non entrambi. |\n"
-"| 400 | `data_column` | set indica un `{segnaposto}`: una colonna di dati, da inviare in data_rows. |\n"
+"| 400 | `data_column` | set indica un `{placeholder}`: una colonna di dati, da inviare in data_rows. |\n"
 "| 400 | `no_rows` | rows non seleziona alcuna riga di dati. |\n"
 "| 400 | `no_data` | sheet senza un file di dati. |\n"
 "| 400 | `no_printer` | Più stampanti e nessuna predefinita: indicarne una in printer. |\n"
@@ -1085,6 +1033,10 @@ msgstr ""
 "| 408 | `timeout` | L'invio della richiesta ha richiesto più di 30 s. |\n"
 "| 409 | `job_finished` | Il lavoro è terminato: nulla da annullare. |\n"
 "| 409 | `counter_not_saved` | Il file dell'etichetta non è scrivibile: non è stato stampato nulla. |\n"
+"| 409 | `label_exists` | Esiste già un'etichetta con questo nome: caricarla con replace=true. |\n"
+"| 409 | `label_in_use` | Lavori dell'etichetta sono in attesa o in stampa: riprovare quando sono terminati. |\n"
+"| 409 | `label_changed` | Il file dell'etichetta è stato sostituito durante il controllo della richiesta. |\n"
+"| 409 | `label_locked` | Una stampa dell'etichetta trattiene il file: riprovare quando è terminata. |\n"
 "| 411 | `length_required` | Nessun Content-Length (i corpi a blocchi non sono accettati). |\n"
 "| 413 | `too_large` | Corpo oltre `--max-body`, oppure troppe righe, colonne o celle di dati. |\n"
 "| 413 | `too_many_labels` | Copie per righe oltre `--max-labels` (10000 per impostazione predefinita); sui fogli di etichette oltre 999. |\n"
@@ -1103,15 +1055,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Dieci token errati da questo indirizzo: attendere un minuto. |\n"
 "| 429 | `queue_full` | Troppi lavori in attesa: riprovare più tardi. |\n"
 "| 500 | `internal` | Un errore del server; viene registrato nel log. |\n"
+"| 500 | `not_saved` | Impossibile scrivere nella cartella delle etichette (507: è piena). |\n"
+"| 500 | `not_deleted` | Impossibile eliminare il file dell'etichetta (una cartella di sola lettura). |\n"
 "| 502 | `printer_<code>` | La stampante non è raggiungibile o segnala un problema. |\n"
 "| 503 | `busy` | Tutti gli slot di richiesta o di rendering sono occupati: riprovare tra un momento. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: il problema della stampante, uno tra `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: il problema della stampante, uno tra `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1196,20 +1149,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1232,14 +1172,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | nessuno | Verifica se il server è in esecuzione; non serve alcun token (per i controlli di stato) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | Questa descrizione (OpenAPI 3.1); un token di qualsiasi ruolo |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | Il nome, il ruolo e le stampanti del token, e i limiti di una richiesta (per la pagina web) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | Le stampanti di `printers.toml` che il token può usare, con il loro stato; senza di esso i modelli di stampante, l'indirizzo impostato per ciascuno e le stampanti trovate (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Interroga una stampante sul suo stato: supporto, problemi, risoluzione |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | I file di etichette nella cartella delle etichette e nelle sue sottocartelle |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Con che cosa si può compilare un'etichetta: elementi, variabili, colonne di dati, dimensione, contatore |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Caricare un file di etichetta (admin): controllato come lo apre l'app, poi inserito nella cartella delle etichette in un unico passaggio |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Eliminare un file di etichetta (admin); il suo file di dati resta |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Leggere un file di dati inviato con la richiesta (CSV, ODS, XLSX) come lo legge l'app: le sue righe per data_rows; non viene conservato nulla |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | L'etichetta compilata, come immagine; non viene stampato nulla |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Stampa: la richiesta viene controllata, poi messa in coda; ogni stampante esegue un lavoro alla volta |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Stato di un lavoro di stampa (un token print: i propri lavori; admin: tutti). Conservato 24 ore dopo la fine |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Annulla un lavoro: subito se è in attesa, dopo l'etichetta in corso se è in stampa |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Annullare un lavoro: subito finché è in attesa, dopo le etichette già inviate alla stampante mentre è in stampa (cab: il lavoro di al massimo labels_per_job etichette) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1315,10 +1259,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1326,14 +1269,12 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"Il nome, il ruolo e le stampanti del token, e i limiti di una richiesta (per "
+"la pagina web)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1341,7 +1282,7 @@ msgid ""
 msgstr ""
 "| Stato | Risposta | Codici |\n"
 "|---|---|---|\n"
-"| 200 | Etichette |  |\n"
+"| 200 | Chi |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1545,10 +1486,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1556,21 +1496,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Caricare un file di etichetta (admin): controllato come lo apre l'app, poi "
+"inserito nella cartella delle etichette in un unico passaggio."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Ruolo: `print`"
+msgstr "Ruolo: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1579,12 +1515,13 @@ msgid ""
 msgstr ""
 "| Parametro | In | Significato |\n"
 "|---|---|---|\n"
-"| `name` | path | Può contenere barre per le sottocartelle; '`.tavletta`' può essere omesso. |\n"
+"| `name` | path | Il nome del file, senza cartella; '`.tavletta`' può essere omesso. |\n"
+"| `replace` | query | Sostituire un'etichetta con questo nome. Predefinito `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Corpo: il contenuto di un file `.tavletta`."
 
 #. type: Plain text
 #: docs/api.md
@@ -1600,6 +1537,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Stato | Risposta | Codici |\n"
+"|---|---|---|\n"
+"| 200 | Sostituita (replace=true) |  |\n"
+"| 201 | Aggiunta |  |\n"
+"| 400 | Non è un nome valido per una nuova etichetta: lettere, cifre, spazi e . _ - ( ) + , (fino a 100), nella cartella stessa | `invalid_field`, `not_json` |\n"
+"| 409 | Esiste già un'etichetta con questo nome (inviare replace=true), lavori dell'etichetta sono in attesa o in stampa (label_in_use), oppure la stampa di un altro programma trattiene il file | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Oltre `--max-body`, oppure etichetta troppo grande per essere resa | `too_large`, `label_too_large` |\n"
+"| 422 | Non è un'etichetta che Tavletta possa aprire | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | Nessuno spazio libero nella cartella delle etichette | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1614,26 +1560,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Eliminare un file di etichetta (admin); il suo file di dati resta."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1644,10 +1582,10 @@ msgid ""
 msgstr ""
 "| Stato | Risposta | Codici |\n"
 "|---|---|---|\n"
-"| 200 | Etichetta |  |\n"
+"| 204 | Eliminata |  |\n"
 "| 400 | Non è un nome all'interno della cartella delle etichette | `invalid_field` |\n"
 "| 404 | Etichetta inesistente | `label_not_found` |\n"
-"| 422 | Il file non è un'etichetta oppure è danneggiato | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | Lavori dell'etichetta sono in attesa o in stampa (label_in_use), oppure la stampa di un altro programma trattiene il file | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1660,10 +1598,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1671,6 +1608,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"Leggere un file di dati inviato con la richiesta (CSV, ODS, XLSX) come lo "
+"legge l'app: le sue righe per data_rows; non viene conservato nulla."
 
 #. type: Plain text
 #: docs/api.md
@@ -1688,17 +1627,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Campo | Tipo | Significato |\n"
+"|---|---|---|\n"
+"| `content` | string | Il file: CSV (qualsiasi delimitatore, UTF-8, UTF-16 o Windows-1252), ODS o XLSX, distinti dal contenuto. Un testo incollato è un file CSV. |\n"
+"| `name` | string | Il nome del file, per i messaggi. |\n"
+"| `sheet` | string | ODS, XLSX: il foglio (per impostazione predefinita il primo). |\n"
+"| `header` | boolean | false: anche la prima riga è di dati; le colonne si chiamano A, B, C … Predefinito `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1708,10 +1646,9 @@ msgid ""
 msgstr ""
 "| Stato | Risposta | Codici |\n"
 "|---|---|---|\n"
-"| 200 | Etichetta |  |\n"
-"| 400 | Non è un nome all'interno della cartella delle etichette | `invalid_field` |\n"
-"| 404 | Etichetta inesistente | `label_not_found` |\n"
-"| 422 | Il file non è un'etichetta oppure è danneggiato | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | Le righe |  |\n"
+"| 400 | Richiesta non valida | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Non è una tabella, è danneggiato o vuoto | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1859,18 +1796,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1889,7 +1815,7 @@ msgstr ""
 "| 202 | In coda o in stampa; seguirlo tramite Location |  |\n"
 "| 400 | Richiesta non valida | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Etichetta, stampante o file di dati inesistente, oppure una stampante che il token non può usare | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | Il file dell'etichetta non è scrivibile: il valore successivo del contatore non ha potuto essere salvato, non è stato stampato nulla | `counter_not_saved` |\n"
+"| 409 | Il file dell'etichetta non è scrivibile: non è stato possibile salvare il valore successivo del contatore, non è stato stampato nulla; oppure è stato sostituito durante il controllo della richiesta (label_changed): inviarla di nuovo | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Troppo grande: corpo, righe di dati, etichette in un lavoro o etichetta da renderizzare | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | L'etichetta verrebbe stampata in modo errato | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Troppi token errati, oppure troppi lavori in attesa (100 in totale, 20 per token con nome) | `too_many_requests`, `queue_full` |\n"
@@ -1961,26 +1887,17 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Annulla un lavoro: subito se è in attesa, dopo l'etichetta in corso se è in "
-"stampa."
+"Annullare un lavoro: subito finché è in attesa, dopo le etichette già "
+"inviate alla stampante mentre è in stampa (cab: il lavoro di al massimo "
+"labels_per_job etichette)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1990,7 +1907,7 @@ msgid ""
 msgstr ""
 "| Stato | Risposta | Codici |\n"
 "|---|---|---|\n"
-"| 202 | Annullato, oppure in arresto dopo l'etichetta in corso |  |\n"
+"| 202 | Annullato, oppure in arresto dopo le etichette già inviate |  |\n"
 "| 404 | Lavoro inesistente | `job_not_found` |\n"
 "| 409 | Già terminato | `job_finished` |\n"
 
@@ -2017,27 +1934,7 @@ msgstr "Lavoro { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2069,7 +1966,8 @@ msgstr ""
 "| `host` | string | L'indirizzo della stampante. |\n"
 "| `owner` | string or null | Nome del token. |\n"
 "| `label` | string or null | Nome nella cartella delle etichette; null per label_content. |\n"
-"| `printed` | integer | Etichette stampate finora. |\n"
+"| `printed` | integer | Etichette stampate finora, con certezza; aumenta etichetta per etichetta mentre il lavoro è in stampa, per quanto la stampante lo comunichi. |\n"
+"| `printed_max` | integer or null | Dopo un errore il cui esito la stampante non ha saputo comunicare (la connessione è caduta durante la stampa): possono essere state stampate fino a tante etichette. Il contatore prosegue dopo di esse; rows_printed conta le righe stampate con certezza, quindi ristampare dalla successiva può stampare etichette due volte. null negli altri casi. |\n"
 "| `total` | integer | Etichette da stampare: copie x righe. |\n"
 "| `rows_printed` | integer | Righe di dati stampate per intero: dopo un errore, stampare di nuovo con rows impostato alla successiva (rows_printed + prima riga). |\n"
 "| `cancel_requested` | boolean | È stato inviato DELETE. |\n"
@@ -2088,22 +1986,7 @@ msgstr "Etichetta { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2130,12 +2013,14 @@ msgstr ""
 "| `elements` | array of object |  |\n"
 "| `variables` | array of string | Variabili proprie, `{=lot}`: compilate con 'set'. |\n"
 "| `builtin_variables` | array of string |  |\n"
-"| `columns` | array of string | Segnaposto `{Colonna}`: le chiavi di data_rows. |\n"
+"| `columns` | array of string | Segnaposto `{Column}`: le chiavi di data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file non esiste (più): inviare le righe in data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (l'etichetta ha `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Stampata su fogli di etichette: al massimo 999 etichette in un lavoro. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2222,14 +2107,7 @@ msgstr "Anteprima { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2245,12 +2123,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Ciò che verrebbe stampato in modo errato. other_labels_loaded: la stampante di `printers.toml` segnala etichette caricate diverse da quelle dell'etichetta (la loro dimensione o la distanza misurata tra le etichette). Vale la sua ultima risposta, se risale all'ultimo minuto; un errore equivale a nessuna informazione (viene interrogata di nuovo in background); per una stampante non ancora nota si attende fino a un secondo dopo il rendering dell'etichetta. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Dove si trovano gli elementi nell'immagine; null per view=printer e per un'etichetta ruotata sul suo foglio. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2259,6 +2138,9 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"I riquadri degli elementi nell'immagine di anteprima, in mm dall'angolo in "
+"alto a sinistra (tavletta/editing.py, docs/editing.md); un pixel "
+"dell'immagine è mm * dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2272,13 +2154,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Campo | Tipo | Significato |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Lungo il nastro: la lunghezza. |\n"
+"| `height_mm` | number | In trasversale: altezza del nastro o dell'etichetta. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | La risoluzione dell'immagine. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Immagini { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2294,13 +2182,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Campo | Tipo | Significato |\n"
+"|---|---|---|\n"
+"| `name` | string | Il nome del token in tokens.toml; 'token' per l'unico token di `--token-file`, 'local' senza token; 'oidc:<user>' per chi ha effettuato l'accesso alla pagina web con OpenID Connect. |\n"
+"| `display_name` | string | Il nome di una persona secondo il provider; altrimenti uguale a name. |\n"
+"| `session` | boolean | true: accesso alla pagina web effettuato con OpenID Connect (il suo cookie di sessione), non con un token. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | Le stampanti che il token può usare; null: tutte. |\n"
+"| `token_required` | boolean | false: il server non ha token né `--oidc` (solo loopback). |\n"
+"| `limits` | object | Il massimo che una richiesta può chiedere: etichette in un lavoro (`--max-labels`; sui fogli di etichette al massimo 999), copie, righe, colonne e celle di dati, e il corpo in byte (`--max-body`; anche il file di etichetta più grande da caricare). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Avvio { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2315,6 +2211,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Campo | Tipo | Significato |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: il delimitatore trovato; null per una colonna e per i fogli di calcolo. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | Il foglio letto. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Ogni cella come testo che mostra: zeri iniziali e formati numerici conservati (00300 resta 00300). Le righe senza alcuna cella compilata vengono omesse. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2619,19 +2523,14 @@ msgstr "Prima etichetta"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Accendere la stampante e sceglierla in [[ui:Printer model]]. Tavletta la "
-"trova in rete (Bonjour) e legge che cosa è caricato: la larghezza del nastro "
-"o la distanza tra le etichette."
+"Accendere la stampante e sceglierla in [[ui:Printer model]]: una stampante "
+"trovata via USB o in rete (Bonjour) è in cima all'elenco. Tavletta legge ciò "
+"che è caricato: la larghezza del nastro o la distanza tra le etichette."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2674,6 +2573,13 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Scegliere la stampante in [[ui:Printer model]]; ognuna ha la propria sezione "
+"più sotto. Le stampanti che Tavletta trova via USB e in rete compaiono per "
+"prime in quell'elenco, sotto [[ui:Found]], con il loro modello: scegliendone "
+"una se ne adottano il modello e l'indirizzo. I modelli seguono sotto "
+"[[ui:All models]]. Tavletta le cerca all'apertura della finestra e con "
+"[[ui:Search for printers]], tutti i modelli contemporaneamente, in "
+"background."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2779,6 +2685,17 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (etichette fustellate): la stampante segnala "
+"etichette di un'altra dimensione, oppure ha misurato tra un'etichetta e la "
+"successiva una distanza diversa da altezza più [[ui:Gap]] della propria "
+"etichetta. [[ui:Use loaded labels]] modifica l'etichetta senza ancora "
+"stampare nulla: adotta la dimensione segnalata dalla stampante (Brother QL), "
+"oppure imposta l'altezza lungo il rotolo in modo che altezza più spazio "
+"diano la distanza misurata (cab, Zebra). Spazio e larghezza restano; la "
+"larghezza di stampa di una Zebra è quella impostata dall'ultima stampa, non "
+"la larghezza delle etichette. Dove tale altezza sarebbe inferiore a 5 mm, "
+"viene modificato lo spazio; dove nessuno dei due dà un'etichetta, viene "
+"offerto solo [[ui:Print anyway]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2787,6 +2704,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"Dopo [[ui:Use loaded labels]], controllare l'etichetta nell'anteprima, poi "
+"stampare. [[ui:Undo]] nel messaggio annulla la modifica; il messaggio lo "
+"segnala se ora alcuni elementi oltrepassano il bordo dell'etichetta."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3324,6 +3244,14 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: una stampante che stampa fuori dal posto dell'etichetta "
+"(la stampa risulta un po' più in alto o più in basso su ogni etichetta "
+"rispetto a quanto mostra l'anteprima) viene compensata qui: misurare su "
+"un'etichetta stampata di quanto la stampa è fuori posto e inserirlo, "
+"positivo per abbassare la stampa sulle etichette trasversali al rotolo, "
+"negativo per alzarla. L'anteprima continua a mostrare l'etichetta come deve "
+"uscire; si sposta solo ciò che viene inviato alla stampante. Il contenuto "
+"entro questa distanza dal bordo verso cui si sposta la stampa viene tagliato."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3335,6 +3263,13 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: le etichette di una serie vanno insieme alla "
+"stampante, fino a questo numero (250 per impostazione predefinita, da 1 a "
+"1000) in un lavoro, e scorrono senza fermarsi tra l'una e l'altra. "
+"[[ui:Stop]] ha effetto tra due lavori: un lavoro già iniziato viene stampato "
+"per intero. 1 invia ogni etichetta come lavoro a sé, come le ricevono le "
+"altre stampanti. Le etichette il cui contenuto cambia da copia a copia vanno "
+"sempre una per una."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3349,12 +3284,6 @@ msgstr "Problemi { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3362,11 +3291,12 @@ msgid ""
 "once after changing the roll so it measures again, then [[ui:Use loaded "
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
-"[[ui:Different labels loaded]]: la stampante ha misurato una distanza tra le "
-"etichette diversa da altezza più spazio della vostra etichetta. Controllare "
-"[[ui:Label size]] e [[ui:Gap]], oppure caricare il rotolo giusto. Dopo aver "
-"cambiato il rotolo premere una volta Feed sulla stampante, in modo che "
-"misuri di nuovo."
+"[[ui:Different labels loaded]]: la stampante ha misurato tra le etichette "
+"una distanza diversa da altezza più spazio della propria etichetta. "
+"Controllare [[ui:Label size]] e [[ui:Gap]], oppure caricare il rotolo "
+"giusto. Premere una volta Feed sulla stampante dopo aver cambiato il rotolo, "
+"in modo che misuri di nuovo, poi [[ui:Use loaded labels]] vi adatta "
+"l'etichetta ([Tutte le stampanti](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3376,6 +3306,11 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Tutto viene stampato un po' troppo in alto o troppo in basso, allo stesso "
+"modo su ogni etichetta, mentre l'anteprima lo mostra al suo posto: impostare "
+"[[ui:Print offset]]. Un'etichetta impostata in un altro programma per "
+"compensare questo viene stampata fuori posto nell'anteprima; rimettere il "
+"suo contenuto al suo posto e impostare invece lo spostamento."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3426,6 +3361,9 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Memoria esaurita: la stampante non aveva spazio per le etichette di un "
+"lavoro. Ridurre [[ui:Labels per job]], poi stampare di nuovo dalla riga "
+"indicata dal messaggio."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3439,6 +3377,15 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"«Il lavoro è stato inviato, ma il suo esito è sconosciuto»: la connessione "
+"alla stampante si è interrotta durante la stampa (oppure la stampante non ha "
+"saputo dire fino a dove era arrivata). Tavletta conta le etichette che sa "
+"stampate; la stampante può averne stampate di più. Controllare le etichette "
+"uscite: ristampare dalla riga indicata dal messaggio può stamparne alcune "
+"due volte, ma non ne omette nessuna. Se l'interfaccia web della stampante è "
+"raggiungibile in rete (impostazione predefinita), Tavletta confronta il "
+"numero anche con il contatore di etichette della stampante; se i due "
+"differiscono, il messaggio indica l'intervallo."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4078,6 +4025,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): la stampante segnala l'ultima "
+"distanza misurata, magari con un rotolo precedente. Dopo aver cambiato il "
+"rotolo, lasciarle misurare di nuovo le etichette (la maggior parte delle "
+"stampanti lo fa con una pressione lunga su Feed) prima di usare [[ui:Use "
+"loaded labels]] ([Tutte le stampanti](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4419,20 +4371,21 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Ogni etichetta è un lavoro di stampa a sé, quindi funziona con ogni "
+"stampante. Una stampante cab riceve fino a [[ui:Labels per job]] etichette "
+"come un unico lavoro, che stampa senza fermarsi tra l'una e l'altra ([cab]"
+"(printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
 "[[ui:Stop]] nella barra sopra la finestra termina la serie dopo l'etichetta "
-"in corso di stampa; la prima etichetta viene sempre stampata."
+"in stampa (su una stampante cab: dopo il lavoro in corso); la prima "
+"etichetta viene sempre stampata."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4506,19 +4459,14 @@ msgstr "Panoramica { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
 "Un piccolo servizio: un'API REST (e MCP per gli assistenti IA) sulla porta "
-"8790.  Esegue da solo il rendering delle etichette e le invia alle stampanti "
-"in rete; nessun desktop, nessun browser, nessun database."
+"8790. Rende da sé le etichette e le invia alle stampanti attraverso la rete; "
+"senza desktop, senza database."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4528,6 +4476,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Una pagina web allo stesso indirizzo per le persone: accedere con un token, "
+"vedere le stampanti, stampare un modello o una serie (da un file CSV, XLSX o "
+"ODS, da un elenco incollato o da intervalli di numeri come 3000–5685), "
+"caricare ed eliminare modelli con un token admin. `--no-web-ui` la disattiva."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4999,6 +4951,13 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Ogni stampante è elencata con il suo stato; `UNREACHABLE` con un messaggio se\n"
+"  il server non riesce a raggiungerla.\n"
+"- Aprire `http://127.0.0.1:8790/` in un browser sul server (gli altri usano\n"
+"  l'indirizzo del proxy, vedere [Reverse proxy](#proxy)) e accedere con un\n"
+"  token: la pagina web mostra ciò che il suo ruolo consente. La pagina tiene\n"
+"  il token solo nella scheda del browser, finché la scheda non viene chiusa o\n"
+"  con «Esci».\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5630,7 +5589,7 @@ msgstr "Non rendere mai il server raggiungibile da Internet."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Accedere con OpenID Connect { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5641,6 +5600,12 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Le persone possono accedere alla pagina web con il provider di identità "
+"della propria organizzazione (Keycloak, Authentik, Microsoft Entra ID, Okta "
+"…) invece che con un token di accesso; i loro ruoli presso il provider "
+"diventano i ruoli di Tavletta. I programmi continuano a usare i token. Serve "
+"HTTPS tramite il reverse proxy (senza, funziona solo `http://localhost`, per "
+"i test)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5652,6 +5617,12 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Registrare un client presso il provider: confidenziale (con un secret), solo "
+"il flusso authorization code, PKCE S256, URI di reindirizzamento `https://"
+"labels.example.com/oidc/callback`, URI di reindirizzamento dopo il logout "
+"`https://labels.example.com/`. Far arrivare i ruoli o i gruppi nell'ID "
+"token: in Keycloak un mapper *User Client Role* (o *User Realm Role*) sul "
+"client con *Add to ID token* attivo; Authentik invia `groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5660,6 +5631,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Mettere il secret in `config/oidc-secret` (solo il secret, modalità 600) e "
+"scrivere `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` dà un "
+"punto di partenza commentato):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5687,6 +5661,10 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Aggiungere `\"--oidc\"` e `\"/config/oidc.toml\"` a `command:` in "
+"`compose.yaml` (nativo: a `ExecStart`, con `/etc/tavletta/...`), mantenere "
+"`--trusted-proxy` e riavviare. Con `--trusted-proxy` il server ha bisogno di "
+"`public_url` e senza non si avvia."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5695,6 +5673,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"L'accesso richiede PyJWT, che l'immagine del container e i pacchetti deb e "
+"rpm contengono; il Flatpak no, e al suo interno non si può installare nulla: "
+"per `--oidc` avviare il server da una delle altre varianti."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5709,6 +5690,16 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"La pagina mostra allora «Accedi con Example ID». Chi non ha uno dei ruoli "
+"riceve «nessun accesso». Una sessione dura 8 ore, o 60 minuti senza utilizzo "
+"(`session_hours`, `idle_minutes`); un ruolo rimosso o un account disattivato "
+"presso il provider vale dal successivo accesso, quindi tenere brevi le "
+"sessioni dove accedono gli amministratori. `token_login = false` nasconde il "
+"campo del token nella pagina. Le stampanti possono essere limitate per ruolo "
+"(`[oidc.printers]`) o tramite un claim (`printers_claim`). Ogni chiave e i "
+"dettagli di sicurezza: [docs/server.md](https://git.joshuahirsig.xyz/joshii/"
+"tavletta/src/branch/main/docs/server.md#signing-in-with-openid-connect-"
+"oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5859,6 +5850,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"Con `--oidc`: `public_url` impostato, il client confidenziale con PKCE, solo "
+"i ruoli di cui le persone hanno bisogno, sessioni brevi dove accedono gli "
+"amministratori, `oidc-secret` in modalità 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5866,6 +5860,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Nessuno stampa da un browser: `--no-web-ui` (la pagina web non ha bisogno di "
+"un token per caricarsi, ma senza non mostra nulla)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5901,24 +5897,7 @@ msgstr "Risoluzione dei problemi { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5942,7 +5921,7 @@ msgstr ""
 "|---|---|\n"
 "| Una stampante è `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | Il server non riesce a raggiungerla: provare dal server con `nc -vz <printer> 9100` (631 per IPP); controllare l'indirizzo, il firewall, che la stampante sia accesa. In Docker il container deve raggiungere la rete della stampante. |\n"
 "| `401 unauthorized` | Token mancante, scritto in modo errato, scaduto o rimosso da `tokens.toml`. L'intestazione è `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Dieci token errati da questo indirizzo entro un minuto: correggere il token, attendere un minuto. |\n"
+"| `429 too_many_requests` | Dieci token errati da questo indirizzo entro un minuto: correggere il token, attendere un minuto. Dietro un reverse proxy non indicato con `--trusted-proxy` tutti condividono l'indirizzo del proxy. |\n"
 "| `429 queue_full` | 100 lavori (20 per token) sono in attesa: la stampante è lenta o ferma; controllarla, riprovare più tardi. |\n"
 "| `503 busy` | Tutti gli slot di richiesta o di rendering sono occupati per un momento: riprovare dopo uno o due secondi. |\n"
 "| `404 printer_not_found` | Non è in `printers.toml`, oppure il token non può usarla (`--printer`). |\n"
@@ -5952,6 +5931,7 @@ msgstr ""
 "| `other_labels_loaded` negli avvisi | Nella stampante sono caricate etichette diverse da quelle dell'etichetta: caricare il rotolo corretto, oppure controllare dimensione e spazio dell'etichetta. Una stampante ZPL può comunicare una distanza misurata su un rotolo precedente: calibrarla. |\n"
 "| `409 counter_not_saved` | Il file dell'etichetta non è scrivibile dall'utente del server: assegnarlo all'utente con `chown` (Docker: 1000, nativo: `tavletta`). |\n"
 "| Data o ora sulle etichette sbagliate di un'ora o due | Il container usa UTC: impostare `TAVLETTA_TZ=Europe/Zurich` in `.env`, poi `docker compose up -d`. |\n"
+"| «L'accesso non ha funzionato» nella pagina web | Il log ne spiega il motivo: il provider non è raggiungibile, l'URI di reindirizzamento o il secret è errato presso il provider, oppure si raggiunge la pagina via HTTP semplice (impostare `public_url`, `--trusted-proxy`). «Nessun accesso»: i ruoli non arrivano nell'ID token (manca un mapper) oppure nessuno è assegnato in `[oidc.roles]`. |\n"
 "| Il server non si avvia | `docker compose logs` o `journalctl -u tavletta-server`: un errore in `printers.toml` o `tokens.toml` viene indicato con la sua chiave. |\n"
 "| Permesso negato sulle cartelle (Fedora, RHEL con SELinux e Podman) | Aggiungere `:Z` ai volumi in `compose.yaml`. |\n"
 
@@ -5963,20 +5943,16 @@ msgstr "Server di stampa"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Altri programmi e assistenti IA possono stampare etichette tramite Tavletta "
-"senza aprire la finestra: `tavletta serve` offre un'interfaccia web per i "
-"programmi (API REST), `tavletta mcp` collega assistenti IA come Claude."
+"Altri programmi, assistenti IA e persone in un browser possono stampare "
+"etichette tramite Tavletta senza aprire la finestra: `tavletta serve` offre "
+"una pagina web per le persone e un'interfaccia web per i programmi (API "
+"REST), `tavletta mcp` collega assistenti IA come Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6040,6 +6016,7 @@ msgstr ""
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
+"Aprire `http://127.0.0.1:8790/` in un browser: la [pagina web](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6115,13 +6092,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6131,9 +6101,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` è il [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` [[ui:Print upside down]]; altre sono `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` e `outlines`, vedere [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"`upside_down` [[ui:Print upside down]], `offset_mm` il [[ui:Print offset]] "
+"(da −5 a 5), `labels_per_job` [[ui:Labels per job]] (da 1 a 1000, 250 per "
+"impostazione predefinita); gli altri sono `quality`, `chain`, `high_res`, "
+"`feed_mm`, `darkness`, `media` e `outlines`, vedere [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
 
 #. type: Bullet: '- '
@@ -6245,17 +6217,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview` elenca soltanto e mostra anteprime, `print` stampa anche e segue i "
-"propri lavori, `admin` vede e annulla tutti i lavori."
+"`preview` elenca e mostra solo anteprime, `print` stampa anche e segue i "
+"propri lavori, `admin` vede e annulla tutti i lavori e carica ed elimina "
+"modelli."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6277,10 +6246,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Immagini { #images }"
+msgstr "Pagina web { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6288,6 +6256,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"La pagina propria del server, al suo indirizzo (`http://127.0.0.1:8790/`, "
+"oppure l'indirizzo del [reverse proxy](server-install.md#proxy)):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6297,12 +6267,19 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Accedere** con un token di accesso (senza token sul server non c'è nulla a "
+"cui accedere). Il browser lo tiene solo in questa scheda; «Esci» lo "
+"dimentica. Dove il server è configurato per questo, «Accedi con …» usa "
+"invece l'account della propria organizzazione ([OpenID Connect](server-"
+"install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Stampanti**: il loro stato, le etichette o il nastro caricati e i "
+"problemi, a parole."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6314,11 +6291,17 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Modelli**: i file di etichetta della cartella delle etichette con "
+"un'anteprima. I campi dati mostrano la prima riga del file di dati del "
+"modello, oppure valori di esempio se non ne ha o se manca. «Stampa» compila "
+"i campi di un'etichetta e mostra l'anteprima mentre si digita; gli elementi "
+"che un campo compila vi sono evidenziati. Con un token `admin` qui si "
+"caricano (file `.tavletta`) e si eliminano modelli."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Serie**, passo per passo:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6326,6 +6309,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Dati: un file CSV, XLSX o ODS, un elenco incollato da un foglio di calcolo, "
+"oppure nessun dato. Gli zeri iniziali restano (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6335,6 +6320,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Assegnare: quale colonna compila quale campo del modello (i nomi uguali sono "
+"già assegnati, maiuscole e spazi a parte). L'anteprima della prima etichetta "
+"accanto evidenzia il campo in uso; ogni campo mostra il suo valore, ogni "
+"colonna i suoi primi valori."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6344,6 +6333,11 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Scegliere: tutte le righe, alcune righe (`1-20, 25, 30-`) oppure per "
+"intervalli di un campo. Senza dati, gli intervalli generano i valori: Numero "
+"di inventario da `3000` a `5685` sono 2686 etichette, da `00300` a `00450` "
+"mantiene gli zeri, un passo genera un numero ogni due o ogni dieci; "
+"`3000-5685` si può digitare o incollare in una volta."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6351,6 +6345,8 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Controllare: il numero di etichette, la prima e l'ultima, i limiti del "
+"server e della stampante."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6360,6 +6356,11 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"Stampare: da 100 etichette in su la pagina chiede prima conferma. "
+"L'avanzamento mostra quante sono state stampate; Annulla si ferma dopo "
+"l'etichetta in corso (stampante cab: dopo il lavoro in corso di al massimo "
+"[[ui:Labels per job]] etichette). Dopo un annullamento o un problema della "
+"stampante, «Continua da …» stampa il resto."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6368,11 +6369,15 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"La pagina parla la lingua del browser o quella scelta in alto: tutte le "
+"lingue dell'app, l'arabo da destra a sinistra. Gli orari sono nel formato a "
+"24 ore."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` disattiva la pagina, per i server usati solo da programmi."
 
 #. type: Title ##
 #: docs/server.md
@@ -6407,17 +6412,14 @@ msgstr "`POST /api/v1/preview` restituisce l'etichetta come immagine PNG."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` mette in coda un lavoro di stampa; `GET /api/v1/jobs/"
-"<id>` ne mostra lo stato, `DELETE` lo annulla tra due etichette."
+"<id>` ne mostra lo stato, `DELETE` lo annulla tra due etichette (stampante "
+"cab: tra due lavori di una serie)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6628,15 +6630,11 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` è una versione, `1.1` l'ultima versione di correzione di 1.1, "
+"`1.2.1` è una versione, `1.2` l'ultima versione di correzione di 1.2, "
 "`latest` l'ultima versione. `edge` è lo stato di sviluppo, non una versione."
 
 #. type: Bullet: '- '
@@ -7350,7 +7348,7 @@ msgstr ""
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Disporre nell'anteprima { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7358,6 +7356,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"Nella disposizione libera gli elementi si possono disporre nell'anteprima "
+"con il mouse, un dito o una penna:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7368,6 +7368,12 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Fare clic su un elemento per selezionarlo; si apre la sua riga in "
+"[[ui:Content]]. Fare clic con Maiusc o Ctrl per aggiungere un elemento alla "
+"selezione o toglierlo. Trascinare su una parte vuota per selezionare ogni "
+"elemento toccato dal riquadro di selezione (con Alt premuto: solo quelli al "
+"suo interno). Un clic su una parte vuota non seleziona nulla. Anche aprire "
+"la riga di un elemento lo seleziona."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7378,6 +7384,12 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Trascinare la selezione per spostarla. Si aggancia ai bordi e al centro "
+"dell'etichetta e ai bordi e ai centri degli altri elementi; una linea rossa "
+"mostra dove. Tenere premuto Alt, o Ctrl, per posizionarla liberamente "
+"(alcuni desktop spostano la finestra se si tiene Alt durante il "
+"trascinamento: allora usare Ctrl). Tenere premuto Maiusc per spostarla solo "
+"lungo un asse. Esc durante il trascinamento la rimette a posto."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7388,6 +7400,12 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Un singolo elemento selezionato ha maniglie agli angoli e ai bordi: "
+"trascinarne una per ridimensionarlo. Una linea o una forma cambia larghezza "
+"e altezza separatamente (Maiusc ne mantiene le proporzioni); un testo, "
+"un'immagine, un simbolo e un codice QR mantengono le proporzioni; un codice "
+"a barre ottiene barre più lunghe o moduli più larghi. Un'etichetta di "
+"spedizione viene solo spostata."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7397,6 +7415,11 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] nella barra dell'intestazione allinea gli elementi "
+"selezionati: un elemento al bordo o al centro dell'etichetta, più elementi "
+"tra loro. Distribuisce uniformemente tre o più elementi ([[ui:Distribute]]), "
+"attiva e disattiva l'aggancio ([[ui:Snap to guides]]) e aggiunge una griglia "
+"a cui agganciarsi."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7406,6 +7429,11 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Con l'anteprima attiva (fare clic su di essa o raggiungerla con Tab), i "
+"tasti freccia spostano la selezione di 0,1 mm, con Maiusc di 1 mm; Canc la "
+"rimuove; Ctrl+A seleziona tutti gli elementi, Maiusc+Ctrl+A ed Esc nessuno. "
+"Le dimensioni si impostano nella riga dell'elemento e nella sua pagina "
+"[[ui:Position and size]]."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7413,6 +7441,9 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Ogni trascinamento, ogni ridimensionamento e una serie di pressioni dei "
+"tasti freccia è un passo di [[ui:Undo]], a turno con le modifiche fatte "
+"nella barra laterale."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7420,6 +7451,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"Nella disposizione [[ui:One after another]] gli elementi si possono "
+"selezionare ma non spostare: trascinarne uno propone [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7584,6 +7617,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Con l'anteprima attiva: i tasti freccia spostano gli elementi selezionati "
+"(Maiusc: di 1 mm), Canc li rimuove, Ctrl+A e Maiusc+Ctrl+A selezionano tutto "
+"o niente ([vedere sopra](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

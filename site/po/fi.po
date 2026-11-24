@@ -475,18 +475,16 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
-#, fuzzy
-#| msgid ""
-#| "A queued job is canceled at once; a printing one stops after the label "
-#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
 "A queued job is canceled at once; a printing one stops after the label being "
 "printed. A cab printer prints a series in jobs of up to `labels_per_job` "
 "labels (250 by default): it stops after the job being printed. 409 "
 "`job_finished` if it had finished already."
 msgstr ""
-"Jonossa oleva työ peruutetaan heti; tulostuva pysähtyy meneillään olevan "
-"tarran jälkeen. 409 `job_finished`, jos se oli jo valmis."
+"Jonossa oleva työ peruutetaan heti; tulostettava työ pysähtyy tulostettavan "
+"tarran jälkeen. cab-tulostin tulostaa sarjan töinä, joissa on enintään "
+"`labels_per_job` tarraa (oletuksena 250): se pysähtyy tulostettavan työn "
+"jälkeen. 409 `job_finished`, jos työ oli jo valmistunut."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -940,57 +938,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Code | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
-#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
-#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
-#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
-#| "| 400 | `no_label` | Give either label or label_content. |\n"
-#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
-#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
-#| "| 400 | `no_rows` | rows selects no data row. |\n"
-#| "| 400 | `no_data` | sheet without a data file. |\n"
-#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
-#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
-#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
-#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
-#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
-#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
-#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
-#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
-#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
-#| "| 404 | `not_found` | No such path. |\n"
-#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
-#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
-#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
-#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
-#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
-#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
-#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
-#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
-#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
-#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
-#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
-#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
-#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
-#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
-#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
-#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
-#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
-#| "| 422 | `label_damaged` | The label file is damaged. |\n"
-#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
-#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
-#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
-#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
-#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
-#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
-#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
-#| "| 500 | `internal` | An error of the server; it is logged. |\n"
-#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
-#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
+#, no-wrap
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -1077,6 +1025,10 @@ msgstr ""
 "| 408 | `timeout` | Pyynnön lähetys kesti yli 30 s. |\n"
 "| 409 | `job_finished` | Työ on valmistunut: ei mitään peruutettavaa. |\n"
 "| 409 | `counter_not_saved` | Tarratiedostoon ei voi kirjoittaa: mitään ei tulostettu. |\n"
+"| 409 | `label_exists` | Samanniminen tarra on jo olemassa: lähetä replace=true-valinnalla. |\n"
+"| 409 | `label_in_use` | Tarran töitä odottaa tai tulostuu: yritä uudelleen, kun ne ovat valmiit. |\n"
+"| 409 | `label_changed` | Tarratiedosto korvattiin pyynnön tarkistuksen aikana. |\n"
+"| 409 | `label_locked` | Tarran tulostus pitää tiedostoa: yritä uudelleen, kun se on päättynyt. |\n"
 "| 411 | `length_required` | Content-Length puuttuu (paloitettuja runkoja ei hyväksytä). |\n"
 "| 413 | `too_large` | Runko ylittää `--max-body`-rajan tai liikaa tietorivejä, sarakkeita tai soluja. |\n"
 "| 413 | `too_many_labels` | Kopiot kertaa rivit ylittää `--max-labels`-rajan (oletus 10000); tarra-arkeilla yli 999. |\n"
@@ -1095,15 +1047,16 @@ msgstr ""
 "| 429 | `too_many_requests` | Kymmenen väärää tunnusta tästä osoitteesta: odota minuutti. |\n"
 "| 429 | `queue_full` | Liian monta työtä odottaa: yritä myöhemmin uudelleen. |\n"
 "| 500 | `internal` | Palvelimen virhe; se kirjataan lokiin. |\n"
+"| 500 | `not_saved` | Tarrakansioon ei voitu kirjoittaa (507: se on täynnä). |\n"
+"| 500 | `not_deleted` | Tarratiedostoa ei voitu poistaa (kirjoitussuojattu kansio). |\n"
 "| 502 | `printer_<code>` | Tulostin ei ole tavoitettavissa tai ilmoittaa ongelmasta. |\n"
 "| 503 | `busy` | Kaikki pyyntö- tai renderöintipaikat ovat käytössä: yritä hetken kuluttua uudelleen. |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, no-wrap
 msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr "`printer_<code>`: tulostimen ongelma, jokin seuraavista: `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: tulostimen ongelma, yksi seuraavista: `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1187,20 +1140,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Request | Role | What |\n"
-#| "|---|---|---|\n"
-#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
-#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
-#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
-#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
-#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
-#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
-#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
-#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
-#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+#, no-wrap
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
@@ -1223,14 +1163,18 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | ei mitään | Onko palvelin käynnissä; tunnusta ei tarvita (tilatarkistuksia varten) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | Tämä kuvaus (OpenAPI 3.1); minkä tahansa roolin tunnus |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | Tunnuksen nimi, rooli ja tulostimet sekä pyynnön rajat (verkkosivua varten) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | Tunnuksen käyttämät `printers.toml`-tiedoston tulostimet tiloineen; ilman sitä tulostinmallit, kullekin asetettu osoite ja löydetyt tulostimet (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Kysy tulostimen tilaa: tarrat, ongelmat, resoluutio |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | Tarratiedostot tarrakansiossa ja sen alikansioissa |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | Mitä tarraan voi täyttää: elementit, muuttujat, tietosarakkeet, koko, laskuri |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Tarratiedoston lähetys (admin): tarkistetaan samoin kuin sovellus avaa tiedoston, sitten viedään tarrakansioon yhdellä askeleella |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Tarratiedoston poisto (admin); sen datatiedosto säilyy |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Pyynnön mukana lähetetyn datatiedoston (CSV, ODS, XLSX) luku samoin kuin sovellus sen lukee: sen rivit kenttään data_rows; mitään ei säilytetä |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | Täytetty tarra kuvana; mitään ei tulosteta |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Tulosta: pyyntö tarkistetaan ja laitetaan sitten jonoon; kukin tulostin tulostaa yhden työn kerrallaan |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | Tulostustyön tila (print-tunnus: omat työt; admin: kaikki). Säilytetään 24 tuntia valmistumisen jälkeen |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Peruuta työ: heti, kun se odottaa; meneillään olevan tarran jälkeen, kun se tulostuu |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Työn peruutus: heti sen odottaessa, tulostimelle jo lähetettyjen tarrojen jälkeen sen tulostuessa (cab: enintään labels_per_job tarran työ) |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1305,10 +1249,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/health` { #get-health }"
+#, no-wrap
 msgid "`GET /api/v1/me` { #get-me }"
-msgstr "`GET /api/v1/health` { #get-health }"
+msgstr "`GET /api/v1/me` { #get-me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1316,14 +1259,11 @@ msgid ""
 "The token's name, role and printers, and the limits of a request (for the "
 "web page)."
 msgstr ""
+"Tunnuksen nimi, rooli ja tulostimet sekä pyynnön rajat (verkkosivua varten)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Labels |  |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1331,7 +1271,7 @@ msgid ""
 msgstr ""
 "| Status | Vastaus | Koodit |\n"
 "|---|---|---|\n"
-"| 200 | Tarrat |  |\n"
+"| 200 | Kuka |  |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1533,10 +1473,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`PUT /api/v1/labels/{name}` { #put-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1544,21 +1483,17 @@ msgid ""
 "Upload a label file (admin): checked as the app opens a file, then put into "
 "the labels folder in one step."
 msgstr ""
+"Tarratiedoston lähetys (admin): tarkistetaan samoin kuin sovellus avaa "
+"tiedoston, sitten viedään tarrakansioon yhdellä askeleella."
 
 #. type: Bullet: '- '
 #: docs/api.md
-#, fuzzy
-#| msgid "Role: `print`"
 msgid "Role: `admin`"
-msgstr "Rooli: `print`"
+msgstr "Rooli: `admin`"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Parameter | In | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+#, no-wrap
 msgid ""
 "| Parameter | In | Meaning |\n"
 "|---|---|---|\n"
@@ -1567,12 +1502,13 @@ msgid ""
 msgstr ""
 "| Parametri | Sijainti | Merkitys |\n"
 "|---|---|---|\n"
-"| `name` | path | Voi sisältää vinoviivoja alikansioille; '`.tavletta`' voi jättää pois. |\n"
+"| `name` | path | Tiedoston nimi ilman kansiota; '`.tavletta`' voi jättää pois. |\n"
+"| `replace` | query | Korvaa samanniminen tarra. Oletus `false` |\n"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Body: The content of a `.tavletta` file."
-msgstr ""
+msgstr "Runko: `.tavletta`-tiedoston sisältö."
 
 #. type: Plain text
 #: docs/api.md
@@ -1588,6 +1524,15 @@ msgid ""
 "| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
 "| 507 | No space left in the labels folder | `not_saved` |\n"
 msgstr ""
+"| Status | Vastaus | Koodit |\n"
+"|---|---|---|\n"
+"| 200 | Korvattu (replace=true) |  |\n"
+"| 201 | Lisätty |  |\n"
+"| 400 | Ei kelvollinen nimi uudelle tarralle: kirjaimet, numerot, välilyönnit ja . _ - ( ) + , (enintään 100), itse kansiossa | `invalid_field`, `not_json` |\n"
+"| 409 | Samanniminen tarra on jo olemassa (lähetä replace=true), tarran töitä odottaa tai tulostuu (label_in_use) tai toisen ohjelman tulostus pitää tiedostoa | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Yli `--max-body` tai tarra liian suuri renderöitäväksi | `too_large`, `label_too_large` |\n"
+"| 422 | Ei tarra, jonka Tavletta voi avata | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | Tarrakansiossa ei ole tilaa | `not_saved` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1602,26 +1547,18 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+#, no-wrap
 msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
-msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgstr "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
 
 #. type: Plain text
 #: docs/api.md
 msgid "Delete a label file (admin); its data file stays."
-msgstr ""
+msgstr "Tarratiedoston poisto (admin); sen datatiedosto säilyy."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1632,10 +1569,10 @@ msgid ""
 msgstr ""
 "| Status | Vastaus | Koodit |\n"
 "|---|---|---|\n"
-"| 200 | Tarra |  |\n"
+"| 204 | Poistettu |  |\n"
 "| 400 | Ei nimi tarrakansion sisällä | `invalid_field` |\n"
 "| 404 | Tarraa ei ole | `label_not_found` |\n"
-"| 422 | Tiedosto ei ole tarra tai on vaurioitunut | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 409 | Tarran töitä odottaa tai tulostuu (label_in_use) tai toisen ohjelman tulostus pitää tiedostoa | `label_in_use`, `label_locked` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1648,10 +1585,9 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "`POST /api/v1/print` { #post-print }"
+#, no-wrap
 msgid "`POST /api/v1/data` { #post-data }"
-msgstr "`POST /api/v1/print` { #post-print }"
+msgstr "`POST /api/v1/data` { #post-data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1659,6 +1595,8 @@ msgid ""
 "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
 "for data_rows; nothing is kept."
 msgstr ""
+"Pyynnön mukana lähetetyn datatiedoston (CSV, ODS, XLSX) luku samoin kuin "
+"sovellus sen lukee: sen rivit kenttään data_rows; mitään ei säilytetä."
 
 #. type: Plain text
 #: docs/api.md
@@ -1676,17 +1614,16 @@ msgid ""
 "| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
 "| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
 msgstr ""
+"| Kenttä | Tyyppi | Merkitys |\n"
+"|---|---|---|\n"
+"| `content` | string | Tiedosto: CSV (mikä tahansa erotin, UTF-8, UTF-16 tai Windows-1252), ODS tai XLSX, erotetaan sisällön perusteella. Liitetty teksti on CSV-tiedosto. |\n"
+"| `name` | string | Tiedoston nimi viestejä varten. |\n"
+"| `sheet` | string | ODS, XLSX: taulukko (oletuksena ensimmäinen). |\n"
+"| `header` | boolean | false: ensimmäinen rivi on myös dataa; sarakkeiden nimet ovat A, B, C … Oletus `true` |\n"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | Label |  |\n"
-#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
-#| "| 404 | No such label | `label_not_found` |\n"
-#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1696,10 +1633,9 @@ msgid ""
 msgstr ""
 "| Status | Vastaus | Koodit |\n"
 "|---|---|---|\n"
-"| 200 | Tarra |  |\n"
-"| 400 | Ei nimi tarrakansion sisällä | `invalid_field` |\n"
-"| 404 | Tarraa ei ole | `label_not_found` |\n"
-"| 422 | Tiedosto ei ole tarra tai on vaurioitunut | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+"| 200 | Rivit |  |\n"
+"| 400 | Virheellinen pyyntö | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Ei taulukko, vaurioitunut tai tyhjä | `data_problem` |\n"
 
 #. type: Fenced code block (sh)
 #: docs/api.md
@@ -1847,18 +1783,7 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 200 | The job finished within 'wait' |  |\n"
-#| "| 202 | Queued or printing; follow it at Location |  |\n"
-#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
-#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
-#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
-#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
-#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1877,7 +1802,7 @@ msgstr ""
 "| 202 | Jonossa tai tulostumassa; seuraa sitä osoitteessa Location |  |\n"
 "| 400 | Virheellinen pyyntö | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | Tarraa, tulostinta tai tietotiedostoa ei ole, tai tulostin, jota tunnus ei saa käyttää | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | Tarratiedostoon ei voi kirjoittaa: seuraavaa laskuriarvoa ei voitu tallentaa, mitään ei tulostettu | `counter_not_saved` |\n"
+"| 409 | Tarratiedostoon ei voi kirjoittaa: laskurin seuraavaa arvoa ei voitu tallentaa, mitään ei tulostettu; tai se korvattiin pyynnön tarkistuksen aikana (label_changed): lähetä uudelleen | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Liian suuri: runko, tietorivit, tarrat yhdessä työssä tai renderöitävä tarra | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | Tarra tulostuisi väärin | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Liian monta väärää tunnusta tai liian monta odottavaa työtä (100 yhteensä, 20 nimettyä tunnusta kohti) | `too_many_requests`, `queue_full` |\n"
@@ -1949,26 +1874,16 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy
-#| msgid ""
-#| "Cancel a job: at once while it waits, after the current label while it "
-#| "prints."
 msgid ""
 "Cancel a job: at once while it waits, after the labels already sent to the "
 "printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
-"Peruuta työ: heti, kun se odottaa; meneillään olevan tarran jälkeen, kun se "
-"tulostuu."
+"Työn peruutus: heti sen odottaessa, tulostimelle jo lähetettyjen tarrojen "
+"jälkeen sen tulostuessa (cab: enintään labels_per_job tarran työ)."
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Status | Answer | Codes |\n"
-#| "|---|---|---|\n"
-#| "| 202 | Canceled, or stopping after the current label |  |\n"
-#| "| 404 | No such job | `job_not_found` |\n"
-#| "| 409 | Already finished | `job_finished` |\n"
+#, no-wrap
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1978,7 +1893,7 @@ msgid ""
 msgstr ""
 "| Status | Vastaus | Koodit |\n"
 "|---|---|---|\n"
-"| 202 | Peruutettu tai pysähtyy meneillään olevan tarran jälkeen |  |\n"
+"| 202 | Peruutettu tai pysähtyy jo lähetettyjen tarrojen jälkeen |  |\n"
 "| 404 | Työtä ei ole | `job_not_found` |\n"
 "| 409 | On jo valmis | `job_finished` |\n"
 
@@ -2005,27 +1920,7 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `id` | string | Random, 16 characters. |\n"
-#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
-#| "| `printer` | string | Printer model id. |\n"
-#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
-#| "| `host` | string | The printer's address. |\n"
-#| "| `owner` | string or null | Name of the token. |\n"
-#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-#| "| `printed` | integer | Labels printed so far. |\n"
-#| "| `total` | integer | Labels to print: copies x rows. |\n"
-#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
-#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
-#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
-#| "| `remark` | string or null | A note of the printer, for people. |\n"
-#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
-#| "| `created` | string | UTC. |\n"
-#| "| `started` | string or null |  |\n"
-#| "| `finished` | string or null |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2057,7 +1952,8 @@ msgstr ""
 "| `host` | string | Tulostimen osoite. |\n"
 "| `owner` | string or null | Tunnuksen nimi. |\n"
 "| `label` | string or null | Nimi tarrakansiossa; null kentälle label_content. |\n"
-"| `printed` | integer | Tähän mennessä tulostetut tarrat. |\n"
+"| `printed` | integer | Tähän mennessä tulostetut tarrat, varmasti; kasvaa tarra tarralta työn tulostuessa sikäli kuin tulostin kertoo. |\n"
+"| `printed_max` | integer or null | Virheen jälkeen, jonka lopputulosta tulostin ei osannut kertoa (yhteys katkesi tulostuksen aikana): enintään näin monta tarraa on voinut tulostua. Laskuri jatkuu niiden jälkeen; rows_printed laskee varmasti tulostetut rivit, joten tulostus uudelleen seuraavasta rivistä voi tulostaa tarroja kahdesti. Muuten null. |\n"
 "| `total` | integer | Tulostettavat tarrat: kopiot x rivit. |\n"
 "| `rows_printed` | integer | Kokonaan tulostetut tietorivit: virheen jälkeen tulosta uudelleen niin, että rows on seuraava (rows_printed + ensimmäinen rivi). |\n"
 "| `cancel_requested` | boolean | DELETE lähetettiin. |\n"
@@ -2076,22 +1972,7 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `name` | string |  |\n"
-#| "| `printer` | object | Model id and name. |\n"
-#| "| `size` | object | Tape, length, orientation, mm. |\n"
-#| "| `elements` | array of object |  |\n"
-#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
-#| "| `builtin_variables` | array of string |  |\n"
-#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
-#| "| `data_file` | string or null |  |\n"
-#| "| `data_file_unusable` | boolean |  |\n"
-#| "| `data_sheet` | string or null |  |\n"
-#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
-#| "| `features` | array of string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2121,9 +2002,11 @@ msgstr ""
 "| `columns` | array of string | Paikkamerkit `{Column}`: data_rows-kentän avaimet. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file puuttuu (enää): lähetä rivit kentässä data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (tarrassa on `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Tulostettu tarra-arkeille: enintään 999 tarraa yhdessä työssä. |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -2210,14 +2093,7 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Field | Type | Meaning |\n"
-#| "|---|---|---|\n"
-#| "| `width` | integer |  |\n"
-#| "| `height` | integer |  |\n"
-#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
-#| "| `png` | string |  |\n"
+#, no-wrap
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -2233,12 +2109,13 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Mikä tulostuisi väärin. other_labels_loaded: `printers.toml`-tiedoston tulostin ilmoittaa, että siinä on muut tarrat kuin tarrassa (niiden koko tai mittaamansa tarrojen väli). Sen viimeisin vastaus otetaan huomioon, jos se on viimeisen minuutin ajalta, virhe tietona ettei mitään tiedetä (kysytään uudelleen taustalla); tulostinta, jota ei vielä tunneta, odotetaan enintään sekunti tarran renderöinnin jälkeen. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Missä elementit ovat kuvassa; null arvolle view=printer ja arkilleen käännetylle tarralle. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Geometry { #geometry }"
-msgstr ""
+msgstr "Geometry { #geometry }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2247,6 +2124,8 @@ msgid ""
 "(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
 "25.4."
 msgstr ""
+"Elementtien laatikot esikatselukuvassa, mm sen vasemmasta yläkulmasta "
+"(tavletta/editing.py, docs/editing.md); kuvan pikseli on mm * dpi / 25.4."
 
 #. type: Plain text
 #: docs/api.md
@@ -2260,13 +2139,19 @@ msgid ""
 "| `dpi` | number | The image's resolution. |\n"
 "| `elements` | array of object |  |\n"
 msgstr ""
+"| Kenttä | Tyyppi | Merkitys |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Nauhan suunnassa: pituus. |\n"
+"| `height_mm` | number | Poikittain: nauhan tai tarran korkeus. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | Kuvan resoluutio. |\n"
+"| `elements` | array of object |  |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Me { #me }"
-msgstr "Kuvat { #images }"
+msgstr "Me { #me }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2282,13 +2167,21 @@ msgid ""
 "| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
+"| Kenttä | Tyyppi | Merkitys |\n"
+"|---|---|---|\n"
+"| `name` | string | Tunnuksen nimi tiedostossa tokens.toml; 'token' valinnan `--token-file` ainoalle tunnukselle, 'local' ilman tunnusta; 'oidc:<user>' OpenID Connectilla verkkosivulle kirjautuneelle. |\n"
+"| `display_name` | string | Henkilön nimi tarjoajalta; muuten sama kuin name. |\n"
+"| `session` | boolean | true: kirjautunut verkkosivulle OpenID Connectilla (sen istuntoevästeellä), ei tunnuksella. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | Tulostimet, joita tunnus saa käyttää; null: kaikki. |\n"
+"| `token_required` | boolean | false: palvelimella ei ole tunnusta eikä `--oidc` (vain loopback). |\n"
+"| `limits` | object | Mitä yksi pyyntö saa enintään pyytää: tarroja yhdessä työssä (`--max-labels`; tarra-arkeilla enintään 999), kopioita, datarivejä, -sarakkeita ja -soluja sekä runko tavuina (`--max-body`; myös suurin lähetettävä tarratiedosto). |\n"
 
 #. type: Title ###
 #: docs/api.md
-#, fuzzy, no-wrap
-#| msgid "Start { #start }"
+#, no-wrap
 msgid "Data { #data }"
-msgstr "Käynnistys { #start }"
+msgstr "Data { #data }"
 
 #. type: Plain text
 #: docs/api.md
@@ -2303,6 +2196,14 @@ msgid ""
 "| `columns` | array of string |  |\n"
 "| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
 msgstr ""
+"| Kenttä | Tyyppi | Merkitys |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: löydetty erotin; null yhdelle sarakkeelle ja taulukkolaskentatiedostoille. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | Luettu taulukko. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Jokainen solu tekstinä, jonka se näyttää: alkunollat ja lukumuodot säilyvät (00300 pysyy 00300). Rivit ilman täytettyä solua jätetään pois. |\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -2603,19 +2504,14 @@ msgstr "Ensimmäinen tarra"
 
 #. type: Bullet: '1. '
 #: docs/index.md
-#, fuzzy
-#| msgid ""
-#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
-#| "width or the distance between the labels."
 msgid ""
 "Switch the printer on and choose it under [[ui:Printer model]]: a printer "
 "found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
 "reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Kytke tulostin päälle ja valitse se kohdasta [[ui:Printer model]]. Tavletta "
-"löytää sen verkosta (Bonjour) ja lukee, mitä siinä on: nauhan leveyden tai "
-"tarrojen välisen etäisyyden."
+"Kytke tulostin päälle ja valitse se kohdasta [[ui:Printer model]]: USB:llä "
+"tai verkossa (Bonjour) löytynyt tulostin on luettelon alussa. Tavletta "
+"lukee, mitä on asetettu: nauhan leveyden tai tarrojen välisen etäisyyden."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2658,6 +2554,12 @@ msgid ""
 "them when the window opens and with [[ui:Search for printers]], every model "
 "at the same time, in the background."
 msgstr ""
+"Valitse tulostin kohdasta [[ui:Printer model]]; jokaisella on oma osionsa "
+"alla. Tulostimet, jotka Tavletta löytää USB:llä ja verkossa, ovat "
+"luettelossa ensimmäisinä kohdassa [[ui:Found]] malleineen: yhden "
+"valitseminen ottaa sen mallin ja osoitteen. Mallit seuraavat kohdassa "
+"[[ui:All models]]. Tavletta etsii niitä ikkunan avautuessa ja kohdalla "
+"[[ui:Search for printers]], kaikkia malleja yhtä aikaa, taustalla."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2762,6 +2664,15 @@ msgid ""
 "that height would be less than 5 mm, the gap is changed instead; where "
 "neither makes a label, only [[ui:Print anyway]] is offered."
 msgstr ""
+"[[ui:Different labels loaded]] (muotoonleikatut tarrat): tulostin ilmoittaa "
+"toisen kokoisia tarroja tai mittasi tarrojen välille toisen etäisyyden kuin "
+"tarrasi korkeus plus [[ui:Gap]]. [[ui:Use loaded labels]] muuttaa tarraa "
+"eikä tulosta vielä mitään: se ottaa tulostimen ilmoittaman koon (Brother QL) "
+"tai asettaa korkeuden rullan suunnassa niin, että korkeus plus rako on "
+"mitattu etäisyys (cab, Zebra). Rako ja leveys säilyvät; Zebran "
+"tulostusleveys on se, jonka viimeisin tulostus asetti, ei tarrojen leveys. "
+"Jos tuo korkeus olisi alle 5 mm, muutetaan sen sijaan rakoa; jos kumpikaan "
+"ei tuota tarraa, tarjolla on vain [[ui:Print anyway]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2770,6 +2681,9 @@ msgid ""
 "[[ui:Undo]] in the message takes the change back; the message says so if "
 "elements now reach beyond the edge of the label."
 msgstr ""
+"[[ui:Use loaded labels]] jälkeen tarkista tarra esikatselusta ja tulosta "
+"sitten. [[ui:Undo]] viestissä perii muutoksen; viesti kertoo siitä, jos "
+"elementit ulottuvat nyt tarran reunan yli."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3298,6 +3212,14 @@ msgid ""
 "come out; only what is sent to the printer moves. Content within this "
 "distance of the edge the print moves to is cut off."
 msgstr ""
+"[[ui:Print offset]]: tulostin, joka tulostaa väärään kohtaan tarrassa "
+"(tuloste on jokaisessa tarrassa hieman ylempänä tai alempana kuin esikatselu "
+"näyttää), kompensoidaan tässä: mittaa tulostetusta tarrasta, kuinka paljon "
+"tuloste on pielessä, ja syötä se, positiivinen siirtää tulostetta alas "
+"rullaa vasten poikittaisissa tarroissa, negatiivinen ylös. Esikatselu "
+"näyttää tarran edelleen sellaisena kuin sen pitää tulla ulos; vain "
+"tulostimelle lähetettävä siirtyy. Sisältö, joka on tämän etäisyyden päässä "
+"reunasta, jonne tuloste siirtyy, leikkautuu pois."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3309,6 +3231,12 @@ msgid ""
 "other printers get them. Labels whose content changes from copy to copy "
 "always go one by one."
 msgstr ""
+"[[ui:Labels per job]]: sarjan tarrat menevät tulostimelle yhdessä, enintään "
+"näin monta (oletuksena 250, 1–1000) yhdessä työssä, ja ajautuvat läpi "
+"pysähtymättä niiden välillä. [[ui:Stop]] tulee voimaan kahden työn välillä: "
+"alkanut työ tulostetaan kokonaan. 1 lähettää jokaisen tarran omana työnään, "
+"kuten muut tulostimet ne saavat. Tarrat, joiden sisältö muuttuu kopiosta "
+"kopioon, lähetetään aina yksi kerrallaan."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3323,12 +3251,6 @@ msgstr "Ongelmat { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Different labels loaded]]: the printer measured another distance "
-#| "between the labels than height plus gap of your label. Check [[ui:Label "
-#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
@@ -3337,9 +3259,10 @@ msgid ""
 "labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
 "[[ui:Different labels loaded]]: tulostin mittasi tarrojen välille toisen "
-"etäisyyden kuin tarrasi korkeus plus väli. Tarkista [[ui:Label size]] ja "
+"etäisyyden kuin tarrasi korkeus plus rako. Tarkista [[ui:Label size]] ja "
 "[[ui:Gap]] tai aseta oikea rulla. Paina tulostimen Feed-painiketta kerran "
-"rullan vaihdon jälkeen, jotta se mittaa uudelleen."
+"rullan vaihdon jälkeen, jotta se mittaa uudelleen, sitten [[ui:Use loaded "
+"labels]] sovittaa tarran siihen ([Kaikki tulostimet](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3349,6 +3272,11 @@ msgid ""
 "laid out to make up for this in another program prints off its place in the "
 "preview; move its content back into place and set the offset instead."
 msgstr ""
+"Kaikki tulostuu hieman liian ylös tai liian alas, samoin jokaisessa "
+"tarrassa, vaikka esikatselu näyttää sen oikeassa kohdassa: aseta [[ui:Print "
+"offset]]. Toisessa ohjelmassa tämän kompensoimiseksi suunniteltu tarra "
+"tulostuu esikatselussa väärään kohtaan; siirrä sen sisältö takaisin "
+"paikalleen ja aseta siirto sen sijaan."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3396,6 +3324,8 @@ msgid ""
 "Out of memory: the printer had no room for the labels of a job. Lower "
 "[[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
+"Muisti loppui: tulostimessa ei ollut tilaa työn tarroille. Pienennä "
+"[[ui:Labels per job]] ja tulosta uudelleen viestin nimeämältä riviltä."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3409,6 +3339,14 @@ msgid ""
 "also checks the number against the printer's label counter; where the two "
 "differ, the message gives the range."
 msgstr ""
+"\"Työ lähetettiin, mutta sen lopputulos on tuntematon\": yhteys tulostimeen "
+"katkesi tulostuksen aikana (tai tulostin ei osannut kertoa, kuinka pitkälle "
+"se pääsi). Tavletta laskee tarrat, jotka se tietää tulostetuiksi; tulostin "
+"on voinut tulostaa enemmän. Tarkista ulos tulleet tarrat: tulostus uudelleen "
+"viestin nimeämältä riviltä voi tulostaa joitakin kahdesti, mutta ei jätä "
+"yhtään pois. Jos tulostimen verkkokäyttöliittymä on tavoitettavissa verkossa "
+"(oletus), Tavletta vertaa lukumäärää myös tulostimen tarralaskuriin; jos ne "
+"eroavat, viesti antaa vaihteluvälin."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4029,6 +3967,11 @@ msgid ""
 "it measure the labels again (most printers do that with a long press on "
 "Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
 msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): tulostin ilmoittaa viimeksi "
+"mittaamansa etäisyyden, ehkä aiemmalta rullalta. Rullan vaihdon jälkeen anna "
+"sen mitata tarrat uudelleen (useimmat tulostimet tekevät sen Feed-painikkeen "
+"pitkällä painalluksella) ennen kuin käytät [[ui:Use loaded labels]] ([Kaikki "
+"tulostimet](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -4363,20 +4306,20 @@ msgid ""
 "cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
 "prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
+"Jokainen tarra on oma tulostustyönsä, joten tämä toimii jokaisella "
+"tulostimella. cab-tulostin saa enintään [[ui:Labels per job]] tarraa yhtenä "
+"työnä, jonka se tulostaa pysähtymättä niiden välillä ([cab](printer.md#cab))."
 
 #. type: Bullet: '- '
 #: docs/serial.md
-#, fuzzy
-#| msgid ""
-#| "[[ui:Stop]] in the bar above the window ends the series after the label "
-#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
 "being printed (on a cab printer: after the job being printed); the first "
 "label is always printed."
 msgstr ""
-"[[ui:Stop]] ikkunan yläpuolella olevassa palkissa päättää sarjan meneillään "
-"olevan tarran jälkeen; ensimmäinen tarra tulostetaan aina."
+"[[ui:Stop]] ikkunan yläpuolella olevassa palkissa päättää sarjan "
+"tulostettavan tarran jälkeen (cab-tulostimella: tulostettavan työn jälkeen); "
+"ensimmäinen tarra tulostetaan aina."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4448,19 +4391,14 @@ msgstr "Yleiskuva { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
-#, fuzzy
-#| msgid ""
-#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
-#| "It renders the labels itself and sends them to the printers over the "
-#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
 "no desktop, no database."
 msgstr ""
-"Yksi pieni palvelu: REST-rajapinta (ja MCP tekoälyavustajille) portissa "
-"8790. Se renderöi tarrat itse ja lähettää ne tulostimille verkon yli; ei "
-"työpöytää, ei selainta, ei tietokantaa."
+"Yksi pieni palvelu: REST API (ja MCP tekoälyavustajille) portissa 8790. Se "
+"renderöi tarrat itse ja lähettää ne tulostimille verkon yli; ei työpöytää, "
+"ei tietokantaa."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4470,6 +4408,10 @@ msgid ""
 "pasted list or number ranges such as 3000–5685), upload and delete templates "
 "with an admin token. `--no-web-ui` turns it off."
 msgstr ""
+"Verkkosivu samassa osoitteessa ihmisille: kirjaudu tunnuksella, katso "
+"tulostimet, tulosta malli tai sarja (CSV-, XLSX- tai ODS-tiedostosta, "
+"liitetystä luettelosta tai lukualueista kuten 3000–5685), lähetä ja poista "
+"malleja admin-tunnuksella. `--no-web-ui` poistaa sen käytöstä."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4941,6 +4883,12 @@ msgid ""
 "  token: the web page shows what its role may do. The page keeps the\n"
 "  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
+"  Jokainen tulostin on listattu tilansa kanssa; `UNREACHABLE` viestin kanssa, jos\n"
+"  palvelin ei tavoita sitä.\n"
+"- Avaa `http://127.0.0.1:8790/` selaimessa palvelimella (muut käyttävät\n"
+"  välityspalvelimen osoitetta, ks. [Käänteinen välityspalvelin](#proxy)) ja kirjaudu\n"
+"  tunnuksella: verkkosivu näyttää, mitä sen rooli sallii. Sivu pitää\n"
+"  tunnuksen vain selaimen välilehdellä, kunnes välilehti suljetaan tai \"Kirjaudu ulos\".\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -5571,7 +5519,7 @@ msgstr "Älä koskaan tee palvelimesta tavoitettavaa internetistä."
 #: docs/server-install.md
 #, no-wrap
 msgid "Signing in with OpenID Connect { #oidc }"
-msgstr ""
+msgstr "Kirjautuminen OpenID Connectilla { #oidc }"
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5582,6 +5530,12 @@ msgid ""
 "keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
 "localhost` works without, for testing)."
 msgstr ""
+"Ihmiset voivat kirjautua verkkosivulle organisaatiosi "
+"identiteetintarjoajalla (Keycloak, Authentik, Microsoft Entra ID, Okta …) "
+"käyttötunnuksen sijaan; heidän roolinsa tarjoajalla muuttuvat Tavletan "
+"rooleiksi. Ohjelmat käyttävät edelleen tunnuksia. Se vaatii HTTPS:n "
+"käänteisen välityspalvelimen kautta (ilman sitä toimii vain `http://"
+"localhost`, testausta varten)."
 
 #. type: Bullet: '1. '
 #: docs/server-install.md
@@ -5593,6 +5547,13 @@ msgid ""
 "Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
 "with *Add to ID token* on; Authentik sends `groups`."
 msgstr ""
+"Rekisteröi tarjoajalle asiakas: confidential (salaisuudella), vain "
+"authorization code -kulku, PKCE S256, uudelleenohjaus-URI `https://"
+"labels.example.com/oidc/callback`, uloskirjautumisen jälkeinen "
+"uudelleenohjaus-URI `https://labels.example.com/`. Ohjaa roolit tai ryhmät "
+"ID-tunnisteeseen: Keycloakissa asiakkaaseen mapper *User Client Role* (tai "
+"*User Realm Role*), jossa *Add to ID token* on päällä; Authentik lähettää "
+"`groups`."
 
 #. type: Bullet: '2. '
 #: docs/server-install.md
@@ -5601,6 +5562,9 @@ msgid ""
 "write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
 "commented start):"
 msgstr ""
+"Laita salaisuus tiedostoon `config/oidc-secret` (pelkkä salaisuus, tila 600) "
+"ja kirjoita `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` "
+"antaa kommentoidun alun):"
 
 #. type: Fenced code block (toml)
 #: docs/server-install.md
@@ -5628,6 +5592,11 @@ msgid ""
 "and restart. With `--trusted-proxy` the server needs `public_url` and does "
 "not start without it."
 msgstr ""
+"Lisää `\"--oidc\"` ja `\"/config/oidc.toml\"` kohtaan `command:` tiedostossa "
+"`compose.yaml` (natiivisti: kohtaan `ExecStart`, polulla `/etc/"
+"tavletta/...`), pidä `--trusted-proxy` ja käynnistä uudelleen. Valinnalla `--"
+"trusted-proxy` palvelin tarvitsee arvon `public_url` eikä käynnisty ilman "
+"sitä."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5636,6 +5605,9 @@ msgid ""
 "packages have; the Flatpak has not, and nothing can be installed into it: "
 "run the server from one of the others for `--oidc`."
 msgstr ""
+"Kirjautuminen vaatii PyJWT:n, joka on konttikuvassa sekä deb- ja rpm-"
+"paketeissa; Flatpakissa sitä ei ole, eikä siihen voi asentaa mitään: "
+"valintaa `--oidc` varten aja palvelin jostakin muusta."
 
 #. type: Plain text
 #: docs/server-install.md
@@ -5650,6 +5622,16 @@ msgid ""
 "(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#signing-in-with-openid-connect-oidctoml)."
 msgstr ""
+"Sivu näyttää silloin \"Kirjaudu sisään: Example ID\". Ilman jotakin "
+"rooleista oleva saa \"ei käyttöoikeutta\". Istunto kestää 8 tuntia tai 60 "
+"minuuttia käyttämättömänä (`session_hours`, `idle_minutes`); tarjoajalla "
+"poistettu rooli tai poistettu käytöstä tili tulee voimaan seuraavasta "
+"kirjautumisesta, joten pidä istunnot lyhyinä siellä, missä ylläpitäjät "
+"kirjautuvat. `token_login = false` piilottaa tunnuskentän sivulta. "
+"Tulostimia voi rajoittaa roolin mukaan (`[oidc.printers]`) tai claimilla "
+"(`printers_claim`). Jokainen avain ja tietoturvan yksityiskohdat: [docs/"
+"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#signing-in-with-openid-connect-oidctoml)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5797,6 +5779,9 @@ msgid ""
 "roles people need, short sessions where admins sign in, `oidc-secret` mode "
 "600."
 msgstr ""
+"Valinnalla `--oidc`: `public_url` asetettu, asiakas confidential PKCE:llä, "
+"vain ihmisten tarvitsemat roolit, lyhyet istunnot siellä, missä ylläpitäjät "
+"kirjautuvat, `oidc-secret` tilassa 600."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5804,6 +5789,8 @@ msgid ""
 "No one prints from a browser: `--no-web-ui` (the web page needs no token to "
 "load, but shows nothing without one)."
 msgstr ""
+"Kukaan ei tulosta selaimesta: `--no-web-ui` (verkkosivu ei tarvitse tunnusta "
+"latautuakseen, mutta ei näytä mitään ilman sitä)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5839,24 +5826,7 @@ msgstr "Vianmääritys { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, fuzzy, no-wrap
-#| msgid ""
-#| "| Symptom | Cause and remedy |\n"
-#| "|---|---|\n"
-#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
-#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
-#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
-#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
-#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
-#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
-#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
-#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
-#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
-#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
-#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
-#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
-#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
+#, no-wrap
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
@@ -5880,7 +5850,7 @@ msgstr ""
 "|---|---|\n"
 "| Tulostin on `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | Palvelin ei tavoita sitä: testaa palvelimelta komennolla `nc -vz <printer> 9100` (631 IPP:lle); tarkista osoite, palomuuri ja että tulostin on päällä. Dockerissa kontin on tavoitettava tulostimen verkko. |\n"
 "| `401 unauthorized` | Tunnus puuttuu, on kirjoitettu väärin, vanhentunut tai poistettu tiedostosta `tokens.toml`. Otsake on `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Kymmenen väärää tunnusta tästä osoitteesta minuutin sisällä: korjaa tunnus, odota minuutti. |\n"
+"| `429 too_many_requests` | Kymmenen väärää tunnusta tästä osoitteesta minuutin sisällä: korjaa tunnus, odota minuutti. Käänteisen välityspalvelimen takana, jota ei ole annettu valinnalla `--trusted-proxy`, kaikki jakavat välityspalvelimen osoitteen. |\n"
 "| `429 queue_full` | 100 työtä (20 tunnusta kohti) odottaa: tulostin on hidas tai pysähtynyt; tarkista se, yritä myöhemmin uudelleen. |\n"
 "| `503 busy` | Kaikki pyyntö- tai renderöintipaikat ovat hetken käytössä: yritä uudelleen sekunnin tai kahden kuluttua. |\n"
 "| `404 printer_not_found` | Ei tiedostossa `printers.toml` tai tunnus ei saa käyttää sitä (`--printer`). |\n"
@@ -5890,6 +5860,7 @@ msgstr ""
 "| `other_labels_loaded` varoituksissa | Tulostimessa on muut tarrat kuin tarrassa: aseta oikea rulla tai tarkista tarran koko ja väli. ZPL-tulostin voi ilmoittaa etäisyyden, jonka se mittasi aiemmalla rullalla: kalibroi se. |\n"
 "| `409 counter_not_saved` | Tarratiedostoon ei voi kirjoittaa palvelimen käyttäjänä: `chown` se käyttäjälle (Docker: 1000, natiivi: `tavletta`). |\n"
 "| Tarrojen päivämäärä tai kellonaika on tunnin tai kaksi pielessä | Kontti toimii UTC:llä: aseta `TAVLETTA_TZ=Europe/Zurich` tiedostossa `.env` ja suorita sitten `docker compose up -d`. |\n"
+"| \"Kirjautuminen ei onnistunut\" verkkosivulla | Loki kertoo syyn: tarjoajaa ei tavoiteta, uudelleenohjaus-URI tai salaisuus on väärä tarjoajalla tai sivulle tullaan pelkällä HTTP:llä (aseta `public_url`, `--trusted-proxy`). \"Ei käyttöoikeutta\": roolit eivät pääse ID-tunnisteeseen (mapper puuttuu) tai mitään ei ole yhdistetty kohdassa `[oidc.roles]`. |\n"
 "| Palvelin ei käynnisty | `docker compose logs` tai `journalctl -u tavletta-server`: virhe tiedostossa `printers.toml` tai `tokens.toml` nimetään avaimineen. |\n"
 "| Käyttöoikeus evätty kansioihin (Fedora, RHEL SELinuxilla ja Podmanilla) | Lisää `:Z` tiedoston `compose.yaml` volume-määrityksiin. |\n"
 
@@ -5901,20 +5872,16 @@ msgstr "Tulostuspalvelin"
 
 #. type: Plain text
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "Other programs and AI assistants can print labels through Tavletta "
-#| "without opening the window: `tavletta serve` offers a web interface for "
-#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
 "Other programs, AI assistants and people in a browser can print labels "
 "through Tavletta without opening the window: `tavletta serve` offers a web "
 "page for people and a web interface for programs (REST API), `tavletta mcp` "
 "connects AI assistants such as Claude."
 msgstr ""
-"Muut ohjelmat ja tekoälyavustajat voivat tulostaa tarroja Tavletan kautta "
-"avaamatta ikkunaa: `tavletta serve` tarjoaa ohjelmille verkkorajapinnan "
-"(REST API), `tavletta mcp` yhdistää tekoälyavustajia, kuten Clauden."
+"Muut ohjelmat, tekoälyavustajat ja ihmiset selaimessa voivat tulostaa "
+"tarroja Tavletan kautta avaamatta ikkunaa: `tavletta serve` tarjoaa "
+"verkkosivun ihmisille ja verkkorajapinnan ohjelmille (REST API), `tavletta "
+"mcp` yhdistää tekoälyavustajia kuten Clauden."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5979,7 +5946,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
-msgstr ""
+msgstr "Avaa `http://127.0.0.1:8790/` selaimessa: [verkkosivu](#web-page)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6054,13 +6021,6 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
-#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
@@ -6070,10 +6030,11 @@ msgid ""
 "joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` on [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` on [[ui:Print upside down]]; muita ovat `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` ja `outlines`, katso [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)."
+"`upside_down` [[ui:Print upside down]], `offset_mm` [[ui:Print offset]] (−5–"
+"5), `labels_per_job` [[ui:Labels per job]] (1–1000, oletuksena 250); muut "
+"ovat `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` ja "
+"`outlines`, ks. [docs/server.md](https://git.joshuahirsig.xyz/joshii/"
+"tavletta/src/branch/main/docs/server.md#printers)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6184,17 +6145,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`preview` only lists and shows previews, `print` also prints and follows "
-#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its "
 "own jobs, `admin` sees and cancels all jobs and uploads and deletes "
 "templates."
 msgstr ""
-"`preview` vain luettelee ja näyttää esikatseluja, `print` myös tulostaa ja "
-"seuraa omia töitään, `admin` näkee ja peruuttaa kaikki työt."
+"`preview` vain listaa ja näyttää esikatseluja, `print` tulostaa myös ja "
+"seuraa omia töitään, `admin` näkee ja peruuttaa kaikki työt sekä lähettää ja "
+"poistaa malleja."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6216,10 +6174,9 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
-#, fuzzy, no-wrap
-#| msgid "Images { #images }"
+#, no-wrap
 msgid "Web page { #web-page }"
-msgstr "Kuvat { #images }"
+msgstr "Verkkosivu { #web-page }"
 
 #. type: Plain text
 #: docs/server.md
@@ -6227,6 +6184,8 @@ msgid ""
 "The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
 "address of the [reverse proxy](server-install.md#proxy)):"
 msgstr ""
+"Palvelimen oma sivu osoitteessaan (`http://127.0.0.1:8790/` tai [käänteisen "
+"välityspalvelimen](server-install.md#proxy) osoite):"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6236,12 +6195,18 @@ msgid ""
 "forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
 "organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
+"**Kirjaudu sisään** käyttötunnuksella (ilman tunnusta palvelimella ei ole "
+"mihin kirjautua). Selain pitää sen vain tällä välilehdellä; \"Kirjaudu "
+"ulos\" unohtaa sen. Missä palvelin on siihen säädetty, \"Kirjaudu sisään: …"
+"\" käyttää sen sijaan organisaatiosi tiliä ([OpenID Connect](server-"
+"install.md#oidc))."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "**Printers**: their state, the labels or tape loaded and problems, in words."
 msgstr ""
+"**Tulostimet**: niiden tila, asetetut tarrat tai nauha ja ongelmat sanoin."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6253,11 +6218,17 @@ msgid ""
 "it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
 "deleted here."
 msgstr ""
+"**Mallit**: tarrakansion tarratiedostot esikatselulla. Datakentät näyttävät "
+"mallin datatiedoston ensimmäisen rivin tai esimerkkiarvot, jos sitä ei ole "
+"tai se puuttuu. \"Tulosta\" täyttää yhden tarran kentät ja näyttää "
+"esikatselun kirjoitettaessa; kentän täyttämät elementit on siinä "
+"reunustettu. `admin`-tunnuksella malleja lähetetään (`.tavletta`-tiedostoja) "
+"ja poistetaan täällä."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "**Series**, step by step:"
-msgstr ""
+msgstr "**Sarja**, vaihe vaiheelta:"
 
 #. type: Bullet: '  1. '
 #: docs/server.md
@@ -6265,6 +6236,8 @@ msgid ""
 "Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
 "at all. Leading zeros stay (`00300`)."
 msgstr ""
+"Data: CSV-, XLSX- tai ODS-tiedosto, taulukkolaskennasta liitetty luettelo "
+"tai ei dataa lainkaan. Alkunollat säilyvät (`00300`)."
 
 #. type: Bullet: '  2. '
 #: docs/server.md
@@ -6274,6 +6247,10 @@ msgid ""
 "beside it outlines the field in use; each field shows its value, each column "
 "its first values."
 msgstr ""
+"Liitä: mikä sarake täyttää minkä mallin kentän (samat nimet on jo liitetty, "
+"kirjainkoosta ja välilyönneistä riippumatta). Vieressä oleva ensimmäisen "
+"tarran esikatselu reunustaa käytössä olevan kentän; jokainen kenttä näyttää "
+"arvonsa, jokainen sarake ensimmäiset arvonsa."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6283,6 +6260,10 @@ msgid ""
 "is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
 "second or tenth number; `3000-5685` can be typed or pasted at once."
 msgstr ""
+"Valitse: kaikki rivit, joitakin rivejä (`1-20, 25, 30-`) tai kentän alueiden "
+"mukaan. Ilman dataa alueet tuottavat arvot: Inventaarionumero `3000`–`5685` "
+"on 2686 tarraa, `00300`–`00450` säilyttää nollat, askel tuottaa joka toisen "
+"tai kymmenennen numeron; `3000-5685` voi kirjoittaa tai liittää kerralla."
 
 #. type: Bullet: '  4. '
 #: docs/server.md
@@ -6290,6 +6271,8 @@ msgid ""
 "Check: the number of labels, the first and the last one, the limits of the "
 "server and the printer."
 msgstr ""
+"Tarkista: tarrojen määrä, ensimmäinen ja viimeinen, palvelimen ja tulostimen "
+"rajat."
 
 #. type: Bullet: '  5. '
 #: docs/server.md
@@ -6299,6 +6282,10 @@ msgid ""
 "current job of up to [[ui:Labels per job]] labels). After a cancel or a "
 "printer problem, \"Continue from …\" prints the rest."
 msgstr ""
+"Tulosta: 100 tarrasta alkaen sivu kysyy ensin. Edistyminen näyttää, montako "
+"on tulostettu; Peru pysähtyy nykyisen tarran jälkeen (cab-tulostin: nykyisen "
+"enintään [[ui:Labels per job]] tarran työn jälkeen). Peruutuksen tai "
+"tulostinongelman jälkeen \"Jatka kohdasta …\" tulostaa loput."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6307,11 +6294,15 @@ msgid ""
 "every language of the app, Arabic right to left. Times are on a 24-hour "
 "clock."
 msgstr ""
+"Sivu puhuu selaimen kieltä tai ylhäältä valittua: kaikki sovelluksen kielet, "
+"arabia oikealta vasemmalle. Ajat ovat 24 tunnin kellolla."
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`--no-web-ui` turns the page off, for servers that only programs use."
 msgstr ""
+"`--no-web-ui` poistaa sivun käytöstä palvelimilla, joita käyttävät vain "
+"ohjelmat."
 
 #. type: Title ##
 #: docs/server.md
@@ -6346,17 +6337,14 @@ msgstr "`POST /api/v1/preview` palauttaa tarran PNG-kuvana."
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
-#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
 "state, `DELETE` cancels it between two labels (a cab printer: between two "
 "jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` laittaa tulostustyön jonoon; `GET /api/v1/jobs/<id>` "
-"näyttää sen tilan, `DELETE` peruuttaa sen kahden tarran välillä."
+"näyttää sen tilan, `DELETE` peruuttaa sen kahden tarran välillä (cab-"
+"tulostin: sarjan kahden työn välillä)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6566,16 +6554,12 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-#, fuzzy
-#| msgid ""
-#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
-#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
 "`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.1.2` on julkaisu, `1.1` version 1.1 viimeisin virhekorjausjulkaisu, "
-"`latest` viimeisin julkaisu. `edge` on kehitystila, ei julkaisu."
+"`1.2.1` on julkaisu, `1.2` version 1.2 viimeisin virhekorjausjulkaisu, "
+"`latest` viimeisin julkaisu. `edge` on kehityksen tila, ei julkaisu."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -7276,7 +7260,7 @@ msgstr ""
 #: docs/use.md
 #, no-wrap
 msgid "Arranging in the preview { #arrange }"
-msgstr ""
+msgstr "Järjestely esikatselussa { #arrange }"
 
 #. type: Plain text
 #: docs/use.md
@@ -7284,6 +7268,8 @@ msgid ""
 "In the free layout the elements can be arranged in the preview with the "
 "mouse, a finger or a pen:"
 msgstr ""
+"Vapaassa asettelussa elementtejä voi järjestellä esikatselussa hiirellä, "
+"sormella tai kynällä:"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7294,6 +7280,12 @@ msgid ""
 "Alt held: only those inside it). A click on an empty part selects nothing. "
 "Opening an element's row selects it too."
 msgstr ""
+"Napsauta elementtiä valitaksesi sen; sen rivi kohdassa [[ui:Content]] "
+"aukeaa. Napsauta Vaihtonäppäimellä tai Ctrl-näppäimellä lisätäksesi "
+"elementin valintaan tai poistaaksesi sen siitä. Vedä tyhjän kohdan yli "
+"valitaksesi jokaisen elementin, jota valintakehys koskettaa (Alt pohjassa: "
+"vain ne, jotka ovat sen sisällä). Napsautus tyhjään kohtaan ei valitse "
+"mitään. Elementin rivin avaaminen valitsee sen myös."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7304,6 +7296,12 @@ msgid ""
 "held while dragging: then use Ctrl). Hold Shift to move it along one axis "
 "only. Escape while dragging puts it back."
 msgstr ""
+"Vedä valintaa siirtääksesi sitä. Se tarttuu tarran reunoihin ja keskelle "
+"sekä muiden elementtien reunoihin ja keskikohtiin; punainen viiva näyttää "
+"missä. Pidä Altia tai Ctrl-näppäintä pohjassa sijoittaaksesi sen vapaasti "
+"(jotkin työpöydät siirtävät ikkunaa, kun Alt on pohjassa vedettäessä: käytä "
+"silloin Ctrl-näppäintä). Pidä Vaihtonäppäintä pohjassa siirtääksesi vain "
+"yhtä akselia pitkin. Escape vedon aikana palauttaa sen."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7314,6 +7312,11 @@ msgid ""
 "proportions; a barcode gets longer bars or wider modules. A shipping label "
 "is only moved."
 msgstr ""
+"Yhdellä valitulla elementillä on kahvat kulmissa ja reunoilla: vedä yhtä "
+"muuttaaksesi kokoa. Viiva tai muoto muuttaa leveyttään ja korkeuttaan "
+"erikseen (Vaihtonäppäin säilyttää mittasuhteet); teksti, kuva, symboli ja QR-"
+"koodi säilyttävät mittasuhteensa; viivakoodi saa pidemmät palkit tai "
+"leveämmät moduulit. Lähetystarraa vain siirretään."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7323,6 +7326,10 @@ msgid ""
 "more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
 "guides]]) and adds a grid to snap to."
 msgstr ""
+"[[ui:Arrange]] otsikkopalkissa tasaa valitut elementit: yksi elementti "
+"tarran reunaan tai keskelle, useita toisiinsa nähden. Se jakaa kolme tai "
+"useampia tasaisesti ([[ui:Distribute]]), kytkee tarttumisen päälle ja pois "
+"([[ui:Snap to guides]]) ja lisää ruudukon, johon tarttua."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7332,6 +7339,11 @@ msgid ""
 "all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
 "row and on its [[ui:Position and size]] page."
 msgstr ""
+"Kun esikatselu on kohdistettuna (napsauta sitä tai siirry siihen Tab-"
+"näppäimellä), nuolinäppäimet siirtävät valintaa 0,1 mm, Vaihtonäppäimellä 1 "
+"mm; Delete poistaa sen; Ctrl+A valitsee kaikki elementit, Shift+Ctrl+A ja "
+"Escape ei yhtään. Koot asetetaan elementin rivillä ja sen sivulla "
+"[[ui:Position and size]]."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7339,6 +7351,8 @@ msgid ""
 "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
 "in turn with the changes made in the sidebar."
 msgstr ""
+"Jokainen veto, jokainen koon muutos ja nuolinäppäinten painallusten sarja on "
+"yksi [[ui:Undo]]-askel, vuorotellen sivupalkissa tehtyjen muutosten kanssa."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7346,6 +7360,8 @@ msgid ""
 "In the layout [[ui:One after another]] elements can be selected, but not "
 "moved: dragging one offers [[ui:Use free layout]]."
 msgstr ""
+"Asettelussa [[ui:One after another]] elementtejä voi valita mutta ei "
+"siirtää: yhden vetäminen tarjoaa kohtaa [[ui:Use free layout]]."
 
 #. type: Title ##
 #: docs/use.md
@@ -7506,6 +7522,9 @@ msgid ""
 "by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
 "([see above](#arrange))."
 msgstr ""
+"Kun esikatselu on kohdistettuna: nuolinäppäimet siirtävät valittuja "
+"elementtejä (Vaihtonäppäin: 1 mm), Delete poistaa ne, Ctrl+A ja Shift+Ctrl+A "
+"valitsevat kaikki tai ei yhtään ([ks. yllä](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md
