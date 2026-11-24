@@ -43,8 +43,11 @@ CUPS classes are addressed as CUPS lists them (`/classes/<name>`).
   document of many megabytes on a slow connection goes on as long as the
   printer keeps taking it (at least 8000 bytes a second), and the answer
   is waited for while the printer still takes the end of the request from
-  the send queue. The answer itself has 10 s plus a second for every
-  8000 bytes, and at most 8 MB. [decided]
+  the send queue (also over `ipps`, where TLS 1.3 makes the connection
+  readable before the answer). The answer, also to `Print-Job`, must
+  begin within 10 s of the last byte of the request the printer took; all
+  of it has 10 s plus a second for every 8000 bytes, and at most 8 MB.
+  [decided]
 - `Get-Printer-Attributes` first: state, `printer-state-reasons`, the
   formats, `print-scaling-supported`, `media-size-supported`,
   `printer-resolution-default` and `-supported`, `copies-supported`,

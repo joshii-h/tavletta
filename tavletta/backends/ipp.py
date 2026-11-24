@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import http.client
 import io
-import select
 import socket
 import ssl
 import struct
@@ -295,7 +294,6 @@ def send(uri: str, body: bytes, timeout: float) -> Response:
         connection.endheaders()  # connects and sends the head
         assert connection.sock is not None
         net.send_all(connection.sock, body, timeout, MIN_RATE)
-        _wait_for_answer(connection.sock, timeout)
         # http.client only calls makefile() on what it reads the answer from
         reader = cast(socket.socket, _Answer(connection.sock, timeout))
         answer = http.client.HTTPResponse(reader, method="POST")
@@ -314,16 +312,21 @@ def send(uri: str, body: bytes, timeout: float) -> Response:
 
 
 class _Answer(io.RawIOBase):
-    """The connection's socket as http.client reads the answer from it: a
-    socket timeout only limits each read, so a printer sending a byte now
-    and then would hold the request for ever. Here the whole answer has
-    `timeout` plus a second for every MIN_RATE bytes (as net.send_all()
-    sends), and at most MAX_RESPONSE + HEAD_BYTES bytes."""
+    """The connection's socket as http.client reads the answer from it.
+
+    The request may still sit in the send queue (megabytes of a document)
+    when it is read from: the time counts from the last byte the printer
+    took (net.unsent), not from the end of sending. A readable socket does
+    not mean the answer has begun: TLS 1.3 sends session tickets after the
+    handshake. And a socket timeout only limits each read, so a printer
+    sending a byte now and then would hold the request for ever: the whole
+    answer has `timeout` plus a second for every MIN_RATE bytes (as
+    net.send_all() sends), and at most MAX_RESPONSE + HEAD_BYTES bytes."""
 
     def __init__(self, sock: socket.socket, timeout: float):
         super().__init__()
         self.sock, self.timeout = sock, timeout
-        self.start = _clock()
+        self.left, self.since = net.unsent(sock), _clock()  # of the request, and since when
         self.got = 0
 
     def makefile(self, _mode: str) -> io.BufferedReader:  # what http.client calls
@@ -336,33 +339,29 @@ class _Answer(io.RawIOBase):
         room = MAX_RESPONSE + HEAD_BYTES - self.got
         if room < 0:
             raise IppError("answer larger than %d bytes" % MAX_RESPONSE)
-        late = TimeoutError("the answer did not come in time, %d bytes of it" % self.got)
-        remaining = self.start + self.timeout + self.got / MIN_RATE - _clock()
-        if remaining <= 0:
-            raise late
-        self.sock.settimeout(remaining)
-        try:
-            count = self.sock.recv_into(memoryview(buffer)[: room + 1])  # one more: too large
-        except TimeoutError:
-            raise late from None
-        self.got += count
-        return count
+        while True:
+            outstanding, now = net.unsent(self.sock), _clock()
+            if outstanding < self.left:  # it still takes the request: no answer yet
+                self.left, self.since = outstanding, now
+            remaining = self.since + self.timeout + self.got / MIN_RATE - now
+            if remaining <= 0:
+                raise self._late(outstanding)
+            # while the request is taken, the send queue is looked at now and then
+            self.sock.settimeout(min(remaining, POLL) if outstanding else remaining)
+            try:
+                count = self.sock.recv_into(memoryview(buffer)[: room + 1])  # one more: too large
+            except TimeoutError:
+                continue
+            self.got += count
+            return count
 
-
-def _wait_for_answer(sock: socket.socket, timeout: float) -> None:
-    """Until the printer starts to answer. The request may still sit in the
-    send queue (megabytes of a document): `timeout` counts from the last
-    byte the printer took (net.unsent), not from the end of sending.
-    TimeoutError if it takes nothing and says nothing for that long."""
-    left, since = net.unsent(sock), _clock()
-    while not select.select([sock], [], [], POLL)[0]:
-        outstanding, now = net.unsent(sock), _clock()
-        if outstanding < left:
-            left, since = outstanding, now
-        elif now - since >= timeout:
-            raise TimeoutError(
-                "no answer within %g s, %d bytes of the request not taken" % (timeout, outstanding)
-            )
+    def _late(self, outstanding: int) -> TimeoutError:
+        if self.got:
+            return TimeoutError("the answer did not come in time, %d bytes of it" % self.got)
+        return TimeoutError(
+            "no answer within %g s, %d bytes of the request not taken"
+            % (self.timeout, outstanding)
+        )
 
 
 def _header_host(host: str) -> str:

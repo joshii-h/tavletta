@@ -230,9 +230,10 @@ class SlowPrinter:
     seconds apart), or stops taking it after `stop_after` bytes; then
     answers, unless `answer` is None."""
 
-    def __init__(self, pause=0.0, stop_after=None, answer=b"", trickle=0.0, head=b""):
+    def __init__(self, pause=0.0, stop_after=None, answer=b"", trickle=0.0, head=b"", tls=None):
         self.pause, self.stop_after, self.answer = pause, stop_after, answer
         self.trickle, self.head = trickle, head  # the answer a byte at a time; more headers
+        self.tls = tls  # an ssl.SSLContext: ipps
         self.taken = 0
         self.listener = socket.create_server(("127.0.0.1", 0))
         self.port = self.listener.getsockname()[1]
@@ -242,6 +243,8 @@ class SlowPrinter:
     def _serve(self):
         conn, _address = self.listener.accept()
         conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 16384)
+        if self.tls is not None:
+            conn = self.tls.wrap_socket(conn, server_side=True)
         with conn:
             head = b""
             while b"\r\n\r\n" not in head:
@@ -299,6 +302,43 @@ def test_a_document_sent_longer_than_the_timeout_is_not_cut_off(slow_printer):
     answer = ipp.send("ipp://p:%d/" % printer.port, body, timeout=0.3)
     assert answer.ok and printer.taken == len(body)
     assert time.monotonic() - start > 0.3  # longer than the timeout in all
+
+
+@pytest.fixture(scope="module")
+def tls13(tmp_path_factory):
+    """A server context of TLS 1.3 with a certificate of its own (as a
+    printer brings): TLS 1.3 sends session tickets after the handshake,
+    so the socket is readable before the answer comes."""
+    import shutil
+    import ssl
+    import subprocess
+
+    openssl = shutil.which("openssl")
+    if openssl is None:
+        pytest.skip("openssl is not installed")
+    folder = tmp_path_factory.mktemp("tls")
+    cert, key = folder / "cert.pem", folder / "key.pem"
+    subprocess.run(  # nosec - a fixed command line
+        [openssl, "req", "-x509", "-newkey", "ec", "-pkeyopt", "ec_paramgen_curve:P-256"]
+        + ["-nodes", "-keyout", str(key), "-out", str(cert), "-days", "1"]
+        + ["-subj", "/CN=printer.local"],
+        check=True,
+        capture_output=True,
+    )
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.minimum_version = ssl.TLSVersion.TLSv1_3
+    context.load_cert_chain(cert, key)
+    return context
+
+
+@pytest.mark.real_ipp
+def test_a_document_sent_over_tls_13_is_not_cut_off(slow_printer, tls13):
+    """ipps: the session tickets make the socket readable at once; the
+    answer is still waited for while the printer takes the request."""
+    printer = slow_printer(pause=0.01, answer=response(), tls=tls13)
+    body = bytes(256 << 10)
+    answer = ipp.send("ipps://p:%d/" % printer.port, body, timeout=0.3)
+    assert answer.ok and printer.taken == len(body)
 
 
 @pytest.mark.real_ipp
