@@ -576,10 +576,8 @@ def _child(data: str, request: dict) -> tuple[dict, bytes]:
     from tavletta.shipping import pdfchild
 
     kept = pdf_answers()
-    key = None
-    if kept is not None:
-        key = (kept.digest(data), json.dumps(request, sort_keys=True))
-    found = kept.get(key) if kept is not None and key is not None else None
+    key = (kept.digest(data), json.dumps(request, sort_keys=True)) if kept is not None else ()
+    found = kept.get(key) if kept is not None else None
     if found is not None:
         answer, body = found
     else:
@@ -589,7 +587,7 @@ def _child(data: str, request: dict) -> tuple[dict, bytes]:
             raise _too_large(str(e)) from None
         except pdfchild.ChildFailed as e:
             raise SourceError("unreadable", str(e)) from None
-        if kept is not None and key is not None:
+        if kept is not None:
             kept.put(key, answer, body)
     if "error" in answer:
         if answer["error"] == "too_large":
