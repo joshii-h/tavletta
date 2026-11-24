@@ -65,7 +65,7 @@ MAX_DEPTH = 8  # nested collections (media-col holds media-size: depth 2)
 # bytes a second a printer takes at least while a request is sent (a slower
 # one stalled; as the raw backends)
 MIN_RATE = 8_000
-POLL = 0.2  # seconds between two looks at the send queue while waiting for the answer
+POLL = 0.2  # seconds between two looks at the send queue, waiting for the answer
 HEAD_BYTES = 64 * 1024  # the HTTP head of an answer, beyond its body
 
 _clock = time.monotonic  # replaced in tests
@@ -346,7 +346,7 @@ class _Answer(io.RawIOBase):
             remaining = self.since + self.timeout + self.got / MIN_RATE - now
             if remaining <= 0:
                 raise self._late(outstanding)
-            # while the request is taken, the send queue is looked at now and then
+            # while the request is taken: the send queue looked at now and then
             self.sock.settimeout(min(remaining, POLL) if outstanding else remaining)
             try:
                 count = self.sock.recv_into(memoryview(buffer)[: room + 1])  # one more: too large

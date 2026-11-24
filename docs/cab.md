@@ -87,12 +87,14 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
 - The print head reports itself in the web interface as "106 mm 12 dots/mm"
   on the EOS2/300; Tavletta renders at exactly 12 dots per mm (8 for /200,
   23.6 for /600 models), so a 100 mm label is 1200 dots. Each print asks
-  `qv` first; an image rendered for another resolution is scaled dot by
-  dot if the ratio is a whole one upwards, else the label is rendered
-  again for the printer's resolution (as for ZPL: scaling down or by 1.5
-  spoils bars and thin lines). [confirmed for the /300] Before `qv` it asks `ESC s`: a
-  printer with a problem may not answer text commands, its status tells
-  the problem (out of labels, head open) instead of a timeout. [assumed]
+  `qv` first. [confirmed for the /300]
+- An image rendered for another resolution than `qv` reports is scaled
+  dot by dot if the ratio is a whole one upwards, else the label is
+  rendered again for the printer's resolution (as for ZPL: scaling down
+  or by 1.5 spoils bars and thin lines). [decided]
+- Before `qv` each print asks `ESC s`: a printer with a problem may not
+  answer text commands, its status tells the problem (out of labels, head
+  open) instead of a timeout. [assumed]
 
 ## A print job
 

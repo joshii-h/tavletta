@@ -195,9 +195,10 @@ class Session:
         """Send a question, read the answer until done(answer), the
         timeout (ANSWER_TIMEOUT) or ANSWER_MAX bytes. What came by then is
         returned, b"" if nothing: many of these printers do not answer
-        every question, which is no error. With `limit` the timeout counts from the last data
-        received, up to `limit` seconds in all: a long answer on a slow
-        line (a serial adapter at 9600 baud) is read while it keeps coming.
+        every question, which is no error. With `limit` the timeout
+        counts from the last data received, up to `limit` seconds in all:
+        a long answer on a slow line (a serial adapter at 9600 baud) is
+        read while it keeps coming.
         On USB a late answer could come before the next one; each session
         starts by dropping what is left (usb.connect)."""
         self.send(request)
