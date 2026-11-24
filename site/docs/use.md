@@ -137,6 +137,39 @@ put it.
   warns about it.
 - Labels in the free layout do not open in earlier versions of Tavletta.
 
+## Arranging in the preview { #arrange }
+
+In the free layout the elements can be arranged in the preview with the
+mouse, a finger or a pen:
+
+- Click an element to select it; its row in [[ui:Content]] opens. Click
+  with Shift or Ctrl to add an element to the selection or take it out.
+  Drag across an empty part to select every element the rubber band
+  touches (with Alt held: only those inside it). A click on an empty part
+  selects nothing. Opening an element's row selects it too.
+- Drag the selection to move it. It snaps to the label's edges and middle
+  and to the edges and middles of the other elements; a red line shows
+  where. Hold Alt, or Ctrl, to place it freely (some desktops move the
+  window when Alt is held while dragging: then use Ctrl). Hold Shift to
+  move it along one axis only. Escape while dragging puts it back.
+- One selected element has handles at its corners and edges: drag one to
+  resize it. A line or shape changes its width and height on their own
+  (Shift keeps its proportions); a text, an image, a symbol and a QR code
+  keep their proportions; a barcode gets longer bars or wider modules. A
+  shipping label is only moved.
+- [[ui:Arrange]] in the header bar aligns the selected elements: one
+  element at the label's edge or middle, several at one another's. It
+  spaces three or more evenly ([[ui:Distribute]]), turns snapping on and
+  off ([[ui:Snap to guides]]) and adds a grid to snap to.
+- With the preview focused (click it, or Tab to it), the arrow keys move
+  the selection by 0.1 mm, with Shift by 1 mm; Delete removes it; Ctrl+A
+  selects all elements, Shift+Ctrl+A and Escape none. Sizes are set in the
+  element's row and on its [[ui:Position and size]] page.
+- Every drag, every resize and a run of arrow keys is one step of
+  [[ui:Undo]], in turn with the changes made in the sidebar.
+- In the layout [[ui:One after another]] elements can be selected, but
+  not moved: dragging one offers [[ui:Use free layout]].
+
 ## Weight and error correction { #weight }
 
 - [[ui:Weight]] chooses one of the font's own weights, such as Light or
@@ -177,6 +210,9 @@ put it.
   removes it, Alt+Up and Alt+Down move it.
 - Ctrl+Shift+T, G, Y, B and L add text, an image, a symbol, a code or a
   line.
+- With the preview focused: the arrow keys move the selected elements
+  (Shift: by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select
+  all or none ([see above](#arrange)).
 - [[ui:Keyboard shortcuts]] (Ctrl+?) in the main menu lists them all.
 
 ## Symbols

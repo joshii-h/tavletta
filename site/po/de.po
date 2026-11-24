@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 13:42+0100\n"
+"POT-Creation-Date: 2026-11-24 14:58+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -6557,6 +6557,117 @@ msgstr ""
 #. type: Title ##
 #: docs/use.md
 #, no-wrap
+msgid "Arranging in the preview { #arrange }"
+msgstr "In der Vorschau anordnen { #arrange }"
+
+#. type: Plain text
+#: docs/use.md
+msgid ""
+"In the free layout the elements can be arranged in the preview with the "
+"mouse, a finger or a pen:"
+msgstr ""
+"In der freien Anordnung lassen sich die Elemente in der Vorschau mit der "
+"Maus, dem Finger oder einem Stift anordnen:"
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"Click an element to select it; its row in [[ui:Content]] opens. Click with "
+"Shift or Ctrl to add an element to the selection or take it out.  Drag "
+"across an empty part to select every element the rubber band touches (with "
+"Alt held: only those inside it). A click on an empty part selects nothing. "
+"Opening an element's row selects it too."
+msgstr ""
+"Ein Klick auf ein Element wählt es aus; seine Zeile unter [[ui:Content]] "
+"öffnet sich. Ein Klick mit Umschalt oder Strg fügt ein Element der Auswahl "
+"hinzu oder nimmt es heraus. Ziehen über eine leere Stelle wählt jedes "
+"Element, das der Auswahlrahmen berührt (mit gedrückter Alt-Taste: nur die "
+"darin). Ein Klick auf eine leere Stelle hebt die Auswahl auf. Auch das "
+"Öffnen der Zeile eines Elements wählt es aus."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"Drag the selection to move it. It snaps to the label's edges and middle and "
+"to the edges and middles of the other elements; a red line shows where. Hold "
+"Alt, or Ctrl, to place it freely (some desktops move the window when Alt is "
+"held while dragging: then use Ctrl). Hold Shift to move it along one axis "
+"only. Escape while dragging puts it back."
+msgstr ""
+"Ziehen verschiebt die Auswahl. Sie rastet an den Rändern und der Mitte des "
+"Etiketts und an den Rändern und Mitten der anderen Elemente ein; eine rote "
+"Linie zeigt, wo. Mit gedrückter Alt- oder Strg-Taste lässt sie sich frei "
+"platzieren (manche Arbeitsumgebungen verschieben das Fenster, wenn beim "
+"Ziehen Alt gedrückt ist: dann Strg verwenden). Mit gedrückter Umschalttaste "
+"bewegt sie sich nur entlang einer Achse. Escape während des Ziehens setzt "
+"sie zurück."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"One selected element has handles at its corners and edges: drag one to "
+"resize it. A line or shape changes its width and height on their own (Shift "
+"keeps its proportions); a text, an image, a symbol and a QR code keep their "
+"proportions; a barcode gets longer bars or wider modules. A shipping label "
+"is only moved."
+msgstr ""
+"Ein einzelnes ausgewähltes Element hat Griffe an Ecken und Rändern: Ziehen "
+"an einem Griff ändert seine Grösse. Eine Linie oder Form ändert Breite und "
+"Höhe unabhängig voneinander (mit Umschalt im gleichen Verhältnis); ein Text, "
+"ein Bild, ein Symbol und ein QR-Code behalten ihr Seitenverhältnis; ein "
+"Strichcode bekommt längere Striche oder breitere Module. Ein Versandetikett "
+"wird nur verschoben."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"[[ui:Arrange]] in the header bar aligns the selected elements: one element "
+"at the label's edge or middle, several at one another's. It spaces three or "
+"more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
+"guides]]) and adds a grid to snap to."
+msgstr ""
+"[[ui:Arrange]] in der Kopfleiste richtet die ausgewählten Elemente aus: ein "
+"einzelnes Element am Rand oder an der Mitte des Etiketts, mehrere "
+"aneinander. Es verteilt drei oder mehr gleichmässig ([[ui:Distribute]]), "
+"schaltet das Einrasten ein und aus ([[ui:Snap to guides]]) und fügt ein "
+"Raster zum Einrasten hinzu."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"With the preview focused (click it, or Tab to it), the arrow keys move the "
+"selection by 0.1 mm, with Shift by 1 mm; Delete removes it; Ctrl+A selects "
+"all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
+"row and on its [[ui:Position and size]] page."
+msgstr ""
+"Hat die Vorschau den Fokus (anklicken oder mit Tab hingehen), verschieben "
+"die Pfeiltasten die Auswahl um 0.1 mm, mit Umschalt um 1 mm; Entf entfernt "
+"sie; Strg+A wählt alle Elemente aus, Umschalt+Strg+A und Escape keines. "
+"Grössen werden in der Zeile des Elements und auf seiner Seite [[ui:Position "
+"and size]] eingestellt."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
+"in turn with the changes made in the sidebar."
+msgstr ""
+"Jedes Ziehen, jede Grössenänderung und eine Folge von Pfeiltasten ist ein "
+"Schritt für [[ui:Undo]], im Wechsel mit den Änderungen in der Seitenleiste."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"In the layout [[ui:One after another]] elements can be selected, but not "
+"moved: dragging one offers [[ui:Use free layout]]."
+msgstr ""
+"In der Anordnung [[ui:One after another]] lassen sich Elemente auswählen, "
+"aber nicht verschieben: Wer eines zieht, bekommt [[ui:Use free layout]] "
+"angeboten."
+
+#. type: Title ##
+#: docs/use.md
+#, no-wrap
 msgid "Weight and error correction { #weight }"
 msgstr "Schriftstärke und Fehlerkorrektur { #weight }"
 
@@ -6707,6 +6818,17 @@ msgid ""
 msgstr ""
 "Strg+Umschalt+T, G, Y, B und L fügen Text, ein Bild, ein Symbol, einen Code "
 "oder eine Linie hinzu."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"With the preview focused: the arrow keys move the selected elements (Shift: "
+"by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
+"([see above](#arrange))."
+msgstr ""
+"Hat die Vorschau den Fokus: Die Pfeiltasten verschieben die ausgewählten "
+"Elemente (Umschalt: um 1 mm), Entf entfernt sie, Strg+A und Umschalt+Strg+A "
+"wählen alle oder keines aus ([siehe oben](#arrange))."
 
 #. type: Bullet: '- '
 #: docs/use.md

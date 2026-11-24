@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 13:42+0100\n"
+"POT-Creation-Date: 2026-11-24 14:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4702,6 +4702,60 @@ msgstr ""
 #. type: Title ##
 #: docs/use.md
 #, markdown-text, no-wrap
+msgid "Arranging in the preview { #arrange }"
+msgstr ""
+
+#. type: Plain text
+#: docs/use.md
+#, markdown-text
+msgid "In the free layout the elements can be arranged in the preview with the mouse, a finger or a pen:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "Click an element to select it; its row in [[ui:Content]] opens. Click with Shift or Ctrl to add an element to the selection or take it out.  Drag across an empty part to select every element the rubber band touches (with Alt held: only those inside it). A click on an empty part selects nothing. Opening an element's row selects it too."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "Drag the selection to move it. It snaps to the label's edges and middle and to the edges and middles of the other elements; a red line shows where. Hold Alt, or Ctrl, to place it freely (some desktops move the window when Alt is held while dragging: then use Ctrl). Hold Shift to move it along one axis only. Escape while dragging puts it back."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "One selected element has handles at its corners and edges: drag one to resize it. A line or shape changes its width and height on their own (Shift keeps its proportions); a text, an image, a symbol and a QR code keep their proportions; a barcode gets longer bars or wider modules. A shipping label is only moved."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "[[ui:Arrange]] in the header bar aligns the selected elements: one element at the label's edge or middle, several at one another's. It spaces three or more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to guides]]) and adds a grid to snap to."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "With the preview focused (click it, or Tab to it), the arrow keys move the selection by 0.1 mm, with Shift by 1 mm; Delete removes it; Ctrl+A selects all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's row and on its [[ui:Position and size]] page."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], in turn with the changes made in the sidebar."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "In the layout [[ui:One after another]] elements can be selected, but not moved: dragging one offers [[ui:Use free layout]]."
+msgstr ""
+
+#. type: Title ##
+#: docs/use.md
+#, markdown-text, no-wrap
 msgid "Weight and error correction { #weight }"
 msgstr ""
 
@@ -4799,6 +4853,12 @@ msgstr ""
 #: docs/use.md
 #, markdown-text
 msgid "Ctrl+Shift+T, G, Y, B and L add text, an image, a symbol, a code or a line."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+#, markdown-text
+msgid "With the preview focused: the arrow keys move the selected elements (Shift: by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none ([see above](#arrange))."
 msgstr ""
 
 #. type: Bullet: '- '
