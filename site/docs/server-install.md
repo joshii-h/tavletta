@@ -356,9 +356,9 @@ Back up `/etc/tavletta`, `/var/lib/tavletta/labels` and your fonts.
 
 Each release has packages for Debian 13 (trixie) and Fedora 44 on x86-64:
 Tavletta, the Python packages it needs that the distribution does not
-have, and the service of option B, installed but not enabled, with the
-user `tavletta` and its folders. Installing them needs only the
-distribution's package sources, no PyPI or GitHub.
+have, and `tavletta-server`, the service of option B, installed but not
+enabled, with the user `tavletta` and its folders. Installing them needs
+only the distribution's package sources, no PyPI or GitHub.
 
 ### 1. Install { #package-install }
 
@@ -369,20 +369,20 @@ download into an empty folder the `.deb` files and `SHA256SUMS-deb`
 
 ```sh
 sha256sum --ignore-missing -c SHA256SUMS-deb && sudo apt install ./*.deb   # Debian
-sha256sum --ignore-missing -c SHA256SUMS-rpm && sudo dnf install ./*.rpm   # Fedora
-tavletta --version
+sha256sum --ignore-missing -c SHA256SUMS-rpm && sudo dnf install ./*.noarch.rpm ./*.x86_64.rpm   # Fedora
+/usr/bin/tavletta --version
 ```
 
 ### 2. Configure and start { #package-start }
 
-The package has made `/etc/tavletta` and `/var/lib/tavletta/labels`,
-owned by `tavletta`, with the paths of [option B](#native-user). Put
-`printers.toml` there ([as above](#printers)), make the tokens as the
-service user, then start the service:
+The package `tavletta-server` has made `/etc/tavletta` and
+`/var/lib/tavletta/labels`, owned by `tavletta`, with the paths of
+[option B](#native-user). Put `printers.toml` there ([as above](#printers)),
+make the tokens as the service user, then start the service:
 
 ```sh
 sudo install -o tavletta -g tavletta -m 600 printers.toml /etc/tavletta/
-sudo -u tavletta tavletta token new inventory-tool --role print \
+sudo -u tavletta /usr/bin/tavletta token new inventory-tool --role print \
     --printer it-cab --tokens /etc/tavletta/tokens.toml --printers /etc/tavletta/printers.toml
 sudo systemctl enable --now tavletta-server
 curl http://127.0.0.1:8790/api/v1/health

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+# An upgrade restarts a running server with the new version; a stopped one
+# stays stopped (dh_installsystemd --no-start leaves both out). Not when
+# systemd does not run (a container, a chroot).
+if [ "$1" = "configure" ] && [ -n "$2" ] && [ -d /run/systemd/system ]; then
+	deb-systemd-invoke try-restart tavletta-server.service > /dev/null || true
+fi
+
+exit 0

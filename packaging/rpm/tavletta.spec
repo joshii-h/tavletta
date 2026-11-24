@@ -32,9 +32,8 @@ BuildRequires:  libadwaita
 BuildRequires:  dejavu-sans-fonts
 # tools/icons.py's tests: librsvg's GObject introspection (Rsvg 2.0)
 BuildRequires:  librsvg2
-# the print server's unit, user and the udev rule
+# the print server's unit and user (tavletta-server), the udev rule
 BuildRequires:  systemd-rpm-macros
-%{?systemd_requires}
 
 # PyGObject with GTK 4, libadwaita, Pango and PangoCairo (typelibs), pycairo
 Requires:       python3-gobject
@@ -64,9 +63,23 @@ office printers through CUPS or IPP, one label per page or on label sheets.
 It also prints label files from the command line and runs a print server
 with a REST API and MCP.
 
-The print server comes as a system service, installed but not enabled,
-that runs as a user of its own. A device rule lets the user at the
-computer use label printers on USB without joining further groups.
+A device rule lets the user at the computer use the USB label printers of
+Brother, cab, DYMO, TSC, Zebra and NIIMBOT without joining further groups;
+printers of other makers need the printer group. The print server as a
+system service is in tavletta-server.
+
+
+%package        server
+Summary:        Print server of the Tavletta label designer, as a system service
+Requires:       %{name} = %{version}-%{release}
+%{?systemd_requires}
+
+%description    server
+The print server of Tavletta, with a REST API and MCP, as the system service
+tavletta-server: as a user of its own (made by this package), sandboxed, on
+the local address 127.0.0.1, port 8790, with its printers, access tokens
+and labels in folders of its own. It is installed but not enabled; an
+upgrade restarts it if it runs.
 
 
 %prep
@@ -112,14 +125,14 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 %pytest -m 'not gui' -p no:cacheprovider --ignore=tests/test_packaging.py
 
 
-%post
+%post server
 # not enabled: the preset disables it unless the system's presets say otherwise
 %systemd_post tavletta-server.service
 
-%preun
+%preun server
 %systemd_preun tavletta-server.service
 
-%postun
+%postun server
 %systemd_postun_with_restart tavletta-server.service
 
 
@@ -137,9 +150,11 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 %{_datadir}/icons/hicolor/symbolic/apps/%{app_id}-symbolic.svg
 %{_datadir}/icons/hicolor/*x*/apps/%{app_id}.svg
 %{_datadir}/mime/packages/%{app_id}.xml
+%{_udevrulesdir}/70-tavletta.rules
+
+%files server
 %{_unitdir}/tavletta-server.service
 %{_sysusersdir}/tavletta.conf
-%{_udevrulesdir}/70-tavletta.rules
 %dir %attr(0750,tavletta,tavletta) %{_sysconfdir}/tavletta
 %dir %attr(0750,tavletta,tavletta) %{_sharedstatedir}/tavletta
 %dir %attr(0750,tavletta,tavletta) %{_sharedstatedir}/tavletta/labels

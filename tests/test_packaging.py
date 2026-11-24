@@ -545,10 +545,12 @@ def test_the_manual_page_names_every_command_and_printer():
 
 
 def test_the_packages_install_the_print_server_disabled():
-    """tavletta-server.service in the Debian and RPM packages: the
-    package's /usr/bin/tavletta instead of a manual installation's, the user
-    tavletta and the folders site/docs/server-install.md names, installed
-    but not enabled; the udev rule for USB label printers."""
+    """tavletta-server.service in the Debian and RPM packages tavletta-server:
+    the package's /usr/bin/tavletta instead of a manual installation's, the
+    user tavletta and the folders site/docs/server-install.md names,
+    installed but not enabled, restarted by an upgrade when it runs, the
+    configuration removed on purge (Debian). The program's package makes no
+    user; it has the udev rule for USB label printers."""
     unit = (ROOT / "packaging" / "systemd" / "tavletta-server.service").read_text(encoding="utf-8")
     execstart = re.findall(r"^ExecStart=(\S+) serve (.*)$", unit, re.M)
     assert execstart and execstart[0][0] == "/opt/tavletta/bin/tavletta", execstart
@@ -566,8 +568,38 @@ def test_the_packages_install_the_print_server_disabled():
         assert f"grep -q '^ExecStart={bindir}/tavletta serve '" in text
         for source in ("tavletta.sysusers.conf", "70-tavletta.rules"):
             assert source in text, source
-    assert "dh_installsystemd --no-enable --no-start" in rules
-    assert "%systemd_post tavletta-server.service" in spec
+    # Debian: the service, its user and folders in tavletta-server, udev in tavletta
+    targets = re.findall(r"^\s+debian/([\w-]+)/(\S+)", rules, re.M)
+    installed = {path: package for package, path in targets if "python3" not in path}
+    assert installed == {
+        "usr/lib/systemd/system/tavletta-server.service": "tavletta-server",
+        "usr/lib/sysusers.d/tavletta.conf": "tavletta-server",
+        "usr/lib/tmpfiles.d/tavletta.conf": "tavletta-server",
+        "usr/lib/udev/rules.d/70-tavletta.rules": "tavletta",
+    }
+    assert "dh_installsystemd -ptavletta-server --no-enable --no-start" in rules
+    debian = ROOT / "packaging" / "debian"
+    postinst = (debian / "tavletta-server.postinst").read_text(encoding="utf-8")
+    assert '[ "$1" = "configure" ] && [ -n "$2" ]' in postinst  # an upgrade only
+    assert "deb-systemd-invoke try-restart tavletta-server.service" in postinst
+    postrm = (debian / "tavletta-server.postrm").read_text(encoding="utf-8")
+    assert '[ "$1" = "purge" ]' in postrm and "rm -rf /etc/tavletta /var/cache/tavletta" in postrm
+    assert "rmdir /var/lib/tavletta/labels /var/lib/tavletta" in postrm  # labels kept
+    control = (debian / "control").read_text(encoding="utf-8")
+    assert "\nPackage: tavletta-server\n" in control
+    assert " tavletta (= ${binary:Version}),\n" in control.split("Package: tavletta-server")[1]
+    # RPM: the subpackage server has them; the program's package makes no user
+    main, server = (
+        spec.split("\n%files server\n")[0].split("\n%files ")[1],
+        spec.split("\n%files server\n")[1].split("\n%changelog")[0],
+    )
+    assert "%{_udevrulesdir}/70-tavletta.rules" in main
+    for line in ("%{_unitdir}/tavletta-server.service", "%{_sysusersdir}/tavletta.conf"):
+        assert line in server and line not in main, line
+    assert "%systemd_post tavletta-server.service" in spec.split("%post server\n")[1]
+    assert (
+        "%systemd_postun_with_restart tavletta-server.service" in spec.split("%postun server\n")[1]
+    )
     sysusers = (ROOT / "packaging" / "systemd" / "tavletta.sysusers.conf").read_text(
         encoding="utf-8"
     )
@@ -579,7 +611,7 @@ def test_the_packages_install_the_print_server_disabled():
     assert folders == ["/etc/tavletta", "/var/lib/tavletta", "/var/lib/tavletta/labels"]
     for folder in folders:  # the RPM owns them itself
         rpm = folder.replace("/etc", "%{_sysconfdir}").replace("/var/lib", "%{_sharedstatedir}")
-        assert f"%dir %attr(0750,tavletta,tavletta) {rpm}\n" in spec, rpm
+        assert f"%dir %attr(0750,tavletta,tavletta) {rpm}\n" in server, rpm
     guide = (ROOT / "site" / "docs" / "server-install.md").read_text(encoding="utf-8")
     for path in (
         "/etc/tavletta/printers.toml",

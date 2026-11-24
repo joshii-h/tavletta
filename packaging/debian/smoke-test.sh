@@ -6,7 +6,8 @@
 #
 # Starts `tavletta --version` (it must say EXPECT_VERSION, if given) and
 # renders two example labels to PNG without a display or a printer: one
-# with a QR code (segno), one with a Data Matrix code (Zint). With the
+# with a QR code (segno), one with a Data Matrix code (Zint). Checks that
+# only tavletta-server makes the server's user and folders. With the
 # source package in DEBDIR/source (build.sh puts it there), then runs its
 # autopkgtests (debian/tests) on this system: the program's tests against
 # the installed package.
@@ -20,7 +21,14 @@ export DEBIAN_FRONTEND=noninteractive
 export CI=1
 
 apt-get update -qq
-apt-get install -y -qq "$DEBS"/*.deb > /dev/null
+# the program first: it makes no user and no server folders
+mapfile -t program < <(find "$DEBS" -maxdepth 1 -name '*.deb' ! -name 'tavletta-server_*')
+apt-get install -y -qq "${program[@]}" > /dev/null
+if getent passwd tavletta > /dev/null || [ -e /etc/tavletta ]; then
+  echo "error: the package tavletta made the server's user or folders" >&2
+  exit 1
+fi
+apt-get install -y -qq "$DEBS"/tavletta-server_*.deb > /dev/null
 
 # no display, no session bus: what a server or a script has
 unset DISPLAY WAYLAND_DISPLAY DBUS_SESSION_BUS_ADDRESS

@@ -1,7 +1,8 @@
 # Tavletta print server as a system service, for a server (site/docs/server-install.md).
 #
-# The Debian and RPM packages install it with ExecStart=/usr/bin/tavletta,
-# disabled, with the user tavletta and the folders below. By hand:
+# The Debian and RPM packages tavletta-server install it with
+# ExecStart=/usr/bin/tavletta, disabled, with the user tavletta and the
+# folders below. By hand:
 #
 #   python3 -m venv --system-site-packages /opt/tavletta
 #   /opt/tavletta/bin/pip install <the Tavletta source or wheel>

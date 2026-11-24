@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 08:50+0100\n"
+"POT-Creation-Date: 2026-11-24 10:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3451,7 +3451,7 @@ msgstr ""
 #. type: Plain text
 #: docs/server-install.md
 #, markdown-text
-msgid "Each release has packages for Debian 13 (trixie) and Fedora 44 on x86-64: Tavletta, the Python packages it needs that the distribution does not have, and the service of option B, installed but not enabled, with the user `tavletta` and its folders. Installing them needs only the distribution's package sources, no PyPI or GitHub."
+msgid "Each release has packages for Debian 13 (trixie) and Fedora 44 on x86-64: Tavletta, the Python packages it needs that the distribution does not have, and `tavletta-server`, the service of option B, installed but not enabled, with the user `tavletta` and its folders. Installing them needs only the distribution's package sources, no PyPI or GitHub."
 msgstr ""
 
 #. type: Title ###
@@ -3471,8 +3471,8 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sha256sum --ignore-missing -c SHA256SUMS-deb && sudo apt install ./*.deb   # Debian\n"
-"sha256sum --ignore-missing -c SHA256SUMS-rpm && sudo dnf install ./*.rpm   # Fedora\n"
-"tavletta --version\n"
+"sha256sum --ignore-missing -c SHA256SUMS-rpm && sudo dnf install ./*.noarch.rpm ./*.x86_64.rpm   # Fedora\n"
+"/usr/bin/tavletta --version\n"
 msgstr ""
 
 #. type: Title ###
@@ -3484,7 +3484,7 @@ msgstr ""
 #. type: Plain text
 #: docs/server-install.md
 #, markdown-text
-msgid "The package has made `/etc/tavletta` and `/var/lib/tavletta/labels`, owned by `tavletta`, with the paths of [option B](#native-user). Put `printers.toml` there ([as above](#printers)), make the tokens as the service user, then start the service:"
+msgid "The package `tavletta-server` has made `/etc/tavletta` and `/var/lib/tavletta/labels`, owned by `tavletta`, with the paths of [option B](#native-user). Put `printers.toml` there ([as above](#printers)), make the tokens as the service user, then start the service:"
 msgstr ""
 
 #. type: Fenced code block (sh)
@@ -3492,7 +3492,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo install -o tavletta -g tavletta -m 600 printers.toml /etc/tavletta/\n"
-"sudo -u tavletta tavletta token new inventory-tool --role print \\\n"
+"sudo -u tavletta /usr/bin/tavletta token new inventory-tool --role print \\\n"
 "    --printer it-cab --tokens /etc/tavletta/tokens.toml --printers /etc/tavletta/printers.toml\n"
 "sudo systemctl enable --now tavletta-server\n"
 "curl http://127.0.0.1:8790/api/v1/health\n"

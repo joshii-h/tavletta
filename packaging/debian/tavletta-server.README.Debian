@@ -1,24 +1,9 @@
-Tavletta for Debian
-===================
-
-Printers on USB
----------------
-
-The package installs a udev rule (/usr/lib/udev/rules.d/70-tavletta.rules)
-that lets the user at the computer, in an active local session, use USB
-printers on the kernel's printer class driver (/dev/usb/lp*) and NIIMBOT
-printers (a USB serial port, /dev/ttyACM*, vendor 3513). It takes effect
-when the printer is plugged in again. Users who print from elsewhere (an SSH
-session, a service) need the group lp, for NIIMBOT printers dialout:
-
-  sudo usermod -aG lp,dialout USER
-
-The print server
-----------------
+Tavletta's print server for Debian
+==================================
 
 tavletta-server.service runs `tavletta serve` as the system user tavletta
-(made by the package), sandboxed, on 127.0.0.1:8790. It is installed but
-neither enabled nor started. Its files:
+(made by this package), sandboxed, on 127.0.0.1:8790. It is installed but
+neither enabled nor started; an upgrade restarts it if it runs. Its files:
 
   /etc/tavletta/printers.toml   the printers clients may use
   /etc/tavletta/tokens.toml     the access tokens (hashes)
@@ -32,4 +17,9 @@ Both TOML files belong to tavletta, mode 600. Make a token as that user:
 
 The service has no access to devices: it prints to network printers. The
 full guide, with a reverse proxy for HTTPS:
-https://tavletta.joshuahirsig.xyz/server-install/
+https://tavletta.joshuahirsig.xyz/server-install/#package
+
+Purging the package (apt purge tavletta-server) deletes /etc/tavletta with
+its printers and tokens, and /var/lib/tavletta unless label files are left
+in it. The user tavletta stays, as files may still belong to it (Debian
+does not remove system users on purge); remove it with `deluser tavletta`.

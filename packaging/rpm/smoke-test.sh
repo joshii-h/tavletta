@@ -7,7 +7,8 @@
 # Starts `tavletta --version` (it must say EXPECT_VERSION, if given) and
 # renders two example labels to PNG without a display or a printer: one
 # with a QR code (segno), one with a Data Matrix code (Zint). Checks the
-# print server's unit (not enabled), its user and folders, and the udev rule.
+# print server's unit (not enabled), its user and folders (only with
+# tavletta-server), and the udev rule.
 set -euo pipefail
 RPMS="$(realpath "$1")"
 EXPECT="${2:-}"
@@ -16,9 +17,15 @@ trap 'rm -rf "$TMP"' EXIT
 # as on the CI runners (see build.sh)
 export CI=1
 
-mapfile -t packages < <(find "$RPMS" -maxdepth 1 -name '*.rpm' ! -name '*.src.rpm')
-# with their documentation (the container images install none: tsflags=nodocs)
-dnf install -y -q --setopt=tsflags= "${packages[@]}" > /dev/null
+# with their documentation (the container images install none: tsflags=nodocs);
+# the program first: it makes no user and no server folders
+mapfile -t program < <(find "$RPMS" -maxdepth 1 -name '*.rpm' ! -name '*.src.rpm' ! -name 'tavletta-server-*')
+dnf install -y -q --setopt=tsflags= "${program[@]}" > /dev/null
+if getent passwd tavletta > /dev/null || [ -e /etc/tavletta ]; then
+  echo "error: the package tavletta made the server's user or folders" >&2
+  exit 1
+fi
+dnf install -y -q --setopt=tsflags= "$RPMS"/tavletta-server-[0-9]*.noarch.rpm > /dev/null
 
 # no display, no session bus: what a server or a script has
 unset DISPLAY WAYLAND_DISPLAY DBUS_SESSION_BUS_ADDRESS
