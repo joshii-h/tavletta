@@ -410,7 +410,7 @@ def test_print_cancels_a_job_cut_off_while_sending(backend, printer, monkeypatch
         backend.print_label(Image.new("RGB", (600, 300), "white"), "h", PrintOptions())
     assert printer.device.requests[-1] == b"\x1bc" and printer.device.cancelled == 1
     # a printer that stalled takes no ESC c either: a short try, a short close
-    assert printer.sockets[-1].timeouts == [cab.CANCEL_TIMEOUT]
+    assert printer.sockets[-1].timeouts[-1] == cab.CANCEL_TIMEOUT
 
 
 def test_print_send_failure_survives_a_cancel_that_fails_too(backend, printer, monkeypatch):
@@ -527,6 +527,53 @@ def test_print_keeps_the_resolution_if_the_printer_does_not_say(backend, printer
     assert (
         png.size == (1267, 300) and commands[2] == "S l1;0,0,25,28,105.6"
     )  # the label's size, as cablabel sends it
+
+
+def test_an_answer_without_end_is_not_read_on():
+    """Something else on port 9100 that talks without a carriage return:
+    refused after MAX_ANSWER bytes, not read for ever."""
+
+    class Endless:
+        received = 0
+
+        def sendall(self, data):
+            pass
+
+        def settimeout(self, timeout):
+            pass
+
+        def recv(self, size):
+            self.received += size
+            return b"x" * size
+
+    endless = Endless()
+    with pytest.raises(PrinterError, match="unexpected answer"):
+        cab._Session(endless).version()
+    assert endless.received == cab.MAX_ANSWER
+
+
+def test_an_answer_that_trickles_in_ends_in_time(monkeypatch):
+    """Each read has its timeout, the whole answer too: a byte every few
+    seconds cannot hold the session."""
+    now = [0.0]
+    timeouts = []
+
+    class Trickle:
+        def sendall(self, data):
+            pass
+
+        def settimeout(self, timeout):
+            timeouts.append(timeout)
+
+        def recv(self, size):
+            now[0] += 3.0
+            return b"x"
+
+    monkeypatch.setattr(cab, "_clock", lambda: now[0])
+    with pytest.raises(PrinterTimeout, match="not complete in time"):
+        cab._Session(Trickle()).version()
+    assert now[0] <= cab.SOCKET_TIMEOUT + 3.0
+    assert timeouts[1] < timeouts[0] and timeouts[-1] == cab.SOCKET_TIMEOUT
 
 
 def test_query_keeps_the_status_if_text_commands_time_out(backend, printer, monkeypatch):

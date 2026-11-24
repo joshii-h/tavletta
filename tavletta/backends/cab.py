@@ -66,6 +66,9 @@ DEFAULT_PORT = 9100
 # sending a job (net.send_all, usb.Connection.sendall)
 SOCKET_TIMEOUT = 10.0
 CANCEL_TIMEOUT = 1.0  # seconds for ESC c after a problem, and for closing then
+# an answer up to a carriage return (qv's is about 40 characters): longer is
+# not a cab printer answering, and is not read on
+MAX_ANSWER = 256
 MIN_RATE = 8_000  # bytes a second: a job that trickles in slower counts as stalled
 PRINT_TIMEOUT = 180.0  # seconds without progress while waiting or printing
 POLL_INTERVAL = 0.5  # the manual: status requests not more often than every 0.5 s
@@ -383,17 +386,30 @@ class _Session:
         self.sock = sock
 
     def _read(self, length: int | None = None) -> str:
-        """An answer: `length` bytes, or up to a carriage return."""
+        """An answer: `length` bytes, or up to a carriage return (at most
+        MAX_ANSWER bytes). All of it within SOCKET_TIMEOUT: a timeout for
+        each read alone would let something that sends a byte now and then
+        hold the session (and on USB the printer) for ever."""
         data = b""
-        while True:
-            chunk = self.sock.recv(1 if length is None else length - len(data))
-            if not chunk:
-                raise PrinterTimeout("connection closed after %r" % data)
-            data += chunk
-            if length is not None and len(data) >= length:
-                return data.decode("ascii", "replace")
-            if length is None and data.endswith(b"\r"):
-                return data.decode("ascii", "replace")
+        deadline = _clock() + SOCKET_TIMEOUT
+        try:
+            while True:
+                remaining = deadline - _clock()
+                if remaining <= 0:
+                    raise PrinterTimeout("answer not complete in time: %r" % data[:40])
+                self.sock.settimeout(remaining)
+                chunk = self.sock.recv(1 if length is None else length - len(data))
+                if not chunk:
+                    raise PrinterTimeout("connection closed after %r" % data[:40])
+                data += chunk
+                if length is not None and len(data) >= length:
+                    return data.decode("ascii", "replace")
+                if length is None and data.endswith(b"\r"):
+                    return data.decode("ascii", "replace")
+                if len(data) >= MAX_ANSWER:
+                    raise PrinterError("unexpected answer: %r" % data[:40])
+        finally:
+            self.sock.settimeout(SOCKET_TIMEOUT)
 
     def status(self) -> Status:
         self.sock.sendall(ESC + b"s")

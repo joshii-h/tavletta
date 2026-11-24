@@ -60,6 +60,9 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
 
 [manual] [confirmed]
 
+- An answer has 10 s in all (not 10 s for each byte), and one up to CR
+  at most 256 bytes: something else on port 9100 that talks without end
+  does not hold the connection. [decided]
 - Error characters of `ESC s` that Tavletta names: `P` out of paper,
   `D` print head or pinch roller open, `E` synchronisation error (no label
   found), `F` out of ribbon, `R` ribbon in thermal direct mode (see "Print
