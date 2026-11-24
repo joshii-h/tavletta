@@ -40,11 +40,15 @@ Requires:       hicolor-icon-theme
 Requires:       shared-mime-info
 # shipping labels from PDF files (images work without it)
 Recommends:     poppler-glib
-# every symbology but QR Code, Code 128 and EAN-13 (without it, such codes
-# show "code unavailable"); compiled, so not on every architecture
-Recommends:     python3dist(zint-bindings)
-# resolve printers' *.local names
-Recommends:     nss-mdns
+# finding printers on the network and resolving their *.local names: through
+# the Avahi daemon on D-Bus; other programs resolve *.local with nss-mdns
+Recommends:     avahi
+Suggests:       nss-mdns
+# The Python dependencies (Pillow, segno, python-barcode, zint-bindings,
+# labelprinter) come from pyproject.toml, as BuildRequires
+# (%%generate_buildrequires, so the tests use them) and as Requires; Zint is
+# one of them as in the Debian package: without it most symbologies show
+# "code unavailable".
 
 %description
 Tavletta designs labels with text, images, symbols and codes, shows them
@@ -61,8 +65,6 @@ with a REST API and MCP.
 # the VC-500W protocol: a direct git URL in pyproject.toml (pip only),
 # here the python3-labelprinter package
 sed -i 's|"labelprinter @ git+[^"]*"|"labelprinter"|' pyproject.toml
-# optional (Recommends above): the other symbologies
-sed -i '/"zint-bindings[^"]*",/d' pyproject.toml
 grep -q '"labelprinter"' pyproject.toml
 
 
@@ -94,8 +96,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 
 
 %files -f %{pyproject_files} -f %{name}.lang
-%doc README.md CREDITS.md
-%license THIRD_PARTY_NOTICES.md
+# LICENSE, THIRD_PARTY_NOTICES.md, CREDITS.md and the data licences are
+# the package's license files (pyproject.toml), %%license through -l above
+%doc README.md
 %{_bindir}/tavletta
 %{_mandir}/man1/tavletta.1*
 %{_datadir}/applications/%{app_id}.desktop

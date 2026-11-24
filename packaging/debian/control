@@ -48,9 +48,10 @@ Depends:
  ${misc:Depends},
  ${python3:Depends},
 Recommends:
+ avahi-daemon,
  gir1.2-poppler-0.18,
 Suggests:
- avahi-daemon,
+ libnss-mdns,
 Description: design and print labels on label printers
  Tavletta designs labels with text, images, symbols and codes, shows them
  exactly as they will be printed and prints them over the network or USB:
