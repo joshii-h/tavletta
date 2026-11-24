@@ -419,19 +419,20 @@ printed are known this way:
 - Without it (USB, the web interface off or behind a password), from
   `ESC s`: a job of one label is over when the printer counted its
   labels down, as the manual has it; a series' job only once the printer
-  is idle, not when the labels to print reached 0 with the interpreter
-  still active (that may be one `A` of many). At a problem the labels
+  is idle at two polls in a row, not when the labels to print reached 0
+  with the interpreter still active (that may be one `A` of many), nor
+  at a moment idle between two `A`. At a problem the labels
   printed for certain are those it was seen to count down (both readings
   agree on them: fewer than printed if it counts each `A` on its own), at
   most the job's labels minus those still to print in the answer that
   reports it; a job of one label counts exactly as the manual has it. A
   series' job counts as stuck only after 180 s and 10 s for each label
   still to print (`LABEL_SECONDS`), as a label printed may not show.
-  Waiting for idle costs a series' job the interpreter's second after it:
-  with a timed fake printer (0.2 s to read an image, 0.4 s a label, the
-  interpreter active 1 s after a job) 45 labels in jobs of 20 took 31 s
-  instead of 28 s, in one job 29 s; with the label counter 28 s as before,
-  label by label 80 s either way. [decided] [measured with the fake
+  Waiting for idle costs a series' job the interpreter's second after it
+  and a poll: with a timed fake printer (0.2 s to read an image, 0.4 s a
+  label, the interpreter active 1 s after a job) 45 labels in jobs of 20
+  took 32.5 s instead of 28 s, in one job 29.5 s; with the label counter
+  28 s as before, label by label 80 s either way. [decided] [measured with the fake
   printer]
 - A lost connection (or a job that never ended): up to every label of
   the job may have printed, the ones counted before for certain. Cut off

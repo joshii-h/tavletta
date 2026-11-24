@@ -900,8 +900,8 @@ def _split(job: bytes) -> tuple[bytes, bytes]:
 
 
 class _Tally:
-    """What is known of the labels a job printed: `done` for certain,
-    `most` at most.
+    """What is known of the labels a job printed: `done` for certain;
+    failed() tells the most that may have printed too.
 
     The label counter of the web interface (`counter`) tells it exactly.
     Without it ESC s does: its labels to print are those of the whole job
@@ -1026,7 +1026,8 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) ->
             tally.stopped = status
             raise error
         tally.seen(status.pending)
-        if not tally.whole_job and (tally.counted() or 0) >= total:
+        counted = None if tally.whole_job else tally.counted()
+        if counted is not None and counted >= total:
             # the counter counted every label: printed, also while the
             # interpreter is still active (its second after a job)
             report_progress(progress, total, total)
@@ -1051,20 +1052,22 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) ->
             active, idle_since = True, None
         else:
             idle_since = _clock() if idle_since is None else idle_since
+            idle = _clock() - idle_since
             grace = RUN_GRACE if active else START_GRACE
-            if started or _clock() - idle_since >= grace:
+            # a series' job: idle at two polls in a row (not a moment
+            # between two of its A)
+            if (started and (tally.whole_job or idle >= RUN_GRACE)) or idle >= grace:
                 # all its labels printed; with the label counter a series'
                 # job only once that counted them all: short of it for
                 # SETTLE_SECONDS, the job ended early (the labels exact)
-                printed = None if tally.whole_job else tally.counted()
-                if printed is None or printed >= total:
+                if counted is None:
                     tally.done = total
                     report_progress(progress, total, total)
                     return False
-                if _clock() - idle_since >= SETTLE_SECONDS:
+                if idle >= SETTLE_SECONDS:
                     tally.stopped = status
                     raise PrinterError(
-                        "the job ended after %d of %d labels (label counter)" % (printed, total)
+                        "the job ended after %d of %d labels (label counter)" % (counted, total)
                     )
         if _clock() > deadline:
             raise PrinterTimeout("printer stayed busy: %s" % status.raw)

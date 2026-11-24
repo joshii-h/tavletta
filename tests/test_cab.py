@@ -1872,3 +1872,18 @@ def test_a_series_job_tells_its_labels_printed_while_it_prints(printer):
     print_series(Cab(), "h", _series(12, labels_per_job=5), events.append)
     printed = [e.printed for e in events]
     assert printed == sorted(printed) and set(printed) >= {1, 2, 3, 4, 6, 7, 11}
+
+
+def test_a_series_job_is_not_over_at_a_moment_idle_between_its_labels(printer, monkeypatch):
+    """Without the label counter a series' job ends only when the printer
+    is idle at two polls in a row: idle once between two A is not its end."""
+    from tavletta.backends.base import PackedImage
+
+    states = iter(
+        [b"Y-000000N", b"Y-000000N"]  # before: the status, and idle
+        + [b"Y-000001Y", b"Y-000000N", b"Y-000001Y", b"Y-000000N", b"Y-000000N"]
+    )
+    monkeypatch.setattr(FakeCab, "status", lambda self: next(states))
+    image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
+    Cab().print_batch([image] * 2, "h", PrintOptions())
+    assert next(states, None) is None  # every answer was asked for
