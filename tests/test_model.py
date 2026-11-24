@@ -255,6 +255,41 @@ def test_old_version_accepted_and_booleans_normalised():
     assert label.elements[0].bold is False and label.elements[0].italic is True
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [("false", False), ("False", False), ("no", False), ("0", False), ("", False), (0.0, False)]
+    + [("true", True), (" Yes ", True), ("1", True), (2, True), (True, True)],
+)
+def test_loose_booleans_read_false_as_false(value, expected):
+    """bool("false") is True: a word is read for what it says."""
+    data = {"tape_mm": 50, "auto_length": value, "elements": [{"kind": "text", "bold": value}]}
+    label = Label.from_dict(data)
+    assert label.auto_length is expected and label.elements[0].bold is expected
+
+
+@pytest.mark.parametrize("value", ["maybe", None, [], {}, float("nan")])
+def test_loose_booleans_refuse_junk(value):
+    for data in ({"auto_length": value}, {"elements": [{"kind": "text", "italic": value}]}):
+        with pytest.raises(LabelError) as info:
+            Label.from_dict({"tape_mm": 50, **data})
+        assert info.value.code == "damaged"
+
+
+@pytest.mark.parametrize("number", [float("nan"), float("inf"), float("-inf")])
+def test_numbers_that_are_not_finite_are_damaged(number):
+    """NaN came out as the lower bound only because max() keeps its first
+    argument; infinity is no size either."""
+    for data in (
+        {"tape_mm": 50, "length_mm": number},
+        {"tape_mm": 50, "elements": [{"kind": "text", "size_pt": number}]},
+        {"tape_mm": 50, "elements": [{"kind": "image", "crop": [number, 0, 1, 1]}]},
+    ):
+        with pytest.raises(LabelError) as info:
+            Label.from_dict(data)
+        assert info.value.code == "damaged"
+    assert Label.from_dict({"tape_mm": 50, "length_mm": 10**400}).length_mm == 1000
+
+
 def test_from_dict_does_not_modify_input():
     data = {"version": 1, "elements": [], "tape_mm": 12}
     Label.from_dict(data)

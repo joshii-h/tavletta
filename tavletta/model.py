@@ -9,6 +9,7 @@ import errno
 import fcntl
 import itertools
 import json
+import math
 import os
 import secrets
 import stat
@@ -730,7 +731,7 @@ class Label:
         else:
             self.tape_mm = _clamp(self.tape_mm, MIN_SIZE_MM, MAX_SIZE_MM, "tape_mm")
         # a die-cut label has its size, it does not grow with the content
-        self.auto_length = bool(self.auto_length) and continuous
+        self.auto_length = _loose_flag(self.auto_length, "auto_length") and continuous
         lower = MIN_TAPE_LENGTH_MM if continuous else MIN_SIZE_MM
         self.length_mm = _clamp(self.length_mm, lower, MAX_SIZE_MM, "length_mm")
         self.gap_mm = _clamp(self.gap_mm, 0, MAX_GAP_MM, "gap_mm")
@@ -1088,7 +1089,11 @@ def _known_fields(cls, data: dict, skip: frozenset[str] = frozenset()) -> dict:
 
 
 def _clamp(value, lower: float, upper: float, name: str) -> float:
+    """A number within the bounds; NaN and infinity (Python's json reads
+    them) are none."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise _damaged("%s must be a number" % name)
+    if isinstance(value, float) and not math.isfinite(value):
         raise _damaged("%s must be a number" % name)
     return float(min(upper, max(lower, value)))
 
@@ -1115,6 +1120,23 @@ def _flag(value, name: str) -> bool:
     if not isinstance(value, bool):  # bool("false") would be True
         raise _damaged("%s must be true or false" % name)
     return value
+
+
+_TRUE = frozenset({"true", "yes", "on", "1"})
+_FALSE = frozenset({"false", "no", "off", "0", ""})
+
+
+def _loose_flag(value, name: str) -> bool:
+    """A flag that the first versions did not check (auto_length, bold,
+    italic): a number or a word as well as true or false, but "false" is
+    false (bool("false") would be True); anything else is damaged."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)) and not (isinstance(value, float) and math.isnan(value)):
+        return value != 0
+    if isinstance(value, str) and value.strip().lower() in _TRUE | _FALSE:
+        return value.strip().lower() in _TRUE
+    raise _damaged("%s must be true or false" % name)
 
 
 def _rotation(value) -> int:
@@ -1179,7 +1201,8 @@ def _validate_text(element: TextElement) -> None:
     element.text = _str(element.text, "text")
     element.font = _str(element.font, "font")
     element.color = _str(element.color, "color")
-    element.bold, element.italic = bool(element.bold), bool(element.italic)
+    element.bold = _loose_flag(element.bold, "bold")
+    element.italic = _loose_flag(element.italic, "italic")
     element.size_pt = _clamp(element.size_pt, 0, 300, "size_pt")
     element.align = _choice(element.align, ("left", "center", "right"), "align")
     element.name = _str(element.name, "name")
