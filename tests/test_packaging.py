@@ -938,7 +938,8 @@ def test_the_package_builds_run_the_tests_as_the_ci_does():
     """CI=1 in the build and smoke scripts: a test that would skip for a
     missing tool fails instead, as on the runners (where the variable is
     set), so a missing build dependency shows in a local build too. The
-    tool tests/test_icons.py needs, librsvg's introspection, is one."""
+    tools tests/test_icons.py and tests/test_webui_js.py need, librsvg's
+    introspection and Node, are build dependencies."""
     for script in ("debian/build.sh", "debian/smoke-test.sh", "rpm/build.sh", "rpm/smoke-test.sh"):
         text = (ROOT / "packaging" / script).read_text(encoding="utf-8")
         assert "\nexport CI=1\n" in text, script
@@ -946,8 +947,10 @@ def test_the_package_builds_run_the_tests_as_the_ci_does():
     assert "CI=1 FONTCONFIG_FILE=" in unittests
     control = (ROOT / "packaging" / "debian" / "control").read_text(encoding="utf-8")
     assert " gir1.2-rsvg-2.0 <!nocheck>,\n" in control
+    assert " nodejs <!nocheck>,\n" in control
     spec = (ROOT / "packaging" / "rpm" / "tavletta.spec").read_text(encoding="utf-8")
     assert "\nBuildRequires:  librsvg2\n" in spec
+    assert "\nBuildRequires:  nodejs\n" in spec
 
 
 def test_the_rpm_sources_are_pinned_as_the_debian_ones():

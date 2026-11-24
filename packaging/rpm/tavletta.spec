@@ -32,6 +32,8 @@ BuildRequires:  libadwaita
 BuildRequires:  dejavu-sans-fonts
 # tools/icons.py's tests: librsvg's GObject introspection (Rsvg 2.0)
 BuildRequires:  librsvg2
+# the web page's JavaScript tests (Node's own test runner)
+BuildRequires:  nodejs
 # the print server's unit and user (tavletta-server), the udev rule
 BuildRequires:  systemd-rpm-macros
 

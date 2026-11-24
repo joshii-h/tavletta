@@ -1,7 +1,8 @@
 """The web page's JavaScript logic (number ranges, row lists, sample values,
 the assignment of columns, times and locales) with Node's
 own test runner (tests/js/*.test.mjs): no package, no build step. Without
-Node the tests are skipped, except in the CI (it installs nodejs)."""
+Node the tests are skipped, except in the CI and the package builds (CI set:
+they install nodejs)."""
 
 from __future__ import annotations
 
@@ -19,7 +20,7 @@ def test_the_javascript_tests_pass():
     node = shutil.which("node")
     if node is None:
         if os.environ.get("CI"):
-            pytest.fail("node is needed for the web page's tests (the CI installs nodejs)")
+            pytest.fail("node is needed for the web page's tests (CI set: install nodejs)")
         pytest.skip("node is not installed")
     tests = sorted(str(p) for p in (ROOT / "tests" / "js").glob("*.test.mjs"))
     assert tests
