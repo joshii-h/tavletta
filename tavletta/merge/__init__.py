@@ -115,6 +115,9 @@ class Book:
     table: Table
     sheets: list[str] = field(default_factory=list)  # [] for CSV
     sheet: str = ""  # the sheet the rows are from, "" for CSV
+    # what the file is: "csv" (any delimited text), "ods" or "xlsx"; how it
+    # was read, not what it holds (left out of ==, as Table.delimiter)
+    kind: str = field(default="csv", compare=False)
 
 
 def read_book(path: str | Path, sheet: str = "", cancel: threading.Event | None = None) -> Book:
@@ -134,8 +137,10 @@ def read_book_data(data: bytes, sheet: str = "", cancel: threading.Event | None 
         if not data.startswith(_ZIP):
             return Book(_table(data, None))
         with _archive(data) as zf:
-            names, table = _reader(zf).read_book(zf, sheet or None)
-        return Book(table, names, sheet if sheet in names else names[0])
+            reader = _reader(zf)
+            names, table = reader.read_book(zf, sheet or None)
+        kind = "xlsx" if reader is xlsx else "ods"
+        return Book(table, names, sheet if sheet in names else names[0], kind)
 
     return _safely(book, cancel)
 

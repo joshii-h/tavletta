@@ -1591,7 +1591,7 @@ def test_a_book_is_read_from_the_files_content(tmp_path):
         styles=date_styles((164, "00000")),
     )
     book = read_book_data(path.read_bytes())
-    assert book.sheets == ["Assets"] and book.sheet == "Assets"
+    assert book.sheets == ["Assets"] and book.sheet == "Assets" and book.kind == "xlsx"
     assert book.table.rows == [{"Number": "00300"}]  # the text the cell shows
     assert book.table.delimiter == ""
 
@@ -1609,6 +1609,9 @@ def test_a_files_content_is_held_to_the_file_limit(monkeypatch):
 def test_a_csv_tells_its_delimiter(tmp_path, sep):
     table = read_table(write(tmp_path, "a.csv", f"A{sep}B\n1{sep}2\n"))
     assert table.delimiter == sep
+    assert read_book(tmp_path / "a.csv").kind == "csv"
+    ods_book = read_book(make_ods(tmp_path, ods_table("T", row(text("A")), row(text("1")))))
+    assert ods_book.kind == "ods"
     assert read_table(write(tmp_path, "b.csv", "Number\n00300\n")).delimiter == ""
 
 
