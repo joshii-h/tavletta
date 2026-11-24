@@ -1201,8 +1201,8 @@ def ask_printer(
 
 
 def _isolated(backend: Backend) -> Backend:
-    """A copy of the backend whose caches (the resolutions a raw printer
-    reported, the model last asked) are its own."""
+    """A copy of the backend whose caches (the resolutions and models the
+    printers reported, by address) are its own."""
     twin = copy.copy(backend)
     for name, value in vars(backend).items():
         if isinstance(value, (dict, list, set)):

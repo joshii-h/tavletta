@@ -528,7 +528,7 @@ class Cab(Backend):
         )
 
     def raster(self, tape_mm: float, options: PrintOptions) -> Raster:
-        info = options.info  # this job's answer, else the printer as last asked
+        info = options.info  # this job's answer, else what this printer reported
         return Raster(info.dpi if info and info.dpi else dpi_for(self._dots(options.host)))
 
     def prepare(

@@ -462,8 +462,8 @@ class PrintOptions:
     chain: bool = False
     high_res: bool = False
     feed_mm: float | None = None  # None: the backend's default
-    # the printer as last asked, for backends whose models render differently;
-    # not part of the request itself
+    # this job's printer as it answered, for backends whose models render
+    # differently; not part of the request itself
     info: PrinterInfo | None = field(default=None, compare=False)
 
 

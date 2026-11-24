@@ -84,7 +84,9 @@ MAX_COUNTER_STEP = 10**6
 # json documentation advises a limit for data from untrusted sources)
 MAX_FILE_BYTES = 200 * 1024 * 1024
 # an image or PDF file a label embeds: in base64 it takes 4/3 of its size,
-# and the label file with it must stay within MAX_FILE_BYTES to open again
+# so a label of one such file stays within MAX_FILE_BYTES and opens again;
+# a label of several large ones can grow beyond that (each is checked on
+# its own when it is added, not the label as a whole)
 MAX_EMBEDDED_BYTES = MAX_FILE_BYTES // 2
 # what a printer model decides about a label: kept per model when switching
 GEOMETRY_FIELDS = ("tape_mm", "auto_length", "length_mm", "orientation", "gap_mm", "sheet")
