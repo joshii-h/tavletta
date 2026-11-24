@@ -38,6 +38,20 @@ def install_kind(root: str = "/") -> str:
 
 
 def issue_url(problem: str | None, printer: str | None, toolkit: str, root: str = "/") -> str:
+    """The new-issue page with title and body filled in, at most MAX_URL
+    long: a very long error text keeps its first 500 characters, fewer
+    still where they take more room encoded (Chinese, emoji: up to 12
+    characters each), down to none."""
+    url = _issue_url(problem, printer, toolkit, root)
+    keep = 500
+    while len(url) > MAX_URL and problem:
+        problem = problem[:keep]
+        url = _issue_url(problem, printer, toolkit, root)
+        keep = len(problem) // 2
+    return url
+
+
+def _issue_url(problem: str | None, printer: str | None, toolkit: str, root: str) -> str:
     title = "Problem: " + problem.splitlines()[0][:80] if problem else ""
     lines = [
         "**What happened?**",
@@ -57,7 +71,4 @@ def issue_url(problem: str | None, printer: str | None, toolkit: str, root: str 
         "- Printer: %s" % (printer or "not connected"),
     ]
     query = urlencode({"title": title, "body": "\n".join(lines)})
-    url = ISSUES_URL + "?" + query
-    if len(url) > MAX_URL:  # very long error text: keep only the first part
-        return issue_url(problem[:500] if problem else None, printer, toolkit, root)
-    return url
+    return ISSUES_URL + "?" + query
