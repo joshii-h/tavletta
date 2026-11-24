@@ -111,7 +111,8 @@ def serve(args) -> int:
     loaded.append(tokens)
     _warn(args, printers, tokens)
     token = read_token(args.token_file) if tokens is None else None
-    if token is None and tokens is None and not binds_loopback(args.host):
+    login = _web_login(args, printers)
+    if token is None and tokens is None and login is None and not binds_loopback(args.host):
         raise CliError(
             _(
                 "Refusing to listen on %s without an access token: set TAVLETTA_TOKEN or "
@@ -132,6 +133,7 @@ def serve(args) -> int:
         tokens=tokens,
         trusted_proxies=tuple(args.trusted_proxy),
         web_ui=not args.no_web_ui,
+        login=login,
     )
     try:
         server = Server(config, service)
@@ -143,6 +145,43 @@ def serve(args) -> int:
             EXIT_USAGE,
         ) from None
     return _run(server, service)
+
+
+def _web_login(args, printers):
+    """--oidc: signing in to the web page with OpenID Connect. PyJWT is
+    needed for it only; the provider is asked for its settings now, in the
+    background (a provider that is away does not stop the server)."""
+    import threading
+
+    path = getattr(args, "oidc", None)
+    if path is None:
+        return None
+    if args.no_web_ui:
+        raise CliError(_("--oidc signs in to the web page: not with --no-web-ui"), EXIT_USAGE)
+    try:
+        import jwt  # noqa: F401 - only whether it is there
+    except ImportError:
+        raise CliError(
+            _("--oidc needs PyJWT with cryptography (python3-jwt, pip install tavletta[oidc])"),
+            EXIT_USAGE,
+        ) from None
+    from tavletta.server.config import ConfigError
+    from tavletta.server.oidc import OidcError, load_oidc
+    from tavletta.server.weblogin import WebLogin
+
+    try:
+        login = WebLogin(load_oidc(path, printers), printers=printers)
+    except ConfigError as e:
+        raise CliError(str(e), EXIT_FILE) from None
+
+    def discover() -> None:
+        try:
+            login.provider.metadata()
+        except OidcError as e:
+            log.warning("OIDC provider not reachable yet (tried again at sign in): %s", e)
+
+    threading.Thread(target=discover, daemon=True, name="oidc-discovery").start()
+    return login
 
 
 def _warn(args, printers, tokens) -> None:

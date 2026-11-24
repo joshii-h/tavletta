@@ -299,12 +299,14 @@ def _color(parent: _Table, data: object) -> dict[str, int]:
 @dataclass(frozen=True)
 class Caller:
     """Who sends a request: the token's name, its role and the printers it
-    may use (None: all)."""
+    may use (None: all). Someone signed in to the web page (oidc.py) is
+    named "oidc:<user name>", which no token can be."""
 
     name: str
     role: str = "admin"
     printers: frozenset[str] | None = None
-    named: bool = False  # a token of tokens.toml (not the one token, not none)
+    named: bool = False  # a token of tokens.toml or a person (not the one token, not none)
+    display: str = ""  # a person's name, for the web page
 
     def may(self, role: str) -> bool:
         return ROLES.index(self.role) >= ROLES.index(role)
