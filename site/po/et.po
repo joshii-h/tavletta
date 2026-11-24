@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 13:42+0100\n"
+"POT-Creation-Date: 2026-11-24 20:32+0100\n"
 "PO-Revision-Date: 2026-11-24 13:42+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -25,12 +25,11 @@ msgstr "Inventariseerimistööriista ühendamine"
 #. type: Plain text
 #: docs/api-guide.md
 msgid ""
-"A walkthrough for the developers of a program that prints labels through the"
-" print server, here an inventory tool that prints asset labels: one label, a"
-" series of labels in one request, following the job, printing again after a "
-"jam, and handling errors. Every request is described in the [API "
-"reference](api.md); setting up the server in [Server installation](server-"
-"install.md)."
+"A walkthrough for the developers of a program that prints labels through the "
+"print server, here an inventory tool that prints asset labels: one label, a "
+"series of labels in one request, following the job, printing again after a "
+"jam, and handling errors. Every request is described in the [API reference]"
+"(api.md); setting up the server in [Server installation](server-install.md)."
 msgstr ""
 "Ülevaade programmide arendajatele, kes prindivad silte prindiserveri kaudu; "
 "siin inventariseerimistööriist, mis prindib vara silte: üks silt, siltide "
@@ -47,8 +46,7 @@ msgstr "Seadistus { #setup }"
 #. type: Plain text
 #: docs/api-guide.md
 msgid "The examples use these names; yours will differ:"
-msgstr ""
-"Näidetes kasutatakse neid nimesid; sinu omad võivad olla teistsugused:"
+msgstr "Näidetes kasutatakse neid nimesid; sinu omad võivad olla teistsugused:"
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
@@ -86,8 +84,8 @@ msgid ""
 "An access token with the role `print`, limited to `it-cab`, made by the "
 "server's administrator:"
 msgstr ""
-"Rolliga `print` pääsutoken, mis on piiratud printeriga `it-cab` ja mille lõi"
-" serveri administraator:"
+"Rolliga `print` pääsutoken, mis on piiratud printeriga `it-cab` ja mille lõi "
+"serveri administraator:"
 
 #. type: Fenced code block (sh)
 #: docs/api-guide.md
@@ -169,12 +167,13 @@ msgid ""
 "With `\"format\": \"json\"` the answer is JSON with the image in base64 and "
 "the `warnings` (for example `font_missing`, `barcode_narrow`)."
 msgstr ""
-"Valikuga `\"format\": \"json\"` on vastus JSON, milles pilt on base64-kujul,"
-" ning hoiatused `warnings` (näiteks `font_missing`, `barcode_narrow`)."
+"Valikuga `\"format\": \"json\"` on vastus JSON, milles pilt on base64-kujul, "
+"ning hoiatused `warnings` (näiteks `font_missing`, `barcode_narrow`)."
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
-msgid "`\"view\": \"printer\"` shows the image as the printer gets it (turned)."
+msgid ""
+"`\"view\": \"printer\"` shows the image as the printer gets it (turned)."
 msgstr ""
 "`\"view\": \"printer\"` näitab pilti sellisena, nagu printer selle saab "
 "(pööratult)."
@@ -182,20 +181,20 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/api-guide.md
 msgid ""
-"`other_labels_loaded` in the `warnings`: the printer has other labels loaded"
-" than the label's (another size, or another label distance measured). Load "
+"`other_labels_loaded` in the `warnings`: the printer has other labels loaded "
+"than the label's (another size, or another label distance measured). Load "
 "the matching roll, or check the label's size and gap.  The printer's latest "
-"answer counts if it is of the last minute (after an error nothing is known);"
-" a printer the server knows nothing of yet is waited for up to a second "
-"after the label is rendered, and one that does not answer by then gives no "
-"such warning."
+"answer counts if it is of the last minute (after an error nothing is known); "
+"a printer the server knows nothing of yet is waited for up to a second after "
+"the label is rendered, and one that does not answer by then gives no such "
+"warning."
 msgstr ""
 "`other_labels_loaded` hoiatustes `warnings`: printerisse on laaditud teised "
 "sildid kui sildil (teine suurus või teine mõõdetud siltidevaheline kaugus). "
 "Lae sobiv rull või kontrolli sildi suurust ja vahet. Printeri viimast "
-"vastust arvestatakse, kui see on viimasest minutist (pärast viga pole midagi"
-" teada); printerit, millest server veel midagi ei tea, oodatakse kuni sekund"
-" pärast sildi renderdamist, ja see, mis selleks ajaks ei vasta, sellist "
+"vastust arvestatakse, kui see on viimasest minutist (pärast viga pole midagi "
+"teada); printerit, millest server veel midagi ei tea, oodatakse kuni sekund "
+"pärast sildi renderdamist, ja see, mis selleks ajaks ei vasta, sellist "
 "hoiatust ei anna."
 
 #. type: Bullet: '- '
@@ -221,24 +220,24 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/api-guide.md
 msgid ""
-"The server checks the request, queues a job for the printer and answers with"
-" the job. With `\"wait\": 30` it waits up to 30 seconds for the job: 200 "
-"with `\"state\": \"done\"` once printed, else 202 with the job still "
-"`queued` or `printing`."
+"The server checks the request, queues a job for the printer and answers with "
+"the job. With `\"wait\": 30` it waits up to 30 seconds for the job: 200 with "
+"`\"state\": \"done\"` once printed, else 202 with the job still `queued` or "
+"`printing`."
 msgstr ""
-"Server kontrollib päringut, paneb printerile töö järjekorda ja vastab tööga."
-" Valikuga `\"wait\": 30` ootab ta tööd kuni 30 sekundit: 200 ja `\"state\": "
+"Server kontrollib päringut, paneb printerile töö järjekorda ja vastab tööga. "
+"Valikuga `\"wait\": 30` ootab ta tööd kuni 30 sekundit: 200 ja `\"state\": "
 "\"done\"` pärast printimist, muidu 202 ja töö on endiselt `queued` või "
 "`printing`."
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
 msgid ""
-"The answer's `Location` header and the job's `id` lead to `GET "
-"/api/v1/jobs/{id}`."
+"The answer's `Location` header and the job's `id` lead to `GET /api/v1/jobs/"
+"{id}`."
 msgstr ""
-"Vastuse päis `Location` ja töö `id` viivad aadressile `GET "
-"/api/v1/jobs/{id}`."
+"Vastuse päis `Location` ja töö `id` viivad aadressile `GET /api/v1/jobs/{id}"
+"`."
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
@@ -270,8 +269,8 @@ msgid ""
 "requests: they print as one job, in order, and a problem stops the job at a "
 "known row."
 msgstr ""
-"Kakskümmend vara silti on üks päring kahekümne andmereaga, mitte kakskümmend"
-" päringut: need prinditakse ühe tööna järjekorras ja probleem peatab töö "
+"Kakskümmend vara silti on üks päring kahekümne andmereaga, mitte kakskümmend "
+"päringut: need prinditakse ühe tööna järjekorras ja probleem peatab töö "
 "teadaoleval real."
 
 #. type: Fenced code block (sh)
@@ -399,8 +398,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/api-guide.md
 msgid ""
-"A `print` token sees its own jobs only; another token's job is \"not "
-"found\"."
+"A `print` token sees its own jobs only; another token's job is \"not found\"."
 msgstr "`print`-token näeb ainult oma töid; teise tokeni töö on \"not found\"."
 
 #. type: Title ##
@@ -428,8 +426,8 @@ msgstr ""
 #. type: Plain text
 #: docs/api-guide.md
 msgid ""
-"Once the printer is ready, send the same request again with `rows`, the rows"
-" still missing:"
+"Once the printer is ready, send the same request again with `rows`, the rows "
+"still missing:"
 msgstr ""
 "Kui printer on valmis, saada sama päring uuesti parameetriga `rows`, kus on "
 "veel puuduvad read:"
@@ -449,8 +447,8 @@ msgstr ""
 msgid ""
 "`rows` counts the data rows from 1: `\"14-20\"`, `\"14-\"` (to the last), "
 "`\"5\"`. Send the same data rows as before, so row 14 is the same asset.  A "
-"label that was half printed when the printer stopped belongs to the row that"
-" failed and is printed again."
+"label that was half printed when the printer stopped belongs to the row that "
+"failed and is printed again."
 msgstr ""
 "`rows` loendab andmeridu 1-st: `\"14-20\"`, `\"14-\"` (viimaseni), `\"5\"`. "
 "Saada samad andmeread nagu enne, et rida 14 oleks sama vara. Silt, mis oli "
@@ -471,9 +469,15 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api-guide.md
+#, fuzzy
+#| msgid ""
+#| "A queued job is canceled at once; a printing one stops after the label "
+#| "being printed. 409 `job_finished` if it had finished already."
 msgid ""
-"A queued job is canceled at once; a printing one stops after the label being"
-" printed. 409 `job_finished` if it had finished already."
+"A queued job is canceled at once; a printing one stops after the label being "
+"printed. A cab printer prints a series in jobs of up to `labels_per_job` "
+"labels (250 by default): it stops after the job being printed. 409 "
+"`job_finished` if it had finished already."
 msgstr ""
 "Järjekorras olev töö tühistatakse kohe; printiv peatub pärast praegu "
 "prinditavat silti. 409 `job_finished`, kui see oli juba lõppenud."
@@ -486,8 +490,7 @@ msgstr "8. Kordused ja vead { #errors }"
 
 #. type: Plain text
 #: docs/api-guide.md
-msgid ""
-"`POST /print` is not idempotent: a request sent twice prints twice. So:"
+msgid "`POST /print` is not idempotent: a request sent twice prints twice. So:"
 msgstr ""
 "`POST /print` ei ole idempotentne: kaks korda saadetud päring prindib kaks "
 "korda. Seega:"
@@ -499,8 +502,8 @@ msgid ""
 "made: 503 `busy` and 429 `queue_full`, after a pause that grows (1, 2, 4, 8 "
 "s)."
 msgstr ""
-"**Korda automaatselt** ainult vastuseid, mis lükati tagasi enne töö loomist:"
-" 503 `busy` ja 429 `queue_full`, kasvava pausi järel (1, 2, 4, 8 s)."
+"**Korda automaatselt** ainult vastuseid, mis lükati tagasi enne töö loomist: "
+"503 `busy` ja 429 `queue_full`, kasvava pausi järel (1, 2, 4, 8 s)."
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
@@ -517,8 +520,7 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
-msgid ""
-"**Fix the request** for other 4xx answers; the code says what is wrong:"
+msgid "**Fix the request** for other 4xx answers; the code says what is wrong:"
 msgstr ""
 "**Paranda päring** muude 4xx-vastuste korral; kood ütleb, mis on valesti:"
 
@@ -656,8 +658,8 @@ msgstr "Näide: C# ja .NET { #csharp }"
 #. type: Plain text
 #: docs/api-guide.md
 msgid ""
-"With `HttpClient` and `System.Net.Http.Json` (.NET 8 or newer), as a console"
-" program; in an application, register one `HttpClient` (for example with "
+"With `HttpClient` and `System.Net.Http.Json` (.NET 8 or newer), as a console "
+"program; in an application, register one `HttpClient` (for example with "
 "`IHttpClientFactory`) and reuse it."
 msgstr ""
 "`HttpClient`i ja `System.Net.Http.Json`iga (.NET 8 või uuem), "
@@ -766,8 +768,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/api-guide.md
 msgid ""
-"The body goes as a `StringContent`: the server needs a `Content-Length`, and"
-" `JsonContent.Create` would send the body in chunks without one (411 "
+"The body goes as a `StringContent`: the server needs a `Content-Length`, and "
+"`JsonContent.Create` would send the body in chunks without one (411 "
 "`length_required`)."
 msgstr ""
 "Keha saadetakse `StringContent`-ina: server vajab päist `Content-Length` ja "
@@ -783,8 +785,8 @@ msgstr "API viide"
 #. type: Plain text
 #: docs/api.md
 msgid ""
-"The REST API of the print server (`tavletta serve`), for programs that print"
-" labels: every request with its role, fields, answers and error codes. A "
+"The REST API of the print server (`tavletta serve`), for programs that print "
+"labels: every request with its role, fields, answers and error codes. A "
 "walkthrough for an inventory tool, with code in Python and C#, is "
 "[Connecting an inventory tool](api-guide.md); installing the server is "
 "[Server installation](server-install.md)."
@@ -798,15 +800,15 @@ msgstr ""
 #. type: Plain text
 #: docs/api.md
 msgid ""
-"This page is made from the OpenAPI 3.1 description of the server "
-"(`tools/openapi_docs.py`). Programs and code generators read the same "
-"description: `docs/openapi.yaml` in the source, or `GET "
-"/api/v1/openapi.json` from a running server."
+"This page is made from the OpenAPI 3.1 description of the server (`tools/"
+"openapi_docs.py`). Programs and code generators read the same description: "
+"`docs/openapi.yaml` in the source, or `GET /api/v1/openapi.json` from a "
+"running server."
 msgstr ""
-"See leht on koostatud serveri OpenAPI 3.1 kirjeldusest "
-"(`tools/openapi_docs.py`). Programmid ja koodigeneraatorid loevad sama "
-"kirjeldust: `docs/openapi.yaml` lähtekoodis või `GET /api/v1/openapi.json` "
-"töötavalt serverilt."
+"See leht on koostatud serveri OpenAPI 3.1 kirjeldusest (`tools/"
+"openapi_docs.py`). Programmid ja koodigeneraatorid loevad sama kirjeldust: "
+"`docs/openapi.yaml` lähtekoodis või `GET /api/v1/openapi.json` töötavalt "
+"serverilt."
 
 #. type: Title ##
 #: docs/api.md
@@ -818,8 +820,7 @@ msgstr "Alused { #basics }"
 #: docs/api.md
 msgid ""
 "Address: `http://<server>:8790/api/v1`, or the HTTPS address of the reverse "
-"proxy. The examples use `$TAVLETTA` for it and `$TOKEN` for the access "
-"token:"
+"proxy. The examples use `$TAVLETTA` for it and `$TOKEN` for the access token:"
 msgstr ""
 "Aadress: `http://<server>:8790/api/v1` või pöördvaheserveri HTTPS-aadress. "
 "Näidetes tähistab seda `$TAVLETTA` ja pääsutokenit `$TOKEN`:"
@@ -907,8 +908,8 @@ msgid ""
 "A token can be limited to some printers of `printers.toml`: the others are "
 "then \"not found\" (404 `printer_not_found`) for it."
 msgstr ""
-"Tokeni saab piirata mõne `printers.toml`-i printeriga: teised on selle jaoks"
-" siis \"not found\" (404 `printer_not_found`)."
+"Tokeni saab piirata mõne `printers.toml`-i printeriga: teised on selle jaoks "
+"siis \"not found\" (404 `printer_not_found`)."
 
 #. type: Title ##
 #: docs/api.md
@@ -924,14 +925,62 @@ msgstr "Iga viga on JSON püsiva koodi ja inimestele mõeldud teatega:"
 #. type: Fenced code block (json)
 #: docs/api.md
 #, no-wrap
-msgid ""
-"{\"error\": {\"code\": \"label_not_found\", \"message\": \"No such label: "
-"asset-tag.tavletta\"}}\n"
+msgid "{\"error\": {\"code\": \"label_not_found\", \"message\": \"No such label: asset-tag.tavletta\"}}\n"
 msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Status | Code | Meaning |\n"
+#| "|---|---|---|\n"
+#| "| 400 | `bad_request` | The request cannot be read (e.g. a body that ends early). |\n"
+#| "| 400 | `not_json` | The body is no valid JSON (415 with another Content-Type). |\n"
+#| "| 400 | `invalid_field` | A field has a wrong type or value; the message names it. |\n"
+#| "| 400 | `unknown_field` | A field the request does not have (a typo): nothing is done. |\n"
+#| "| 400 | `no_label` | Give either label or label_content. |\n"
+#| "| 400 | `data_conflict` | Give data_rows or data_file, not both. |\n"
+#| "| 400 | `data_column` | set names a `{placeholder}`: a data column, send it in data_rows. |\n"
+#| "| 400 | `no_rows` | rows selects no data row. |\n"
+#| "| 400 | `no_data` | sheet without a data file. |\n"
+#| "| 400 | `no_printer` | Several printers and no default: name one in printer. |\n"
+#| "| 400 | `no_host` | No printer address (without `printers.toml`). |\n"
+#| "| 400 | `host_given` | host with `printers.toml`: choose the printer by name. |\n"
+#| "| 400 | `too_many_copies` | More copies than the printer's max_copies. |\n"
+#| "| 401 | `unauthorized` | Token missing, wrong, expired or revoked. |\n"
+#| "| 403 | `forbidden` | The token's role is too low (e.g. preview printing). |\n"
+#| "| 403 | `host_not_allowed` | The printer address is not allowed (`--allow-printer`). |\n"
+#| "| 403 | `origin_not_allowed` | A web page of an origin not allowed (`--allow-origin`). |\n"
+#| "| 403 | `header_required` | No token on the server: send X-Tavletta-Request. |\n"
+#| "| 404 | `not_found` | No such path. |\n"
+#| "| 404 | `label_not_found` | No such label file in the labels folder. |\n"
+#| "| 404 | `data_not_found` | No such data file in the labels folder. |\n"
+#| "| 404 | `printer_not_found` | No such printer, or one the token may not use. |\n"
+#| "| 404 | `job_not_found` | No such job (another token's, or older than 24 hours). |\n"
+#| "| 405 | `method_not_allowed` | Not a method of this path. |\n"
+#| "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
+#| "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
+#| "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
+#| "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
+#| "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
+#| "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
+#| "| 413 | `label_too_large` | The label is too large to render (elements, text, pixels). |\n"
+#| "| 415 | `not_json` | Send Content-Type: application/json. |\n"
+#| "| 421 | `wrong_host` | A loopback server asked for another host name. |\n"
+#| "| 422 | `file_problem` | The label file cannot be opened. |\n"
+#| "| 422 | `label_not_label` | The file is no Tavletta label. |\n"
+#| "| 422 | `label_newer` | The label needs a newer Tavletta: update the server. |\n"
+#| "| 422 | `label_damaged` | The label file is damaged. |\n"
+#| "| 422 | `label_unprintable` | It would print wrongly: a missing column, a bad code, … |\n"
+#| "| 422 | `pages_not_allowed` | Document pages in label_content need the server switch `--allow-pdf-pages`. |\n"
+#| "| 422 | `data_outside` | The label's data file lies outside the labels folder. |\n"
+#| "| 422 | `data_problem` | The data file cannot be read, or has no such sheet. |\n"
+#| "| 422 | `prepare_failed` | The label cannot be prepared for the printer. |\n"
+#| "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
+#| "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
+#| "| 500 | `internal` | An error of the server; it is logged. |\n"
+#| "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
+#| "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
 msgid ""
 "| Status | Code | Meaning |\n"
 "|---|---|---|\n"
@@ -962,6 +1011,10 @@ msgid ""
 "| 408 | `timeout` | The request took longer than 30 s to send. |\n"
 "| 409 | `job_finished` | The job has finished: nothing to cancel. |\n"
 "| 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |\n"
+"| 409 | `label_exists` | A label of that name exists: upload with replace=true. |\n"
+"| 409 | `label_in_use` | Jobs of the label wait or print: retry when they are done. |\n"
+"| 409 | `label_changed` | The label file was replaced while the request was checked. |\n"
+"| 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |\n"
 "| 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |\n"
 "| 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |\n"
 "| 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |\n"
@@ -980,6 +1033,8 @@ msgid ""
 "| 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |\n"
 "| 429 | `queue_full` | Too many jobs waiting: retry later. |\n"
 "| 500 | `internal` | An error of the server; it is logged. |\n"
+"| 500 | `not_saved` | The labels folder could not be written (507: it is full). |\n"
+"| 500 | `not_deleted` | The label file could not be deleted (a read-only folder). |\n"
 "| 502 | `printer_<code>` | The printer is unreachable or reports a problem. |\n"
 "| 503 | `busy` | All request or render slots taken: retry after a moment. |\n"
 msgstr ""
@@ -1035,27 +1090,10 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
-msgid ""
-"`printer_<code>`: the printer's problem, one of `generic`, `not_found`, "
-"`timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, "
-"`head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, "
-"`label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, "
-"`too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, "
-"`ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, "
-"`resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, "
-"`usb_permission`, `serial_permission`, `battery`, `overheat`, "
-"`unsupported_model`, `unknown_model`, `editor_lite`.\n"
-msgstr ""
-"`printer_<code>`: printeri probleem, üks järgmistest: `generic`, "
-"`not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, "
-"`cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, "
-"`out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, "
-"`page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, "
-"`ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, "
-"`format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, "
-"`usb_not_found`, `usb_permission`, `serial_permission`, `battery`, "
-"`overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+#, fuzzy, no-wrap
+#| msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgstr "`printer_<code>`: printeri probleem, üks järgmistest: `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 
 #. type: Plain text
 #: docs/api.md
@@ -1139,20 +1177,37 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Request | Role | What |\n"
+#| "|---|---|---|\n"
+#| "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
+#| "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
+#| "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
+#| "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
+#| "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
+#| "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
+#| "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
+#| "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
+#| "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
+#| "| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
 msgid ""
 "| Request | Role | What |\n"
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |\n"
+"| [`GET /api/v1/me`](#get-me) | `preview` | The token's name, role and printers, and the limits of a request (for the web page) |\n"
 "| [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |\n"
+"| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step |\n"
+"| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Delete a label file (admin); its data file stays |\n"
+"| [`POST /api/v1/data`](#post-data) | `preview` | Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept |\n"
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels) |\n"
 msgstr ""
 "| Päring | Roll | Mis |\n"
 "|---|---|---|\n"
@@ -1239,6 +1294,44 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
+#, fuzzy, no-wrap
+#| msgid "`GET /api/v1/health` { #get-health }"
+msgid "`GET /api/v1/me` { #get-me }"
+msgstr "`GET /api/v1/health` { #get-health }"
+
+#. type: Plain text
+#: docs/api.md
+msgid ""
+"The token's name, role and printers, and the limits of a request (for the "
+"web page)."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Status | Answer | Codes |\n"
+#| "|---|---|---|\n"
+#| "| 200 | Labels |  |\n"
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 200 | Who |  |\n"
+msgstr ""
+"| Status | Vastus | Koodid |\n"
+"|---|---|---|\n"
+"| 200 | Sildid |  |\n"
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     \"$TAVLETTA/me\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
 #, no-wrap
 msgid "`GET /api/v1/printers` { #get-printers }"
 msgstr "`GET /api/v1/printers` { #get-printers }"
@@ -1246,9 +1339,9 @@ msgstr "`GET /api/v1/printers` { #get-printers }"
 #. type: Plain text
 #: docs/api.md
 msgid ""
-"The printers of `printers.toml` the token may use, with their state; without"
-" it the printer models, the address set for each and the printers found "
-"(`--discover`)."
+"The printers of `printers.toml` the token may use, with their state; without "
+"it the printer models, the address set for each and the printers found (`--"
+"discover`)."
 msgstr ""
 "Printerid failist `printers.toml`, mida token tohib kasutada, koos olekuga; "
 "ilma selleta printerimudelid, igaühele seatud aadress ja leitud printerid "
@@ -1383,8 +1476,8 @@ msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
 #. type: Plain text
 #: docs/api.md
 msgid ""
-"What a label can be filled in with: elements, variables, data columns, size,"
-" counter."
+"What a label can be filled in with: elements, variables, data columns, size, "
+"counter."
 msgstr ""
 "Millega silti saab täita: elemendid, muutujad, andmeveerud, suurus, loendur."
 
@@ -1428,6 +1521,186 @@ msgstr ""
 
 #. type: Title ###
 #: docs/api.md
+#, fuzzy, no-wrap
+#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgid "`PUT /api/v1/labels/{name}` { #put-labels-name }"
+msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+
+#. type: Plain text
+#: docs/api.md
+msgid ""
+"Upload a label file (admin): checked as the app opens a file, then put into "
+"the labels folder in one step."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/api.md
+#, fuzzy
+#| msgid "Role: `print`"
+msgid "Role: `admin`"
+msgstr "Roll: `print`"
+
+#. type: Plain text
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Parameter | In | Meaning |\n"
+#| "|---|---|---|\n"
+#| "| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |\n"
+msgid ""
+"| Parameter | In | Meaning |\n"
+"|---|---|---|\n"
+"| `name` | path | The file's name, without folder; '`.tavletta`' may be left out. |\n"
+"| `replace` | query | Replace a label of that name. default `false` |\n"
+msgstr ""
+"| Parameeter | Asukoht | Tähendus |\n"
+"|---|---|---|\n"
+"| `name` | path | Võib sisaldada kaldkriipse alamkaustade jaoks; '`.tavletta`' võib ära jätta. |\n"
+
+#. type: Plain text
+#: docs/api.md
+msgid "Body: The content of a `.tavletta` file."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, no-wrap
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 200 | Replaced (replace=true) |  |\n"
+"| 201 | Added |  |\n"
+"| 400 | Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to 100), in the folder itself | `invalid_field`, `not_json` |\n"
+"| 409 | A label of that name exists (send replace=true), jobs of it wait or print (label_in_use), or another program's print holds the file | `label_exists`, `label_in_use`, `label_locked` |\n"
+"| 413 | Over `--max-body`, or a label too large to render | `too_large`, `label_too_large` |\n"
+"| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |\n"
+"| 507 | No space left in the labels folder | `not_saved` |\n"
+msgstr ""
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     -X PUT \\\n"
+"     -H 'Content-Type: application/json' \\\n"
+"     --data-binary @asset-tag.tavletta \\\n"
+"     \"$TAVLETTA/labels/asset-tag\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid "`GET /api/v1/labels/{name}` { #get-labels-name }"
+msgid "`DELETE /api/v1/labels/{name}` { #delete-labels-name }"
+msgstr "`GET /api/v1/labels/{name}` { #get-labels-name }"
+
+#. type: Plain text
+#: docs/api.md
+msgid "Delete a label file (admin); its data file stays."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Status | Answer | Codes |\n"
+#| "|---|---|---|\n"
+#| "| 200 | Label |  |\n"
+#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
+#| "| 404 | No such label | `label_not_found` |\n"
+#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 204 | Deleted |  |\n"
+"| 400 | Not a name inside the labels folder | `invalid_field` |\n"
+"| 404 | No such label | `label_not_found` |\n"
+"| 409 | Jobs of it wait or print (label_in_use), or another program's print holds the file | `label_in_use`, `label_locked` |\n"
+msgstr ""
+"| Status | Vastus | Koodid |\n"
+"|---|---|---|\n"
+"| 200 | Silt |  |\n"
+"| 400 | Pole nimi siltide kausta sees | `invalid_field` |\n"
+"| 404 | Sellist silti pole | `label_not_found` |\n"
+"| 422 | Fail ei ole silt või on kahjustatud | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     -X DELETE \\\n"
+"     \"$TAVLETTA/labels/asset-tag\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid "`POST /api/v1/print` { #post-print }"
+msgid "`POST /api/v1/data` { #post-data }"
+msgstr "`POST /api/v1/print` { #post-print }"
+
+#. type: Plain text
+#: docs/api.md
+msgid ""
+"Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows "
+"for data_rows; nothing is kept."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+msgid "Body fields:"
+msgstr "Keha väljad:"
+
+#. type: Plain text
+#: docs/api.md
+#, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `content` | string | The file: CSV (any delimiter, UTF-8, UTF-16 or Windows-1252), ODS or XLSX, told apart by content. Pasted text is a CSV file. |\n"
+"| `name` | string | The file's name, for messages. |\n"
+"| `sheet` | string | ODS, XLSX: the sheet (default the first). |\n"
+"| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |\n"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Status | Answer | Codes |\n"
+#| "|---|---|---|\n"
+#| "| 200 | Label |  |\n"
+#| "| 400 | Not a name inside the labels folder | `invalid_field` |\n"
+#| "| 404 | No such label | `label_not_found` |\n"
+#| "| 422 | The file is no label or damaged | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+msgid ""
+"| Status | Answer | Codes |\n"
+"|---|---|---|\n"
+"| 200 | The rows |  |\n"
+"| 400 | Invalid request | `invalid_field`, `unknown_field`, `not_json` |\n"
+"| 422 | Not a table, damaged or empty | `data_problem` |\n"
+msgstr ""
+"| Status | Vastus | Koodid |\n"
+"|---|---|---|\n"
+"| 200 | Silt |  |\n"
+"| 400 | Pole nimi siltide kausta sees | `invalid_field` |\n"
+"| 404 | Sellist silti pole | `label_not_found` |\n"
+"| 422 | Fail ei ole silt või on kahjustatud | `file_problem`, `label_not_label`, `label_newer`, `label_damaged` |\n"
+
+#. type: Fenced code block (sh)
+#: docs/api.md
+#, no-wrap
+msgid ""
+"curl -H \"Authorization: Bearer $TOKEN\" \\\n"
+"     -H 'Content-Type: application/json' \\\n"
+"     -d '{\"name\": \"assets.csv\", \"content\": \"QXNzZXROdW1iZXIKMDAzMDAKMDAzMDEK\"}' \\\n"
+"     \"$TAVLETTA/data\"\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
 #, no-wrap
 msgid "`POST /api/v1/preview` { #post-preview }"
 msgstr "`POST /api/v1/preview` { #post-preview }"
@@ -1436,11 +1709,6 @@ msgstr "`POST /api/v1/preview` { #post-preview }"
 #: docs/api.md
 msgid "The label filled in, as an image; nothing is printed."
 msgstr "Täidetud silt pildina; midagi ei prindita."
-
-#. type: Plain text
-#: docs/api.md
-msgid "Body fields:"
-msgstr "Keha väljad:"
 
 #. type: Plain text
 #: docs/api.md
@@ -1516,11 +1784,11 @@ msgstr "`POST /api/v1/print` { #post-print }"
 #. type: Plain text
 #: docs/api.md
 msgid ""
-"Print: the request is checked, then queued; each printer prints one job at a"
-" time."
+"Print: the request is checked, then queued; each printer prints one job at a "
+"time."
 msgstr ""
-"Printimine: päring kontrollitakse, seejärel pannakse järjekorda; iga printer"
-" prindib ühe töö korraga."
+"Printimine: päring kontrollitakse, seejärel pannakse järjekorda; iga printer "
+"prindib ühe töö korraga."
 
 #. type: Bullet: '- '
 #: docs/api.md
@@ -1567,7 +1835,18 @@ msgstr ""
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Status | Answer | Codes |\n"
+#| "|---|---|---|\n"
+#| "| 200 | The job finished within 'wait' |  |\n"
+#| "| 202 | Queued or printing; follow it at Location |  |\n"
+#| "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
+#| "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
+#| "| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
+#| "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
+#| "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
+#| "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
@@ -1575,7 +1854,7 @@ msgid ""
 "| 202 | Queued or printing; follow it at Location |  |\n"
 "| 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |\n"
 "| 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |\n"
-"| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |\n"
+"| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed; or it was replaced while the request was checked (label_changed): send it again | `counter_not_saved`, `label_changed` |\n"
 "| 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |\n"
 "| 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |\n"
 "| 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |\n"
@@ -1658,19 +1937,29 @@ msgstr "`DELETE /api/v1/jobs/{id}` { #delete-jobs-id }"
 
 #. type: Plain text
 #: docs/api.md
+#, fuzzy
+#| msgid ""
+#| "Cancel a job: at once while it waits, after the current label while it "
+#| "prints."
 msgid ""
-"Cancel a job: at once while it waits, after the current label while it "
-"prints."
+"Cancel a job: at once while it waits, after the labels already sent to the "
+"printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
 "Tühista töö: kohe, kui see ootab; pärast praegust silti, kui see prindib."
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Status | Answer | Codes |\n"
+#| "|---|---|---|\n"
+#| "| 202 | Canceled, or stopping after the current label |  |\n"
+#| "| 404 | No such job | `job_not_found` |\n"
+#| "| 409 | Already finished | `job_finished` |\n"
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
-"| 202 | Canceled, or stopping after the current label |  |\n"
+"| 202 | Canceled, or stopping after the labels already sent |  |\n"
 "| 404 | No such job | `job_not_found` |\n"
 "| 409 | Already finished | `job_finished` |\n"
 msgstr ""
@@ -1703,7 +1992,27 @@ msgstr "Job { #job }"
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Field | Type | Meaning |\n"
+#| "|---|---|---|\n"
+#| "| `id` | string | Random, 16 characters. |\n"
+#| "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: its turn came, another job holds the label file (its counter). done, failed and canceled are final. |\n"
+#| "| `printer` | string | Printer model id. |\n"
+#| "| `printer_name` | string or null | Its name in `printers.toml`. |\n"
+#| "| `host` | string | The printer's address. |\n"
+#| "| `owner` | string or null | Name of the token. |\n"
+#| "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
+#| "| `printed` | integer | Labels printed so far. |\n"
+#| "| `total` | integer | Labels to print: copies x rows. |\n"
+#| "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
+#| "| `cancel_requested` | boolean | DELETE was sent. |\n"
+#| "| `error` | null or Warning | Why it failed: `printer_<code>`, counter_not_saved, label_locked or prepare_failed. |\n"
+#| "| `remark` | string or null | A note of the printer, for people. |\n"
+#| "| `warnings` | array of Warning | Found when it was checked; it printed anyway. other_labels_loaded: the printer reports other labels loaded than the label's (their size, or the label distance it measured); for a printer of `printers.toml` as in a preview when the job is queued, and replaced by what the printer reports when the job prints, if it then tells of the loaded labels. |\n"
+#| "| `created` | string | UTC. |\n"
+#| "| `started` | string or null |  |\n"
+#| "| `finished` | string or null |  |\n"
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -1714,7 +2023,8 @@ msgid ""
 "| `host` | string | The printer's address. |\n"
 "| `owner` | string or null | Name of the token. |\n"
 "| `label` | string or null | Name in the labels folder; null for label_content. |\n"
-"| `printed` | integer | Labels printed so far. |\n"
+"| `printed` | integer | Labels printed so far, for certain; rises label by label while the job prints, as far as the printer tells. |\n"
+"| `printed_max` | integer or null | After a failure whose outcome the printer could not tell (the connection was lost while it printed): up to this many labels may have printed. The counter goes on after them; rows_printed counts the rows printed for certain, so printing again from the next one may print labels twice. null otherwise. |\n"
 "| `total` | integer | Labels to print: copies x rows. |\n"
 "| `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |\n"
 "| `cancel_requested` | boolean | DELETE was sent. |\n"
@@ -1753,7 +2063,22 @@ msgstr "Label { #label }"
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Field | Type | Meaning |\n"
+#| "|---|---|---|\n"
+#| "| `name` | string |  |\n"
+#| "| `printer` | object | Model id and name. |\n"
+#| "| `size` | object | Tape, length, orientation, mm. |\n"
+#| "| `elements` | array of object |  |\n"
+#| "| `variables` | array of string | Variables of your own, `{=lot}`: filled in with 'set'. |\n"
+#| "| `builtin_variables` | array of string |  |\n"
+#| "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
+#| "| `data_file` | string or null |  |\n"
+#| "| `data_file_unusable` | boolean |  |\n"
+#| "| `data_sheet` | string or null |  |\n"
+#| "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
+#| "| `features` | array of string |  |\n"
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -1766,9 +2091,11 @@ msgid ""
 "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file is not there (any more): send the rows in data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
+"| `on_sheet` | boolean | Printed on label sheets: at most 999 labels in one job. |\n"
 msgstr ""
 "| Väli | Tüüp | Tähendus |\n"
 "|---|---|---|\n"
@@ -1870,7 +2197,14 @@ msgstr "Preview { #preview }"
 
 #. type: Plain text
 #: docs/api.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Field | Type | Meaning |\n"
+#| "|---|---|---|\n"
+#| "| `width` | integer |  |\n"
+#| "| `height` | integer |  |\n"
+#| "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
+#| "| `png` | string |  |\n"
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
@@ -1878,6 +2212,7 @@ msgid ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |\n"
 "| `png` | string |  |\n"
+"| `geometry` | null or Geometry | Where the elements are in the image; null for view=printer and a label turned onto its sheet. |\n"
 msgstr ""
 "| Väli | Tüüp | Tähendus |\n"
 "|---|---|---|\n"
@@ -1885,6 +2220,76 @@ msgstr ""
 "| `height` | integer |  |\n"
 "| `warnings` | array of Warning | Mis prinditaks valesti. other_labels_loaded: `printers.toml`-i printer teatab, et sinna on laaditud teised sildid kui sildil (nende suurus või mõõdetud siltidevaheline kaugus). Selle viimast vastust arvestatakse, kui see on viimasest minutist, viga kui mitte midagi teada (küsitakse uuesti taustal); printerit, mida veel ei tunta, oodatakse kuni sekund pärast sildi renderdamist. |\n"
 "| `png` | string |  |\n"
+
+#. type: Title ###
+#: docs/api.md
+#, no-wrap
+msgid "Geometry { #geometry }"
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+msgid ""
+"The elements' boxes in the preview image, in mm from its top left corner "
+"(tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / "
+"25.4."
+msgstr ""
+
+#. type: Plain text
+#: docs/api.md
+#, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `width_mm` | number | Along the tape: the length. |\n"
+"| `height_mm` | number | Across: tape or label height. |\n"
+"| `layout` | `\"flow\"` \\| `\"free\"` |  |\n"
+"| `dpi` | number | The image's resolution. |\n"
+"| `elements` | array of object |  |\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid "Images { #images }"
+msgid "Me { #me }"
+msgstr "Pildid { #images }"
+
+#. type: Plain text
+#: docs/api.md
+#, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token; 'oidc:<user>' for someone signed in to the web page with OpenID Connect. |\n"
+"| `display_name` | string | A person's name from the provider; else the same as name. |\n"
+"| `session` | boolean | true: signed in to the web page with OpenID Connect (its session cookie), not with a token. |\n"
+"| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
+"| `printers` | array or null | The printers the token may use; null: all. |\n"
+"| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
+"| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
+msgstr ""
+
+#. type: Title ###
+#: docs/api.md
+#, fuzzy, no-wrap
+#| msgid "Start { #start }"
+msgid "Data { #data }"
+msgstr "Käivitamine { #start }"
+
+#. type: Plain text
+#: docs/api.md
+#, no-wrap
+msgid ""
+"| Field | Type | Meaning |\n"
+"|---|---|---|\n"
+"| `kind` | `\"csv\"` \\| `\"ods\"` \\| `\"xlsx\"` |  |\n"
+"| `delimiter` | string or null | CSV: the delimiter found; null for one column and spreadsheets. |\n"
+"| `sheets` | array of string |  |\n"
+"| `sheet` | string or null | The sheet read. |\n"
+"| `columns` | array of string |  |\n"
+"| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |\n"
+msgstr ""
 
 #. type: Plain text
 #: docs/api.md
@@ -1904,6 +2309,7 @@ msgid ""
 "  \"owner\": \"inventory-tool\",\n"
 "  \"label\": \"asset-tag.tavletta\",\n"
 "  \"printed\": 20,\n"
+"  \"printed_max\": null,\n"
 "  \"total\": 20,\n"
 "  \"rows_printed\": 20,\n"
 "  \"cancel_requested\": false,\n"
@@ -1925,8 +2331,8 @@ msgstr "Osale"
 #. type: Plain text
 #: docs/contribute.md
 msgid ""
-"Code, bug reports, translations and tests with other printers, cassettes and"
-" label rolls are welcome."
+"Code, bug reports, translations and tests with other printers, cassettes and "
+"label rolls are welcome."
 msgstr ""
 "Kood, veateated, tõlked ja testid teiste printerite, kassettide ja siltide "
 "rullidega on teretulnud."
@@ -1938,19 +2344,19 @@ msgid ""
 "are welcome, no Forgejo account needed. They are copied automatically to "
 "[Forgejo](https://git.joshuahirsig.xyz/joshii/tavletta), the main "
 "repository, with a link on GitHub. Review and merge happen there; your "
-"commits are kept, so GitHub shows the pull request as merged. The discussion"
-" can stay on GitHub.  With a Forgejo account you can contribute there "
-"directly.  Details: "
-"[CONTRIBUTING.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/CONTRIBUTING.md)."
+"commits are kept, so GitHub shows the pull request as merged. The discussion "
+"can stay on GitHub.  With a Forgejo account you can contribute there "
+"directly.  Details: [CONTRIBUTING.md](https://git.joshuahirsig.xyz/joshii/"
+"tavletta/src/branch/main/CONTRIBUTING.md)."
 msgstr ""
-"Issued ja pull requestid [GitHubis](https://github.com/joshii-h/tavletta) on"
-" teretulnud, Forgejo kontot pole vaja. Need kopeeritakse automaatselt "
+"Issued ja pull requestid [GitHubis](https://github.com/joshii-h/tavletta) on "
+"teretulnud, Forgejo kontot pole vaja. Need kopeeritakse automaatselt "
 "[Forgejosse](https://git.joshuahirsig.xyz/joshii/tavletta), "
-"põhirepositooriumisse, koos lingiga GitHubis. Ülevaatus ja liitmine toimuvad"
-" seal; sinu commitid säilivad, nii et GitHub näitab pull requesti liidetuna."
-" Arutelu võib jääda GitHubi. Forgejo kontoga saad osaleda otse seal. "
-"Üksikasjad: "
-"[CONTRIBUTING.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/CONTRIBUTING.md)."
+"põhirepositooriumisse, koos lingiga GitHubis. Ülevaatus ja liitmine toimuvad "
+"seal; sinu commitid säilivad, nii et GitHub näitab pull requesti liidetuna. "
+"Arutelu võib jääda GitHubi. Forgejo kontoga saad osaleda otse seal. "
+"Üksikasjad: [CONTRIBUTING.md](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"src/branch/main/CONTRIBUTING.md)."
 
 #. type: Bullet: '- '
 #: docs/contribute.md
@@ -1960,27 +2366,26 @@ msgstr "**Rakenduse tõlked**: `tools/strings_<lang>.py`, vaata CONTRIBUTING."
 #. type: Bullet: '- '
 #: docs/contribute.md
 msgid ""
-"**This documentation**: `site/po/<lang>.po`, see "
-"[site/README.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/site/README.md)."
-"  Names of buttons and settings come from the app translation automatically."
+"**This documentation**: `site/po/<lang>.po`, see [site/README.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/site/README.md).  Names "
+"of buttons and settings come from the app translation automatically."
 msgstr ""
-"**See dokumentatsioon**: `site/po/<lang>.po`, vaata "
-"[site/README.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/site/README.md)."
-" Nuppude ja seadete nimed tulevad automaatselt rakenduse tõlkest."
+"**See dokumentatsioon**: `site/po/<lang>.po`, vaata [site/README.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/site/README.md). "
+"Nuppude ja seadete nimed tulevad automaatselt rakenduse tõlkest."
 
 #. type: Bullet: '- '
 #: docs/contribute.md
 msgid ""
-"**Other printers**: printing goes through a backend interface; a new printer"
-" is a new backend. The protocols of the supported printers are described in "
+"**Other printers**: printing goes through a backend interface; a new printer "
+"is a new backend. The protocols of the supported printers are described in "
 "[docs/](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs), "
 "one file per printer."
 msgstr ""
 "**Muud printerid**: printimine käib taustaprogrammi liidese kaudu; uus "
 "printer on uus taustaprogramm. Toetatud printerite protokollid on "
-"kirjeldatud kaustas "
-"[docs/](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs), "
-"üks fail printeri kohta."
+"kirjeldatud kaustas [docs/](https://git.joshuahirsig.xyz/joshii/tavletta/src/"
+"branch/main/docs), üks fail printeri kohta."
 
 #. type: Title #
 #: docs/index.md
@@ -1991,10 +2396,10 @@ msgstr "Tavletta"
 #. type: Plain text
 #: docs/index.md
 msgid ""
-"Tavletta designs labels under Linux and prints them over the network or USB:"
-" on label printers with endless tape or die-cut labels, and on office "
-"printers, one label per page or on label sheets. It talks to each printer in"
-" its own language."
+"Tavletta designs labels under Linux and prints them over the network or USB: "
+"on label printers with endless tape or die-cut labels, and on office "
+"printers, one label per page or on label sheets. It talks to each printer in "
+"its own language."
 msgstr ""
 "Tavletta kujundab silte Linuxis ja prindib need võrgu või USB kaudu: "
 "sildiprinteritel lõpmatu lindi või lõigatud siltidega ning "
@@ -2004,8 +2409,8 @@ msgstr ""
 #. type: Plain text
 #: docs/index.md
 msgid ""
-"Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced"
-" tav-LET-ta."
+"Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced "
+"tav-LET-ta."
 msgstr ""
 "Tavletta on retoromaani keeles väike tahvel (sõnast tavla, laud/tahvel). "
 "Hääldatakse tav-LET-ta."
@@ -2016,8 +2421,8 @@ msgid ""
 "![Main window](media/main.png#only-light)  ![Main window](media/main-"
 "dark.png#only-dark)"
 msgstr ""
-"![Põhiaken](media/main.png#only-light)  ![Põhiaken](media/main-"
-"dark.png#only-dark)"
+"![Põhiaken](media/main.png#only-light)  ![Põhiaken](media/main-dark.png#only-"
+"dark)"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -2035,8 +2440,8 @@ msgid ""
 "[free layout](use.md#free-layout) with each element at its own place; undo "
 "and redo"
 msgstr ""
-"[Tekstistiilid](use.md#text-style), [jooned ja kujundid](use.md#shapes) ning"
-" [vaba paigutus](use.md#free-layout), kus iga element asub oma kohal; võta "
+"[Tekstistiilid](use.md#text-style), [jooned ja kujundid](use.md#shapes) ning "
+"[vaba paigutus](use.md#free-layout), kus iga element asub oma kohal; võta "
 "tagasi ja tee uuesti"
 
 #. type: Bullet: '- '
@@ -2055,8 +2460,8 @@ msgid ""
 "[Serial labels](serial.md): one label for each row of a CSV, ODS or XLSX "
 "file; variables such as date and counter, and a command line"
 msgstr ""
-"[Seeriasildid](serial.md): üks silt iga CSV-, ODS- või XLSX-faili rea kohta;"
-" muutujad nagu kuupäev ja loendur ning käsurida"
+"[Seeriasildid](serial.md): üks silt iga CSV-, ODS- või XLSX-faili rea kohta; "
+"muutujad nagu kuupäev ja loendur ning käsurida"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -2090,9 +2495,9 @@ msgstr "27 keelt, järgib töölaua hele- või tumerežiimi"
 #. type: Plain text
 #: docs/index.md
 msgid ""
-"The supported printers and what each one can do are listed under "
-"[Printers](printer.md). Further printers can be added as a backend, see "
-"[Contribute](contribute.md)."
+"The supported printers and what each one can do are listed under [Printers]"
+"(printer.md). Further printers can be added as a backend, see [Contribute]"
+"(contribute.md)."
 msgstr ""
 "Toetatud printerid ja see, mida iga neist oskab, on loetletud jaotises "
 "[Printerid](printer.md). Edasisi printereid saab lisada taustaprogrammina, "
@@ -2182,10 +2587,15 @@ msgstr "Esimene silt"
 
 #. type: Bullet: '1. '
 #: docs/index.md
+#, fuzzy
+#| msgid ""
+#| "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
+#| "finds it in the network (Bonjour) and reads what is loaded: the tape "
+#| "width or the distance between the labels."
 msgid ""
-"Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-"finds it in the network (Bonjour) and reads what is loaded: the tape width "
-"or the distance between the labels."
+"Switch the printer on and choose it under [[ui:Printer model]]: a printer "
+"found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
+"reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
 "Lülita printer sisse ja vali see valikust [[ui:Printer model]]. Tavletta "
 "leiab selle võrgust (Bonjour) ja loeb, mis on laaditud: lindi laiuse või "
@@ -2226,9 +2636,12 @@ msgstr "Printerid ja tõrkeotsing"
 #: docs/printer.md
 msgid ""
 "Choose the printer under [[ui:Printer model]]; each one has its own section "
-"below."
+"below. Printers Tavletta finds on USB and in the network come first in that "
+"list, under [[ui:Found]], with their model: choosing one takes its model and "
+"its address. The models follow under [[ui:All models]]. Tavletta looks for "
+"them when the window opens and with [[ui:Search for printers]], every model "
+"at the same time, in the background."
 msgstr ""
-"Vali printer valikust [[ui:Printer model]]; igaühel on allpool oma jaotis."
 
 #. type: Title ##
 #: docs/printer.md
@@ -2246,8 +2659,8 @@ msgid ""
 msgstr ""
 "[[ui:No printer found]]: kas printer on sisse lülitatud ja samas võrgus? "
 "Otsing vajab Avahi teenust (paigaldatud enamikule töölaudadest, mis tahes "
-"init-süsteem); ainult systemd-resolved lahendab `.local` nimed, kuid ei oska"
-" otsida. Muidu sisesta aadress väljale [[ui:Host name or IP address]]."
+"init-süsteem); ainult systemd-resolved lahendab `.local` nimed, kuid ei oska "
+"otsida. Muidu sisesta aadress väljale [[ui:Host name or IP address]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2264,21 +2677,21 @@ msgstr ""
 #: docs/printer.md
 msgid ""
 "No permission for the USB port: your user needs to be in the group `lp`.  "
-"Run `sudo usermod -aG lp $USER`, then log out and in again. NIIMBOT printers"
-" use another group, see [NIIMBOT](#niimbot)."
+"Run `sudo usermod -aG lp $USER`, then log out and in again. NIIMBOT printers "
+"use another group, see [NIIMBOT](#niimbot)."
 msgstr ""
-"Õigust USB-pordile pole: sinu kasutaja peab olema rühmas `lp`. Käivita `sudo"
-" usermod -aG lp $USER`, seejärel logi välja ja uuesti sisse. NIIMBOT-"
+"Õigust USB-pordile pole: sinu kasutaja peab olema rühmas `lp`. Käivita `sudo "
+"usermod -aG lp $USER`, seejärel logi välja ja uuesti sisse. NIIMBOT-"
 "printerid kasutavad teist rühma, vaata [NIIMBOT](#niimbot)."
 
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"USB printer not found: check the cable, switch the printer on and wake it up"
-" (a sleeping printer can drop off USB), then search again."
+"USB printer not found: check the cable, switch the printer on and wake it up "
+"(a sleeping printer can drop off USB), then search again."
 msgstr ""
-"USB-printerit ei leita: kontrolli kaablit, lülita printer sisse ja ärata see"
-" (magav printer võib USB-lt kaduda), seejärel otsi uuesti."
+"USB-printerit ei leita: kontrolli kaablit, lülita printer sisse ja ärata see "
+"(magav printer võib USB-lt kaduda), seejärel otsi uuesti."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2312,13 +2725,35 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"[[ui:content scaled down to fit]]: the content does not fit the label.  Make"
-" the label longer or larger, use [[ui:Automatic length]] on tape, or shorten"
-" the content."
+"[[ui:content scaled down to fit]]: the content does not fit the label.  Make "
+"the label longer or larger, use [[ui:Automatic length]] on tape, or shorten "
+"the content."
 msgstr ""
 "[[ui:content scaled down to fit]]: sisu ei mahu sildile. Tee silt pikemaks "
 "või suuremaks, kasuta lindil valikut [[ui:Automatic length]] või lühenda "
 "sisu."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"[[ui:Different labels loaded]] (die-cut labels): the printer reports labels "
+"of another size, or measured another distance from one label to the next "
+"than height plus [[ui:Gap]] of your label.  [[ui:Use loaded labels]] changes "
+"the label and prints nothing yet: it takes the size the printer reports "
+"(Brother QL), or sets the height along the roll so that height plus gap make "
+"the measured distance (cab, Zebra). The gap and the width stay; a Zebra's "
+"print width is what the last print set, not the width of the labels. Where "
+"that height would be less than 5 mm, the gap is changed instead; where "
+"neither makes a label, only [[ui:Print anyway]] is offered."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"After [[ui:Use loaded labels]], check the label in the preview, then print. "
+"[[ui:Undo]] in the message takes the change back; the message says so if "
+"elements now reach beyond the edge of the label."
+msgstr ""
 
 #. type: Title ##
 #: docs/printer.md
@@ -2391,8 +2826,8 @@ msgid ""
 "[[ui:Printer not reachable]]), and it may not cut by itself, then swipe "
 "across its panel. Wi-Fi is the tried way."
 msgstr ""
-"Ühenda printer; [[ui:Search for printers]] leiab selle. Printimist USB kaudu"
-" pole veel printeril proovitud ja see järgib teiste tähelepanekuid: printer "
+"Ühenda printer; [[ui:Search for printers]] leiab selle. Printimist USB kaudu "
+"pole veel printeril proovitud ja see järgib teiste tähelepanekuid: printer "
 "ei pruugi USB kaudu üldse vastata (siis lõpeb päring teatega [[ui:Printer "
 "not reachable]]) ja ta ei pruugi ise lõigata, siis libista üle selle "
 "paneeli. Wi-Fi on proovitud viis."
@@ -2431,10 +2866,10 @@ msgid ""
 "paler and yellowish, Tavletta warns about old cassettes. Store cassettes "
 "cool and dry."
 msgstr ""
-"Tavletta näitab sisestatud kassetti, järelejäänud linti, prinditavat laiust,"
-" partii numbrit ja oletatavat tootmiskuupäeva. ZINK-paber vananeb: vana "
-"paber prindib kahvatumalt ja kollakalt ning Tavletta hoiatab vanade "
-"kassettide eest. Hoia kassette jahedas ja kuivas."
+"Tavletta näitab sisestatud kassetti, järelejäänud linti, prinditavat laiust, "
+"partii numbrit ja oletatavat tootmiskuupäeva. ZINK-paber vananeb: vana paber "
+"prindib kahvatumalt ja kollakalt ning Tavletta hoiatab vanade kassettide "
+"eest. Hoia kassette jahedas ja kuivas."
 
 #. type: Plain text
 #: docs/printer.md
@@ -2525,8 +2960,7 @@ msgstr "Kaas lahti: sulge kaas."
 
 #. type: Bullet: '- '
 #: docs/printer.md
-msgid ""
-"Warming up, cooling down, cleaning: wait, printing continues by itself."
+msgid "Warming up, cooling down, cleaning: wait, printing continues by itself."
 msgstr "Soojeneb, jahtub, puhastab: oota, printimine jätkub ise."
 
 #. type: Bullet: '- '
@@ -2577,8 +3011,8 @@ msgstr "Brother QL { #brother-ql }"
 #: docs/printer.md
 msgid ""
 "Tavletta prints on Brother QL label printers from the QL-500 to the "
-"QL-1115NWB, red and black too on the QL-800, QL-810W and QL-820NWB. This has"
-" not been tried on a printer yet: it follows the protocol as others "
+"QL-1115NWB, red and black too on the QL-800, QL-810W and QL-820NWB. This has "
+"not been tried on a printer yet: it follows the protocol as others "
 "documented it. Reports of what works and what does not are very welcome."
 msgstr ""
 "Tavletta prindib Brother QL sildiprinteritel mudelist QL-500 kuni "
@@ -2605,8 +3039,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"Network: models with Wi-Fi or LAN are reached on port 9100.  [[ui:Search for"
-" printers]] finds them, or enter the address."
+"Network: models with Wi-Fi or LAN are reached on port 9100.  [[ui:Search for "
+"printers]] finds them, or enter the address."
 msgstr ""
 "Võrk: Wi-Fi või LAN-iga mudelid on kättesaadavad pordis 9100. [[ui:Search "
 "for printers]] leiab need, või sisesta aadress."
@@ -2614,8 +3048,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"USB: plug the printer in; [[ui:Search for printers]] finds it. On the QL-700"
-" and the QL-800 series, switch off \"Editor Lite\" first (hold its button "
+"USB: plug the printer in; [[ui:Search for printers]] finds it. On the QL-700 "
+"and the QL-800 series, switch off \"Editor Lite\" first (hold its button "
 "until the green light goes out), otherwise the printer appears as a USB "
 "drive."
 msgstr ""
@@ -2689,8 +3123,8 @@ msgstr ""
 "62 mm pidev rull; sildi punased osad prinditakse punasena punase ja musta "
 "rullil DK-22251. See rull vajab punase ja musta tööd ka mustade siltide "
 "jaoks: kui valik ei sobi laaditud rulliga, lükkab printer töö tagasi, "
-"Tavletta prindib selle teisiti ja teatab sellest. Sellest ajast järgib valik"
-" rulli."
+"Tavletta prindib selle teisiti ja teatab sellest. Sellest ajast järgib valik "
+"rulli."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2700,8 +3134,8 @@ msgid ""
 "printers](use.md#black-and-white)."
 msgstr ""
 "Punane ja must: punased osad jäävad punaseks; pildid, taust ja kõik muu "
-"teisendatakse nagu mustvalgetel printeritel, vaata [Mustvalged "
-"printerid](use.md#black-and-white)."
+"teisendatakse nagu mustvalgetel printeritel, vaata [Mustvalged printerid]"
+"(use.md#black-and-white)."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2710,8 +3144,8 @@ msgid ""
 "along the roll; printing takes longer. Offered on the QL-570, QL-580N, "
 "QL-700, QL-710W, QL-720NW, the QL-800 series and the QL-1100 series."
 msgstr ""
-"[[ui:Quality]]: [[ui:High resolution (600 dpi)]] kahekordistab eraldusvõimet"
-" piki rulli; printimine võtab kauem aega. Pakutakse mudelitel QL-570, "
+"[[ui:Quality]]: [[ui:High resolution (600 dpi)]] kahekordistab eraldusvõimet "
+"piki rulli; printimine võtab kauem aega. Pakutakse mudelitel QL-570, "
 "QL-580N, QL-700, QL-710W, QL-720NW, QL-800 seeria ja QL-1100 seeria."
 
 #. type: Title ###
@@ -2734,8 +3168,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"\"The loaded roll does not match the label\": a die-cut roll is loaded for a"
-" label on continuous roll, or the other way round. Load the other roll or "
+"\"The loaded roll does not match the label\": a die-cut roll is loaded for a "
+"label on continuous roll, or the other way round. Load the other roll or "
 "choose the other entry under [[ui:Printer model]]."
 msgstr ""
 "\"The loaded roll does not match the label\": lõigatud rull on laaditud "
@@ -2745,11 +3179,11 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"Out of labels: load a new roll. Cover open: close it. Label jammed: open the"
-" cover and remove it, check the cutter."
+"Out of labels: load a new roll. Cover open: close it. Label jammed: open the "
+"cover and remove it, check the cutter."
 msgstr ""
-"Sildid otsas: lae uus rull. Kaas lahti: sulge see. Silt ummistunud: ava kaas"
-" ja eemalda see, kontrolli lõikurit."
+"Sildid otsas: lae uus rull. Kaas lahti: sulge see. Silt ummistunud: ava kaas "
+"ja eemalda see, kontrolli lõikurit."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2791,8 +3225,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"USB: plug the printer in; [[ui:Search for printers]] finds it. Printing over"
-" USB has not been tried on a printer yet."
+"USB: plug the printer in; [[ui:Search for printers]] finds it. Printing over "
+"USB has not been tried on a printer yet."
 msgstr ""
 "USB: ühenda printer; [[ui:Search for printers]] leiab selle. Printimist USB "
 "kaudu pole veel printeril proovitud."
@@ -2813,15 +3247,15 @@ msgid ""
 "[[ui:Print method]]: [[ui:As set on the printer]] keeps the printer's own "
 "setting. [[ui:Thermal transfer (ribbon)]] for labels printed with a ribbon, "
 "[[ui:Thermal direct]] for labels that print without one. The printer then "
-"prints at the speed set on it, if its web interface tells it, else at 50 "
-"mm/s. [[ui:Printer details]] show the method set on the printer."
+"prints at the speed set on it, if its web interface tells it, else at 50 mm/"
+"s. [[ui:Printer details]] show the method set on the printer."
 msgstr ""
 "[[ui:Print method]]: [[ui:As set on the printer]] säilitab printeri enda "
 "seadistuse. [[ui:Thermal transfer (ribbon)]] värvilindiga prinditavatele "
 "siltidele, [[ui:Thermal direct]] siltidele, mis prindivad ilma selleta. "
 "Printer prindib siis sellel seatud kiirusega, kui selle veebiliides seda "
-"teatab, muidu kiirusega 50 mm/s. [[ui:Printer details]] näitavad printerisse"
-" seatud meetodit."
+"teatab, muidu kiirusega 50 mm/s. [[ui:Printer details]] näitavad printerisse "
+"seatud meetodit."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2831,6 +3265,29 @@ msgid ""
 msgstr ""
 "[[ui:Print upside down]]: silt tuleb välja pööratult 180°, nagu tootja "
 "sildiprogramm seda prindib."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"[[ui:Print offset]]: a printer that prints off the label's place (the print "
+"a little higher or lower on every label than the preview shows it) is made "
+"up for here: measure on a printed label how far the print lies off, and "
+"enter it, positive to move the print down on labels across the roll, "
+"negative to move it up. The preview keeps showing the label as it should "
+"come out; only what is sent to the printer moves. Content within this "
+"distance of the edge the print moves to is cut off."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"[[ui:Labels per job]]: the labels of a series go to the printer together, up "
+"to this many (250 by default, 1 to 1000) in one job, and run through without "
+"stopping between them. [[ui:Stop]] takes effect between two jobs: a job that "
+"has started is printed in full. 1 sends every label as a job of its own, as "
+"other printers get them. Labels whose content changes from copy to copy "
+"always go one by one."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2845,16 +3302,32 @@ msgstr "Probleemid { #cab-problems }"
 
 #. type: Bullet: '- '
 #: docs/printer.md
+#, fuzzy
+#| msgid ""
+#| "[[ui:Different labels loaded]]: the printer measured another distance "
+#| "between the labels than height plus gap of your label. Check [[ui:Label "
+#| "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
+#| "once after changing the roll so it measures again."
 msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
 "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-"once after changing the roll so it measures again."
+"once after changing the roll so it measures again, then [[ui:Use loaded "
+"labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
 "[[ui:Different labels loaded]]: printer mõõtis siltide vahele teise kauguse "
 "kui sinu sildi kõrgus pluss vahe. Kontrolli [[ui:Label size]] ja [[ui:Gap]] "
 "või lae õige rull. Vajuta pärast rulli vahetamist printeril üks kord Feed, "
 "et see mõõdaks uuesti."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"Everything printed a little too high or too low, the same on every label, "
+"while the preview shows it in its place: set [[ui:Print offset]]. A label "
+"laid out to make up for this in another program prints off its place in the "
+"preview; move its content back into place and set the offset instead."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2899,6 +3372,26 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
+"Out of memory: the printer had no room for the labels of a job. Lower "
+"[[ui:Labels per job]], then print again from the row the message names."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"\"The job was sent, but its outcome is unknown\": the connection to the "
+"printer broke while it printed (or the printer could not tell how far it "
+"got). Tavletta counts the labels it knows were printed; the printer may have "
+"printed more. Check the labels that came out: printing again from the row "
+"the message names may print some twice, but leaves none out.  With the "
+"printer's web interface reachable on the network (the default), Tavletta "
+"also checks the number against the printer's label counter; where the two "
+"differ, the message gives the range."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
 "Labels with a ribbon print blank or smeared, the ribbon does not move: the "
 "printer is set to thermal direct. Choose [[ui:Thermal transfer (ribbon)]] "
 "under [[ui:Print method]]."
@@ -2929,14 +3422,13 @@ msgstr "Brother P-touch { #ptouch }"
 #: docs/printer.md
 msgid ""
 "Tavletta prints on Brother P-touch tape printers with TZe tape and HSe heat-"
-"shrink tube: the PT-P700, PT-P750W, PT-E550W, PT-P710BT, the PT-P900 series,"
-" the PT-D series and older models such as the PT-2430PC. Not tried on a "
+"shrink tube: the PT-P700, PT-P750W, PT-E550W, PT-P710BT, the PT-P900 series, "
+"the PT-D series and older models such as the PT-2430PC. Not tried on a "
 "printer yet."
 msgstr ""
 "Tavletta prindib Brother P-touch lindiprinteritel TZe-lindi ja HSe-"
-"kahanevate torudega: PT-P700, PT-P750W, PT-E550W, PT-P710BT, PT-P900 seeria,"
-" PT-D seeria ja vanemad mudelid nagu PT-2430PC. Pole veel printeril "
-"proovitud."
+"kahanevate torudega: PT-P700, PT-P750W, PT-E550W, PT-P710BT, PT-P900 seeria, "
+"PT-D seeria ja vanemad mudelid nagu PT-2430PC. Pole veel printeril proovitud."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2975,8 +3467,8 @@ msgstr "Lint { #ptouch-tape }"
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"Tavletta shows the inserted tape, its type (laminated, heat-shrink tube, "
-"...) and the printable width under [[ui:Printer details]]."
+"Tavletta shows the inserted tape, its type (laminated, heat-shrink "
+"tube, ...) and the printable width under [[ui:Printer details]]."
 msgstr ""
 "Tavletta näitab sisestatud linti, selle tüüpi (laminaat, kahanev toru, ...) "
 "ja prinditavat laiust jaotises [[ui:Printer details]]."
@@ -2993,10 +3485,9 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"Heat-shrink tube: choose the nearest [[ui:Tape width]] (12 mm for an 11.2 mm"
-" tube)."
-msgstr ""
-"Kahanev toru: vali lähim [[ui:Tape width]] (12 mm 11,2 mm toru jaoks)."
+"Heat-shrink tube: choose the nearest [[ui:Tape width]] (12 mm for an 11.2 mm "
+"tube)."
+msgstr "Kahanev toru: vali lähim [[ui:Tape width]] (12 mm 11,2 mm toru jaoks)."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3032,8 +3523,8 @@ msgid ""
 "[[ui:Chain printing]]: the last label stays in the printer and comes out "
 "with the next print. Saves about 25 mm of tape per print."
 msgstr ""
-"[[ui:Chain printing]]: viimane silt jääb printerisse ja tuleb välja järgmise"
-" printimisega. Säästab umbes 25 mm linti printimise kohta."
+"[[ui:Chain printing]]: viimane silt jääb printerisse ja tuleb välja järgmise "
+"printimisega. Säästab umbes 25 mm linti printimise kohta."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3043,11 +3534,11 @@ msgstr "[[ui:High resolution]]: peenem printimine piki linti, aeglasem."
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"[[ui:Tape feed]]: blank tape before and after each label, at least 2 mm "
-"(PT-P900 series: 1 mm)."
+"[[ui:Tape feed]]: blank tape before and after each label, at least 2 mm (PT-"
+"P900 series: 1 mm)."
 msgstr ""
-"[[ui:Tape feed]]: tühi lint enne ja pärast iga silti, vähemalt 2 mm (PT-P900"
-" seeria: 1 mm)."
+"[[ui:Tape feed]]: tühi lint enne ja pärast iga silti, vähemalt 2 mm (PT-P900 "
+"seeria: 1 mm)."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3070,8 +3561,8 @@ msgid ""
 "[[ui:Wrong cassette]]: another tape width is inserted. The label is scaled "
 "to the tape."
 msgstr ""
-"[[ui:Wrong cassette]]: sisestatud on teise laiusega lint. Silt skaleeritakse"
-" lindile."
+"[[ui:Wrong cassette]]: sisestatud on teise laiusega lint. Silt skaleeritakse "
+"lindile."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3129,8 +3620,8 @@ msgstr ""
 #: docs/printer.md
 msgid ""
 "The port belongs to the group `dialout` (Fedora, Debian, Ubuntu) or `uucp` "
-"(Arch Linux), not `lp`. Run `sudo usermod -aG dialout $USER` (on Arch Linux:"
-" `uucp`), then log out and in again."
+"(Arch Linux), not `lp`. Run `sudo usermod -aG dialout $USER` (on Arch Linux: "
+"`uucp`), then log out and in again."
 msgstr ""
 "Port kuulub rühma `dialout` (Fedora, Debian, Ubuntu) või `uucp` (Arch "
 "Linux), mitte `lp`. Käivita `sudo usermod -aG dialout $USER` (Arch Linuxis: "
@@ -3148,8 +3639,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"[[ui:Label size]]: the labels on the roll, the width across the printer.  On"
-" the D11, D110 and D101 the roll is narrow (12 mm on a D11): choose "
+"[[ui:Label size]]: the labels on the roll, the width across the printer.  On "
+"the D11, D110 and D101 the roll is narrow (12 mm on a D11): choose "
 "[[ui:Along the roll]] under [[ui:Content direction]] for text along the "
 "label."
 msgstr ""
@@ -3196,12 +3687,12 @@ msgstr "Õigust jadaportile pole: lisa oma kasutaja rühma, vaata ülal."
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"[[ui:Printer not reachable]] right after plugging in: some systems probe new"
-" serial ports for a modem first. Wait a few seconds, then [[ui:Refresh]]."
+"[[ui:Printer not reachable]] right after plugging in: some systems probe new "
+"serial ports for a modem first. Wait a few seconds, then [[ui:Refresh]]."
 msgstr ""
 "[[ui:Printer not reachable]] kohe pärast ühendamist: mõned süsteemid "
-"kontrollivad uusi jadaporte esmalt modemi suhtes. Oota mõni sekund, seejärel"
-" [[ui:Refresh]]."
+"kontrollivad uusi jadaporte esmalt modemi suhtes. Oota mõni sekund, seejärel "
+"[[ui:Refresh]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3254,8 +3745,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"[[ui:Search for printers]] lists both. Otherwise enter the printer's address"
-" or the name of its CUPS queue under [[ui:Host name or IP address]]."
+"[[ui:Search for printers]] lists both. Otherwise enter the printer's address "
+"or the name of its CUPS queue under [[ui:Host name or IP address]]."
 msgstr ""
 "[[ui:Search for printers]] loetleb mõlemad. Muidu sisesta printeri aadress "
 "või selle CUPS-järjekorra nimi väljale [[ui:Host name or IP address]]."
@@ -3271,8 +3762,8 @@ msgid ""
 "[[ui:Print on]] [[ui:Label sheet]]: several labels on a sheet of self-"
 "adhesive labels, see [Label sheets](sheets.md)."
 msgstr ""
-"[[ui:Print on]] [[ui:Label sheet]]: mitu silti isekleepuvate siltide lehele,"
-" vaata [Sildilehed](sheets.md)."
+"[[ui:Print on]] [[ui:Label sheet]]: mitu silti isekleepuvate siltide lehele, "
+"vaata [Sildilehed](sheets.md)."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3342,8 +3833,8 @@ msgid ""
 "The job is held in the queue (until it is released, or until a password is "
 "entered): Tavletta cancels it. Check the queue in the system settings."
 msgstr ""
-"Töö on järjekorras peatatud (kuni see vabastatakse või sisestatakse parool):"
-" Tavletta tühistab selle. Kontrolli järjekorda süsteemiseadetes."
+"Töö on järjekorras peatatud (kuni see vabastatakse või sisestatakse parool): "
+"Tavletta tühistab selle. Kontrolli järjekorda süsteemiseadetes."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3355,9 +3846,9 @@ msgstr "Sildiprinterid ZPL-i, EPL2, TSPL-i, ESC/POS-i või DYMO-ga { #raw }"
 #: docs/printer.md
 msgid ""
 "Tavletta prints on label printers that take the label as an image in their "
-"own printer language. Zebra ZPL was tried on a Zebra GX420d over USB (status"
-" and printing); the other printers have not been tried with Tavletta yet: if"
-" you have one, a report of what works and what does not helps a lot "
+"own printer language. Zebra ZPL was tried on a Zebra GX420d over USB (status "
+"and printing); the other printers have not been tried with Tavletta yet: if "
+"you have one, a report of what works and what does not helps a lot "
 "([[ui:Report a problem…]])."
 msgstr ""
 "Tavletta prindib sildiprinteritel, mis võtavad sildi vastu pildina oma "
@@ -3389,9 +3880,9 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"Connection: over the network on port 9100, or USB. Plug a USB printer in and"
-" use [[ui:Search for printers]]. Some low-cost shipping label printers do "
-"not show up as a printer on USB; Tavletta cannot find those."
+"Connection: over the network on port 9100, or USB. Plug a USB printer in and "
+"use [[ui:Search for printers]]. Some low-cost shipping label printers do not "
+"show up as a printer on USB; Tavletta cannot find those."
 msgstr ""
 "Ühendus: võrgu kaudu pordis 9100 või USB. Ühenda USB-printer ja kasuta "
 "[[ui:Search for printers]]. Mõned odavad saatesildiprinterid ei ilmu USB-l "
@@ -3403,23 +3894,23 @@ msgid ""
 "[[ui:Resolution]]: choose the resolution of the print head (203, 300 or 600 "
 "dpi). Zebra printers report it: [[ui:As reported by the printer]]."
 msgstr ""
-"[[ui:Resolution]]: vali prindipea eraldusvõime (203, 300 või 600 dpi). Zebra"
-" printerid teatavad selle: [[ui:As reported by the printer]]."
+"[[ui:Resolution]]: vali prindipea eraldusvõime (203, 300 või 600 dpi). Zebra "
+"printerid teatavad selle: [[ui:As reported by the printer]]."
 
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
 "[[ui:Label sensor]]: [[ui:As set on the printer]] keeps the printer's own "
-"setting. [[ui:Gap between labels]] for die-cut labels, [[ui:Black mark]] for"
-" labels with a black mark on the back, [[ui:Continuous media]] for a roll "
-"without gaps. Set the [[ui:Label size]] and the [[ui:Gap]] (or the height of"
-" the mark) like the roll."
+"setting. [[ui:Gap between labels]] for die-cut labels, [[ui:Black mark]] for "
+"labels with a black mark on the back, [[ui:Continuous media]] for a roll "
+"without gaps. Set the [[ui:Label size]] and the [[ui:Gap]] (or the height of "
+"the mark) like the roll."
 msgstr ""
 "[[ui:Label sensor]]: [[ui:As set on the printer]] säilitab printeri enda "
 "seadistuse. [[ui:Gap between labels]] lõigatud siltide jaoks, [[ui:Black "
 "mark]] siltide jaoks, mille taga on must märk, [[ui:Continuous media]] "
-"vahedeta rulli jaoks. Sea [[ui:Label size]] ja [[ui:Gap]] (või märgi kõrgus)"
-" rulli järgi."
+"vahedeta rulli jaoks. Sea [[ui:Label size]] ja [[ui:Gap]] (või märgi kõrgus) "
+"rulli järgi."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3471,13 +3962,13 @@ msgstr "Probleemid { #raw-problems }"
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid ""
-"[[ui:Reachable · the printer reports no status]]: the printer takes jobs but"
-" answers no questions, which many of these printers do (EPL2 printers never "
+"[[ui:Reachable · the printer reports no status]]: the printer takes jobs but "
+"answers no questions, which many of these printers do (EPL2 printers never "
 "answer). Problems such as an open cover then show on the printer only."
 msgstr ""
 "[[ui:Reachable · the printer reports no status]]: printer võtab töid vastu, "
-"kuid ei vasta küsimustele, nagu paljud neist printeritest (EPL2-printerid ei"
-" vasta kunagi). Probleemid, nagu avatud kaas, ilmuvad siis ainult printeril."
+"kuid ei vasta küsimustele, nagu paljud neist printeritest (EPL2-printerid ei "
+"vasta kunagi). Probleemid, nagu avatud kaas, ilmuvad siis ainult printeril."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3496,13 +3987,22 @@ msgid ""
 "Zebra GX420d only."
 msgstr ""
 "Silt tuleb tagurpidi välja: lülita sisse [[ui:Print upside down]] ja anna "
-"sellest koos printerimudeliga teada; suunda on proovitud ainult Zebra "
-"GX420d-l."
+"sellest koos printerimudeliga teada; suunda on proovitud ainult Zebra GX420d-"
+"l."
 
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid "Print too pale or too dark: change [[ui:Darkness]]."
 msgstr "Prindi liiga kahvatu või liiga tume: muuda [[ui:Darkness]]."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"[[ui:Different labels loaded]] (Zebra ZPL): the printer reports the distance "
+"it measured last, perhaps on an earlier roll. After changing the roll, let "
+"it measure the labels again (most printers do that with a long press on "
+"Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3519,12 +4019,12 @@ msgstr ""
 #: docs/printer.md
 msgid ""
 "Nothing is printed and the printer shows no problem: check that its printer "
-"language is the one chosen in Tavletta (many printers can switch between ZPL"
-" and EPL2, or between TSPL and ESC/POS)."
+"language is the one chosen in Tavletta (many printers can switch between ZPL "
+"and EPL2, or between TSPL and ESC/POS)."
 msgstr ""
 "Midagi ei prindita ja printer ei näita probleemi: kontrolli, et selle "
-"printerikeel on see, mis Tavlettas valitud (paljud printerid saavad lülituda"
-" ZPL-i ja EPL2 või TSPL-i ja ESC/POS-i vahel)."
+"printerikeel on see, mis Tavlettas valitud (paljud printerid saavad lülituda "
+"ZPL-i ja EPL2 või TSPL-i ja ESC/POS-i vahel)."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3535,9 +4035,9 @@ msgstr "Abi"
 #. type: Plain text
 #: docs/printer.md
 msgid ""
-"Something else? [[ui:Report a problem…]] in the main menu (also offered with"
-" error messages) opens a prefilled issue in the browser with version, system"
-" and printer. You see everything before sending it."
+"Something else? [[ui:Report a problem…]] in the main menu (also offered with "
+"error messages) opens a prefilled issue in the browser with version, system "
+"and printer. You see everything before sending it."
 msgstr ""
 "Midagi muud? [[ui:Report a problem…]] peamenüüs (pakutakse ka veateadete "
 "juures) avab brauseris eeltäidetud issue koos versiooni, süsteemi ja "
@@ -3563,8 +4063,8 @@ msgstr ""
 #. type: Plain text
 #: docs/serial.md
 msgid ""
-"![Serial labels](media/serial.png#only-light)  ![Serial "
-"labels](media/serial-dark.png#only-dark)"
+"![Serial labels](media/serial.png#only-light)  ![Serial labels](media/serial-"
+"dark.png#only-dark)"
 msgstr ""
 "![Seeriasildid](media/serial.png#only-light)  ![Seeriasildid](media/serial-"
 "dark.png#only-dark)"
@@ -3606,20 +4106,19 @@ msgstr ""
 #: docs/serial.md
 msgid "ODS: cells as LibreOffice shows them, dates as `2026-11-11`."
 msgstr ""
-"ODS: lahtrid nii, nagu LibreOffice neid näitab, kuupäevad kujul "
-"`2026-11-11`."
+"ODS: lahtrid nii, nagu LibreOffice neid näitab, kuupäevad kujul `2026-11-11`."
 
 #. type: Bullet: '- '
 #: docs/serial.md
 msgid ""
-"XLSX: numbers with their decimals, leading zeros and percent signs, dates as"
-" `2026-11-11`. Thousands separators and text in the number format, such as a"
-" currency, are left out. Dates in the East Asian built-in formats come out "
-"as numbers. Leading zeros fill up to 30 digits; a number format longer than "
-"the 255 characters Excel takes is ignored."
+"XLSX: numbers with their decimals, leading zeros and percent signs, dates as "
+"`2026-11-11`. Thousands separators and text in the number format, such as a "
+"currency, are left out. Dates in the East Asian built-in formats come out as "
+"numbers. Leading zeros fill up to 30 digits; a number format longer than the "
+"255 characters Excel takes is ignored."
 msgstr ""
-"XLSX: arvud koos kümnendkohtade, eesnullide ja protsendimärkidega, kuupäevad"
-" kujul `2026-11-11`. Tuhandeeraldajad ja tekst arvuvormingus, näiteks "
+"XLSX: arvud koos kümnendkohtade, eesnullide ja protsendimärkidega, kuupäevad "
+"kujul `2026-11-11`. Tuhandeeraldajad ja tekst arvuvormingus, näiteks "
 "valuuta, jäetakse välja. Ida-Aasia sisseehitatud vormingutes kuupäevad "
 "tulevad arvudena. Eesnullid täidavad kuni 30 numbrini; Exceli "
 "aktsepteeritavast 255 märgist pikem arvuvorming ignoreeritakse."
@@ -3657,10 +4156,10 @@ msgstr ""
 #. type: Plain text
 #: docs/serial.md
 msgid ""
-"The label file stores where the data file is, never its content. If the data"
-" file lies in the same folder as the label (or below it), both can be moved "
-"or shared together. If it is missing when the label is opened, Tavletta says"
-" so: choose it again or remove it."
+"The label file stores where the data file is, never its content. If the data "
+"file lies in the same folder as the label (or below it), both can be moved "
+"or shared together. If it is missing when the label is opened, Tavletta says "
+"so: choose it again or remove it."
 msgstr ""
 "Sildifail salvestab, kus andmefail asub, mitte kunagi selle sisu. Kui "
 "andmefail asub samas kaustas sildiga (või selle all), saab mõlemat koos "
@@ -3671,8 +4170,8 @@ msgstr ""
 #: docs/serial.md
 msgid ""
 "A data file is read without asking only if it is a table (`.csv`, `.tsv`, "
-"`.txt`, `.ods`, `.xlsx`) in the label's folder or below, and not in a hidden"
-" folder. Any other data file is read only after asking, once for each label "
+"`.txt`, `.ods`, `.xlsx`) in the label's folder or below, and not in a hidden "
+"folder. Any other data file is read only after asking, once for each label "
 "file: a label from someone else could name any file.  [[ui:Forget allowed "
 "data files]] in the main menu makes Tavletta ask again."
 msgstr ""
@@ -3700,8 +4199,7 @@ msgstr ""
 #: docs/serial.md
 msgid ""
 "Templates keep the placeholders but not the data file. Older versions of "
-"Tavletta refuse labels with a data file instead of printing the "
-"placeholders."
+"Tavletta refuse labels with a data file instead of printing the placeholders."
 msgstr ""
 "Mallid säilitavad kohatäited, kuid mitte andmefaili. Tavletta vanemad "
 "versioonid keelduvad siltidest, millel on andmefail, selle asemel et "
@@ -3716,8 +4214,8 @@ msgstr "Kohatäited"
 #. type: Bullet: '- '
 #: docs/serial.md
 msgid ""
-"[[ui:Insert column]] next to a text or the content of a code adds `{Column}`"
-" at the cursor; typing it works as well."
+"[[ui:Insert column]] next to a text or the content of a code adds `{Column}` "
+"at the cursor; typing it works as well."
 msgstr ""
 "[[ui:Insert column]] teksti või koodi sisu kõrval lisab kursori kohale "
 "`{Column}`; selle tippimine töötab samuti."
@@ -3734,15 +4232,15 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/serial.md
 msgid ""
-"With a data file `{{` and `}}` print a single brace, in every text and code:"
-" `{{Name}}` prints `{Name}`. Other braces need doubling too, for example "
-"JSON in a QR code: `{{\"id\":{Number}}}`. Without a data file texts print as"
-" typed."
+"With a data file `{{` and `}}` print a single brace, in every text and code: "
+"`{{Name}}` prints `{Name}`. Other braces need doubling too, for example JSON "
+"in a QR code: `{{\"id\":{Number}}}`. Without a data file texts print as "
+"typed."
 msgstr ""
 "Andmefailiga prindivad `{{` ja `}}` ühe looksulu, igas tekstis ja koodis: "
 "`{{Name}}` prindib `{Name}`. Teised looksulud tuleb samuti kahekordistada, "
-"näiteks JSON QR-koodis: `{{\"id\":{Number}}}`. Ilma andmefailita prinditakse"
-" tekstid nii, nagu tipitud."
+"näiteks JSON QR-koodis: `{{\"id\":{Number}}}`. Ilma andmefailita prinditakse "
+"tekstid nii, nagu tipitud."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -3764,8 +4262,8 @@ msgstr ""
 #: docs/serial.md
 msgid ""
 "Before printing, the codes of every row are checked: an EAN-13 needs 12 or "
-"13 digits, an empty cell gives no code, a code holds only so much (a QR code"
-" less with a higher error correction), GS1 data needs the lengths of its "
+"13 digits, an empty cell gives no code, a code holds only so much (a QR code "
+"less with a higher error correction), GS1 data needs the lengths of its "
 "application identifiers. Rows that fail are named; print without them or "
 "correct the data file."
 msgstr ""
@@ -3830,17 +4328,25 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/serial.md
-msgid "Every label is a print job of its own, so this works on every printer."
-msgstr "Iga silt on eraldi printimistöö, nii et see töötab igal printeril."
+msgid ""
+"Every label is a print job of its own, so this works on every printer.  A "
+"cab printer gets up to [[ui:Labels per job]] labels as one job, which it "
+"prints without stopping between them ([cab](printer.md#cab))."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/serial.md
+#, fuzzy
+#| msgid ""
+#| "[[ui:Stop]] in the bar above the window ends the series after the label "
+#| "being printed; the first label is always printed."
 msgid ""
 "[[ui:Stop]] in the bar above the window ends the series after the label "
-"being printed; the first label is always printed."
+"being printed (on a cab printer: after the job being printed); the first "
+"label is always printed."
 msgstr ""
-"[[ui:Stop]] akna kohal olevas ribal lõpetab seeria pärast praegu prinditavat"
-" silti; esimene silt prinditakse alati."
+"[[ui:Stop]] akna kohal olevas ribal lõpetab seeria pärast praegu prinditavat "
+"silti; esimene silt prinditakse alati."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -3856,11 +4362,11 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/serial.md
 msgid ""
-"On a label sheet each position gets one label: the rows in order, the copies"
-" of a row on the positions after each other, starting at the positions "
-"chosen for the first sheet. All sheets are one print job, so [[ui:Stop]] is "
-"not offered. After a problem the message also says at which position of "
-"which sheet the row to go on from belongs."
+"On a label sheet each position gets one label: the rows in order, the copies "
+"of a row on the positions after each other, starting at the positions chosen "
+"for the first sheet. All sheets are one print job, so [[ui:Stop]] is not "
+"offered. After a problem the message also says at which position of which "
+"sheet the row to go on from belongs."
 msgstr ""
 "Sildilehel saab iga positsioon ühe sildi: read järjekorras, rea koopiad "
 "järjestikustel positsioonidel, alustades esimese lehe jaoks valitud "
@@ -3894,8 +4400,8 @@ msgstr "Serveri paigaldus"
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"This guide sets up the print server (`tavletta serve`) on a Linux server for"
-" a company: other programs, for example an inventory tool, print labels "
+"This guide sets up the print server (`tavletta serve`) on a Linux server for "
+"a company: other programs, for example an inventory tool, print labels "
 "through it over the network. What the server does and how programs use it: "
 "[Print server](server.md) and [API reference](api.md)."
 msgstr ""
@@ -3912,14 +4418,28 @@ msgstr "Ülevaade { #overview }"
 
 #. type: Bullet: '- '
 #: docs/server-install.md
+#, fuzzy
+#| msgid ""
+#| "One small service: a REST API (and MCP for AI assistants) on port 8790.  "
+#| "It renders the labels itself and sends them to the printers over the "
+#| "network; no desktop, no browser, no database."
 msgid ""
 "One small service: a REST API (and MCP for AI assistants) on port 8790.  It "
 "renders the labels itself and sends them to the printers over the network; "
-"no desktop, no browser, no database."
+"no desktop, no database."
 msgstr ""
 "Üks väike teenus: REST API (ja MCP tehisintellekti assistentidele) pordis "
 "8790. See renderdab sildid ise ja saadab need printeritele võrgu kaudu; ei "
 "mingit töölauda, brauserit ega andmebaasi."
+
+#. type: Bullet: '- '
+#: docs/server-install.md
+msgid ""
+"A web page at the same address for people: sign in with a token, see the "
+"printers, print a template or a series (from a CSV, XLSX or ODS file, a "
+"pasted list or number ranges such as 3000–5685), upload and delete templates "
+"with an admin token. `--no-web-ui` turns it off."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -3945,8 +4465,8 @@ msgid ""
 "The labels are `.tavletta` files in a labels folder, designed in the "
 "Tavletta app and copied there."
 msgstr ""
-"Sildid on `.tavletta`-failid siltide kaustas, kujundatud Tavletta rakenduses"
-" ja sinna kopeeritud."
+"Sildid on `.tavletta`-failid siltide kaustas, kujundatud Tavletta rakenduses "
+"ja sinna kopeeritud."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -3969,8 +4489,8 @@ msgid ""
 "A Linux server on x86-64 or ARM64 (a virtual machine or a Raspberry Pi 4/5 "
 "is enough)."
 msgstr ""
-"Linuxi server x86-64 või ARM64 arhitektuuril (virtuaalmasin või Raspberry Pi"
-" 4/5 piisab)."
+"Linuxi server x86-64 või ARM64 arhitektuuril (virtuaalmasin või Raspberry Pi "
+"4/5 piisab)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -3992,9 +4512,9 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server-install.md
 msgid ""
-"Resources: 1 CPU core, 1 GB RAM reserved (the server usually uses 50–150 MB;"
-" a large label is limited to 40 megapixels), 500 MB of disk for the image or"
-" the installation, plus the labels."
+"Resources: 1 CPU core, 1 GB RAM reserved (the server usually uses 50–150 MB; "
+"a large label is limited to 40 megapixels), 500 MB of disk for the image or "
+"the installation, plus the labels."
 msgstr ""
 "Ressursid: 1 protsessorituum, 1 GB RAM-i reserveeritud (server kasutab "
 "tavaliselt 50-150 MB; suur silt on piiratud 40 megapikslile), 500 MB "
@@ -4033,11 +4553,11 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server-install.md
 msgid ""
-"Fonts: every font the labels use must be installed on the server (see "
-"[Fonts](#fonts))."
+"Fonts: every font the labels use must be installed on the server (see [Fonts]"
+"(#fonts))."
 msgstr ""
-"Fondid: iga siltidel kasutatav font peab olema serverisse paigaldatud (vaata"
-" [Fondid](#fonts))."
+"Fondid: iga siltidel kasutatav font peab olema serverisse paigaldatud (vaata "
+"[Fondid](#fonts))."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -4057,9 +4577,9 @@ msgstr "1. Hangi failid ja pilt { #docker-build }"
 msgid ""
 "sudo git clone https://git.joshuahirsig.xyz/joshii/tavletta.git /opt/tavletta\n"
 "cd /opt/tavletta\n"
-"sudo git checkout v1.1.2      # the release to run: git tag lists them\n"
+"sudo git checkout v1.2.1      # the release to run: git tag lists them\n"
 "cd packaging/docker\n"
-"sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.1, for x86-64 and ARM64\n"
+"sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.2, for x86-64 and ARM64\n"
 msgstr ""
 
 #. type: Plain text
@@ -4071,10 +4591,10 @@ msgid ""
 "(metrics of Arial, Times New Roman and Courier New) and Carlito (metrics of "
 "Calibri). It runs as an unprivileged user, read-only, without capabilities."
 msgstr ""
-"Pilt (umbes 230 MB), mille projekti CI ehitab, testib ja allkirjastab (vaata"
-" [Server ja konteiner](server.md#container)), sisaldab Tavlettat, Pythonit, "
-"Pangot ja Cairot, fonte DejaVu, Source Sans 3, Liberation (Ariali, Times New"
-" Romani ja Courier New mõõdud) ja Carlito (Calibri mõõdud). See töötab "
+"Pilt (umbes 230 MB), mille projekti CI ehitab, testib ja allkirjastab (vaata "
+"[Server ja konteiner](server.md#container)), sisaldab Tavlettat, Pythonit, "
+"Pangot ja Cairot, fonte DejaVu, Source Sans 3, Liberation (Ariali, Times New "
+"Romani ja Courier New mõõdud) ja Carlito (Calibri mõõdud). See töötab "
 "õigusteta kasutajana, kirjutuskaitstuna, ilma capability'deta."
 
 #. type: Title ###
@@ -4131,8 +4651,8 @@ msgstr "3. Printerid: printers.toml { #printers }"
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"`config/printers.toml` names every printer programs may use. An example with"
-" a cab printer for asset labels (thermal transfer, printed turned by 180 "
+"`config/printers.toml` names every printer programs may use. An example with "
+"a cab printer for asset labels (thermal transfer, printed turned by 180 "
 "degrees), a Brother QL at the reception and an office printer over IPP:"
 msgstr ""
 "`config/printers.toml` nimetab iga printeri, mida programmid tohivad "
@@ -4199,11 +4719,12 @@ msgstr ""
 #: docs/server-install.md
 msgid ""
 "The settings of a model are those of the app's printer settings; the full "
-"list is in "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
+"list is in [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/"
+"branch/main/docs/server.md)."
 msgstr ""
-"Mudeli seaded on rakenduse printeriseaded; täielik loend on failis "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
+"Mudeli seaded on rakenduse printeriseaded; täielik loend on failis [docs/"
+"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4236,7 +4757,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo docker run --rm --user 1000:1000 -v ./config:/config --entrypoint tavletta \\\n"
-"    ghcr.io/joshii-h/tavletta:1.1 token new inventory-tool --role print --printer it-cab \\\n"
+"    ghcr.io/joshii-h/tavletta:1.2 token new inventory-tool --role print --printer it-cab \\\n"
 "    --description \"Inventory tool\" \\\n"
 "    --tokens /config/tokens.toml --printers /config/printers.toml\n"
 msgstr ""
@@ -4312,8 +4833,8 @@ msgid ""
 msgstr ""
 "Kujunda sildid Tavletta rakenduses ja kopeeri `.tavletta`-failid kausta "
 "`labels/` (alamkaustad on lubatud). Programmid nimetavad neid ilma "
-"laiendita: `labels/inventory/asset-tag.tavletta` on `\"label\": "
-"\"inventory/asset-tag\"`."
+"laiendita: `labels/inventory/asset-tag.tavletta` on `\"label\": \"inventory/"
+"asset-tag\"`."
 
 #. type: Fenced code block (sh)
 #: docs/server-install.md
@@ -4341,7 +4862,7 @@ msgstr ""
 #. type: Fenced code block (text)
 #: docs/server-install.md
 #, no-wrap
-msgid "{\"status\": \"ok\", \"version\": \"1.1.2\"}\n"
+msgid "{\"status\": \"ok\", \"version\": \"1.2.1\"}\n"
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4356,9 +4877,8 @@ msgid ""
 "`TAVLETTA_TZ=Europe/Zurich` in a file `.env` next to `compose.yaml` (UTC by "
 "default)."
 msgstr ""
-"Sea siltide `{=date}` ja `{=time}` ajavöönd valikuga "
-"`TAVLETTA_TZ=Europe/Zurich` failis `.env` `compose.yaml`i kõrval (vaikimisi "
-"UTC)."
+"Sea siltide `{=date}` ja `{=time}` ajavöönd valikuga `TAVLETTA_TZ=Europe/"
+"Zurich` failis `.env` `compose.yaml`i kõrval (vaikimisi UTC)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -4379,9 +4899,11 @@ msgstr ""
 msgid ""
 "  Each printer is listed with its state; `UNREACHABLE` with a message if\n"
 "  the server cannot reach it.\n"
+"- Open `http://127.0.0.1:8790/` in a browser on the server (others use\n"
+"  the proxy's address, see [Reverse proxy](#proxy)) and sign in with a\n"
+"  token: the web page shows what its role may do. The page keeps the\n"
+"  token in the browser tab only, until the tab is closed or \"Sign out\".\n"
 msgstr ""
-"  Iga printer on loetletud olekuga; `UNREACHABLE` ja teade, kui\n"
-"  server ei pääse sellele ligi.\n"
 
 #. type: Title ###
 #: docs/server-install.md
@@ -4392,8 +4914,8 @@ msgstr "Hosti võrk: mDNS ja USB { #docker-host }"
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"To find printers on the network by mDNS, to print on CUPS queues of the host"
-" or on USB printers, start with the override `compose.host.yaml`:"
+"To find printers on the network by mDNS, to print on CUPS queues of the host "
+"or on USB printers, start with the override `compose.host.yaml`:"
 msgstr ""
 "Printerite leidmiseks võrgust mDNS-iga, hosti CUPS-järjekordadele või USB-"
 "printeritele printimiseks käivita ülekirjutusega `compose.host.yaml`:"
@@ -4431,13 +4953,12 @@ msgstr ""
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"Each request is logged with the client's address, the token's name, the path"
-" and the status; each job with its label, printer and outcome. Tokens and "
+"Each request is logged with the client's address, the token's name, the path "
+"and the status; each job with its label, printer and outcome. Tokens and "
 "label contents are never logged."
 msgstr ""
 "Iga päring logitakse kliendi aadressi, tokeni nime, tee ja olekuga; iga töö "
-"oma sildi, printeri ja tulemusega. Tokeneid ja siltide sisu ei logita "
-"kunagi."
+"oma sildi, printeri ja tulemusega. Tokeneid ja siltide sisu ei logita kunagi."
 
 #. type: Title ###
 #: docs/server-install.md
@@ -4451,7 +4972,7 @@ msgstr "Uuendamine { #docker-update }"
 msgid ""
 "cd /opt/tavletta\n"
 "sudo git fetch --tags\n"
-"sudo git checkout v1.2.0         # the new release\n"
+"sudo git checkout v1.2.1         # the new release\n"
 "cd packaging/docker\n"
 "sudo docker compose pull\n"
 "sudo docker compose up -d\n"
@@ -4464,9 +4985,9 @@ msgid ""
 "stops; a label being printed is finished. `config/`, `labels/` and `fonts/` "
 "are kept."
 msgstr ""
-"Loe esmalt väljalaskemärkmeid. Ootavad tööd tühistatakse serveri peatumisel;"
-" praegu prinditav silt lõpetatakse. Kaustad `config/`, `labels/` ja `fonts/`"
-" säilivad."
+"Loe esmalt väljalaskemärkmeid. Ootavad tööd tühistatakse serveri peatumisel; "
+"praegu prinditav silt lõpetatakse. Kaustad `config/`, `labels/` ja `fonts/` "
+"säilivad."
 
 #. type: Title ###
 #: docs/server-install.md
@@ -4478,12 +4999,12 @@ msgstr "Varundus { #docker-backup }"
 #: docs/server-install.md
 msgid ""
 "Back up the three folders: `config/` (the printer list, the token hashes), "
-"`labels/` (the labels and their counters: the next number of each label with"
-" `{=counter}` is saved in its file) and `fonts/`. The image can be pulled "
+"`labels/` (the labels and their counters: the next number of each label with "
+"`{=counter}` is saved in its file) and `fonts/`. The image can be pulled "
 "again at any time."
 msgstr ""
-"Varunda kolm kausta: `config/` (printerite loend, tokenite räsid), `labels/`"
-" (sildid ja nende loendurid: iga `{=counter}`-sildi järgmine number "
+"Varunda kolm kausta: `config/` (printerite loend, tokenite räsid), `labels/` "
+"(sildid ja nende loendurid: iga `{=counter}`-sildi järgmine number "
 "salvestatakse selle faili) ja `fonts/`. Pildi saab igal ajal uuesti alla "
 "tõmmata."
 
@@ -4499,7 +5020,7 @@ msgstr "Eemaldamine { #docker-uninstall }"
 msgid ""
 "cd /opt/tavletta/packaging/docker\n"
 "sudo docker compose down\n"
-"sudo docker image rm ghcr.io/joshii-h/tavletta:1.1\n"
+"sudo docker image rm ghcr.io/joshii-h/tavletta:1.2\n"
 "sudo rm -r /opt/tavletta     # also deletes config, labels and fonts\n"
 msgstr ""
 
@@ -4547,15 +5068,12 @@ msgstr "Fedora:"
 #. type: Fenced code block (sh)
 #: docs/server-install.md
 #, no-wrap
-msgid ""
-"sudo dnf install python3 python3-gobject gobject-introspection pango gettext"
-" git-core\n"
+msgid "sudo dnf install python3 python3-gobject gobject-introspection pango gettext git-core\n"
 msgstr ""
 
 #. type: Plain text
 #: docs/server-install.md
-msgid ""
-"No GTK is needed. `gettext` and `git` are needed only while installing."
+msgid "No GTK is needed. `gettext` and `git` are needed only while installing."
 msgstr "GTK-d pole vaja. `gettext` ja `git` on vaja ainult paigaldamise ajal."
 
 #. type: Title ###
@@ -4578,7 +5096,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo python3 -m venv --system-site-packages /opt/tavletta\n"
-"sudo /opt/tavletta/bin/pip install \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.2\"\n"
+"sudo /opt/tavletta/bin/pip install \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1\"\n"
 "/opt/tavletta/bin/tavletta --version\n"
 msgstr ""
 
@@ -4650,15 +5168,15 @@ msgid ""
 "sandboxed (read-only system, no home folders, no capabilities, 1 GB memory):"
 msgstr ""
 "`packaging/systemd/tavletta-server.service` käivitab serveri kasutajana "
-"`tavletta`, liivakastis (kirjutuskaitstud süsteem, ei mingeid kodukaustu, ei"
-" mingeid capability'sid, 1 GB mälu):"
+"`tavletta`, liivakastis (kirjutuskaitstud süsteem, ei mingeid kodukaustu, ei "
+"mingeid capability'sid, 1 GB mälu):"
 
 #. type: Fenced code block (sh)
 #: docs/server-install.md
 #, no-wrap
 msgid ""
 "sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \\\n"
-"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/packaging/systemd/tavletta-server.service\n"
+"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service\n"
 "sudo systemctl daemon-reload\n"
 "sudo systemctl enable --now tavletta-server\n"
 "systemctl status tavletta-server\n"
@@ -4696,11 +5214,11 @@ msgstr "Ajavöönd on serveri oma (`timedatectl`)."
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"For a single user on a desktop there is the user service "
-"`packaging/systemd/tavletta.service` instead."
+"For a single user on a desktop there is the user service `packaging/systemd/"
+"tavletta.service` instead."
 msgstr ""
-"Ühe kasutaja jaoks töölaual on selle asemel kasutajateenus "
-"`packaging/systemd/tavletta.service`."
+"Ühe kasutaja jaoks töölaual on selle asemel kasutajateenus `packaging/"
+"systemd/tavletta.service`."
 
 #. type: Title ###
 #: docs/server-install.md
@@ -4712,9 +5230,9 @@ msgstr "Uuendamine { #native-update }"
 #: docs/server-install.md
 #, no-wrap
 msgid ""
-"sudo /opt/tavletta/bin/pip install --upgrade \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.0\"\n"
+"sudo /opt/tavletta/bin/pip install --upgrade \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1\"\n"
 "sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \\\n"
-"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.0/packaging/systemd/tavletta-server.service\n"
+"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service\n"
 "sudo systemctl daemon-reload\n"
 "sudo systemctl restart tavletta-server\n"
 msgstr ""
@@ -4754,17 +5272,15 @@ msgstr "1. Paigaldus { #package-install }"
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"From the [latest "
-"release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/latest), "
-"download into an empty folder the `.deb` files and `SHA256SUMS-deb` "
-"(Debian), or the `.noarch.rpm` and `.x86_64.rpm` files and `SHA256SUMS-rpm` "
-"(Fedora). Check and install them:"
+"From the [latest release](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"releases/latest), download into an empty folder the `.deb` files and "
+"`SHA256SUMS-deb` (Debian), or the `.noarch.rpm` and `.x86_64.rpm` files and "
+"`SHA256SUMS-rpm` (Fedora). Check and install them:"
 msgstr ""
-"[Viimasest "
-"väljalasest](https://git.joshuahirsig.xyz/joshii/tavletta/releases/latest) "
-"laadi tühja kausta alla `.deb`-failid ja `SHA256SUMS-deb` (Debian) või "
-"`.noarch.rpm`- ja `.x86_64.rpm`-failid ja `SHA256SUMS-rpm` (Fedora). "
-"Kontrolli ja paigalda need:"
+"[Viimasest väljalasest](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"releases/latest) laadi tühja kausta alla `.deb`-failid ja `SHA256SUMS-deb` "
+"(Debian) või `.noarch.rpm`- ja `.x86_64.rpm`-failid ja `SHA256SUMS-rpm` "
+"(Fedora). Kontrolli ja paigalda need:"
 
 #. type: Fenced code block (sh)
 #: docs/server-install.md
@@ -4784,15 +5300,15 @@ msgstr "2. Seadista ja käivita { #package-start }"
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"The package `tavletta-server` has made `/etc/tavletta` and "
-"`/var/lib/tavletta/labels`, owned by `tavletta`, with the paths of [option "
-"B](#native-user). Put `printers.toml` there ([as above](#printers)), make "
-"the tokens as the service user, then start the service:"
+"The package `tavletta-server` has made `/etc/tavletta` and `/var/lib/"
+"tavletta/labels`, owned by `tavletta`, with the paths of [option B](#native-"
+"user). Put `printers.toml` there ([as above](#printers)), make the tokens as "
+"the service user, then start the service:"
 msgstr ""
-"Pakett `tavletta-server` on loonud kaustad `/etc/tavletta` ja "
-"`/var/lib/tavletta/labels`, mille omanik on `tavletta`, [variandi "
-"B](#native-user) teedega. Pane sinna `printers.toml` ([nagu "
-"ülal](#printers)), loo tokenid teenusekasutajana, seejärel käivita teenus:"
+"Pakett `tavletta-server` on loonud kaustad `/etc/tavletta` ja `/var/lib/"
+"tavletta/labels`, mille omanik on `tavletta`, [variandi B](#native-user) "
+"teedega. Pane sinna `printers.toml` ([nagu ülal](#printers)), loo tokenid "
+"teenusekasutajana, seejärel käivita teenus:"
 
 #. type: Fenced code block (sh)
 #: docs/server-install.md
@@ -4808,8 +5324,8 @@ msgstr ""
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"Reload, restart and logs work as in [option B](#native-service). The service"
-" prints to network printers; it has no access to devices."
+"Reload, restart and logs work as in [option B](#native-service). The service "
+"prints to network printers; it has no access to devices."
 msgstr ""
 "Taaslaadimine, taaskäivitus ja logid töötavad nagu [variandis B](#native-"
 "service). Teenus prindib võrguprinteritele; sellel pole juurdepääsu "
@@ -4825,11 +5341,11 @@ msgstr "Uuendamine { #package-update }"
 #: docs/server-install.md
 msgid ""
 "Install the packages of the new release the same way; a running service is "
-"restarted with the new version. Back up `/etc/tavletta` and "
-"`/var/lib/tavletta/labels`."
+"restarted with the new version. Back up `/etc/tavletta` and `/var/lib/"
+"tavletta/labels`."
 msgstr ""
-"Paigalda uue väljalase paketid samamoodi; töötav teenus taaskäivitatakse uue"
-" versiooniga. Varunda `/etc/tavletta` ja `/var/lib/tavletta/labels`."
+"Paigalda uue väljalase paketid samamoodi; töötav teenus taaskäivitatakse uue "
+"versiooniga. Varunda `/etc/tavletta` ja `/var/lib/tavletta/labels`."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -4841,8 +5357,8 @@ msgstr "Pöördvaheserver ja HTTPS { #proxy }"
 #: docs/server-install.md
 msgid ""
 "The server speaks plain HTTP on `127.0.0.1`. Other computers reach it "
-"through a reverse proxy that adds HTTPS. Give the server the proxy's address"
-" with `--trusted-proxy`, so the log and the limits per client see the real "
+"through a reverse proxy that adds HTTPS. Give the server the proxy's address "
+"with `--trusted-proxy`, so the log and the limits per client see the real "
 "client, not the proxy."
 msgstr ""
 "Server räägib lihtsat HTTP-d aadressil `127.0.0.1`. Teised arvutid pääsevad "
@@ -4859,8 +5375,8 @@ msgstr "Traefik (Docker) { #traefik }"
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"Traefik and Tavletta in one Docker network, Traefik with a fixed address. In"
-" `compose.yaml`, remove `ports:` (the server is then reached only through "
+"Traefik and Tavletta in one Docker network, Traefik with a fixed address. In "
+"`compose.yaml`, remove `ports:` (the server is then reached only through "
 "Traefik) and add:"
 msgstr ""
 "Traefik ja Tavletta ühes Dockeri võrgus, Traefikul püsiaadress. Eemalda "
@@ -4905,8 +5421,8 @@ msgstr "nginx { #nginx }"
 #: docs/server-install.md
 msgid ""
 "The server on `127.0.0.1` answers only requests for a local host name "
-"(against DNS rebinding): nginx must not pass on the public name. Its default"
-" (`127.0.0.1:8790`) is right; do not add `proxy_set_header Host $host`."
+"(against DNS rebinding): nginx must not pass on the public name. Its default "
+"(`127.0.0.1:8790`) is right; do not add `proxy_set_header Host $host`."
 msgstr ""
 "Server aadressil `127.0.0.1` vastab ainult kohaliku hostinime päringutele "
 "(DNS-i rebindingu vastu): nginx ei tohi avalikku nime edasi anda. Selle "
@@ -4995,8 +5511,8 @@ msgid ""
 "Port 8790 stays closed: the server listens on `127.0.0.1` (Docker publishes "
 "it on `127.0.0.1` only)."
 msgstr ""
-"Port 8790 jääb suletuks: server kuulab aadressil `127.0.0.1` (Docker avaldab"
-" selle ainult aadressil `127.0.0.1`)."
+"Port 8790 jääb suletuks: server kuulab aadressil `127.0.0.1` (Docker avaldab "
+"selle ainult aadressil `127.0.0.1`)."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5007,6 +5523,90 @@ msgstr "Väljuv serverist printeritele: TCP 9100 ja 631."
 #: docs/server-install.md
 msgid "Never make the server reachable from the internet."
 msgstr "Ära kunagi tee serverit internetist kättesaadavaks."
+
+#. type: Title ##
+#: docs/server-install.md
+#, no-wrap
+msgid "Signing in with OpenID Connect { #oidc }"
+msgstr ""
+
+#. type: Plain text
+#: docs/server-install.md
+msgid ""
+"People can sign in to the web page with your organisation's identity "
+"provider (Keycloak, Authentik, Microsoft Entra ID, Okta …) instead of an "
+"access token; their roles at the provider become Tavletta's roles.  Programs "
+"keep using tokens. It needs HTTPS through the reverse proxy (only `http://"
+"localhost` works without, for testing)."
+msgstr ""
+
+#. type: Bullet: '1. '
+#: docs/server-install.md
+msgid ""
+"Register a client at the provider: confidential (with a secret), the "
+"authorization code flow only, PKCE S256, redirect URI `https://"
+"labels.example.com/oidc/callback`, post-logout redirect URI `https://"
+"labels.example.com/`. Make the roles or groups reach the ID token: in "
+"Keycloak a mapper *User Client Role* (or *User Realm Role*)  on the client "
+"with *Add to ID token* on; Authentik sends `groups`."
+msgstr ""
+
+#. type: Bullet: '2. '
+#: docs/server-install.md
+msgid ""
+"Put the secret into `config/oidc-secret` (the secret alone, mode 600)  and "
+"write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml` gives a "
+"commented start):"
+msgstr ""
+
+#. type: Fenced code block (toml)
+#: docs/server-install.md
+#, no-wrap
+msgid ""
+"   [oidc]\n"
+"   issuer = \"https://id.example.com/realms/example\"\n"
+"   client_id = \"tavletta\"\n"
+"   client_secret_file = \"/config/oidc-secret\"\n"
+"   public_url = \"https://labels.example.com\"\n"
+"   provider_name = \"Example ID\"\n"
+"   roles_claim = \"resource_access.tavletta.roles\"   # Authentik: \"groups\"\n"
+"\n"
+"   [oidc.roles]\n"
+"   preview = [\"tavletta-preview\"]\n"
+"   print = [\"tavletta-print\"]\n"
+"   admin = [\"tavletta-admin\"]\n"
+msgstr ""
+
+#. type: Bullet: '3. '
+#: docs/server-install.md
+msgid ""
+"Add `\"--oidc\"` and `\"/config/oidc.toml\"` to `command:` in `compose.yaml` "
+"(native: to `ExecStart`, with `/etc/tavletta/...`), keep `--trusted-proxy`, "
+"and restart. With `--trusted-proxy` the server needs `public_url` and does "
+"not start without it."
+msgstr ""
+
+#. type: Plain text
+#: docs/server-install.md
+msgid ""
+"Signing in needs PyJWT, which the container image and the deb and rpm "
+"packages have; the Flatpak has not, and nothing can be installed into it: "
+"run the server from one of the others for `--oidc`."
+msgstr ""
+
+#. type: Plain text
+#: docs/server-install.md
+msgid ""
+"The page then shows \"Sign in with Example ID\". Someone without one of the "
+"roles gets \"no access\". A session lasts 8 hours, or 60 minutes without use "
+"(`session_hours`, `idle_minutes`); a role removed or an account disabled at "
+"the provider counts from the next sign in, so keep sessions short where "
+"admins sign in. `token_login = false` hides the token field on the page. "
+"Printers can be limited per role (`[oidc.printers]`) or by a claim "
+"(`printers_claim`). Every key and the security details: [docs/server.md]"
+"(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#signing-in-with-openid-connect-oidctoml)."
+msgstr ""
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5023,15 +5623,15 @@ msgid ""
 "Source Sans 3 is not installed – another font is used`)."
 msgstr ""
 "Silt joonistatakse selle arvuti fontidega, mis prindib. Tekst fondis, mida "
-"serveris pole, joonistatakse teises; eelvaade ja printimistöö hoiatavad siis"
-" koodiga `font_missing` (näiteks `Element 2: the font Source Sans 3 is not "
+"serveris pole, joonistatakse teises; eelvaade ja printimistöö hoiatavad siis "
+"koodiga `font_missing` (näiteks `Element 2: the font Source Sans 3 is not "
 "installed – another font is used`)."
 
 #. type: Plain text
 #: docs/server-install.md
 msgid ""
-"A metric-compatible stand-in counts as installed: it has the same widths, so"
-" the text takes the room it was designed for. Liberation Sans stands in for "
+"A metric-compatible stand-in counts as installed: it has the same widths, so "
+"the text takes the room it was designed for. Liberation Sans stands in for "
 "Arial and Helvetica (Liberation Sans Narrow for Arial Narrow), Liberation "
 "Serif for Times New Roman, Liberation Mono for Courier New, Carlito for "
 "Calibri, Caladea for Cambria, Gelasio for Georgia, and the TeX Gyre fonts "
@@ -5045,25 +5645,25 @@ msgstr ""
 "Serif Times New Romani, Liberation Mono Courier New'd, Carlito Calibrit, "
 "Caladea Cambriat, Gelasio Georgiat ja TeX Gyre fondid Helveticat, Timesi ja "
 "Couriert; ka nende perekonnana nimetatud stiilid (`Arial Bold`, `Calibri "
-"Light`). Arvestatakse ainult paigaldatud asendajat: ilma selleta hoiatatakse"
-" Ariali eest."
+"Light`). Arvestatakse ainult paigaldatud asendajat: ilma selleta hoiatatakse "
+"Ariali eest."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
 msgid ""
 "Docker: the image has DejaVu, Source Sans 3, Liberation and Carlito.  Copy "
 "other fonts (`.ttf`, `.otf`, e.g. the corporate font) into `fonts/` and "
-"restart: `sudo docker compose restart`. More Debian font packages: build the"
-" image yourself, `sudo docker compose -f compose.yaml -f compose.build.yaml "
+"restart: `sudo docker compose restart`. More Debian font packages: build the "
+"image yourself, `sudo docker compose -f compose.yaml -f compose.build.yaml "
 "build --build-arg FONTS=\"fonts-dejavu-core fonts-adobe-sourcesans3 fonts-"
-"liberation fonts-crosextra-carlito fonts-noto-core\"`, then `up -d` with the"
-" same two files."
+"liberation fonts-crosextra-carlito fonts-noto-core\"`, then `up -d` with the "
+"same two files."
 msgstr ""
-"Docker: pildil on DejaVu, Source Sans 3, Liberation ja Carlito. Kopeeri muud"
-" fondid (`.ttf`, `.otf`, nt ettevõtte font) kausta `fonts/` ja taaskäivita: "
+"Docker: pildil on DejaVu, Source Sans 3, Liberation ja Carlito. Kopeeri muud "
+"fondid (`.ttf`, `.otf`, nt ettevõtte font) kausta `fonts/` ja taaskäivita: "
 "`sudo docker compose restart`. Rohkem Debiani fondipakette: ehita pilt ise, "
-"`sudo docker compose -f compose.yaml -f compose.build.yaml build --build-arg"
-" FONTS=\"fonts-dejavu-core fonts-adobe-sourcesans3 fonts-liberation fonts-"
+"`sudo docker compose -f compose.yaml -f compose.build.yaml build --build-arg "
+"FONTS=\"fonts-dejavu-core fonts-adobe-sourcesans3 fonts-liberation fonts-"
 "crosextra-carlito fonts-noto-core\"`, seejärel `up -d` samade kahe failiga."
 
 #. type: Bullet: '- '
@@ -5076,8 +5676,8 @@ msgid ""
 msgstr ""
 "Natiivne: paigalda distributsiooni fondipaketid (Debian, Ubuntu: `fonts-"
 "adobe-sourcesans3`; Fedora: `adobe-source-sans-pro-fonts`) või kopeeri "
-"fondifailid kausta `/usr/local/share/fonts/`, seejärel `sudo fc-cache -f` ja"
-" taaskäivita teenus."
+"fondifailid kausta `/usr/local/share/fonts/`, seejärel `sudo fc-cache -f` ja "
+"taaskäivita teenus."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5107,12 +5707,12 @@ msgstr "Turvakontrollnimekiri { #security }"
 #: docs/server-install.md
 msgid ""
 "One token per program or device, with the smallest role (`print` for "
-"programs, `preview` for monitoring) and limited to its printers "
-"(`--printer`); an expiry date for temporary ones."
+"programs, `preview` for monitoring) and limited to its printers (`--"
+"printer`); an expiry date for temporary ones."
 msgstr ""
 "Üks token programmi või seadme kohta, väikseima rolliga (`print` "
-"programmidele, `preview` seirele) ja piiratud selle printeritega "
-"(`--printer`); ajutistele aegumiskuupäev."
+"programmidele, `preview` seirele) ja piiratud selle printeritega (`--"
+"printer`); ajutistele aegumiskuupäev."
 
 #. type: Bullet: '- '
 #: docs/server-install.md
@@ -5148,6 +5748,21 @@ msgstr "`--trusted-proxy` seatud vaheserveri enda aadressile, mitte laiemaks."
 #. type: Bullet: '- '
 #: docs/server-install.md
 msgid ""
+"With `--oidc`: `public_url` set, the client confidential with PKCE, only the "
+"roles people need, short sessions where admins sign in, `oidc-secret` mode "
+"600."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server-install.md
+msgid ""
+"No one prints from a browser: `--no-web-ui` (the web page needs no token to "
+"load, but shows nothing without one)."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server-install.md
+msgid ""
 "Updates: watch the releases and update within weeks; the image of each "
 "release brings Debian's security updates of its day (`docker compose pull`)."
 msgstr ""
@@ -5163,12 +5778,12 @@ msgstr "Kausta `config/` (või `/etc/tavletta`) ja siltide varukoopia."
 #: docs/server-install.md
 msgid ""
 "The details of every protection (limits, rate limit, file access, web "
-"pages): "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#security)."
+"pages): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/"
+"branch/main/docs/server.md#security)."
 msgstr ""
 "Iga kaitse üksikasjad (piirangud, kiiruspiirang, failidele juurdepääs, "
-"veebilehed): "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#security)."
+"veebilehed): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/"
+"src/branch/main/docs/server.md#security)."
 
 #. type: Title ##
 #: docs/server-install.md
@@ -5178,13 +5793,30 @@ msgstr "Tõrkeotsing { #troubleshooting }"
 
 #. type: Plain text
 #: docs/server-install.md
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "| Symptom | Cause and remedy |\n"
+#| "|---|---|\n"
+#| "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
+#| "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
+#| "| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
+#| "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
+#| "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
+#| "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
+#| "| `413 label_too_large` | The label has too many elements, too long texts or renders larger than 40 megapixels: simplify it or use fewer data rows per request. |\n"
+#| "| `421 wrong_host` | A reverse proxy passes the public host name to a server on `127.0.0.1`: see [nginx](#nginx) and [Caddy](#caddy). |\n"
+#| "| `font_missing` in the warnings, text looks wrong | The font is not installed on the server: see [Fonts](#fonts). |\n"
+#| "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
+#| "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
+#| "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
+#| "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
+#| "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
 msgid ""
 "| Symptom | Cause and remedy |\n"
 "|---|---|\n"
 "| A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |\n"
 "| `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |\n"
-"| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |\n"
+"| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. Behind a reverse proxy not given with `--trusted-proxy` everyone shares the proxy's address. |\n"
 "| `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |\n"
 "| `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |\n"
 "| `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |\n"
@@ -5194,6 +5826,7 @@ msgid ""
 "| `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |\n"
 "| `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |\n"
 "| Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |\n"
+"| \"Signing in did not work\" on the web page | The log says why: the provider cannot be reached, the redirect URI or secret is wrong at the provider, or the page is reached over plain HTTP (set `public_url`, `--trusted-proxy`). \"No access\": the roles do not reach the ID token (a mapper is missing) or none is mapped in `[oidc.roles]`. |\n"
 "| The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |\n"
 "| Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |\n"
 msgstr ""
@@ -5222,13 +5855,19 @@ msgstr "Prindiserver"
 
 #. type: Plain text
 #: docs/server.md
+#, fuzzy
+#| msgid ""
+#| "Other programs and AI assistants can print labels through Tavletta "
+#| "without opening the window: `tavletta serve` offers a web interface for "
+#| "programs (REST API), `tavletta mcp` connects AI assistants such as Claude."
 msgid ""
-"Other programs and AI assistants can print labels through Tavletta without "
-"opening the window: `tavletta serve` offers a web interface for programs "
-"(REST API), `tavletta mcp` connects AI assistants such as Claude."
+"Other programs, AI assistants and people in a browser can print labels "
+"through Tavletta without opening the window: `tavletta serve` offers a web "
+"page for people and a web interface for programs (REST API), `tavletta mcp` "
+"connects AI assistants such as Claude."
 msgstr ""
-"Teised programmid ja tehisintellekti assistendid saavad Tavletta kaudu silte"
-" printida ilma akent avamata: `tavletta serve` pakub programmidele "
+"Teised programmid ja tehisintellekti assistendid saavad Tavletta kaudu silte "
+"printida ilma akent avamata: `tavletta serve` pakub programmidele "
 "veebiliidest (REST API), `tavletta mcp` ühendab tehisintellekti assistente "
 "nagu Claude."
 
@@ -5276,8 +5915,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"Only label files in the labels folder (and its subfolders) can be used, with"
-" their data files. Without `--labels-dir`: `~/.local/share/tavletta/labels`."
+"Only label files in the labels folder (and its subfolders) can be used, with "
+"their data files. Without `--labels-dir`: `~/.local/share/tavletta/labels`."
 msgstr ""
 "Kasutada saab ainult siltide kausta (ja selle alamkaustade) sildifaile koos "
 "nende andmefailidega. Ilma `--labels-dir`: `~/.local/share/tavletta/labels`."
@@ -5292,9 +5931,13 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
-msgid "`--mcp` adds the connection for AI assistants at `/mcp`."
+msgid "Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page)."
 msgstr ""
-"`--mcp` lisab tehisintellekti assistentide ühenduse aadressile `/mcp`."
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid "`--mcp` adds the connection for AI assistants at `/mcp`."
+msgstr "`--mcp` lisab tehisintellekti assistentide ühenduse aadressile `/mcp`."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5314,13 +5957,13 @@ msgstr "Printerid { #printers }"
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"Name the printers in a file `printers.toml` and start the server with "
-"`--printers printers.toml`. Programs then choose a printer by its name; no "
+"Name the printers in a file `printers.toml` and start the server with `--"
+"printers printers.toml`. Programs then choose a printer by its name; no "
 "other printer can be used."
 msgstr ""
-"Nimeta printerid failis `printers.toml` ja käivita server valikuga "
-"`--printers printers.toml`. Programmid valivad siis printeri nime järgi; "
-"muid printereid kasutada ei saa."
+"Nimeta printerid failis `printers.toml` ja käivita server valikuga `--"
+"printers printers.toml`. Programmid valivad siis printeri nime järgi; muid "
+"printereid kasutada ei saa."
 
 #. type: Fenced code block (toml)
 #: docs/server.md
@@ -5343,8 +5986,8 @@ msgstr "`backend` on printerimudel, `host` printeri aadress."
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"The printer's settings, as in the app's printer settings, go into a table of"
-" their own; only the ones the model has:"
+"The printer's settings, as in the app's printer settings, go into a table of "
+"their own; only the ones the model has:"
 msgstr ""
 "Printeri seaded, nagu rakenduse printeriseadetes, lähevad oma tabelisse; "
 "ainult need, mis mudelil on:"
@@ -5364,16 +6007,26 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
+#, fuzzy
+#| msgid ""
+#| "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
+#| "`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
+#| "`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
+#| "server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
+#| "docs/server.md#printers)."
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
+"`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
+"(−5 to 5), `labels_per_job` [[ui:Labels per job]] (1 to 1000, 250 by "
+"default); others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, "
+"`media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` on [[ui:Print method]] (`printer`, `transfer`, `direct`), "
 "`upside_down` on [[ui:Print upside down]]; teised on `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` ja `outlines`, vaata "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
+"`high_res`, `feed_mm`, `darkness`, `media` ja `outlines`, vaata [docs/"
+"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"server.md#printers)."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5403,8 +6056,8 @@ msgstr "Printerite loend näitab iga printerit olekuga."
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"The server searches the network for printers only when started with "
-"`--discover`."
+"The server searches the network for printers only when started with `--"
+"discover`."
 msgstr ""
 "Server otsib võrgust printereid ainult siis, kui see käivitatakse valikuga "
 "`--discover`."
@@ -5447,8 +6100,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"`--allow-printer` limits the printer addresses, for example `--allow-printer"
-" '*.local'`."
+"`--allow-printer` limits the printer addresses, for example `--allow-printer "
+"'*.local'`."
 msgstr ""
 "`--allow-printer` piirab printerite aadresse, näiteks `--allow-printer "
 "'*.local'`."
@@ -5482,9 +6135,14 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
+#, fuzzy
+#| msgid ""
+#| "`preview` only lists and shows previews, `print` also prints and follows "
+#| "its own jobs, `admin` sees and cancels all jobs."
 msgid ""
-"`preview` only lists and shows previews, `print` also prints and follows its"
-" own jobs, `admin` sees and cancels all jobs."
+"`preview` only lists and shows previews, `print` also prints and follows its "
+"own jobs, `admin` sees and cancels all jobs and uploads and deletes "
+"templates."
 msgstr ""
 "`preview` ainult loetleb ja näitab eelvaateid, `print` prindib ka ja jälgib "
 "oma töid, `admin` näeb ja tühistab kõik tööd."
@@ -5509,6 +6167,105 @@ msgstr ""
 
 #. type: Title ##
 #: docs/server.md
+#, fuzzy, no-wrap
+#| msgid "Images { #images }"
+msgid "Web page { #web-page }"
+msgstr "Pildid { #images }"
+
+#. type: Plain text
+#: docs/server.md
+msgid ""
+"The server's own page, at its address (`http://127.0.0.1:8790/`, or the "
+"address of the [reverse proxy](server-install.md#proxy)):"
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid ""
+"**Sign in** with an access token (without a token on the server there is "
+"nothing to sign in to). The browser keeps it in this tab only; \"Sign out\" "
+"forgets it. Where the server is set up for it, \"Sign in with …\" uses your "
+"organisation's account instead ([OpenID Connect](server-install.md#oidc))."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid ""
+"**Printers**: their state, the labels or tape loaded and problems, in words."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid ""
+"**Templates**: the label files of the labels folder with a preview.  Data "
+"fields show the first row of the template's data file, or sample values if "
+"it has none or it is missing. \"Print\" fills in the fields of one label and "
+"shows the preview as it is typed; the elements a field fills are outlined in "
+"it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
+"deleted here."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid "**Series**, step by step:"
+msgstr ""
+
+#. type: Bullet: '  1. '
+#: docs/server.md
+msgid ""
+"Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or no data "
+"at all. Leading zeros stay (`00300`)."
+msgstr ""
+
+#. type: Bullet: '  2. '
+#: docs/server.md
+msgid ""
+"Assign: which column fills which field of the template (the same names are "
+"assigned already, case and spaces aside). The preview of the first label "
+"beside it outlines the field in use; each field shows its value, each column "
+"its first values."
+msgstr ""
+
+#. type: Bullet: '  3. '
+#: docs/server.md
+msgid ""
+"Choose: all rows, some rows (`1-20, 25, 30-`), or by ranges of a field. "
+"Without data, ranges make the values: Inventory number from `3000` to `5685` "
+"is 2686 labels, `00300` to `00450` keeps the zeros, a step makes every "
+"second or tenth number; `3000-5685` can be typed or pasted at once."
+msgstr ""
+
+#. type: Bullet: '  4. '
+#: docs/server.md
+msgid ""
+"Check: the number of labels, the first and the last one, the limits of the "
+"server and the printer."
+msgstr ""
+
+#. type: Bullet: '  5. '
+#: docs/server.md
+msgid ""
+"Print: from 100 labels on, the page asks first. The progress shows how many "
+"are printed; Cancel stops after the current label (a cab printer: after the "
+"current job of up to [[ui:Labels per job]] labels). After a cancel or a "
+"printer problem, \"Continue from …\" prints the rest."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid ""
+"The page speaks the language of the browser, or the one chosen at the top: "
+"every language of the app, Arabic right to left. Times are on a 24-hour "
+"clock."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/server.md
+msgid "`--no-web-ui` turns the page off, for servers that only programs use."
+msgstr ""
+
+#. type: Title ##
+#: docs/server.md
 #, no-wrap
 msgid "Programs (REST API) { #api }"
 msgstr "Programmid (REST API) { #api }"
@@ -5520,8 +6277,8 @@ msgid ""
 "programs `http://127.0.0.1:8790/api/v1/openapi.json` (OpenAPI 3.1, with any "
 "valid token)."
 msgstr ""
-"Kõigi päringute kirjeldus: [API viide](api.md) ja programmidele "
-"`http://127.0.0.1:8790/api/v1/openapi.json` (OpenAPI 3.1, mis tahes kehtiva "
+"Kõigi päringute kirjeldus: [API viide](api.md) ja programmidele `http://"
+"127.0.0.1:8790/api/v1/openapi.json` (OpenAPI 3.1, mis tahes kehtiva "
 "tokeniga)."
 
 #. type: Bullet: '- '
@@ -5540,9 +6297,14 @@ msgstr "`POST /api/v1/preview` tagastab sildi PNG-pildina."
 
 #. type: Bullet: '- '
 #: docs/server.md
+#, fuzzy
+#| msgid ""
+#| "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows "
+#| "its state, `DELETE` cancels it between two labels."
 msgid ""
 "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its "
-"state, `DELETE` cancels it between two labels."
+"state, `DELETE` cancels it between two labels (a cab printer: between two "
+"jobs of a series)."
 msgstr ""
 "`POST /api/v1/print` paneb printimistöö järjekorda; `GET /api/v1/jobs/<id>` "
 "näitab selle olekut, `DELETE` tühistab selle kahe sildi vahel."
@@ -5560,8 +6322,8 @@ msgstr "Teated tulevad päise `Accept-Language` keeles."
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"Without an access token, requests that ask printers need the header "
-"`X-Tavletta-Request: 1`, so that no web page can send them."
+"Without an access token, requests that ask printers need the header `X-"
+"Tavletta-Request: 1`, so that no web page can send them."
 msgstr ""
 "Ilma pääsutokenita vajavad printereid puudutavad päringud päist `X-Tavletta-"
 "Request: 1`, et ükski veebileht ei saaks neid saata."
@@ -5646,8 +6408,8 @@ msgstr "Tehisintellekti assistendid (MCP) { #mcp }"
 #: docs/server.md
 msgid ""
 "The assistant can list the labels and printers, show a preview, print and "
-"follow or cancel print jobs. It asks before it uses a tool, depending on its"
-" settings."
+"follow or cancel print jobs. It asks before it uses a tool, depending on its "
+"settings."
 msgstr ""
 "Assistent saab loetleda sildid ja printerid, näidata eelvaadet, printida "
 "ning jälgida või tühistada printimistöid. See küsib enne tööriista "
@@ -5686,9 +6448,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"Over the network: `tavletta serve --mcp` and the address "
-"`http://127.0.0.1:8790/mcp` with the access token as `Authorization: Bearer`"
-" header."
+"Over the network: `tavletta serve --mcp` and the address `http://"
+"127.0.0.1:8790/mcp` with the access token as `Authorization: Bearer` header."
 msgstr ""
 "Võrgu kaudu: `tavletta serve --mcp` ja aadress `http://127.0.0.1:8790/mcp` "
 "pääsutokeniga päisena `Authorization: Bearer`."
@@ -5718,8 +6479,8 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"As a service of your user on a desktop: `packaging/systemd/tavletta.service`"
-" (instructions in the file)."
+"As a service of your user on a desktop: `packaging/systemd/tavletta.service` "
+"(instructions in the file)."
 msgstr ""
 "Sinu kasutaja teenusena töölaual: `packaging/systemd/tavletta.service` "
 "(juhised failis)."
@@ -5727,11 +6488,11 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"Technical details and security: "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
+"Technical details and security: [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
 msgstr ""
-"Tehnilised üksikasjad ja turvalisus: "
-"[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
+"Tehnilised üksikasjad ja turvalisus: [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
 
 #. type: Title ##
 #: docs/server.md
@@ -5742,8 +6503,8 @@ msgstr "Konteineripilt { #container }"
 #. type: Plain text
 #: docs/server.md
 msgid ""
-"The print server is published as a container image for amd64 and arm64 (also"
-" a Raspberry Pi with a 64-bit system):"
+"The print server is published as a container image for amd64 and arm64 (also "
+"a Raspberry Pi with a 64-bit system):"
 msgstr ""
 "Prindiserver avaldatakse konteineripildina arhitektuuridele amd64 ja arm64 "
 "(ka Raspberry Pi 64-bitise süsteemiga):"
@@ -5751,13 +6512,17 @@ msgstr ""
 #. type: Fenced code block (sh)
 #: docs/server.md
 #, no-wrap
-msgid "docker pull ghcr.io/joshii-h/tavletta:1.1.2\n"
+msgid "docker pull ghcr.io/joshii-h/tavletta:1.2.1\n"
 msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
+#, fuzzy
+#| msgid ""
+#| "`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` "
+#| "the latest release. `edge` is the state of development, not a release."
 msgid ""
-"`1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest` the "
+"`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
 "`1.1.2` on väljalase, `1.1` versiooni 1.1 viimane veaparanduse väljalase, "
@@ -5796,15 +6561,15 @@ msgid ""
 "Check that an image was built from Tavletta's repository, with the [GitHub "
 "CLI](https://cli.github.com) or [cosign](https://docs.sigstore.dev):"
 msgstr ""
-"Kontrolli, et pilt on ehitatud Tavletta repositooriumist, [GitHub CLI-"
-"ga](https://cli.github.com) või [cosigniga](https://docs.sigstore.dev):"
+"Kontrolli, et pilt on ehitatud Tavletta repositooriumist, [GitHub CLI-ga]"
+"(https://cli.github.com) või [cosigniga](https://docs.sigstore.dev):"
 
 #. type: Fenced code block (sh)
 #: docs/server.md
 #, no-wrap
 msgid ""
-"gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.1.2 --repo joshii-h/tavletta\n"
-"cosign verify ghcr.io/joshii-h/tavletta:1.1.2 \\\n"
+"gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.1 --repo joshii-h/tavletta\n"
+"cosign verify ghcr.io/joshii-h/tavletta:1.2.1 \\\n"
 "    --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n"
 "    --certificate-identity-regexp '^https://github\\.com/joshii-h/tavletta/\\.github/workflows/docker\\.yml@refs/tags/v'\n"
 msgstr ""
@@ -5819,8 +6584,8 @@ msgstr "Sildilehed { #sheets }"
 #: docs/sheets.md
 msgid ""
 "With the [[ui:System printer (CUPS, IPP)]], an office printer prints on "
-"sheets of self-adhesive labels: A4 or US Letter pages with a grid of labels,"
-" as Avery, Zweckform, Herma and many others sell them. Tavletta knows more "
+"sheets of self-adhesive labels: A4 or US Letter pages with a grid of labels, "
+"as Avery, Zweckform, Herma and many others sell them. Tavletta knows more "
 "than 1700 of these sheets, from the template collection of gLabels."
 msgstr ""
 "Valikuga [[ui:System printer (CUPS, IPP)]] prindib kontoriprinter "
@@ -5877,8 +6642,8 @@ msgid ""
 "[[ui:Turn the content]]: for labels read from the side, such as folder "
 "spines: the label is designed lying on its side and turned onto the sheet."
 msgstr ""
-"[[ui:Turn the content]]: küljelt loetavate siltide jaoks, nagu kaustaseljad:"
-" silt kujundatakse külili ja pööratakse lehele."
+"[[ui:Turn the content]]: küljelt loetavate siltide jaoks, nagu kaustaseljad: "
+"silt kujundatakse külili ja pööratakse lehele."
 
 #. type: Bullet: '- '
 #: docs/sheets.md
@@ -5925,9 +6690,9 @@ msgid ""
 "the rows times the copies of each."
 msgstr ""
 "[[ui:Labels]]: mitu silti printida. Alguses nii palju, kui positsioone on "
-"valitud; rohkem täidab järgmisi lehti. Dialoog näitab, mitu lehte see võtab."
-" Üks printimistöö võtab kuni 999 silti; seeriasiltidega on see read korda "
-"iga rea koopiad."
+"valitud; rohkem täidab järgmisi lehti. Dialoog näitab, mitu lehte see võtab. "
+"Üks printimistöö võtab kuni 999 silti; seeriasiltidega on see read korda iga "
+"rea koopiad."
 
 #. type: Bullet: '- '
 #: docs/sheets.md
@@ -5996,8 +6761,8 @@ msgid ""
 "Elements are placed one after another along the label. Order them with "
 "[[ui:Move up]] and [[ui:Move down]]."
 msgstr ""
-"Elemendid paigutatakse üksteise järel piki silti. Järjesta need toimingutega"
-" [[ui:Move up]] ja [[ui:Move down]]."
+"Elemendid paigutatakse üksteise järel piki silti. Järjesta need toimingutega "
+"[[ui:Move up]] ja [[ui:Move down]]."
 
 #. type: Plain text
 #: docs/use.md
@@ -6005,17 +6770,17 @@ msgid ""
 "![Editing a text element](media/expand.png#only-light)  ![Editing a text "
 "element](media/expand-dark.png#only-dark)"
 msgstr ""
-"![Tekstielemendi redigeerimine](media/expand.png#only-light)  "
-"![Tekstielemendi redigeerimine](media/expand-dark.png#only-dark)"
+"![Tekstielemendi redigeerimine](media/expand.png#only-light)  !"
+"[Tekstielemendi redigeerimine](media/expand-dark.png#only-dark)"
 
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"**Text**: any installed font, colour, several lines. [[ui:Size]] 0 fills the"
-" label height, otherwise fixed in pt."
+"**Text**: any installed font, colour, several lines. [[ui:Size]] 0 fills the "
+"label height, otherwise fixed in pt."
 msgstr ""
-"**Tekst**: mis tahes paigaldatud font, värv, mitu rida. [[ui:Size]] 0 täidab"
-" sildi kõrguse, muidu kindel pt-des."
+"**Tekst**: mis tahes paigaldatud font, värv, mitu rida. [[ui:Size]] 0 täidab "
+"sildi kõrguse, muidu kindel pt-des."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6030,14 +6795,14 @@ msgstr "**Sümbol**: piktogramm sümbolikogust, vaata allpool."
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"**Code**: [[ui:Type]] offers 2D codes (QR code, Data Matrix, PDF417, Aztec),"
-" linear barcodes (Code 128, Code 39, Code 93, EAN-13, EAN-8, UPC-A, UPC-E, "
-"ITF-14) and GS1 codes (GS1-128, GS1 DataMatrix). Below the type it says what"
-" the type is for and what it accepts."
+"**Code**: [[ui:Type]] offers 2D codes (QR code, Data Matrix, PDF417, Aztec), "
+"linear barcodes (Code 128, Code 39, Code 93, EAN-13, EAN-8, UPC-A, UPC-E, "
+"ITF-14) and GS1 codes (GS1-128, GS1 DataMatrix). Below the type it says what "
+"the type is for and what it accepts."
 msgstr ""
 "**Kood**: [[ui:Type]] pakub 2D-koode (QR-kood, Data Matrix, PDF417, Aztec), "
-"lineaarseid vöötkoode (Code 128, Code 39, Code 93, EAN-13, EAN-8, UPC-A, "
-"UPC-E, ITF-14) ja GS1-koode (GS1-128, GS1 DataMatrix). Tüübi all on öeldud, "
+"lineaarseid vöötkoode (Code 128, Code 39, Code 93, EAN-13, EAN-8, UPC-A, UPC-"
+"E, ITF-14) ja GS1-koode (GS1-128, GS1 DataMatrix). Tüübi all on öeldud, "
 "milleks tüüp on ja mida see aktsepteerib."
 
 #. type: Bullet: '- '
@@ -6080,8 +6845,8 @@ msgid ""
 "scanners, too small for carton labels read in logistics."
 msgstr ""
 "ITF-14 ja GS1-128 saatekarpidel: GS1 nõuab vähemalt 0,495 mm mooduleid. "
-"Kitsastel siltidel tulevad need kitsamad: sobib omade skannerite jaoks, kuid"
-" liiga väike logistikas loetavatele karbisiltidele."
+"Kitsastel siltidel tulevad need kitsamad: sobib omade skannerite jaoks, kuid "
+"liiga väike logistikas loetavatele karbisiltidele."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6089,8 +6854,8 @@ msgid ""
 "Code 39: a `$`, `/`, `+` or `%` before a capital letter is read as another "
 "character by scanners set to Full ASCII; Tavletta warns."
 msgstr ""
-"Code 39: `$`, `/`, `+` või `%` enne suurtähte loetakse Full ASCII-sse seatud"
-" skannerites teiseks märgiks; Tavletta hoiatab."
+"Code 39: `$`, `/`, `+` või `%` enne suurtähte loetakse Full ASCII-sse seatud "
+"skannerites teiseks märgiks; Tavletta hoiatab."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6114,9 +6879,9 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"Codes print sharp on every printer: each bar and square is a whole number of"
-" printer dots, as close to the designed width as the element's space allows,"
-" with the blank margin a scanner needs. The code may come out slightly "
+"Codes print sharp on every printer: each bar and square is a whole number of "
+"printer dots, as close to the designed width as the element's space allows, "
+"with the blank margin a scanner needs. The code may come out slightly "
 "smaller than designed, centred in its space."
 msgstr ""
 "Koodid prinditakse teravalt igal printeril: iga triip ja ruut on täisarv "
@@ -6138,15 +6903,15 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"QR codes with characters beyond plain ASCII (umlauts, °, £ …) are now marked"
-" as UTF-8, so scanners read them correctly. Labels made with earlier "
-"versions print such a QR code with a different pattern, some with more and "
-"smaller modules."
+"QR codes with characters beyond plain ASCII (umlauts, °, £ …) are now marked "
+"as UTF-8, so scanners read them correctly. Labels made with earlier versions "
+"print such a QR code with a different pattern, some with more and smaller "
+"modules."
 msgstr ""
 "QR-koodid tavalisest ASCII-st väljaspool olevate märkidega (täpitähed, °, £ "
 "…) märgitakse nüüd UTF-8-ks, et skannerid loeksid need õigesti. Varasemate "
-"versioonidega tehtud sildid prindivad sellise QR-koodi teise mustriga, mõned"
-" rohkemate ja väiksemate moodulitega."
+"versioonidega tehtud sildid prindivad sellise QR-koodi teise mustriga, mõned "
+"rohkemate ja väiksemate moodulitega."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6171,9 +6936,9 @@ msgstr "Tekstistiil { #text-style }"
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"![Text in a box and a frame, lines and a rounded "
-"border](media/design.png#only-light)  ![Text in a box and a frame, lines and"
-" a rounded border](media/design-dark.png#only-dark)"
+"![Text in a box and a frame, lines and a rounded border](media/"
+"design.png#only-light)  ![Text in a box and a frame, lines and a rounded "
+"border](media/design-dark.png#only-dark)"
 msgstr ""
 "![Tekst kastis ja raamis, jooned ja ümardatud ääris](media/design.png#only-"
 "light)  ![Tekst kastis ja raamis, jooned ja ümardatud ääris](media/design-"
@@ -6182,8 +6947,8 @@ msgstr ""
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"The rows of a text element; [[ui:Spacing and fitting]], [[ui:Box and frame]]"
-" and [[ui:Outline and shadow]] open a page of their own in the sidebar, its "
+"The rows of a text element; [[ui:Spacing and fitting]], [[ui:Box and frame]] "
+"and [[ui:Outline and shadow]] open a page of their own in the sidebar, its "
 "header names the element:"
 msgstr ""
 "Tekstielemendi read; [[ui:Spacing and fitting]], [[ui:Box and frame]] ja "
@@ -6232,8 +6997,8 @@ msgid ""
 "the text colour; [[ui:Background box]] puts a box of another colour behind "
 "it; [[ui:Padding]], [[ui:Corner radius]] and [[ui:Frame]] shape the box."
 msgstr ""
-"[[ui:Box and frame]]: [[ui:White on black]] lõikab teksti välja teksti värvi"
-" kastist; [[ui:Background box]] paneb selle taha teise värvi kasti; "
+"[[ui:Box and frame]]: [[ui:White on black]] lõikab teksti välja teksti värvi "
+"kastist; [[ui:Background box]] paneb selle taha teise värvi kasti; "
 "[[ui:Padding]], [[ui:Corner radius]] ja [[ui:Frame]] kujundavad kasti."
 
 #. type: Bullet: '- '
@@ -6241,8 +7006,7 @@ msgstr ""
 msgid ""
 "[[ui:Outline and shadow]]: a line around each letter, a shadow down and to "
 "the right."
-msgstr ""
-"[[ui:Outline and shadow]]: joon iga tähe ümber, vari alla ja paremale."
+msgstr "[[ui:Outline and shadow]]: joon iga tähe ümber, vari alla ja paremale."
 
 #. type: Title ##
 #: docs/use.md
@@ -6294,8 +7058,8 @@ msgstr "[[ui:Line or shape]] lisamismenüüs:"
 #: docs/use.md
 msgid "[[ui:Line]]: horizontal, vertical or diagonal, with [[ui:Arrows]]."
 msgstr ""
-"[[ui:Line]]: horisontaalne, vertikaalne või diagonaalne, koos "
-"[[ui:Arrows]]-nooltega."
+"[[ui:Line]]: horisontaalne, vertikaalne või diagonaalne, koos [[ui:Arrows]]-"
+"nooltega."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6330,8 +7094,8 @@ msgid ""
 "Labels without them open as before."
 msgstr ""
 "Sildid joonte või kujunditega või selle lehe valikutega ei avane Tavletta "
-"varasemates versioonides: need ütlevad, et silt vajab uuemat versiooni. Ilma"
-" nendeta sildid avanevad nagu varem."
+"varasemates versioonides: need ütlevad, et silt vajab uuemat versiooni. Ilma "
+"nendeta sildid avanevad nagu varem."
 
 #. type: Title ##
 #: docs/use.md
@@ -6347,8 +7111,8 @@ msgstr "Igal elemendil on [[ui:Position]]:"
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"[[ui:Vertical alignment]]: at the top, in the middle or at the bottom of the"
-" label height."
+"[[ui:Vertical alignment]]: at the top, in the middle or at the bottom of the "
+"label height."
 msgstr "[[ui:Vertical alignment]]: sildi kõrguse ülaosas, keskel või allosas."
 
 #. type: Bullet: '- '
@@ -6356,8 +7120,7 @@ msgstr "[[ui:Vertical alignment]]: sildi kõrguse ülaosas, keskel või allosas.
 msgid ""
 "[[ui:Own spacing]]: [[ui:Space after it]] instead of the label's "
 "[[ui:Spacing]]."
-msgstr ""
-"[[ui:Own spacing]]: [[ui:Space after it]] sildi [[ui:Spacing]] asemel."
+msgstr "[[ui:Own spacing]]: [[ui:Space after it]] sildi [[ui:Spacing]] asemel."
 
 #. type: Title ##
 #: docs/use.md
@@ -6387,8 +7150,8 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "A text is placed by the top left corner of its letters' ink, a code by its "
-"first module. The numbers of other label designers can be taken over as they"
-" are."
+"first module. The numbers of other label designers can be taken over as they "
+"are."
 msgstr ""
 "Tekst paigutatakse tema tähtede tindi vasaku ülanurga järgi, kood tema "
 "esimese mooduli järgi. Teiste sildikujundajate numbreid saab üle võtta "
@@ -6407,13 +7170,13 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "A code's [[ui:Module size]] is rounded to whole printer dots: 0.67 mm at 12 "
-"dots per mm prints as 8 dots. Leave room for the quiet zone around the code."
-" Codes can be turned ([[ui:Rotation]]), a barcode has its [[ui:Bar height]]."
+"dots per mm prints as 8 dots. Leave room for the quiet zone around the code. "
+"Codes can be turned ([[ui:Rotation]]), a barcode has its [[ui:Bar height]]."
 msgstr ""
-"Koodi [[ui:Module size]] ümardatakse täisarvu printeripunktideni: 0,67 mm 12"
-" punktiga millimeetri kohta prindib 8 punktina. Jäta koodi ümber ruumi "
-"vaikse tsooni jaoks. Koode saab pöörata ([[ui:Rotation]]), vöötkoodil on "
-"[[ui:Bar height]]."
+"Koodi [[ui:Module size]] ümardatakse täisarvu printeripunktideni: 0,67 mm 12 "
+"punktiga millimeetri kohta prindib 8 punktina. Jäta koodi ümber ruumi vaikse "
+"tsooni jaoks. Koode saab pöörata ([[ui:Rotation]]), vöötkoodil on [[ui:Bar "
+"height]]."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6428,24 +7191,98 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"Switching to the free layout for the first time keeps every element where it"
-" was."
-msgstr ""
-"Esmakordsel üleminekul vabale paigutusele jääb iga element oma kohale."
+"Switching to the free layout for the first time keeps every element where it "
+"was."
+msgstr "Esmakordsel üleminekul vabale paigutusele jääb iga element oma kohale."
 
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"An element that reaches beyond the label is cut off there; the preview warns"
-" about it."
+"An element that reaches beyond the label is cut off there; the preview warns "
+"about it."
 msgstr ""
-"Sildist kaugemale ulatuv element lõigatakse seal ära; eelvaade hoiatab selle"
-" eest."
+"Sildist kaugemale ulatuv element lõigatakse seal ära; eelvaade hoiatab selle "
+"eest."
 
 #. type: Bullet: '- '
 #: docs/use.md
 msgid "Labels in the free layout do not open in earlier versions of Tavletta."
 msgstr "Vabas paigutuses sildid ei avane Tavletta varasemates versioonides."
+
+#. type: Title ##
+#: docs/use.md
+#, no-wrap
+msgid "Arranging in the preview { #arrange }"
+msgstr ""
+
+#. type: Plain text
+#: docs/use.md
+msgid ""
+"In the free layout the elements can be arranged in the preview with the "
+"mouse, a finger or a pen:"
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"Click an element to select it; its row in [[ui:Content]] opens. Click with "
+"Shift or Ctrl to add an element to the selection or take it out.  Drag "
+"across an empty part to select every element the rubber band touches (with "
+"Alt held: only those inside it). A click on an empty part selects nothing. "
+"Opening an element's row selects it too."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"Drag the selection to move it. It snaps to the label's edges and middle and "
+"to the edges and middles of the other elements; a red line shows where. Hold "
+"Alt, or Ctrl, to place it freely (some desktops move the window when Alt is "
+"held while dragging: then use Ctrl). Hold Shift to move it along one axis "
+"only. Escape while dragging puts it back."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"One selected element has handles at its corners and edges: drag one to "
+"resize it. A line or shape changes its width and height on their own (Shift "
+"keeps its proportions); a text, an image, a symbol and a QR code keep their "
+"proportions; a barcode gets longer bars or wider modules. A shipping label "
+"is only moved."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"[[ui:Arrange]] in the header bar aligns the selected elements: one element "
+"at the label's edge or middle, several at one another's. It spaces three or "
+"more evenly ([[ui:Distribute]]), turns snapping on and off ([[ui:Snap to "
+"guides]]) and adds a grid to snap to."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"With the preview focused (click it, or Tab to it), the arrow keys move the "
+"selection by 0.1 mm, with Shift by 1 mm; Delete removes it; Ctrl+A selects "
+"all elements, Shift+Ctrl+A and Escape none. Sizes are set in the element's "
+"row and on its [[ui:Position and size]] page."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"Every drag, every resize and a run of arrow keys is one step of [[ui:Undo]], "
+"in turn with the changes made in the sidebar."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"In the layout [[ui:One after another]] elements can be selected, but not "
+"moved: dragging one offers [[ui:Use free layout]]."
+msgstr ""
 
 #. type: Title ##
 #: docs/use.md
@@ -6494,8 +7331,8 @@ msgid ""
 "drawn without smoothed edges, every part is converted on its own."
 msgstr ""
 "Tekst, koodid, sümbolid, jooned ja ääristused prinditakse teravate "
-"servadega: tekst joonistatakse ilma silutud servadeta, iga osa teisendatakse"
-" eraldi."
+"servadega: tekst joonistatakse ilma silutud servadeta, iga osa teisendatakse "
+"eraldi."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6522,12 +7359,12 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"Colours print black, or white if they are lighter than what lies behind them"
-" (the background colour or image, or a text's box); an element over a light "
+"Colours print black, or white if they are lighter than what lies behind them "
+"(the background colour or image, or a text's box); an element over a light "
 "and a dark part takes the colour that shows on most of it."
 msgstr ""
-"Värvid prinditakse mustana või valgena, kui need on heledamad kui nende taga"
-" olev (taustavärv või -pilt või teksti kast); element heleda ja tumeda osa "
+"Värvid prinditakse mustana või valgena, kui need on heledamad kui nende taga "
+"olev (taustavärv või -pilt või teksti kast); element heleda ja tumeda osa "
 "kohal saab värvi, mis paistab enamikul sellest."
 
 #. type: Bullet: '- '
@@ -6575,8 +7412,8 @@ msgid ""
 "counts as one step, also when the field has the focus. Undoing back to the "
 "saved label makes it unchanged again."
 msgstr ""
-"[[ui:Undo]] (Ctrl+Z) ja [[ui:Redo]] (Ctrl+Shift+Z); välja tippimine loetakse"
-" üheks sammuks, ka siis, kui väljal on fookus. Salvestatud sildini "
+"[[ui:Undo]] (Ctrl+Z) ja [[ui:Redo]] (Ctrl+Shift+Z); välja tippimine loetakse "
+"üheks sammuks, ka siis, kui väljal on fookus. Salvestatud sildini "
 "tagasivõtmine teeb selle jälle muutmata."
 
 #. type: Bullet: '- '
@@ -6594,6 +7431,14 @@ msgid ""
 "Ctrl+Shift+T, G, Y, B and L add text, an image, a symbol, a code or a line."
 msgstr ""
 "Ctrl+Shift+T, G, Y, B ja L lisavad teksti, pildi, sümboli, koodi või joone."
+
+#. type: Bullet: '- '
+#: docs/use.md
+msgid ""
+"With the preview focused: the arrow keys move the selected elements (Shift: "
+"by 1 mm), Delete removes them, Ctrl+A and Shift+Ctrl+A select all or none "
+"([see above](#arrange))."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6621,9 +7466,9 @@ msgstr ""
 "hoiatused, ringlussevõtt, tööriistad, toit või ilm, Material Design "
 "Iconsist. Otsi nime järgi, näiteks \"arrow\" või \"recycle\". Nimed ja "
 "kategooriad pärinevad ikoonikomplektist ja on inglise keeles, nii et otsing "
-"on samuti inglise keeles. Otsingu kõrval olev loend näitab ühte kategooriat;"
-" [[ui:Recently used]] näitab viimati valitud sümboleid. Kategooria \"Brand /"
-" Logo\" ja muud kaubamärke näitavad ikoonid on välja jäetud."
+"on samuti inglise keeles. Otsingu kõrval olev loend näitab ühte kategooriat; "
+"[[ui:Recently used]] näitab viimati valitud sümboleid. Kategooria \"Brand / "
+"Logo\" ja muud kaubamärke näitavad ikoonid on välja jäetud."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6644,8 +7489,7 @@ msgid ""
 "sharp edges."
 msgstr ""
 "Värv prinditakse värvi- ja kontoriprinteritel. Mustvalged sildiprinterid "
-"prindivad sümbolid mustana või valgena, kui värv on hele, teravate "
-"servadega."
+"prindivad sümbolid mustana või valgena, kui värv on hele, teravate servadega."
 
 #. type: Plain text
 #: docs/use.md
@@ -6684,8 +7528,8 @@ msgid ""
 "[[ui:Automatic length]]: the label is as long as its content. Off: fixed "
 "[[ui:Length]], content aligned and scaled down if needed."
 msgstr ""
-"[[ui:Automatic length]]: silt on sisu pikkune. Väljas: kindel [[ui:Length]],"
-" sisu joondatud ja vajadusel vähendatud."
+"[[ui:Automatic length]]: silt on sisu pikkune. Väljas: kindel [[ui:Length]], "
+"sisu joondatud ja vajadusel vähendatud."
 
 #. type: Plain text
 #: docs/use.md
@@ -6753,12 +7597,12 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"[[ui:Gap]]: space between two labels on the roll, usually 2 to 3 mm.  Before"
-" printing Tavletta compares height and gap with the distance the printer "
+"[[ui:Gap]]: space between two labels on the roll, usually 2 to 3 mm.  Before "
+"printing Tavletta compares height and gap with the distance the printer "
 "measured."
 msgstr ""
-"[[ui:Gap]]: ruum kahe sildi vahel rullil, tavaliselt 2-3 mm. Enne printimist"
-" võrdleb Tavletta kõrgust ja vahet printeri mõõdetud kaugusega."
+"[[ui:Gap]]: ruum kahe sildi vahel rullil, tavaliselt 2-3 mm. Enne printimist "
+"võrdleb Tavletta kõrgust ja vahet printeri mõõdetud kaugusega."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6877,17 +7721,17 @@ msgid ""
 "than a dot on black may vanish. Label printers get the label at their own "
 "resolution. The system printer gets it without loss: as PWG Raster drawn at "
 "the printer's resolution, or as a PDF drawn at 300 dpi, which a printer of "
-"another resolution scales itself (on a 203 dpi printer the edges of bars may"
-" then soften: check that the barcode scans).  Only printers that take "
-"nothing but JPEG get a compressed copy."
+"another resolution scales itself (on a 203 dpi printer the edges of bars may "
+"then soften: check that the barcode scans).  Only printers that take nothing "
+"but JPEG get a compressed copy."
 msgstr ""
 "PDF-i leht joonistatakse õigesti printimise eraldusvõimega, silumata: "
-"triibud ja tekst tulevad täispunktidena, nii et vöötkoodid jäävad loetavaks."
-" Punktist õhemad jooned prinditakse vähemalt ühe punkti laiuselt (mõnikord "
+"triibud ja tekst tulevad täispunktidena, nii et vöötkoodid jäävad loetavaks. "
+"Punktist õhemad jooned prinditakse vähemalt ühe punkti laiuselt (mõnikord "
 "kahe) ja mustana, isegi kui need on heledad hallid või värvilised; mustal "
-"punktist õhemad valged jooned võivad kaduda. Sildiprinterid saavad sildi oma"
-" eraldusvõimega. Süsteemiprinter saab selle kadudeta: PWG Rasterina printeri"
-" eraldusvõimega joonistatult või PDF-ina, mis on joonistatud 300 dpi-ga ja "
+"punktist õhemad valged jooned võivad kaduda. Sildiprinterid saavad sildi oma "
+"eraldusvõimega. Süsteemiprinter saab selle kadudeta: PWG Rasterina printeri "
+"eraldusvõimega joonistatult või PDF-ina, mis on joonistatud 300 dpi-ga ja "
 "mida teise eraldusvõimega printer ise skaleerib (203 dpi printeril võivad "
 "triipude servad siis pehmeneda: kontrolli, et vöötkood skaneerub). Ainult "
 "printerid, mis võtavad vastu vaid JPEG-i, saavad tihendatud koopia."
@@ -6900,8 +7744,8 @@ msgid ""
 "pixels that fall together are averaged into grey."
 msgstr ""
 "Pilte suurendatakse pikslite kordamisega, ühtlaselt ainult täisarvuliste "
-"kordadega (muidu tulevad mõned pikslid ühe punkti võrra laiemad kui teised);"
-" vähendamisel keskmistatakse kokku langevad pikslid halliks."
+"kordadega (muidu tulevad mõned pikslid ühe punkti võrra laiemad kui teised); "
+"vähendamisel keskmistatakse kokku langevad pikslid halliks."
 
 #. type: Plain text
 #: docs/use.md
@@ -6930,37 +7774,37 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "The label file keeps the whole page the area was taken from, also outside "
-"the area (addresses, tracking numbers). Of a PDF with several pages only the"
-" chosen page is kept if it can be copied unchanged, otherwise the whole "
-"document (the dialog then says so). Unchanged is strict: a copy that differs"
-" by more than rounding anywhere, even by a few dots, is not used; pages with"
-" embedded fonts that are drawn slightly differently when copied (TeX, for "
+"the area (addresses, tracking numbers). Of a PDF with several pages only the "
+"chosen page is kept if it can be copied unchanged, otherwise the whole "
+"document (the dialog then says so). Unchanged is strict: a copy that differs "
+"by more than rounding anywhere, even by a few dots, is not used; pages with "
+"embedded fonts that are drawn slightly differently when copied (TeX, for "
 "example) keep the whole document. Of a TIFF with several pages only the "
 "chosen page is kept."
 msgstr ""
-"Sildifail säilitab kogu lehe, millest ala võeti, ka ala väliselt (aadressid,"
-" jälgimisnumbrid). Mitmeleheküljelisest PDF-ist säilitatakse ainult valitud "
+"Sildifail säilitab kogu lehe, millest ala võeti, ka ala väliselt (aadressid, "
+"jälgimisnumbrid). Mitmeleheküljelisest PDF-ist säilitatakse ainult valitud "
 "leht, kui seda saab muutmata kopeerida, muidu kogu dokument (dialoog ütleb "
 "seda siis). Muutmata on range: koopiat, mis erineb kuskil rohkem kui "
 "ümardusega, isegi mõne punkti võrra, ei kasutata; lehed manustatud "
 "fontidega, mis kopeerimisel joonistuvad veidi teisiti (näiteks TeX), "
-"säilitavad kogu dokumendi. Mitmeleheküljelisest TIFF-ist säilitatakse ainult"
-" valitud leht."
+"säilitavad kogu dokumendi. Mitmeleheküljelisest TIFF-ist säilitatakse ainult "
+"valitud leht."
 
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"Opening PDF files needs Poppler (poppler-glib); the Flatpak brings it along,"
-" otherwise install it from your distribution (package names: "
-"[docs/install.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/install.md))."
-"  Older versions of Tavletta refuse to open labels with a shipping label and"
-" say that the label needs a newer version."
+"Opening PDF files needs Poppler (poppler-glib); the Flatpak brings it along, "
+"otherwise install it from your distribution (package names: [docs/install.md]"
+"(https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"install.md)).  Older versions of Tavletta refuse to open labels with a "
+"shipping label and say that the label needs a newer version."
 msgstr ""
 "PDF-failide avamine vajab Popplerit (poppler-glib); Flatpak toob selle "
-"kaasa, muidu paigalda see oma distributsioonist (pakettide nimed: "
-"[docs/install.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/install.md))."
-" Tavletta vanemad versioonid keelduvad saatesildiga siltide avamisest ja "
-"ütlevad, et silt vajab uuemat versiooni."
+"kaasa, muidu paigalda see oma distributsioonist (pakettide nimed: [docs/"
+"install.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/"
+"docs/install.md)). Tavletta vanemad versioonid keelduvad saatesildiga "
+"siltide avamisest ja ütlevad, et silt vajab uuemat versiooni."
 
 #. type: Plain text
 #: docs/use.md
@@ -6981,8 +7825,8 @@ msgid ""
 "![Print dialog](media/print.png#only-light)  ![Print dialog](media/print-"
 "dark.png#only-dark)"
 msgstr ""
-"![Printimisdialoog](media/print.png#only-light)  "
-"![Printimisdialoog](media/print-dark.png#only-dark)"
+"![Printimisdialoog](media/print.png#only-light)  ![Printimisdialoog](media/"
+"print-dark.png#only-dark)"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -7014,8 +7858,8 @@ msgstr "Muutujad { #variables }"
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"Variables are filled in when printing, in texts and in the content of codes."
-" [[ui:Insert variable]] next to the text or the content offers the common "
+"Variables are filled in when printing, in texts and in the content of codes. "
+"[[ui:Insert variable]] next to the text or the content offers the common "
 "ones; type the others."
 msgstr ""
 "Muutujad täidetakse printimisel, tekstides ja koodide sisus. [[ui:Insert "
@@ -7052,15 +7896,13 @@ msgstr ""
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"Formats use the letters of "
-"[strftime](https://docs.python.org/3/library/datetime.html#format-codes): "
-"`%d` day, `%m` month, `%Y` year, `%H:%M` hours and minutes, `%B` the name of"
-" the month."
+"Formats use the letters of [strftime](https://docs.python.org/3/library/"
+"datetime.html#format-codes): `%d` day, `%m` month, `%Y` year, `%H:%M` hours "
+"and minutes, `%B` the name of the month."
 msgstr ""
-"Vormingud kasutavad "
-"[strftime'i](https://docs.python.org/3/library/datetime.html#format-codes) "
-"tähti: `%d` päev, `%m` kuu, `%Y` aasta, `%H:%M` tunnid ja minutid, `%B` kuu "
-"nimi."
+"Vormingud kasutavad [strftime'i](https://docs.python.org/3/library/"
+"datetime.html#format-codes) tähti: `%d` päev, `%m` kuu, `%Y` aasta, `%H:%M` "
+"tunnid ja minutid, `%B` kuu nimi."
 
 #. type: Plain text
 #: docs/use.md
@@ -7068,8 +7910,8 @@ msgid ""
 "The counter goes up with every printed label, also from copy to copy: 5 "
 "copies get 5 numbers. Set the [[ui:Next number]] and the [[ui:Step]] in the "
 "[[ui:Counter]] group below the content; it appears once a text uses the "
-"counter. After printing the label remembers the next number: save it to keep"
-" it."
+"counter. After printing the label remembers the next number: save it to keep "
+"it."
 msgstr ""
 "Loendur kasvab iga prinditud sildiga, ka koopiast koopiasse: 5 koopiat "
 "saavad 5 numbrit. Sea [[ui:Next number]] ja [[ui:Step]] rühmas "
@@ -7080,8 +7922,8 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "On one label every variable has one value: a counter or an ID used in the "
-"text and in the QR code is the same number. The preview shows the values the"
-" next print uses."
+"text and in the QR code is the same number. The preview shows the values the "
+"next print uses."
 msgstr ""
 "Ühel sildil on igal muutujal üks väärtus: tekstis ja QR-koodis kasutatud "
 "loendur või ID on sama number. Eelvaade näitab väärtusi, mida järgmine "
@@ -7096,15 +7938,15 @@ msgid ""
 msgstr ""
 "Looksulu printimiseks kahekordista see: `{{=date}}` prindib `{=date}`. "
 "Muutujateta tekstid prinditakse täpselt nii, nagu tipitud, kui sildil pole "
-"[seeriasiltide](serial.md) andmefaili: siis prindivad `{{` ja `}}` alati ühe"
-" looksulu."
+"[seeriasiltide](serial.md) andmefaili: siis prindivad `{{` ja `}}` alati ühe "
+"looksulu."
 
 #. type: Plain text
 #: docs/use.md
 msgid ""
 "Dates and times are in the computer's time zone. `+1d` keeps the time of "
-"day, also when summer time starts or ends; `+2h` counts real hours. `%z` and"
-" `%Z` give the offset and the name of the time zone."
+"day, also when summer time starts or ends; `+2h` counts real hours. `%z` and "
+"`%Z` give the offset and the name of the time zone."
 msgstr ""
 "Kuupäevad ja kellaajad on arvuti ajavööndis. `+1d` säilitab kellaaja, ka "
 "suveaja algamisel või lõppemisel; `+2h` loeb tegelikke tunde. `%z` ja `%Z` "
@@ -7114,8 +7956,8 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "A label with variables or a counter needs this version of Tavletta or a "
-"newer one: older versions refuse to open it instead of printing `{=date}` as"
-" it is."
+"newer one: older versions refuse to open it instead of printing `{=date}` as "
+"it is."
 msgstr ""
 "Silt muutujate või loendurita vajab Tavletta seda või uuemat versiooni: "
 "vanemad versioonid keelduvad selle avamisest, selle asemel et printida "
@@ -7157,8 +7999,8 @@ msgid ""
 "it finds on the network. `tavletta list-printers` shows model, address and "
 "name of each printer found."
 msgstr ""
-"Ilma `--host` kasutab Tavletta rakenduses seatud printerit või ainsat, mille"
-" see võrgust leiab. `tavletta list-printers` näitab iga leitud printeri "
+"Ilma `--host` kasutab Tavletta rakenduses seatud printerit või ainsat, mille "
+"see võrgust leiab. `tavletta list-printers` näitab iga leitud printeri "
 "mudelit, aadressi ja nime."
 
 #. type: Bullet: '- '
@@ -7168,12 +8010,12 @@ msgid ""
 "the command line]] (in the element's settings), or fills in a variable of "
 "your own: `{=lot}` in the label, `--set lot=A12` when printing; a name may "
 "use letters of any language. Variables in a new text are filled in; `--set-"
-"literal NAME=VALUE` takes the value as it is. `--set date=2026-12-31` prints"
-" with another date."
+"literal NAME=VALUE` takes the value as it is. `--set date=2026-12-31` prints "
+"with another date."
 msgstr ""
 "`--set NAME=VALUE` asendab selle elemendi teksti, millel on see [[ui:Name "
-"for the command line]] (elemendi seadetes), või täidab oma muutuja: `{=lot}`"
-" sildil, `--set lot=A12` printimisel; nimes võib kasutada mis tahes keele "
+"for the command line]] (elemendi seadetes), või täidab oma muutuja: `{=lot}` "
+"sildil, `--set lot=A12` printimisel; nimes võib kasutada mis tahes keele "
 "tähti. Uue teksti muutujad täidetakse; `--set-literal NAME=VALUE` võtab "
 "väärtuse sellisena, nagu see on. `--set date=2026-12-31` prindib teise "
 "kuupäevaga."
@@ -7182,8 +8024,8 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "With a counter the next number is saved in the label file after printing, "
-"also when the printer fails half-way or the print is stopped with Ctrl+C. If"
-" the file cannot be written, nothing is printed; `--no-save-counter` prints "
+"also when the printer fails half-way or the print is stopped with Ctrl+C. If "
+"the file cannot be written, nothing is printed; `--no-save-counter` prints "
 "anyway and saves nothing, so the next print repeats the numbers. The label "
 "file is locked while printing: a second `tavletta print` of the same file "
 "waits. The window reads the saved number again before printing and saving."
@@ -7199,16 +8041,16 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"It prints with the choices last made in the app for that printer model: cut,"
-" colours, quality, chain printing, high resolution, tape feed, the printer "
+"It prints with the choices last made in the app for that printer model: cut, "
+"colours, quality, chain printing, high resolution, tape feed, the printer "
 "settings and [[ui:Print outlines]] on a label sheet.  `--printer-defaults` "
 "takes the model's defaults for these instead (no outlines); the printer's "
 "address and the [[ui:Safety margin]] stay as set in the app."
 msgstr ""
 "See prindib valikutega, mis tehti rakenduses viimati selle printerimudeli "
 "jaoks: lõikamine, värvid, kvaliteet, ketiprintimine, kõrge eraldusvõime, "
-"lindi söötmine, printeriseaded ja [[ui:Print outlines]] sildilehel. "
-"`--printer-defaults` võtab nende asemel mudeli vaikeväärtused (ilma "
+"lindi söötmine, printeriseaded ja [[ui:Print outlines]] sildilehel. `--"
+"printer-defaults` võtab nende asemel mudeli vaikeväärtused (ilma "
 "kontuurideta); printeri aadress ja [[ui:Safety margin]] jäävad rakenduses "
 "seatuks."
 
@@ -7238,15 +8080,15 @@ msgstr ""
 #: docs/use.md
 msgid ""
 "Some printers are asked before the label is drawn, because it depends on "
-"what they report (the tape, the resolution), a Brother QL with DK labels for"
-" the hint above (the labels loaded); a printer that does not answer within 5"
-" s (2 s for `--dry-run`) gets the label drawn without.  A question still on "
+"what they report (the tape, the resolution), a Brother QL with DK labels for "
+"the hint above (the labels loaded); a printer that does not answer within 5 "
+"s (2 s for `--dry-run`) gets the label drawn without.  A question still on "
 "its way then gets up to 10 s more to end before the label is sent (Tavletta "
 "says so); an answer in that time is used.  `--no-query` skips the question."
 msgstr ""
 "Mõnelt printerilt küsitakse enne sildi joonistamist, sest see sõltub "
-"sellest, mida nad teatavad (lint, eraldusvõime), Brother QL-ilt DK-siltidega"
-" ülaltoodud vihje jaoks (laaditud sildid); printer, mis ei vasta 5 sekundi "
+"sellest, mida nad teatavad (lint, eraldusvõime), Brother QL-ilt DK-siltidega "
+"ülaltoodud vihje jaoks (laaditud sildid); printer, mis ei vasta 5 sekundi "
 "jooksul (2 sekundit valikuga `--dry-run`), saab sildi joonistatud ilma "
 "selleta. Veel teel olev küsimus saab siis kuni 10 sekundit lisaaega enne "
 "sildi saatmist lõpuni jõudmiseks (Tavletta ütleb seda); selle aja jooksul "
@@ -7262,24 +8104,23 @@ msgid ""
 "column or a code a row cannot make stops the print before the first label. "
 "See [Serial labels](serial.md)."
 msgstr ""
-"Seeriasildid: üks silt andmefaili iga rea kohta, `--copies` igaüht; `--data`"
-" annab andmefaili (vaikimisi sildi enda, kui see asub sildi kaustas), "
-"`--sheet` lehe, `--rows` read (`3-10`, `5`, `7-` viimaseni). Loendur jätkab "
+"Seeriasildid: üks silt andmefaili iga rea kohta, `--copies` igaüht; `--data` "
+"annab andmefaili (vaikimisi sildi enda, kui see asub sildi kaustas), `--"
+"sheet` lehe, `--rows` read (`3-10`, `5`, `7-` viimaseni). Loendur jätkab "
 "reast reale. Kohatäide ilma veeruta või kood, mida rida teha ei saa, peatab "
 "printimise enne esimest silti. Vaata [Seeriasildid](serial.md)."
 
 #. type: Bullet: '- '
 #: docs/use.md
 msgid ""
-"`--dry-run` only checks and renders: it lists the texts of each label; "
-"`--output file.png` saves each label as [[ui:Export PNG…]] does: as printed,"
-" on the whole tape, at most 600 dpi like the preview (a large page coarser),"
-" with its resolution (`file-1.png`, `file-2.png` … if they differ; `-` "
-"writes the first to standard output). The first label is also drawn as the "
-"printer would get it. With `--output` every label is drawn, and a code that "
-"does not fit stops the dry run (exit code 4); without it the labels after "
-"the first are not drawn: their columns and codes are checked, not whether a "
-"code fits."
+"`--dry-run` only checks and renders: it lists the texts of each label; `--"
+"output file.png` saves each label as [[ui:Export PNG…]] does: as printed, on "
+"the whole tape, at most 600 dpi like the preview (a large page coarser), "
+"with its resolution (`file-1.png`, `file-2.png` … if they differ; `-` writes "
+"the first to standard output). The first label is also drawn as the printer "
+"would get it. With `--output` every label is drawn, and a code that does not "
+"fit stops the dry run (exit code 4); without it the labels after the first "
+"are not drawn: their columns and codes are checked, not whether a code fits."
 msgstr ""
 "`--dry-run` ainult kontrollib ja renderdab: see loetleb iga sildi tekstid; "
 "`--output file.png` salvestab iga sildi nagu [[ui:Export PNG…]]: nii nagu "
@@ -7332,14 +8173,14 @@ msgstr ""
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"A file handed over this way is reached through the document portal. The next"
-" counter value is written there like any save, but the portal may not "
-"support locking the file: two prints of the same file at the same moment are"
-" then not kept apart. If the portal refuses to write, nothing is printed "
-"(exit code 5)."
+"A file handed over this way is reached through the document portal. The next "
+"counter value is written there like any save, but the portal may not support "
+"locking the file: two prints of the same file at the same moment are then "
+"not kept apart. If the portal refuses to write, nothing is printed (exit "
+"code 5)."
 msgstr ""
-"Nii üle antud failile pääseb ligi dokumendiportaali kaudu. Järgmine loenduri"
-" väärtus kirjutatakse sinna nagu iga salvestus, kuid portaal ei pruugi "
+"Nii üle antud failile pääseb ligi dokumendiportaali kaudu. Järgmine loenduri "
+"väärtus kirjutatakse sinna nagu iga salvestus, kuid portaal ei pruugi "
 "toetada faili lukustamist: sama faili kaks samaaegset printimist ei hoita "
 "siis lahus. Kui portaal keeldub kirjutamast, ei prindita midagi "
 "(väljumiskood 5)."
@@ -7347,10 +8188,10 @@ msgstr ""
 #. type: Plain text
 #: docs/use.md
 msgid ""
-"Writing the counter back through the document portal has not been tried yet."
-" After the first print from the Flatpak, open the label and check that "
-"[[ui:Next number]] went on; if not, give the start with `--counter-start` on"
-" every print."
+"Writing the counter back through the document portal has not been tried yet. "
+"After the first print from the Flatpak, open the label and check that "
+"[[ui:Next number]] went on; if not, give the start with `--counter-start` on "
+"every print."
 msgstr ""
 "Loenduri tagasikirjutamist dokumendiportaali kaudu pole veel proovitud. "
 "Pärast esimest printimist Flatpakist ava silt ja kontrolli, et [[ui:Next "
