@@ -1211,6 +1211,37 @@ def test_number_formats(code, raw, shown):
     assert display(raw, code, False) == shown
 
 
+def test_number_formats_do_not_make_cells_long():
+    """The format decides the length of a cell's text: a format of many
+    zeros made megabytes of every number of a small file."""
+    from tavletta.merge.numfmt import display
+
+    assert display("12", "0" * 30, False) == "12".zfill(30)
+    assert display("12", "0" * 1_000_000, False) == "12"  # longer than Excel takes: General
+    assert display("12", "0" * 255, False) == "12".zfill(30)
+    assert display("12", "0" * 256, False) == "12"
+    assert display("0.5", "[" + "h" * 200 + "]", False) == "12".zfill(30) + ":00"
+    assert display("0.5", "[" + "h" * 29 + "]", False) == "12".zfill(29) + ":00"
+    assert display("0.1", "[s]." + "0" * 200, False) == "8640." + "0" * 9
+    assert display("0.1", "[s]." + "0" * 8, False) == "8640." + "0" * 8
+    assert display("1.5", "0." + "0" * 20, False) == "1.5" + "0" * 9  # Decimal's precision
+    assert display("1.5", "0." + "0" * 9, False) == "1.5" + "0" * 8
+
+
+def test_xlsx_number_format_bomb(tmp_path):
+    """A few kilobytes of file, a format of a million zeros: each number as
+    General, not a megabyte of zeros."""
+    styles = (
+        '<numFmts><numFmt numFmtId="164" formatCode="%s"/></numFmts>' % ("0" * 1_000_000)
+        + '<cellXfs><xf numFmtId="0"/><xf numFmtId="164"/></cellXfs>'
+    )
+    sheet = xrow(inline("A1", "A")) + "".join(
+        xrow(num("A%d" % n, str(n), 1)) for n in range(2, 202)
+    )
+    path = make_xlsx(tmp_path, sheet, styles=styles)
+    assert [r["A"] for r in read_table(path).rows] == [str(n) for n in range(2, 202)]
+
+
 def test_xlsx_styles_are_streamed(tmp_path, monkeypatch):
     """Only the first cellXfs counts (not cellStyleXfs); fonts and fills of
     tens of thousands of styles are dropped as they are read."""

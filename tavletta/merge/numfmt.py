@@ -4,6 +4,8 @@ decimals, leading zeros, percent and scaling by thousands ("0,"). Thousands
 separators, currency symbols and other text in the format are left out;
 fractions ("# ?/?") come out like Excel's "General" format, and so do the
 East Asian built-in date formats, which the file names by number only.
+Formats longer than Excel takes are shown as General, and no format pads
+a number beyond _MAX_WIDTH digits.
 
 "General" shows up to 11 significant digits, as Excel does, except that
 whole numbers keep all their digits up to 15 (article and EAN numbers):
@@ -57,6 +59,15 @@ _SCALING = re.compile(r"[0#?](,+)(?![0#?,])")  # "0," divides by 1000, "0,," by 
 _LARGEST_GENERAL_INTEGER = 1e15  # beyond that Excel switches to 1E+15 too
 _GENERAL_DIGITS = 11
 _AFTER_LAST_DAY = 2958466  # 10000-01-01: Excel shows "#####" from there on, also for [h]
+# A format decides how long a cell's text is ("000…0" pads with zeros), and
+# a data file comes from anywhere: a few bytes of format would make every
+# number megabytes long. Excel takes formats of up to 255 characters; a
+# longer one is shown as General. Padding goes to at most _MAX_WIDTH digits
+# (a number has at most 15 significant ones), seconds have at most
+# _MAX_SECOND_DECIMALS decimals (finer than the stored number tells).
+_MAX_CODE = 255
+_MAX_WIDTH = 30
+_MAX_SECOND_DECIMALS = 9
 
 
 @dataclass(frozen=True)
@@ -85,6 +96,8 @@ def display(raw: str, code: str, date1904: bool) -> str:
         return raw
     if not math.isfinite(value):
         return raw
+    if len(code) > _MAX_CODE:
+        return general(value)
     shape = _shape(code)
     try:
         if shape is None:
@@ -119,7 +132,8 @@ def _shape(code: str) -> _Shape | None:
     is_date = _is_date(lower, time)
     if not (is_date or time):
         return None
-    return _Shape(is_date, hours, seconds, ampm, unit[:1], len(unit), decimals)
+    width, decimals = min(len(unit), _MAX_WIDTH), min(decimals, _MAX_SECOND_DECIMALS)
+    return _Shape(is_date, hours, seconds, ampm, unit[:1], width, decimals)
 
 
 def _elapsed_unit(code: str) -> str:
@@ -221,6 +235,7 @@ def _number(value: float, code: str) -> str:
     sign, digits = ("-", str(-rounded)) if rounded < 0 else ("", str(rounded))
     whole, point, fraction = digits.partition(".")
     zeros = _INTEGER_ZEROS.match(section).group(0).count("0")  # type: ignore[union-attr]
+    zeros = min(zeros, _MAX_WIDTH)
     return "%s%s%s%s%s" % (sign, whole.zfill(zeros), point, fraction, "%" if percent else "")
 
 

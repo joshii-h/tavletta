@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 10:18+0100\n"
+"POT-Creation-Date: 2026-11-24 10:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2599,7 +2599,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/serial.md
 #, markdown-text
-msgid "XLSX: numbers with their decimals, leading zeros and percent signs, dates as `2026-11-11`. Thousands separators and text in the number format, such as a currency, are left out. Dates in the East Asian built-in formats come out as numbers."
+msgid "XLSX: numbers with their decimals, leading zeros and percent signs, dates as `2026-11-11`. Thousands separators and text in the number format, such as a currency, are left out. Dates in the East Asian built-in formats come out as numbers. Leading zeros fill up to 30 digits; a number format longer than the 255 characters Excel takes is ignored."
 msgstr ""
 
 #. type: Bullet: '- '

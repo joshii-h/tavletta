@@ -19,7 +19,9 @@ printed label shows the values of its row.
 - XLSX: numbers with their decimals, leading zeros and percent signs,
   dates as `2026-11-11`. Thousands separators and text in the number
   format, such as a currency, are left out. Dates in the East Asian
-  built-in formats come out as numbers.
+  built-in formats come out as numbers. Leading zeros fill up to 30
+  digits; a number format longer than the 255 characters Excel takes is
+  ignored.
 - Empty rows are left out. The hidden cells of merged cells are empty.
 - Several sheets: choose one under [[ui:Sheet]]. If the sheet saved with
   the label is no longer there, nothing is printed until another one is
