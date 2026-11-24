@@ -1239,10 +1239,13 @@ def _print_paths() -> dict:
                 parameters=[_LANGUAGE, _JOB_ID],
             ),
             "delete": _operation(
-                "Cancel a job: at once while it waits, after the current label while it prints",
+                "Cancel a job: at once while it waits, after the labels already sent to the printer "
+                "while it prints (cab: the job of up to labels_per_job labels)",
                 "print",
                 {
-                    "202": _json(_ref("Job"), "Canceled, or stopping after the current label"),
+                    "202": _json(
+                        _ref("Job"), "Canceled, or stopping after the labels already sent"
+                    ),
                     "404": _error("No such job", "job_not_found"),
                     "409": _error("Already finished", "job_finished"),
                 },

@@ -61,7 +61,7 @@ INSTRUCTIONS = (
     "label files and what can be filled in (element names and variables for 'set', "
     "columns for data rows). preview_label shows a label as it will print. print_label "
     "queues a print job and returns its id; job_status follows it, cancel_job stops it "
-    "between two labels. Printing uses real labels: preview first and print only what "
+    "after the labels already sent to the printer. Printing uses real labels: preview first and print only what "
     "the user asked for."
 )
 MAX_LINE = 64 * 1024 * 1024  # one message on stdio
@@ -264,7 +264,9 @@ TOOLS = [
     _tool(
         "cancel_job",
         "Cancel a print job",
-        "Cancel a waiting job, or stop a printing one after the label being printed.",
+        "Cancel a waiting job, or stop a printing one after the labels already sent to the "
+        "printer: the label being printed, on a cab printer the job of up to "
+        "labels_per_job labels being printed.",
         _schema(_JOB_ID, ("job_id",)),
         False,
     ),

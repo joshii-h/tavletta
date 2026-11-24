@@ -3115,10 +3115,11 @@ def test_stop_button(series):
     banner.set_button_label("Stop")
     banner.emit("button-clicked")
     assert series.print_flow._stop.is_set()
-    assert banner.get_title() == "Stopping after this label…"
+    assert banner.get_title() == "Stopping after the labels already sent to the printer…"
     assert not banner.get_button_label()
     series.print_flow.series_progress(SeriesProgress(2, 3, 2, Progress(1, 1, "PREHEATING")))
-    assert banner.get_title() == "Stopping after this label…"  # stays until the end
+    # stays until the end
+    assert banner.get_title() == "Stopping after the labels already sent to the printer…"
     assert series.print_button.get_label() == "Printing 2/3…"
 
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 18:36+0100\n"
+"PO-Revision-Date: 2026-11-24 18:39+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: et\n"
 "Language: et\n"
@@ -365,7 +365,7 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output kirjutab PNG-pilte: anna nimi, mis lõpeb laiendiga .png"
 
 #: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:746 tavletta/server/service.py:1147
+#: tavletta/ui/printing.py:749 tavletta/server/service.py:1147
 #: tavletta/server/service.py:1170 tavletta/server/service.py:1472
 #: tavletta/server/service.py:1708
 msgid "The label cannot be prepared for printing."
@@ -412,7 +412,7 @@ msgstr "--print-method: sellel printerimudelil pole prindimeetodi seadistust: %s
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet ja --rows vajavad andmefaili (--data)"
 
-#: tavletta/cli.py:1028 tavletta/ui/printing.py:615
+#: tavletta/cli.py:1028 tavletta/ui/printing.py:616
 #: tavletta/server/service.py:1005
 msgid "No rows to print"
 msgstr "Pole ridu, mida printida"
@@ -427,14 +427,14 @@ msgstr "Silt kasutab andmefaili väljaspool oma kausta: anna see võtmega --data
 msgid "No such column: %s"
 msgstr "Tundmatu veerg: %s"
 
-#: tavletta/cli.py:1070 tavletta/ui/printing.py:695
+#: tavletta/cli.py:1070 tavletta/ui/printing.py:698
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "Nende ridade ribakoodi või QR-koodi ei saa nende väärtustest luua, näiteks tähtedega EAN-13 või tühi lahter. Paranda andmefail ja loe see uuesti või prindi ilma nende ridadeta."
 
-#: tavletta/cli.py:1075 tavletta/ui/printing.py:700
+#: tavletta/cli.py:1075 tavletta/ui/printing.py:703
 #, python-format
 msgid "Rows: %s"
 msgstr "Read: %s"
@@ -1072,7 +1072,7 @@ msgstr "Lohista, et valida pildi osa, mis jääb alles"
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:390
 #: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
-#: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
+#: tavletta/ui/printing.py:707 tavletta/ui/sheets.py:206
 #: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
 #: tavletta/ui/window.py:964 tavletta/server/web/ui.js:223
 msgid "Cancel"
@@ -1461,7 +1461,7 @@ msgstr "Seerianumber"
 msgid "Probably made"
 msgstr "Arvatav valmistusaeg"
 
-#: tavletta/ui/printer.py:638 tavletta/ui/printing.py:802
+#: tavletta/ui/printer.py:638 tavletta/ui/printing.py:805
 msgid "Close"
 msgstr "Sulge"
 
@@ -1596,7 +1596,7 @@ msgstr "Prindi seeriasildid"
 msgid "Print label"
 msgstr "Prindi silt"
 
-#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
+#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:792
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
 #: tavletta/server/web/app.js:384 tavletta/server/web/batch.js:56
 #: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
@@ -1628,55 +1628,55 @@ msgstr "Printerit pole veel – otsi seda või sisesta selle aadress"
 msgid "Printing…"
 msgstr "Printimine…"
 
-#: tavletta/ui/printing.py:634 tavletta/ui/printing.py:674
+#: tavletta/ui/printing.py:635 tavletta/ui/printing.py:677
 msgid "Printing serial labels"
 msgstr "Seeriasiltide printimine"
 
-#: tavletta/ui/printing.py:635
+#: tavletta/ui/printing.py:636
 msgid "Stop"
 msgstr "Peata"
 
-#: tavletta/ui/printing.py:664
-msgid "Stopping after this label…"
-msgstr "Peatub pärast seda silti…"
+#: tavletta/ui/printing.py:666 tavletta/server/web/ui.js:433
+msgid "Stopping after the labels already sent to the printer…"
+msgstr "Peatumine pärast printerile juba saadetud silte…"
 
-#: tavletta/ui/printing.py:671 tavletta/ui/printing.py:757
+#: tavletta/ui/printing.py:674 tavletta/ui/printing.py:760
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "Printimine %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:703
+#: tavletta/ui/printing.py:706
 msgid "Rows that cannot be printed"
 msgstr "Read, mida ei saa printida"
 
-#: tavletta/ui/printing.py:706
+#: tavletta/ui/printing.py:709
 msgid "Print without these rows"
 msgstr "Prindi ilma nende ridadeta"
 
-#: tavletta/ui/printing.py:731
+#: tavletta/ui/printing.py:734
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "Peatatud pärast rida %(row)d"
 
-#: tavletta/ui/printing.py:736
+#: tavletta/ui/printing.py:739
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "Rida %(row)d prinditud"
 
-#: tavletta/ui/printing.py:738
+#: tavletta/ui/printing.py:741
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "Read %(first)d kuni %(last)d prinditud"
 
-#: tavletta/ui/printing.py:797
+#: tavletta/ui/printing.py:800
 msgid "Printing failed"
 msgstr "Printimine nurjus"
 
-#: tavletta/ui/printing.py:798 tavletta/server/web/ui.js:125
+#: tavletta/ui/printing.py:801 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "Üksikasjad"
 
-#: tavletta/ui/printing.py:801 tavletta/ui/window.py:993
+#: tavletta/ui/printing.py:804 tavletta/ui/window.py:993
 msgid "Report"
 msgstr "Teata"
 
@@ -4687,10 +4687,6 @@ msgstr "Umbes {minutes} min jäänud"
 #: tavletta/server/web/ui.js:405
 msgid "Waiting for the printer…"
 msgstr "Printeri ootamine…"
-
-#: tavletta/server/web/ui.js:433
-msgid "Stopping after the label being printed…"
-msgstr "Peatumine pärast praegu prinditavat silti…"
 
 #: tavletta/server/web/ui.js:452
 msgid "Canceled"

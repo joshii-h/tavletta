@@ -1818,14 +1818,15 @@ paths:
           x-tavletta-codes:
           - busy
     delete:
-      summary: 'Cancel a job: at once while it waits, after the current label while it prints'
+      summary: 'Cancel a job: at once while it waits, after the labels already sent to the printer while
+        it prints (cab: the job of up to labels_per_job labels)'
       x-tavletta-role: print
       parameters:
       - *id001
       - *id005
       responses:
         '202':
-          description: Canceled, or stopping after the current label
+          description: Canceled, or stopping after the labels already sent
           content:
             application/json:
               schema:

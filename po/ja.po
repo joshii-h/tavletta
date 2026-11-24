@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 18:36+0100\n"
+"PO-Revision-Date: 2026-11-24 18:39+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ja\n"
 "Language: ja\n"
@@ -365,7 +365,7 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output は PNG 画像を書き込みます: .png で終わる名前を指定してください"
 
 #: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:746 tavletta/server/service.py:1147
+#: tavletta/ui/printing.py:749 tavletta/server/service.py:1147
 #: tavletta/server/service.py:1170 tavletta/server/service.py:1472
 #: tavletta/server/service.py:1708
 msgid "The label cannot be prepared for printing."
@@ -412,7 +412,7 @@ msgstr "--print-method: このプリンター機種には印刷方式の設定�
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet と --rows にはデータファイル (--data) が必要です"
 
-#: tavletta/cli.py:1028 tavletta/ui/printing.py:615
+#: tavletta/cli.py:1028 tavletta/ui/printing.py:616
 #: tavletta/server/service.py:1005
 msgid "No rows to print"
 msgstr "印刷する行がありません"
@@ -427,14 +427,14 @@ msgstr "ラベルはフォルダーの外にあるデータファイルを使っ
 msgid "No such column: %s"
 msgstr "その列はありません: %s"
 
-#: tavletta/cli.py:1070 tavletta/ui/printing.py:695
+#: tavletta/cli.py:1070 tavletta/ui/printing.py:698
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "これらの行の値からはバーコードまたは QR コードを作れません(例: 文字を含む EAN-13、空のセル)。データファイルを修正して読み込み直すか、これらの行を除いて印刷してください。"
 
-#: tavletta/cli.py:1075 tavletta/ui/printing.py:700
+#: tavletta/cli.py:1075 tavletta/ui/printing.py:703
 #, python-format
 msgid "Rows: %s"
 msgstr "行: %s"
@@ -1072,7 +1072,7 @@ msgstr "ドラッグして残す部分を選択します"
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:390
 #: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
-#: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
+#: tavletta/ui/printing.py:707 tavletta/ui/sheets.py:206
 #: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
 #: tavletta/ui/window.py:964 tavletta/server/web/ui.js:223
 msgid "Cancel"
@@ -1461,7 +1461,7 @@ msgstr "シリアル番号"
 msgid "Probably made"
 msgstr "推定製造時期"
 
-#: tavletta/ui/printer.py:638 tavletta/ui/printing.py:802
+#: tavletta/ui/printer.py:638 tavletta/ui/printing.py:805
 msgid "Close"
 msgstr "閉じる"
 
@@ -1596,7 +1596,7 @@ msgstr "差し込み印刷ラベルを印刷"
 msgid "Print label"
 msgstr "ラベルを印刷"
 
-#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
+#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:792
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
 #: tavletta/server/web/app.js:384 tavletta/server/web/batch.js:56
 #: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
@@ -1628,55 +1628,55 @@ msgstr "プリンターがありません。検索するかアドレスを入力
 msgid "Printing…"
 msgstr "印刷中…"
 
-#: tavletta/ui/printing.py:634 tavletta/ui/printing.py:674
+#: tavletta/ui/printing.py:635 tavletta/ui/printing.py:677
 msgid "Printing serial labels"
 msgstr "差し込み印刷ラベルを印刷中"
 
-#: tavletta/ui/printing.py:635
+#: tavletta/ui/printing.py:636
 msgid "Stop"
 msgstr "停止"
 
-#: tavletta/ui/printing.py:664
-msgid "Stopping after this label…"
-msgstr "このラベルの後で停止します…"
+#: tavletta/ui/printing.py:666 tavletta/server/web/ui.js:433
+msgid "Stopping after the labels already sent to the printer…"
+msgstr "プリンターに送信済みのラベルの後で停止しています…"
 
-#: tavletta/ui/printing.py:671 tavletta/ui/printing.py:757
+#: tavletta/ui/printing.py:674 tavletta/ui/printing.py:760
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "印刷中 %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:703
+#: tavletta/ui/printing.py:706
 msgid "Rows that cannot be printed"
 msgstr "印刷できない行"
 
-#: tavletta/ui/printing.py:706
+#: tavletta/ui/printing.py:709
 msgid "Print without these rows"
 msgstr "これらの行を除いて印刷"
 
-#: tavletta/ui/printing.py:731
+#: tavletta/ui/printing.py:734
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "%(row)d 行目の後で停止しました"
 
-#: tavletta/ui/printing.py:736
+#: tavletta/ui/printing.py:739
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "%(row)d 行目を印刷しました"
 
-#: tavletta/ui/printing.py:738
+#: tavletta/ui/printing.py:741
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "%(first)d 行目から %(last)d 行目まで印刷しました"
 
-#: tavletta/ui/printing.py:797
+#: tavletta/ui/printing.py:800
 msgid "Printing failed"
 msgstr "印刷に失敗しました"
 
-#: tavletta/ui/printing.py:798 tavletta/server/web/ui.js:125
+#: tavletta/ui/printing.py:801 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "詳細"
 
-#: tavletta/ui/printing.py:801 tavletta/ui/window.py:993
+#: tavletta/ui/printing.py:804 tavletta/ui/window.py:993
 msgid "Report"
 msgstr "報告"
 
@@ -4687,10 +4687,6 @@ msgstr "残り約 {minutes} 分"
 #: tavletta/server/web/ui.js:405
 msgid "Waiting for the printer…"
 msgstr "プリンターを待っています…"
-
-#: tavletta/server/web/ui.js:433
-msgid "Stopping after the label being printed…"
-msgstr "印刷中のラベルの後で停止しています…"
 
 #: tavletta/server/web/ui.js:452
 msgid "Canceled"

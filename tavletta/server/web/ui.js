@@ -430,7 +430,7 @@ export function jobProgress(job, { onEnd, status }) {
     cancel.disabled = true;
     try {
       await api("DELETE", `/jobs/${encodeURIComponent(job.id)}`);
-      left.textContent = t("Stopping after the label being printed…");
+      left.textContent = t("Stopping after the labels already sent to the printer…");
     } catch (error) {
       if (error.code !== "job_finished") left.textContent = errorText(error);
     }

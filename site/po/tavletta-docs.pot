@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 18:37+0100\n"
+"POT-Creation-Date: 2026-11-24 18:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -860,7 +860,7 @@ msgid ""
 "| [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |\n"
 "| [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |\n"
 "| [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |\n"
-"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |\n"
+"| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels) |\n"
 msgstr ""
 
 #. type: Title ###
@@ -1427,7 +1427,7 @@ msgstr ""
 #. type: Plain text
 #: docs/api.md
 #, markdown-text
-msgid "Cancel a job: at once while it waits, after the current label while it prints."
+msgid "Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels)."
 msgstr ""
 
 #. type: Plain text
@@ -1436,7 +1436,7 @@ msgstr ""
 msgid ""
 "| Status | Answer | Codes |\n"
 "|---|---|---|\n"
-"| 202 | Canceled, or stopping after the current label |  |\n"
+"| 202 | Canceled, or stopping after the labels already sent |  |\n"
 "| 404 | No such job | `job_not_found` |\n"
 "| 409 | Already finished | `job_finished` |\n"
 msgstr ""

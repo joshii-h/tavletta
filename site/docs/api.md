@@ -156,7 +156,7 @@ general errors of the table above: 401, 403, 405, 408, 421, 429
 | [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |
 | [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |
 | [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |
-| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |
+| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels) |
 
 ### `GET /api/v1/health` { #get-health }
 
@@ -470,7 +470,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### `DELETE /api/v1/jobs/{id}` { #delete-jobs-id }
 
-Cancel a job: at once while it waits, after the current label while it prints.
+Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels).
 
 - Role: `print`
 
@@ -480,7 +480,7 @@ Cancel a job: at once while it waits, after the current label while it prints.
 
 | Status | Answer | Codes |
 |---|---|---|
-| 202 | Canceled, or stopping after the current label |  |
+| 202 | Canceled, or stopping after the labels already sent |  |
 | 404 | No such job | `job_not_found` |
 | 409 | Already finished | `job_finished` |
 

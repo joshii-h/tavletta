@@ -3,8 +3,10 @@
 A job is accepted (and checked) when it is asked for and printed when its
 turn comes, by a worker thread of its printer (backend and address). It
 can be canceled while it waits, and between two labels while it prints:
-the label being printed is finished. Finished jobs are kept for a while,
-so their state can still be asked for.
+the label being printed is finished (a cab printer: between two jobs of a
+series, the job of up to labels_per_job labels being printed is
+finished). Finished jobs are kept for a while, so their state can still
+be asked for.
 
 Messages are made when the job is asked for, in the language of that
 request: a job keeps what happened (the exception), not a text.
@@ -207,7 +209,7 @@ class JobQueue:
 
     def cancel(self, job: PrintJob) -> None:
         """A waiting job is canceled at once; a printing one stops after
-        the label being printed."""
+        the labels already sent to the printer (print_series())."""
         with self._lock:
             job.stop.set()
             if job.state == QUEUED:

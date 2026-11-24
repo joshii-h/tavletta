@@ -606,8 +606,9 @@ class PrintFlow:
         self, options: PrintOptions, indexes: Sequence[int], sheet: SheetJob | None = None
     ) -> None:
         """One label per row in `indexes`; a Stop button in the banner ends
-        the series after the label being printed. On label sheets (`sheet`)
-        one job of sheets, each position a label: it cannot be stopped."""
+        the series after the label being printed (a cab printer: after the
+        job being printed, "labels_per_job"). On label sheets (`sheet`) one
+        job of sheets, each position a label: it cannot be stopped."""
         window = self.window
         # the file may have been read again, with fewer rows, since the dialog
         indexes = [index for index in indexes if 0 <= index < len(window.data.rows)]
@@ -656,12 +657,14 @@ class PrintFlow:
         self.thread.start()
 
     def stop(self) -> None:
-        """Stop a series after the label being printed."""
+        """Stop a series after the labels already sent to the printer."""
         if not self.busy:
             return
         self._stop.set()
         banner = self.window.banner
-        banner.set_title(GLib.markup_escape_text(_("Stopping after this label…")))
+        banner.set_title(
+            GLib.markup_escape_text(_("Stopping after the labels already sent to the printer…"))
+        )
         banner.set_button_label(None)
 
     def series_progress(self, event: SeriesProgress) -> bool:
