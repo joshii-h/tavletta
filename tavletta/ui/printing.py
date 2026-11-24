@@ -20,7 +20,7 @@ from tavletta.backends.base import (
     PrintResult,
     Progress,
 )
-from tavletta.job import Job, OtherLabels, PrepareFailed
+from tavletta.job import Job, LoadedFit, OtherLabels, PrepareFailed, fit_loaded
 from tavletta.merge import MergeError
 from tavletta.model import Label
 from tavletta.serial import (
@@ -175,7 +175,48 @@ class PrintFlow:
         )
 
     def _other_labels_dialog(self, other: OtherLabels) -> None:
-        self._warn(_("Different labels loaded"), other_labels_text(other, self.window.unit))
+        """Print anyway, or, where the loaded labels make a label the model
+        allows (job.fit_loaded()), take them over and print not yet."""
+        window = self.window
+        heading, body = _("Different labels loaded"), other_labels_text(other, window.unit)
+        fit = fit_loaded(window.backend, window.label, other)
+        if fit is None:
+            self._warn(heading, body)
+            return
+        dialog = Adw.AlertDialog(heading=heading, body=body)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("print", _("Print anyway"))
+        dialog.add_response("adapt", _("Use loaded labels"))
+        dialog.set_response_appearance("print", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_response_appearance("adapt", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("adapt")
+        dialog.set_close_response("cancel")
+
+        def answered(_dialog, response: str) -> None:
+            if response == "print":
+                self.dialog()
+            elif response == "adapt":
+                self.use_loaded(fit)
+
+        dialog.connect("response", answered)
+        window.present_dialog(dialog)
+
+    def use_loaded(self, fit: LoadedFit) -> None:
+        """The label's size and gap set to the loaded labels', one step of
+        undo; not printed: the preview shows it to be checked first, with a
+        warning if elements now reach beyond the label."""
+        window = self.window
+        window.label.set_media_size(*fit.size_mm)
+        window.label.gap_mm = fit.gap_mm
+        window.rebuild_sidebar()
+        window.mark_changed()
+        window.render_if_stale()
+        rendered = window.rendered
+        if rendered and any(w.key == "outside_label" for w in rendered.warnings):
+            text = _("Label adapted to the loaded labels. Some elements reach beyond its edge.")
+        else:
+            text = _("Label adapted to the loaded labels")
+        window.offer_undo(text)
 
     # --- print dialog ------------------------------------------------------------
 
