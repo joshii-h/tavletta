@@ -441,7 +441,12 @@ def fake_run(returncode, stdout=b"", stderr=b""):
 
 
 @pytest.mark.parametrize(
-    "said", [b"Out of memory\n", b"GLib-ERROR **: failed to allocate 4294967296 bytes"]
+    "said",
+    [
+        b"Out of memory\n",
+        b"GLib-ERROR **: failed to allocate 4294967296 bytes",
+        b"terminate called after throwing an instance of 'std::bad_alloc'\n  what():  std::bad_alloc",
+    ],
 )
 def test_a_child_aborted_by_its_memory_limit_is_too_large(monkeypatch, said):
     """Poppler's and GLib's allocators abort when the memory limit stops
@@ -470,11 +475,15 @@ def test_the_child_gets_no_secrets_of_the_server(monkeypatch):
     monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "elsewhere")
     monkeypatch.setenv("FONTCONFIG_FILE", "/fonts.conf")
     monkeypatch.setenv("PYTHONPATH", "/extra")
+    for kept in ("PYTHONNOUSERSITE", "PYTHONSAFEPATH", "PYTHONDONTWRITEBYTECODE"):
+        monkeypatch.setenv(kept, "1")  # as the server was set up
+    monkeypatch.setenv("PYTHONPYCACHEPREFIX", "/cache")
     monkeypatch.setattr(pdfchild.subprocess, "run", run)
     pdfchild.ask(b"", {})
     assert "TAVLETTA_TOKEN" not in seen and "AWS_SECRET_ACCESS_KEY" not in seen
     assert set(seen) <= {*pdfchild.KEPT_ENVIRONMENT, "PYTHONPATH"}
-    assert seen["FONTCONFIG_FILE"] == "/fonts.conf"
+    assert seen["FONTCONFIG_FILE"] == "/fonts.conf" and seen["PYTHONPYCACHEPREFIX"] == "/cache"
+    assert seen["PYTHONNOUSERSITE"] == seen["PYTHONSAFEPATH"] == "1"
     root = str(Path(pdfchild.__file__).resolve().parent.parent.parent)
     assert seen["PYTHONPATH"] == os.pathsep.join((root, "/extra"))
 

@@ -36,10 +36,12 @@ OPEN_FILES = 256  # Python, its modules, the typelibs, fonts: a few dozen
 # killed by its limits: refused as too large rather than as damaged
 LIMIT_SIGNALS = (signal.SIGXCPU, signal.SIGKILL)
 # what an allocator that failed writes before it aborts (SIGABRT): Poppler's
-# gmalloc "Out of memory", GLib's g_malloc "failed to allocate N bytes"
-OUT_OF_MEMORY = (b"out of memory", b"failed to allocate")
+# gmalloc "Out of memory", GLib's g_malloc "failed to allocate N bytes", C++
+# new without a handler "terminate called after throwing ... std::bad_alloc"
+OUT_OF_MEMORY = (b"out of memory", b"failed to allocate", b"bad_alloc")
 # the environment the child keeps: where Python, the libraries, typelibs
-# and fonts are, the locale and the temporary folder
+# and fonts are, how Python finds its modules and writes its bytecode (as
+# the server was set up), the locale and the temporary folder
 KEPT_ENVIRONMENT = (
     "PATH",
     "HOME",
@@ -50,6 +52,10 @@ KEPT_ENVIRONMENT = (
     "LC_CTYPE",
     "PYTHONHOME",
     "PYTHONUSERBASE",
+    "PYTHONNOUSERSITE",
+    "PYTHONSAFEPATH",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONPYCACHEPREFIX",
     "LD_LIBRARY_PATH",
     "GI_TYPELIB_PATH",
     "FONTCONFIG_FILE",
