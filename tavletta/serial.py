@@ -352,7 +352,7 @@ def _print_in_batches(
             outcome.stopped = True
             return outcome
         jobs, images, unprepared = _next_batch(
-            backend, series, options, values, indexes[start:], batch, outcome
+            backend, series, options, values, indexes[start : start + batch], outcome
         )
         sent = indexes[start : start + len(images)]
 
@@ -405,11 +405,10 @@ def _next_batch(
     options: PrintOptions,
     values: Values,
     indexes: Sequence[int],
-    batch: int,
     outcome: SeriesResult,
 ) -> tuple[list[Job], list[PackedImage], PrepareFailed | None]:
-    """The jobs and packed images of the next job of a series: up to
-    `batch` rows, fewer once the images hold BATCH_BYTES (one at least),
+    """The jobs and packed images of the next job of a series: the rows
+    of `indexes`, fewer once the images hold BATCH_BYTES (one at least),
     up to the first row that cannot be rendered (and its error). Each
     image is packed as soon as it is rendered: only one at a time is held
     as an image."""
@@ -417,7 +416,7 @@ def _next_batch(
     jobs: list[Job] = []
     images: list[PackedImage] = []
     held = 0
-    for n, index in enumerate(indexes[:batch]):
+    for n, index in enumerate(indexes):
         if held >= BATCH_BYTES:
             break
         # the counter goes on from the labels before; UUID and ID are new
