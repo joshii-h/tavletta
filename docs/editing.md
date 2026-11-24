@@ -158,6 +158,11 @@ editor.undo(), editor.redo()  # a drag going on is called off first
 in quick succession can be one step, as typing is. `apply()` returns
 False for an edit that changed nothing; no empty step is recorded.
 
+The window's editor keeps no `Editor`: its label changes in many places
+(the sidebar, undo, a file opened). Each edit of the preview takes one on
+the window's label and History for that edit alone and `apply()`s it at
+the end of the gesture; while dragging it shows nothing but the overlay.
+
 ## The window's editor
 
 `tavletta/ui/editor.py` (input, selection, edits) and `ui/canvas.py`
@@ -176,7 +181,9 @@ with the mouse").
 - **Geometry**: `Geometry.of()` of the window's render, while the render
   is of the elements the label has (their identities, `model.element_id`);
   an element added, removed or moved up or down has none until the next
-  render. Elements edited since the render are where they landed.
+  render. Elements edited since the render are where they landed. A
+  press and aligning first render what is not rendered yet
+  (`render_if_stale()`), so they work with the label as it is.
 - **A drag** is a `Gtk.GestureDrag` (mouse, touch, pen; 4 px before it
   moves): on an element it moves the selection, on a handle it resizes, in
   the empty it is a rubber band. Each motion snaps (`snap()`, 6 screen
@@ -184,7 +191,7 @@ with the mouse").
   dragged elements' pixels cut from the preview's texture and drawn at
   their new box (scaled for a resize). Nothing is rendered until it ends;
   then the edit is one step (`Editor.apply()` on the window's `History`),
-  the changed fields are taken over into the window's elements in place
+  the edited elements' fields are taken over into the window's in place
   (the sidebar keeps its rows), and the preview renders as after any edit.
   Until that render is shown the elements are drawn where they landed.
 - **Keys** (while the preview has the focus): arrows nudge by 0.1 mm, with
