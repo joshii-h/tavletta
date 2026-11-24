@@ -496,7 +496,17 @@ SCHEMAS: dict[str, Any] = {
             "name": {
                 "type": "string",
                 "description": "The token's name in tokens.toml; 'token' for the one token of "
-                "--token-file, 'local' without a token.",
+                "--token-file, 'local' without a token; 'oidc:<user>' for someone signed in "
+                "to the web page with OpenID Connect.",
+            },
+            "display_name": {
+                "type": "string",
+                "description": "A person's name from the provider; else the same as name.",
+            },
+            "session": {
+                "type": "boolean",
+                "description": "true: signed in to the web page with OpenID Connect (its "
+                "session cookie), not with a token.",
             },
             "role": {"enum": ["preview", "print", "admin"]},
             "printers": {
@@ -506,7 +516,7 @@ SCHEMAS: dict[str, Any] = {
             },
             "token_required": {
                 "type": "boolean",
-                "description": "false: the server has no token (loopback only).",
+                "description": "false: the server has no token and no --oidc (loopback only).",
             },
             "limits": {
                 "type": "object",

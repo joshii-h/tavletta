@@ -115,7 +115,9 @@ address of the [reverse proxy](server-install.md#proxy)):
 
 - **Sign in** with an access token (without a token on the server there is
   nothing to sign in to). The browser keeps it in this tab only; "Sign
-  out" forgets it.
+  out" forgets it. Where the server is set up for it, "Sign in with …"
+  uses your organisation's account instead ([OpenID
+  Connect](server-install.md#oidc)).
 - **Printers**: their state, the labels or tape loaded and problems, in
   words.
 - **Templates**: the label files of the labels folder with a preview.

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 16:10+0100\n"
+"POT-Creation-Date: 2026-11-24 16:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1624,10 +1624,12 @@ msgstr ""
 msgid ""
 "| Field | Type | Meaning |\n"
 "|---|---|---|\n"
-"| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token. |\n"
+"| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token; 'oidc:<user>' for someone signed in to the web page with OpenID Connect. |\n"
+"| `display_name` | string | A person's name from the provider; else the same as name. |\n"
+"| `session` | boolean | true: signed in to the web page with OpenID Connect (its session cookie), not with a token. |\n"
 "| `role` | `\"preview\"` \\| `\"print\"` \\| `\"admin\"` |  |\n"
 "| `printers` | array or null | The printers the token may use; null: all. |\n"
-"| `token_required` | boolean | false: the server has no token (loopback only). |\n"
+"| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |\n"
 "| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |\n"
 msgstr ""
 
@@ -4368,7 +4370,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "**Sign in** with an access token (without a token on the server there is nothing to sign in to). The browser keeps it in this tab only; \"Sign out\" forgets it."
+msgid "**Sign in** with an access token (without a token on the server there is nothing to sign in to). The browser keeps it in this tab only; \"Sign out\" forgets it. Where the server is set up for it, \"Sign in with …\" uses your organisation's account instead ([OpenID Connect](server-install.md#oidc))."
 msgstr ""
 
 #. type: Bullet: '- '
