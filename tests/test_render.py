@@ -941,11 +941,13 @@ def test_decoded_images_are_kept_within_their_memory(png_b64, monkeypatch):
     are kept by their memory, not only by their count."""
     cached = render_module._decoded_cached
     cached.cache_clear()
-    monkeypatch.setattr(cached.kept, "max_bytes", 2 * 100 * 100 * 4)  # two RGBA images
     first, second, third = (png_b64((100, 100), c) for c in ("red", "green", "blue"))
+    # each: the pixels, and the file's text as the key
+    size = {data: 100 * 100 * 4 + len(data) for data in (first, second, third)}
+    monkeypatch.setattr(cached.kept, "max_bytes", size[second] + size[third])
     for data in (first, second, third):
         render_module._decoded(data)
-    assert cached.cache_info().currsize == 2 and cached.kept.bytes == 2 * 100 * 100 * 4
+    assert cached.cache_info().currsize == 2 and cached.kept.bytes == size[second] + size[third]
     assert render_module._decoded(third) is render_module._decoded(third)  # kept
     misses = cached.cache_info().misses
     render_module._decoded(first)  # the oldest went

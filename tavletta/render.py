@@ -25,7 +25,7 @@ from typing import NamedTuple
 from PIL import Image, ImageChops, ImageDraw, ImageOps, ImageStat
 
 from tavletta import codes, imageformats, imagefx, shapes, typeset
-from tavletta.caches import kept_images
+from tavletta.caches import kept_images, kept_small
 from tavletta.codes import CodeError
 from tavletta.model import (
     CodeElement,
@@ -1611,7 +1611,8 @@ def _image_brightness(data: str, colour: tuple[int, int, int]) -> float:
     return imagefx.luma(ImageStat.Stat(flat.convert("RGB")).mean)  # type: ignore[arg-type]
 
 
-_image_brightness_cached = lru_cache(maxsize=4)(_image_brightness)
+# a number for each background image, kept by the memory of the image files
+_image_brightness_cached = kept_small(4, 256 * 2**20)(_image_brightness)
 
 
 def _local_inks(area: Image.Image, mask: Image.Image | None, inks: Inks) -> Inks:
