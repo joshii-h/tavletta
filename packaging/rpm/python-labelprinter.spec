@@ -53,9 +53,9 @@ sed -i '1{/^#!/d}' labelprinter/*.py labelprinter/test/*.py
 %pyproject_install
 # the library only, as in Debian: the command line tools (label-text, the
 # print queue, the CUPS backend) would take generic command names, and
-# Tavletta does not use them; nor the tests
+# Tavletta does not use them; nor the tests (%%exclude below: the wheel's
+# file list has them)
 rm %{buildroot}%{_bindir}/{label-raw,label-text,label-queue,label-queue-setup,label-queue-worker,vc500w-cups-backend}
-rm -r %{buildroot}%{python3_sitelib}/labelprinter/test
 %pyproject_save_files -l labelprinter
 
 
@@ -67,6 +67,7 @@ rm -r %{buildroot}%{python3_sitelib}/labelprinter/test
 
 %files -n python3-labelprinter -f %{pyproject_files}
 %doc README.md
+%exclude %{python3_sitelib}/labelprinter/test/
 
 
 %changelog
