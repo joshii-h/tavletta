@@ -651,8 +651,9 @@ while a job of this server waits or prints for that label (409
 layout replaced and then save its counter into the new file), nor while
 the window or the command line prints it (the file lock; 409
 `label_locked` after 5 s). A print request checked just before its label
-is deleted is not queued (404 `label_not_found`); one checked while the
-label is replaced prints the layout it was checked with. Both are logged
+is deleted is not queued (404 `label_not_found`), nor one checked while
+the label is replaced (409 `label_changed`: send it again; a counter a
+print saved meanwhile is no change). Both are logged
 with the token's name. Uploads a server left behind when it was killed
 while checking one (`.upload-…` in the folder) are removed at the next
 start once they are an hour old.

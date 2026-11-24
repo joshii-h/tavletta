@@ -85,6 +85,7 @@ Every error is JSON with a stable code and a message for people:
 | 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |
 | 409 | `label_exists` | A label of that name exists: upload with replace=true. |
 | 409 | `label_in_use` | Jobs of the label wait or print: retry when they are done. |
+| 409 | `label_changed` | The label file was replaced while the request was checked. |
 | 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |
 | 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |
 | 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |
@@ -438,7 +439,7 @@ Body fields:
 | 202 | Queued or printing; follow it at Location |  |
 | 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |
 | 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |
-| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |
+| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed; or it was replaced while the request was checked (label_changed): send it again | `counter_not_saved`, `label_changed` |
 | 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |
 | 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |
 | 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |

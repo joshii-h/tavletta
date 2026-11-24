@@ -105,6 +105,9 @@ x-tavletta-error-codes:
   code: label_in_use
   meaning: 'Jobs of the label wait or print: retry when they are done.'
 - status: 409
+  code: label_changed
+  meaning: The label file was replaced while the request was checked.
+- status: 409
   code: label_locked
   meaning: 'A print of the label holds the file: retry when it has ended.'
 - status: 411
@@ -1616,13 +1619,14 @@ paths:
           - timeout
         '409':
           description: 'The label file is not writable: the next counter value could not be saved, nothing
-            was printed'
+            was printed; or it was replaced while the request was checked (label_changed): send it again'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
           x-tavletta-codes:
           - counter_not_saved
+          - label_changed
         '411':
           description: No Content-Length
           content:

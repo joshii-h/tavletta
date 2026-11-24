@@ -402,6 +402,28 @@ def test_no_job_is_queued_for_a_label_deleted_after_its_check(server_env):
     assert refused.value.code == "label_not_found" and not service.jobs.uses_label("box.tavletta")
 
 
+def test_no_job_is_queued_for_a_label_replaced_after_its_check(server_env):
+    """It would print the layout before and save its counter into the new
+    file: 409 label_changed. A counter saved meanwhile (a print of it) is
+    no change."""
+    from tavletta.server.errors import ApiError
+    from tavletta.server.requests import PrintRequest
+
+    service = _service(server_env)
+    path = server_env.labels / "box.tavletta"
+    checked = service.check_print(PrintRequest(label="box"))
+    Label.store_counter(path, 41)
+    assert service.queue_print(checked).done.wait(10)
+    checked = service.check_print(PrintRequest(label="box"))
+    changed = Label.load(path)
+    changed.elements[0].text = "Crate {=counter}"
+    service.save_label("box", json.dumps(changed.to_dict()).encode(), replace_it=True)
+    with pytest.raises(ApiError) as refused:
+        service.queue_print(checked)
+    assert refused.value.status == 409 and refused.value.code == "label_changed"
+    assert "box.tavletta" in str(refused.value)
+
+
 def test_a_label_that_cannot_be_deleted_says_so(base, server_env, monkeypatch):
     import errno
     from pathlib import Path

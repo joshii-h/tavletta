@@ -1216,8 +1216,10 @@ def _print_paths() -> dict:
                     ),
                     "409": _error(
                         "The label file is not writable: the next counter value could not "
-                        "be saved, nothing was printed",
+                        "be saved, nothing was printed; or it was replaced while the request "
+                        "was checked (label_changed): send it again",
                         "counter_not_saved",
+                        "label_changed",
                     ),
                     "413": _error(
                         "Too large: body, data rows, labels in one job or the label to render",
@@ -1342,6 +1344,7 @@ ERROR_CODES: tuple[tuple[int, str, str], ...] = (
     (409, "counter_not_saved", "The label file is not writable: nothing was printed."),
     (409, "label_exists", "A label of that name exists: upload with replace=true."),
     (409, "label_in_use", "Jobs of the label wait or print: retry when they are done."),
+    (409, "label_changed", "The label file was replaced while the request was checked."),
     (409, "label_locked", "A print of the label holds the file: retry when it has ended."),
     (411, "length_required", "No Content-Length (chunked bodies are not accepted)."),
     (413, "too_large", "Body over --max-body, or too many data rows, columns or cells."),

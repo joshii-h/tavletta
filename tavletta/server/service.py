@@ -14,8 +14,10 @@ import contextlib
 import errno
 import fnmatch
 import functools
+import hashlib
 import io
 import ipaddress
+import json
 import logging
 import os
 import re
@@ -63,6 +65,7 @@ from tavletta.model import (
     TextElement,
     data_inside,
     locked,
+    read_file,
     writable,
 )
 from tavletta.render import RenderTooLarge, RenderWarning, limited
@@ -166,6 +169,9 @@ class Prepared:
     named: NamedPrinter | None = None  # the printer of printers.toml it is for
     # a label sheet (page printers): every label a position, as in the app
     sheet: SheetJob | None = None
+    # the label file's layout when it was read (_layout()): a job is not
+    # queued for a file replaced since
+    layout: bytes | None = None
 
     def job(self, values: Values | None = None, index: int | None = None) -> Job:
         columns = self.rows[self.indexes[0] if index is None else index] if self.rows else None
@@ -1019,6 +1025,8 @@ class Service:
         if self.named is not None:
             named = self._choose(request.printer, caller, printing)
         path = self.labels.label(request.label) if request.label is not None else None
+        # before it is read: a file replaced in between is found changed
+        layout = _layout(path) if path else None
         label = self._label(request, path, named.backend if named else request.printer)
         backend = self._backend(label.printer)
         settings = self._named_settings(named) if named else self._settings()
@@ -1057,6 +1065,7 @@ class Service:
             request.counter_start is not None,
             named,
             sheet,
+            layout,
         )
 
     def _label(self, request: LabelRequest, path: Path | None, model: str | None) -> Label:
@@ -1292,10 +1301,20 @@ class Service:
         job.key = queue_key(host)
         job.cost = _cost(prepared)
         try:
-            # not for a label deleted since it was checked (_label_free())
+            # not for a label deleted or replaced since it was checked
+            # (_label_free()): it would print the layout before and save its
+            # counter into the new file
             with self._submitting:
-                if prepared.path is not None and not os.path.lexists(prepared.path):
-                    raise not_found("label_not_found", _("No such label: %s") % name)
+                if prepared.path is not None:
+                    if not os.path.lexists(prepared.path):
+                        raise not_found("label_not_found", _("No such label: %s") % name)
+                    if _layout(prepared.path) != prepared.layout:
+                        raise ApiError(
+                            409,
+                            "label_changed",
+                            _("%s was changed while the request was checked – send it again")
+                            % name,
+                        )
                 self.jobs.submit(job)
         except QueueFull:
             raise ApiError(
@@ -1659,6 +1678,19 @@ def _link(upload: Path, path: Path) -> None:
 
 def _label_exists(name: str) -> ApiError:
     return ApiError(409, "label_exists", _("A label named %s exists already") % name)
+
+
+def _layout(path: Path) -> bytes | None:
+    """The SHA-256 of a label file's content but what a print saves into
+    it (Label.store_counter(): the counter, and the features and version
+    that come with it); None if it cannot be read."""
+    try:
+        data = json.loads(read_file(path))
+    except (OSError, ValueError, RecursionError):
+        return None
+    if isinstance(data, dict):
+        data = {k: v for k, v in data.items() if k not in ("counter_next", "features", "version")}
+    return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).digest()
 
 
 def _not_deleted(error: OSError) -> ApiError:
