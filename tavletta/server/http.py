@@ -564,6 +564,10 @@ class Handler(BaseHTTPRequestHandler):
         blocked address only skips the slow hash of tokens not seen before."""
         if self._session_request():
             return self._session_caller()
+        if self.server.config.login is not None and "Authorization" not in self.headers:
+            # the page asking who is signed in, signed out: no token was
+            # guessed (people behind one address must not block each other)
+            raise ApiError(401, "unauthorized", _("Access token missing or wrong"))
         client = rate_key(self.client())
         blocked = self.server.rate_limit.blocked(client)
         scheme, _sep, value = self.headers.get("Authorization", "").partition(" ")

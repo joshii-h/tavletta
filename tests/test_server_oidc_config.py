@@ -253,7 +253,7 @@ def test_claims_to_a_caller():
     assert caller_for(settings, {"sub": "1", "groups": "p"}).role == "print"
     assert caller_for(settings, {"sub": "1", "groups": ["admin"]}) is None
     assert caller_for(settings, {"sub": "1", "groups": [1, None]}) is None
-    assert caller_for(settings, {"sub": "1", "groups": {"p": True}}) is None
+    assert caller_for(settings, {"sub": "1", "groups": {"p": {"org": "x"}}}).role == "print"
     caller = caller_for(settings, {"sub": "id-1", "groups": ["p"]})
     assert caller.name == "oidc:id-1" and caller.display == "id-1" and caller.named
     long = caller_for(settings, {"sub": "1", "preferred_username": "x" * 500, "groups": "p"})

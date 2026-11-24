@@ -10,8 +10,10 @@ signature (RSA, RSA-PSS, ECDSA or EdDSA, never "none" or a shared
 secret), iss, aud, azp, exp, iat and nbf with a minute of leeway, and the
 nonce.
 
-Claims become a Caller: a claim (a path such as realm_access.roles or
-groups) holds the provider's role or group names; [oidc.roles] says which
+Claims become a Caller: a claim holds the provider's role or group names
+(realm_access.roles or resource_access.<client>.roles at Keycloak, with a
+mapper that puts them into the ID token; groups at Authentik; roles at
+Microsoft Entra ID); [oidc.roles] says which
 of them is which role of Tavletta. Someone without one of them gets no
 access. Printers can be limited by a claim holding printer names or by
 a list per role or group name.
@@ -24,7 +26,7 @@ oidc.toml:
     client_secret_file = "/etc/tavletta/oidc-secret"
     public_url = "https://labels.example.com"  # the page's address
     provider_name = "Example ID"                  # on the sign in button
-    roles_claim = "realm_access.roles"
+    roles_claim = "resource_access.tavletta.roles"  # or "groups", "realm_access.roles"
 
     [oidc.roles]
     preview = ["tavletta-preview"]
@@ -640,11 +642,14 @@ def claim(claims: Mapping[str, Any], path: tuple[str, ...]) -> Any:
 
 
 def _names(value: Any) -> set[str]:
-    """A claim's names: a text, or the texts of a list."""
+    """A claim's names: a text, the texts of a list, or the keys of an
+    object (Zitadel names the roles so)."""
     if isinstance(value, str):
         return {value}
     if isinstance(value, list):
         return {v for v in value if isinstance(v, str)}
+    if isinstance(value, Mapping):
+        return {k for k in value if isinstance(k, str)}
     return set()
 
 

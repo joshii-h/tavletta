@@ -711,3 +711,11 @@ def test_the_provider_class_alone(fake):
     assert provider.end_session_url("", "http://127.0.0.1/") is not None
     provider = Provider(settings(fake, issuer="http://127.0.0.1:9/realms/none"))
     assert provider.end_session_url("t", "/") is None
+
+
+def test_signed_out_page_loads_are_not_wrong_tokens(site):
+    for _ in range(15):
+        assert call(site.base, "GET", "/api/v1/me", headers=PAGE)[0] == 401
+    for _ in range(10):
+        call(site.base, "GET", "/api/v1/me", token="w" * 20)
+    assert call(site.base, "GET", "/api/v1/me", token="w" * 20)[0] == 429
