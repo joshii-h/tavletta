@@ -13,6 +13,7 @@ import {
   generatedCount,
   generatedRow,
   generateRows,
+  leavesOut,
   matchingRows,
   parseRowList,
   rowListText,
@@ -966,7 +967,8 @@ export async function batchView(name, ctx) {
     const sel = st.job.sel;
     const extra = [];
     if (printed > 0) {
-      extra.push(h("p", null, t("First printed: {first}, last printed in full: {last}", { first: shown(rows[0], sel, 0), last: shown(rows[printed - 1], sel, printed - 1) })));
+      const [a, b] = [shown(rows[0], sel, 0), shown(rows[printed - 1], sel, printed - 1)];
+      extra.push(h("p", null, t("First printed: {first}, last printed in full: {last}", { first: a, last: b }), leavesOut(a, b, printed) && ` ${t("(not all numbers in between)")}`));
     }
     const actions = h("div", { class: "actions" });
     if (ended.state !== "done" && printed < rows.length) {

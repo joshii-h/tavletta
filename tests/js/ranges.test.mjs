@@ -176,3 +176,13 @@ test("a column may be called __proto__", () => {
   assert.equal(JSON.stringify(row), '{"constructor":"x","__proto__":"2"}');
   assert.deepEqual(matchingRows([JSON.parse('{"__proto__": "2"}'), {}], checked.fields), [0]);
 });
+
+test("numbers left out between the first and the last printed", async () => {
+  const { leavesOut } = await import("../../tavletta/server/web/ranges.js");
+  assert.equal(leavesOut("70000", "70004", 4), true);
+  assert.equal(leavesOut("70000", "70004", 5), false);
+  assert.equal(leavesOut("00300", "00301", 2), false);
+  assert.equal(leavesOut("7", "7", 1), false);
+  assert.equal(leavesOut("B-07-1", "B-07-4", 2), false);
+  assert.equal(leavesOut("", "5", 1), false);
+});
