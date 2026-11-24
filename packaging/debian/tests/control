@@ -1,3 +1,7 @@
 Tests: cli
 Depends: @
 Restrictions: allow-stderr, superficial
+
+Tests: unittests
+Depends: @, @builddeps@
+Restrictions: allow-stderr

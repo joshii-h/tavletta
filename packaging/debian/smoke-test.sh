@@ -6,7 +6,10 @@
 #
 # Starts `tavletta --version` (it must say EXPECT_VERSION, if given) and
 # renders two example labels to PNG without a display or a printer: one
-# with a QR code (segno), one with a Data Matrix code (Zint).
+# with a QR code (segno), one with a Data Matrix code (Zint). With the
+# source package in DEBDIR/source (build.sh puts it there), then runs its
+# autopkgtests (debian/tests) on this system: the program's tests against
+# the installed package.
 set -euo pipefail
 DEBS="$(realpath "$1")"
 EXPECT="${2:-}"
@@ -36,4 +39,17 @@ man -w tavletta > /dev/null 2>&1 || test -f /usr/share/man/man1/tavletta.1.gz
 test -f /usr/share/applications/xyz.joshuahirsig.Tavletta.desktop
 test -f /usr/share/metainfo/xyz.joshuahirsig.Tavletta.metainfo.xml
 test -f /usr/share/locale/de/LC_MESSAGES/tavletta.mo
+# the print server: installed with its user and folders, not enabled
+grep -q '^ExecStart=/usr/bin/tavletta serve ' /usr/lib/systemd/system/tavletta-server.service
+getent passwd tavletta > /dev/null
+test "$(stat -c %U:%a /etc/tavletta /var/lib/tavletta/labels)" = "$(printf 'tavletta:750\ntavletta:750')"
+test ! -e /etc/systemd/system/multi-user.target.wants/tavletta-server.service
+test -f /usr/lib/udev/rules.d/70-tavletta.rules
+dsc="$(ls "$DEBS"/source/tavletta_*.dsc 2> /dev/null || true)"
+if [ -n "$dsc" ]; then
+  apt-get install -y -qq --no-install-recommends autopkgtest > /dev/null
+  autopkgtest --output-dir "$TMP/autopkgtest" "$DEBS"/*.deb "$dsc" -- null
+else
+  echo "(no source package in $DEBS/source: autopkgtests skipped)"
+fi
 echo "smoke test passed"

@@ -1,0 +1,16 @@
+#!/bin/sh
+# The program's tests against the installed package, without a display (the
+# tests marked gui skip), as the build runs them: in a copy of the source
+# tree whose tavletta/ is the installed module.
+set -eu
+installed="$(cd / && python3 -c 'import os, tavletta; print(os.path.dirname(tavletta.__file__))')"
+case "$installed" in
+  /usr/lib/python3/dist-packages/tavletta) ;;
+  *) echo "not the package's module: $installed" >&2; exit 1 ;;
+esac
+src="$AUTOPKGTEST_TMP/src"
+mkdir "$src"
+tar --exclude=./tavletta --exclude=./debian --exclude=./.pybuild -cf - . | tar -xf - -C "$src"
+ln -s "$installed" "$src/tavletta"
+cd "$src"
+FONTCONFIG_FILE="$src/tests/fonts.conf" python3 -m pytest -q -p no:cacheprovider -n auto -m "not gui"
