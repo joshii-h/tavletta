@@ -13,9 +13,18 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from tavletta import editing
+from tavletta import editing, freelayout
 from tavletta.editing import ElementBox, Geometry
-from tavletta.model import CodeElement, Label, ShapeElement, TextElement, element_id
+from tavletta.model import (
+    CodeElement,
+    ImageElement,
+    Label,
+    PageElement,
+    ShapeElement,
+    SymbolElement,
+    TextElement,
+    element_id,
+)
 from tavletta.render import render
 from tavletta.variables import Values
 
@@ -354,3 +363,127 @@ def test_a_move_keeps_positions_valid_and_their_distances(places, dx, dy):
     assert [(e.x_mm, e.y_mm) for e in back.elements] == pytest.approx(
         [(e.x_mm, e.y_mm) for e in old], abs=0.011
     )
+
+
+# --- resizing -----------------------------------------------------------------------
+
+
+def _resized(element, box_of) -> tuple[ElementBox, ElementBox, Label]:
+    """The element alone on a label, resized to box_of(its box): its box
+    before and after, and the new label."""
+    label = _free_label(element)
+    before = editing.measure(label, dpi=DPI).boxes[0]
+    resized = editing.resize(label, editing.measure(label, dpi=DPI), 0, box_of(before))
+    return before, editing.measure(resized, dpi=DPI).boxes[0], resized
+
+
+def test_a_shape_takes_the_new_box():
+    shape = ShapeElement(shape="rectangle", width_mm=6, height_mm=4, x_mm=5, y_mm=5)
+    _before, after, label = _resized(shape, lambda b: (b.left - 2, b.top, b.right, b.bottom + 3))
+    assert after.box == pytest.approx((3, 5, 11, 12), abs=DOT)
+    # scaled by how much the box (in whole dots) grew: within a dot
+    shape = label.elements[0]
+    assert (shape.width_mm, shape.height_mm) == pytest.approx((8, 7), abs=DOT)
+
+
+def test_a_shape_reaching_down_to_the_bottom_gets_a_height_of_its_own():
+    shape = ShapeElement(shape="rectangle", width_mm=6, height_mm=0, x_mm=5, y_mm=4)
+    before, after, label = _resized(shape, lambda b: (b.left, b.top, b.right, b.bottom - 10))
+    assert before.bottom == pytest.approx(24, abs=DOT)
+    assert label.elements[0].height_mm == pytest.approx(10, abs=DOT)
+    assert after.bottom == pytest.approx(14, abs=DOT)
+
+
+@pytest.mark.parametrize("rotation", [0, 90])
+def test_a_text_keeps_its_proportions(rotation):
+    text = TextElement(text="Hello", size_pt=10, rotation=rotation, x_mm=2, y_mm=2, padding_mm=1)
+    before, after, label = _resized(
+        text, lambda b: (b.left, b.top, b.left + 2 * b.width, b.top + 1.2 * b.height)
+    )
+    assert label.elements[0].size_pt == 20  # the side that changed more
+    assert label.elements[0].padding_mm == 2
+    assert after.width == pytest.approx(2 * before.width, rel=0.05)
+    assert after.height == pytest.approx(2 * before.height, rel=0.05)
+    assert (after.left, after.top) == pytest.approx((before.left, before.top), abs=2 * DOT)
+
+
+def test_a_text_of_the_default_size_and_dragging_its_top_left_corner():
+    text = TextElement(text="Hi", x_mm=10, y_mm=10)
+    before, after, label = _resized(
+        text, lambda b: (b.right - 1.5 * b.width, b.bottom - 1.5 * b.height, b.right, b.bottom)
+    )
+    assert label.elements[0].size_pt == pytest.approx(1.5 * freelayout.mm_to_pt(4), abs=0.01)
+    assert (after.right, after.bottom) == pytest.approx((before.right, before.bottom), abs=3 * DOT)
+
+
+def test_an_image_and_a_symbol_keep_their_proportions(png_b64):
+    image = ImageElement(data=png_b64((30, 10), "red"), height_mm=5, x_mm=2, y_mm=2)
+    before, after, _label = _resized(image, lambda b: (b.left, b.top, b.right, b.top + 10))
+    assert after.width == pytest.approx(2 * before.width, abs=2 * DOT)
+    symbol = SymbolElement(path="M0,0H24V24H0Z", x_mm=2, y_mm=2)  # size 0: the default
+    _before, after, label = _resized(symbol, lambda b: (b.left, b.top, b.left + 5, b.bottom))
+    assert label.elements[0].size_mm == 5
+    assert after.height == pytest.approx(5, abs=DOT)
+
+
+def test_a_two_dimensional_code_by_its_module():
+    code = CodeElement(data="x", module_mm=0.5, x_mm=2, y_mm=2)
+    _before, _after, label = _resized(
+        code, lambda b: (b.left, b.top, b.left + 2 * b.width, b.top + 2 * b.height)
+    )
+    assert label.elements[0].module_mm == 1.0
+
+
+@pytest.mark.parametrize("rotation", [0, 90])
+def test_a_linear_code_by_its_module_along_and_its_bars_across(rotation):
+    code = CodeElement(
+        data="12345", symbology="code128", module_mm=0.3, height_mm=5, rotation=rotation
+    )
+    code.x_mm = code.y_mm = 1
+
+    def wider(b):  # twice as long along the bars' run, as high across
+        if rotation:
+            return (b.left, b.top, b.right, b.top + 2 * b.height)
+        return (b.left, b.top, b.left + 2 * b.width, b.bottom)
+
+    _before, _after, label = _resized(code, wider)
+    assert (label.elements[0].module_mm, label.elements[0].height_mm) == (0.6, 5)
+
+
+def test_a_code_of_default_sizes_gets_sizes_of_its_own():
+    code = CodeElement(data="12345", symbology="code128", x_mm=1, y_mm=1)
+    _before, _after, label = _resized(code, lambda b: (b.left, b.top, b.right, b.bottom))
+    bars = freelayout.FREE_BAR_MM * 10 / 0.3  # as designed for the module
+    assert (label.elements[0].module_mm, label.elements[0].height_mm) == (0.3, round(bars, 2))
+
+
+def test_a_page_is_only_moved(png_b64):
+    page = PageElement(data=png_b64((20, 20), "blue"), x_mm=5, y_mm=5)
+    label = _free_label(page)
+    geometry = editing.measure(label, dpi=DPI)
+    box = geometry.boxes[0]
+    resized = editing.resize(
+        label, geometry, 0, (box.left - 2, box.top - 1, box.right, box.bottom)
+    )
+    assert (resized.elements[0].x_mm, resized.elements[0].y_mm) == pytest.approx((3, 4), abs=DOT)
+
+
+def test_a_resize_to_nothing_leaves_the_smallest_size():
+    shape = ShapeElement(shape="rectangle", width_mm=6, height_mm=4, x_mm=5, y_mm=5)
+    label = _free_label(shape)
+    geometry = editing.measure(label, dpi=DPI)
+    resized = editing.resize(label, geometry, 0, (5, 5, 5, 5))
+    assert (resized.elements[0].width_mm, resized.elements[0].height_mm) == (0.1, 0.1)
+    text = _free_label(TextElement(text="x", size_pt=8, x_mm=1, y_mm=1))
+    tiny = editing.resize(text, editing.measure(text, dpi=DPI), 0, (1, 1, 1, 1))
+    assert tiny.elements[0].size_pt == editing.LEAST_PT
+
+
+def test_a_resize_is_checked_as_a_file_is():
+    text = _free_label(TextElement(text="x", size_pt=200, frame_mm=4, x_mm=1, y_mm=1))
+    geometry = editing.measure(text, dpi=DPI)
+    box = geometry.boxes[0]
+    huge = editing.resize(text, geometry, 0, (box.left, box.top, box.left + 10 * box.width, 99))
+    assert (huge.elements[0].size_pt, huge.elements[0].frame_mm) == (300, 5)  # the largest
+    with pytest.raises(ValueError):
+        editing.resize(text, geometry, 0, (0, 0, math.inf, 1))

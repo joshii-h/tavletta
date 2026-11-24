@@ -25,8 +25,28 @@ import math
 from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
-from tavletta.model import MAX_SIZE_MM, Label, validate_element
-from tavletta.render import DEFAULT_SAFE_MM, PRINT_DPI, MmBox, Rendered, render
+from tavletta import freelayout
+from tavletta.model import (
+    MAX_SIZE_MM,
+    CodeElement,
+    Element,
+    ImageElement,
+    Label,
+    ShapeElement,
+    SymbolElement,
+    TextElement,
+    validate_element,
+)
+from tavletta.render import (
+    BAR_HEIGHT_MM,
+    BAR_MODULE_MM,
+    DEFAULT_SAFE_MM,
+    PRINT_DPI,
+    TEXT_LENGTHS,
+    MmBox,
+    Rendered,
+    render,
+)
 from tavletta.variables import Values, expand_label
 
 # --- where the elements are -----------------------------------------------------
@@ -277,7 +297,7 @@ def _on_grid(value: float, grid: float) -> float:
 # by their index in label.elements. Every changed element is checked as a
 # label file's (model.validate_element): a position is never negative.
 
-POSITION_DIGITS = 2  # positions in mm, rounded as freelayout.adopt() rounds them
+POSITION_DIGITS = 2  # positions and sizes, rounded as freelayout.adopt() rounds them
 
 
 class NotFree(ValueError):
@@ -361,6 +381,90 @@ def distribute(label: Label, geometry: Geometry, indices: Collection[int], axis:
         offsets[index] = (0.0, shift) if across else (shift, 0.0)
         start += span(index)[1] - span(index)[0] + gap
     return _moved(label, offsets)
+
+
+# the smallest sizes a resize leaves (size 0 would be the default size)
+LEAST_PT = 1.0
+LEAST_MM = 0.1
+LEAST_MODULE_MM = 0.05
+
+
+def resize(label: Label, geometry: Geometry, index: int, box: MmBox) -> Label:
+    """The element made the size of a new box (its box with an edge or a
+    corner dragged elsewhere), its top left corner where the box's is:
+    - a shape: its width and height, each on its own;
+    - a linear code: its module by the change along its bars' run, the
+      bars' height by the change across it;
+    - a text (its size and every length of it: padding, frame, wrap width
+      and so on), a 2D code (its module), an image and a symbol keep their
+      proportions: by the side that changed more;
+    - a page fills the label from its position on: only moved.
+    The element is as close to the box as it can be drawn (a code's module
+    in whole printer dots); the next render says where it is."""
+    _check_free(label, geometry)
+    _chosen(label, [index])
+    _check_finite(*box)
+    left, right = sorted((box[0], box[2]))
+    top, bottom = sorted((box[1], box[3]))
+    old = geometry.boxes[index]
+    sx = (right - left) / old.width if old.width > 0 else 1.0
+    sy = (bottom - top) / old.height if old.height > 0 else 1.0
+    element = label.elements[index]
+    changes, (fx, fy) = _resized(element, sx, sy, geometry.height_mm)
+    # where its position lies within its box, scaled with it
+    changes["x_mm"] = round(left + (element.x_mm - old.left) * fx, POSITION_DIGITS)
+    changes["y_mm"] = round(top + (element.y_mm - old.top) * fy, POSITION_DIGITS)
+    return _changed(label, {index: changes})
+
+
+def _resized(
+    element: Element, sx: float, sy: float, height_mm: float
+) -> tuple[dict[str, float], tuple[float, float]]:
+    """The sizes of an element scaled by sx along and sy across, and by
+    how much it scales along and across."""
+    s = sx if abs(math.log(max(sx, 1e-9))) >= abs(math.log(max(sy, 1e-9))) else sy
+    if isinstance(element, TextElement):
+        size = element.size_pt or freelayout.mm_to_pt(freelayout.FREE_TEXT_MM)
+        changes = {"size_pt": _scaled(size, s, LEAST_PT)}
+        for name in TEXT_LENGTHS:  # 0 stays 0: none
+            changes[name] = _scaled(getattr(element, name), s, 0.0)
+        return changes, (s, s)
+    if isinstance(element, CodeElement):
+        return _resized_code(element, sx, sy, s)
+    if isinstance(element, ImageElement):
+        size = element.height_mm or freelayout.FREE_SIZE_MM
+        return {"height_mm": _scaled(size, s, LEAST_MM)}, (s, s)
+    if isinstance(element, SymbolElement):
+        size = element.size_mm or freelayout.FREE_SIZE_MM
+        return {"size_mm": _scaled(size, s, LEAST_MM)}, (s, s)
+    if isinstance(element, ShapeElement):
+        # height 0: down to the label's bottom edge
+        height = element.height_mm or max(LEAST_MM, height_mm - element.y_mm)
+        return {
+            "width_mm": _scaled(element.width_mm, sx, LEAST_MM),
+            "height_mm": _scaled(height, sy, LEAST_MM),
+        }, (sx, sy)
+    return {}, (1.0, 1.0)  # a page
+
+
+def _resized_code(
+    element: CodeElement, sx: float, sy: float, s: float
+) -> tuple[dict[str, float], tuple[float, float]]:
+    module = element.module_mm or freelayout.default_module_mm(element)
+    if freelayout.two_dimensional(element):
+        return {"module_mm": _scaled(module, s, LEAST_MODULE_MM)}, (s, s)
+    upright = element.rotation in (0, 180)
+    along, across = (sx, sy) if upright else (sy, sx)
+    bars = element.height_mm or module * BAR_HEIGHT_MM / BAR_MODULE_MM
+    changes = {
+        "module_mm": _scaled(module, along, LEAST_MODULE_MM),
+        "height_mm": _scaled(bars, across, LEAST_MM),
+    }
+    return changes, ((along, across) if upright else (across, along))
+
+
+def _scaled(value: float, scale: float, least: float) -> float:
+    return max(least, round(value * scale, POSITION_DIGITS)) if value else value
 
 
 def _moved(label: Label, offsets: Mapping[int, tuple[float, float]]) -> Label:

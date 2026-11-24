@@ -98,13 +98,22 @@ def text_part(element: TextElement, dpi: float, inks: Inks) -> Part:
 def module_px(element: CodeElement, dpi: float, steps: tuple[int, int] = (1, 1)) -> int:
     """The module in whole printer dots (a multiple of both steps, along
     and across, see render.render())."""
-    default = FREE_MODULE_MM if codes.SPECS[element.symbology].layout in _MATRIX else FREE_BAR_MM
-    module = max(1, dots(element.module_mm or default, dpi))
+    module = max(1, dots(element.module_mm or default_module_mm(element), dpi))
     unit = math.lcm(*steps)
     return max(unit, module // unit * unit)
 
 
 _MATRIX = ("matrix", "stacked")
+
+
+def two_dimensional(element: CodeElement) -> bool:
+    """A 2D code (rows of modules), not a linear one (bars)."""
+    return codes.SPECS[element.symbology].layout in _MATRIX
+
+
+def default_module_mm(element: CodeElement) -> float:
+    """The module of a code of module size 0."""
+    return FREE_MODULE_MM if two_dimensional(element) else FREE_BAR_MM
 
 
 def code_part(
@@ -119,7 +128,7 @@ def code_part(
     spec = codes.SPECS[element.symbology]
     module = module_px(element, dpi, steps)
     problems = ("code_thin",) if module < flow.THIN_MODULE * max(steps) else ()
-    if spec.layout in _MATRIX:
+    if two_dimensional(element):
         image = _modules(element, symbol, spec.row_modules, module, problems)
         box = (0, 0, image.width, image.height)
     else:
@@ -464,7 +473,7 @@ def _adopt_size(element: Element, part: Image.Image, how) -> None:
         element.size_pt = _matched_size(element, part, how)
     elif isinstance(element, CodeElement) and hasattr(part, "code_module"):
         element.module_mm = mm(part.code_module)
-        if codes.SPECS[element.symbology].layout not in _MATRIX:
+        if not two_dimensional(element):
             element.height_mm = mm(part.height * flow.BAR_HEIGHT_MM / flow.BAR_TOTAL_MM)
     elif isinstance(element, ImageElement):
         element.height_mm = mm(part.height)
