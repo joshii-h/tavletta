@@ -45,7 +45,7 @@ build provenance and a signature
 ([how to check them](#container)):
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.1.2
+docker pull ghcr.io/joshii-h/tavletta:1.2.0
 ```
 
 ## Options
@@ -1002,7 +1002,7 @@ two), so the option is off by default.
   whatever user the container runs as. It listens on all interfaces of
   the container, so it does not start without a token.
 - `packaging/docker/compose.yaml`: the published image
-  `ghcr.io/joshii-h/tavletta:1.1` ([Container image](#container)), network
+  `ghcr.io/joshii-h/tavletta:1.2` ([Container image](#container)), network
   printers, running as the owner of `config/` and `labels/` (`user:`, `TAVLETTA_UID` and
   `TAVLETTA_GID`, 1000 by default), 1 GB memory, 128 processes. `config/` with
   `printers.toml` and `tokens.toml` mounted read-only as a folder (a single
@@ -1048,7 +1048,7 @@ cd packaging/docker
 mkdir -p config labels && cp printers.example.toml config/printers.toml
 docker compose pull
 docker run --rm --user "$(id -u)" -v ./config:/config --entrypoint tavletta \
-    ghcr.io/joshii-h/tavletta:1.1 token new shipping-pc --role print \
+    ghcr.io/joshii-h/tavletta:1.2 token new shipping-pc --role print \
     --tokens /config/tokens.toml --printers /config/printers.toml
 docker compose up -d
 ```
@@ -1057,7 +1057,7 @@ For a quick try without files:
 
 ```sh
 docker run -e TAVLETTA_TOKEN="$(openssl rand -hex 32)" \
-    -v ~/Labels:/labels -p 127.0.0.1:8790:8790 ghcr.io/joshii-h/tavletta:1.1
+    -v ~/Labels:/labels -p 127.0.0.1:8790:8790 ghcr.io/joshii-h/tavletta:1.2
 ```
 
 ## Container image { #container }
@@ -1068,13 +1068,13 @@ for `linux/amd64` and `linux/arm64` and publishes it as
 
 | Tag | |
 |---|---|
-| `1.1.2` | a release, from its tag `v1.1.2` |
-| `1.1` | the latest bug fix release of 1.1 (what `compose.yaml` uses) |
+| `1.2.0` | a release, from its tag `v1.2.0` |
+| `1.2` | the latest bug fix release of 1.2 (what `compose.yaml` uses) |
 | `latest` | the latest release (not a pre-release) |
 | `edge` | the state of `main`, not a release |
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.1.2
+docker pull ghcr.io/joshii-h/tavletta:1.2.0
 ```
 
 Before anything is pushed the amd64 image is started with
@@ -1086,11 +1086,11 @@ cosign signature. To check that an image was built by this workflow from
 this repository:
 
 ```sh
-gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.1.2 --repo joshii-h/tavletta
-cosign verify ghcr.io/joshii-h/tavletta:1.1.2 \
+gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.0 --repo joshii-h/tavletta
+cosign verify ghcr.io/joshii-h/tavletta:1.2.0 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     --certificate-identity-regexp '^https://github\.com/joshii-h/tavletta/\.github/workflows/docker\.yml@refs/tags/v'
-docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.1.2 --format '{{ json .SBOM }}'
+docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.2.0 --format '{{ json .SBOM }}'
 ```
 
 ## Roadmap

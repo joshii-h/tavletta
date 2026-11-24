@@ -1,3 +1,10 @@
+tavletta (1.2.0-1) unstable; urgency=medium
+
+  * New upstream release: the print server's web page, signing in with
+    OpenID Connect, editing with the mouse, cab series as one job.
+
+ -- Joshua Hirsig <tavletta@joshuahirsig.xyz>  Tue, 24 Nov 2026 12:00:00 +0100
+
 tavletta (1.1.2-1) unstable; urgency=medium
 
   * Initial release, built for the release assets (no ITP filed yet).

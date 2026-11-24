@@ -91,35 +91,35 @@
   <screenshots>
     <screenshot type="default" environment="gnome">
       <caption>A label with a QR code and text</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/main.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/main.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A label with a QR code and text</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/main-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/main-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/colour.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/colour.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Full colour background printed edge to edge</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/colour-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/colour-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/sticker.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/sticker.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A square sticker with an image and a border</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/sticker-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/sticker-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/print.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/print.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Print options: copies, cut mode and colour mode</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.1.2/docs/screenshots/print-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.0/docs/screenshots/print-dark.png</image>
     </screenshot>
   </screenshots>
 
@@ -183,6 +183,26 @@
   </provides>
 
   <releases>
+    <release version="1.2.0" date="2026-11-24">
+      <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.2.0</url>
+      <description>
+        <p>A web page for the print server, signing in with OpenID Connect, and editing with the mouse.</p>
+        <ul>
+          <li>Print server: a web page to print single labels, series from a data file and ranges of numbers, with a preview, and for administrators to upload templates</li>
+          <li>Print server: people sign in to the web page with OpenID Connect (Keycloak, Authentik, Entra ID and others), their roles and printers from the provider</li>
+          <li>Labels are edited with the mouse or by touch on the preview: move, resize, align</li>
+          <li>Printers found on USB and in the network come first in the model list</li>
+          <li>"Use loaded labels" adapts a label to the labels the printer has loaded</li>
+          <li>cab: a print offset per printer, and the labels of a series printed as one job of up to "Labels per job" labels, without stopping between them</li>
+          <li>Label sheets: a job of more than 999 labels is refused before the first sheet instead of being cut short</li>
+          <li>Rows given as two numbers without a dash ("3 4") are refused instead of read as a range</li>
+          <li>Label files: a number that is NaN or infinite makes the file damaged; in loose flags a word that says no is false, other words true</li>
+          <li>Serial labels: rows whose codes cannot be made are named before printing</li>
+          <li>When the printer cannot tell how many labels of a job printed (a lost connection), the message says how many printed for certain and how many may have; printing again from the row it names may print some twice but leaves none out</li>
+          <li>Fixes: XLSX number formats, embedded images and PDF pages up to 100 MB, labels rendered again for another resolution on cab and NIIMBOT printers, DYMO LabelWriter 4XL found by its IP address, IPP documents on slow connections</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.2" date="2026-11-23">
       <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.1.2</url>
       <description>
