@@ -1254,3 +1254,29 @@ def test_default_labels_folder(monkeypatch, tmp_path):
 def test_real_default_labels_folder():
     path = server_main.default_labels_dir()
     assert path.parts[-2:] == ("tavletta", "labels")
+
+
+def test_head_answers_as_get_without_the_body(make_server):
+    """HEAD of the page, its files and the API's GET routes: GET's status
+    and headers, no body; not for MCP (whose GET is no read)."""
+    _server, base = make_server(token=TOKEN)
+
+    def head(path, token=None):
+        url = urlsplit(base)
+        connection = http.client.HTTPConnection(url.hostname, url.port, timeout=20)
+        headers = {"Authorization": "Bearer " + token} if token else {}
+        connection.request("HEAD", path, headers=headers)
+        response = connection.getresponse()
+        body = response.read()
+        connection.close()
+        return response.status, response, body
+
+    for path, token in (("/", None), ("/api/v1/health", None), ("/api/v1/labels", TOKEN)):
+        get_status, get_response, _body = call(base, "GET", path, token=token)
+        status, response, body = head(path, token)
+        assert (status, body) == (get_status, b""), path
+        assert response.getheader("Content-Length") == get_response.getheader("Content-Length")
+        assert response.getheader("Content-Type") == get_response.getheader("Content-Type")
+    assert head("/api/v1/labels")[0] == 401
+    assert head("/api/v1/print", TOKEN)[0] == 405
+    assert head("/mcp", TOKEN)[0] == 405

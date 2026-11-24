@@ -460,6 +460,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802 - the name http.server calls
         self._handle("GET")
 
+    def do_HEAD(self) -> None:  # noqa: N802 - GET's answer without its body (_send_bytes)
+        self._handle("HEAD")
+
     def do_POST(self) -> None:  # noqa: N802
         self._handle("POST")
 
@@ -782,6 +785,8 @@ class Handler(BaseHTTPRequestHandler):
     # --- routes -------------------------------------------------------------------
 
     def _route(self, method: str) -> None:
+        """HEAD as GET (the body left out when it is sent), but not for MCP
+        and signing in, whose GETs do something."""
         path = self._path()
         if path == "/mcp" and self.server.mcp is not None:
             self._mcp(method)
@@ -789,6 +794,7 @@ class Handler(BaseHTTPRequestHandler):
         if self._login_page(path):
             self._login(method, path)
             return
+        method = "GET" if method == "HEAD" else method
         if self._web_page(path):
             self._web(method, path)
             return

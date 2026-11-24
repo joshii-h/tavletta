@@ -403,6 +403,9 @@ token of any role, like the list of labels (it shows nothing a `preview`
 token cannot see otherwise, but the version). `docs/openapi.yaml` and the
 reference page `site/docs/api.md` are written from it by
 `tools/openapi_docs.py`; a test fails when they are out of date.
+`HEAD` of a `GET` request (and of the web page and its files) answers
+with the same status and headers, without the body; `/mcp` and `/oidc/`
+take no `HEAD` (405).
 
 | Request | Answer |
 |---|---|
