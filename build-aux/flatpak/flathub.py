@@ -17,9 +17,10 @@ the commit pins the content, whichever server serves it.
 
 The commit is the tag's in this repository unless --commit is given; either
 way the tag must be on the mirror at that very commit (checked with git
-ls-remote), and a local tag must agree. Any release that contains this
-manifest's build can be submitted: v1.1.2 and later (v1.1.0 had no
-CREDITS.md yet).
+ls-remote), and a local tag must agree. The first release to submit is the
+one after v1.1.2: its metainfo is the first with the screenshots on the
+GitHub mirror (v1.1.2's are on the main server, which Flathub's screenshot
+mirroring would have to fetch from).
 """
 
 from __future__ import annotations
