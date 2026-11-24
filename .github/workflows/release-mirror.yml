@@ -19,8 +19,11 @@
 # non-static pages often (scenario crowdsecurity/http-crawl-non_statics),
 # API requests and file downloads alike, and then answers 403. The mirror of
 # v1.2.0, which asked once a minute, got nothing but 403. So one request for
-# the release per pass, a pass every POLL_SECONDS (longer after a 403, up to
-# 15 minutes), and each file downloaded once.
+# the release per pass, a pass every POLL_SECONDS (after a 403 twice as long
+# each time, up to 15 minutes; any other answer goes back to POLL_SECONDS),
+# each file downloaded once, 2 seconds apart, and a pass ends at the first
+# error. An error of GitHub's API or a failed download is taken again in the
+# next pass. tests/test_packaging.py runs this step with fake curl and gh.
 #
 # Manual run (Actions -> Mirror release from Forgejo -> Run workflow) with a
 # tag: copies that release again, once, without waiting; for files attached
@@ -42,6 +45,11 @@ on:
 
 permissions:
   contents: write
+
+# one copy of a release at a time (a manual run waits for the tag's run)
+concurrency:
+  group: mirror-${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+  cancel-in-progress: false
 
 jobs:
   mirror:
@@ -67,65 +75,90 @@ jobs:
           fi
           mkdir assets
           touch copied  # the Forgejo asset ids copied (a rebuilt file gets a new one)
+          title="Tavletta ${TAG#v}"  # as release.yml names the Forgejo release
+          api=(--connect-timeout 20 --max-time 60)
 
           create() {  # the GitHub release, right away: its notes and files follow from Forgejo
-            gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 && return
-            local pre=()
+            local pre=() i
             case "$TAG" in *-*) pre=(--prerelease) ;; esac
-            printf 'Tavletta %s\n\nThe release notes and files follow from %s.\n' \
-              "${TAG#v}" "https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/$TAG" > notes.md
-            gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
-              --title "Tavletta ${TAG#v}" --notes-file notes.md --verify-tag "${pre[@]}"
+            printf '%s\n\nThe release notes and files follow from %s.\n' \
+              "$title" "https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/$TAG" > notes.md
+            for i in 1 2 3; do  # the GitHub API sometimes answers 500
+              gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 && return
+              gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
+                --title "$title" --notes-file notes.md --verify-tag "${pre[@]}" && return
+              sleep 20
+            done
+            echo "::error::the GitHub release of $TAG could not be created"; exit 1
           }
 
           fetch() {  # the Forgejo release into $release, one request; $state: ok, none, refused, ...
             local code
-            code="$(curl -sS -o forgejo.json -w '%{http_code}' "$FORGEJO_API/releases/tags/$TAG")" || code=000
+            code="$(curl -sS "${api[@]}" -o forgejo.json -w '%{http_code}' \
+              "$FORGEJO_API/releases/tags/$TAG")" || code=000
+            state="HTTP $code"
             case "$code" in
-              200) release="$(cat forgejo.json)"; state=ok ;;
+              200)
+                # not a page in between (a proxy's or a ban's)
+                if jq -e '.id' forgejo.json > /dev/null 2>&1; then
+                  release="$(cat forgejo.json)"; state=ok
+                else
+                  state="no JSON (HTTP 200)"
+                fi ;;
               404) state=none ;;
               403|429) state=refused ;;
-              *) state="HTTP $code" ;;
             esac
           }
 
-          copy() {  # the files of the Forgejo release not copied yet
-            local here id name url digest ours mine
-            here="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" \
-              --jq '.assets[] | [.name, .id, (.digest // "")] | @tsv')"
+          copy() {  # the files of the Forgejo release not copied yet; the first error ends the pass
+            local here id name url digest ours mine names i downloads=0
+            if ! here="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" \
+                 --jq '.assets[] | [.name, .id, (.digest // "")] | @tsv')"; then
+              echo "the GitHub release not read, again in the next pass"; failed=1; return
+            fi
             while IFS=$'\t' read -r -u 3 id name url; do
               grep -qxF -- "$id" copied && continue
               case "$name" in ""|*/*|.*|*.) echo "::error::odd asset name: $name"; exit 1 ;; esac
               # flatpak-bundle.yml uploads the bundle here itself: replacing it
               # raced with that workflow (v1.0.1)
               case "$name" in Tavletta-*.flatpak|Tavletta-*.flatpak.sha256) echo "$id" >> copied; continue ;; esac
+              # no burst of downloads from Forgejo (CrowdSec, see above)
+              [ "$downloads" = 0 ] || sleep 2
+              downloads=$((downloads + 1))
               # a file replaced on Forgejo meanwhile (a re-run of its workflow) is
               # gone at this address: the next pass takes the new one
-              if ! curl -sS --fail -L -o "assets/$name" "$url"; then
-                echo "$name: not downloaded, again in the next pass"; failed=1; continue
+              if ! curl -sS --fail -L --connect-timeout 20 --max-time 600 -o "assets/$name" "$url"; then
+                echo "$name: not downloaded, again in the next pass"; failed=1; return
               fi
               ours="sha256:$(sha256sum "assets/$name" | cut -d' ' -f1)"
               mine="$(awk -F'\t' -v n="$name" '$1 == n { print $2 "\t" $3 }' <<<"$here")"
               if [ -n "$mine" ]; then
                 digest="${mine#*$'\t'}"
-                if [ -z "$digest" ]; then  # uploaded before GitHub kept digests
-                  digest="sha256:$(gh release download "$TAG" -R "$GITHUB_REPOSITORY" \
-                    --pattern "$name" --output - | sha256sum | cut -d' ' -f1)"
+                if [ -z "$digest" ] &&  # uploaded before GitHub kept digests
+                   ! digest="sha256:$(gh release download "$TAG" -R "$GITHUB_REPOSITORY" \
+                     --pattern "$name" --output - | sha256sum | cut -d' ' -f1)"; then
+                  echo "$name: GitHub's copy not read, again in the next pass"; failed=1; return
                 fi
                 if [ "$digest" = "$ours" ]; then
                   echo "$name exists"; echo "$id" >> copied; continue
                 fi
-                gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/${mine%%$'\t'*}"
+                if ! gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/${mine%%$'\t'*}"; then
+                  echo "$name: not replaced, again in the next pass"; failed=1; return
+                fi
                 echo "$name replaced:"
               fi
               for i in 1 2 3; do  # the GitHub API sometimes answers 500
                 gh release upload "$TAG" "assets/$name" -R "$GITHUB_REPOSITORY" && break
-                [ "$i" = 3 ] && exit 1
+                if [ "$i" = 3 ]; then
+                  echo "$name: not uploaded, again in the next pass"; failed=1; return
+                fi
                 sleep 20
               done
               # GitHub renames some names; the package workflows choose names it keeps
-              if ! gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' |
-                   grep -qxF -- "$name"; then
+              if ! names="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name')"; then
+                echo "the GitHub release not read, again in the next pass"; failed=1; return
+              fi
+              if ! grep -qxF -- "$name" <<<"$names"; then
                 echo "::error::GitHub renamed $name"; exit 1
               fi
               echo "$name uploaded"; echo "$id" >> copied
@@ -133,13 +166,18 @@ jobs:
           }
 
           notes() {  # the release notes and title as on Forgejo, where workflows add their lines
-            local title
+            local name here_body here_name
             jq -r '.body // ""' <<<"$release" > notes.md
-            title="$(jq -r --arg tag "$TAG" '.name // "" | if . == "" then $tag else . end' <<<"$release")"
-            if [ "$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)" != \
-                 "$(cat notes.md)" ] ||
-               [ "$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json name -q .name)" != "$title" ]; then
-              gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --title "$title" --notes-file notes.md > /dev/null
+            # no name: the title release.yml gives
+            name="$(jq -r --arg t "$title" '.name // "" | if . == "" then $t else . end' <<<"$release")"
+            if ! here_body="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)" ||
+               ! here_name="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json name -q .name)"; then
+              echo "the GitHub release not read, again in the next pass"; failed=1; return
+            fi
+            if [ "$here_body" != "$(cat notes.md)" ] || [ "$here_name" != "$name" ]; then
+              if ! gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --title "$name" --notes-file notes.md > /dev/null; then
+                echo "the release notes not updated, again in the next pass"; failed=1; return
+              fi
               echo "release notes updated"
             fi
           }
@@ -159,38 +197,42 @@ jobs:
                 "the ban is over (or lifted), $again."
             elif [ -z "$release" ]; then
               echo "::error::no Forgejo release for $TAG ($state): did release.yml fail? Once it is there, $again."
-            elif [ -z "$(missing)" ]; then
-              echo "::error::files of the Forgejo release not downloaded (see above): $again."
-            else
+            elif [ -n "$(missing)" ]; then
               echo "::error::not on the Forgejo release yet: $(missing | xargs) (did deb.yml or" \
                 "rpm.yml fail?). The GitHub release has the files copied so far; once they are" \
                 "there, $again."
+            else
+              echo "::error::the copy is not complete (see above): $again."
             fi
             exit 1
           }
 
           create
-          release="" state="" retries=0 wait="$POLL_SECONDS" start="$SECONDS"
+          release="" state="" retries=0 wait="$POLL_SECONDS" waited=0
           while :; do
             failed=0
             fetch
             if [ "$state" = ok ]; then
-              copy
+              # the notes first, close to the request: flatpak-bundle.yml adds its
+              # line to both releases meanwhile, and checks it again
               notes
+              copy
               [ -z "$(missing)" ] && [ "$failed" = 0 ] && break
-              wait="$POLL_SECONDS"
-            elif [ "$state" = refused ]; then
+            fi
+            if [ "$state" = refused ]; then
               echo "::warning::git.joshuahirsig.xyz answers 403 (a CrowdSec ban?): asking less often"
               wait=$((wait * 2 > 900 ? 900 : wait * 2))
             else
-              echo "Forgejo release: $state"
+              [ "$state" = ok ] || echo "Forgejo release: $state"
+              wait="$POLL_SECONDS"
             fi
-            # a download that failed (a file replaced meanwhile): again, also in a manual run
+            # an error of this pass: again, also in a manual run
             if [ "$failed" = 1 ] && [ "$retries" -lt 2 ]; then
               retries=$((retries + 1))
-            elif [ $((SECONDS - start + wait)) -gt $((WAIT_MINUTES * 60)) ]; then
+            elif [ $((waited + wait)) -gt $((WAIT_MINUTES * 60)) ]; then
               give_up
             fi
             sleep "$wait"
+            waited=$((waited + wait))
           done
           echo "https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG"
