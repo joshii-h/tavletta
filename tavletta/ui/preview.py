@@ -1,4 +1,5 @@
-"""The label preview with its status line and zoom buttons."""
+"""The label preview with its status line and zoom buttons; over the
+picture the mouse editor's canvas (ui/canvas.py, ui/editor.py)."""
 
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ gi.require_version("Gdk", "4.0")
 
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
+from tavletta.ui.canvas import Canvas  # noqa: E402
 from tavletta.ui.i18n import _  # noqa: E402
 from tavletta.ui.widgets import flat_button  # noqa: E402
 
@@ -28,6 +30,23 @@ def texture(image) -> Gdk.Texture:
     return Gdk.MemoryTexture.new(image.width, image.height, memory, data, stride)
 
 
+class LabelPicture(Gtk.Picture):
+    """A picture exactly as large as its size request (the zoom's): a
+    Gtk.Picture would otherwise take the image's own pixels as its natural
+    size, and show the label larger than the zoom says (zoomed out, or a
+    label rendered at 600 dpi), so the editor's millimetres would be off."""
+
+    def do_measure(self, orientation: Gtk.Orientation, for_size: int):
+        width, height = self.get_size_request()
+        size = width if orientation == Gtk.Orientation.HORIZONTAL else height
+        if size < 0:  # no baselines: Gtk.Picture sets none, GTK starts them at -1
+            minimum, natural, _min_baseline, _baseline = Gtk.Picture.do_measure(
+                self, orientation, for_size
+            )
+            return minimum, natural, -1, -1
+        return size, size, -1, -1
+
+
 class Preview(Gtk.Box):
     """The label preview with the status line and zoom buttons."""
 
@@ -38,7 +57,7 @@ class Preview(Gtk.Box):
         self._size_mm: tuple[float, float] | None = None  # (length, height) of the shown label
 
         self.scroller = Gtk.ScrolledWindow(hexpand=True, vexpand=True)
-        self.picture = Gtk.Picture(
+        self.picture = LabelPicture(
             can_shrink=True,
             content_fit=Gtk.ContentFit.CONTAIN,
             halign=Gtk.Align.CENTER,
@@ -51,7 +70,12 @@ class Preview(Gtk.Box):
         self.picture.set_margin_start(24)
         self.picture.set_margin_end(24)
         self.picture.add_css_class("label-preview")
-        self.scroller.set_child(self.picture)
+        # the canvas covers the whole preview: a rubber band starts anywhere
+        self.canvas = Canvas(self.picture)
+        self.canvas.update_property([Gtk.AccessibleProperty.LABEL], [_("Label preview")])
+        overlay = Gtk.Overlay(child=self.picture)
+        overlay.add_overlay(self.canvas)
+        self.scroller.set_child(overlay)
         self.append(self.scroller)
         self.append(Gtk.Separator())
         self.append(self._build_status())
@@ -100,6 +124,11 @@ class Preview(Gtk.Box):
 
     def hide_row(self) -> None:
         self.rows.set_visible(False)
+
+    @property
+    def size_mm(self) -> tuple[float, float] | None:
+        """The length and height of the label shown, None if none is."""
+        return self._size_mm if self.picture.get_paintable() is not None else None
 
     def show_image(self, image, length_mm: float, height_mm: float, text: str) -> None:
         """Show a rendered preview image and its status text."""
