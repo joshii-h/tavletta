@@ -93,17 +93,20 @@ def positions(win) -> list[tuple[float, float]]:
 def test_the_view_follows_the_zoom(window, zoom):
     show(window, free(box(5, 5)))
     window.preview.set_zoom(zoom)
-    pump(lambda: abs(window.preview.canvas.view().sx - preview.PREVIEW_PX_PER_MM * zoom) < 0.1)
+    pump(
+        lambda: window.preview.picture.get_width() == round(60 * preview.PREVIEW_PX_PER_MM * zoom)
+    )
     view = window.preview.canvas.view()
     ppm = preview.PREVIEW_PX_PER_MM * zoom
-    assert view.sx == pytest.approx(ppm, rel=0.02) and view.sy == pytest.approx(ppm, rel=0.02)
+    # the VC-500W's raster is a little taller than the 25 mm tape: the
+    # picture fits it in, a little smaller
+    assert view.sx == view.sy == pytest.approx(ppm, rel=0.02)
     # the picture is as large as the zoom says, not the image's pixels
     assert window.preview.picture.get_width() == round(60 * ppm)
     x, y = view.to_px(12.5, 7.25)
     assert view.to_mm(x, y) == pytest.approx((12.5, 7.25))
-    # the label's corner is the picture's
     ok, bounds = window.preview.picture.compute_bounds(window.preview.canvas)
-    assert ok and (view.ox, view.oy) == (bounds.get_x(), bounds.get_y())
+    assert ok and bounds.get_x() <= view.ox < bounds.get_x() + 0.02 * bounds.get_width()
 
 
 def test_a_click_hits_at_any_zoom(window):
@@ -638,8 +641,12 @@ def test_a_resized_text_shows_its_size(window):
     rows = window.elements_group.rows
     assert rows[0] is not old_rows[0] and rows[1] is old_rows[1]  # only its own built again
     assert rows[0].get_expanded() and rows[0].has_css_class("selected-element")
-    size = next(r for r in _walk(rows[0]) if isinstance(r, Adw.SpinRow) and r.get_title() == "Size")
-    assert size.get_value() == pytest.approx(window.label.elements[0].size_pt * 25.4 / 72, abs=0.01)
+    size = next(
+        r for r in _walk(rows[0]) if isinstance(r, Adw.SpinRow) and r.get_title() == "Size"
+    )
+    assert size.get_value() == pytest.approx(
+        window.label.elements[0].size_pt * 25.4 / 72, abs=0.01
+    )
     # its row's fields still edit the window's element
     size.set_value(5)
     assert window.label.elements[0].size_pt == pytest.approx(5 * 72 / 25.4, abs=0.1)

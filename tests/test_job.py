@@ -500,3 +500,36 @@ def test_a_busy_answer_is_no_sign_of_another_sensing():
     busy = _info()
     assert not labels_reported(get_backend("zpl"), busy, {"media": "gap"})
     assert labels_reported(get_backend("zpl"), _info(media_type="mark"), {"media": "gap"})
+
+
+@pytest.mark.parametrize(
+    ("printer", "tape"),
+    [
+        ("vc500w", 25),  # a raster taller than the tape
+        ("vc500w", 24),  # a width the printer has no tape of
+        ("ptouch", 24),  # a print head narrower than the tape: the whole tape around it
+        ("ptouch", 12),
+        ("brother_ql", 62),
+        ("zpl", 50),
+    ],
+)
+def test_the_previews_row_of_the_labels_top_edge(printer, tape):
+    """Rendered.boxes are from the label's top edge; the preview's image
+    has it at preview_top(): an element's ink lies where its box says."""
+    from tavletta.backends import get_backend
+    from tavletta.job import preview_image, preview_top
+    from tavletta.render import px_to_mm
+
+    label = Label(
+        printer=printer,
+        tape_mm=tape,
+        layout="free",
+        auto_length=False,
+        length_mm=40,
+        elements=[TextElement(text="Hx", size_pt=20, x_mm=4, y_mm=3)],
+    )
+    rendered, image, dpi = preview_image(get_backend(printer), label, PrintOptions())
+    top = preview_top(rendered, image, label.tape_mm, dpi)
+    ink = image.convert("L").point(lambda v: 255 if v < 128 else 0).getbbox()  # as ink_box()
+    assert px_to_mm(ink[1] - top, dpi) == pytest.approx(rendered.boxes[0][1], abs=0.01)
+    assert px_to_mm(ink[0], dpi) == pytest.approx(rendered.boxes[0][0], abs=0.01)

@@ -99,3 +99,60 @@ def test_snapping_settings():
         assert settings.grid_mm == 0
     settings.data["snap"] = "no"  # anything but false: on
     assert settings.snap
+
+
+class _Bounds:
+    def __init__(self, x, y, width, height):
+        self.values = (x, y, width, height)
+
+    def get_x(self):
+        return self.values[0]
+
+    def get_y(self):
+        return self.values[1]
+
+    def get_width(self):
+        return self.values[2]
+
+    def get_height(self):
+        return self.values[3]
+
+
+class _Picture:
+    """A Gtk.Picture's part view_of() asks: its image's size, its place."""
+
+    def __init__(self, image, bounds):
+        self.image, self.bounds = image, bounds
+
+    def get_paintable(self):
+        if self.image is None:
+            return None
+        width, height = self.image
+        return type(
+            "P",
+            (),
+            {"get_intrinsic_width": lambda s: width, "get_intrinsic_height": lambda s: height},
+        )()
+
+    def compute_bounds(self, _canvas):
+        return True, _Bounds(*self.bounds)
+
+
+def test_view_of_a_picture_that_fits_its_image():
+    # 254 dpi: 10 px per mm; drawn at half size at 30, 40
+    view = canvas.view_of(_Picture((400, 200), (30, 40, 200, 100)), None, canvas.Raster(254))
+    assert view == canvas.View(30, 40, 5, 5)
+
+
+def test_view_of_a_letterboxed_image_and_its_top_row():
+    # the image taller than the picture's proportions: drawn 100 px high,
+    # 200 px wide, centred in 300; the label's top 20 rows down the image
+    raster = canvas.Raster(254, top_px=20)
+    view = canvas.view_of(_Picture((400, 200), (0, 0, 300, 100)), None, raster)
+    assert view.ox == 50 and view.oy == 10 and view.sx == view.sy == 5
+
+
+def test_no_view_without_an_image():
+    assert canvas.view_of(_Picture(None, (0, 0, 10, 10)), None, canvas.Raster(254)) is None
+    assert canvas.view_of(_Picture((10, 10), (0, 0, 10, 10)), None, None) is None
+    assert canvas.view_of(_Picture((10, 10), (0, 0, 0, 0)), None, canvas.Raster(254)) is None

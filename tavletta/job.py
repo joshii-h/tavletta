@@ -29,7 +29,7 @@ from tavletta.backends.base import (
     check_codes,
 )
 from tavletta.model import Label, measured_differs
-from tavletta.render import DEFAULT_SAFE_MM, Rendered, RenderWarning, whole_tape
+from tavletta.render import DEFAULT_SAFE_MM, Rendered, RenderWarning, mm_to_px, whole_tape
 from tavletta.sheets import Sheet
 from tavletta.sheets.layout import Copies, LabelSource, Pages, SheetJob, clip_preview
 from tavletta.variables import Values, expand_label, uses_counter, varies_per_copy
@@ -67,6 +67,15 @@ def preview_image(
     if sheet is not None:
         image = clip_preview(image, sheet, rotated)
     return rendered, image, dpi
+
+
+def preview_top(rendered: Rendered, image: Image.Image, tape_mm: float, dpi: float) -> int:
+    """The row of preview_image()'s image where the label's top edge lies,
+    from which Rendered.boxes are measured: the nominal tape centred on the
+    rendered raster (render.label_top()), that raster centred on the whole
+    tape where it is narrower (render.whole_tape())."""
+    top = (rendered.image.height - mm_to_px(tape_mm, dpi)) // 2
+    return top + max(0, (image.height - rendered.image.height) // 2)
 
 
 @dataclass(frozen=True)

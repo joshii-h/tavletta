@@ -25,7 +25,12 @@ from tavletta import imageformats, report  # noqa: E402
 from tavletta.backends import get_backend  # noqa: E402
 from tavletta.backends.base import Backend, PrintOptions, margins_for  # noqa: E402
 from tavletta.history import History, typing_key  # noqa: E402
-from tavletta.job import PREVIEW_MAX_DPI, PREVIEW_MAX_PIXELS, preview_image  # noqa: E402
+from tavletta.job import (  # noqa: E402
+    PREVIEW_MAX_DPI,
+    PREVIEW_MAX_PIXELS,
+    preview_image,
+    preview_top,
+)
 from tavletta.model import (  # noqa: E402
     MAX_COUNTER,
     CodeElement,
@@ -775,7 +780,8 @@ class Window(Adw.ApplicationWindow):
         def work() -> PreviewResult:
             rendered, image, dpi = preview_image(backend, label, options, safe_mm, sheet, rotated)
             rendered.warnings[:0] = warnings
-            return PreviewResult(rendered, image, label.tape_mm, dpi, ids)
+            top = preview_top(rendered, image, label.tape_mm, dpi)
+            return PreviewResult(rendered, image, label.tape_mm, dpi, ids, top)
 
         return work
 
@@ -888,6 +894,7 @@ class Window(Adw.ApplicationWindow):
             result.rendered.length_mm,
             result.tape_mm,
             self._status_text(self.rendered),
+            (result.dpi, result.top_px),
         )
         self.editor.rendered(generation)
         return False
@@ -1274,6 +1281,7 @@ class PreviewResult(NamedTuple):
     tape_mm: float
     dpi: float
     ids: tuple[int, ...] = ()  # its elements' identities (model.element_id)
+    top_px: int = 0  # the image's row of the label's top edge (job.preview_top)
 
 
 def _run(work: Callable[[], PreviewResult]) -> tuple:

@@ -10,7 +10,7 @@ gi.require_version("Gdk", "4.0")
 
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
-from tavletta.ui.canvas import Canvas  # noqa: E402
+from tavletta.ui.canvas import Canvas, Raster  # noqa: E402
 from tavletta.ui.i18n import _  # noqa: E402
 from tavletta.ui.widgets import flat_button  # noqa: E402
 
@@ -130,10 +130,15 @@ class Preview(Gtk.Box):
         """The length and height of the label shown, None if none is."""
         return self._size_mm if self.picture.get_paintable() is not None else None
 
-    def show_image(self, image, length_mm: float, height_mm: float, text: str) -> None:
-        """Show a rendered preview image and its status text."""
+    def show_image(
+        self, image, length_mm: float, height_mm: float, text: str, raster=None
+    ) -> None:
+        """Show a rendered preview image and its status text. raster: its
+        resolution and the row of the label's top edge in it, for the
+        editor's canvas (canvas.Raster)."""
         self.picture.set_paintable(texture(image))
         self._size_mm = (length_mm, height_mm)
+        self.canvas.raster = Raster(*raster) if raster else None
         self.apply_zoom()
         self.status.set_text(text)
 

@@ -82,18 +82,31 @@ class View:
         return px / self.sx
 
 
-def view_of(picture: Gtk.Widget, canvas: Gtk.Widget, size_mm) -> View | None:
-    """The view of the label the picture shows (size_mm: its length and
-    height), in the canvas's pixels; None while nothing is shown."""
-    if not size_mm or min(size_mm) <= 0 or picture.get_paintable() is None:
+@dataclass(frozen=True)
+class Raster:
+    """The preview's image: its resolution, and its row of the label's top
+    edge (job.preview_top: the image can be taller than the tape)."""
+
+    dpi: float
+    top_px: int = 0
+
+
+def view_of(picture: Gtk.Picture, canvas: Gtk.Widget, raster: Raster | None) -> View | None:
+    """Where the picture shows the label, in the canvas's pixels: its image
+    as Gtk.Picture draws it (fit into its allocation, centred), the label's
+    top left corner at the raster's top row; None while nothing is shown."""
+    paintable = picture.get_paintable()
+    if paintable is None or raster is None or raster.dpi <= 0:
         return None
+    width, height = paintable.get_intrinsic_width(), paintable.get_intrinsic_height()
     ok, bounds = picture.compute_bounds(canvas)
-    if not ok:
+    if not ok or width <= 0 or height <= 0 or bounds.get_width() <= 0:
         return None
-    width, height = bounds.get_width(), bounds.get_height()
-    if width <= 0 or height <= 0:
-        return None
-    return View(bounds.get_x(), bounds.get_y(), width / size_mm[0], height / size_mm[1])
+    k = min(bounds.get_width() / width, bounds.get_height() / height)
+    left = bounds.get_x() + (bounds.get_width() - width * k) / 2
+    top = bounds.get_y() + (bounds.get_height() - height * k) / 2
+    scale = k * raster.dpi / 25.4
+    return View(left, top + raster.top_px * k, scale, scale)
 
 
 def handle_at(view: View, box: MmBox, x: float, y: float, hit: float) -> str | None:
@@ -224,11 +237,12 @@ class Canvas(Gtk.Widget):
             accessible_role=Gtk.AccessibleRole.GROUP,
         )
         self.picture = picture
+        self.raster: Raster | None = None  # of the image the picture shows
         self.scene = Scene()
         self.colours = Colours()
 
     def view(self) -> View | None:
-        return view_of(self.picture, self, self.scene.size_mm)
+        return view_of(self.picture, self, self.raster)
 
     def show(self, scene: Scene) -> None:
         self.scene = scene
@@ -236,7 +250,7 @@ class Canvas(Gtk.Widget):
 
     def do_snapshot(self, snapshot: Gtk.Snapshot) -> None:
         view = self.view()
-        if view is None:
+        if view is None or min(self.scene.size_mm) <= 0:
             return
         scene, colours = self.scene, self.colours
         self._ghosts(snapshot, view, scene)
@@ -262,9 +276,18 @@ class Canvas(Gtk.Widget):
     def _ghosts(self, snapshot: Gtk.Snapshot, view: View, scene: Scene) -> None:
         """Dragged elements: their place dimmed, their pixels at the new box."""
         texture = self.picture.get_paintable()
-        if not scene.ghosts or not isinstance(texture, Gdk.Texture):
+        if not scene.ghosts or not isinstance(texture, Gdk.Texture) or self.raster is None:
             return
-        label = view.box_px((0.0, 0.0, *scene.size_mm))
+        # the whole image, in mm: it starts above the label where its raster does
+        mm_per_px = 25.4 / self.raster.dpi
+        image = view.box_px(
+            (
+                0.0,
+                -self.raster.top_px * mm_per_px,
+                texture.get_width() * mm_per_px,
+                (texture.get_height() - self.raster.top_px) * mm_per_px,
+            )
+        )
         for source, _target in scene.ghosts:
             left, top, right, bottom = view.box_px(source)
             snapshot.append_color(
@@ -276,10 +299,10 @@ class Canvas(Gtk.Widget):
                 continue
             kx, ky = (dst[2] - dst[0]) / (src[2] - src[0]), (dst[3] - dst[1]) / (src[3] - src[1])
             whole = _rect(
-                dst[0] + (label[0] - src[0]) * kx,
-                dst[1] + (label[1] - src[1]) * ky,
-                (label[2] - label[0]) * kx,
-                (label[3] - label[1]) * ky,
+                dst[0] + (image[0] - src[0]) * kx,
+                dst[1] + (image[1] - src[1]) * ky,
+                (image[2] - image[0]) * kx,
+                (image[3] - image[1]) * ky,
             )
             snapshot.push_clip(_rect(dst[0], dst[1], dst[2] - dst[0], dst[3] - dst[1]))
             snapshot.append_texture(texture, whole)
