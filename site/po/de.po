@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 15:25+0100\n"
+"POT-Creation-Date: 2026-11-24 16:12+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1982,6 +1982,7 @@ msgid ""
 "| `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file is not there (any more): send the rows in data_rows. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (the label has `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
@@ -1998,6 +1999,7 @@ msgstr ""
 "| `columns` | array of string | Platzhalter `{Column}`: die Schlüssel von data_rows. |\n"
 "| `data_file` | string or null |  |\n"
 "| `data_file_unusable` | boolean |  |\n"
+"| `data_file_missing` | boolean | data_file ist nicht (mehr) da: die Zeilen in data_rows mitschicken. |\n"
 "| `data_sheet` | string or null |  |\n"
 "| `counter` | object | used (das Etikett hat `{=counter}`), next, step. |\n"
 "| `features` | array of string |  |\n"
@@ -2501,13 +2503,14 @@ msgstr "Erstes Etikett"
 #. type: Bullet: '1. '
 #: docs/index.md
 msgid ""
-"Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-"finds it in the network (Bonjour) and reads what is loaded: the tape width "
-"or the distance between the labels."
+"Switch the printer on and choose it under [[ui:Printer model]]: a printer "
+"found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
+"reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Drucker einschalten und unter [[ui:Printer model]] wählen. Tavletta findet "
-"ihn im Netzwerk (Bonjour) und liest aus, was eingelegt ist: die Bandbreite "
-"oder den Abstand der Etiketten."
+"Drucker einschalten und unter [[ui:Printer model]] wählen: ein Drucker, der "
+"über USB oder im Netzwerk (Bonjour) gefunden wurde, steht zuoberst in der "
+"Liste. Tavletta liest aus, was eingelegt ist: die Bandbreite oder den "
+"Abstand der Etiketten."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2544,10 +2547,12 @@ msgstr "Drucker und Fehlerbehebung"
 #: docs/printer.md
 msgid ""
 "Choose the printer under [[ui:Printer model]]; each one has its own section "
-"below."
+"below. Printers Tavletta finds on USB and in the network come first in that "
+"list, under [[ui:Found]], with their model: choosing one takes its model and "
+"its address. The models follow under [[ui:All models]]. Tavletta looks for "
+"them when the window opens and with [[ui:Search for printers]], every model "
+"at the same time, in the background."
 msgstr ""
-"Den Drucker unter [[ui:Printer model]] wählen; jeder hat unten einen eigenen "
-"Abschnitt."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3162,6 +3167,18 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/printer.md
+msgid ""
+"[[ui:Print offset]]: a printer that prints off the label's place (the print "
+"a little higher or lower on every label than the preview shows it) is made "
+"up for here: measure on a printed label how far the print lies off, and "
+"enter it, positive to move the print down on labels across the roll, "
+"negative to move it up. The preview keeps showing the label as it should "
+"come out; only what is sent to the printer moves.  Content within this "
+"distance of the edge the print moves to is cut off."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
 msgid "Heat and tear-off position stay as set on the printer."
 msgstr ""
 "Heizstufe und Abreissposition bleiben, wie sie am Drucker eingestellt sind."
@@ -3184,6 +3201,15 @@ msgstr ""
 "zwischen den Etiketten gemessen als Höhe plus Lücke des Etiketts. [[ui:Label "
 "size]] und [[ui:Gap]] prüfen oder die richtige Rolle einlegen. Nach dem "
 "Rollenwechsel einmal Vorschub am Drucker drücken, damit er neu misst."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"Everything printed a little too high or too low, the same on every label, "
+"while the preview shows it in its place: set [[ui:Print offset]]. A label "
+"laid out to make up for this in another program prints off its place in the "
+"preview; move its content back into place and set the offset instead."
+msgstr ""
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -5783,15 +5809,16 @@ msgstr ""
 #: docs/server.md
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)."
+"`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
+"(−5 to 5); others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, "
+"`media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` ist die [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` [[ui:Print upside down]]; weitere sind `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` und `outlines`, siehe [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"`upside_down` [[ui:Print upside down]], `offset_mm` der [[ui:Print offset]] "
+"(−5 bis 5); weitere sind `quality`, `chain`, `high_res`, `feed_mm`, "
+"`darkness`, `media` und `outlines`, siehe [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
 
 #. type: Bullet: '- '
@@ -5973,16 +6000,19 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"**Templates**: the label files of the labels folder with a preview.  "
-"\"Print\" fills in the fields of one label and shows the preview as it is "
-"typed; the elements a field fills are outlined in it. With an `admin` token, "
-"templates are uploaded (`.tavletta` files) and deleted here."
+"**Templates**: the label files of the labels folder with a preview.  Data "
+"fields show the first row of the template's data file, or sample values if "
+"it has none or it is missing. \"Print\" fills in the fields of one label and "
+"shows the preview as it is typed; the elements a field fills are outlined in "
+"it. With an `admin` token, templates are uploaded (`.tavletta` files) and "
+"deleted here."
 msgstr ""
 "**Vorlagen**: die Etikettendateien des Etikettenordners mit einer Vorschau. "
-"„Drucken“ füllt die Felder eines Etiketts aus und zeigt die Vorschau schon "
-"beim Tippen; die Elemente, die ein Feld füllt, sind darin umrandet. Mit "
-"einem `admin`-Token werden hier Vorlagen hochgeladen (`.tavletta`-Dateien) "
-"und gelöscht."
+"Datenfelder zeigen die erste Zeile der Datendatei der Vorlage, oder "
+"Beispielwerte, wenn sie keine hat oder sie fehlt. „Drucken“ füllt die Felder "
+"eines Etiketts aus und zeigt die Vorschau schon beim Tippen; die Elemente, "
+"die ein Feld füllt, sind darin umrandet. Mit einem `admin`-Token werden hier "
+"Vorlagen hochgeladen (`.tavletta`-Dateien) und gelöscht."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6002,10 +6032,14 @@ msgstr ""
 #: docs/server.md
 msgid ""
 "Assign: which column fills which field of the template (the same names are "
-"assigned already)."
+"assigned already, case and spaces aside). The preview of the first label "
+"beside it outlines the field in use; each field shows its value, each column "
+"its first values."
 msgstr ""
 "Zuordnen: welche Spalte welches Feld der Vorlage füllt (gleiche Namen sind "
-"schon zugeordnet)."
+"schon zugeordnet, Gross- und Kleinschreibung und Leerzeichen egal). Die "
+"Vorschau des ersten Etiketts daneben umrandet das Feld, das gerade "
+"bearbeitet wird; jedes Feld zeigt seinen Wert, jede Spalte ihre ersten Werte."
 
 #. type: Bullet: '  3. '
 #: docs/server.md
@@ -6045,8 +6079,13 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"The page speaks the language of the browser, or the one chosen at the top."
-msgstr "Die Seite spricht die Sprache des Browsers oder die oben gewählte."
+"The page speaks the language of the browser, or the one chosen at the top: "
+"every language of the app, Arabic right to left. Times are on a 24-hour "
+"clock."
+msgstr ""
+"Die Seite spricht die Sprache des Browsers oder die oben gewählte: jede "
+"Sprache der App, Arabisch von rechts nach links. Uhrzeiten stehen im 24-"
+"Stunden-Format."
 
 #. type: Bullet: '- '
 #: docs/server.md

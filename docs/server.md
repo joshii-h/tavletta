@@ -399,13 +399,25 @@ packages, Flatpak). `--no-web-ui` turns it off.
   labels or tape loaded, problems; a printer that cannot be reached
   cannot be chosen for printing.
 - **Templates**: the labels folder with a preview, size and fields of
-  each. Print one: the fields filled in (data columns, variables, named
+  each. A template with data fields is previewed with the first row of
+  its own data file, else with sample values, never the placeholders
+  (`{Inventory number}` is longer than most values and runs off the
+  label): digits for fields named like a number (number, Nr., ID,
+  counter, code) and as many as a code of only digits takes (EAN, UPC,
+  ITF-14), else the field's name, shortened while the boxes of the
+  preview's `geometry` run off the label or into another text or code.
+  A data file that is missing (`data_file_missing` of
+  `GET /labels/{name}`) or unreadable is a note under the preview. Print one: the fields filled in (data columns, variables, named
   elements), a preview that follows the input; the elements a field
   fills are outlined in the preview, and pointing at an element names
   it (the boxes come with the preview, `geometry`).
 - **Series**: values from a CSV, XLSX or ODS file (`POST /data` reads it
   as the app does: cells as shown, `00300` stays `00300`) or a pasted
-  list, their columns assigned to the template's fields, and all rows,
+  list, their columns assigned to the template's fields beside a preview
+  of the first label (the field in use is outlined in it, each field says
+  its value on the first label, each column's choice its first values;
+  columns named as a field, case and spaces aside, are assigned
+  automatically and the page says so), and all rows,
   some rows (`1-20, 25, 30-`, or checkboxes) or the rows whose values lie
   in ranges of a field. Without data, ranges make the values: an
   inventory number from 3000 to 5685 is 2686 labels; leading zeros keep
@@ -419,10 +431,19 @@ packages, Flatpak). `--no-web-ui` turns it off.
   the number, template and printer asks first. The job shows its
   progress and can be canceled (labels printed stay printed); after a
   cancel or a failure it continues with the first row not printed in
-  full.
-- **Languages**: the texts come from the app's catalogs
-  (`/ui/messages.json?lang=de`, by default in the language of the
-  browser); numbers in Swiss German as `2'686`. The scripts' texts are
+  full. The result says when not all numbers from the first to the last
+  label were printed.
+- **Languages**: every language of the app (`po/*.po`); the texts come
+  from its catalogs (`/ui/messages.json?lang=de`, by default in the
+  language of the browser; a region without a catalog takes the
+  language's, `zh-Hant` and `zh-MO` traditional Chinese), from the
+  compiled ones of the installation or, in a checkout, from `po/`
+  directly. Arabic is laid out right to left (`dir` of messages.json).
+  Numbers follow the page's language in the region the browser names
+  for it, German always Swiss as `2'686`. Times are on a 24-hour clock
+  in every language (`15:49`): browsers tell neither the system's clock
+  setting nor its region, and English browsers say `en-US` wherever they
+  are. The scripts' texts are
   `t("…")` calls, which `xgettext --language=JavaScript --keyword=t`
   extracts (see CONTRIBUTING.md).
 - **Accessibility**: one `<h1>` per view, focused after each change of
