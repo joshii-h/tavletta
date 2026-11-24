@@ -11,8 +11,9 @@ navigation from another site, which Lax lets through, a request of a page
 of another site not) and, over HTTPS, Secure with the __Host- prefix (only
 this host, path /). Over plain HTTP only on this computer, for testing.
 The browser that started a sign in must finish it: a second cookie holds
-a secret whose hash the sign in keeps, so a callback sent to someone else
-(signing them in as another user) fails.
+the sign in itself, sealed (sessions.Logins), so a callback sent to
+someone else (signing them in as another user) fails, and the server
+keeps nothing until the session.
 
 Requests to the API with the session cookie are checked in http.py: the
 header X-Tavletta-Request, and the page's own origin (Origin, required
@@ -57,10 +58,6 @@ class Answer:
     headers: dict[str, str] = field(default_factory=dict)
     cookies: list[str] = field(default_factory=list)
     body: object | None = None
-    # a callback for no sign in under way (forged, replayed, too late):
-    # counted for the address (http.py). Not a provider's failure: people
-    # behind one address would block each other while it is away
-    failed: bool = False
 
 
 def cookies(lines: Iterable[str]) -> dict[str, str | None]:
@@ -133,14 +130,12 @@ class WebLogin:
             "token_login": self.settings.token_login,
         }
 
-    def start(
-        self, site: str, asked: str | None, client: str, jar: Mapping, moved: bool = False
-    ) -> Answer:
+    def start(self, site: str, asked: str | None, moved: bool = False) -> Answer:
         """GET /oidc/login: to the provider. Started at another address
         than public_url: there first, where the callback comes to (once:
         a proxy that hides the address the browser sees must not make it
-        go round in circles). A sign in this browser started before (its
-        login cookie) is replaced; TooManyLogins (sessions.py)."""
+        go round in circles). The sign in goes into the browser's login
+        cookie (sessions.Logins), replacing one it started before."""
         back = after(asked)
         public = self.settings.public_url
         if public and not moved and not _same_host(site, public):
@@ -155,7 +150,7 @@ class WebLogin:
             )
             return _failed("failed")
         login_cookie = self.names(origin)[1]
-        login, browser = self.logins.start(client, back, jar.get(login_cookie))
+        login, browser = self.logins.start(back)
         try:
             url = self.provider.authorization_url(
                 origin + CALLBACK, login.state, login.nonce, login.verifier
@@ -178,7 +173,6 @@ class WebLogin:
         except OidcError as e:
             log.warning("OIDC sign in failed: %s", e)
             answer = _failed(e.code)
-            answer.failed = login is None  # no sign in under way: the request's doing
         answer.cookies.append(self._cookie(origin, login_cookie, "", 0))
         return answer
 

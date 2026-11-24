@@ -608,7 +608,7 @@ pages): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch
 |---|---|
 | A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |
 | `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |
-| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. On `/oidc/login`: 30 sign ins started from this address within a minute, counted apart from wrong tokens; behind a reverse proxy not given with `--trusted-proxy` everyone shares the proxy's address. |
+| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. Behind a reverse proxy not given with `--trusted-proxy` everyone shares the proxy's address. |
 | `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |
 | `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |
 | `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |

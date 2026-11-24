@@ -9,6 +9,7 @@ every sign in (no session fixation).
 from __future__ import annotations
 
 import hashlib
+import json
 import secrets
 import threading
 import time
@@ -18,12 +19,10 @@ from dataclasses import dataclass, field
 from tavletta.server.config import Caller
 
 LOGIN_SECONDS = 600.0  # from the sign in button to the provider's answer
-MAX_LOGINS = 1000  # sign ins under way, in all
-# per client address; more are refused (TooManyLogins), none of another
-# browser is dropped for them. Many people behind one address (a proxy not
-# given with --trusted-proxy, NAT) share it; http.py also lets an address
-# start only LOGIN_STARTS a minute
-LOGINS_PER_CLIENT = 100
+# sign ins taken (their state), remembered for LOGIN_SECONDS so a callback
+# is taken once; when more come, the oldest are forgotten: a callback of
+# one of those sent again still fails at the provider, which takes a code once
+MAX_TAKEN = 10_000
 MAX_SESSIONS = 10_000
 SESSIONS_PER_USER = 20  # a user's own oldest makes room
 
@@ -44,77 +43,63 @@ class Login:
 
     state: str
     nonce: str
-    verifier: str  # PKCE
-    binding: bytes = field(repr=False)  # SHA-256 of the browser's login cookie
+    verifier: str = field(repr=False)  # PKCE
     after: str  # the page's address (#/...) to go back to
-    client: str
     started: float
 
 
-class TooManyLogins(Exception):
-    """The client's address has LOGINS_PER_CLIENT sign ins under way."""
-
-
 class Logins:
-    """Sign ins under way, by their state; each is taken once. A browser
-    has one at most: its next replaces it (found by its login cookie)."""
+    """Sign ins under way, kept by nobody but the browser that started
+    one: sealed (encrypted and signed, Fernet, with a key made when the
+    server starts) into its login cookie. No store on the server, so none
+    to fill: no limit of sign ins under way, and none of another browser
+    is dropped for a new one. A sign in is good for LOGIN_SECONDS and taken
+    once (MAX_TAKEN)."""
 
     def __init__(self, clock=time.monotonic):
+        from cryptography.fernet import Fernet  # with PyJWT for --oidc
+
+        self._fernet = Fernet(Fernet.generate_key())
         self._clock = clock
         self._lock = threading.Lock()
-        self._logins: OrderedDict[str, Login] = OrderedDict()
-        self._browsers: dict[bytes, str] = {}  # binding -> state
+        self._taken: OrderedDict[str, float] = OrderedDict()  # state -> when started
 
-    def start(self, client: str, after: str, browser: str | None = None) -> tuple[Login, str]:
-        """A new sign in, and the value of the cookie that binds it to the
-        browser that started it. `browser`: the login cookie it sent, whose
-        sign in this one replaces. TooManyLogins for an address with
-        LOGINS_PER_CLIENT under way: refused rather than dropping one of
-        another browser behind the same address."""
-        value = new_secret()
-        login = Login(
-            new_secret(), new_secret(), new_secret(), _key(value), after, client, self._clock()
-        )
-        with self._lock:
-            self._expire()
-            if browser:
-                self._drop(self._browsers.get(_key(browser)))
-            if sum(entry.client == client for entry in self._logins.values()) >= LOGINS_PER_CLIENT:
-                raise TooManyLogins(client)
-            if len(self._logins) >= MAX_LOGINS:
-                self._drop(next(iter(self._logins)))
-            self._logins[login.state] = login
-            self._browsers[login.binding] = login.state
-        return login, value
+    def start(self, after: str) -> tuple[Login, str]:
+        """A new sign in, and the value of the browser's login cookie that
+        holds it."""
+        login = Login(new_secret(), new_secret(), new_secret(), after, self._clock())
+        sealed = json.dumps([login.state, login.nonce, login.verifier, after, login.started])
+        return login, self._fernet.encrypt(sealed.encode()).decode()
 
     def take(self, state: str, browser: str | None) -> Login | None:
-        """The sign in of this state, if this browser started it and it is
-        not too old; gone from the store either way (one try)."""
+        """The sign in of this state, if this browser's cookie holds it and
+        it is not too old."""
+        from cryptography.fernet import InvalidToken
+
+        if not browser:
+            return None
+        try:
+            data = json.loads(self._fernet.decrypt(browser.encode()))
+        except (InvalidToken, ValueError):
+            return None
+        if not isinstance(data, list) or len(data) != 5:
+            return None
+        login = Login(*data)
+        if not secrets.compare_digest(login.state.encode(), state.encode()):
+            return None
+        now = self._clock()
+        if not 0 <= now - login.started < LOGIN_SECONDS:
+            return None
         with self._lock:
-            self._expire()
-            login = self._drop(state)
-        if login is None or browser is None:
-            return None
-        if not secrets.compare_digest(login.binding, _key(browser)):
-            return None
+            while self._taken and (
+                len(self._taken) >= MAX_TAKEN
+                or now - next(iter(self._taken.values())) >= LOGIN_SECONDS
+            ):
+                self._taken.popitem(last=False)
+            if login.state in self._taken:
+                return None
+            self._taken[login.state] = login.started
         return login
-
-    def _drop(self, state: str | None) -> Login | None:
-        login = self._logins.pop(state, None) if state else None
-        if login is not None:
-            self._browsers.pop(login.binding, None)
-        return login
-
-    def _expire(self) -> None:
-        limit = self._clock() - LOGIN_SECONDS
-        while self._logins:
-            state, login = next(iter(self._logins.items()))
-            if login.started > limit:
-                break
-            self._drop(state)
-
-    def __len__(self) -> int:
-        return len(self._logins)
 
 
 @dataclass

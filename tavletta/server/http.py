@@ -49,7 +49,6 @@ from tavletta.server.mcp import HttpTransport, Mcp
 from tavletta.server.oidc import origin_of
 from tavletta.server.openapi import spec
 from tavletta.server.service import Service
-from tavletta.server.sessions import TooManyLogins
 from tavletta.server.weblogin import PREFIX as LOGIN_PREFIX
 from tavletta.server.weblogin import Answer, WebLogin, cookies
 from tavletta.ui.i18n import _, language
@@ -81,10 +80,6 @@ CORS_HEADERS = (
 )
 CORS_EXPOSED = "Location, X-Tavletta-Warnings, Mcp-Session-Id"
 AUTH_FAILURES = 10  # wrong tokens per address and minute before it is blocked
-# sign ins with OpenID Connect an address may start in a minute (and
-# callbacks for no sign in under way, counted alike); its own count, apart
-# from wrong tokens: people behind one address must not block each other
-LOGIN_STARTS = 30
 LOOPBACK_NAMES = frozenset({"localhost", "localhost.localdomain", "ip6-localhost"})
 
 
@@ -245,7 +240,6 @@ class Server(ThreadingHTTPServer):
         self.mcp = HttpTransport(Mcp(service)) if config.mcp else None
         self.web_ui = config.web_ui
         self.rate_limit = RateLimit()  # wrong tokens
-        self.login_limit = RateLimit(LOGIN_STARTS)  # sign ins started (weblogin.py)
         self.parses = threading.BoundedSemaphore(PARSES)
         self.reaper = Reaper()
         # a few more connections than requests: /health is answered even
@@ -700,33 +694,22 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(404, "not_found", _("Not found"))
         if method != expected:
             raise ApiError(405, "method_not_allowed", _("Method not allowed"))
-        client = rate_key(self.client())
-        limit = self.server.login_limit
         if route == "info":
             self._send(200, login.info())
             return
+        # nothing kept on the server until the session (the sign in under
+        # way is in the browser's cookie): no limit of its own, and none of
+        # wrong tokens, so people behind one address never block each other
         if route == "logout":
             self._same_page()
             self._raw_json()  # read (and JSON, as every POST): the connection goes on
             answer = login.logout(self._site(), self._jar())
-        elif limit.blocked(client):
-            raise ApiError(429, "too_many_requests", _("Too many requests – try again later"))
         elif route == "login":
-            limit.failed(client)  # each start counts: LOGIN_STARTS a minute
             query = self._query()
             asked = query.get("return", [None])[-1]
-            try:
-                answer = login.start(
-                    self._site(), asked, client, self._jar(), moved="moved" in query
-                )
-            except TooManyLogins:
-                raise ApiError(
-                    429, "too_many_requests", _("Too many requests – try again later")
-                ) from None
+            answer = login.start(self._site(), asked, moved="moved" in query)
         else:
             answer = login.finish(self._site(), self._query(), self._jar())
-        if answer.failed:
-            limit.failed(client)
         self._send_answer(answer)
 
     def _send_answer(self, answer: Answer) -> None:

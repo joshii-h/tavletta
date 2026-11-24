@@ -17,12 +17,10 @@ from tavletta.server.config import (  # noqa: E402
 )
 from tavletta.server.oidc import OidcSettings, caller_for, challenge, load_oidc, origin_of  # noqa: E402
 from tavletta.server.sessions import (  # noqa: E402
-    LOGINS_PER_CLIENT,
-    MAX_LOGINS,
+    LOGIN_SECONDS,
     SESSIONS_PER_USER,
     Logins,
     Sessions,
-    TooManyLogins,
 )
 from tavletta.server.weblogin import after, cookies  # noqa: E402
 
@@ -330,46 +328,35 @@ class Clock:
         return self.now
 
 
-def test_sign_ins_are_bounded():
-    """An address with LOGINS_PER_CLIENT under way gets no more: none of
-    another browser behind it is dropped for one (a client could else
-    drop everybody's with a few requests)."""
+def test_sign_ins_under_way_are_kept_by_the_browsers():
+    """Each in its browser's login cookie, sealed: nothing on the server to
+    fill, none of another browser dropped, however many start; each taken
+    once, and only within LOGIN_SECONDS."""
     clock = Clock()
     logins = Logins(clock)
-    first, browser = logins.start("192.0.2.1", "#/")
-    for _ in range(LOGINS_PER_CLIENT - 1):
-        logins.start("192.0.2.1", "#/")
-    assert len(logins) == LOGINS_PER_CLIENT
-    with pytest.raises(TooManyLogins):
-        logins.start("192.0.2.1", "#/")
-    assert logins.take(first.state, browser) == first  # still there
-    for n in range(MAX_LOGINS + 5):
-        logins.start("198.51.100.%d" % (n % 250) + str(n), "#/")
-    assert len(logins) == MAX_LOGINS
-    clock.now += 601
-    logins.start("192.0.2.9", "#/")
-    assert len(logins) == 1  # the others expired
+    first, browser = logins.start("#/x")
+    late, late_browser = logins.start("#/")
+    for _ in range(5000):
+        logins.start("#/")
+    assert not logins._taken  # nothing kept for sign ins under way
+    assert logins.take(first.state, browser) == first
+    assert logins.take(first.state, browser) is None  # once
+    assert first.after == "#/x" and first.verifier not in repr(first)
+    clock.now += LOGIN_SECONDS
+    assert logins.take(late.state, late_browser) is None  # too old
 
 
-def test_a_browser_has_one_sign_in_under_way():
-    """Its next sign in (its login cookie sent) replaces the one before,
-    which takes no place of the address."""
+def test_a_sign_in_is_taken_by_its_browser_only():
     logins = Logins()
-    first, browser = logins.start("192.0.2.1", "#/")
-    second, again = logins.start("192.0.2.1", "#/", browser)
-    assert len(logins) == 1 and logins.take(first.state, browser) is None
-    assert logins.take(second.state, again) == second
-    logins.start("192.0.2.1", "#/", "a cookie of no sign in")
-    assert len(logins) == 1
-
-
-def test_a_sign_in_is_taken_once_by_its_browser():
-    logins = Logins()
-    login, browser = logins.start("c", "#/x")
-    assert logins.take(login.state, "other") is None
-    login, browser = logins.start("c", "#/x")
+    login, browser = logins.start("#/x")
+    other, other_browser = logins.start("#/x")
+    assert logins.take(login.state, other_browser) is None  # another browser's
+    assert logins.take(login.state, None) is None
+    assert logins.take(login.state, "x" * 43) is None  # not sealed by this server
+    assert Logins().take(login.state, browser) is None  # another server's (or restarted)
+    tampered = browser[:-4] + ("AAAA" if browser[-4:] != "AAAA" else "BBBB")
+    assert logins.take(login.state, tampered) is None
     assert logins.take(login.state, browser) == login
-    assert logins.take(login.state, browser) is None
 
 
 def test_sessions_are_bounded_per_user():

@@ -200,8 +200,8 @@ def _in_flatpak() -> bool:
 def _check_proxy(args, public_url: str | None) -> None:
     """--oidc behind a reverse proxy: the page's address from public_url,
     not from what the proxy forwards (X-Forwarded-Host may carry a port or
-    a client's own value); without --trusted-proxy every sign in comes
-    from the proxy's address and shares its limits."""
+    a client's own value); without --trusted-proxy every request comes
+    from the proxy's address and shares its limits per client."""
     from tavletta.server.http import binds_loopback
 
     if getattr(args, "trusted_proxy", []) and not public_url:
@@ -214,9 +214,9 @@ def _check_proxy(args, public_url: str | None) -> None:
         )
     if not getattr(args, "trusted_proxy", []) and not binds_loopback(args.host):
         log.warning(
-            "--oidc without --trusted-proxy: behind a reverse proxy every sign in comes "
-            "from the proxy's address and shares its limits; give the proxy with "
-            "--trusted-proxy"
+            "--oidc without --trusted-proxy: behind a reverse proxy every request comes "
+            "from the proxy's address and shares its limits per client; give the proxy "
+            "with --trusted-proxy"
         )
 
 

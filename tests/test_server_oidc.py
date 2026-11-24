@@ -386,37 +386,20 @@ def test_a_provider_that_cannot_be_reached(make_site):
     assert status == 303 and response.getheader("Location") == "/#/signin-error/failed"
 
 
-def test_sign_ins_started_are_limited_apart_from_tokens(site):
-    """LOGIN_STARTS a minute per address, counted apart from wrong tokens:
-    people behind one address do not lock each other out of either."""
-    from tavletta.server.http import AUTH_FAILURES, LOGIN_STARTS
+def test_signing_in_is_not_limited_by_wrong_tokens_or_failures(site):
+    """Nothing is kept on the server until the session: many sign ins from
+    one address (people behind NAT), wrong tokens, failures of the provider
+    and callbacks for no sign in under way block nobody."""
+    from tavletta.server.http import AUTH_FAILURES
 
     for _ in range(AUTH_FAILURES):  # wrong tokens: tokens blocked, sign ins not
         call(site.base, "GET", "/api/v1/labels", token="wrong")
-    assert call(site.base, "GET", "/oidc/login")[0] == 303
-    for _ in range(LOGIN_STARTS - 1):
+    for _ in range(40):
         assert call(site.base, "GET", "/oidc/login")[0] == 303
-    status, _response, body = call(site.base, "GET", "/oidc/login")
-    assert status == 429 and body["error"]["code"] == "too_many_requests"
-
-
-def test_a_provider_failing_is_no_wrong_credential(make_site):
-    """Sign ins the provider fails (away, an answer that does not check
-    out) are not counted against the address; callbacks for no sign in
-    under way are."""
-    from tavletta.server.http import LOGIN_STARTS
-
-    site = make_site()
-    for _ in range(LOGIN_STARTS // 2):
-        failure(site, claims={"nonce": "other"})
-    assert site.server.login_limit._failures["127.0.0.1"].maxlen == LOGIN_STARTS
-    assert len(site.server.login_limit._failures["127.0.0.1"]) == LOGIN_STARTS // 2
-    assert call(site.base, "GET", "/oidc/login")[0] == 303
-    site = make_site()
-    for _ in range(LOGIN_STARTS):
         call(site.base, "GET", "/oidc/callback?state=%s&code=x" % ("x" * 43))
-    status, _response, body = call(site.base, "GET", "/oidc/login")
-    assert status == 429
+    for _ in range(3):
+        failure(site, claims={"nonce": "other"})
+    assert sign_in(site)[0] == 303 and "tavletta-session" in sign_in(site)[2]
 
 
 # --- roles and printers ------------------------------------------------------------------

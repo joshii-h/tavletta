@@ -288,8 +288,8 @@ from the deb or rpm package, the container image or pip; `tavletta serve
 --oidc` in the Flatpak says so. A server with `--oidc` may listen beyond
 loopback without a token: every request then needs a session or a
 token. Behind a reverse proxy give it with `--trusted-proxy` (and
-`public_url`): without, every sign in comes from the proxy's address and
-shares its limits, which the server warns about at startup when it
+`public_url`): without, every client is the proxy's address for the
+limits per client, which the server warns about at startup when it
 listens beyond loopback.
 
 **How it works.** The page shows "Sign in with <provider_name>"; that is
@@ -299,11 +299,13 @@ authorization code flow: PKCE with S256, a random `state` and `nonce`
 A sign in started at another address than `public_url` is sent there
 first (once). The provider redirects back to `/oidc/callback`, which
 
-- takes the sign in of that `state` (once; at most 10 minutes old) and
-  checks that the same browser started it: a second cookie,
-  `__Host-tavletta-login`, holds a secret whose SHA-256 the sign in
-  keeps, so a callback address sent to someone else does not sign them
-  in as another person;
+- takes the sign in of that `state` (once; at most 10 minutes old) from
+  the browser that started it: a second cookie, `__Host-tavletta-login`,
+  holds the sign in itself (state, nonce, PKCE verifier, the page to go
+  back to), encrypted and signed with a key the server makes when it
+  starts (Fernet), so a callback address sent to someone else does not
+  sign them in as another person, and the server keeps nothing for a
+  sign in under way (a restart ends those);
 - refuses an `iss` parameter of another issuer (RFC 9207) and an error
   answer (`access_denied`: "Signing in was canceled");
 - exchanges the code at the token endpoint with the secret and the PKCE
@@ -324,18 +326,18 @@ first (once). The provider redirects back to `/oidc/callback`, which
 The provider's settings (discovery) and keys are fetched when first
 needed (and at startup, in the background: a provider that is away does
 not stop the server) and kept for an hour; a key id not seen before
-fetches the keys again, at most every 30 s (keys rotate). An address
-may start 30 sign ins a minute (`/oidc/login`; a callback for no sign in
-under way counts as one), else 429 for a minute; this is counted apart
-from wrong tokens, and a sign in the provider fails (away, an answer that
-does not check out) is not counted at all, so people behind one address
-do not lock each other out while it is away. At most 100 sign ins of one
-address are under way at once (10 minutes each); more are refused
-(429), none of another browser is dropped for them, and a browser that
-starts again replaces its own sign in under way. With `--oidc`, a
-request with neither a token nor a session (the page loading while
-signed out) is 401 but not counted, so people behind one address do not
-block each other.
+fetches the keys again, at most every 30 s (keys rotate). As nothing is
+kept for a sign in under way, there is no store to fill and no limit of
+sign ins: many people behind one address (NAT, a proxy) sign in at
+once, a browser starting again replaces its own sign in, and nothing of
+another browser is ever dropped. Sign ins are not counted with wrong
+tokens either, failed or not (a provider away blocks nobody); the limits
+of requests per client apply as to any request. The states taken are
+remembered for 10 minutes (at most 10 000; a callback of one forgotten
+sent again still fails at the provider, which takes a code once). With
+`--oidc`, a request with neither a token nor a session (the page loading
+while signed out) is 401 but not counted, so people behind one address
+do not block each other.
 
 **The session.** The cookie `__Host-tavletta-session` is `Secure`,
 `HttpOnly`, `SameSite=Lax`, `Path=/`, no `Domain` (the `__Host-` prefix
