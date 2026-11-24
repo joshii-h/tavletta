@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 16:22+0100\n"
+"POT-Creation-Date: 2026-11-24 18:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -353,7 +353,7 @@ msgstr ""
 #. type: Plain text
 #: docs/api-guide.md
 #, markdown-text
-msgid "A queued job is canceled at once; a printing one stops after the label being printed. 409 `job_finished` if it had finished already."
+msgid "A queued job is canceled at once; a printing one stops after the label being printed. A cab printer prints a series in jobs of up to `labels_per_job` labels (250 by default): it stops after the job being printed. 409 `job_finished` if it had finished already."
 msgstr ""
 
 #. type: Title ##
@@ -783,7 +783,7 @@ msgstr ""
 #. type: Plain text
 #: docs/api.md
 #, markdown-text, no-wrap
-msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
+msgid "`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.\n"
 msgstr ""
 
 #. type: Plain text
@@ -2325,6 +2325,12 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 #, markdown-text
+msgid "[[ui:Labels per job]]: the labels of a series go to the printer together, up to this many (250 by default, 1 to 1000) in one job, and run through without stopping between them. [[ui:Stop]] takes effect between two jobs: a job that has started is printed in full. 1 sends every label as a job of its own, as other printers get them. Labels whose content changes from copy to copy always go one by one."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+#, markdown-text
 msgid "Heat and tear-off position stay as set on the printer."
 msgstr ""
 
@@ -2374,6 +2380,12 @@ msgstr ""
 #: docs/printer.md
 #, markdown-text
 msgid "Ribbon problem: no ribbon in thermal transfer mode, or a ribbon in thermal direct mode. Load or remove the ribbon, or choose the other [[ui:Print method]]."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+#, markdown-text
+msgid "Out of memory: the printer had no room for the labels of a job. Lower [[ui:Labels per job]], then print again from the row the message names."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -3010,13 +3022,13 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/serial.md
 #, markdown-text
-msgid "Every label is a print job of its own, so this works on every printer."
+msgid "Every label is a print job of its own, so this works on every printer.  A cab printer gets up to [[ui:Labels per job]] labels as one job, which it prints without stopping between them ([cab](printer.md#cab))."
 msgstr ""
 
 #. type: Bullet: '- '
 #: docs/serial.md
 #, markdown-text
-msgid "[[ui:Stop]] in the bar above the window ends the series after the label being printed; the first label is always printed."
+msgid "[[ui:Stop]] in the bar above the window ends the series after the label being printed (on a cab printer: after the job being printed); the first label is always printed."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4275,7 +4287,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), `upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] (−5 to 5); others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
+msgid "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), `upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] (−5 to 5), `labels_per_job` [[ui:Labels per job]] (1 to 1000, 250 by default); others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4449,7 +4461,7 @@ msgstr ""
 #. type: Bullet: '  5. '
 #: docs/server.md
 #, markdown-text
-msgid "Print: from 100 labels on, the page asks first. The progress shows how many are printed; Cancel stops after the current label. After a cancel or a printer problem, \"Continue from …\" prints the rest."
+msgid "Print: from 100 labels on, the page asks first. The progress shows how many are printed; Cancel stops after the current label (a cab printer: after the current job of up to [[ui:Labels per job]] labels). After a cancel or a printer problem, \"Continue from …\" prints the rest."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4491,7 +4503,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its state, `DELETE` cancels it between two labels."
+msgid "`POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows its state, `DELETE` cancels it between two labels (a cab printer: between two jobs of a series)."
 msgstr ""
 
 #. type: Bullet: '- '

@@ -180,7 +180,9 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" "$TAVLETTA/jobs/$JOB"
 ```
 
 A queued job is canceled at once; a printing one stops after the label
-being printed. 409 `job_finished` if it had finished already.
+being printed. A cab printer prints a series in jobs of up to
+`labels_per_job` labels (250 by default): it stops after the job being
+printed. 409 `job_finished` if it had finished already.
 
 ## 8. Retries and errors { #errors }
 

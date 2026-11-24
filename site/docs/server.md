@@ -60,7 +60,8 @@ tavletta serve --labels-dir ~/Labels
 
 - `method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`),
   `upside_down` [[ui:Print upside down]], `offset_mm` the
-  [[ui:Print offset]] (−5 to 5); others are `quality`, `chain`,
+  [[ui:Print offset]] (−5 to 5), `labels_per_job`
+  [[ui:Labels per job]] (1 to 1000, 250 by default); others are `quality`, `chain`,
   `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see
   [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers).
 - The printer's state tells the print method set on the printer
@@ -142,8 +143,10 @@ address of the [reverse proxy](server-install.md#proxy)):
   4. Check: the number of labels, the first and the last one, the limits
      of the server and the printer.
   5. Print: from 100 labels on, the page asks first. The progress shows
-     how many are printed; Cancel stops after the current label. After a
-     cancel or a printer problem, "Continue from …" prints the rest.
+     how many are printed; Cancel stops after the current label (a cab
+     printer: after the current job of up to [[ui:Labels per job]]
+     labels). After a cancel or a printer problem, "Continue from …"
+     prints the rest.
 - The page speaks the language of the browser, or the one chosen at the
   top: every language of the app, Arabic right to left. Times are on a
   24-hour clock.
@@ -158,7 +161,8 @@ address of the [reverse proxy](server-install.md#proxy)):
   shows what can be filled in: element names, variables and columns.
 - `POST /api/v1/preview` returns the label as a PNG image.
 - `POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows
-  its state, `DELETE` cancels it between two labels.
+  its state, `DELETE` cancels it between two labels (a cab printer:
+  between two jobs of a series).
 - Each printer prints one job after the other.
 - Messages come in the language of the `Accept-Language` header.
 - Without an access token, requests that ask printers need the header

@@ -209,6 +209,12 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
   across the roll, negative to move it up. The preview keeps showing the
   label as it should come out; only what is sent to the printer moves. Content
   within this distance of the edge the print moves to is cut off.
+- [[ui:Labels per job]]: the labels of a series go to the printer
+  together, up to this many (250 by default, 1 to 1000) in one job, and
+  run through without stopping between them. [[ui:Stop]] takes effect
+  between two jobs: a job that has started is printed in full. 1 sends
+  every label as a job of its own, as other printers get them. Labels
+  whose content changes from copy to copy always go one by one.
 - Heat and tear-off position stay as set on the printer.
 
 ### Problems { #cab-problems }
@@ -233,6 +239,9 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
 - Ribbon problem: no ribbon in thermal transfer mode, or a ribbon in thermal
   direct mode. Load or remove the ribbon, or choose the other
   [[ui:Print method]].
+- Out of memory: the printer had no room for the labels of a job. Lower
+  [[ui:Labels per job]], then print again from the row the message
+  names.
 - Labels with a ribbon print blank or smeared, the ribbon does not move:
   the printer is set to thermal direct. Choose
   [[ui:Thermal transfer (ribbon)]] under [[ui:Print method]].
