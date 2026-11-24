@@ -419,24 +419,28 @@ decides, and the counter only checks it:
   29.5 s; label by label 80 s as before. [decided] [measured with the
   fake printer]
 - At a problem the labels printed for certain are, from `ESC s`, those it
-  was seen to count down (both readings of it agree on them: fewer than
-  printed if it counts each `A` on its own), at most the job's labels
-  minus those still to print in the answer that reports it; a job of one
-  label counts exactly, as the manual has it. A lost connection (or a job
+  was seen to count down before the answer that reports the problem (both
+  readings of it agree on them: fewer than printed if it counts each `A`
+  on its own); that answer only tells the most, the job's labels minus
+  those it still has to print: a printer that drops the job at the
+  problem may say 0, and the rest is not booked as printed. The same for
+  a job of one label and its copies. A lost connection (or a job
   that never ended): up to every label of the job may have printed, the
   ones seen counted down for certain. Cut off while the images were sent
   (before `m m`, which Tavletta sends on its own): nothing printed.
   [decided]
 - The counter (network only, read in 2 s or not at all) is read with the
-  printer idle just before a job (not right after a label of the job
-  before whose interpreter is still active: that label may not be counted
-  yet), and once more when the job fails, after `ESC c` (three tries,
-  0.5 s apart). Where it tells another number than `ESC s`, the outcome
+  printer idle just before a job (once it is idle, if another job was
+  printing; not right after a label of the job before whose interpreter
+  is still active: that label may not be counted yet), and once more when
+  the job fails, after `ESC c` (three tries, 0.5 s apart). Where it tells another number than `ESC s`, the outcome
   is the range of both: printed for certain the smaller, at most the
   larger; a number only the counter tells is never taken as certain. A
   counter lower than at the start (reset) or higher by more than the
   job's labels (another program printing) tells nothing. It is not read
-  while a job prints, nor when one ends well. A printer whose web
+  while a job prints; after a series' job that ended well once, and if it
+  tells another number than the job's labels that is only logged (it may
+  count later than the labels print). A printer whose web
   interface did not answer is not asked again for 30 s. [decided] [open:
   when the counter counts a label]
 - When more may have printed than for certain, the message says so ("The

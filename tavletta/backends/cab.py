@@ -22,6 +22,7 @@ from __future__ import annotations
 import base64
 import http.client
 import json
+import logging
 import math
 import re
 import socket
@@ -70,6 +71,8 @@ from tavletta.backends.base import (
 )
 from tavletta.model import Label
 from tavletta.render import DEFAULT_SAFE_MM
+
+log = logging.getLogger(__name__)
 
 DEFAULT_PORT = 9100
 # seconds for connecting and for each answer; also without progress while
@@ -810,7 +813,7 @@ class Cab(Backend):
             self._ended.pop(host, None)
             if not idle.idle:  # our job's tail: its last label may not be counted yet
                 counters = Counters()
-            elif waited and counters.labels is not None:  # another job printed meanwhile
+            elif waited or not before.idle:  # another job printed meanwhile
                 counters = web_counters(host)
             counter = _LabelCounter(host, counters) if counters.labels is not None else None
             tally = _Tally(total, len(images) == 1, counter)
@@ -823,6 +826,7 @@ class Cab(Backend):
                 s.send(labels)
                 if _wait_done(s, progress, tally):
                     self._ended[host] = _clock()
+                tally.check_end(host)
             except (PrinterError, OSError) as e:
                 s.cancel()
                 error = tally.failed(e)
@@ -966,6 +970,21 @@ class _Tally:
                 return printed if 0 <= printed <= self.total else None
         return None
 
+    def check_end(self, host: str) -> None:
+        """A series' job that ended well: a counter that tells another number
+        is only logged (it may count later than the labels print)."""
+        if self.whole_job or self.counter is None:
+            return
+        printed = self.counter.printed()
+        if printed is not None and printed != self.total:
+            log.warning(
+                "cab %s: the label counter tells %d labels for a job of %d that ended "
+                "(it may count later than they print)",
+                host,
+                printed,
+                self.total,
+            )
+
     def failed(self, error: Exception) -> PrinterError:
         """The error, as a PrinterError, with what printed: the printer
         reported a problem (ESC c sent: it prints no more), or the outcome
@@ -988,11 +1007,12 @@ class _Tally:
         return mapped
 
     def _stopped(self, pending: int) -> tuple[int, int]:
-        """What ESC s tells of a job the printer stopped with a problem."""
-        self.seen(pending)
-        if self.whole_job:  # as the manual has it: the labels before were printed
-            return self.done, self.done
-        return self.done, self.total - pending if 0 < pending <= self.total else self.total
+        """What ESC s tells of a job the printer stopped with a problem:
+        printed for certain what it counted down before; the answer of the
+        problem only tells the most (a printer that drops the job may say 0
+        labels to print, which are not printed)."""
+        most = self.total - pending if 0 < pending <= self.total else self.total
+        return self.done, max(self.done, most)
 
 
 def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) -> bool:

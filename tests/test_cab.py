@@ -1322,8 +1322,10 @@ def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
     real = FakeCab.status
 
     def status(self):
-        if len(self.jobs) == 2 and self.pending == 13:
-            return b"YP000013N"
+        if len(self.jobs) == 2 and self.pending == 12:
+            # 8 of 20 out, 7 seen counted down: the answer of the problem
+            # only tells the most
+            return b"YP000012N"
         return real(self)
 
     monkeypatch.setattr(FakeCab, "status", status)
@@ -1336,7 +1338,7 @@ def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
     from tavletta.ui.texts import printer_error_text
     from tavletta.units import unit_for
 
-    assert error.error.params == {"printed": 27, "copies": 45}
+    assert error.error.params == {"printed": 27, "copies": 45, "printed_max": 28}
     assert "27 of 45" in printer_error_text(error.error, unit_for("mm"))
     assert len(printer.device.jobs) == 2 and printer.device.cancelled == 1
 
@@ -1347,8 +1349,8 @@ def test_a_series_job_with_copies_counts_rows_by_their_copies(printer, monkeypat
     real = FakeCab.status
 
     def status(self):
-        if self.pending == 3:  # 5 of 8 labels: rows 1 and 2, and one copy of row 3
-            return b"YD000003N"
+        if self.pending == 2:  # 5 of 8 seen: rows 1 and 2, and one copy of row 3
+            return b"YD000002N"
         return real(self)
 
     monkeypatch.setattr(FakeCab, "status", status)
@@ -1357,6 +1359,7 @@ def test_a_series_job_with_copies_counts_rows_by_their_copies(printer, monkeypat
     error = failed.value
     assert (error.row, error.printed, error.copies_printed) == (3, [1, 2], 1)
     assert error.outcome.labels == 5 and isinstance(error.error, HeadOpen)
+    assert error.outcome.unsure == 1  # the sixth: told only by the answer of the problem
     assert re.findall(rb"\nA (\d+)", printer.device.jobs[0]) == [b"2"] * 4
 
 
@@ -1686,8 +1689,9 @@ def test_a_connection_lost_in_a_job_of_copies(backend, printer, monkeypatch):
 
 
 def test_an_error_in_a_job_of_copies_counts_the_copies_before_it(backend, printer, monkeypatch):
-    """ESC s's labels to print in the answer of the problem: the copies
-    before it are printed, as the manual has it (exact)."""
+    """The copies seen counted down before the problem are printed; the
+    answer of the problem only tells the most (a printer that drops the job
+    may say 0 left)."""
     from tavletta.job import Job
 
     real = FakeCab.status
@@ -1697,7 +1701,9 @@ def test_an_error_in_a_job_of_copies_counts_the_copies_before_it(backend, printe
     job = Job(backend, _label(40, 18.6, elements=[TextElement(text="x")]), PrintOptions(copies=5))
     with pytest.raises(OutOfLabels) as failed:
         job.run("h")
-    assert failed.value.params == {"printed": 3, "copies": 5} and job.unsure == 0
+    # 3 seen counted down; the answer of the problem tells 2 left: 3 at most
+    assert failed.value.params == {"printed": 2, "copies": 5, "printed_max": 3}
+    assert job.unsure == 1
 
 
 def test_the_counter_of_a_printer_without_web_interface_is_not_asked_each_job(printer):
@@ -1814,7 +1820,8 @@ def test_a_series_job_ends_by_esc_s_whatever_the_counter_tells(printer, view, pe
     printer.device.per_block = per_block
     outcome = print_series(Cab(), "h", _series(6, copies=2))
     assert outcome.labels == 12 and printer.device.counter == 112
-    assert printer.device.pending == 0 and printer.device.counted == ["h"]
+    # read before the job, and once after it (only logged if it differs)
+    assert printer.device.pending == 0 and printer.device.counted == ["h", "h"]
 
 
 def _fail_at(monkeypatch, pending: int) -> None:
@@ -1852,9 +1859,7 @@ def test_a_problem_in_a_series_job_is_bounded_whatever_the_counter_tells(
     image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
     with pytest.raises(OutOfLabels) as failed:
         Cab().print_batch([image] * 10, "h", PrintOptions())
-    printed, most = _bounds_hold(failed.value, printer.device, 10)
-    if view == "as printed" and not per_block:  # ESC s and the counter agree
-        assert printed == most == 6
+    _bounds_hold(failed.value, printer.device, 10)
 
 
 @pytest.mark.parametrize("view", COUNTER_VIEWS)
@@ -1868,8 +1873,7 @@ def test_a_problem_in_a_job_of_copies_is_bounded_whatever_the_counter_tells(
     with pytest.raises(OutOfLabels) as failed:
         backend.print_label(_blank(), "h", PrintOptions(copies=10))
     printed, most = _bounds_hold(failed.value, printer.device, 10)
-    exact = view in ("as printed", "reset")  # agreeing, or telling nothing
-    assert (printed == most == 6) is exact
+    assert printed <= 5  # seen counted down before the problem: never more
 
 
 @pytest.mark.parametrize("view", COUNTER_VIEWS)
@@ -1928,3 +1932,54 @@ def test_the_counter_is_read_only_with_the_printer_idle(printer, monkeypatch):
     assert printer.device.counted == ["h"]
     backend.print_label(_blank(), "h", PrintOptions())
     assert printer.device.counted == ["h"]
+
+
+@pytest.mark.parametrize("counter", [None, 100])
+@pytest.mark.parametrize("single", [False, True])
+def test_a_printer_that_drops_the_job_at_a_problem_leaves_no_gap(
+    printer, monkeypatch, counter, single
+):
+    """The answer of the problem says 0 labels left (the job dropped): the
+    rest is not booked as printed, with or without the label counter."""
+    from tavletta.backends.base import PackedImage
+
+    printer.device.counter = counter
+    real = FakeCab.status
+
+    def status(self):
+        if self.pending == 6 and self.jobs and b"m m" in self.jobs[-1]:
+            self.pending = 0  # dropped
+            return b"YP000000N"
+        return real(self)
+
+    monkeypatch.setattr(FakeCab, "status", status)
+    image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
+    with pytest.raises(OutOfLabels) as failed:
+        if single:
+            Cab().print_label(image.open(), "h", PrintOptions(copies=10))
+        else:
+            Cab().print_batch([image] * 10, "h", PrintOptions())
+    params = failed.value.params
+    assert params["printed"] <= 4 and params["printed_max"] == 10
+
+
+def test_the_counter_is_read_once_the_printer_is_idle(printer, monkeypatch):
+    """Busy with another job when asked first: the counter is read once it
+    is idle, before the job is sent."""
+    printer.device.counter = 0
+    printer.device.busy_polls = 2
+    Cab().print_label(_blank(), "h", PrintOptions())
+    assert printer.device.counted == ["h"]
+    sent = printer.device.requests.index(printer.device.jobs[0])
+    assert b"\x1bs" in printer.device.requests[:sent]
+
+
+def test_a_counter_that_differs_at_a_jobs_end_is_logged(printer, caplog):
+    from tavletta.backends.base import PackedImage
+
+    printer.device.counter = 0
+    printer.device.view = lambda d: d.counter - (d.counter > 0)  # a label short
+    image = PackedImage.of(Cab().prepare(_label(40, 18.6), PrintOptions()))
+    with caplog.at_level("WARNING"):
+        Cab().print_batch([image] * 3, "h", PrintOptions())
+    assert "label counter tells 2 labels for a job of 3" in caplog.text
