@@ -621,8 +621,12 @@ images towards the 50 images and codes; within the render limits:
 - a PDF of at most 10 MB is read and drawn by Poppler in a child process
   (`tavletta/shipping/pdfchild.py`) limited to 10 s of processor time,
   20 s in all and an address space of 512 MB plus 24 bytes per pixel of
-  the drawing; one that breaks these limits refuses the label (413), a
-  damaged one or a crash of the child is a warning (`page_unreadable`).
+  the drawing, without core files and with 256 files open at most; one
+  that breaks these limits refuses the label (413), also when Poppler or
+  GLib abort because the memory limit stopped an allocation; a damaged
+  one or another crash of the child is a warning (`page_unreadable`).
+  The child gets only the environment that finds Python, its libraries
+  and fonts, not the server's token (`TAVLETTA_TOKEN`) or anything else.
   Poppler never runs in the server's process; only the drawings the
   children send back are kept, for the preview or print job they belong
   to (see below);

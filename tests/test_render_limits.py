@@ -7,9 +7,11 @@ from __future__ import annotations
 import base64
 import io
 import json
+import os
 import signal
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 from PIL import Image
@@ -316,11 +318,50 @@ def test_pdf_limits_within_the_child(pdf, monkeypatch):
             source.page_info(damaged)
 
 
-def fake_run(returncode, stdout=b""):
+def fake_run(returncode, stdout=b"", stderr=b""):
     def run(*_args, **_kwargs):
-        return subprocess.CompletedProcess([], returncode, stdout, b"")
+        return subprocess.CompletedProcess([], returncode, stdout, stderr)
 
     return run
+
+
+@pytest.mark.parametrize(
+    "said", [b"Out of memory\n", b"GLib-ERROR **: failed to allocate 4294967296 bytes"]
+)
+def test_a_child_aborted_by_its_memory_limit_is_too_large(monkeypatch, said):
+    """Poppler's and GLib's allocators abort when the memory limit stops
+    them: the PDF is too large for its limits, not damaged."""
+    monkeypatch.setattr(pdfchild.subprocess, "run", fake_run(-signal.SIGABRT, stderr=said))
+    with pytest.raises(pdfchild.ChildLimit):
+        pdfchild.ask(b"", {})
+    with limited(10**6), pytest.raises(RenderTooLarge):
+        source.page_info(b64(b"%PDF-1.4"))
+    # another abort (an assertion in Poppler): unreadable
+    monkeypatch.setattr(pdfchild.subprocess, "run", fake_run(-signal.SIGABRT, stderr=b"assert"))
+    with pytest.raises(pdfchild.ChildFailed):
+        pdfchild.ask(b"", {})
+
+
+def test_the_child_gets_no_secrets_of_the_server(monkeypatch):
+    """Only what finds Python, the libraries and fonts: not the server's
+    token or anything else of its environment."""
+    seen = {}
+
+    def run(*_args, env, **_kwargs):
+        seen.update(env)
+        return subprocess.CompletedProcess([], 0, b"{}\n", b"")
+
+    monkeypatch.setenv("TAVLETTA_TOKEN", "secret-token-of-the-server")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "elsewhere")
+    monkeypatch.setenv("FONTCONFIG_FILE", "/fonts.conf")
+    monkeypatch.setenv("PYTHONPATH", "/extra")
+    monkeypatch.setattr(pdfchild.subprocess, "run", run)
+    pdfchild.ask(b"", {})
+    assert "TAVLETTA_TOKEN" not in seen and "AWS_SECRET_ACCESS_KEY" not in seen
+    assert set(seen) <= {*pdfchild.KEPT_ENVIRONMENT, "PYTHONPATH"}
+    assert seen["FONTCONFIG_FILE"] == "/fonts.conf"
+    root = str(Path(pdfchild.__file__).resolve().parent.parent.parent)
+    assert seen["PYTHONPATH"] == os.pathsep.join((root, "/extra"))
 
 
 def test_child_outcomes(monkeypatch):
@@ -400,9 +441,11 @@ def test_child_limits_its_own_memory_and_time():
         "import resource; from tavletta.shipping import pdfchild; pdfchild._limit(1000);"
         "print(resource.getrlimit(resource.RLIMIT_AS)[0], resource.getrlimit(resource.RLIMIT_CPU)[0])"
     )
+    code += ";print(resource.getrlimit(resource.RLIMIT_CORE)[0], resource.getrlimit(resource.RLIMIT_NOFILE)[0])"
     done = subprocess.run([sys.executable, "-c", code], capture_output=True, check=True, text=True)
-    memory, cpu = map(int, done.stdout.split())
+    memory, cpu, core, files = map(int, done.stdout.split())
     assert memory == pdfchild._memory(1000) and cpu == pdfchild.CPU_SECONDS
+    assert core == 0 and files <= pdfchild.OPEN_FILES
 
 
 def test_pdfchild_memory():

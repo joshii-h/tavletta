@@ -1,8 +1,15 @@
 """A PDF page read and drawn by Poppler in a process of its own, for the
 print server: a PDF a client sends is parsed outside the server's process,
 within limits of memory (RLIMIT_AS), processor time (RLIMIT_CPU) and wall
-time. A PDF that breaks them refuses the label (RenderTooLarge), a damaged
-one or a crash is unreadable; the server goes on either way.
+time, without core dumps and with few files open. A PDF that breaks them
+refuses the label (RenderTooLarge): also when an allocation beyond the
+memory limit aborts the child (Poppler's and GLib's allocators abort and
+say "out of memory" or "failed to allocate"). A damaged one or another
+crash is unreadable; the server goes on either way.
+
+The child gets only the environment it needs to find Python, its
+libraries and fonts (KEPT_ENVIRONMENT): not the server's access token
+(TAVLETTA_TOKEN) or anything else of it.
 
 The request goes to the child's standard input as one line of JSON and
 the PDF after it; the answer comes back as one line of JSON (the page's
@@ -25,8 +32,34 @@ CPU_SECONDS = 10
 # (two cairo surfaces, Pillow copies, the ink mask, the pixels sent back)
 BASE_MEMORY = 512 * 2**20
 MEMORY_PER_PIXEL = 24
+OPEN_FILES = 256  # Python, its modules, the typelibs, fonts: a few dozen
 # killed by its limits: refused as too large rather than as damaged
 LIMIT_SIGNALS = (signal.SIGXCPU, signal.SIGKILL)
+# what an allocator that failed writes before it aborts (SIGABRT): Poppler's
+# gmalloc "Out of memory", GLib's g_malloc "failed to allocate N bytes"
+OUT_OF_MEMORY = (b"out of memory", b"failed to allocate")
+# the environment the child keeps: where Python, the libraries, typelibs
+# and fonts are, the locale and the temporary folder
+KEPT_ENVIRONMENT = (
+    "PATH",
+    "HOME",
+    "TMPDIR",
+    "LANG",
+    "LANGUAGE",
+    "LC_ALL",
+    "LC_CTYPE",
+    "PYTHONHOME",
+    "PYTHONUSERBASE",
+    "LD_LIBRARY_PATH",
+    "GI_TYPELIB_PATH",
+    "FONTCONFIG_FILE",
+    "FONTCONFIG_PATH",
+    "XDG_DATA_DIRS",
+    "XDG_DATA_HOME",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_DIRS",
+    "XDG_CONFIG_HOME",
+)
 
 
 class ChildLimit(Exception):
@@ -63,9 +96,7 @@ def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
     seconds, budget = _seconds()
     if seconds <= 0:
         raise ChildLimit("the PDF pages took more than their time")
-    root = str(Path(__file__).resolve().parent.parent.parent)
-    env = dict(os.environ)
-    env["PYTHONPATH"] = os.pathsep.join(p for p in (root, env.get("PYTHONPATH", "")) if p)
+    env = _environment()
     try:
         # this module only, a fixed command line, no shell
         with pdf_time():
@@ -85,6 +116,8 @@ def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
         raise ChildFailed(str(e)) from None
     if done.returncode < 0 and -done.returncode in LIMIT_SIGNALS:
         raise ChildLimit("the PDF took too long (signal %d)" % -done.returncode)
+    if done.returncode == -signal.SIGABRT and _out_of_memory(done.stderr):
+        raise ChildLimit("the PDF took more memory than it may")
     head, _newline, body = done.stdout.partition(b"\n")
     try:
         answer = json.loads(head)
@@ -95,12 +128,31 @@ def ask(raw: bytes, request: dict) -> tuple[dict, bytes]:
     return answer, body
 
 
+def _environment() -> dict[str, str]:
+    """The child's environment: KEPT_ENVIRONMENT, and the folder Tavletta
+    is in ahead of PYTHONPATH (a checkout that is not installed)."""
+    env = {name: os.environ[name] for name in KEPT_ENVIRONMENT if name in os.environ}
+    root = str(Path(__file__).resolve().parent.parent.parent)
+    path = (root, os.environ.get("PYTHONPATH", ""))
+    env["PYTHONPATH"] = os.pathsep.join(p for p in path if p)
+    return env
+
+
+def _out_of_memory(stderr: bytes) -> bool:
+    text = stderr.lower()
+    return any(words in text for words in OUT_OF_MEMORY)
+
+
 def _limit(max_pixels: int) -> None:
     import resource
 
     memory = _memory(max_pixels)
     resource.setrlimit(resource.RLIMIT_AS, (memory, memory))
     resource.setrlimit(resource.RLIMIT_CPU, (CPU_SECONDS, CPU_SECONDS + 1))
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))  # a crash writes no core file
+    hard = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
+    files = OPEN_FILES if hard == resource.RLIM_INFINITY else min(OPEN_FILES, hard)
+    resource.setrlimit(resource.RLIMIT_NOFILE, (files, files))
 
 
 def _answer(request: dict, raw: bytes) -> tuple[dict, bytes]:
