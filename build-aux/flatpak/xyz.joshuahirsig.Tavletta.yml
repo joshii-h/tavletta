@@ -8,9 +8,13 @@ finish-args:
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
-  # GPU, and printers on USB (/dev/usb/lp*, the kernel's printer class
-  # driver; --device=usb only covers raw libusb access), also those on a
-  # USB serial port (/dev/ttyACM*, NIIMBOT; serial ports have no portal)
+  # Printers on USB are device files of the kernel's drivers, which Tavletta
+  # opens directly: /dev/usb/lp* (printer class driver usblp: Brother, cab,
+  # Zebra, DYMO and other label printers) and /dev/ttyACM* (USB serial port:
+  # NIIMBOT). Only --device=all exposes them: --device=usb is /dev/bus/usb
+  # alone (raw libusb access, which the kernel driver holds), --device=dri
+  # the GPU alone, and neither printer files nor serial ports have a
+  # portal. It also gives the GPU, which GTK 4 renders with.
   - --device=all
   # printers on the network: TCP 9100, IPP to the printer or to CUPS on
   # localhost:631 (no --socket=cups: Tavletta has no client for CUPS's Unix
@@ -39,7 +43,9 @@ build-options:
 # what each component is.
 modules:
   # build-only: Pillow's setup.py imports pybind11.setup_helpers, and
-  # zint-bindings' CMake build finds pybind11's CMake files in it
+  # zint-bindings' CMake build finds pybind11's CMake files in it. The
+  # wheel (headers and pure Python): its sdist builds with scikit-build-core
+  # and CMake, for files the wheel has as they are
   - name: python3-pybind11
     buildsystem: simple
     build-commands:
@@ -69,26 +75,44 @@ modules:
           type: pypi
           name: pillow
 
-  # pure Python
+  # build-only: segno's build backend; builds itself (backend-path), segno
+  # needs a 3.x
+  - name: python3-flit-core
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps --no-index
+        .
+    cleanup:
+      - '*'
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/69/59/b6fc2188dfc7ea4f936cd12b49d707f66a1cb7a1d2c16172963534db741b/flit_core-3.12.0.tar.gz
+        sha256: 18f63100d6f94385c6ed57a72073443e1a71a4acb4339491615d0f16d6ff01b2
+        x-checker-data:
+          type: pypi
+          name: flit-core
+          versions:
+            <: '4'
+
+  # pure Python, from its sdist (LICENSE at the top: flatpak-builder copies it)
   - name: python3-segno
     buildsystem: simple
     build-commands:
       - pip3 install --prefix=${FLATPAK_DEST} --no-build-isolation --no-deps --no-index
-        segno-*.whl
-      - install -Dm644 -t ${FLATPAK_DEST}/share/licenses/${FLATPAK_ID}/python3-segno ${FLATPAK_DEST}/lib/python3*/site-packages/segno-*.dist-info/licenses/LICENSE
+        .
     cleanup:
       - /bin/segno
       - /share/man/man1/segno.1
     sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/d6/02/12c73fd423eb9577b97fc1924966b929eff7074ae6b2e15dd3d30cb9e4ae/segno-1.6.6-py3-none-any.whl
-        sha256: 28c7d081ed0cf935e0411293a465efd4d500704072cdb039778a2ab8736190c7
+      - type: archive
+        url: https://files.pythonhosted.org/packages/1c/2e/b396f750c53f570055bf5a9fc1ace09bed2dff013c73b7afec5702a581ba/segno-1.6.6.tar.gz
+        sha256: e60933afc4b52137d323a4434c8340e0ce1e58cec71439e46680d4db188f11b3
         x-checker-data:
           type: pypi
           name: segno
-          packagetype: bdist_wheel
 
-  # pure Python
+  # pure Python; the wheel, as its sdist's build needs setuptools-scm, which
+  # the SDK does not have
   - name: python3-python-barcode
     buildsystem: simple
     build-commands:
@@ -241,8 +265,8 @@ modules:
         .
       # the drawings for small sizes as PNG: Flathub accepts only PNG in the
       # fixed-size hicolor folders (linter: non-png-icon-in-hicolor-size-folder)
-      - for size in 16 20 22 24 32; do dir=${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps;
-        rsvg-convert -w $size -h $size -o $dir/${FLATPAK_ID}.png $dir/${FLATPAK_ID}.svg && rm $dir/${FLATPAK_ID}.svg;
+      - set -e; for size in 16 20 22 24 32; do dir=${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps;
+        rsvg-convert -w $size -h $size -o $dir/${FLATPAK_ID}.png $dir/${FLATPAK_ID}.svg; rm $dir/${FLATPAK_ID}.svg;
         done
       # (LICENSE flatpak-builder copies itself)
       - install -Dm644 -t ${FLATPAK_DEST}/share/licenses/${FLATPAK_ID}/tavletta THIRD_PARTY_NOTICES.md CREDITS.md

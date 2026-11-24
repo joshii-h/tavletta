@@ -94,7 +94,6 @@ def test_the_flatpak_ships_every_licence_once():
                 assert folder == module["name"], command  # the module's own folder
                 by_hand[module["name"]] = command
     assert set(by_hand) == {
-        "python3-segno",
         "python3-python-barcode",
         "poppler-data",
         "poppler",
@@ -111,6 +110,9 @@ def test_the_flatpak_ships_every_licence_once():
     assert [s["type"] for s in zint["sources"]] == ["archive", "patch", "file"]
     assert zint["sources"][0]["url"].endswith(".tar.gz")
     assert (path.parent / zint["sources"][1]["path"]).is_file()
+    tavletta = manifest["modules"][-1]
+    icons = next(c for c in tavletta["build-commands"] if "rsvg-convert" in c)
+    assert icons.startswith("set -e; ")  # a failed size fails the build
     cleanup = [c for module in manifest["modules"] for c in module.get("cleanup", [])]
     assert "/share/man/man1/segno.1" in cleanup
     for unused in ("test", "cups_backend.py", "__main__.py", "print_text.py", "queue_*.py"):
@@ -119,9 +121,11 @@ def test_the_flatpak_ships_every_licence_once():
         for source in module.get("sources", []):
             if source.get("type") in ("file", "archive") and "url" in source:
                 assert "x-checker-data" in source, (module["name"], source["url"])
-            # prebuilt binaries only as pure Python wheels (py3-none-any)
+            # prebuilt binaries only as pure Python wheels (py3-none-any), and
+            # only where the sdist's build needs what the SDK lacks
             if source.get("url", "").endswith(".whl"):
                 assert source["url"].endswith("-py3-none-any.whl"), source["url"]
+                assert module["name"] in ("python3-pybind11", "python3-python-barcode"), module
 
     # the manifest for Flathub: the same, with the release tag instead of the checkout
     flathub = _flathub()
