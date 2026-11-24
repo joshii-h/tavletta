@@ -59,7 +59,8 @@ tavletta serve --labels-dir ~/Labels
   ```
 
 - `method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`),
-  `upside_down` [[ui:Print upside down]]; others are `quality`, `chain`,
+  `upside_down` [[ui:Print upside down]], `offset_mm` the
+  [[ui:Print offset]] (−5 to 5); others are `quality`, `chain`,
   `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see
   [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers).
 - The printer's state tells the print method set on the printer

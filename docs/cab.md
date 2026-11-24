@@ -125,6 +125,13 @@ A 1                       (number of labels)
   the setting "Print upside down" (`upside_down`, off by default), directly
   after `S` as the manual asks; no other `O` options (tear-off, backfeed):
   the printer's setup stays in charge of those. [manual]
+- "Print offset" (`offset_mm`, −5 to 5 mm, 0 by default) moves the
+  image's content along y before it is sent, by whole dots: positive
+  down (towards the image's last rows), the rows it leaves white, what
+  moves out cut off. `S` keeps offset 0,0, the label's size and the
+  image's place stay. Only the job moves: the preview, the editor's
+  boxes and the server's preview keep showing the label; the server's
+  `"view": "printer"` is the image as sent, moved. [decided]
 - Images are not erased before the download: Tavletta always uses the one
   name `TAVLETTA`, which each download replaces, so the RAM does not fill
   up, and images other programs left in the printer stay. [manual]
@@ -296,6 +303,25 @@ A 1
 - `O P` keeps the label in place instead of pulling it back after the
   tear-off feed; the manual warns of a thin white line where the label
   stood under the head. Tavletta leaves this to the setup ("Backfeed").
+
+## Where the print lands
+
+The test printer (EOS2/300, gap sensor, tear-off mode on, setup "Print
+position Y" 0 mm) prints the image about 1.25 mm higher on the label (with
+`O R`) than its place: the job places it at 0,0 on a label of the label's
+size (`S l1;0,0,18.6,20,40` / `I:Label;0,0,0;…`), and the preview is that
+image. A label for 40 × 18.6 mm laid out in cablabel S3 had its content
+low in cablabel's own preview too (ink 3.4 mm from the top, 0.8 mm from
+the bottom; Tavletta's render of it agrees within 0.07 mm) and comes out
+centred from Tavletta [confirmed], as from cablabel for its users
+[assumed]: the layout made up for the printer.
+In Tavletta the label is laid out as it should come out (the preview
+shows the content centred) and "Print offset" 1.25 makes up for the
+printer; the job is then the one the old layout sent, dot for dot.
+[confirmed by comparing the images]
+Where the shift comes from (the gap sensor's distance to the head, the
+tear-off feed) is not known; the setup's "Print position Y" would move
+cablabel's prints too. [open]
 
 ## Label start, tear-off and backfeed
 

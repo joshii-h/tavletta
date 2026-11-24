@@ -113,6 +113,7 @@ media = "57 x 32 mm, ribbon"
 [printers.inventory.settings]         # the printer settings of the app
 method = "transfer"                  # print method: printer, transfer, direct
 upside_down = true                   # print turned by 180 degrees (cab: O R)
+offset_mm = 0.5                      # the print moved along the feed (cab)
 ```
 
 - Names: letters, digits, `.`, `_`, `-`, up to 64 characters. `backend` and
@@ -127,7 +128,7 @@ upside_down = true                   # print turned by 180 degrees (cab: O R)
 - `[printers.<name>.settings]`: the printer settings the app keeps for the
   model, with the same keys and values as in `settings.json`, and used the
   same way (`PrinterSettings`): the model's own settings (cab: `method`,
-  `upside_down`; ZPL and TSPL: `dpi`, `media`, `finish`, `darkness`,
+  `upside_down`, `offset_mm` from −5 to 5; ZPL and TSPL: `dpi`, `media`, `finish`, `darkness`,
   `speed`, `upside_down`; EPL2: `dpi`, `media`, `darkness`, `upside_down`; ESC/POS: `dpi`, `upside_down`; DYMO: `darkness`,
   `upside_down`; NIIMBOT: `media`, `density`), `quality` (Brother QL:
   `standard`, `high`), the extras (P-touch: `chain`, `high_res`,

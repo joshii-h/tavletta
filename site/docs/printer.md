@@ -184,6 +184,13 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
   printer.
 - [[ui:Print upside down]]: the label comes out turned by 180°, as
   the manufacturer's label software prints it.
+- [[ui:Print offset]]: a printer that prints off the label's place (the
+  print a little higher or lower on every label than the preview shows
+  it) is made up for here: measure on a printed label how far the print
+  lies off, and enter it, positive to move the print down on labels
+  across the roll, negative to move it up. The preview keeps showing the
+  label as it should come out; only what is sent to the printer moves.
+  Content within this distance of the edge the print moves to is cut off.
 - Heat and tear-off position stay as set on the printer.
 
 ### Problems { #cab-problems }
@@ -192,6 +199,11 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
   between the labels than height plus gap of your label. Check
   [[ui:Label size]] and [[ui:Gap]], or load the right roll. Press Feed on
   the printer once after changing the roll so it measures again.
+- Everything printed a little too high or too low, the same on every
+  label, while the preview shows it in its place: set
+  [[ui:Print offset]]. A label laid out to make up for this in another
+  program prints off its place in the preview; move its content back
+  into place and set the offset instead.
 - A print that stopped because of a problem is cancelled, so printing again
   does not give extra labels.
 - Out of labels: load a new roll, the printer then synchronises by itself.
