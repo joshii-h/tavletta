@@ -1845,3 +1845,19 @@ def test_a_stuck_series_job_without_the_counter_gets_time_for_each_label(printer
     waited = printer.now[0] - start
     assert waited >= cab.PRINT_TIMEOUT + 4 * cab.LABEL_SECONDS
     assert failed.value.error.params["printed_max"] == 4
+
+
+@pytest.mark.parametrize("counter", [0, None])
+def test_a_series_job_counted_in_full_need_not_wait_for_the_interpreter(printer, counter):
+    """With the label counter a series' job is over once it counted every
+    label, also with the interpreter still active (its second after the
+    job, which the next job need not wait for); without it only once the
+    printer is idle."""
+    from tavletta.backends.base import PackedImage
+
+    printer.device.counter = counter
+    backend = Cab()
+    image = PackedImage.of(backend.prepare(_label(40, 18.6), PrintOptions()))
+    backend.print_batch([image] * 3, "h", PrintOptions())
+    assert ("h" in backend._ended) == (counter is not None)
+    assert printer.device.printed() == 3

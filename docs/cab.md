@@ -408,9 +408,10 @@ printed are known this way:
   connection, when it is watched until it reached the job's labels or
   stayed the same for 10 s (`SETTLE_SECONDS`; the printer may print on
   a job whose `ESC c` did not reach it). A series' job is over once the
-  counter counted every label; a printer idle 10 s with fewer counted
-  ended the job early, which is reported as a problem with the labels
-  counted. A printer whose web interface does not answer is not asked
+  counter counted every label, also with the interpreter still active
+  (the next job need not wait for its second); a printer idle 10 s with
+  fewer counted ended the job early, which is reported as a problem with
+  the labels counted. A printer whose web interface does not answer is not asked
   again for 30 s. Another program printing at the same moment would
   count as ours (at most the job's labels). [decided] [open: whether the
   counter counts a label as it is printed or later; not watched during a
@@ -426,7 +427,12 @@ printed are known this way:
   reports it; a job of one label counts exactly as the manual has it. A
   series' job counts as stuck only after 180 s and 10 s for each label
   still to print (`LABEL_SECONDS`), as a label printed may not show.
-  [decided]
+  Waiting for idle costs a series' job the interpreter's second after it:
+  with a timed fake printer (0.2 s to read an image, 0.4 s a label, the
+  interpreter active 1 s after a job) 45 labels in jobs of 20 took 31 s
+  instead of 28 s, in one job 29 s; with the label counter 28 s as before,
+  label by label 80 s either way. [decided] [measured with the fake
+  printer]
 - A lost connection (or a job that never ended): up to every label of
   the job may have printed, the ones counted before for certain. Cut off
   while the images were sent (before `m m`, which Tavletta sends on its

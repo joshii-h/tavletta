@@ -1009,9 +1009,9 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) ->
     interpreter was seen active, for START_GRACE if it was not seen at
     all. While the image is read the interpreter is active without labels
     pending, which is not yet the job. A series' job (an A for each label)
-    has run once the printer is idle (ESC s may count each A on its own),
-    and, with the web interface's label counter, once that counted every
-    label. The timeout restarts with every printed label. `tally` keeps
+    has run once the web interface's label counter counted every label,
+    without it once the printer is idle (ESC s may count each A on its
+    own). The timeout restarts with every printed label. `tally` keeps
     what printed, also when the printer reports a problem."""
     total = tally.total
     started = False  # labels of the job seen pending
@@ -1026,8 +1026,11 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) ->
             tally.stopped = status
             raise error
         tally.seen(status.pending)
-        if not tally.whole_job:
-            tally.counted()
+        if not tally.whole_job and (tally.counted() or 0) >= total:
+            # the counter counted every label: printed, also while the
+            # interpreter is still active (its second after a job)
+            report_progress(progress, total, total)
+            return status.running
         if tally.done != last:
             last = tally.done
             deadline = _clock() + tally.allowance()
