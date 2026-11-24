@@ -36,7 +36,8 @@ done
 test -f /usr/share/man/man1/tavletta.1.gz
 test -f /usr/share/applications/xyz.joshuahirsig.Tavletta.desktop
 test -f /usr/share/metainfo/xyz.joshuahirsig.Tavletta.metainfo.xml
-test -f /usr/share/locale/de/LC_MESSAGES/tavletta.mo
+# in the package (the container image installs no languages but C: %_install_langs)
+rpm -ql tavletta | grep -qx /usr/share/locale/de/LC_MESSAGES/tavletta.mo
 # the print server: installed with its user and folders, not enabled
 grep -q '^ExecStart=/usr/bin/tavletta serve ' /usr/lib/systemd/system/tavletta-server.service
 getent passwd tavletta > /dev/null
