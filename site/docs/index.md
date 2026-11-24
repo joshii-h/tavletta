@@ -64,9 +64,10 @@ Saved labels and templates are kept.
 
 ## First label
 
-1. Switch the printer on and choose it under [[ui:Printer model]]. Tavletta
-   finds it in the network (Bonjour) and reads what is loaded: the tape
-   width or the distance between the labels.
+1. Switch the printer on and choose it under [[ui:Printer model]]: a
+   printer found on USB or in the network (Bonjour) is at the top of the
+   list. Tavletta reads what is loaded: the tape width or the distance
+   between the labels.
 2. Not found? Enter the address under [[ui:Host name or IP address]], e.g.
    `printer.local` or `192.168.1.50`. New printer: connect it to the
    network first, see [Printers](printer.md).

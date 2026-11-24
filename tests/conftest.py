@@ -406,6 +406,8 @@ def gui_env(monkeypatch, tmp_path):
         print_result=None,
         stages=[],  # printer stages reported while printing
         found=[],
+        found_all=[],  # (backend, FoundPrinter) the search of all models finds
+        finds=0,
         configured=None,
         tmp=tmp_path,
         backend=backend,
@@ -434,6 +436,14 @@ def gui_env(monkeypatch, tmp_path):
         monkeypatch.setattr(each, "print_label", print_label)
         monkeypatch.setattr(each, "discover", discover)
         monkeypatch.setattr(each, "configured_host", lambda: env.configured)
+    from tavletta.ui import printer as ui_printer
+
+    def find_all(timeout=3.0):
+        env.finds += 1
+        return list(env.found_all)
+
+    monkeypatch.setattr(ui_printer, "find_all", find_all)
+    monkeypatch.setattr(ui_printer, "_found", None)  # nothing of another test's search
     monkeypatch.setattr(config, "CONFIG_DIR", tmp_path / "config")
     monkeypatch.setattr(config, "SETTINGS_FILE", tmp_path / "config" / "settings.json")
     monkeypatch.setattr(config, "TEMPLATE_DIR", tmp_path / "templates")

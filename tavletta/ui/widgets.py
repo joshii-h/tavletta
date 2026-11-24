@@ -40,6 +40,22 @@ def grouped_combo_row(title: str, groups, current: str, on_change) -> Adw.ComboR
     """A choice of (key, label) items in groups of (heading, items), each
     group under its heading; on_change(key) when another is chosen."""
     keys = [key for _heading, items in groups for key, _label in items]
+    row = Adw.ComboRow(title=title)
+    set_groups(row, groups)
+    row.set_selected(keys.index(current) if current in keys else 0)
+    row.connect("notify::selected", lambda r, _p: on_change(keys[r.get_selected()]))
+    return row
+
+
+def set_groups(row: Adw.ComboRow, groups) -> None:
+    """The row's items: (key, label) items in groups of (heading, items),
+    each group under its heading (a list header, read out by screen
+    readers before the group's first item); one group without a heading:
+    a plain list."""
+    if len(groups) == 1 and not groups[0][0]:
+        row.set_header_factory(None)
+        row.set_model(Gtk.StringList.new([label for _key, label in groups[0][1]]))
+        return
     sections = Gio.ListStore(item_type=Gio.ListModel)
     for _heading, items in groups:
         sections.append(Gtk.StringList.new([label for _key, label in items]))
@@ -59,11 +75,8 @@ def grouped_combo_row(title: str, groups, current: str, on_change) -> Adw.ComboR
         ),
     )
     headers.connect("bind", bind)
-    row = Adw.ComboRow(title=title, model=Gtk.FlattenListModel(model=sections))
     row.set_header_factory(headers)
-    row.set_selected(keys.index(current) if current in keys else 0)
-    row.connect("notify::selected", lambda r, _p: on_change(keys[r.get_selected()]))
-    return row
+    row.set_model(Gtk.FlattenListModel(model=sections))
 
 
 def color_button(value: str, on_change) -> Gtk.ColorDialogButton:

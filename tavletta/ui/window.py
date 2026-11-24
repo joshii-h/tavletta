@@ -154,6 +154,8 @@ class Window(Adw.ApplicationWindow):
         self.schedule_render()
         if not GLib.getenv("TAVLETTA_SCREENSHOT"):
             self.printer.refresh()
+            if not self.printer.found_all:  # none of the last minute's search
+                self.printer.find_all()
 
     # --- layout --------------------------------------------------------------
 

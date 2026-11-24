@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import threading
+import time
 from typing import TYPE_CHECKING
 
 import gi
@@ -12,8 +13,16 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
-from tavletta.backends import backends, get_backend  # noqa: E402
-from tavletta.backends.base import Choice, Distance, PrinterInfo, Setting, Toggle  # noqa: E402
+from tavletta.backends import backends, find_all, get_backend  # noqa: E402
+from tavletta.backends.base import (  # noqa: E402
+    Backend,
+    Choice,
+    Distance,
+    FoundPrinter,
+    PrinterInfo,
+    Setting,
+    Toggle,
+)
 from tavletta.job import OtherLabels, other_labels  # noqa: E402
 from tavletta.ui.i18n import _, isolate, month_year  # noqa: E402
 from tavletta.ui.texts import (  # noqa: E402
@@ -33,11 +42,43 @@ from tavletta.ui.widgets import (  # noqa: E402
     flat_button,
     length_row,
     list_dialog,
+    set_groups,
 )
 from tavletta.units import default_unit  # noqa: E402
 
 if TYPE_CHECKING:
     from tavletta.ui.window import Window
+
+# how long what the search of all models found is taken for a new window
+FOUND_SECONDS = 60.0
+# the last search of all models: (when, what it found), for every window
+_found: tuple[float, list[tuple[Backend, FoundPrinter]]] | None = None
+_found_lock = threading.Lock()
+
+
+def recently_found() -> list[tuple[Backend, FoundPrinter]] | None:
+    """What the last search of all models found, if it is recent."""
+    with _found_lock:
+        if _found and 0 <= time.monotonic() - _found[0] < FOUND_SECONDS:
+            return list(_found[1])
+    return None
+
+
+def _in_model_order(
+    found: list[tuple[Backend, FoundPrinter]],
+) -> list[tuple[Backend, FoundPrinter]]:
+    """In the order of the models (backends()), as the search of all of
+    them finds them; a printer's order within its model kept."""
+    order = [b.id for b in backends()]
+    return sorted(
+        found, key=lambda item: order.index(item[0].id) if item[0].id in order else len(order)
+    )
+
+
+def _remember(found: list[tuple[Backend, FoundPrinter]]) -> None:
+    global _found
+    with _found_lock:
+        _found = (time.monotonic(), list(found))
 
 
 class Printer:
@@ -55,6 +96,13 @@ class Printer:
         self.generation = 0  # answers of older printer queries are dropped
         self.chooser: Adw.AlertDialog | None = None  # the open "Choose a printer" dialog
         self._settings_shown: tuple[Setting, ...] = ()
+        # the printers found on USB and the network, of every model, shown
+        # first in the model list
+        self.found_all: list[tuple[Backend, FoundPrinter]] = recently_found() or []
+        self._model_row: Adw.ComboRow | None = None
+        self._model_keys: list[tuple[str, str]] = []  # (model, address or "") by position
+        self._filling = False  # the model row's items are being replaced
+        self._model_searched: dict[str, float] = {}  # model id -> when its own search ended
 
     @property
     def host(self) -> str | None:
@@ -111,10 +159,84 @@ class Printer:
         return group
 
     def _backend_row(self) -> Adw.ComboRow:
-        items = [(b.id, backend_name(b)) for b in backends()]
-        return combo_row(
-            _("Printer model"), items, self.window.backend.id, self.window.set_backend
-        )
+        """The printer models; printers found on USB and the network first,
+        under "Found", the models under "All models"."""
+        row = self._model_row = Adw.ComboRow(title=_("Printer model"))
+        self._fill_models()
+        row.connect("notify::selected", self._on_model_chosen)
+        return row
+
+    def _fill_models(self) -> None:
+        row = self._model_row
+        if row is None:
+            return
+        models = [((b.id, ""), backend_name(b)) for b in backends()]
+        ids = {b.id for b in backends()}
+        found = [
+            ((b.id, p.host), "%s · %s" % (p.name, backend_name(b)))
+            for b, p in self.found_all
+            if b.id in ids
+        ]
+        groups = [(_("Found"), found), (_("All models"), models)] if found else [("", models)]
+        self._model_keys = [key for _heading, items in groups for key, _label in items]
+        current = (self.window.backend.id, self.host or "")
+        if current not in self._model_keys:
+            current = (self.window.backend.id, "")
+        self._filling = True
+        try:
+            set_groups(row, groups)
+            if current in self._model_keys:
+                row.set_selected(self._model_keys.index(current))
+        finally:
+            self._filling = False
+
+    def _on_model_chosen(self, row: Adw.ComboRow, _param) -> None:
+        if self._filling:
+            return
+        position = row.get_selected()
+        if not 0 <= position < len(self._model_keys):
+            return
+        backend_id, host = self._model_keys[position]
+        if not host:
+            self.window.set_backend(backend_id)
+            return
+        # a printer found: its model and its address
+        if backend_id == self.window.backend.id:
+            if host != self.host:
+                self._use(host)
+            return
+        self.window.settings.printer(get_backend(backend_id)).update(host=host)
+        self.window.set_backend(backend_id)
+
+    def find_all(self) -> None:
+        """Look for the printers of every model, on USB and the network, in
+        the background; the model list shows them first when it is done."""
+
+        started = time.monotonic()
+
+        def work():
+            found = find_all()
+            _remember(found)
+            GLib.idle_add(self._all_found, found, started)
+
+        threading.Thread(target=work, name="tavletta-discover", daemon=True).start()
+
+    def _all_found(self, found: list[tuple[Backend, FoundPrinter]], started: float) -> bool:
+        if getattr(self.window, "_closed", False):
+            return False
+        # a model searched on its own since: what that search found is newer
+        newer = {b for b, when in self._model_searched.items() if when > started}
+        if newer:
+            kept = [(b, p) for b, p in self.found_all if b.id in newer]
+            found = [(b, p) for b, p in found if b.id not in newer] + kept
+            order = [b.id for b in backends()]
+            found.sort(
+                key=lambda item: order.index(item[0].id) if item[0].id in order else len(order)
+            )
+        if [(b.id, p) for b, p in found] != [(b.id, p) for b, p in self.found_all]:
+            self.found_all = found
+            self._fill_models()
+        return False
 
     def _setting_row(self, setting: Setting) -> Adw.PreferencesRow:
         """A row for one of the backend's own settings, kept in settings.json."""
@@ -171,7 +293,7 @@ class Printer:
             flat_button(
                 "system-search-symbolic",
                 _("Search for printers"),
-                self.discover,
+                self.search,
             )
         )
         group.add(self.row)
@@ -184,6 +306,7 @@ class Printer:
 
     def _on_host_apply(self, row: Adw.EntryRow) -> None:
         self.window.printer_settings.update(host=row.get_text().strip())
+        self._fill_models()  # a printer found at that address is the one chosen
         self.refresh()
 
     def _on_safe_margin(self, value: float) -> None:
@@ -192,6 +315,12 @@ class Printer:
         self.window.schedule_render()
 
     # --- search and connection ---------------------------------------------------------
+
+    def search(self) -> None:
+        """The search button: printers of the current model (to choose
+        one), and of every model for the model list."""
+        self.discover()
+        self.find_all()
 
     def discover(self) -> None:
         """Look for printers of the current model on the network."""
@@ -208,6 +337,7 @@ class Printer:
     def discovered(self, found, generation: int | None = None) -> bool:
         if self._outdated(generation) or not self._known_printer():
             return False
+        self._found_for(self.window.backend, found)
         if not found:
             self.update_row(
                 _("No printer found"),
@@ -251,6 +381,15 @@ class Printer:
         dialog.close()
         self._use(host)
 
+    def _found_for(self, backend: Backend, found) -> None:
+        """What a search of one model found, in the model list's "Found"."""
+        self._model_searched[backend.id] = time.monotonic()
+        others = [(b, p) for b, p in self.found_all if b.id != backend.id]
+        mine = [(backend, p) for p in found]
+        if mine != [(b, p) for b, p in self.found_all if b.id == backend.id]:
+            self.found_all = _in_model_order(others + mine)
+            self._fill_models()
+
     def chooser_closed(self, dialog) -> None:
         if self.chooser is dialog:
             self.chooser = None
@@ -258,6 +397,7 @@ class Printer:
     def _use(self, host: str) -> None:
         self.window.printer_settings.update(host=host)
         self._host_row.set_text(host)  # not a rebuild: open rows and input stay
+        self._fill_models()
         self.refresh()
 
     def refresh(self) -> None:

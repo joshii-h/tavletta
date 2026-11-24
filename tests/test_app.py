@@ -1980,8 +1980,9 @@ def cab_window(make_window, cab_env):
 
 
 def _items(row):
+    """The texts of a combo row's items, also of one in groups."""
     model = row.get_model()
-    return [model.get_string(i) for i in range(model.get_n_items())]
+    return [model.get_item(i).get_string() for i in range(model.get_n_items())]
 
 
 def _selected(row):

@@ -8,9 +8,10 @@ names a Backend subclass or instance).
 from __future__ import annotations
 
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from importlib.metadata import entry_points
 
-from tavletta.backends.base import Backend
+from tavletta.backends.base import Backend, FoundPrinter
 from tavletta.model import DEFAULT_PRINTER
 
 ENTRY_POINT_GROUP = "tavletta.backends"
@@ -81,3 +82,22 @@ def get_backend(backend_id: str = DEFAULT_PRINTER) -> Backend:
     """KeyError for unknown ids."""
     _load()
     return _registry[backend_id]
+
+
+def find_all(timeout: float = 3.0) -> list[tuple[Backend, FoundPrinter]]:
+    """The printers every model finds (Backend.discover(): on USB and on the
+    network), searched side by side, so the search takes as long as the
+    slowest model's; in the order of backends(). A model whose search
+    fails finds nothing."""
+    chosen = backends()
+
+    def search(backend: Backend) -> list[FoundPrinter]:
+        try:
+            return list(backend.discover(timeout))
+        except Exception:  # noqa: BLE001 - one model's failure hides no other's printers
+            log.debug("search of %s failed", backend.id, exc_info=True)
+            return []
+
+    with ThreadPoolExecutor(max_workers=len(chosen), thread_name_prefix="tavletta-find") as pool:
+        results = list(pool.map(search, chosen))
+    return [(b, p) for b, found in zip(chosen, results, strict=True) for p in found]

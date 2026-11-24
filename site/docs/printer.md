@@ -1,7 +1,12 @@
 # Printers and troubleshooting
 
 Choose the printer under [[ui:Printer model]]; each one has its own
-section below.
+section below. Printers Tavletta finds on USB and in the network come
+first in that list, under [[ui:Found]], with their model: choosing one
+takes its model and its address. The models follow under
+[[ui:All models]]. Tavletta looks for them when the window opens and
+with [[ui:Search for printers]], every model at the same time, in the
+background.
 
 ## All printers { #common }
 
