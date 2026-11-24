@@ -2,7 +2,7 @@ Description: depend on labelprinter by name, not on a Git URL
  pyproject.toml pins the labelprinter fork by a direct Git URL, which pip
  can install but dh_python3 cannot map to a package. Debian gets it from
  python3-labelprinter, built from the same commit of the fork.
-Author: Joshua Hirsig <joshuahirsig@gmail.com>
+Author: Joshua Hirsig <tavletta@joshuahirsig.xyz>
 Forwarded: not-needed
 Last-Update: 2026-11-17
 ---

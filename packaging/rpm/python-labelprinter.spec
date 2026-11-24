@@ -71,5 +71,5 @@ rm %{buildroot}%{_bindir}/{label-raw,label-text,label-queue,label-queue-setup,la
 
 
 %changelog
-* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 0.1.0^20261105gita6f2957-1
+* Tue Nov 17 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 0.1.0^20261105gita6f2957-1
 - Initial package

@@ -57,5 +57,5 @@ sed -i '1{/^#!/d}' segno/cli.py
 
 
 %changelog
-* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 1.6.6-1
+* Tue Nov 17 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.6.6-1
 - Initial package

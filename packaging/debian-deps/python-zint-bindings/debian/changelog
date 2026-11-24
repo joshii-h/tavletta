@@ -2,4 +2,4 @@ python-zint-bindings (1.2.2+ds-1) unstable; urgency=medium
 
   * Initial release, built for Tavletta's release assets (no ITP filed yet).
 
- -- Joshua Hirsig <joshuahirsig@gmail.com>  Tue, 17 Nov 2026 12:00:00 +0100
+ -- Joshua Hirsig <tavletta@joshuahirsig.xyz>  Tue, 17 Nov 2026 12:00:00 +0100

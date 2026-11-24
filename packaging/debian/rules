@@ -32,6 +32,11 @@ execute_after_dh_auto_install:
 	install -D -m 0644 packaging/udev/70-tavletta.rules \
 	    debian/tavletta/usr/lib/udev/rules.d/70-tavletta.rules
 
+# the user before the folders (dh_installtmpfiles): dh_installsysusers is in
+# dh's sequence only from compat 14 on
+execute_before_dh_installtmpfiles:
+	dh_installsysusers
+
 override_dh_installsystemd:
 	# installed, not enabled nor started: it needs printers.toml and tokens.toml
 	dh_installsystemd --no-enable --no-start

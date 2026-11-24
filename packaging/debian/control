@@ -1,7 +1,7 @@
 Source: tavletta
 Section: graphics
 Priority: optional
-Maintainer: Joshua Hirsig <joshuahirsig@gmail.com>
+Maintainer: Joshua Hirsig <tavletta@joshuahirsig.xyz>
 Build-Depends:
  debhelper-compat (= 13),
  dh-sequence-python3,
@@ -45,6 +45,7 @@ Depends:
  gir1.2-pangocairo-1.0,
  python3-gi,
  python3-gi-cairo,
+ systemd | systemd-standalone-tmpfiles,
  ${misc:Depends},
  ${python3:Depends},
 Recommends:

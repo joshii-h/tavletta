@@ -62,11 +62,9 @@ office printers through CUPS or IPP, one label per page or on label sheets.
 It also prints label files from the command line and runs a print server
 with a REST API and MCP.
 
-The print server comes as tavletta-server.service, installed but not
-enabled: it runs as the user tavletta with printers.toml and tokens.toml
-in /etc/tavletta and the labels in /var/lib/tavletta/labels. A udev rule
-lets the user at the computer use label printers on USB (/dev/usb/lp*,
-NIIMBOT on /dev/ttyACM*) without joining the group lp or dialout.
+The print server comes as a system service, installed but not enabled,
+that runs as a user of its own. A device rule lets the user at the
+computer use label printers on USB without joining further groups.
 
 
 %prep
@@ -146,5 +144,5 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 
 
 %changelog
-* Mon Nov 23 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 1.1.2-1
+* Mon Nov 23 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.1.2-1
 - Initial package

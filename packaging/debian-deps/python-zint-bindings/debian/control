@@ -1,7 +1,7 @@
 Source: python-zint-bindings
 Section: python
 Priority: optional
-Maintainer: Joshua Hirsig <joshuahirsig@gmail.com>
+Maintainer: Joshua Hirsig <tavletta@joshuahirsig.xyz>
 Build-Depends:
  debhelper-compat (= 13),
  dh-sequence-python3,

@@ -65,5 +65,5 @@ ln -srf %{buildroot}%{_datadir}/fonts/dejavu-sans-mono-fonts/DejaVuSansMono.ttf 
 
 
 %changelog
-* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 0.16.1-1
+* Tue Nov 17 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 0.16.1-1
 - Initial package

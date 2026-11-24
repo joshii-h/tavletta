@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Tavletta
-Upstream-Contact: Joshua Hirsig <joshuahirsig@gmail.com>
+Upstream-Contact: Joshua Hirsig <tavletta@joshuahirsig.xyz>
 Source: https://git.joshuahirsig.xyz/joshii/tavletta
 Comment: THIRD_PARTY_NOTICES.md (installed in /usr/share/doc/tavletta) lists
  everything Tavletta ships or derives from. Sources of protocol knowledge it
@@ -43,7 +43,7 @@ License: BSD-3-clause
 Comment: The licence of libzint, which the Flatpak bundles.
 
 Files: debian/*
-Copyright: 2026 Joshua Hirsig <joshuahirsig@gmail.com>
+Copyright: 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz>
 License: AGPL-3+
 
 License: CC0-1.0

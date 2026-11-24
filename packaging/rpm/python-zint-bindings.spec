@@ -67,5 +67,5 @@ rm -r external/zint
 
 
 %changelog
-* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 1.2.2-1
+* Tue Nov 17 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.2.2-1
 - Initial package

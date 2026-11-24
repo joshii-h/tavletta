@@ -172,6 +172,8 @@
 
   <provides>
     <mediatype>application/x-tavletta</mediatype>
+    <!-- NIIMBOT printers (USB vendor 3513), as in packaging/udev/70-tavletta.rules -->
+    <modalias>usb:v3513p*</modalias>
   </provides>
 
   <releases>

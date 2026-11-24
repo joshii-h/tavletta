@@ -6,7 +6,7 @@ Description: build against the system's libzint, offline
  (generate-stub.py needs pybind11-stubgen, installed with pip at configure
  time). The build requirements are lowered to what Debian has
  (scikit-build-core 0.11, pybind11 2.13), and -Werror is dropped.
-Author: Joshua Hirsig <joshuahirsig@gmail.com>
+Author: Joshua Hirsig <tavletta@joshuahirsig.xyz>
 Forwarded: no
 Last-Update: 2026-11-17
 ---
