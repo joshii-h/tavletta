@@ -63,8 +63,10 @@ data file instead of printing the placeholders.
 - A placeholder without a column of that name is printed as it is; the
   line under the preview names it.
 - Before printing, the codes of every row are checked: an EAN-13 needs
-  12 or 13 digits, an empty cell gives no code. Rows that fail are named;
-  print without them or correct the data file.
+  12 or 13 digits, an empty cell gives no code, a code holds only so much
+  (a QR code less with a higher error correction), GS1 data needs the
+  lengths of its application identifiers. Rows that fail are named; print
+  without them or correct the data file.
 
 - Variables such as `{=counter}` or `{=date}` work together with the
   placeholders; the counter goes on from row to row.

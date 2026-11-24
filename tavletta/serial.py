@@ -16,11 +16,12 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from datetime import datetime
 
+from tavletta import codes
 from tavletta.backends.base import Backend, PrintOptions, PrintResult, Progress
 from tavletta.job import Job, PrepareFailed, merge_results
 from tavletta.merge.fill import VARIABLE
 from tavletta.model import CodeElement, Label, TextElement
-from tavletta.render import DEFAULT_SAFE_MM, check_code
+from tavletta.render import DEFAULT_SAFE_MM
 from tavletta.sheets.layout import SheetJob
 from tavletta.variables import (
     Values,
@@ -30,9 +31,6 @@ from tavletta.variables import (
     uses_counter,
     varies_per_copy,
 )
-
-# what a QR code takes in any case: bytes, error correction M, the largest size
-QR_BYTES = 2331
 
 
 def filled(label: Label, row: Mapping[str, str], values: Values | None = None) -> Label:
@@ -182,13 +180,11 @@ class UnprintableRows(Exception):
 
 
 def _code_fails(element: CodeElement) -> bool:
+    """Whether the code cannot be made: the renderer would draw a
+    crossed-out box instead (any error, as it does)."""
     try:
-        check_code(element)
-        if element.symbology == "qr" and len(element.data.encode()) > QR_BYTES:
-            import segno
-
-            segno.make(element.data, error="m")
-    except Exception:  # noqa: BLE001 - CodeError, segno's DataOverflowError
+        codes.verify(element)
+    except Exception:  # noqa: BLE001 - CodeError, or an encoder's own error
         return True
     return False
 

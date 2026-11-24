@@ -159,6 +159,27 @@ def _check_digits(data: str, symbology: str) -> None:
         raise CodeError("ean13_check" if symbology == "ean13" else "code_check")
 
 
+# a QR code's bytes at version 40 for each error correction level (ISO/IEC
+# 18004, byte mode); without a level the code has at least M
+QR_BYTES = {"L": 2953, "M": 2331, "Q": 1663, "H": 1273}
+QR_ECI_BYTES = 2  # the UTF-8 ECI in front of content beyond ASCII (12 bits)
+
+
+def verify(element: CodeElement) -> None:
+    """Raise CodeError (or another encoder error) if the code cannot be
+    made: check(), then the encoder's own limits (the length a code
+    holds, the syntax of GS1 data, the forms of UPC-E), as encode() would
+    meet them while drawing. A QR code whose content fits in any case is
+    not made: that takes milliseconds, and this checks every row of a
+    data file."""
+    check(element)
+    if element.symbology == "qr":
+        room = QR_BYTES[element.error_correction or "M"] - QR_ECI_BYTES
+        if len(element.data.encode()) <= room:
+            return
+    encode(element)
+
+
 # --- encoding ---------------------------------------------------------------
 
 

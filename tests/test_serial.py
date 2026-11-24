@@ -274,6 +274,26 @@ def test_unprintable_rows_are_found_before_the_first_label():
     assert info.value.rows == [2, 3, 4] and backend.prepared == [] and backend.jobs == []
 
 
+def test_rows_whose_codes_the_encoder_refuses_are_unprintable():
+    """Content the quick check passes but no code holds: GS1 data of the
+    wrong length, more than a DataMatrix or PDF417 code holds, a QR code
+    over the room of its error correction level. Printed, each would be a
+    crossed-out box."""
+    for symbology, good, bad, level in (
+        ("gs1_128", "(01)09501101530003", "(01)123", ""),
+        ("datamatrix", "ok", "x" * 5000, ""),
+        ("pdf417", "ok", "x" * 5000, ""),
+        ("qr", "x" * 1271, "x" * 1500, "H"),  # fits at M, not at H
+    ):
+        label = Label(
+            tape_mm=12,
+            printer="fake-mono",
+            elements=[CodeElement(data="{C}", symbology=symbology, error_correction=level)],
+        )
+        rows = [{"C": good}, {"C": bad}]
+        assert unprintable_rows(label, rows, range(2)) == [2], symbology
+
+
 def test_a_counter_that_overflows_a_code_on_a_later_copy():
     """The second copy's counter makes the EAN-13 13 digits with a wrong
     check digit: found before printing, not halfway through the row."""

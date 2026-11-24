@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 10:14+0100\n"
+"POT-Creation-Date: 2026-11-24 10:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2689,7 +2689,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/serial.md
 #, markdown-text
-msgid "Before printing, the codes of every row are checked: an EAN-13 needs 12 or 13 digits, an empty cell gives no code. Rows that fail are named; print without them or correct the data file."
+msgid "Before printing, the codes of every row are checked: an EAN-13 needs 12 or 13 digits, an empty cell gives no code, a code holds only so much (a QR code less with a higher error correction), GS1 data needs the lengths of its application identifiers. Rows that fail are named; print without them or correct the data file."
 msgstr ""
 
 #. type: Bullet: '- '

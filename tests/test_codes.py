@@ -447,6 +447,50 @@ def test_a_qr_code_too_long_warns():
     assert info.value.key == "code_too_long"
 
 
+@pytest.mark.parametrize(
+    ("data", "symbology", "key"),
+    [
+        ("(01)123", "gs1_128", "gs1_length"),
+        ("(99)" + "A" * 500, "gs1_128", "code_too_long"),
+        ("x" * 5000, "datamatrix", "code_too_long"),
+        ("x" * 5000, "pdf417", "code_too_long"),
+    ],
+)
+def test_verify_meets_the_encoders_own_limits(data, symbology, key):
+    """check() alone lets these through; drawing them fails."""
+    codes.check(CodeElement(data, symbology))
+    with pytest.raises(codes.CodeError) as info:
+        codes.verify(CodeElement(data, symbology))
+    assert info.value.key == key
+
+
+@pytest.mark.parametrize("level", ["", "L", "M", "Q", "H"])
+@pytest.mark.parametrize("char", ["x", "\u00e9"])
+def test_verify_of_a_qr_code_agrees_with_encoding_it(level, char, monkeypatch):
+    """A QR code whose bytes surely fit is not made; around the capacity
+    (with the UTF-8 ECI in front of content beyond ASCII) it is."""
+    room = codes.QR_BYTES[level or "M"]
+    seen = set()
+    for size in range(room - 4, room + 2):
+        element = CodeElement(char * (size // len(char.encode())), "qr", error_correction=level)
+        try:
+            codes.encode(element)
+        except codes.CodeError:
+            seen.add(False)
+            with pytest.raises(codes.CodeError):
+                codes.verify(element)
+        else:
+            seen.add(True)
+            codes.verify(element)
+    assert seen == {True, False}  # both sides of the capacity
+    made = []
+    monkeypatch.setattr(codes, "encode", made.append)
+    codes.verify(
+        CodeElement(char * ((room - 2) // len(char.encode())), "qr", error_correction=level)
+    )
+    assert made == []
+
+
 @pytest.mark.parametrize("symbology", SYMBOLOGIES)
 def test_lone_surrogates_are_refused(make_label, symbology):
     rendered = render(make_label(elements=[CodeElement("a\ud800", symbology)]))
