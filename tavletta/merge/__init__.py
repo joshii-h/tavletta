@@ -26,7 +26,14 @@ from xml.etree import ElementTree as ET
 
 from tavletta.merge import csvfile, limits, ods, xlsx
 from tavletta.merge.fill import fill, placeholders
-from tavletta.merge.table import MergeError, Table, cancellable, damaged, too_large
+from tavletta.merge.table import (
+    MergeError,
+    Table,
+    cancellable,
+    damaged,
+    too_large,
+    without_header,
+)
 from tavletta.readfile import FileTooLarge, NotRegularFile, read_limited
 
 __all__ = [
@@ -37,8 +44,10 @@ __all__ = [
     "limits",
     "placeholders",
     "read_book",
+    "read_book_data",
     "read_table",
     "sheet_names",
+    "without_header",
 ]
 
 _ZIP = (b"PK\x03\x04", b"PK\x05\x06")  # a file, or an empty archive
@@ -112,7 +121,14 @@ def read_book(path: str | Path, sheet: str = "", cancel: threading.Event | None 
     """The rows of the sheet named `sheet`, or of the first one if it is ""
     or there is no such sheet (any more), and the names of all sheets. ODS
     files are parsed only once for both. `cancel` as in read_table()."""
-    data = _read(path)
+    return read_book_data(_read(path), sheet, cancel)
+
+
+def read_book_data(data: bytes, sheet: str = "", cancel: threading.Event | None = None) -> Book:
+    """read_book() of a file's content (the print server gets files in its
+    requests), within the same limits."""
+    if len(data) > limits.MAX_FILE_BYTES:
+        raise too_large("file larger than %d MB" % (limits.MAX_FILE_BYTES // 2**20))
 
     def book() -> Book:
         if not data.startswith(_ZIP):

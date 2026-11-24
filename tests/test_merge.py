@@ -1576,3 +1576,62 @@ def test_fill_inserts_any_value(name, value):
     assume(not name.strip().startswith("="))  # a variable, never a column
     if name.strip():
         assert fill("<{%s}>" % name, {name.strip(): value}) == "<%s>" % value
+
+
+# --- the print server's web page: a file's content, a file without header -----
+
+
+def test_a_book_is_read_from_the_files_content(tmp_path):
+    from tavletta.merge import read_book_data
+
+    path = make_xlsx(
+        tmp_path,
+        xrow(inline("A1", "Number")) + xrow(num("A2", "300", 2)),
+        names=("Assets",),
+        styles=date_styles((164, "00000")),
+    )
+    book = read_book_data(path.read_bytes())
+    assert book.sheets == ["Assets"] and book.sheet == "Assets"
+    assert book.table.rows == [{"Number": "00300"}]  # the text the cell shows
+    assert book.table.delimiter == ""
+
+
+def test_a_files_content_is_held_to_the_file_limit(monkeypatch):
+    from tavletta.merge import read_book_data
+
+    monkeypatch.setattr(limits, "MAX_FILE_BYTES", 10)
+    with pytest.raises(MergeError) as info:
+        read_book_data(b"a\n" * 10)
+    assert info.value.code == "too_large"
+
+
+@pytest.mark.parametrize("sep", [",", ";", "\t"])
+def test_a_csv_tells_its_delimiter(tmp_path, sep):
+    table = read_table(write(tmp_path, "a.csv", f"A{sep}B\n1{sep}2\n"))
+    assert table.delimiter == sep
+    assert read_table(write(tmp_path, "b.csv", "Number\n00300\n")).delimiter == ""
+
+
+def test_a_table_without_header_keeps_its_first_row_as_data(tmp_path):
+    from tavletta.merge import without_header
+
+    table = read_table(write(tmp_path, "a.csv", "00300; x \n00301;y\n00302\n"))
+    assert table.columns == ["00300", "x"]  # read with a header: names
+    plain = without_header(table)
+    assert plain.columns == ["A", "B"]
+    assert plain.rows == [
+        {"A": "00300", "B": " x "},  # as it was, not stripped as a name is
+        {"A": "00301", "B": "y"},
+        {"A": "00302", "B": ""},
+    ]
+    assert plain.delimiter == ";"
+
+
+def test_a_table_without_header_keeps_the_row_limit(tmp_path, monkeypatch):
+    from tavletta.merge import without_header
+
+    table = read_table(write(tmp_path, "a.csv", "1\n2\n3\n"))
+    monkeypatch.setattr(limits, "MAX_ROWS", 2)
+    with pytest.raises(MergeError) as info:
+        without_header(table)
+    assert info.value.code == "too_large"
