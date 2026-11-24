@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import sys
 import tomllib
 from pathlib import Path
 
@@ -592,6 +593,287 @@ def test_the_packages_install_the_print_server_disabled():
     assert 'SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*"' in udev
     from tavletta.backends.niimbot import VENDOR_IDS
 
-    for vendor in VENDOR_IDS:  # the only serial devices
+    metainfo = (ROOT / "data" / "xyz.joshuahirsig.Tavletta.metainfo.xml").read_text(
+        encoding="utf-8"
+    )
+    for vendor in VENDOR_IDS:  # the only serial devices; software centres know them too
         assert f'ATTRS{{idVendor}}=="{vendor:04x}"' in udev
+        assert f"<modalias>usb:v{vendor:04X}p*</modalias>" in metainfo
     assert sum('SUBSYSTEM=="tty"' in line for line in rules_lines) == len(VENDOR_IDS)
+
+
+def test_release_assets_get_names_github_keeps_and_a_checksum_file(tmp_path):
+    """packaging/release-assets.sh collect: + and ^ (Debian and RPM
+    versions) become dots, so the mirror's names are the same; clashes and
+    names GitHub would change otherwise are refused."""
+    import shutil
+    import subprocess
+
+    if not shutil.which("bash"):
+        pytest.skip("no bash")
+    script = ROOT / "packaging" / "release-assets.sh"
+    built = tmp_path / "built"
+    built.mkdir()
+    names = [
+        "python3-zint-bindings_1.2.2+ds-1_amd64.deb",
+        "python3-x-0.1.0^20261105gita6f2957-1.fc44.noarch.rpm",
+    ]
+    for name in names:
+        (built / name).write_bytes(name.encode())
+
+    def collect(out, *files):
+        return subprocess.run(
+            ["bash", str(script), "collect", str(out), "SUMS", *map(str, files)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    done = collect(tmp_path / "assets", *(built / n for n in names))
+    assert done.returncode == 0, done.stderr
+    kept = [
+        "python3-zint-bindings_1.2.2.ds-1_amd64.deb",
+        "python3-x-0.1.0.20261105gita6f2957-1.fc44.noarch.rpm",
+    ]
+    assert sorted(p.name for p in (tmp_path / "assets").iterdir()) == sorted([*kept, "SUMS"])
+    sums = (tmp_path / "assets" / "SUMS").read_text()
+    assert [line.split("  ")[1] for line in sums.splitlines()] == kept
+    (built / "python3-zint-bindings_1.2.2.ds-1_amd64.deb").write_bytes(b"other")
+    clash = collect(
+        tmp_path / "clash", built / names[0], built / "python3-zint-bindings_1.2.2.ds-1_amd64.deb"
+    )
+    assert clash.returncode == 1 and "two assets named" in clash.stderr
+    (built / ".hidden").write_bytes(b"")
+    assert "starts or ends with a dot" in collect(tmp_path / "dot", built / ".hidden").stderr
+    assert "is not empty" in collect(tmp_path / "assets", built / names[0]).stderr
+
+
+class _FakeForgejo:
+    """A release's assets as Forgejo's API serves them, on 127.0.0.1."""
+
+    def __init__(self, hidden_for: int = 0):
+        import http.server
+        import threading
+
+        self.assets: dict[int, tuple[str, bytes]] = {}
+        self.next_id = 1
+        self.hidden_for = hidden_for  # answers 404 for the release this often
+        self.deleted: list[str] = []
+        fake = self
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+            def _send(self, code, body=b"", kind="application/json"):
+                self.send_response(code)
+                self.send_header("Content-Type", kind)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def do_GET(self):
+                import json
+
+                if self.path.startswith("/dl/"):
+                    data = fake.assets[int(self.path[4:])][1]
+                    self._send(200, data, "application/octet-stream")
+                    return
+                assert self.headers["Authorization"] == "token secret"
+                assert self.path == "/api/v1/repos/o/r/releases/tags/v1.0.0", self.path
+                if fake.hidden_for:
+                    fake.hidden_for -= 1
+                    self._send(404, b"{}")
+                    return
+                assets = [
+                    {"id": i, "name": n, "browser_download_url": f"{fake.url}/dl/{i}"}
+                    for i, (n, _) in fake.assets.items()
+                ]
+                self._send(200, json.dumps({"id": 7, "assets": assets}).encode())
+
+            def do_DELETE(self):
+                assert self.headers["Authorization"] == "token secret"
+                prefix = "/api/v1/repos/o/r/releases/7/assets/"
+                assert self.path.startswith(prefix)
+                fake.deleted.append(fake.assets.pop(int(self.path[len(prefix) :]))[0])
+                self._send(204)
+
+            def do_POST(self):
+                from email import policy
+                from email.parser import BytesParser
+                from urllib.parse import parse_qs, urlsplit
+
+                assert self.headers["Authorization"] == "token secret"
+                url = urlsplit(self.path)
+                assert url.path == "/api/v1/repos/o/r/releases/7/assets"
+                name = parse_qs(url.query)["name"][0]
+                body = self.rfile.read(int(self.headers["Content-Length"]))
+                head = f"Content-Type: {self.headers['Content-Type']}\r\n\r\n".encode()
+                part = next(
+                    BytesParser(policy=policy.default).parsebytes(head + body).iter_parts()
+                )
+                fake.assets[fake.next_id] = (name, part.get_payload(decode=True))
+                fake.next_id += 1
+                self._send(201, b"{}")
+
+        self.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        self.url = f"http://127.0.0.1:{self.server.server_address[1]}"
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+
+    def add(self, name: str, data: bytes) -> None:
+        self.assets[self.next_id] = (name, data)
+        self.next_id += 1
+
+    def files(self) -> dict[str, bytes]:
+        return dict(self.assets.values())
+
+
+def test_release_assets_upload_skips_the_same_and_replaces_other_content(tmp_path):
+    """packaging/release-assets.sh upload: waits for the release, skips a
+    file attached with the same content, replaces one with other content
+    (a rebuild, and its checksum file with it); a second run changes nothing."""
+    import os
+    import shutil
+    import subprocess
+
+    if not all(shutil.which(tool) for tool in ("bash", "curl", "jq", "sha256sum")):
+        pytest.skip("needs bash, curl, jq and sha256sum")
+    forgejo = _FakeForgejo(hidden_for=2)
+    forgejo.add("same.deb", b"same")
+    forgejo.add("rebuilt.deb", b"before")
+    forgejo.add("other-workflow.flatpak", b"untouched")
+    for name, data in (("same.deb", b"same"), ("rebuilt.deb", b"after"), ("new.deb", b"new")):
+        (tmp_path / name).write_bytes(data)
+    env = {
+        "PATH": os.environ["PATH"],
+        "FORGEJO_URL": forgejo.url,
+        "GITHUB_REPOSITORY": "o/r",
+        "TOKEN": "secret",
+        "RELEASE_WAIT_SECONDS": "0",
+    }
+
+    def upload(*names, **extra):
+        return subprocess.run(
+            ["bash", str(ROOT / "packaging" / "release-assets.sh"), "upload", "v1.0.0"]
+            + [str(tmp_path / n) for n in names],
+            env=env | extra,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+
+    try:
+        done = upload("same.deb", "rebuilt.deb", "new.deb")
+        assert done.returncode == 0, done.stdout + done.stderr
+        assert "same.deb exists" in done.stdout and "new.deb uploaded" in done.stdout
+        assert "rebuilt.deb replaced" in done.stdout
+        assert forgejo.deleted == ["rebuilt.deb"]
+        assert forgejo.files() == {
+            "same.deb": b"same",
+            "rebuilt.deb": b"after",
+            "other-workflow.flatpak": b"untouched",
+            "new.deb": b"new",
+        }
+        again = upload("same.deb", "rebuilt.deb", "new.deb")
+        assert again.returncode == 0 and again.stdout.count(" exists") == 3, again.stdout
+        forgejo.hidden_for = 5
+        gone = upload("new.deb", RELEASE_WAIT_TRIES="2")
+        assert gone.returncode == 1 and "::error::no Forgejo release for v1.0.0" in gone.stdout
+    finally:
+        forgejo.server.shutdown()
+
+
+def test_the_packages_name_the_project_address():
+    """Maintainer, changelogs, copyright and patch headers of the Debian
+    and RPM packages give the project's address, no personal one."""
+    files = [p for p in (ROOT / "packaging").rglob("*") if p.is_file()]
+    assert files
+    for path in files:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        assert "gmail.com" not in text, path
+    control = (ROOT / "packaging" / "debian" / "control").read_text(encoding="utf-8")
+    assert "Maintainer: Joshua Hirsig <tavletta@joshuahirsig.xyz>\n" in control
+
+
+def test_the_package_workflows():
+    """deb.yml and rpm.yml alike: the tag of a push or of a manual run
+    (which then uploads too), an image pinned by digest for the job and the
+    fresh container that tries the packages, uploads through
+    release-assets.sh with the checksum file last, which release-mirror.yml
+    waits for; release.yml's notes name the systems the images are."""
+    docs = _workflow("docs.yml", ".forgejo")
+    notes = (ROOT / ".forgejo" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    mirror = _workflow("release-mirror.yml")
+    for name, image, sums, system in (
+        ("deb.yml", "debian:trixie", "SHA256SUMS-deb", "Debian 13 (trixie)"),
+        ("rpm.yml", "fedora:44", "SHA256SUMS-rpm", "Fedora 44 (`fc44`)"),
+    ):
+        workflow = _workflow(name, ".forgejo")
+        assert set(workflow["on"]) == {"push", "workflow_dispatch"}
+        (job,) = workflow["jobs"].values()
+        assert re.fullmatch(re.escape(image) + r"@sha256:[0-9a-f]{64}", job["container"]["image"])
+        assert workflow["env"]["IMAGE"] == job["container"]["image"], name
+        assert job["env"]["TAG"] == (
+            "${{ github.event_name == 'push' && github.ref_name || inputs.tag }}"
+        )
+        steps = {step["name"]: step for step in job["steps"]}
+        code = steps["Get the code"]["run"]
+        assert 'echo "PUBLISH=true"' in code.split("else")[0]  # with a tag, also a manual run
+        assert '"$IMAGE"' in steps["Install and try in a fresh container"]["run"]
+        assert (
+            "packaging/clean-container.sh" in steps["Install and try in a fresh container"]["run"]
+        )
+        assert f"release-assets.sh collect assets {sums} " in steps["Assets"]["run"]
+        upload = steps["Attach to the Forgejo release"]
+        assert upload["if"] == "env.PUBLISH == 'true'"
+        assert upload["run"].rstrip().endswith(f'"${{files[@]}}" assets/{sums}')
+        assert workflow["env"]["DOCKER_CLI_VERSION"] == docs["env"]["DOCKER_CLI_VERSION"]
+        assert re.fullmatch(r"[0-9a-f]{64}", workflow["env"]["DOCKER_CLI_SHA256"])
+        assert sums in mirror["jobs"]["mirror"]["env"]["COMPLETE"].split()
+        assert system in notes, system
+    assert "SHA256SUMS" in mirror["jobs"]["mirror"]["env"]["COMPLETE"].split()
+    assert "workflow_dispatch" in mirror["on"]
+    bundle = (ROOT / ".github" / "workflows" / "flatpak-bundle.yml").read_text(encoding="utf-8")
+    assert (
+        "Tavletta-${{ github.event_name == 'push' && github.ref_name || 'test' }}-x86_64.flatpak"
+        in bundle
+    )
+    assert "`Tavletta-{tag}-x86_64.flatpak`: any Linux distribution with Flatpak, x86-64" in notes
+
+
+def test_the_release_notes_say_which_download_is_for_which_system(tmp_path):
+    """release.yml's notes step, run: the metainfo's notes of this version,
+    then the downloads."""
+    import os
+    import subprocess
+
+    from tavletta import __version__
+
+    step = next(
+        s
+        for s in _workflow("release.yml", ".forgejo")["jobs"]["release"]["steps"]
+        if s["name"] == "Version and release notes"
+    )
+    script = step["run"].split("<<'EOF'\n", 1)[1].split("\nEOF\n", 1)[0]
+    src = tmp_path / "src"
+    (src / "tavletta").mkdir(parents=True)
+    (src / "data").mkdir()
+    (src / "tavletta" / "__init__.py").write_text(f'__version__ = "{__version__}"\n')
+    metainfo = "xyz.joshuahirsig.Tavletta.metainfo.xml"
+    (src / "data" / metainfo).write_bytes((ROOT / "data" / metainfo).read_bytes())
+    env_file = tmp_path / "env"
+    done = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=src,
+        env=os.environ
+        | {"TAG": f"v{__version__}", "DRY_RUN": "true", "GITHUB_ENV": str(env_file)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert done.returncode == 0, done.stderr
+    body = (tmp_path / "release-notes.md").read_text()
+    assert body.index("**Downloads**") > 0  # after the version's notes
+    assert f"`Tavletta-v{__version__}-x86_64.flatpak`" in body
+    assert f"VERSION={__version__}\n" in env_file.read_text()

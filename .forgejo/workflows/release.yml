@@ -2,7 +2,7 @@
 # (.github/workflows/release-mirror.yml) once the tag arrives via the mirror.
 #
 # Notes come from the matching <release> in the AppStream metainfo, otherwise
-# from the tag annotation. Assets: sdist, wheel and SHA256SUMS. The tag must
+# from the tag annotation, followed by which download is for which system. Assets: sdist, wheel and SHA256SUMS. The tag must
 # match __version__ in tavletta/__init__.py (pyproject.toml reads it from there).
 #
 # Manual run (Actions -> Release -> Run workflow): `tag` picks an existing tag;
@@ -118,6 +118,18 @@ jobs:
               if ann:
                   notes.append(ann)
           body = "\n\n".join(notes) or f"Tavletta {version}"
+          # which file is for which system: the package workflows' images
+          # (deb.yml, rpm.yml) and the bundle's architecture (flatpak-bundle.yml);
+          # tests/test_packaging.py keeps these in step with them
+          body += (
+              "\n\n**Downloads** (the packages are attached once their builds finish):\n\n"
+              f"- `Tavletta-{tag}-x86_64.flatpak`: any Linux distribution with Flatpak, x86-64\n"
+              "- `*.deb`: Debian 13 (trixie), amd64 (`_amd64`) and every architecture"
+              " (`_all`); the source packages as `*.debian-source.tar`\n"
+              "- `*.rpm`: Fedora 44 (`fc44`), x86_64 and noarch; the source packages as `*.src.rpm`\n"
+              "- `.tar.gz` and `.whl`: the Python source and wheel, for pip\n"
+              "- `SHA256SUMS`, `SHA256SUMS-deb`, `SHA256SUMS-rpm`: checksums"
+          )
 
           pathlib.Path("../release-notes.md").write_text(body + "\n")
           with open(os.environ["GITHUB_ENV"], "a") as env:

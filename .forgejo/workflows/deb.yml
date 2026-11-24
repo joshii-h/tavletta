@@ -2,16 +2,27 @@
 # release that release.yml creates. GitHub copies them with the rest
 # (.github/workflows/release-mirror.yml).
 #
-# packaging/debian/build.sh builds, in a debian:trixie container, tavletta
-# and the two packages it needs that Debian does not have
+# packaging/debian/build.sh builds, in a Debian 13 (trixie) container,
+# tavletta and the two packages it needs that Debian does not have
 # (python3-zint-bindings, against Debian's libzint, and python3-labelprinter,
-# the fork's pinned commit), with lintian on each; smoke-test.sh installs them
-# and renders example labels without a display. Assets: every .deb and
-# SHA256SUMS-deb.
+# the fork's pinned commit), with lintian on each. smoke-test.sh then
+# installs them in a fresh container, where nothing of the build is
+# installed: version, two labels rendered without a display, the print
+# server's unit, and the autopkgtests (the program's tests against the
+# installed package). That container is started through the host's Docker
+# daemon, which jobs on this instance reach (docs.yml deploys through it):
+# a second job could not get the packages, as artifacts do not work here
+# (the runner reaches Forgejo as server:3000, see ci.yml).
 #
-# Manual run (Actions -> Debian packages -> Run workflow): `tag` empty builds
-# and tests the selected branch and uploads nothing; a tag rebuilds that
-# release and adds missing files to it (existing assets are skipped).
+# Assets (packaging/release-assets.sh: names GitHub keeps): every .deb, the
+# source packages as one tar each (.dsc, .debian.tar.xz and .orig.tar.*,
+# under the names the .dsc expects) and SHA256SUMS-deb. The release notes
+# name the distribution and architectures (release.yml).
+#
+# Manual run (Actions -> Debian packages -> Run workflow): `tag` empty
+# builds and tests the selected branch and uploads nothing; a tag rebuilds
+# that release and attaches the files to it (the same file is skipped, a
+# different one replaced, so re-runs are safe).
 #
 # No secrets: Forgejo uses the automatic Actions token.
 
@@ -23,7 +34,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag to build and attach, e.g. v1.1.0 (empty = test build, uploads nothing)
+        description: Tag to build and attach, e.g. v1.1.2 (empty = test build, uploads nothing)
         required: false
         default: ""
 
@@ -34,6 +45,12 @@ env:
   FORGEJO_URL: https://git.joshuahirsig.xyz
   REPO_URL: https://git.joshuahirsig.xyz/${{ github.repository }}.git
   DEBIAN_FRONTEND: noninteractive
+  # the image of the job and of the fresh container, pinned by digest: bump
+  # both together (tests/test_packaging.py checks that they agree)
+  IMAGE: debian:trixie@sha256:3cda3ca472ce45507a5109c6a3907093e24d9ae67d55954c9a07a45665dafba2
+  # match the host's Docker daemon (as docs.yml)
+  DOCKER_CLI_VERSION: "29.6.2"
+  DOCKER_CLI_SHA256: d6204aea92238e2453d5445c885b9d2e5eb8f82915568ec50edf9dbe12a3ac74
 
 defaults:
   run:
@@ -43,10 +60,11 @@ jobs:
   deb:
     runs-on: ubuntu-latest
     container:
-      image: debian:trixie
-    timeout-minutes: 60
+      image: debian:trixie@sha256:3cda3ca472ce45507a5109c6a3907093e24d9ae67d55954c9a07a45665dafba2
+    timeout-minutes: 90
     env:
-      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+      # a push: the tag pushed; a manual run: the tag given, possibly empty
+      TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
     steps:
       - name: Install system packages
         run: |
@@ -64,16 +82,15 @@ jobs:
               echo "::error::not a release tag: $TAG"; exit 1
             fi
             git checkout -q --detach "refs/tags/$TAG"
-            version="$(sed -n 's/^__version__ = "\([^"]*\)"$/\1/p' tavletta/__init__.py)"
-            if [ "$TAG" != "v$version" ]; then
-              echo "::error::tag $TAG does not match the version $version in tavletta/__init__.py"; exit 1
-            fi
             echo "PUBLISH=true" >> "$GITHUB_ENV"
           else
             echo "::notice::test build of ${GITHUB_SHA}, nothing is uploaded"
             git checkout -q --detach "$GITHUB_SHA"
-            version="$(sed -n 's/^__version__ = "\([^"]*\)"$/\1/p' tavletta/__init__.py)"
             echo "PUBLISH=false" >> "$GITHUB_ENV"
+          fi
+          version="$(sed -n 's/^__version__ = "\([^"]*\)"$/\1/p' tavletta/__init__.py)"
+          if [ -n "$TAG" ] && [ "$TAG" != "v$version" ]; then
+            echo "::error::tag $TAG does not match the version $version in tavletta/__init__.py"; exit 1
           fi
           echo "VERSION=$version" >> "$GITHUB_ENV"
           git log -1 --format='%h %s'
@@ -81,14 +98,36 @@ jobs:
       - name: Build
         run: src/packaging/debian/build.sh out
 
-      - name: Install and try
-        run: src/packaging/debian/smoke-test.sh out "$VERSION"
-
-      - name: Checksums
-        working-directory: out
+      - name: Docker CLI
         run: |
-          sha256sum -- *.deb > SHA256SUMS-deb
-          ls -l; cat SHA256SUMS-deb
+          set -euo pipefail
+          curl -fsSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_CLI_VERSION}.tgz" -o /tmp/docker.tgz
+          echo "$DOCKER_CLI_SHA256  /tmp/docker.tgz" | sha256sum -c --quiet -
+          tar -xzf /tmp/docker.tgz -C /tmp docker/docker
+          install -m 0755 /tmp/docker/docker /usr/local/bin/docker
+          docker version --format 'Docker daemon {{.Server.Version}}'
+
+      - name: Install and try in a fresh container
+        run: |
+          set -euo pipefail
+          mkdir try
+          cp -r out try/out
+          cp src/packaging/debian/smoke-test.sh try/
+          src/packaging/clean-container.sh "$IMAGE" try ./smoke-test.sh out "$VERSION"
+
+      - name: Assets
+        run: |
+          set -euo pipefail
+          # each source package as one tar: renaming its files would break the .dsc
+          mkdir sources
+          for dsc in out/source/*.dsc; do
+            base="$(basename "$dsc" .dsc)"
+            mapfile -t files < <(sed -n '/^Files:/,/^[^ ]/s/^ [0-9a-f]\{32\} [0-9]* \(.*\)$/\1/p' "$dsc")
+            files=("$(basename "$dsc")" "${files[@]}")
+            tar -C out/source -cf "sources/$base.debian-source.tar" -- "${files[@]}"
+            tar -tf "sources/$base.debian-source.tar"
+          done
+          src/packaging/release-assets.sh collect assets SHA256SUMS-deb out/*.deb sources/*.tar
 
       - name: Attach to the Forgejo release
         if: env.PUBLISH == 'true'
@@ -96,23 +135,6 @@ jobs:
           TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          api="$FORGEJO_URL/api/v1/repos/$GITHUB_REPOSITORY"
-          auth=(-H "Authorization: token $TOKEN")
-          # the release is created by release.yml, which may still be building;
-          # once a minute: frequent polling looks like a crawler to the server's CrowdSec
-          for i in $(seq 30); do
-            release="$(curl -sS --fail "${auth[@]}" "$api/releases/tags/$TAG")" && break
-            [ "$i" = 30 ] && { echo "::error::no Forgejo release for $TAG"; exit 1; }
-            sleep 60
-          done
-          id="$(jq -r .id <<<"$release")"
-          for f in out/*.deb out/SHA256SUMS-deb; do
-            name="$(basename "$f")"
-            if jq -e --arg n "$name" 'any(.assets[]?; .name == $n)' <<<"$release" > /dev/null; then
-              echo "$name exists"; continue
-            fi
-            curl -sS --fail-with-body "${auth[@]}" -F "attachment=@$f" \
-              "$api/releases/$id/assets?name=$(jq -rn --arg n "$name" '$n|@uri')" > /dev/null
-            echo "$name uploaded"
-          done
-          echo "$FORGEJO_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+          # the checksum file last: release-mirror.yml waits for it
+          mapfile -t files < <(find assets -maxdepth 1 -type f ! -name SHA256SUMS-deb | sort)
+          src/packaging/release-assets.sh upload "$TAG" "${files[@]}" assets/SHA256SUMS-deb

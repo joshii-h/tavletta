@@ -1,22 +1,29 @@
-# Builds the RPMs for a tag v* in a Fedora container and attaches them to
+# Builds the RPMs for a tag v* in a Fedora 44 container and attaches them to
 # the Forgejo release: tavletta (noarch) and the Python packages it needs
 # that Fedora does not have (python3-segno, python3-barcode,
 # python3-labelprinter, python3-zint-bindings), each with its SRPM, and
 # SHA256SUMS-rpm. The specs follow Fedora's packaging guidelines
 # (packaging/rpm/, built by packaging/rpm/build.sh, checked by rpmlint).
 #
-# The packages are installed in the same container and tried before the
-# upload: `tavletta --version` must print the tag's version, and a label is
-# rendered to PNG without a printer or display.
+# packaging/rpm/smoke-test.sh then installs the packages in a fresh
+# container, where nothing of the build is installed: `tavletta --version`
+# must print the tag's version, two labels are rendered without a printer
+# or display, the print server's unit, user and folders are checked. That
+# container is started through the host's Docker daemon, as in deb.yml
+# (which says why not in a second job).
 #
-# The release itself comes from release.yml; this workflow waits for it.
-# GitHub copies the assets (release-mirror.yml).
+# Assets (packaging/release-assets.sh): names GitHub keeps (the ^ of a
+# snapshot version becomes a dot). The release notes name the distribution
+# and architectures (release.yml). The release itself comes from
+# release.yml; this workflow waits for it. GitHub copies the assets
+# (release-mirror.yml).
 #
-# Manual run (Actions -> RPM -> Run workflow): builds and tries the packages
-# of the selected branch, or of `tag` if given; uploads nothing.
+# Manual run (Actions -> RPM -> Run workflow): `tag` empty builds and tries
+# the packages of the selected branch and uploads nothing; a tag rebuilds
+# that release and attaches the files to it, as deb.yml does (the same file
+# is skipped, a different one replaced, so re-runs are safe).
 #
 # No secrets: Forgejo uses the automatic Actions token.
-# Re-runs are safe: existing assets are skipped.
 
 name: RPM
 
@@ -26,7 +33,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag to build, e.g. v1.1.0 (empty = the selected branch); nothing is uploaded
+        description: Tag to build and attach, e.g. v1.1.2 (empty = test build, uploads nothing)
         required: false
         default: ""
 
@@ -36,6 +43,12 @@ permissions:
 env:
   FORGEJO_URL: https://git.joshuahirsig.xyz
   REPO_URL: https://git.joshuahirsig.xyz/${{ github.repository }}.git
+  # the image of the job and of the fresh container, pinned by digest: bump
+  # both together (tests/test_packaging.py checks that they agree)
+  IMAGE: fedora:44@sha256:15da97ed9aa94dd3d92c3925eb89520f6c80e07ea7ee24cba848d1f8b6912b3e
+  # match the host's Docker daemon (as docs.yml)
+  DOCKER_CLI_VERSION: "29.6.2"
+  DOCKER_CLI_SHA256: d6204aea92238e2453d5445c885b9d2e5eb8f82915568ec50edf9dbe12a3ac74
 
 defaults:
   run:
@@ -45,15 +58,14 @@ jobs:
   rpm:
     runs-on: ubuntu-latest
     container:
-      image: fedora:44
-    timeout-minutes: 60
+      image: fedora:44@sha256:15da97ed9aa94dd3d92c3925eb89520f6c80e07ea7ee24cba848d1f8b6912b3e
+    timeout-minutes: 90
     env:
-      # (a push: the tag pushed; a manual run: the tag given, possibly empty)
+      # a push: the tag pushed; a manual run: the tag given, possibly empty
       TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
-      PUBLISH: ${{ github.event_name == 'push' }}
     steps:
-      - name: Install git
-        run: dnf install -y -q git-core jq > /dev/null
+      - name: Install system packages
+        run: dnf install -y -q git-core jq curl tar > /dev/null
 
       - name: Get the code
         run: |
@@ -66,15 +78,18 @@ jobs:
               echo "::error::not a release tag: $TAG"; exit 1
             fi
             git checkout -q --detach "refs/tags/$TAG"
+            echo "PUBLISH=true" >> "$GITHUB_ENV"
           else
+            echo "::notice::test build of ${GITHUB_SHA}, nothing is uploaded"
             git checkout -q --detach "$GITHUB_SHA"
+            echo "PUBLISH=false" >> "$GITHUB_ENV"
           fi
-          git log -1 --format='%h %s'
-          version="$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' tavletta/__init__.py)"
+          version="$(sed -n 's/^__version__ = "\([^"]*\)"$/\1/p' tavletta/__init__.py)"
           if [ -n "$TAG" ] && [ "$TAG" != "v$version" ]; then
             echo "::error::tag $TAG does not match the version $version in tavletta/__init__.py"; exit 1
           fi
           echo "VERSION=$version" >> "$GITHUB_ENV"
+          git log -1 --format='%h %s'
 
       - name: Build
         working-directory: src
@@ -89,45 +104,32 @@ jobs:
             packaging/rpm/build.sh ../rpms
           fi
 
-      - name: Try the packages
-        working-directory: rpms
+      - name: Docker CLI
         run: |
           set -euo pipefail
-          dnf install -y -q $(ls *.rpm | grep -v '\.src\.rpm$')
-          out="$(tavletta --version)"
-          echo "$out"
-          grep -qF "$VERSION" <<<"$out" || { echo "::error::expected $VERSION"; exit 1; }
-          # a label rendered to PNG: no printer, no display
-          tavletta print ../src/docs/examples/cable.tavletta --printer vc500w \
-            --no-query --no-save-counter --dry-run --output cable.png
-          python3 -c 'from PIL import Image; im = Image.open("cable.png"); print(im.size); assert min(im.size) > 0'
-          rm cable.png
-          sha256sum -- *.rpm > SHA256SUMS-rpm
-          ls -l; cat SHA256SUMS-rpm
+          curl -fsSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_CLI_VERSION}.tgz" -o /tmp/docker.tgz
+          echo "$DOCKER_CLI_SHA256  /tmp/docker.tgz" | sha256sum -c --quiet -
+          tar -xzf /tmp/docker.tgz -C /tmp docker/docker
+          install -m 0755 /tmp/docker/docker /usr/local/bin/docker
+          docker version --format 'Docker daemon {{.Server.Version}}'
+
+      - name: Install and try in a fresh container
+        run: |
+          set -euo pipefail
+          mkdir try
+          cp -r rpms try/rpms
+          cp src/packaging/rpm/smoke-test.sh try/
+          src/packaging/clean-container.sh "$IMAGE" try ./smoke-test.sh rpms "$VERSION"
+
+      - name: Assets
+        run: src/packaging/release-assets.sh collect assets SHA256SUMS-rpm rpms/*.rpm
 
       - name: Attach to the Forgejo release
         if: env.PUBLISH == 'true'
-        working-directory: rpms
         env:
           TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          api="$FORGEJO_URL/api/v1/repos/$GITHUB_REPOSITORY"
-          auth=(-H "Authorization: token $TOKEN")
-          # release.yml creates the release; wait for it (up to 30 minutes),
-          # once a minute: frequent polling looks like a crawler to the server's CrowdSec
-          for i in $(seq 30); do
-            release="$(curl -sS --fail "${auth[@]}" "$api/releases/tags/$TAG")" && break
-            [ "$i" = 30 ] && { echo "::error::no Forgejo release for $TAG"; exit 1; }
-            sleep 60
-          done
-          id="$(jq -r .id <<<"$release")"
-          for f in *.rpm SHA256SUMS-rpm; do
-            if jq -e --arg n "$f" 'any(.assets[]?; .name == $n)' <<<"$release" > /dev/null; then
-              echo "$f exists"; continue
-            fi
-            curl -sS --fail-with-body "${auth[@]}" -F "attachment=@$f" \
-              "$api/releases/$id/assets?name=$(jq -rn --arg n "$f" '$n|@uri')" > /dev/null
-            echo "$f uploaded"
-          done
-          echo "$FORGEJO_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+          # the checksum file last: release-mirror.yml waits for it
+          mapfile -t files < <(find assets -maxdepth 1 -type f ! -name SHA256SUMS-rpm | sort)
+          src/packaging/release-assets.sh upload "$TAG" "${files[@]}" assets/SHA256SUMS-rpm
