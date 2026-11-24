@@ -59,11 +59,14 @@ collect() {
 
 api() { echo "$FORGEJO_URL/api/v1/repos/$GITHUB_REPOSITORY"; }
 auth=(-H "Authorization: token ${TOKEN:-}")
+# no request hangs a workflow: API calls a minute, files 10 minutes
+quick=(--connect-timeout 20 --max-time 60)
+slow=(--connect-timeout 20 --max-time 600)
 
 release_of() {  # TAG: the release's JSON, waiting for it; fails without it
   local tries="${RELEASE_WAIT_TRIES:-30}" i
   for ((i = 1; ; i++)); do
-    curl -sS --fail "${auth[@]}" "$(api)/releases/tags/$1" && return
+    curl -sS --fail "${quick[@]}" "${auth[@]}" "$(api)/releases/tags/$1" && return
     [ "$i" -lt "$tries" ] || return 1
     sleep "${RELEASE_WAIT_SECONDS:-60}"
   done
@@ -79,16 +82,16 @@ upload() {
     asset="$(jq -c --arg n "$name" 'first(.assets[]? | select(.name == $n)) // empty' <<< "$release")"
     if [ -n "$asset" ]; then
       url="$(jq -r .browser_download_url <<< "$asset")"
-      if [ "$(curl -sS --fail -L "$url" | sha256sum | cut -d' ' -f1)" = \
+      if [ "$(curl -sS --fail -L "${slow[@]}" "$url" | sha256sum | cut -d' ' -f1)" = \
            "$(sha256sum < "$f" | cut -d' ' -f1)" ]; then
         echo "$name exists"
         continue
       fi
-      curl -sS --fail-with-body "${auth[@]}" -X DELETE \
+      curl -sS --fail-with-body "${quick[@]}" "${auth[@]}" -X DELETE \
         "$(api)/releases/$id/assets/$(jq -r .id <<< "$asset")" > /dev/null
       echo "$name replaced:"
     fi
-    curl -sS --fail-with-body "${auth[@]}" -F "attachment=@$f" \
+    curl -sS --fail-with-body "${slow[@]}" "${auth[@]}" -F "attachment=@$f" \
       "$(api)/releases/$id/assets?name=$(jq -rn --arg n "$name" '$n|@uri')" > /dev/null
     echo "$name uploaded"
   done
@@ -111,7 +114,7 @@ notes() {
     fi
     grep -qxF -- "**Downloads**" <<< "$body" || body="${body%$'\n'}"$'\n\n'"**Downloads**"$'\n\n'
     body="${body%$'\n'}"$'\n'"$line"
-    curl -sS --fail-with-body "${auth[@]}" -X PATCH -H "Content-Type: application/json" \
+    curl -sS --fail-with-body "${quick[@]}" "${auth[@]}" -X PATCH -H "Content-Type: application/json" \
       --data "$(jq -n --arg b "$body" '{body: $b}')" \
       "$(api)/releases/$(jq -r .id <<< "$release")" > /dev/null
     checked=0
