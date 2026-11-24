@@ -101,7 +101,7 @@ main:focus,
 
 .skip {
   position: absolute;
-  left: var(--sp-2);
+  inset-inline-start: var(--sp-2);
   top: -100px;
   padding: var(--sp-2) var(--sp-3);
   background: var(--surface);

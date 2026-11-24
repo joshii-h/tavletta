@@ -456,7 +456,7 @@ export function jobResult(job, extra = []) {
   const kinds = { done: ["ok", t("Printed")], canceled: ["warn", t("Canceled")], failed: ["error", t("Failed")] };
   const [kind, title] = kinds[job.state] ?? ["info", job.state];
   const seconds = job.started && job.finished ? (new Date(job.finished) - new Date(job.started)) / 1000 : null;
-  const idInput = h("input", { type: "text", readonly: true, value: job.id, class: "job-id", id: uid("job") });
+  const idInput = h("input", { type: "text", readonly: true, value: job.id, class: "job-id", id: uid("job"), dir: "ltr" });
   const copy = h(
     "button",
     {

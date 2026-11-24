@@ -7,6 +7,7 @@
 let messages = {};
 export let lang = "en";
 export let languages = ["en"];
+export let dir = "ltr";
 const STORE = "tavletta.lang"; // the language chosen here, for this browser only
 
 export function t(text, params) {
@@ -68,10 +69,11 @@ export async function loadMessages(asked = stored()) {
       messages = body.messages ?? {};
       lang = body.language ?? "en";
       languages = body.languages ?? ["en"];
+      dir = body.dir === "rtl" ? "rtl" : "ltr";
     }
   } catch {
     // offline: English, the texts themselves
   }
   document.documentElement.lang = lang.replace("_", "-");
-  document.documentElement.dir = ["ar", "he", "fa", "ur"].includes(lang.split("_")[0]) ? "rtl" : "ltr";
+  document.documentElement.dir = dir; // the server's, from the app's list of right-to-left languages
 }

@@ -68,7 +68,8 @@ function header() {
       header();
       render();
     } },
-    languages.map((code) => h("option", { value: code, selected: code === lang }, languageName(code))),
+    // each name in its own language (and script direction)
+    languages.map((code) => h("option", { value: code, selected: code === lang, lang: code.replace("_", "-") }, languageName(code))),
   );
   box.replaceChildren(
     h("label", { for: "language", class: "visually-hidden" }, t("Language")),
@@ -155,7 +156,7 @@ async function render() {
 
 function signIn() {
   document.getElementById("nav").replaceChildren();
-  const input = h("input", { type: "password", autocomplete: "off", spellcheck: "false", autocapitalize: "off", name: "token" });
+  const input = h("input", { type: "password", autocomplete: "off", spellcheck: "false", autocapitalize: "off", name: "token", dir: "ltr" });
   const tokenField = field({
     label: t("Access token"),
     hint: t("The administrator gives it to you. It is kept in this tab only and forgotten when the tab is closed."),
