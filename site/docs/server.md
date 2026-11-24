@@ -1,8 +1,9 @@
 # Print server
 
-Other programs and AI assistants can print labels through Tavletta without
-opening the window: `tavletta serve` offers a web interface for programs
-(REST API), `tavletta mcp` connects AI assistants such as Claude.
+Other programs, AI assistants and people in a browser can print labels
+through Tavletta without opening the window: `tavletta serve` offers a web
+page for people and a web interface for programs (REST API), `tavletta
+mcp` connects AI assistants such as Claude.
 
 - Setting up the server for a company, with Docker or systemd, HTTPS and
   fonts: [Server installation](server-install.md).
@@ -22,6 +23,7 @@ tavletta serve --labels-dir ~/Labels
   `~/.local/share/tavletta/labels`.
 - Printer address, safety margin and print settings are those set in the
   app.
+- Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page).
 - `--mcp` adds the connection for AI assistants at `/mcp`.
 - Stop with Ctrl+C: waiting jobs are canceled, a label being printed is
   finished and the counter saved.
@@ -99,11 +101,46 @@ tavletta serve --labels-dir ~/Labels
 - The token is shown only once; the file keeps only a fingerprint (hash)
   of it.
 - `preview` only lists and shows previews, `print` also prints and
-  follows its own jobs, `admin` sees and cancels all jobs.
+  follows its own jobs, `admin` sees and cancels all jobs and uploads
+  and deletes templates.
 - `--printer shipping` limits a token to that printer, `--expires
   2027-12-31` to a date.
 - To take a token back, delete its entry in `tokens.toml`. The server
   notices it at once.
+
+## Web page { #web-page }
+
+The server's own page, at its address (`http://127.0.0.1:8790/`, or the
+address of the [reverse proxy](server-install.md#proxy)):
+
+- **Sign in** with an access token (without a token on the server there is
+  nothing to sign in to). The browser keeps it in this tab only; "Sign
+  out" forgets it.
+- **Printers**: their state, the labels or tape loaded and problems, in
+  words.
+- **Templates**: the label files of the labels folder with a preview.
+  "Print" fills in the fields of one label and shows the preview as it
+  is typed; the elements a field fills are outlined in it. With an
+  `admin` token, templates are uploaded (`.tavletta` files) and deleted
+  here.
+- **Series**, step by step:
+  1. Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or
+     no data at all. Leading zeros stay (`00300`).
+  2. Assign: which column fills which field of the template (the same
+     names are assigned already).
+  3. Choose: all rows, some rows (`1-20, 25, 30-`), or by ranges of a
+     field. Without data, ranges make the values: Inventory number from
+     `3000` to `5685` is 2686 labels, `00300` to `00450` keeps the zeros,
+     a step makes every second or tenth number; `3000-5685` can be typed
+     or pasted at once.
+  4. Check: the number of labels, the first and the last one, the limits
+     of the server and the printer.
+  5. Print: from 100 labels on, the page asks first. The progress shows
+     how many are printed; Cancel stops after the current label. After a
+     cancel or a printer problem, "Continue from …" prints the rest.
+- The page speaks the language of the browser, or the one chosen at the
+  top.
+- `--no-web-ui` turns the page off, for servers that only programs use.
 
 ## Programs (REST API) { #api }
 

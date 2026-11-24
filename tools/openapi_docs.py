@@ -220,7 +220,10 @@ def _curl(method: str, path: str, operation: dict) -> list[str]:
     if method not in ("get", "post"):
         parts.append("-X " + method.upper())
     body = operation.get("requestBody")
-    if body:
+    if method == "put":  # a file uploaded as it is
+        parts.append("-H 'Content-Type: application/json'")
+        parts.append("--data-binary @asset-tag.tavletta")
+    elif body:
         content = body["content"]["application/json"]
         example = content.get("example") or next(iter(content["examples"].values()))["value"]
         parts.append("-H 'Content-Type: application/json'")
@@ -250,8 +253,12 @@ def _operation(document: dict, method: str, path: str, operation: dict) -> list[
         lines += params + [""]
     body = operation.get("requestBody")
     if body:
-        lines += ["Body fields:", ""]
-        lines += _fields(document, body["content"]["application/json"]["schema"]) + [""]
+        schema = _schema(document, body["content"]["application/json"]["schema"])
+        if "properties" in schema:
+            lines += ["Body fields:", ""]
+            lines += _fields(document, schema) + [""]
+        else:
+            lines += ["Body: " + _md(schema["description"]), ""]
     lines += _answers(operation) + [""]
     lines += _curl(method, path, operation) + [""]
     return lines
@@ -259,7 +266,16 @@ def _operation(document: dict, method: str, path: str, operation: dict) -> list[
 
 def _schemas(document: dict) -> list[str]:
     lines = ["## Answers { #answers }", ""]
-    for name in ("Job", "Label", "NamedPrinter", "PrinterStatus", "Preview"):
+    for name in (
+        "Job",
+        "Label",
+        "NamedPrinter",
+        "PrinterStatus",
+        "Preview",
+        "Geometry",
+        "Me",
+        "Data",
+    ):
         schema = document["components"]["schemas"][name]
         lines += ["### %s { #%s }" % (name, name.lower()), ""]
         if "description" in schema:

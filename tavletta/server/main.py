@@ -131,6 +131,7 @@ def serve(args) -> int:
         max_body=args.max_body * 1024 * 1024,
         tokens=tokens,
         trusted_proxies=tuple(args.trusted_proxy),
+        web_ui=not args.no_web_ui,
     )
     try:
         server = Server(config, service)
@@ -179,10 +180,11 @@ def _run(server, service) -> int:
     signal.signal(signal.SIGTERM, stop)
     host, port = server.server_address[:2]
     log.info(
-        "listening on http://%s:%d%s (labels: %s)",
+        "listening on http://%s:%d%s%s (labels: %s)",
         "[%s]" % host if ":" in host else host,
         port,
         " with MCP at /mcp" if server.mcp else "",
+        ", the web page at /" if getattr(server, "web_ui", False) else "",
         service.labels.root,
     )
     notify("READY=1")  # systemd (Type=notify): started, a reload may come now

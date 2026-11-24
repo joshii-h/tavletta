@@ -22,7 +22,7 @@ More in [docs/screenshots.md](docs/screenshots.md).
 - Serial labels from CSV, ODS or XLSX files; variables such as dates and counters
 - Shipping labels from a carrier's PDF or image
 - Finds printers on the network and explains printer problems in plain words
-- `tavletta print` on the command line, `tavletta serve` as a print server with a REST API and MCP
+- `tavletta print` on the command line, `tavletta serve` as a print server with a REST API, MCP and a web page
 - GTK 4 and libadwaita, in 27 languages
 
 All of it: [docs/features.md](docs/features.md). How labels are laid out: [docs/layout.md](docs/layout.md).

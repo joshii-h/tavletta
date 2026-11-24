@@ -61,7 +61,7 @@ label printers with endless tape or die-cut labels (Brother VC-500W, QL and
 P-touch, cab, NIIMBOT, ZPL, EPL, TSPL, ESC/POS and DYMO printers), and on
 office printers through CUPS or IPP, one label per page or on label sheets.
 It also prints label files from the command line and runs a print server
-with a REST API and MCP.
+with a REST API, MCP and a web page.
 
 A device rule lets the user at the computer use the USB label printers of
 Brother, cab, DYMO, TSC, Zebra and NIIMBOT without joining further groups;
@@ -75,11 +75,11 @@ Requires:       %{name} = %{version}-%{release}
 %{?systemd_requires}
 
 %description    server
-The print server of Tavletta, with a REST API and MCP, as the system service
-tavletta-server: as a user of its own (made by this package), in a sandbox, on
-the local address 127.0.0.1, port 8790, with its printers, access tokens
-and labels in folders of its own. It is installed but not enabled; an
-upgrade restarts it if it runs.
+The print server of Tavletta, with a REST API, MCP and a web page, as the
+system service tavletta-server: as a user of its own (made by this package),
+in a sandbox, on the local address 127.0.0.1, port 8790, with its printers,
+access tokens and labels in folders of its own. It is installed but not
+enabled; an upgrade restarts it if it runs.
 
 
 %prep

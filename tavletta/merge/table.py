@@ -62,6 +62,27 @@ class Table:
 
     columns: list[str]
     rows: list[dict[str, str]] = field(default_factory=list)
+    # how it was read, not what it holds (left out of ==): the cells of the
+    # first filled row as they are, which the columns are named after (a
+    # file whose first row is data: without_header()), and the delimiter of
+    # a CSV file ("" for ODS, XLSX and a single column)
+    first_row: list[str] = field(default_factory=list, compare=False)
+    delimiter: str = field(default="", compare=False)
+
+
+def without_header(table: Table) -> Table:
+    """The table of a file without a header row: its first row is data too,
+    the columns are named by their letters (A, B, …), as spreadsheets name
+    them."""
+    columns = [column_letter(n) for n in range(len(table.columns))]
+    first = dict(zip(columns, table.first_row, strict=True))
+    rows = [first] + [
+        dict(zip(columns, (row[name] for name in table.columns), strict=True))
+        for row in table.rows
+    ]
+    if len(rows) > limits.MAX_ROWS:
+        raise too_large("more than %d rows" % limits.MAX_ROWS)
+    return Table(columns, rows, list(table.first_row), table.delimiter)
 
 
 def matches(wanted: str | int | None, index: int, name: str) -> bool:
@@ -195,8 +216,9 @@ class Builder:
         # every row gets every column: one long row makes all of them wide
         if self._width * sum(count for _cells, count in rest) > limits.MAX_CELLS:
             raise too_large("more than %d cells (rows times columns)" % limits.MAX_CELLS)
-        columns = column_names(self._padded(header))
-        return Table(columns, self._records(columns, rest))
+        first_row = self._padded(header)
+        columns = column_names(first_row)
+        return Table(columns, self._records(columns, rest), first_row)
 
     def _records(self, columns: list[str], rest) -> list[dict[str, str]]:
         """The data rows as column -> value, repeated rows each on their own."""

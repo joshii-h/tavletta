@@ -47,6 +47,8 @@ test -f /usr/share/applications/xyz.joshuahirsig.Tavletta.desktop
 test -f /usr/share/metainfo/xyz.joshuahirsig.Tavletta.metainfo.xml
 # in the package (the container image installs no languages but C: %_install_langs)
 rpm -ql tavletta | grep -qx /usr/share/locale/de/LC_MESSAGES/tavletta.mo
+# the print server's web page is part of the package (package data)
+python3 -c 'from tavletta.server import webui; assert all(webui.asset(n) for n in ("index.html", "app.js", "style.css"))'
 # the print server: installed with its user and folders, not enabled
 grep -q '^ExecStart=/usr/bin/tavletta serve ' /usr/lib/systemd/system/tavletta-server.service
 getent passwd tavletta > /dev/null

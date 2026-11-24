@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 14:55+0100\n"
+"PO-Revision-Date: 2026-11-24 15:25+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ms\n"
 "Language: ms\n"
@@ -237,223 +237,228 @@ msgstr "tokens.toml: token akses bernama dengan peranan"
 msgid "also serve MCP at /mcp"
 msgstr "turut sediakan MCP di /mcp"
 
-#: tavletta/cli.py:391
+#: tavletta/cli.py:389
+msgid "do not serve the web page at /: only the REST API (and MCP)"
+msgstr "jangan sajikan halaman web di /: hanya REST API (dan MCP)"
+
+#: tavletta/cli.py:396
 msgid "largest request body in MB (default 4)"
 msgstr "saiz badan permintaan terbesar dalam MB (lalai 4)"
 
-#: tavletta/cli.py:400
+#: tavletta/cli.py:405
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "proksi songsang yang pengepala X-Forwarded-For menamakan klien, cth. 172.16.0.0/12; boleh diulang"
 
-#: tavletta/cli.py:409
+#: tavletta/cli.py:414
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "benarkan permintaan daripada halaman web asal ini; boleh diulang"
 
-#: tavletta/cli.py:414
+#: tavletta/cli.py:419
 msgid "serve MCP on standard input and output"
 msgstr "sediakan MCP pada input dan output standard"
 
-#: tavletta/cli.py:416
+#: tavletta/cli.py:421
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "Sediakan MCP pada input dan output standard, untuk klien AI seperti Claude Desktop."
 
-#: tavletta/cli.py:426
+#: tavletta/cli.py:431
 msgid "manage the access tokens of the print server"
 msgstr "urus token akses pelayan cetak"
 
-#: tavletta/cli.py:427
+#: tavletta/cli.py:432
 msgid "Manage the access tokens of the print server."
 msgstr "Urus token akses pelayan cetak."
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:437
 msgid "make a token and add its hash to tokens.toml"
 msgstr "buat token dan tambah cincangannya ke tokens.toml"
 
-#: tavletta/cli.py:433
+#: tavletta/cli.py:438
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "Buat token, tambah cincangannya ke tokens.toml dan tunjukkan token sekali sahaja."
 
-#: tavletta/cli.py:435
+#: tavletta/cli.py:440
 msgid "name of the token, e.g. the device"
 msgstr "nama token, cth. peranti"
 
-#: tavletta/cli.py:440
+#: tavletta/cli.py:445
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview: lihat sahaja; print: juga cetak; admin: juga semua kerja cetak"
 
-#: tavletta/cli.py:442
+#: tavletta/cli.py:447
 msgid "tokens.toml to add it to"
 msgstr "tokens.toml untuk menambahnya"
 
-#: tavletta/cli.py:448
+#: tavletta/cli.py:453
 msgid "only this printer of printers.toml; repeatable"
 msgstr "hanya pencetak ini daripada printers.toml; boleh diulang"
 
-#: tavletta/cli.py:451
+#: tavletta/cli.py:456
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml, untuk menyemak --printer"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:458
 msgid "valid until, e.g. 2027-12-31"
 msgstr "sah sehingga, cth. 2027-12-31"
 
-#: tavletta/cli.py:454
+#: tavletta/cli.py:459
 msgid "a note for people"
 msgstr "nota untuk manusia"
 
-#: tavletta/cli.py:456
+#: tavletta/cli.py:461
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "simpan cincangan dengan scrypt dan bukan SHA-256"
 
-#: tavletta/cli.py:462
+#: tavletta/cli.py:467
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "ambil token pilihan anda daripada input standard (disimpan dengan scrypt) dan bukan membuat token baharu"
 
-#: tavletta/cli.py:482 tavletta/server/config.py:219
-#: tavletta/server/service.py:593
+#: tavletta/cli.py:487 tavletta/server/config.py:219
+#: tavletta/server/service.py:612
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "Model pencetak tidak diketahui: %s"
 
-#: tavletta/cli.py:489 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:340 tavletta/ui/texts.py:722
-#: tavletta/server/service.py:750
+#: tavletta/server/service.py:902
 #, python-format
 msgid "Cannot open %s"
 msgstr "Tidak dapat membuka %s"
 
-#: tavletta/cli.py:511 tavletta/server/main.py:260
+#: tavletta/cli.py:516 tavletta/server/main.py:262
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s bukan tarikh, dijangka cth. 2026-12-31 atau 2026-12-31T08:30"
 
-#: tavletta/cli.py:559
+#: tavletta/cli.py:564
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} diisi semasa mencetak dan tidak boleh ditetapkan"
 
-#: tavletta/cli.py:565
+#: tavletta/cli.py:570
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "Label tidak mempunyai elemen atau pemboleh ubah bernama %s"
 
-#: tavletta/cli.py:594 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1133
+#: tavletta/cli.py:599 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1287
 msgid "The label is empty"
 msgstr "Label kosong"
 
-#: tavletta/cli.py:631
+#: tavletta/cli.py:636
 msgid "Cannot write the output"
 msgstr "Tidak dapat menulis output"
 
-#: tavletta/cli.py:662
+#: tavletta/cli.py:667
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output menulis imej PNG: berikan nama yang berakhir dengan .png"
 
-#: tavletta/cli.py:687 tavletta/cli.py:896 tavletta/ui/printing.py:541
-#: tavletta/ui/printing.py:705 tavletta/server/service.py:992
-#: tavletta/server/service.py:1015 tavletta/server/service.py:1317
-#: tavletta/server/service.py:1487
+#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
+#: tavletta/ui/printing.py:705 tavletta/server/service.py:1146
+#: tavletta/server/service.py:1169 tavletta/server/service.py:1471
+#: tavletta/server/service.py:1707
 msgid "The label cannot be prepared for printing."
 msgstr "Label tidak dapat disediakan untuk dicetak."
 
-#: tavletta/cli.py:774
+#: tavletta/cli.py:779
 msgid "No printer found – give its address with --host"
 msgstr "Tiada pencetak ditemui – berikan alamatnya dengan --host"
 
-#: tavletta/cli.py:776
+#: tavletta/cli.py:781
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Beberapa pencetak ditemui – pilih satu dengan --host (tavletta list-printers)"
 
-#: tavletta/cli.py:787 tavletta/ui/texts.py:765 tavletta/server/service.py:1477
+#: tavletta/cli.py:792 tavletta/ui/texts.py:765 tavletta/server/service.py:1697
 #, python-format
 msgid "Cannot save %s"
 msgstr "Tidak dapat menyimpan %s"
 
-#: tavletta/cli.py:789 tavletta/server/service.py:1480
+#: tavletta/cli.py:794 tavletta/server/service.py:1700
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "label telah dicetak, tetapi nilai pembilang seterusnya tidak disimpan"
 
-#: tavletta/cli.py:804 tavletta/server/service.py:1162
+#: tavletta/cli.py:809 tavletta/server/service.py:1316
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "tiada apa-apa dicetak: nilai pembilang seterusnya tidak dapat disimpan"
 
-#: tavletta/cli.py:864 tavletta/cli.py:891 tavletta/cli.py:1255
+#: tavletta/cli.py:869 tavletta/cli.py:896 tavletta/cli.py:1260
 msgid "Interrupted"
 msgstr "Diganggu"
 
-#: tavletta/cli.py:947 tavletta/ui/printing.py:447
-#: tavletta/server/service.py:1038
+#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/server/service.py:1192
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "Paling banyak %d label dalam satu kerja cetak"
 
-#: tavletta/cli.py:966
+#: tavletta/cli.py:971
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method: model pencetak ini tiada tetapan kaedah cetakan: %s"
 
-#: tavletta/cli.py:1008
+#: tavletta/cli.py:1013
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet dan --rows memerlukan fail data (--data)"
 
-#: tavletta/cli.py:1017 tavletta/ui/printing.py:574
-#: tavletta/server/service.py:852
+#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/server/service.py:1004
 msgid "No rows to print"
 msgstr "Tiada baris untuk dicetak"
 
-#: tavletta/cli.py:1027
+#: tavletta/cli.py:1032
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "Label menggunakan fail data di luar foldernya: berikan dengan --data"
 
-#: tavletta/cli.py:1054 tavletta/ui/window.py:912
-#: tavletta/server/service.py:909
+#: tavletta/cli.py:1059 tavletta/ui/window.py:915
+#: tavletta/server/service.py:1063
 #, python-format
 msgid "No such column: %s"
 msgstr "Tiada lajur sedemikian: %s"
 
-#: tavletta/cli.py:1059 tavletta/ui/printing.py:654
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "Kod bar atau kod QR baris-baris ini tidak dapat dibuat daripada nilainya, contohnya EAN-13 dengan huruf atau sel kosong. Betulkan fail data dan baca semula, atau cetak tanpa baris-baris ini."
 
-#: tavletta/cli.py:1064 tavletta/ui/printing.py:659
+#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
 #, python-format
 msgid "Rows: %s"
 msgstr "Baris: %s"
 
-#: tavletta/cli.py:1072
+#: tavletta/cli.py:1077
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "Menunggu cetakan lain bagi %s selesai…"
 
-#: tavletta/cli.py:1079 tavletta/server/service.py:1311
+#: tavletta/cli.py:1084 tavletta/server/service.py:791
+#: tavletta/server/service.py:1465
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s masih dikunci oleh cetakan lain – cuba lagi kemudian"
 
-#: tavletta/cli.py:1085
+#: tavletta/cli.py:1090
 msgid "--output needs --dry-run"
 msgstr "--output memerlukan --dry-run"
 
-#: tavletta/cli.py:1102
+#: tavletta/cli.py:1107
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "Nilai pembilang seterusnya tidak disimpan: cetakan seterusnya mengulang nombor-nombor itu"
 
-#: tavletta/cli.py:1198
+#: tavletta/cli.py:1203
 msgid "Waiting for the printer's answer…"
 msgstr "Menunggu jawapan pencetak…"
 
-#: tavletta/cli.py:1226 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1231 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "Tiada pencetak ditemui"
 
@@ -527,8 +532,8 @@ msgstr "Tiada fail data"
 msgid "CSV, ODS or XLSX"
 msgstr "CSV, ODS atau XLSX"
 
-#: tavletta/ui/data.py:291 tavletta/ui/elements.py:359
-#: tavletta/ui/elements.py:377 tavletta/ui/elements.py:390
+#: tavletta/ui/data.py:291 tavletta/ui/elements.py:355
+#: tavletta/ui/elements.py:373 tavletta/ui/elements.py:386
 msgid "Choose…"
 msgstr "Pilih…"
 
@@ -548,7 +553,7 @@ msgstr "Pilih fail lain"
 msgid "Remove data file"
 msgstr "Buang fail data"
 
-#: tavletta/ui/data.py:337
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:401
 msgid "Sheet"
 msgstr "Helaian"
 
@@ -556,101 +561,101 @@ msgstr "Helaian"
 msgid "Insert column"
 msgstr "Sisipkan lajur"
 
-#: tavletta/ui/editor.py:719
+#: tavletta/ui/editor.py:738
 #, python-format
 msgid "Elements removed: %d"
 msgstr "Elemen dibuang: %d"
 
-#: tavletta/ui/editor.py:719 tavletta/ui/shortcuts.py:53
+#: tavletta/ui/editor.py:738 tavletta/ui/shortcuts.py:53
 #: tavletta/ui/window.py:183
 msgid "Undo"
 msgstr "Buat asal"
 
-#: tavletta/ui/editor.py:789
+#: tavletta/ui/editor.py:819
 msgid "Elements can be moved in the free layout"
 msgstr "Elemen boleh dialihkan dalam susun atur bebas"
 
-#: tavletta/ui/editor.py:790
+#: tavletta/ui/editor.py:820
 msgid "Use free layout"
 msgstr "Guna susun atur bebas"
 
-#: tavletta/ui/editor.py:800
+#: tavletta/ui/editor.py:830
 msgid "No element selected"
 msgstr "Tiada elemen dipilih"
 
-#: tavletta/ui/editor.py:802
+#: tavletta/ui/editor.py:832
 #, python-format
 msgid "Elements selected: %(n)d of %(total)d"
 msgstr "Elemen dipilih: %(n)d daripada %(total)d"
 
-#: tavletta/ui/editor.py:808
+#: tavletta/ui/editor.py:838
 #, python-format
 msgid "Element %(n)d of %(total)d: %(name)s"
 msgstr "Elemen %(n)d daripada %(total)d: %(name)s"
 
-#: tavletta/ui/editor.py:853
+#: tavletta/ui/editor.py:883
 msgid "Arrange"
 msgstr "Susun"
 
-#: tavletta/ui/editor.py:854
+#: tavletta/ui/editor.py:884
 msgid "Align, distribute and snap the selected elements"
 msgstr "Jajarkan, agihkan dan lekatkan elemen yang dipilih"
 
-#: tavletta/ui/editor.py:870 tavletta/ui/image_crop.py:82
+#: tavletta/ui/editor.py:900 tavletta/ui/image_crop.py:82
 #: tavletta/ui/texts.py:113
 msgid "Left"
 msgstr "Kiri"
 
-#: tavletta/ui/editor.py:871 tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
+#: tavletta/ui/editor.py:901 tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
 msgid "Centre"
 msgstr "Tengah"
 
-#: tavletta/ui/editor.py:872 tavletta/ui/texts.py:113
+#: tavletta/ui/editor.py:902 tavletta/ui/texts.py:113
 msgid "Right"
 msgstr "Kanan"
 
-#: tavletta/ui/editor.py:873 tavletta/ui/image_crop.py:82
+#: tavletta/ui/editor.py:903 tavletta/ui/image_crop.py:82
 #: tavletta/ui/texts.py:164
 msgid "Top"
 msgstr "Atas"
 
-#: tavletta/ui/editor.py:874 tavletta/ui/texts.py:164
+#: tavletta/ui/editor.py:904 tavletta/ui/texts.py:164
 msgid "Middle"
 msgstr "Tengah"
 
-#: tavletta/ui/editor.py:875 tavletta/ui/texts.py:164
+#: tavletta/ui/editor.py:905 tavletta/ui/texts.py:164
 msgid "Bottom"
 msgstr "Bawah"
 
-#: tavletta/ui/editor.py:878
+#: tavletta/ui/editor.py:908
 msgid "Align"
 msgstr "Jajarkan"
 
-#: tavletta/ui/editor.py:880
+#: tavletta/ui/editor.py:910
 msgid "Horizontally"
 msgstr "Secara mendatar"
 
-#: tavletta/ui/editor.py:881
+#: tavletta/ui/editor.py:911
 msgid "Vertically"
 msgstr "Secara menegak"
 
-#: tavletta/ui/editor.py:882
+#: tavletta/ui/editor.py:912
 msgid "Distribute"
 msgstr "Agihkan"
 
-#: tavletta/ui/editor.py:884
+#: tavletta/ui/editor.py:914
 msgid "Snap to guides"
 msgstr "Lekatkan pada garis panduan"
 
-#: tavletta/ui/editor.py:885
+#: tavletta/ui/editor.py:915
 msgid "No grid"
 msgstr "Tiada grid"
 
-#: tavletta/ui/editor.py:888
+#: tavletta/ui/editor.py:918
 msgid "Snapping"
 msgstr "Lekatan"
 
-#: tavletta/ui/editor.py:894 tavletta/ui/editor.py:895
+#: tavletta/ui/editor.py:924 tavletta/ui/editor.py:925
 #, python-format
 msgid "Grid of %s"
 msgstr "Grid %s"
@@ -667,130 +672,130 @@ msgstr "Belum ada kandungan"
 msgid "Add text, an image, a symbol or a code"
 msgstr "Tambah teks, imej, simbol atau kod"
 
-#: tavletta/ui/elements.py:107 tavletta/ui/texts.py:280
-#: tavletta/ui/window.py:1025
+#: tavletta/ui/elements.py:105 tavletta/ui/texts.py:280
+#: tavletta/ui/window.py:1029 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "Teks"
 
-#: tavletta/ui/elements.py:108
+#: tavletta/ui/elements.py:106
 msgid "Image…"
 msgstr "Imej…"
 
-#: tavletta/ui/elements.py:109
+#: tavletta/ui/elements.py:107
 msgid "Symbol…"
 msgstr "Simbol…"
 
-#: tavletta/ui/elements.py:110
+#: tavletta/ui/elements.py:108
 msgid "QR code / barcode"
 msgstr "Kod QR / kod bar"
 
-#: tavletta/ui/elements.py:111
+#: tavletta/ui/elements.py:109
 msgid "Line or shape"
 msgstr "Garisan atau bentuk"
 
-#: tavletta/ui/elements.py:113
+#: tavletta/ui/elements.py:111
 msgid "Add"
 msgstr "Tambah"
 
-#: tavletta/ui/elements.py:247 tavletta/ui/label_group.py:145
+#: tavletta/ui/elements.py:243 tavletta/ui/label_group.py:145
 msgid "Remove"
 msgstr "Buang"
 
-#: tavletta/ui/elements.py:250
+#: tavletta/ui/elements.py:246
 msgid "Move down"
 msgstr "Alih ke belakang"
 
-#: tavletta/ui/elements.py:251
+#: tavletta/ui/elements.py:247
 msgid "Move up"
 msgstr "Alih ke depan"
 
-#: tavletta/ui/elements.py:269 tavletta/ui/elements.py:406
+#: tavletta/ui/elements.py:265 tavletta/ui/elements.py:402
 #: tavletta/ui/freelayout.py:190
 msgid "Size"
 msgstr "Saiz"
 
-#: tavletta/ui/elements.py:276
+#: tavletta/ui/elements.py:272
 msgid "pt, 0 = fill tape height"
 msgstr "pt, 0 = penuhi tinggi pita"
 
-#: tavletta/ui/elements.py:281
+#: tavletta/ui/elements.py:277
 msgid "Line alignment"
 msgstr "Penjajaran baris"
 
-#: tavletta/ui/elements.py:289
+#: tavletta/ui/elements.py:285
 msgid "Name for the command line"
 msgstr "Nama untuk baris arahan"
 
-#: tavletta/ui/elements.py:328
+#: tavletta/ui/elements.py:324
 msgid "Font"
 msgstr "Fon"
 
-#: tavletta/ui/elements.py:345 tavletta/ui/freelayout.py:214
+#: tavletta/ui/elements.py:341 tavletta/ui/freelayout.py:214
 msgid "Bold"
 msgstr "Tebal"
 
-#: tavletta/ui/elements.py:347
+#: tavletta/ui/elements.py:343
 msgid "Italic"
 msgstr "Condong"
 
-#: tavletta/ui/elements.py:348
+#: tavletta/ui/elements.py:344
 msgid "Underline"
 msgstr "Garis bawah"
 
-#: tavletta/ui/elements.py:349
+#: tavletta/ui/elements.py:345
 msgid "Strikethrough"
 msgstr "Garis lorek"
 
-#: tavletta/ui/elements.py:357
+#: tavletta/ui/elements.py:353
 msgid "Image file"
 msgstr "Fail imej"
 
-#: tavletta/ui/elements.py:358 tavletta/ui/elements.py:389
+#: tavletta/ui/elements.py:354 tavletta/ui/elements.py:385
 #: tavletta/ui/label_group.py:133
 msgid "None"
 msgstr "Tiada"
 
-#: tavletta/ui/elements.py:367
+#: tavletta/ui/elements.py:363
 msgid "Crop, turn and adjustments reset for the new image"
 msgstr "Pangkasan, putaran dan pelarasan ditetapkan semula untuk imej baharu"
 
-#: tavletta/ui/elements.py:375
+#: tavletta/ui/elements.py:371
 msgid "Area"
 msgstr "Kawasan"
 
-#: tavletta/ui/elements.py:381 tavletta/ui/shipping.py:295
+#: tavletta/ui/elements.py:377 tavletta/ui/shipping.py:295
 msgid "Scale"
 msgstr "Skala"
 
-#: tavletta/ui/elements.py:387 tavletta/ui/texts.py:284
+#: tavletta/ui/elements.py:383 tavletta/ui/texts.py:284
 msgid "Symbol"
 msgstr "Simbol"
 
-#: tavletta/ui/elements.py:412 tavletta/ui/styles.py:513
+#: tavletta/ui/elements.py:408 tavletta/ui/styles.py:513
 #, python-format
 msgid "%(unit)s, 0 = fill tape height"
 msgstr "%(unit)s, 0 = penuhi tinggi pita"
 
-#: tavletta/ui/elements.py:417
+#: tavletta/ui/elements.py:413
 msgid ""
 "Black-and-white printers print symbols in black, or in white if the colour "
 "is light"
 msgstr "Pencetak hitam putih mencetak simbol dalam warna hitam, atau putih jika warnanya cerah"
 
-#: tavletta/ui/elements.py:424 tavletta/ui/freelayout.py:166
+#: tavletta/ui/elements.py:420 tavletta/ui/freelayout.py:166
 #: tavletta/ui/styles.py:113
 msgid "Rotation"
 msgstr "Putaran"
 
-#: tavletta/ui/elements.py:437
+#: tavletta/ui/elements.py:433
 msgid "Type"
 msgstr "Jenis"
 
-#: tavletta/ui/elements.py:441
+#: tavletta/ui/elements.py:437
 msgid "Content (link, text, number)"
 msgstr "Kandungan (pautan, teks, nombor)"
 
-#: tavletta/ui/elements.py:451 tavletta/ui/styles.py:548
+#: tavletta/ui/elements.py:447 tavletta/ui/styles.py:548
 msgid "Colour"
 msgstr "Warna"
 
@@ -844,7 +849,7 @@ msgstr "%s disimpan"
 msgid "Export PNG"
 msgstr "Eksport sebagai PNG"
 
-#: tavletta/ui/files.py:276 tavletta/ui/window.py:937
+#: tavletta/ui/files.py:276 tavletta/ui/window.py:940
 msgid "The preview cannot be drawn"
 msgstr "Pratonton tidak dapat dilukis"
 
@@ -1064,7 +1069,8 @@ msgstr "Seret untuk memilih bahagian imej yang hendak disimpan"
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:233
 #: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
 #: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
-#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:954
+#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:957
+#: tavletta/server/web/ui.js:220
 msgid "Cancel"
 msgstr "Batal"
 
@@ -1218,40 +1224,40 @@ msgstr "Arah kandungan"
 msgid "Label preview"
 msgstr "Pratonton label"
 
-#: tavletta/ui/preview.py:89
+#: tavletta/ui/preview.py:92
 msgid "Fit to window"
 msgstr "Muat ke tetingkap"
 
-#: tavletta/ui/preview.py:92
+#: tavletta/ui/preview.py:95
 msgid "Zoom out"
 msgstr "Zum keluar"
 
-#: tavletta/ui/preview.py:96
+#: tavletta/ui/preview.py:99
 msgid "Zoom in"
 msgstr "Zum masuk"
 
-#: tavletta/ui/preview.py:105 tavletta/ui/shortcuts.py:92
+#: tavletta/ui/preview.py:108 tavletta/ui/shortcuts.py:92
 msgid "First row"
 msgstr "Baris pertama"
 
-#: tavletta/ui/preview.py:106 tavletta/ui/shortcuts.py:93
+#: tavletta/ui/preview.py:109 tavletta/ui/shortcuts.py:93
 msgid "Previous row"
 msgstr "Baris sebelumnya"
 
-#: tavletta/ui/preview.py:107 tavletta/ui/shortcuts.py:94
+#: tavletta/ui/preview.py:110 tavletta/ui/shortcuts.py:94
 msgid "Next row"
 msgstr "Baris seterusnya"
 
-#: tavletta/ui/preview.py:108 tavletta/ui/shortcuts.py:95
+#: tavletta/ui/preview.py:111 tavletta/ui/shortcuts.py:95
 msgid "Last row"
 msgstr "Baris terakhir"
 
-#: tavletta/ui/preview.py:122
+#: tavletta/ui/preview.py:125
 #, python-format
 msgid "Row %(n)d of %(total)d"
 msgstr "Baris %(n)d daripada %(total)d"
 
-#: tavletta/ui/printer.py:66
+#: tavletta/ui/printer.py:66 tavletta/server/web/print.js:71
 msgid "Printer"
 msgstr "Pencetak"
 
@@ -1356,7 +1362,7 @@ msgstr "Baki %(left)s daripada %(total)s"
 msgid "Reachable · the printer reports no status"
 msgstr "Boleh dicapai · pencetak tidak melaporkan status"
 
-#: tavletta/ui/printer.py:390
+#: tavletta/ui/printer.py:390 tavletta/server/web/ui.js:389
 msgid "Printing"
 msgstr "Mencetak"
 
@@ -1365,7 +1371,7 @@ msgstr "Mencetak"
 msgid "Ready · a label every %s"
 msgstr "Sedia · satu label setiap %s"
 
-#: tavletta/ui/printer.py:393
+#: tavletta/ui/printer.py:393 tavletta/server/web/ui.js:47
 msgid "Ready"
 msgstr "Sedia"
 
@@ -1456,7 +1462,7 @@ msgid "The data file is still being read. Try again in a moment."
 msgstr "Fail data masih dibaca. Cuba lagi sebentar lagi."
 
 #: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
-#: tavletta/ui/printing.py:509
+#: tavletta/ui/printing.py:509 tavletta/server/web/ui.js:262
 msgid "Print anyway"
 msgstr "Cetak juga"
 
@@ -1503,11 +1509,11 @@ msgstr "Untuk menguji pada kertas biasa"
 msgid "Sheets: %d"
 msgstr "Helaian: %d"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/batch.js:724
 msgid "Copies of each label"
 msgstr "Salinan setiap label"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr "Salinan"
 
@@ -1566,6 +1572,9 @@ msgstr "Cetak label"
 
 #: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:194
+#: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
+#: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
+#: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "Cetak"
 
@@ -1637,11 +1646,11 @@ msgstr "Baris %(first)d hingga %(last)d telah dicetak"
 msgid "Printing failed"
 msgstr "Pencetakan gagal"
 
-#: tavletta/ui/printing.py:757
+#: tavletta/ui/printing.py:757 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "Butiran"
 
-#: tavletta/ui/printing.py:760 tavletta/ui/window.py:978
+#: tavletta/ui/printing.py:760 tavletta/ui/window.py:982
 msgid "Report"
 msgstr "Laporkan"
 
@@ -1810,7 +1819,8 @@ msgstr "Alih elemen yang terbuka ke depan"
 msgid "Move the open element down"
 msgstr "Alih elemen yang terbuka ke belakang"
 
-#: tavletta/ui/shortcuts.py:73
+#: tavletta/ui/shortcuts.py:73 tavletta/server/web/print.js:121
+#: tavletta/server/web/ui.js:62
 msgid "Preview"
 msgstr "Pratonton"
 
@@ -2556,7 +2566,7 @@ msgstr "%d%%"
 msgid "%d in/s"
 msgstr "%d inci/s"
 
-#: tavletta/ui/texts.py:282
+#: tavletta/ui/texts.py:282 tavletta/server/web/ui.js:66
 msgid "Image"
 msgstr "Imej"
 
@@ -3117,7 +3127,7 @@ msgid ""
 "more."
 msgstr "Pencetak melaporkan masalah. Matikan dan hidupkan semula, kemudian cuba sekali lagi."
 
-#: tavletta/ui/texts.py:666
+#: tavletta/ui/texts.py:666 tavletta/server/web/ui.js:456
 msgid "Printed"
 msgstr "Telah dicetak"
 
@@ -3179,7 +3189,7 @@ msgid "%s is not a Tavletta label"
 msgstr "%s bukan label Tavletta"
 
 #: tavletta/ui/texts.py:713 tavletta/ui/texts.py:733
-#: tavletta/server/service.py:761
+#: tavletta/server/service.py:913
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "Fail rosak: %s"
@@ -3299,11 +3309,12 @@ msgstr "Meningkat dengan setiap label yang dicetak, mengikut langkah"
 msgid "Next number"
 msgstr "Nombor seterusnya"
 
-#: tavletta/ui/variables.py:122
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:563
 msgid "Step"
 msgstr "Langkah"
 
-#: tavletta/ui/window.py:172
+#: tavletta/ui/window.py:172 tavletta/server/web/app.js:45
+#: tavletta/server/web/app.js:288
 msgid "Templates"
 msgstr "Templat"
 
@@ -3331,42 +3342,42 @@ msgstr "Laporkan masalah…"
 msgid "About Tavletta"
 msgstr "Perihal Tavletta"
 
-#: tavletta/ui/window.py:734
+#: tavletta/ui/window.py:736
 msgid "Unsaved label"
 msgstr "Label belum disimpan"
 
-#: tavletta/ui/window.py:905
+#: tavletta/ui/window.py:908
 msgid "content scaled down to fit"
 msgstr "kandungan dikecilkan supaya muat"
 
-#: tavletta/ui/window.py:909
+#: tavletta/ui/window.py:912
 #, python-format
 msgid "Problem: %s"
 msgstr "Masalah: %s"
 
-#: tavletta/ui/window.py:928
+#: tavletta/ui/window.py:931
 #, python-format
 msgid "Too long for this printer: at most %s"
 msgstr "Terlalu panjang untuk pencetak ini: maksimum %s"
 
-#: tavletta/ui/window.py:932
+#: tavletta/ui/window.py:935
 #, python-format
 msgid "Too wide for this printer: at most %s"
 msgstr "Terlalu lebar untuk pencetak ini: maksimum %s"
 
-#: tavletta/ui/window.py:1005
+#: tavletta/ui/window.py:1009
 msgid "The browser cannot be opened"
 msgstr "Pelayar tidak dapat dibuka"
 
-#: tavletta/ui/window.py:1007
+#: tavletta/ui/window.py:1011
 msgid "Copy link"
 msgstr "Salin pautan"
 
-#: tavletta/ui/window.py:1079
+#: tavletta/ui/window.py:1083
 msgid "Only local files can be dropped"
 msgstr "Hanya fail setempat boleh dilepaskan"
 
-#: tavletta/ui/window.py:1132
+#: tavletta/ui/window.py:1136
 msgid "Please wait until printing has finished"
 msgstr "Sila tunggu sehingga cetakan selesai"
 
@@ -3376,7 +3387,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:88 tavletta/server/config.py:92
-#: tavletta/server/config.py:98 tavletta/server/main.py:342
+#: tavletta/server/config.py:98 tavletta/server/main.py:344
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "Tidak dapat membaca %(file)s: %(reason)s"
@@ -3460,11 +3471,11 @@ msgstr "bukan cincangan token: dijangka sha256:… atau scrypt:…"
 msgid "expected a list of printer names"
 msgstr "dijangka senarai nama pencetak"
 
-#: tavletta/server/config.py:477 tavletta/server/main.py:368
+#: tavletta/server/config.py:477 tavletta/server/main.py:370
 msgid "printers can only be limited with --printers"
 msgstr "pencetak hanya boleh dihadkan dengan --printers"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:532
+#: tavletta/server/config.py:479 tavletta/server/service.py:551
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "Pencetak tidak diketahui: %s"
@@ -3474,68 +3485,74 @@ msgstr "Pencetak tidak diketahui: %s"
 msgid "Invalid value for %s"
 msgstr "Nilai tidak sah untuk %s"
 
-#: tavletta/server/http.py:464 tavletta/server/http.py:513
+#: tavletta/server/http.py:469 tavletta/server/http.py:518
 msgid "The request took too long"
 msgstr "Permintaan mengambil masa terlalu lama"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1398
+#: tavletta/server/http.py:478 tavletta/server/service.py:1618
 msgid "The server is busy – try again later"
 msgstr "Pelayan sibuk – cuba lagi kemudian"
 
-#: tavletta/server/http.py:516
+#: tavletta/server/http.py:521
 msgid "Internal error"
 msgstr "Ralat dalaman"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:526
 msgid "This server only answers on its local address"
 msgstr "Pelayan ini hanya menjawab pada alamat setempatnya"
 
-#: tavletta/server/http.py:525
+#: tavletta/server/http.py:530
 msgid "Requests from this web page are not allowed"
 msgstr "Permintaan daripada halaman web ini tidak dibenarkan"
 
-#: tavletta/server/http.py:543
+#: tavletta/server/http.py:557
 msgid "Too many requests – try again later"
 msgstr "Terlalu banyak permintaan – cuba lagi kemudian"
 
-#: tavletta/server/http.py:545
+#: tavletta/server/http.py:559
 msgid "Access token missing or wrong"
 msgstr "Token akses tiada atau salah"
 
-#: tavletta/server/http.py:586 tavletta/server/http.py:591
+#: tavletta/server/http.py:600 tavletta/server/http.py:605
 msgid "The request needs a Content-Length"
 msgstr "Permintaan memerlukan Content-Length"
 
-#: tavletta/server/http.py:588
+#: tavletta/server/http.py:602
 msgid "The request has more than one Content-Length"
 msgstr "Permintaan mempunyai lebih daripada satu Content-Length"
 
-#: tavletta/server/http.py:594
+#: tavletta/server/http.py:608 tavletta/server/service.py:836
 msgid "The request is too large"
 msgstr "Permintaan terlalu besar"
 
-#: tavletta/server/http.py:599
+#: tavletta/server/http.py:613
 msgid "The request body is incomplete"
 msgstr "Badan permintaan tidak lengkap"
 
-#: tavletta/server/http.py:606
+#: tavletta/server/http.py:620
 msgid "Send the request as application/json"
 msgstr "Hantar permintaan sebagai application/json"
 
-#: tavletta/server/http.py:635 tavletta/server/http.py:645
+#: tavletta/server/http.py:652 tavletta/server/http.py:662
+#: tavletta/server/http.py:783
 msgid "Not found"
 msgstr "Tidak ditemui"
 
-#: tavletta/server/http.py:644
+#: tavletta/server/http.py:661 tavletta/server/http.py:774
 msgid "Method not allowed"
 msgstr "Kaedah tidak dibenarkan"
 
-#: tavletta/server/http.py:661
+#: tavletta/server/http.py:678
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Hantar pengepala %s bersama permintaan ini"
 
-#: tavletta/server/http.py:816
+#: tavletta/server/http.py:721 tavletta/server/service.py:627
+#: tavletta/server/service.py:1591
+msgid "This access token may not do this"
+msgstr "Token akses ini tidak boleh melakukan ini"
+
+#: tavletta/server/http.py:897
 msgid "The request is not valid JSON"
 msgstr "Permintaan bukan JSON yang sah"
 
@@ -3549,12 +3566,12 @@ msgstr "Folder label %s tidak wujud"
 msgid "Cannot read the token file %s"
 msgstr "Tidak dapat membaca fail token %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:313
+#: tavletta/server/main.py:54 tavletta/server/main.py:315
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "Token akses hanya boleh mengandungi aksara ASCII boleh cetak tanpa ruang"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:318
+#: tavletta/server/main.py:59 tavletta/server/main.py:320
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "Token akses mestilah sekurang-kurangnya %d aksara"
@@ -3579,159 +3596,956 @@ msgid ""
 "--token-file"
 msgstr "Enggan mendengar pada %s tanpa token akses: tetapkan TAVLETTA_TOKEN atau gunakan --token-file"
 
-#: tavletta/server/main.py:140
+#: tavletta/server/main.py:141
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "Tidak dapat mendengar pada %(address)s: %(reason)s"
 
-#: tavletta/server/main.py:272
+#: tavletta/server/main.py:274
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "Bukan nama yang sah: huruf, digit, . _ - (sehingga 64)"
 
-#: tavletta/server/main.py:283
+#: tavletta/server/main.py:285
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s sedang digunakan oleh program lain – cuba lagi kemudian"
 
-#: tavletta/server/main.py:290
+#: tavletta/server/main.py:292
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "Token %(name)s telah ditambah ke %(file)s."
 
-#: tavletta/server/main.py:297
+#: tavletta/server/main.py:299
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "Token ditunjukkan sekali ini sahaja; %s hanya menyimpan cincangannya."
 
-#: tavletta/server/main.py:308
+#: tavletta/server/main.py:310
 msgid "Access token: "
 msgstr "Token akses: "
 
-#: tavletta/server/main.py:323
+#: tavletta/server/main.py:325
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "Token yang dipilih tidak boleh kelihatan seperti token yang dijana (tav_…)"
 
-#: tavletta/server/main.py:373
+#: tavletta/server/main.py:375
 #, python-format
 msgid "A token named %s exists already"
 msgstr "Token bernama %s sudah wujud"
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:402
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "Token ini sudah ada dalam fail, sebagai %s"
 
-#: tavletta/server/paths.py:39
+#: tavletta/server/paths.py:46 tavletta/server/service.py:815
 #, python-format
 msgid "No such label: %s"
 msgstr "Tiada label sedemikian: %s"
 
-#: tavletta/server/paths.py:46
+#: tavletta/server/paths.py:67
 #, python-format
 msgid "No such data file: %s"
 msgstr "Tiada fail data sedemikian: %s"
 
-#: tavletta/server/requests.py:95
+#: tavletta/server/requests.py:127
 msgid "The request must be a JSON object"
 msgstr "Permintaan mestilah objek JSON"
 
-#: tavletta/server/requests.py:97
+#: tavletta/server/requests.py:129
 #, python-format
 msgid "Unknown field: %s"
 msgstr "Medan tidak diketahui: %s"
 
-#: tavletta/server/requests.py:104
+#: tavletta/server/requests.py:136
 msgid "Give the label either by name or as content"
 msgstr "Berikan label sama ada mengikut nama atau sebagai kandungan"
 
-#: tavletta/server/requests.py:109
+#: tavletta/server/requests.py:141
 msgid "Give data rows or a data file, not both"
 msgstr "Berikan baris data atau fail data, bukan kedua-duanya"
 
-#: tavletta/server/requests.py:196
+#: tavletta/server/requests.py:228
 #, python-format
 msgid "Too many data rows: at most %d"
 msgstr "Terlalu banyak baris data: maksimum %d"
 
-#: tavletta/server/requests.py:204
+#: tavletta/server/requests.py:236
 #, python-format
 msgid "Too many columns: at most %d"
 msgstr "Terlalu banyak lajur: maksimum %d"
 
-#: tavletta/server/requests.py:207
+#: tavletta/server/requests.py:239 tavletta/server/service.py:834
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "Terlalu banyak sel: maksimum %d"
 
-#: tavletta/server/service.py:544
+#: tavletta/server/service.py:563
 msgid "Choose a printer by its name"
 msgstr "Pilih pencetak mengikut namanya"
 
-#: tavletta/server/service.py:608 tavletta/server/service.py:1371
-msgid "This access token may not do this"
-msgstr "Token akses ini tidak boleh melakukan ini"
-
-#: tavletta/server/service.py:665
+#: tavletta/server/service.py:685
 msgid "No printer address: give it as host"
 msgstr "Tiada alamat pencetak: berikan sebagai host"
 
-#: tavletta/server/service.py:674
+#: tavletta/server/service.py:694
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "Alamat pencetak ini tidak dibenarkan: %s"
 
-#: tavletta/server/service.py:769
+#: tavletta/server/service.py:778 tavletta/server/service.py:921
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "Halaman dokumen tidak dibenarkan dalam label_content (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:802
+#: tavletta/server/service.py:954
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s ialah lajur data ({%(name)s}) – hantar dalam data_rows"
 
-#: tavletta/server/service.py:860
+#: tavletta/server/service.py:1012
 msgid "A sheet needs a data file"
 msgstr "Helaian memerlukan fail data"
 
-#: tavletta/server/service.py:866
+#: tavletta/server/service.py:1018
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "Label menggunakan fail data di luar folder label: hantar baris-barisnya sekali"
 
-#: tavletta/server/service.py:1064
+#: tavletta/server/service.py:1218
 msgid "Too many print jobs are waiting – try again later"
 msgstr "Terlalu banyak kerja cetak sedang menunggu – cuba lagi kemudian"
 
-#: tavletta/server/service.py:1333
+#: tavletta/server/service.py:1487
 #, python-format
 msgid "No such print job: %s"
 msgstr "Tiada kerja cetak sedemikian: %s"
 
-#: tavletta/server/service.py:1345
+#: tavletta/server/service.py:1499
 msgid "The print job has already finished"
 msgstr "Kerja cetak sudah selesai"
 
-#: tavletta/server/service.py:1402
+#: tavletta/server/service.py:1559
+#, python-format
+msgid "A label named %s exists already"
+msgstr "Label bernama %s sudah wujud"
+
+#: tavletta/server/service.py:1564
+msgid "The label could not be saved in the labels folder"
+msgstr "Label tidak dapat disimpan dalam folder label"
+
+#: tavletta/server/service.py:1622
 msgid "The label is too large to render"
 msgstr "Label terlalu besar untuk dipaparkan"
 
-#: tavletta/server/service.py:1416
+#: tavletta/server/service.py:1636
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "Label terlalu besar: paling banyak %d imej dan kod"
 
-#: tavletta/server/service.py:1439
+#: tavletta/server/service.py:1659
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "Label terlalu besar: paling banyak %(elements)d elemen dan %(chars)d aksara dalam satu teks"
 
-#: tavletta/server/service.py:1458
+#: tavletta/server/service.py:1678
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "Paling banyak %d salinan pada pencetak ini"
 
-#: tavletta/server/service.py:1463
+#: tavletta/server/service.py:1683
 msgid "Printers are chosen by name: leave out host"
 msgstr "Pencetak dipilih mengikut nama: tinggalkan host"
+
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:482
+msgid "No connection to the server. Your input is kept."
+msgstr "Tiada sambungan ke pelayan. Input anda dikekalkan."
+
+#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:210
+msgid "Printers"
+msgstr "Pencetak"
+
+#: tavletta/server/web/app.js:51
+msgid "Main"
+msgstr "Navigasi utama"
+
+#: tavletta/server/web/app.js:74
+msgid "Language"
+msgstr "Bahasa"
+
+#: tavletta/server/web/app.js:81
+msgid "Sign out"
+msgstr "Log keluar"
+
+#: tavletta/server/web/app.js:84
+msgid "Skip to content"
+msgstr "Langkau ke kandungan"
+
+#: tavletta/server/web/app.js:160
+msgid "Access token"
+msgstr "Token akses"
+
+#: tavletta/server/web/app.js:161
+msgid ""
+"The administrator gives it to you. It is kept in this tab only and forgotten "
+"when the tab is closed."
+msgstr "Pentadbir memberikannya kepada anda. Token hanya disimpan dalam tab ini dan dilupakan apabila tab ditutup."
+
+#: tavletta/server/web/app.js:166 tavletta/server/web/app.js:202
+msgid "Sign in"
+msgstr "Log masuk"
+
+#: tavletta/server/web/app.js:172
+msgid "Show token"
+msgstr "Tunjukkan token"
+
+#: tavletta/server/web/app.js:180
+msgid "Enter the access token."
+msgstr "Masukkan token akses."
+
+#: tavletta/server/web/app.js:195
+msgid ""
+"The token was not accepted. Check it, or ask the administrator for a new one."
+msgstr "Token tidak diterima. Semak token itu, atau minta token baharu daripada pentadbir."
+
+#: tavletta/server/web/app.js:209
+msgid "Check again"
+msgstr "Semak semula"
+
+#: tavletta/server/web/app.js:221 tavletta/server/web/print.js:74
+msgid "No printer this token may use. Ask the administrator."
+msgstr "Tiada pencetak yang boleh digunakan oleh token ini. Tanya pentadbir."
+
+#: tavletta/server/web/app.js:234
+msgid "Location: {place}"
+msgstr "Lokasi: {place}"
+
+#: tavletta/server/web/app.js:235
+msgid "Meant for: {media}"
+msgstr "Untuk: {media}"
+
+#: tavletta/server/web/app.js:236
+msgid "Model: {model}"
+msgstr "Model: {model}"
+
+#: tavletta/server/web/app.js:242
+msgid "Default"
+msgstr "Lalai"
+
+#: tavletta/server/web/app.js:256
+msgid "Asking the printer…"
+msgstr "Menyoal pencetak…"
+
+#: tavletta/server/web/app.js:267
+msgid "Ask for its state"
+msgstr "Tanya statusnya"
+
+#: tavletta/server/web/app.js:273
+msgid "Address: {host}"
+msgstr "Alamat: {host}"
+
+#: tavletta/server/web/app.js:273
+msgid "No address set"
+msgstr "Tiada alamat ditetapkan"
+
+#: tavletta/server/web/app.js:304
+msgid "No templates yet. Upload one above."
+msgstr "Belum ada templat. Muat naik templat di atas."
+
+#: tavletta/server/web/app.js:304
+msgid "No templates yet. Ask the administrator."
+msgstr "Belum ada templat. Tanya pentadbir."
+
+#: tavletta/server/web/app.js:331
+msgid "Series"
+msgstr "Siri"
+
+#: tavletta/server/web/app.js:332
+msgid "Delete"
+msgstr "Padam"
+
+#: tavletta/server/web/app.js:340
+msgid "Size: {width} × {height} mm"
+msgstr "Saiz: {width} × {height} mm"
+
+#: tavletta/server/web/app.js:341
+msgid "Fields: {count}"
+msgstr "Medan: {count}"
+
+#: tavletta/server/web/app.js:342
+msgid "Printer model: {model}"
+msgstr "Model pencetak: {model}"
+
+#: tavletta/server/web/app.js:348 tavletta/server/web/print.js:188
+msgid "Preview of {name}"
+msgstr "Pratonton {name}"
+
+#: tavletta/server/web/app.js:359
+msgid "Delete template?"
+msgstr "Padam templat?"
+
+#: tavletta/server/web/app.js:360
+msgid "The template {name} is deleted from the server. Its data file stays."
+msgstr "Templat {name} dipadam daripada pelayan. Fail datanya kekal."
+
+#: tavletta/server/web/app.js:361
+msgid "Delete {name}"
+msgstr "Padam {name}"
+
+#: tavletta/server/web/app.js:368
+msgid "{name} deleted."
+msgstr "{name} dipadam."
+
+#: tavletta/server/web/app.js:381
+msgid "Template file"
+msgstr "Fail templat"
+
+#: tavletta/server/web/app.js:382
+msgid "A .tavletta file saved by Tavletta, at most {size} MB."
+msgstr "Fail .tavletta yang disimpan oleh Tavletta, maksimum {size} MB."
+
+#: tavletta/server/web/app.js:386
+msgid "Upload"
+msgstr "Muat naik"
+
+#: tavletta/server/web/app.js:390
+msgid "Upload a template"
+msgstr "Muat naik templat"
+
+#: tavletta/server/web/app.js:392
+msgid "Replace a template of the same name"
+msgstr "Ganti templat dengan nama yang sama"
+
+#: tavletta/server/web/app.js:400
+msgid "Choose a template file."
+msgstr "Pilih fail templat."
+
+#: tavletta/server/web/app.js:405
+msgid "The file is too large: at most {size} MB."
+msgstr "Fail terlalu besar: maksimum {size} MB."
+
+#: tavletta/server/web/app.js:416
+msgid "{name} uploaded."
+msgstr "{name} dimuat naik."
+
+#: tavletta/server/web/app.js:420
+msgid ""
+"A template of this name exists. Choose \"Replace a template of the same "
+"name\" to replace it."
+msgstr "Templat dengan nama ini sudah wujud. Pilih \"Ganti templat dengan nama yang sama\" untuk menggantikannya."
+
+#: tavletta/server/web/app.js:422
+msgid ""
+"The file name can have letters, digits, spaces and . _ - ( ) + , and must "
+"not start with a dot. Rename the file."
+msgstr "Nama fail boleh mengandungi huruf, digit, ruang dan . _ - ( ) + , serta tidak boleh bermula dengan titik. Namakan semula fail."
+
+#: tavletta/server/web/app.js:437
+msgid "Print job"
+msgstr "Kerja cetak"
+
+#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:843
+#: tavletta/server/web/print.js:243
+msgid "Template: {name}"
+msgstr "Templat: {name}"
+
+#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:844
+#: tavletta/server/web/print.js:243
+msgid "Printer: {name}"
+msgstr "Pencetak: {name}"
+
+#: tavletta/server/web/app.js:449 tavletta/server/web/batch.js:886
+msgid "Print job ended: {printed} of {total} labels printed."
+msgstr "Kerja cetak tamat: {printed} daripada {total} label dicetak."
+
+#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:272
+msgid "Data"
+msgstr "Data"
+
+#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:398
+msgid "Assign"
+msgstr "Tetapkan"
+
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:465
+msgid "Choose"
+msgstr "Pilih"
+
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:706
+msgid "Check"
+msgstr "Semak"
+
+#: tavletta/server/web/batch.js:85
+msgid "From needs a number."
+msgstr "\"Dari\" memerlukan nombor."
+
+#: tavletta/server/web/batch.js:86
+msgid "To needs a number."
+msgstr "\"Hingga\" memerlukan nombor."
+
+#: tavletta/server/web/batch.js:87
+msgid "Step must be a whole number from 1."
+msgstr "\"Langkah\" mesti nombor bulat bermula dari 1."
+
+#: tavletta/server/web/batch.js:88
+msgid "From and To must be the same apart from the number ({from}, {to})."
+msgstr "\"Dari\" dan \"Hingga\" mesti sama kecuali nombornya ({from}, {to})."
+
+#: tavletta/server/web/batch.js:89
+msgid ""
+"From has {from} digits, To {to}. Enter both with the same number of digits."
+msgstr "\"Dari\" mempunyai {from} digit, \"Hingga\" {to}. Masukkan kedua-duanya dengan bilangan digit yang sama."
+
+#: tavletta/server/web/batch.js:90
+msgid "To must be greater than or equal to From ({from})."
+msgstr "\"Hingga\" mesti lebih besar daripada atau sama dengan \"Dari\" ({from})."
+
+#: tavletta/server/web/batch.js:91
+msgid ""
+"The ranges make different numbers of labels: {counts}. Make them the same "
+"length."
+msgstr "Julat menghasilkan bilangan label yang berbeza: {counts}. Samakan panjangnya."
+
+#: tavletta/server/web/batch.js:100
+msgid "Series of {name}"
+msgstr "Siri {name}"
+
+#: tavletta/server/web/batch.js:117
+msgid ""
+"This template has no data fields ({placeholder}). For many equal labels, set "
+"the copies when printing."
+msgstr "Templat ini tiada medan data ({placeholder}). Untuk banyak label yang sama, tetapkan salinan semasa mencetak."
+
+#: tavletta/server/web/batch.js:127
+msgid "Steps"
+msgstr "Langkah-langkah"
+
+#: tavletta/server/web/batch.js:162 tavletta/server/web/batch.js:181
+msgid "Enter a range for at least one field."
+msgstr "Masukkan julat untuk sekurang-kurangnya satu medan."
+
+#: tavletta/server/web/batch.js:191 tavletta/server/web/batch.js:641
+msgid "Row {n}"
+msgstr "Baris {n}"
+
+#: tavletta/server/web/batch.js:207 tavletta/server/web/batch.js:518
+#: tavletta/server/web/batch.js:708
+msgid "No row selected."
+msgstr "Tiada baris dipilih."
+
+#: tavletta/server/web/batch.js:211
+msgid "{count} labels ({span})"
+msgstr "{count} label ({span})"
+
+#: tavletta/server/web/batch.js:226
+msgid "not needed"
+msgstr "tidak diperlukan"
+
+#: tavletta/server/web/batch.js:248 tavletta/server/web/batch.js:302
+msgid "Next"
+msgstr "Seterusnya"
+
+#: tavletta/server/web/batch.js:252 tavletta/server/web/batch.js:759
+msgid "Back"
+msgstr "Kembali"
+
+#: tavletta/server/web/batch.js:276
+msgid "Where do the values come from?"
+msgstr "Dari mana nilai diambil?"
+
+#: tavletta/server/web/batch.js:277
+msgid "A file (CSV, XLSX, ODS)"
+msgstr "Fail (CSV, XLSX, ODS)"
+
+#: tavletta/server/web/batch.js:278
+msgid "A pasted list"
+msgstr "Senarai yang ditampal"
+
+#: tavletta/server/web/batch.js:279
+msgid "No data: make numbers from ranges"
+msgstr "Tiada data: jana nombor daripada julat"
+
+#: tavletta/server/web/batch.js:287
+msgid "Data file"
+msgstr "Fail data"
+
+#: tavletta/server/web/batch.js:287
+msgid ""
+"At most {size} MB. Every cell is read as the text it shows: leading zeros "
+"stay."
+msgstr "Maksimum {size} MB. Setiap sel dibaca sebagai teks yang dipaparkannya: sifar di hadapan dikekalkan."
+
+#: tavletta/server/web/batch.js:289 tavletta/server/web/batch.js:296
+msgid "The first row holds the column names"
+msgstr "Baris pertama mengandungi nama lajur"
+
+#: tavletta/server/web/batch.js:290
+msgid "Last file read: {name}"
+msgstr "Fail terakhir dibaca: {name}"
+
+#: tavletta/server/web/batch.js:294 tavletta/server/web/batch.js:343
+msgid "List"
+msgstr "Senarai"
+
+#: tavletta/server/web/batch.js:294
+msgid ""
+"One label per line; columns separated by tab, semicolon or comma (as copied "
+"from a spreadsheet)."
+msgstr "Satu label setiap baris; lajur dipisahkan dengan tab, koma bertitik atau koma (seperti yang disalin daripada hamparan)."
+
+#: tavletta/server/web/batch.js:298
+msgid ""
+"The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
+msgstr "Langkah seterusnya menjana nilai daripada julat, seperti 3000–5685 atau 00300–00450."
+
+#: tavletta/server/web/batch.js:302
+msgid "Read and continue"
+msgstr "Baca dan teruskan"
+
+#: tavletta/server/web/batch.js:334
+msgid "Choose a data file."
+msgstr "Pilih fail data."
+
+#: tavletta/server/web/batch.js:342
+msgid "Paste the list first."
+msgstr "Tampal senarai dahulu."
+
+#: tavletta/server/web/batch.js:347
+msgid "The data are too large: at most {size} MB."
+msgstr "Data terlalu besar: maksimum {size} MB."
+
+#: tavletta/server/web/batch.js:370
+msgid "semicolon"
+msgstr "koma bertitik"
+
+#: tavletta/server/web/batch.js:370
+msgid "comma"
+msgstr "koma"
+
+#: tavletta/server/web/batch.js:370
+msgid "tab"
+msgstr "tab"
+
+#: tavletta/server/web/batch.js:372
+msgid "{name}: {kind}"
+msgstr "{name}: {kind}"
+
+#: tavletta/server/web/batch.js:373
+msgid "Separated by {delimiter}"
+msgstr "Dipisahkan dengan {delimiter}"
+
+#: tavletta/server/web/batch.js:374
+msgid "Sheet: {sheet}"
+msgstr "Helaian: {sheet}"
+
+#: tavletta/server/web/batch.js:375
+msgid "{rows} rows, {columns} columns"
+msgstr "{rows} baris, {columns} lajur"
+
+#: tavletta/server/web/batch.js:377
+msgid "The first {count} rows"
+msgstr "{count} baris pertama"
+
+#: tavletta/server/web/batch.js:388 tavletta/server/web/batch.js:635
+msgid "Row"
+msgstr "Baris"
+
+#: tavletta/server/web/batch.js:413
+msgid "Choose the data column for each field of the template."
+msgstr "Pilih lajur data bagi setiap medan templat."
+
+#: tavletta/server/web/batch.js:418
+msgid "– not assigned –"
+msgstr "– tidak ditetapkan –"
+
+#: tavletta/server/web/batch.js:419
+msgid "The same value for all"
+msgstr "Nilai yang sama untuk semua"
+
+#: tavletta/server/web/batch.js:423
+msgid "Value for {name}"
+msgstr "Nilai untuk {name}"
+
+#: tavletta/server/web/batch.js:426
+msgid "Data field {placeholder} of the template, required"
+msgstr "Medan data {placeholder} templat, wajib"
+
+#: tavletta/server/web/batch.js:443
+msgid "{name} has no data column. Choose one, or the same value for all."
+msgstr "{name} tiada lajur data. Pilih satu, atau nilai yang sama untuk semua."
+
+#: tavletta/server/web/batch.js:476
+msgid "Continuing: {count} rows left."
+msgstr "Meneruskan: tinggal {count} baris."
+
+#: tavletta/server/web/batch.js:480
+msgid "Choose again"
+msgstr "Pilih semula"
+
+#: tavletta/server/web/batch.js:486 tavletta/server/web/batch.js:612
+msgid "All rows"
+msgstr "Semua baris"
+
+#: tavletta/server/web/batch.js:487
+msgid "Some rows"
+msgstr "Sesetengah baris"
+
+#: tavletta/server/web/batch.js:488
+msgid "Ranges of a field"
+msgstr "Julat medan"
+
+#: tavletta/server/web/batch.js:494
+msgid "Which rows?"
+msgstr "Baris yang mana?"
+
+#: tavletta/server/web/batch.js:529
+msgid ""
+"Several fields: their values are put together row by row (the first with the "
+"first), never every combination."
+msgstr "Beberapa medan: nilainya digabungkan baris demi baris (yang pertama dengan yang pertama), bukan setiap gabungan."
+
+#: tavletta/server/web/batch.js:530
+msgid ""
+"Several fields: a row is printed if its values lie in the ranges of all of "
+"them."
+msgstr "Beberapa medan: baris dicetak jika nilainya berada dalam julat kesemuanya."
+
+#: tavletta/server/web/batch.js:561
+msgid "From"
+msgstr "Dari"
+
+#: tavletta/server/web/batch.js:561
+msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
+msgstr "Contohnya 3000, 00300 atau INV-0001; atau keseluruhan julat, 3000-5685"
+
+#: tavletta/server/web/batch.js:562
+msgid "To"
+msgstr "Hingga"
+
+#: tavletta/server/web/batch.js:568
+msgid "Remove range"
+msgstr "Buang julat"
+
+#: tavletta/server/web/batch.js:590
+msgid "Add a range"
+msgstr "Tambah julat"
+
+#: tavletta/server/web/batch.js:598
+msgid "Or the same value for all"
+msgstr "Atau nilai yang sama untuk semua"
+
+#: tavletta/server/web/batch.js:598
+msgid "Used if no range is given for this field."
+msgstr "Digunakan jika tiada julat diberikan untuk medan ini."
+
+#: tavletta/server/web/batch.js:611 tavletta/server/web/batch.js:630
+msgid "Rows"
+msgstr "Baris"
+
+#: tavletta/server/web/batch.js:611
+msgid "For example 1-20, 25, 30-"
+msgstr "Contohnya 1-20, 25, 30-"
+
+#: tavletta/server/web/batch.js:634
+msgid "Rows {first} to {last} of {total}"
+msgstr "Baris {first} hingga {last} daripada {total}"
+
+#: tavletta/server/web/batch.js:670
+msgid "Page {page} of {pages}"
+msgstr "Halaman {page} daripada {pages}"
+
+#: tavletta/server/web/batch.js:676
+msgid "Previous page"
+msgstr "Halaman sebelumnya"
+
+#: tavletta/server/web/batch.js:677
+msgid "Next page"
+msgstr "Halaman seterusnya"
+
+#: tavletta/server/web/batch.js:691
+msgid "Write the rows as numbers and ranges, such as 1-20, 25."
+msgstr "Tulis baris sebagai nombor dan julat, seperti 1-20, 25."
+
+#: tavletta/server/web/batch.js:753
+msgid "The same for all labels"
+msgstr "Sama untuk semua label"
+
+#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:203
+msgid "Printing needs a token with the role Print or Admin."
+msgstr "Mencetak memerlukan token dengan peranan Cetak atau Admin."
+
+#: tavletta/server/web/batch.js:772 tavletta/server/web/print.js:222
+msgid "Copies must be a whole number from 1."
+msgstr "Salinan mesti nombor bulat bermula dari 1."
+
+#: tavletta/server/web/batch.js:773 tavletta/server/web/print.js:223
+msgid "At most {max} copies on this printer."
+msgstr "Maksimum {max} salinan pada pencetak ini."
+
+#: tavletta/server/web/batch.js:774
+msgid "At most {max} rows in one print job."
+msgstr "Maksimum {max} baris dalam satu kerja cetak."
+
+#: tavletta/server/web/batch.js:775
+msgid ""
+"At most {max} labels in one print job. Choose fewer rows, or print them in "
+"several jobs."
+msgstr "Maksimum {max} label dalam satu kerja cetak. Pilih lebih sedikit baris, atau cetak dalam beberapa kerja."
+
+#: tavletta/server/web/batch.js:776 tavletta/server/web/print.js:204
+msgid "Confirm above that it should print on the labels loaded."
+msgstr "Sahkan di atas bahawa ia patut mencetak pada label yang dimuatkan."
+
+#: tavletta/server/web/batch.js:783
+msgid "At most {max} labels in one print job; {left} more could be added."
+msgstr "Maksimum {max} label dalam satu kerja cetak; {left} lagi boleh ditambah."
+
+#: tavletta/server/web/batch.js:784 tavletta/server/web/batch.js:846
+#: tavletta/server/web/print.js:244
+msgid "Print {count} labels"
+msgstr "Cetak {count} label"
+
+#: tavletta/server/web/batch.js:806
+msgid "First: {value}"
+msgstr "Pertama: {value}"
+
+#: tavletta/server/web/batch.js:807
+msgid "Last: {value}"
+msgstr "Terakhir: {value}"
+
+#: tavletta/server/web/batch.js:810 tavletta/server/web/batch.js:811
+msgid "Preview of the label {value}"
+msgstr "Pratonton label {value}"
+
+#: tavletta/server/web/batch.js:840 tavletta/server/web/print.js:242
+msgid "Print {count} labels?"
+msgstr "Cetak {count} label?"
+
+#: tavletta/server/web/batch.js:854
+msgid "Too much data for one print job ({size} MB). Choose fewer rows."
+msgstr "Terlalu banyak data untuk satu kerja cetak ({size} MB). Pilih lebih sedikit baris."
+
+#: tavletta/server/web/batch.js:905
+msgid "First printed: {first}, last printed in full: {last}"
+msgstr "Pertama dicetak: {first}, terakhir dicetak sepenuhnya: {last}"
+
+#: tavletta/server/web/batch.js:916
+msgid "Continue from {value}"
+msgstr "Teruskan dari {value}"
+
+#: tavletta/server/web/batch.js:918
+msgid "A label of a row that was printed in part is printed again in full."
+msgstr "Label bagi baris yang dicetak sebahagian akan dicetak semula sepenuhnya."
+
+#: tavletta/server/web/batch.js:926
+msgid "New series"
+msgstr "Siri baharu"
+
+#: tavletta/server/web/print.js:38
+msgid "Back to the templates"
+msgstr "Kembali ke templat"
+
+#: tavletta/server/web/print.js:47
+msgid "Printer: {model}, at the address set on the server"
+msgstr "Pencetak: {model}, pada alamat yang ditetapkan pada pelayan"
+
+#: tavletta/server/web/print.js:80
+msgid "No printer chosen."
+msgstr "Tiada pencetak dipilih."
+
+#: tavletta/server/web/print.js:81
+msgid ""
+"The printer is unreachable. Check that it is on and connected, then reload "
+"the page."
+msgstr "Pencetak tidak dapat dicapai. Semak bahawa ia dihidupkan dan disambungkan, kemudian muat semula halaman."
+
+#: tavletta/server/web/print.js:90
+msgid "Data field {placeholder}"
+msgstr "Medan data {placeholder}"
+
+#: tavletta/server/web/print.js:93
+msgid "Variable {placeholder}"
+msgstr "Pemboleh ubah {placeholder}"
+
+#: tavletta/server/web/print.js:98
+msgid "Text of the element; changed here for this print only"
+msgstr "Teks elemen; diubah di sini untuk cetakan ini sahaja"
+
+#: tavletta/server/web/print.js:105
+msgid "Print {name}"
+msgstr "Cetak {name}"
+
+#: tavletta/server/web/print.js:145
+msgid "Start number"
+msgstr "Nombor mula"
+
+#: tavletta/server/web/print.js:145
+msgid ""
+"The counter {placeholder} starts here; next number saved in the template: "
+"{next}"
+msgstr "Pembilang {placeholder} bermula di sini; nombor seterusnya yang disimpan dalam templat: {next}"
+
+#: tavletta/server/web/print.js:150
+msgid "At most {max}"
+msgstr "Maksimum {max}"
+
+#: tavletta/server/web/print.js:160
+msgid "Fields"
+msgstr "Medan"
+
+#: tavletta/server/web/print.js:160
+msgid "This template has no fields to fill in."
+msgstr "Templat ini tiada medan untuk diisi."
+
+#: tavletta/server/web/print.js:216
+msgid "{name} is empty. Enter a value."
+msgstr "{name} kosong. Masukkan nilai."
+
+#: tavletta/server/web/print.js:219
+msgid "The start number must be a whole number from 0."
+msgstr "Nombor mula mesti nombor bulat bermula dari 0."
+
+#: tavletta/server/web/print.js:224
+msgid "At most {max} labels in one print job."
+msgstr "Maksimum {max} label dalam satu kerja cetak."
+
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+msgid "There is a problem"
+msgstr "Terdapat masalah"
+
+#: tavletta/server/web/ui.js:48
+msgid "Busy"
+msgstr "Sibuk"
+
+#: tavletta/server/web/ui.js:49
+msgid "Paused"
+msgstr "Dijeda"
+
+#: tavletta/server/web/ui.js:50
+msgid "Problem"
+msgstr "Masalah"
+
+#: tavletta/server/web/ui.js:51
+msgid "Reachable, no status"
+msgstr "Boleh dicapai, tiada status"
+
+#: tavletta/server/web/ui.js:52
+msgid "Unreachable"
+msgstr "Tidak dapat dicapai"
+
+#: tavletta/server/web/ui.js:62
+msgid "Admin"
+msgstr "Admin"
+
+#: tavletta/server/web/ui.js:66
+msgid "Code"
+msgstr "Kod"
+
+#: tavletta/server/web/ui.js:66
+msgid "Element"
+msgstr "Elemen"
+
+#: tavletta/server/web/ui.js:71
+msgid "Something went wrong in the page."
+msgstr "Sesuatu tidak kena pada halaman."
+
+#: tavletta/server/web/ui.js:72
+msgid "This needs a token with more rights."
+msgstr "Ini memerlukan token dengan lebih banyak hak."
+
+#: tavletta/server/web/ui.js:74
+msgid ""
+"Too many wrong tokens from this computer. Wait a minute, then sign in again."
+msgstr "Terlalu banyak token salah dari komputer ini. Tunggu seminit, kemudian log masuk semula."
+
+#: tavletta/server/web/ui.js:82
+msgid "Labels loaded: {width} × {height} mm"
+msgstr "Label dimuatkan: {width} × {height} mm"
+
+#: tavletta/server/web/ui.js:83
+msgid "Tape loaded: {width} mm"
+msgstr "Pita dimuatkan: {width} mm"
+
+#: tavletta/server/web/ui.js:84
+msgid "Label distance measured: {length} mm"
+msgstr "Jarak label diukur: {length} mm"
+
+#: tavletta/server/web/ui.js:85
+msgid "Left on the roll: {length} mm"
+msgstr "Baki pada gulungan: {length} mm"
+
+#: tavletta/server/web/ui.js:92
+msgid "Unreachable (checked {time})"
+msgstr "Tidak dapat dicapai (disemak {time})"
+
+#: tavletta/server/web/ui.js:106
+msgid "Loading…"
+msgstr "Memuatkan…"
+
+#: tavletta/server/web/ui.js:122
+msgid "Try again"
+msgstr "Cuba lagi"
+
+#: tavletta/server/web/ui.js:149
+msgid "optional"
+msgstr "pilihan"
+
+#: tavletta/server/web/ui.js:260
+msgid "Other labels are loaded in the printer than the template needs."
+msgstr "Label yang dimuatkan dalam pencetak berbeza daripada yang diperlukan templat."
+
+#: tavletta/server/web/ui.js:326
+msgid "Element {n}: {kind}"
+msgstr "Elemen {n}: {kind}"
+
+#: tavletta/server/web/ui.js:385
+msgid "Cancel printing"
+msgstr "Batalkan pencetakan"
+
+#: tavletta/server/web/ui.js:386
+msgid "Labels already printed stay printed."
+msgstr "Label yang sudah dicetak kekal dicetak."
+
+#: tavletta/server/web/ui.js:398
+msgid "{printed} of {total}"
+msgstr "{printed} daripada {total}"
+
+#: tavletta/server/web/ui.js:407
+msgid "About {minutes} min left"
+msgstr "Kira-kira {minutes} min lagi"
+
+#: tavletta/server/web/ui.js:409
+msgid "Waiting for the printer…"
+msgstr "Menunggu pencetak…"
+
+#: tavletta/server/web/ui.js:437
+msgid "Stopping after the label being printed…"
+msgstr "Berhenti selepas label yang sedang dicetak…"
+
+#: tavletta/server/web/ui.js:456
+msgid "Canceled"
+msgstr "Dibatalkan"
+
+#: tavletta/server/web/ui.js:456
+msgid "Failed"
+msgstr "Gagal"
+
+#: tavletta/server/web/ui.js:468
+msgid "Copied"
+msgstr "Disalin"
+
+#: tavletta/server/web/ui.js:474
+msgid "Copy"
+msgstr "Salin"
+
+#: tavletta/server/web/ui.js:480
+msgid "{printed} of {total} labels printed."
+msgstr "{printed} daripada {total} label dicetak."
+
+#: tavletta/server/web/ui.js:483
+msgid "Took {seconds} s, finished at {time}."
+msgstr "Mengambil masa {seconds} s, selesai pada {time}."
+
+#: tavletta/server/web/ui.js:485
+msgid "Job number"
+msgstr "Nombor kerja"

@@ -44,6 +44,8 @@ include = ["tavletta*"]
 "tavletta.sheets" = ["templates.json", "LICENSE.glabels"]
 # symbols from Material Design Icons, with their Apache-2.0 license
 "tavletta.symbols" = ["mdi.json.gz", "LICENSE.mdi"]
+# the print server's web page (tavletta serve, docs/server.md)
+"tavletta.server" = ["web/*.html", "web/*.css", "web/*.js", "web/*.svg"]
 
 [tool.setuptools.dynamic]
 version = {attr = "tavletta.__version__"}

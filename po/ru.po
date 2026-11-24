@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 14:55+0100\n"
+"PO-Revision-Date: 2026-11-24 15:25+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ru\n"
 "Language: ru\n"
@@ -237,223 +237,228 @@ msgstr "tokens.toml: именованные токены доступа с ро�
 msgid "also serve MCP at /mcp"
 msgstr "также предоставлять MCP по адресу /mcp"
 
-#: tavletta/cli.py:391
+#: tavletta/cli.py:389
+msgid "do not serve the web page at /: only the REST API (and MCP)"
+msgstr "не показывать веб-страницу по адресу /: только REST API (и MCP)"
+
+#: tavletta/cli.py:396
 msgid "largest request body in MB (default 4)"
 msgstr "максимальный размер тела запроса в MB (по умолчанию 4)"
 
-#: tavletta/cli.py:400
+#: tavletta/cli.py:405
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "обратный прокси, заголовок X-Forwarded-For которого указывает клиента, например 172.16.0.0/12; можно повторять"
 
-#: tavletta/cli.py:409
+#: tavletta/cli.py:414
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "разрешать запросы с веб-страниц этого источника; можно повторять"
 
-#: tavletta/cli.py:414
+#: tavletta/cli.py:419
 msgid "serve MCP on standard input and output"
 msgstr "предоставляет MCP через стандартный ввод и вывод"
 
-#: tavletta/cli.py:416
+#: tavletta/cli.py:421
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "Предоставляет MCP через стандартный ввод и вывод для клиентов ИИ, например Claude Desktop."
 
-#: tavletta/cli.py:426
+#: tavletta/cli.py:431
 msgid "manage the access tokens of the print server"
 msgstr "управляет токенами доступа сервера печати"
 
-#: tavletta/cli.py:427
+#: tavletta/cli.py:432
 msgid "Manage the access tokens of the print server."
 msgstr "Управление токенами доступа сервера печати."
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:437
 msgid "make a token and add its hash to tokens.toml"
 msgstr "создаёт токен и добавляет его хеш в tokens.toml"
 
-#: tavletta/cli.py:433
+#: tavletta/cli.py:438
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "Создание токена, добавление его хеша в tokens.toml и однократный показ токена."
 
-#: tavletta/cli.py:435
+#: tavletta/cli.py:440
 msgid "name of the token, e.g. the device"
 msgstr "имя токена, например устройство"
 
-#: tavletta/cli.py:440
+#: tavletta/cli.py:445
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview: только просмотр; print: также печать; admin: также все задания"
 
-#: tavletta/cli.py:442
+#: tavletta/cli.py:447
 msgid "tokens.toml to add it to"
 msgstr "tokens.toml, в который его добавить"
 
-#: tavletta/cli.py:448
+#: tavletta/cli.py:453
 msgid "only this printer of printers.toml; repeatable"
 msgstr "только этот принтер из printers.toml; можно повторять"
 
-#: tavletta/cli.py:451
+#: tavletta/cli.py:456
 msgid "printers.toml, to check --printer"
 msgstr "printers.toml для проверки --printer"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:458
 msgid "valid until, e.g. 2027-12-31"
 msgstr "действителен до, например 2027-12-31"
 
-#: tavletta/cli.py:454
+#: tavletta/cli.py:459
 msgid "a note for people"
 msgstr "примечание для людей"
 
-#: tavletta/cli.py:456
+#: tavletta/cli.py:461
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "хранить хеш с помощью scrypt вместо SHA-256"
 
-#: tavletta/cli.py:462
+#: tavletta/cli.py:467
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "взять выбранный вами токен со стандартного ввода (хранится с помощью scrypt) вместо создания нового"
 
-#: tavletta/cli.py:482 tavletta/server/config.py:219
-#: tavletta/server/service.py:593
+#: tavletta/cli.py:487 tavletta/server/config.py:219
+#: tavletta/server/service.py:612
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "Неизвестная модель принтера: %s"
 
-#: tavletta/cli.py:489 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/cli.py:494 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:340 tavletta/ui/texts.py:722
-#: tavletta/server/service.py:750
+#: tavletta/server/service.py:902
 #, python-format
 msgid "Cannot open %s"
 msgstr "Не удалось открыть %s"
 
-#: tavletta/cli.py:511 tavletta/server/main.py:260
+#: tavletta/cli.py:516 tavletta/server/main.py:262
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s не является датой, ожидается, например, 2026-12-31 или 2026-12-31T08:30"
 
-#: tavletta/cli.py:559
+#: tavletta/cli.py:564
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s} подставляется при печати и не может быть задано"
 
-#: tavletta/cli.py:565
+#: tavletta/cli.py:570
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "В этикетке нет элемента или переменной с именем %s"
 
-#: tavletta/cli.py:594 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1133
+#: tavletta/cli.py:599 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1287
 msgid "The label is empty"
 msgstr "Этикетка пуста"
 
-#: tavletta/cli.py:631
+#: tavletta/cli.py:636
 msgid "Cannot write the output"
 msgstr "Не удаётся записать вывод"
 
-#: tavletta/cli.py:662
+#: tavletta/cli.py:667
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output записывает изображения PNG: укажите имя с окончанием .png"
 
-#: tavletta/cli.py:687 tavletta/cli.py:896 tavletta/ui/printing.py:541
-#: tavletta/ui/printing.py:705 tavletta/server/service.py:992
-#: tavletta/server/service.py:1015 tavletta/server/service.py:1317
-#: tavletta/server/service.py:1487
+#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
+#: tavletta/ui/printing.py:705 tavletta/server/service.py:1146
+#: tavletta/server/service.py:1169 tavletta/server/service.py:1471
+#: tavletta/server/service.py:1707
 msgid "The label cannot be prepared for printing."
 msgstr "Не удалось подготовить этикетку к печати."
 
-#: tavletta/cli.py:774
+#: tavletta/cli.py:779
 msgid "No printer found – give its address with --host"
 msgstr "Принтер не найден – укажите его адрес через --host"
 
-#: tavletta/cli.py:776
+#: tavletta/cli.py:781
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Найдено несколько принтеров – выберите один через --host (tavletta list-printers)"
 
-#: tavletta/cli.py:787 tavletta/ui/texts.py:765 tavletta/server/service.py:1477
+#: tavletta/cli.py:792 tavletta/ui/texts.py:765 tavletta/server/service.py:1697
 #, python-format
 msgid "Cannot save %s"
 msgstr "Не удалось сохранить %s"
 
-#: tavletta/cli.py:789 tavletta/server/service.py:1480
+#: tavletta/cli.py:794 tavletta/server/service.py:1700
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "этикетки напечатаны, но следующее значение счётчика не сохранено"
 
-#: tavletta/cli.py:804 tavletta/server/service.py:1162
+#: tavletta/cli.py:809 tavletta/server/service.py:1316
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "ничего не напечатано: следующее значение счётчика не удалось бы сохранить"
 
-#: tavletta/cli.py:864 tavletta/cli.py:891 tavletta/cli.py:1255
+#: tavletta/cli.py:869 tavletta/cli.py:896 tavletta/cli.py:1260
 msgid "Interrupted"
 msgstr "Прервано"
 
-#: tavletta/cli.py:947 tavletta/ui/printing.py:447
-#: tavletta/server/service.py:1038
+#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/server/service.py:1192
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "Не более %d этикеток в одном задании печати"
 
-#: tavletta/cli.py:966
+#: tavletta/cli.py:971
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method: у этой модели принтера нет настройки способа печати: %s"
 
-#: tavletta/cli.py:1008
+#: tavletta/cli.py:1013
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet и --rows требуют файл данных (--data)"
 
-#: tavletta/cli.py:1017 tavletta/ui/printing.py:574
-#: tavletta/server/service.py:852
+#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/server/service.py:1004
 msgid "No rows to print"
 msgstr "Нет строк для печати"
 
-#: tavletta/cli.py:1027
+#: tavletta/cli.py:1032
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "Этикетка использует файл данных вне своей папки: укажите его через --data"
 
-#: tavletta/cli.py:1054 tavletta/ui/window.py:912
-#: tavletta/server/service.py:909
+#: tavletta/cli.py:1059 tavletta/ui/window.py:915
+#: tavletta/server/service.py:1063
 #, python-format
 msgid "No such column: %s"
 msgstr "Нет такого столбца: %s"
 
-#: tavletta/cli.py:1059 tavletta/ui/printing.py:654
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "Штрихкод или QR-код этих строк нельзя создать из их значений, например EAN-13 с буквами или пустая ячейка. Исправьте файл данных и прочитайте его снова или печатайте без этих строк."
 
-#: tavletta/cli.py:1064 tavletta/ui/printing.py:659
+#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
 #, python-format
 msgid "Rows: %s"
 msgstr "Строки: %s"
 
-#: tavletta/cli.py:1072
+#: tavletta/cli.py:1077
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "Ожидание завершения другой печати %s…"
 
-#: tavletta/cli.py:1079 tavletta/server/service.py:1311
+#: tavletta/cli.py:1084 tavletta/server/service.py:791
+#: tavletta/server/service.py:1465
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s всё ещё заблокирован другой печатью – попробуйте позже"
 
-#: tavletta/cli.py:1085
+#: tavletta/cli.py:1090
 msgid "--output needs --dry-run"
 msgstr "--output требует --dry-run"
 
-#: tavletta/cli.py:1102
+#: tavletta/cli.py:1107
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "Следующее значение счётчика не сохраняется: следующая печать повторит номера"
 
-#: tavletta/cli.py:1198
+#: tavletta/cli.py:1203
 msgid "Waiting for the printer's answer…"
 msgstr "Ожидание ответа принтера…"
 
-#: tavletta/cli.py:1226 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1231 tavletta/ui/printer.py:199
 msgid "No printer found"
 msgstr "Принтер не найден"
 
@@ -527,8 +532,8 @@ msgstr "Нет файла данных"
 msgid "CSV, ODS or XLSX"
 msgstr "CSV, ODS или XLSX"
 
-#: tavletta/ui/data.py:291 tavletta/ui/elements.py:359
-#: tavletta/ui/elements.py:377 tavletta/ui/elements.py:390
+#: tavletta/ui/data.py:291 tavletta/ui/elements.py:355
+#: tavletta/ui/elements.py:373 tavletta/ui/elements.py:386
 msgid "Choose…"
 msgstr "Выбрать…"
 
@@ -548,7 +553,7 @@ msgstr "Выбрать другой файл"
 msgid "Remove data file"
 msgstr "Удалить файл данных"
 
-#: tavletta/ui/data.py:337
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:401
 msgid "Sheet"
 msgstr "Лист"
 
@@ -556,101 +561,101 @@ msgstr "Лист"
 msgid "Insert column"
 msgstr "Вставить столбец"
 
-#: tavletta/ui/editor.py:719
+#: tavletta/ui/editor.py:738
 #, python-format
 msgid "Elements removed: %d"
 msgstr "Удалено элементов: %d"
 
-#: tavletta/ui/editor.py:719 tavletta/ui/shortcuts.py:53
+#: tavletta/ui/editor.py:738 tavletta/ui/shortcuts.py:53
 #: tavletta/ui/window.py:183
 msgid "Undo"
 msgstr "Отменить"
 
-#: tavletta/ui/editor.py:789
+#: tavletta/ui/editor.py:819
 msgid "Elements can be moved in the free layout"
 msgstr "Элементы можно перемещать в свободном расположении"
 
-#: tavletta/ui/editor.py:790
+#: tavletta/ui/editor.py:820
 msgid "Use free layout"
 msgstr "Свободное расположение"
 
-#: tavletta/ui/editor.py:800
+#: tavletta/ui/editor.py:830
 msgid "No element selected"
 msgstr "Элемент не выбран"
 
-#: tavletta/ui/editor.py:802
+#: tavletta/ui/editor.py:832
 #, python-format
 msgid "Elements selected: %(n)d of %(total)d"
 msgstr "Выбрано элементов: %(n)d из %(total)d"
 
-#: tavletta/ui/editor.py:808
+#: tavletta/ui/editor.py:838
 #, python-format
 msgid "Element %(n)d of %(total)d: %(name)s"
 msgstr "Элемент %(n)d из %(total)d: %(name)s"
 
-#: tavletta/ui/editor.py:853
+#: tavletta/ui/editor.py:883
 msgid "Arrange"
 msgstr "Упорядочить"
 
-#: tavletta/ui/editor.py:854
+#: tavletta/ui/editor.py:884
 msgid "Align, distribute and snap the selected elements"
 msgstr "Выровнять, распределить и привязать выбранные элементы"
 
-#: tavletta/ui/editor.py:870 tavletta/ui/image_crop.py:82
+#: tavletta/ui/editor.py:900 tavletta/ui/image_crop.py:82
 #: tavletta/ui/texts.py:113
 msgid "Left"
 msgstr "Слева"
 
-#: tavletta/ui/editor.py:871 tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
+#: tavletta/ui/editor.py:901 tavletta/ui/texts.py:76 tavletta/ui/texts.py:113
 msgid "Centre"
 msgstr "Центр"
 
-#: tavletta/ui/editor.py:872 tavletta/ui/texts.py:113
+#: tavletta/ui/editor.py:902 tavletta/ui/texts.py:113
 msgid "Right"
 msgstr "Справа"
 
-#: tavletta/ui/editor.py:873 tavletta/ui/image_crop.py:82
+#: tavletta/ui/editor.py:903 tavletta/ui/image_crop.py:82
 #: tavletta/ui/texts.py:164
 msgid "Top"
 msgstr "Сверху"
 
-#: tavletta/ui/editor.py:874 tavletta/ui/texts.py:164
+#: tavletta/ui/editor.py:904 tavletta/ui/texts.py:164
 msgid "Middle"
 msgstr "Посередине"
 
-#: tavletta/ui/editor.py:875 tavletta/ui/texts.py:164
+#: tavletta/ui/editor.py:905 tavletta/ui/texts.py:164
 msgid "Bottom"
 msgstr "Снизу"
 
-#: tavletta/ui/editor.py:878
+#: tavletta/ui/editor.py:908
 msgid "Align"
 msgstr "Выровнять"
 
-#: tavletta/ui/editor.py:880
+#: tavletta/ui/editor.py:910
 msgid "Horizontally"
 msgstr "По горизонтали"
 
-#: tavletta/ui/editor.py:881
+#: tavletta/ui/editor.py:911
 msgid "Vertically"
 msgstr "По вертикали"
 
-#: tavletta/ui/editor.py:882
+#: tavletta/ui/editor.py:912
 msgid "Distribute"
 msgstr "Распределить"
 
-#: tavletta/ui/editor.py:884
+#: tavletta/ui/editor.py:914
 msgid "Snap to guides"
 msgstr "Привязка к направляющим"
 
-#: tavletta/ui/editor.py:885
+#: tavletta/ui/editor.py:915
 msgid "No grid"
 msgstr "Без сетки"
 
-#: tavletta/ui/editor.py:888
+#: tavletta/ui/editor.py:918
 msgid "Snapping"
 msgstr "Привязка"
 
-#: tavletta/ui/editor.py:894 tavletta/ui/editor.py:895
+#: tavletta/ui/editor.py:924 tavletta/ui/editor.py:925
 #, python-format
 msgid "Grid of %s"
 msgstr "Сетка %s"
@@ -667,130 +672,130 @@ msgstr "Содержимого пока нет"
 msgid "Add text, an image, a symbol or a code"
 msgstr "Добавьте текст, изображение, символ или код"
 
-#: tavletta/ui/elements.py:107 tavletta/ui/texts.py:280
-#: tavletta/ui/window.py:1025
+#: tavletta/ui/elements.py:105 tavletta/ui/texts.py:280
+#: tavletta/ui/window.py:1029 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "Текст"
 
-#: tavletta/ui/elements.py:108
+#: tavletta/ui/elements.py:106
 msgid "Image…"
 msgstr "Изображение…"
 
-#: tavletta/ui/elements.py:109
+#: tavletta/ui/elements.py:107
 msgid "Symbol…"
 msgstr "Символ…"
 
-#: tavletta/ui/elements.py:110
+#: tavletta/ui/elements.py:108
 msgid "QR code / barcode"
 msgstr "QR-код / штрихкод"
 
-#: tavletta/ui/elements.py:111
+#: tavletta/ui/elements.py:109
 msgid "Line or shape"
 msgstr "Линия или фигура"
 
-#: tavletta/ui/elements.py:113
+#: tavletta/ui/elements.py:111
 msgid "Add"
 msgstr "Добавить"
 
-#: tavletta/ui/elements.py:247 tavletta/ui/label_group.py:145
+#: tavletta/ui/elements.py:243 tavletta/ui/label_group.py:145
 msgid "Remove"
 msgstr "Удалить"
 
-#: tavletta/ui/elements.py:250
+#: tavletta/ui/elements.py:246
 msgid "Move down"
 msgstr "Переместить назад"
 
-#: tavletta/ui/elements.py:251
+#: tavletta/ui/elements.py:247
 msgid "Move up"
 msgstr "Переместить вперёд"
 
-#: tavletta/ui/elements.py:269 tavletta/ui/elements.py:406
+#: tavletta/ui/elements.py:265 tavletta/ui/elements.py:402
 #: tavletta/ui/freelayout.py:190
 msgid "Size"
 msgstr "Размер"
 
-#: tavletta/ui/elements.py:276
+#: tavletta/ui/elements.py:272
 msgid "pt, 0 = fill tape height"
 msgstr "пт, 0 = по высоте ленты"
 
-#: tavletta/ui/elements.py:281
+#: tavletta/ui/elements.py:277
 msgid "Line alignment"
 msgstr "Выравнивание строк"
 
-#: tavletta/ui/elements.py:289
+#: tavletta/ui/elements.py:285
 msgid "Name for the command line"
 msgstr "Имя для командной строки"
 
-#: tavletta/ui/elements.py:328
+#: tavletta/ui/elements.py:324
 msgid "Font"
 msgstr "Шрифт"
 
-#: tavletta/ui/elements.py:345 tavletta/ui/freelayout.py:214
+#: tavletta/ui/elements.py:341 tavletta/ui/freelayout.py:214
 msgid "Bold"
 msgstr "Полужирный"
 
-#: tavletta/ui/elements.py:347
+#: tavletta/ui/elements.py:343
 msgid "Italic"
 msgstr "Курсив"
 
-#: tavletta/ui/elements.py:348
+#: tavletta/ui/elements.py:344
 msgid "Underline"
 msgstr "Подчёркнутый"
 
-#: tavletta/ui/elements.py:349
+#: tavletta/ui/elements.py:345
 msgid "Strikethrough"
 msgstr "Зачёркнутый"
 
-#: tavletta/ui/elements.py:357
+#: tavletta/ui/elements.py:353
 msgid "Image file"
 msgstr "Файл изображения"
 
-#: tavletta/ui/elements.py:358 tavletta/ui/elements.py:389
+#: tavletta/ui/elements.py:354 tavletta/ui/elements.py:385
 #: tavletta/ui/label_group.py:133
 msgid "None"
 msgstr "Нет"
 
-#: tavletta/ui/elements.py:367
+#: tavletta/ui/elements.py:363
 msgid "Crop, turn and adjustments reset for the new image"
 msgstr "Обрезка, поворот и коррекция сброшены для нового изображения"
 
-#: tavletta/ui/elements.py:375
+#: tavletta/ui/elements.py:371
 msgid "Area"
 msgstr "Область"
 
-#: tavletta/ui/elements.py:381 tavletta/ui/shipping.py:295
+#: tavletta/ui/elements.py:377 tavletta/ui/shipping.py:295
 msgid "Scale"
 msgstr "Масштаб"
 
-#: tavletta/ui/elements.py:387 tavletta/ui/texts.py:284
+#: tavletta/ui/elements.py:383 tavletta/ui/texts.py:284
 msgid "Symbol"
 msgstr "Символ"
 
-#: tavletta/ui/elements.py:412 tavletta/ui/styles.py:513
+#: tavletta/ui/elements.py:408 tavletta/ui/styles.py:513
 #, python-format
 msgid "%(unit)s, 0 = fill tape height"
 msgstr "%(unit)s, 0 = по высоте ленты"
 
-#: tavletta/ui/elements.py:417
+#: tavletta/ui/elements.py:413
 msgid ""
 "Black-and-white printers print symbols in black, or in white if the colour "
 "is light"
 msgstr "Чёрно-белые принтеры печатают символы чёрным, а при светлом цвете белым"
 
-#: tavletta/ui/elements.py:424 tavletta/ui/freelayout.py:166
+#: tavletta/ui/elements.py:420 tavletta/ui/freelayout.py:166
 #: tavletta/ui/styles.py:113
 msgid "Rotation"
 msgstr "Поворот"
 
-#: tavletta/ui/elements.py:437
+#: tavletta/ui/elements.py:433
 msgid "Type"
 msgstr "Тип"
 
-#: tavletta/ui/elements.py:441
+#: tavletta/ui/elements.py:437
 msgid "Content (link, text, number)"
 msgstr "Содержимое (ссылка, текст, номер)"
 
-#: tavletta/ui/elements.py:451 tavletta/ui/styles.py:548
+#: tavletta/ui/elements.py:447 tavletta/ui/styles.py:548
 msgid "Colour"
 msgstr "Цвет"
 
@@ -844,7 +849,7 @@ msgstr "Сохранено: %s"
 msgid "Export PNG"
 msgstr "Экспорт в PNG"
 
-#: tavletta/ui/files.py:276 tavletta/ui/window.py:937
+#: tavletta/ui/files.py:276 tavletta/ui/window.py:940
 msgid "The preview cannot be drawn"
 msgstr "Не удалось нарисовать предпросмотр"
 
@@ -1064,7 +1069,8 @@ msgstr "Перетащите, чтобы выбрать сохраняемую �
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:233
 #: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
 #: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
-#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:954
+#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:957
+#: tavletta/server/web/ui.js:220
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -1218,40 +1224,40 @@ msgstr "Направление содержимого"
 msgid "Label preview"
 msgstr "Предпросмотр этикетки"
 
-#: tavletta/ui/preview.py:89
+#: tavletta/ui/preview.py:92
 msgid "Fit to window"
 msgstr "По размеру окна"
 
-#: tavletta/ui/preview.py:92
+#: tavletta/ui/preview.py:95
 msgid "Zoom out"
 msgstr "Уменьшить"
 
-#: tavletta/ui/preview.py:96
+#: tavletta/ui/preview.py:99
 msgid "Zoom in"
 msgstr "Увеличить"
 
-#: tavletta/ui/preview.py:105 tavletta/ui/shortcuts.py:92
+#: tavletta/ui/preview.py:108 tavletta/ui/shortcuts.py:92
 msgid "First row"
 msgstr "Первая строка"
 
-#: tavletta/ui/preview.py:106 tavletta/ui/shortcuts.py:93
+#: tavletta/ui/preview.py:109 tavletta/ui/shortcuts.py:93
 msgid "Previous row"
 msgstr "Предыдущая строка"
 
-#: tavletta/ui/preview.py:107 tavletta/ui/shortcuts.py:94
+#: tavletta/ui/preview.py:110 tavletta/ui/shortcuts.py:94
 msgid "Next row"
 msgstr "Следующая строка"
 
-#: tavletta/ui/preview.py:108 tavletta/ui/shortcuts.py:95
+#: tavletta/ui/preview.py:111 tavletta/ui/shortcuts.py:95
 msgid "Last row"
 msgstr "Последняя строка"
 
-#: tavletta/ui/preview.py:122
+#: tavletta/ui/preview.py:125
 #, python-format
 msgid "Row %(n)d of %(total)d"
 msgstr "Строка %(n)d из %(total)d"
 
-#: tavletta/ui/printer.py:66
+#: tavletta/ui/printer.py:66 tavletta/server/web/print.js:71
 msgid "Printer"
 msgstr "Принтер"
 
@@ -1356,7 +1362,7 @@ msgstr "Осталось %(left)s из %(total)s"
 msgid "Reachable · the printer reports no status"
 msgstr "Доступен · принтер не сообщает состояние"
 
-#: tavletta/ui/printer.py:390
+#: tavletta/ui/printer.py:390 tavletta/server/web/ui.js:389
 msgid "Printing"
 msgstr "Печать"
 
@@ -1365,7 +1371,7 @@ msgstr "Печать"
 msgid "Ready · a label every %s"
 msgstr "Готов · этикетка каждые %s"
 
-#: tavletta/ui/printer.py:393
+#: tavletta/ui/printer.py:393 tavletta/server/web/ui.js:47
 msgid "Ready"
 msgstr "Готов"
 
@@ -1456,7 +1462,7 @@ msgid "The data file is still being read. Try again in a moment."
 msgstr "Файл данных ещё читается. Повторите попытку через мгновение."
 
 #: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
-#: tavletta/ui/printing.py:509
+#: tavletta/ui/printing.py:509 tavletta/server/web/ui.js:262
 msgid "Print anyway"
 msgstr "Всё равно печатать"
 
@@ -1503,11 +1509,11 @@ msgstr "Для проверки на обычной бумаге"
 msgid "Sheets: %d"
 msgstr "Листов: %d"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/batch.js:724
 msgid "Copies of each label"
 msgstr "Копии каждой этикетки"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:287 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr "Копии"
 
@@ -1566,6 +1572,9 @@ msgstr "Печать этикетки"
 
 #: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
 #: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:194
+#: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
+#: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
+#: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "Печать"
 
@@ -1637,11 +1646,11 @@ msgstr "Строки с %(first)d по %(last)d напечатаны"
 msgid "Printing failed"
 msgstr "Ошибка печати"
 
-#: tavletta/ui/printing.py:757
+#: tavletta/ui/printing.py:757 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "Подробности"
 
-#: tavletta/ui/printing.py:760 tavletta/ui/window.py:978
+#: tavletta/ui/printing.py:760 tavletta/ui/window.py:982
 msgid "Report"
 msgstr "Сообщить"
 
@@ -1810,7 +1819,8 @@ msgstr "Переместить открытый элемент вперёд"
 msgid "Move the open element down"
 msgstr "Переместить открытый элемент назад"
 
-#: tavletta/ui/shortcuts.py:73
+#: tavletta/ui/shortcuts.py:73 tavletta/server/web/print.js:121
+#: tavletta/server/web/ui.js:62
 msgid "Preview"
 msgstr "Предпросмотр"
 
@@ -2556,7 +2566,7 @@ msgstr "%d %%"
 msgid "%d in/s"
 msgstr "%d дюйм/с"
 
-#: tavletta/ui/texts.py:282
+#: tavletta/ui/texts.py:282 tavletta/server/web/ui.js:66
 msgid "Image"
 msgstr "Изображение"
 
@@ -3117,7 +3127,7 @@ msgid ""
 "more."
 msgstr "Принтер сообщил о проблеме. Выключите и снова включите его, затем повторите попытку."
 
-#: tavletta/ui/texts.py:666
+#: tavletta/ui/texts.py:666 tavletta/server/web/ui.js:456
 msgid "Printed"
 msgstr "Напечатано"
 
@@ -3179,7 +3189,7 @@ msgid "%s is not a Tavletta label"
 msgstr "%s не является этикеткой Tavletta"
 
 #: tavletta/ui/texts.py:713 tavletta/ui/texts.py:733
-#: tavletta/server/service.py:761
+#: tavletta/server/service.py:913
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "Файл повреждён: %s"
@@ -3299,11 +3309,12 @@ msgstr "Растёт с каждой напечатанной этикеткой
 msgid "Next number"
 msgstr "Следующий номер"
 
-#: tavletta/ui/variables.py:122
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:563
 msgid "Step"
 msgstr "Шаг"
 
-#: tavletta/ui/window.py:172
+#: tavletta/ui/window.py:172 tavletta/server/web/app.js:45
+#: tavletta/server/web/app.js:288
 msgid "Templates"
 msgstr "Шаблоны"
 
@@ -3331,42 +3342,42 @@ msgstr "Сообщить о проблеме…"
 msgid "About Tavletta"
 msgstr "О приложении Tavletta"
 
-#: tavletta/ui/window.py:734
+#: tavletta/ui/window.py:736
 msgid "Unsaved label"
 msgstr "Несохранённая этикетка"
 
-#: tavletta/ui/window.py:905
+#: tavletta/ui/window.py:908
 msgid "content scaled down to fit"
 msgstr "содержимое уменьшено по размеру"
 
-#: tavletta/ui/window.py:909
+#: tavletta/ui/window.py:912
 #, python-format
 msgid "Problem: %s"
 msgstr "Проблема: %s"
 
-#: tavletta/ui/window.py:928
+#: tavletta/ui/window.py:931
 #, python-format
 msgid "Too long for this printer: at most %s"
 msgstr "Слишком длинная для этого принтера: не более %s"
 
-#: tavletta/ui/window.py:932
+#: tavletta/ui/window.py:935
 #, python-format
 msgid "Too wide for this printer: at most %s"
 msgstr "Слишком широкая для этого принтера: максимум %s"
 
-#: tavletta/ui/window.py:1005
+#: tavletta/ui/window.py:1009
 msgid "The browser cannot be opened"
 msgstr "Не удалось открыть браузер"
 
-#: tavletta/ui/window.py:1007
+#: tavletta/ui/window.py:1011
 msgid "Copy link"
 msgstr "Копировать ссылку"
 
-#: tavletta/ui/window.py:1079
+#: tavletta/ui/window.py:1083
 msgid "Only local files can be dropped"
 msgstr "Перетаскивать можно только локальные файлы"
 
-#: tavletta/ui/window.py:1132
+#: tavletta/ui/window.py:1136
 msgid "Please wait until printing has finished"
 msgstr "Дождитесь окончания печати"
 
@@ -3376,7 +3387,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:88 tavletta/server/config.py:92
-#: tavletta/server/config.py:98 tavletta/server/main.py:342
+#: tavletta/server/config.py:98 tavletta/server/main.py:344
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "Не удаётся прочитать %(file)s: %(reason)s"
@@ -3460,11 +3471,11 @@ msgstr "не хеш токена: ожидается sha256:… или scrypt:�
 msgid "expected a list of printer names"
 msgstr "ожидается список имён принтеров"
 
-#: tavletta/server/config.py:477 tavletta/server/main.py:368
+#: tavletta/server/config.py:477 tavletta/server/main.py:370
 msgid "printers can only be limited with --printers"
 msgstr "ограничить принтеры можно только с --printers"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:532
+#: tavletta/server/config.py:479 tavletta/server/service.py:551
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "Неизвестный принтер: %s"
@@ -3474,68 +3485,74 @@ msgstr "Неизвестный принтер: %s"
 msgid "Invalid value for %s"
 msgstr "Недопустимое значение для %s"
 
-#: tavletta/server/http.py:464 tavletta/server/http.py:513
+#: tavletta/server/http.py:469 tavletta/server/http.py:518
 msgid "The request took too long"
 msgstr "Запрос выполнялся слишком долго"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1398
+#: tavletta/server/http.py:478 tavletta/server/service.py:1618
 msgid "The server is busy – try again later"
 msgstr "Сервер занят – повторите попытку позже"
 
-#: tavletta/server/http.py:516
+#: tavletta/server/http.py:521
 msgid "Internal error"
 msgstr "Внутренняя ошибка"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:526
 msgid "This server only answers on its local address"
 msgstr "Этот сервер отвечает только на своём локальном адресе"
 
-#: tavletta/server/http.py:525
+#: tavletta/server/http.py:530
 msgid "Requests from this web page are not allowed"
 msgstr "Запросы с этой веб-страницы не разрешены"
 
-#: tavletta/server/http.py:543
+#: tavletta/server/http.py:557
 msgid "Too many requests – try again later"
 msgstr "Слишком много запросов – повторите попытку позже"
 
-#: tavletta/server/http.py:545
+#: tavletta/server/http.py:559
 msgid "Access token missing or wrong"
 msgstr "Токен доступа отсутствует или неверен"
 
-#: tavletta/server/http.py:586 tavletta/server/http.py:591
+#: tavletta/server/http.py:600 tavletta/server/http.py:605
 msgid "The request needs a Content-Length"
 msgstr "Запросу нужен заголовок Content-Length"
 
-#: tavletta/server/http.py:588
+#: tavletta/server/http.py:602
 msgid "The request has more than one Content-Length"
 msgstr "В запросе больше одного заголовка Content-Length"
 
-#: tavletta/server/http.py:594
+#: tavletta/server/http.py:608 tavletta/server/service.py:836
 msgid "The request is too large"
 msgstr "Запрос слишком большой"
 
-#: tavletta/server/http.py:599
+#: tavletta/server/http.py:613
 msgid "The request body is incomplete"
 msgstr "Тело запроса неполное"
 
-#: tavletta/server/http.py:606
+#: tavletta/server/http.py:620
 msgid "Send the request as application/json"
 msgstr "Отправьте запрос как application/json"
 
-#: tavletta/server/http.py:635 tavletta/server/http.py:645
+#: tavletta/server/http.py:652 tavletta/server/http.py:662
+#: tavletta/server/http.py:783
 msgid "Not found"
 msgstr "Не найдено"
 
-#: tavletta/server/http.py:644
+#: tavletta/server/http.py:661 tavletta/server/http.py:774
 msgid "Method not allowed"
 msgstr "Метод не разрешён"
 
-#: tavletta/server/http.py:661
+#: tavletta/server/http.py:678
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Отправьте с этим запросом заголовок %s"
 
-#: tavletta/server/http.py:816
+#: tavletta/server/http.py:721 tavletta/server/service.py:627
+#: tavletta/server/service.py:1591
+msgid "This access token may not do this"
+msgstr "Этому токену доступа это не разрешено"
+
+#: tavletta/server/http.py:897
 msgid "The request is not valid JSON"
 msgstr "Запрос не является допустимым JSON"
 
@@ -3549,12 +3566,12 @@ msgstr "Папка этикеток %s не существует"
 msgid "Cannot read the token file %s"
 msgstr "Не удаётся прочитать файл токена %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:313
+#: tavletta/server/main.py:54 tavletta/server/main.py:315
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "Токен доступа может содержать только печатаемые символы ASCII без пробелов"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:318
+#: tavletta/server/main.py:59 tavletta/server/main.py:320
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "Токен доступа должен содержать не менее %d символов"
@@ -3579,159 +3596,956 @@ msgid ""
 "--token-file"
 msgstr "Отказ прослушивать %s без токена доступа: задайте TAVLETTA_TOKEN или используйте --token-file"
 
-#: tavletta/server/main.py:140
+#: tavletta/server/main.py:141
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "Не удаётся прослушивать %(address)s: %(reason)s"
 
-#: tavletta/server/main.py:272
+#: tavletta/server/main.py:274
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "Недопустимое имя: буквы, цифры, . _ - (не более 64)"
 
-#: tavletta/server/main.py:283
+#: tavletta/server/main.py:285
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s используется другой программой – повторите попытку позже"
 
-#: tavletta/server/main.py:290
+#: tavletta/server/main.py:292
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "Токен %(name)s добавлен в %(file)s."
 
-#: tavletta/server/main.py:297
+#: tavletta/server/main.py:299
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "Токен показывается только этот один раз; %s хранит только его хеш."
 
-#: tavletta/server/main.py:308
+#: tavletta/server/main.py:310
 msgid "Access token: "
 msgstr "Токен доступа: "
 
-#: tavletta/server/main.py:323
+#: tavletta/server/main.py:325
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "Выбранный токен не должен быть похож на созданный (tav_…)"
 
-#: tavletta/server/main.py:373
+#: tavletta/server/main.py:375
 #, python-format
 msgid "A token named %s exists already"
 msgstr "Токен с именем %s уже существует"
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:402
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "Этот токен уже есть в файле под именем %s"
 
-#: tavletta/server/paths.py:39
+#: tavletta/server/paths.py:46 tavletta/server/service.py:815
 #, python-format
 msgid "No such label: %s"
 msgstr "Нет такой этикетки: %s"
 
-#: tavletta/server/paths.py:46
+#: tavletta/server/paths.py:67
 #, python-format
 msgid "No such data file: %s"
 msgstr "Нет такого файла данных: %s"
 
-#: tavletta/server/requests.py:95
+#: tavletta/server/requests.py:127
 msgid "The request must be a JSON object"
 msgstr "Запрос должен быть объектом JSON"
 
-#: tavletta/server/requests.py:97
+#: tavletta/server/requests.py:129
 #, python-format
 msgid "Unknown field: %s"
 msgstr "Неизвестное поле: %s"
 
-#: tavletta/server/requests.py:104
+#: tavletta/server/requests.py:136
 msgid "Give the label either by name or as content"
 msgstr "Укажите этикетку либо по имени, либо как содержимое"
 
-#: tavletta/server/requests.py:109
+#: tavletta/server/requests.py:141
 msgid "Give data rows or a data file, not both"
 msgstr "Укажите строки данных или файл данных, но не то и другое"
 
-#: tavletta/server/requests.py:196
+#: tavletta/server/requests.py:228
 #, python-format
 msgid "Too many data rows: at most %d"
 msgstr "Слишком много строк данных: не более %d"
 
-#: tavletta/server/requests.py:204
+#: tavletta/server/requests.py:236
 #, python-format
 msgid "Too many columns: at most %d"
 msgstr "Слишком много столбцов: не более %d"
 
-#: tavletta/server/requests.py:207
+#: tavletta/server/requests.py:239 tavletta/server/service.py:834
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "Слишком много ячеек: не более %d"
 
-#: tavletta/server/service.py:544
+#: tavletta/server/service.py:563
 msgid "Choose a printer by its name"
 msgstr "Выберите принтер по его имени"
 
-#: tavletta/server/service.py:608 tavletta/server/service.py:1371
-msgid "This access token may not do this"
-msgstr "Этому токену доступа это не разрешено"
-
-#: tavletta/server/service.py:665
+#: tavletta/server/service.py:685
 msgid "No printer address: give it as host"
 msgstr "Нет адреса принтера: укажите его как host"
 
-#: tavletta/server/service.py:674
+#: tavletta/server/service.py:694
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "Этот адрес принтера не разрешён: %s"
 
-#: tavletta/server/service.py:769
+#: tavletta/server/service.py:778 tavletta/server/service.py:921
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "Страницы документов в label_content не разрешены (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:802
+#: tavletta/server/service.py:954
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s — столбец данных ({%(name)s}) – передайте его в data_rows"
 
-#: tavletta/server/service.py:860
+#: tavletta/server/service.py:1012
 msgid "A sheet needs a data file"
 msgstr "Для листа нужен файл данных"
 
-#: tavletta/server/service.py:866
+#: tavletta/server/service.py:1018
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "Этикетка использует файл данных вне папки этикеток: отправьте его строки вместе с запросом"
 
-#: tavletta/server/service.py:1064
+#: tavletta/server/service.py:1218
 msgid "Too many print jobs are waiting – try again later"
 msgstr "Слишком много заданий печати в очереди – повторите попытку позже"
 
-#: tavletta/server/service.py:1333
+#: tavletta/server/service.py:1487
 #, python-format
 msgid "No such print job: %s"
 msgstr "Нет такого задания печати: %s"
 
-#: tavletta/server/service.py:1345
+#: tavletta/server/service.py:1499
 msgid "The print job has already finished"
 msgstr "Задание печати уже завершено"
 
-#: tavletta/server/service.py:1402
+#: tavletta/server/service.py:1559
+#, python-format
+msgid "A label named %s exists already"
+msgstr "Этикетка с именем %s уже существует"
+
+#: tavletta/server/service.py:1564
+msgid "The label could not be saved in the labels folder"
+msgstr "Не удалось сохранить этикетку в папке этикеток"
+
+#: tavletta/server/service.py:1622
 msgid "The label is too large to render"
 msgstr "Этикетка слишком большая для отрисовки"
 
-#: tavletta/server/service.py:1416
+#: tavletta/server/service.py:1636
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "Этикетка слишком большая: не более %d изображений и кодов"
 
-#: tavletta/server/service.py:1439
+#: tavletta/server/service.py:1659
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "Этикетка слишком большая: не более %(elements)d элементов и %(chars)d символов в одном тексте"
 
-#: tavletta/server/service.py:1458
+#: tavletta/server/service.py:1678
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "Не более %d копий на этом принтере"
 
-#: tavletta/server/service.py:1463
+#: tavletta/server/service.py:1683
 msgid "Printers are chosen by name: leave out host"
 msgstr "Принтеры выбираются по имени: не указывайте host"
+
+#: tavletta/server/web/api.js:66 tavletta/server/web/app.js:482
+msgid "No connection to the server. Your input is kept."
+msgstr "Нет соединения с сервером. Введённые данные сохранены."
+
+#: tavletta/server/web/app.js:46 tavletta/server/web/app.js:210
+msgid "Printers"
+msgstr "Принтеры"
+
+#: tavletta/server/web/app.js:51
+msgid "Main"
+msgstr "Основная навигация"
+
+#: tavletta/server/web/app.js:74
+msgid "Language"
+msgstr "Язык"
+
+#: tavletta/server/web/app.js:81
+msgid "Sign out"
+msgstr "Выйти"
+
+#: tavletta/server/web/app.js:84
+msgid "Skip to content"
+msgstr "Перейти к содержимому"
+
+#: tavletta/server/web/app.js:160
+msgid "Access token"
+msgstr "Токен доступа"
+
+#: tavletta/server/web/app.js:161
+msgid ""
+"The administrator gives it to you. It is kept in this tab only and forgotten "
+"when the tab is closed."
+msgstr "Его выдаёт администратор. Он хранится только в этой вкладке и забывается при её закрытии."
+
+#: tavletta/server/web/app.js:166 tavletta/server/web/app.js:202
+msgid "Sign in"
+msgstr "Войти"
+
+#: tavletta/server/web/app.js:172
+msgid "Show token"
+msgstr "Показать токен"
+
+#: tavletta/server/web/app.js:180
+msgid "Enter the access token."
+msgstr "Введите токен доступа."
+
+#: tavletta/server/web/app.js:195
+msgid ""
+"The token was not accepted. Check it, or ask the administrator for a new one."
+msgstr "Токен не принят. Проверьте его или попросите у администратора новый."
+
+#: tavletta/server/web/app.js:209
+msgid "Check again"
+msgstr "Проверить снова"
+
+#: tavletta/server/web/app.js:221 tavletta/server/web/print.js:74
+msgid "No printer this token may use. Ask the administrator."
+msgstr "Нет принтеров, доступных этому токену. Обратитесь к администратору."
+
+#: tavletta/server/web/app.js:234
+msgid "Location: {place}"
+msgstr "Расположение: {place}"
+
+#: tavletta/server/web/app.js:235
+msgid "Meant for: {media}"
+msgstr "Предназначен для: {media}"
+
+#: tavletta/server/web/app.js:236
+msgid "Model: {model}"
+msgstr "Модель: {model}"
+
+#: tavletta/server/web/app.js:242
+msgid "Default"
+msgstr "По умолчанию"
+
+#: tavletta/server/web/app.js:256
+msgid "Asking the printer…"
+msgstr "Запрос к принтеру…"
+
+#: tavletta/server/web/app.js:267
+msgid "Ask for its state"
+msgstr "Запросить состояние"
+
+#: tavletta/server/web/app.js:273
+msgid "Address: {host}"
+msgstr "Адрес: {host}"
+
+#: tavletta/server/web/app.js:273
+msgid "No address set"
+msgstr "Адрес не задан"
+
+#: tavletta/server/web/app.js:304
+msgid "No templates yet. Upload one above."
+msgstr "Шаблонов пока нет. Загрузите шаблон выше."
+
+#: tavletta/server/web/app.js:304
+msgid "No templates yet. Ask the administrator."
+msgstr "Шаблонов пока нет. Обратитесь к администратору."
+
+#: tavletta/server/web/app.js:331
+msgid "Series"
+msgstr "Серия"
+
+#: tavletta/server/web/app.js:332
+msgid "Delete"
+msgstr "Удалить"
+
+#: tavletta/server/web/app.js:340
+msgid "Size: {width} × {height} mm"
+msgstr "Размер: {width} × {height} mm"
+
+#: tavletta/server/web/app.js:341
+msgid "Fields: {count}"
+msgstr "Поля: {count}"
+
+#: tavletta/server/web/app.js:342
+msgid "Printer model: {model}"
+msgstr "Модель принтера: {model}"
+
+#: tavletta/server/web/app.js:348 tavletta/server/web/print.js:188
+msgid "Preview of {name}"
+msgstr "Предпросмотр {name}"
+
+#: tavletta/server/web/app.js:359
+msgid "Delete template?"
+msgstr "Удалить шаблон?"
+
+#: tavletta/server/web/app.js:360
+msgid "The template {name} is deleted from the server. Its data file stays."
+msgstr "Шаблон {name} будет удалён с сервера. Его файл данных останется."
+
+#: tavletta/server/web/app.js:361
+msgid "Delete {name}"
+msgstr "Удалить {name}"
+
+#: tavletta/server/web/app.js:368
+msgid "{name} deleted."
+msgstr "{name} удалён."
+
+#: tavletta/server/web/app.js:381
+msgid "Template file"
+msgstr "Файл шаблона"
+
+#: tavletta/server/web/app.js:382
+msgid "A .tavletta file saved by Tavletta, at most {size} MB."
+msgstr "Файл .tavletta, сохранённый в Tavletta, не более {size} MB."
+
+#: tavletta/server/web/app.js:386
+msgid "Upload"
+msgstr "Загрузить"
+
+#: tavletta/server/web/app.js:390
+msgid "Upload a template"
+msgstr "Загрузка шаблона"
+
+#: tavletta/server/web/app.js:392
+msgid "Replace a template of the same name"
+msgstr "Заменить шаблон с таким же именем"
+
+#: tavletta/server/web/app.js:400
+msgid "Choose a template file."
+msgstr "Выберите файл шаблона."
+
+#: tavletta/server/web/app.js:405
+msgid "The file is too large: at most {size} MB."
+msgstr "Файл слишком большой: не более {size} MB."
+
+#: tavletta/server/web/app.js:416
+msgid "{name} uploaded."
+msgstr "{name} загружен."
+
+#: tavletta/server/web/app.js:420
+msgid ""
+"A template of this name exists. Choose \"Replace a template of the same "
+"name\" to replace it."
+msgstr "Шаблон с таким именем уже существует. Чтобы заменить его, выберите «Заменить шаблон с таким же именем»."
+
+#: tavletta/server/web/app.js:422
+msgid ""
+"The file name can have letters, digits, spaces and . _ - ( ) + , and must "
+"not start with a dot. Rename the file."
+msgstr "Имя файла может содержать буквы, цифры, пробелы и . _ - ( ) + , и не должно начинаться с точки. Переименуйте файл."
+
+#: tavletta/server/web/app.js:437
+msgid "Print job"
+msgstr "Задание печати"
+
+#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:843
+#: tavletta/server/web/print.js:243
+msgid "Template: {name}"
+msgstr "Шаблон: {name}"
+
+#: tavletta/server/web/app.js:444 tavletta/server/web/batch.js:844
+#: tavletta/server/web/print.js:243
+msgid "Printer: {name}"
+msgstr "Принтер: {name}"
+
+#: tavletta/server/web/app.js:449 tavletta/server/web/batch.js:886
+msgid "Print job ended: {printed} of {total} labels printed."
+msgstr "Задание печати завершено: напечатано этикеток — {printed} из {total}."
+
+#: tavletta/server/web/batch.js:50 tavletta/server/web/batch.js:272
+msgid "Data"
+msgstr "Данные"
+
+#: tavletta/server/web/batch.js:51 tavletta/server/web/batch.js:398
+msgid "Assign"
+msgstr "Назначение"
+
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:465
+msgid "Choose"
+msgstr "Выбор"
+
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:706
+msgid "Check"
+msgstr "Проверка"
+
+#: tavletta/server/web/batch.js:85
+msgid "From needs a number."
+msgstr "Для «От» нужно число."
+
+#: tavletta/server/web/batch.js:86
+msgid "To needs a number."
+msgstr "Для «До» нужно число."
+
+#: tavletta/server/web/batch.js:87
+msgid "Step must be a whole number from 1."
+msgstr "Шаг должен быть целым числом от 1."
+
+#: tavletta/server/web/batch.js:88
+msgid "From and To must be the same apart from the number ({from}, {to})."
+msgstr "«От» и «До» должны совпадать во всём, кроме числа ({from}, {to})."
+
+#: tavletta/server/web/batch.js:89
+msgid ""
+"From has {from} digits, To {to}. Enter both with the same number of digits."
+msgstr "Цифр в «От»: {from}, в «До»: {to}. Введите оба значения с одинаковым числом цифр."
+
+#: tavletta/server/web/batch.js:90
+msgid "To must be greater than or equal to From ({from})."
+msgstr "«До» должно быть больше или равно «От» ({from})."
+
+#: tavletta/server/web/batch.js:91
+msgid ""
+"The ranges make different numbers of labels: {counts}. Make them the same "
+"length."
+msgstr "Диапазоны дают разное число этикеток: {counts}. Сделайте их одинаковой длины."
+
+#: tavletta/server/web/batch.js:100
+msgid "Series of {name}"
+msgstr "Серия: {name}"
+
+#: tavletta/server/web/batch.js:117
+msgid ""
+"This template has no data fields ({placeholder}). For many equal labels, set "
+"the copies when printing."
+msgstr "В этом шаблоне нет полей данных ({placeholder}). Для множества одинаковых этикеток задайте число копий при печати."
+
+#: tavletta/server/web/batch.js:127
+msgid "Steps"
+msgstr "Шаги"
+
+#: tavletta/server/web/batch.js:162 tavletta/server/web/batch.js:181
+msgid "Enter a range for at least one field."
+msgstr "Введите диапазон хотя бы для одного поля."
+
+#: tavletta/server/web/batch.js:191 tavletta/server/web/batch.js:641
+msgid "Row {n}"
+msgstr "Строка {n}"
+
+#: tavletta/server/web/batch.js:207 tavletta/server/web/batch.js:518
+#: tavletta/server/web/batch.js:708
+msgid "No row selected."
+msgstr "Строка не выбрана."
+
+#: tavletta/server/web/batch.js:211
+msgid "{count} labels ({span})"
+msgstr "Этикеток: {count} ({span})"
+
+#: tavletta/server/web/batch.js:226
+msgid "not needed"
+msgstr "не требуется"
+
+#: tavletta/server/web/batch.js:248 tavletta/server/web/batch.js:302
+msgid "Next"
+msgstr "Далее"
+
+#: tavletta/server/web/batch.js:252 tavletta/server/web/batch.js:759
+msgid "Back"
+msgstr "Назад"
+
+#: tavletta/server/web/batch.js:276
+msgid "Where do the values come from?"
+msgstr "Откуда берутся значения?"
+
+#: tavletta/server/web/batch.js:277
+msgid "A file (CSV, XLSX, ODS)"
+msgstr "Файл (CSV, XLSX, ODS)"
+
+#: tavletta/server/web/batch.js:278
+msgid "A pasted list"
+msgstr "Вставленный список"
+
+#: tavletta/server/web/batch.js:279
+msgid "No data: make numbers from ranges"
+msgstr "Без данных: числа из диапазонов"
+
+#: tavletta/server/web/batch.js:287
+msgid "Data file"
+msgstr "Файл данных"
+
+#: tavletta/server/web/batch.js:287
+msgid ""
+"At most {size} MB. Every cell is read as the text it shows: leading zeros "
+"stay."
+msgstr "Не более {size} MB. Каждая ячейка читается как отображаемый в ней текст: ведущие нули сохраняются."
+
+#: tavletta/server/web/batch.js:289 tavletta/server/web/batch.js:296
+msgid "The first row holds the column names"
+msgstr "Первая строка содержит имена столбцов"
+
+#: tavletta/server/web/batch.js:290
+msgid "Last file read: {name}"
+msgstr "Последний прочитанный файл: {name}"
+
+#: tavletta/server/web/batch.js:294 tavletta/server/web/batch.js:343
+msgid "List"
+msgstr "Список"
+
+#: tavletta/server/web/batch.js:294
+msgid ""
+"One label per line; columns separated by tab, semicolon or comma (as copied "
+"from a spreadsheet)."
+msgstr "Одна этикетка на строку; столбцы разделены табуляцией, точкой с запятой или запятой (как при копировании из электронной таблицы)."
+
+#: tavletta/server/web/batch.js:298
+msgid ""
+"The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
+msgstr "На следующих шагах значения создаются из диапазонов, например 3000–5685 или 00300–00450."
+
+#: tavletta/server/web/batch.js:302
+msgid "Read and continue"
+msgstr "Прочитать и продолжить"
+
+#: tavletta/server/web/batch.js:334
+msgid "Choose a data file."
+msgstr "Выберите файл данных."
+
+#: tavletta/server/web/batch.js:342
+msgid "Paste the list first."
+msgstr "Сначала вставьте список."
+
+#: tavletta/server/web/batch.js:347
+msgid "The data are too large: at most {size} MB."
+msgstr "Данные слишком большие: не более {size} MB."
+
+#: tavletta/server/web/batch.js:370
+msgid "semicolon"
+msgstr "точка с запятой"
+
+#: tavletta/server/web/batch.js:370
+msgid "comma"
+msgstr "запятая"
+
+#: tavletta/server/web/batch.js:370
+msgid "tab"
+msgstr "табуляция"
+
+#: tavletta/server/web/batch.js:372
+msgid "{name}: {kind}"
+msgstr "{name}: {kind}"
+
+#: tavletta/server/web/batch.js:373
+msgid "Separated by {delimiter}"
+msgstr "Разделитель: {delimiter}"
+
+#: tavletta/server/web/batch.js:374
+msgid "Sheet: {sheet}"
+msgstr "Лист: {sheet}"
+
+#: tavletta/server/web/batch.js:375
+msgid "{rows} rows, {columns} columns"
+msgstr "Строк: {rows}, столбцов: {columns}"
+
+#: tavletta/server/web/batch.js:377
+msgid "The first {count} rows"
+msgstr "Первые строки ({count})"
+
+#: tavletta/server/web/batch.js:388 tavletta/server/web/batch.js:635
+msgid "Row"
+msgstr "Строка"
+
+#: tavletta/server/web/batch.js:413
+msgid "Choose the data column for each field of the template."
+msgstr "Выберите столбец данных для каждого поля шаблона."
+
+#: tavletta/server/web/batch.js:418
+msgid "– not assigned –"
+msgstr "– не назначено –"
+
+#: tavletta/server/web/batch.js:419
+msgid "The same value for all"
+msgstr "Одинаковое значение для всех"
+
+#: tavletta/server/web/batch.js:423
+msgid "Value for {name}"
+msgstr "Значение для {name}"
+
+#: tavletta/server/web/batch.js:426
+msgid "Data field {placeholder} of the template, required"
+msgstr "Поле данных {placeholder} шаблона, обязательно"
+
+#: tavletta/server/web/batch.js:443
+msgid "{name} has no data column. Choose one, or the same value for all."
+msgstr "Для {name} нет столбца данных. Выберите столбец или одинаковое значение для всех."
+
+#: tavletta/server/web/batch.js:476
+msgid "Continuing: {count} rows left."
+msgstr "Продолжение: осталось строк — {count}."
+
+#: tavletta/server/web/batch.js:480
+msgid "Choose again"
+msgstr "Выбрать заново"
+
+#: tavletta/server/web/batch.js:486 tavletta/server/web/batch.js:612
+msgid "All rows"
+msgstr "Все строки"
+
+#: tavletta/server/web/batch.js:487
+msgid "Some rows"
+msgstr "Некоторые строки"
+
+#: tavletta/server/web/batch.js:488
+msgid "Ranges of a field"
+msgstr "Диапазоны поля"
+
+#: tavletta/server/web/batch.js:494
+msgid "Which rows?"
+msgstr "Какие строки?"
+
+#: tavletta/server/web/batch.js:529
+msgid ""
+"Several fields: their values are put together row by row (the first with the "
+"first), never every combination."
+msgstr "Несколько полей: их значения объединяются построчно (первое с первым), а не во всех сочетаниях."
+
+#: tavletta/server/web/batch.js:530
+msgid ""
+"Several fields: a row is printed if its values lie in the ranges of all of "
+"them."
+msgstr "Несколько полей: строка печатается, если её значения попадают в диапазоны всех этих полей."
+
+#: tavletta/server/web/batch.js:561
+msgid "From"
+msgstr "От"
+
+#: tavletta/server/web/batch.js:561
+msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
+msgstr "Например 3000, 00300 или INV-0001; или весь диапазон, 3000-5685"
+
+#: tavletta/server/web/batch.js:562
+msgid "To"
+msgstr "До"
+
+#: tavletta/server/web/batch.js:568
+msgid "Remove range"
+msgstr "Удалить диапазон"
+
+#: tavletta/server/web/batch.js:590
+msgid "Add a range"
+msgstr "Добавить диапазон"
+
+#: tavletta/server/web/batch.js:598
+msgid "Or the same value for all"
+msgstr "Или одинаковое значение для всех"
+
+#: tavletta/server/web/batch.js:598
+msgid "Used if no range is given for this field."
+msgstr "Используется, если для этого поля не задан диапазон."
+
+#: tavletta/server/web/batch.js:611 tavletta/server/web/batch.js:630
+msgid "Rows"
+msgstr "Строки"
+
+#: tavletta/server/web/batch.js:611
+msgid "For example 1-20, 25, 30-"
+msgstr "Например 1-20, 25, 30-"
+
+#: tavletta/server/web/batch.js:634
+msgid "Rows {first} to {last} of {total}"
+msgstr "Строки {first}–{last} из {total}"
+
+#: tavletta/server/web/batch.js:670
+msgid "Page {page} of {pages}"
+msgstr "Страница {page} из {pages}"
+
+#: tavletta/server/web/batch.js:676
+msgid "Previous page"
+msgstr "Предыдущая страница"
+
+#: tavletta/server/web/batch.js:677
+msgid "Next page"
+msgstr "Следующая страница"
+
+#: tavletta/server/web/batch.js:691
+msgid "Write the rows as numbers and ranges, such as 1-20, 25."
+msgstr "Укажите строки числами и диапазонами, например 1-20, 25."
+
+#: tavletta/server/web/batch.js:753
+msgid "The same for all labels"
+msgstr "Одинаково для всех этикеток"
+
+#: tavletta/server/web/batch.js:770 tavletta/server/web/print.js:203
+msgid "Printing needs a token with the role Print or Admin."
+msgstr "Для печати нужен токен с ролью «Печать» или «Администратор»."
+
+#: tavletta/server/web/batch.js:772 tavletta/server/web/print.js:222
+msgid "Copies must be a whole number from 1."
+msgstr "Число копий должно быть целым числом от 1."
+
+#: tavletta/server/web/batch.js:773 tavletta/server/web/print.js:223
+msgid "At most {max} copies on this printer."
+msgstr "На этом принтере не более {max} копий."
+
+#: tavletta/server/web/batch.js:774
+msgid "At most {max} rows in one print job."
+msgstr "В одном задании печати не более {max} строк."
+
+#: tavletta/server/web/batch.js:775
+msgid ""
+"At most {max} labels in one print job. Choose fewer rows, or print them in "
+"several jobs."
+msgstr "В одном задании печати не более {max} этикеток. Выберите меньше строк или напечатайте их в нескольких заданиях."
+
+#: tavletta/server/web/batch.js:776 tavletta/server/web/print.js:204
+msgid "Confirm above that it should print on the labels loaded."
+msgstr "Подтвердите выше, что печать должна идти на загруженные этикетки."
+
+#: tavletta/server/web/batch.js:783
+msgid "At most {max} labels in one print job; {left} more could be added."
+msgstr "В одном задании печати не более {max} этикеток; можно добавить ещё {left}."
+
+#: tavletta/server/web/batch.js:784 tavletta/server/web/batch.js:846
+#: tavletta/server/web/print.js:244
+msgid "Print {count} labels"
+msgstr "Печать этикеток: {count}"
+
+#: tavletta/server/web/batch.js:806
+msgid "First: {value}"
+msgstr "Первая: {value}"
+
+#: tavletta/server/web/batch.js:807
+msgid "Last: {value}"
+msgstr "Последняя: {value}"
+
+#: tavletta/server/web/batch.js:810 tavletta/server/web/batch.js:811
+msgid "Preview of the label {value}"
+msgstr "Предпросмотр этикетки {value}"
+
+#: tavletta/server/web/batch.js:840 tavletta/server/web/print.js:242
+msgid "Print {count} labels?"
+msgstr "Напечатать этикетки ({count})?"
+
+#: tavletta/server/web/batch.js:854
+msgid "Too much data for one print job ({size} MB). Choose fewer rows."
+msgstr "Слишком много данных для одного задания печати ({size} MB). Выберите меньше строк."
+
+#: tavletta/server/web/batch.js:905
+msgid "First printed: {first}, last printed in full: {last}"
+msgstr "Первая напечатанная: {first}, последняя напечатанная полностью: {last}"
+
+#: tavletta/server/web/batch.js:916
+msgid "Continue from {value}"
+msgstr "Продолжить с {value}"
+
+#: tavletta/server/web/batch.js:918
+msgid "A label of a row that was printed in part is printed again in full."
+msgstr "Этикетка строки, напечатанной частично, печатается заново целиком."
+
+#: tavletta/server/web/batch.js:926
+msgid "New series"
+msgstr "Новая серия"
+
+#: tavletta/server/web/print.js:38
+msgid "Back to the templates"
+msgstr "Назад к шаблонам"
+
+#: tavletta/server/web/print.js:47
+msgid "Printer: {model}, at the address set on the server"
+msgstr "Принтер: {model}, по адресу, заданному на сервере"
+
+#: tavletta/server/web/print.js:80
+msgid "No printer chosen."
+msgstr "Принтер не выбран."
+
+#: tavletta/server/web/print.js:81
+msgid ""
+"The printer is unreachable. Check that it is on and connected, then reload "
+"the page."
+msgstr "Принтер недоступен. Проверьте, что он включён и подключён, затем перезагрузите страницу."
+
+#: tavletta/server/web/print.js:90
+msgid "Data field {placeholder}"
+msgstr "Поле данных {placeholder}"
+
+#: tavletta/server/web/print.js:93
+msgid "Variable {placeholder}"
+msgstr "Переменная {placeholder}"
+
+#: tavletta/server/web/print.js:98
+msgid "Text of the element; changed here for this print only"
+msgstr "Текст элемента; изменяется здесь только для этой печати"
+
+#: tavletta/server/web/print.js:105
+msgid "Print {name}"
+msgstr "Печать: {name}"
+
+#: tavletta/server/web/print.js:145
+msgid "Start number"
+msgstr "Начальный номер"
+
+#: tavletta/server/web/print.js:145
+msgid ""
+"The counter {placeholder} starts here; next number saved in the template: "
+"{next}"
+msgstr "Счётчик {placeholder} начинается здесь; следующий номер, сохранённый в шаблоне: {next}"
+
+#: tavletta/server/web/print.js:150
+msgid "At most {max}"
+msgstr "Не более {max}"
+
+#: tavletta/server/web/print.js:160
+msgid "Fields"
+msgstr "Поля"
+
+#: tavletta/server/web/print.js:160
+msgid "This template has no fields to fill in."
+msgstr "В этом шаблоне нет полей для заполнения."
+
+#: tavletta/server/web/print.js:216
+msgid "{name} is empty. Enter a value."
+msgstr "Поле {name} пустое. Введите значение."
+
+#: tavletta/server/web/print.js:219
+msgid "The start number must be a whole number from 0."
+msgstr "Начальный номер должен быть целым числом от 0."
+
+#: tavletta/server/web/print.js:224
+msgid "At most {max} labels in one print job."
+msgstr "В одном задании печати не более {max} этикеток."
+
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:181
+msgid "There is a problem"
+msgstr "Возникла проблема"
+
+#: tavletta/server/web/ui.js:48
+msgid "Busy"
+msgstr "Занят"
+
+#: tavletta/server/web/ui.js:49
+msgid "Paused"
+msgstr "Приостановлен"
+
+#: tavletta/server/web/ui.js:50
+msgid "Problem"
+msgstr "Проблема"
+
+#: tavletta/server/web/ui.js:51
+msgid "Reachable, no status"
+msgstr "Доступен, нет состояния"
+
+#: tavletta/server/web/ui.js:52
+msgid "Unreachable"
+msgstr "Недоступен"
+
+#: tavletta/server/web/ui.js:62
+msgid "Admin"
+msgstr "Администратор"
+
+#: tavletta/server/web/ui.js:66
+msgid "Code"
+msgstr "Код"
+
+#: tavletta/server/web/ui.js:66
+msgid "Element"
+msgstr "Элемент"
+
+#: tavletta/server/web/ui.js:71
+msgid "Something went wrong in the page."
+msgstr "На странице что-то пошло не так."
+
+#: tavletta/server/web/ui.js:72
+msgid "This needs a token with more rights."
+msgstr "Для этого нужен токен с более широкими правами."
+
+#: tavletta/server/web/ui.js:74
+msgid ""
+"Too many wrong tokens from this computer. Wait a minute, then sign in again."
+msgstr "Слишком много неверных токенов с этого компьютера. Подождите минуту и войдите снова."
+
+#: tavletta/server/web/ui.js:82
+msgid "Labels loaded: {width} × {height} mm"
+msgstr "Загружены этикетки: {width} × {height} mm"
+
+#: tavletta/server/web/ui.js:83
+msgid "Tape loaded: {width} mm"
+msgstr "Загружена лента: {width} mm"
+
+#: tavletta/server/web/ui.js:84
+msgid "Label distance measured: {length} mm"
+msgstr "Измеренное расстояние между этикетками: {length} mm"
+
+#: tavletta/server/web/ui.js:85
+msgid "Left on the roll: {length} mm"
+msgstr "Осталось на рулоне: {length} mm"
+
+#: tavletta/server/web/ui.js:92
+msgid "Unreachable (checked {time})"
+msgstr "Недоступен (проверено {time})"
+
+#: tavletta/server/web/ui.js:106
+msgid "Loading…"
+msgstr "Загрузка…"
+
+#: tavletta/server/web/ui.js:122
+msgid "Try again"
+msgstr "Повторить"
+
+#: tavletta/server/web/ui.js:149
+msgid "optional"
+msgstr "необязательно"
+
+#: tavletta/server/web/ui.js:260
+msgid "Other labels are loaded in the printer than the template needs."
+msgstr "В принтер загружены не те этикетки, которые нужны шаблону."
+
+#: tavletta/server/web/ui.js:326
+msgid "Element {n}: {kind}"
+msgstr "Элемент {n}: {kind}"
+
+#: tavletta/server/web/ui.js:385
+msgid "Cancel printing"
+msgstr "Отменить печать"
+
+#: tavletta/server/web/ui.js:386
+msgid "Labels already printed stay printed."
+msgstr "Уже напечатанные этикетки останутся напечатанными."
+
+#: tavletta/server/web/ui.js:398
+msgid "{printed} of {total}"
+msgstr "{printed} из {total}"
+
+#: tavletta/server/web/ui.js:407
+msgid "About {minutes} min left"
+msgstr "Осталось около {minutes} мин"
+
+#: tavletta/server/web/ui.js:409
+msgid "Waiting for the printer…"
+msgstr "Ожидание принтера…"
+
+#: tavletta/server/web/ui.js:437
+msgid "Stopping after the label being printed…"
+msgstr "Остановка после печатаемой этикетки…"
+
+#: tavletta/server/web/ui.js:456
+msgid "Canceled"
+msgstr "Отменено"
+
+#: tavletta/server/web/ui.js:456
+msgid "Failed"
+msgstr "Не удалось"
+
+#: tavletta/server/web/ui.js:468
+msgid "Copied"
+msgstr "Скопировано"
+
+#: tavletta/server/web/ui.js:474
+msgid "Copy"
+msgstr "Копировать"
+
+#: tavletta/server/web/ui.js:480
+msgid "{printed} of {total} labels printed."
+msgstr "Напечатано этикеток: {printed} из {total}."
+
+#: tavletta/server/web/ui.js:483
+msgid "Took {seconds} s, finished at {time}."
+msgstr "Заняло {seconds} с, завершено в {time}."
+
+#: tavletta/server/web/ui.js:485
+msgid "Job number"
+msgstr "Номер задания"

@@ -384,6 +384,11 @@ def _server_parsers(commands) -> None:
     )
     serve.add_argument("--mcp", action="store_true", help=_("also serve MCP at /mcp"))
     serve.add_argument(
+        "--no-web-ui",
+        action="store_true",
+        help=_("do not serve the web page at /: only the REST API (and MCP)"),
+    )
+    serve.add_argument(
         "--max-body",
         metavar="MB",
         type=_number(1, 64),

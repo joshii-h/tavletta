@@ -29,7 +29,10 @@ def read(data: bytes) -> Table:
     builder = Builder()
     for cells in reader:
         builder.add(cells)
-    return builder.table()
+    table = builder.table()
+    if delimiter != _NO_DELIMITER:
+        table.delimiter = delimiter
+    return table
 
 
 def _decode(data: bytes) -> str:

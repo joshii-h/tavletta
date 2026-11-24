@@ -1,4 +1,5 @@
-"""The HTTP server: the REST API under /api/v1 and MCP at /mcp.
+"""The HTTP server: the REST API under /api/v1, MCP at /mcp and the web
+page at / (webui.py).
 
 The standard library's ThreadingHTTPServer, one thread per connection
 (at most MAX_CONNECTIONS at once). Every request passes these checks, in
@@ -11,9 +12,10 @@ this order, before it reaches a route:
    unless that origin is the server itself or allowed with --allow-origin.
    POST also needs Content-Type application/json, which a page cannot send
    to another site without asking first (CORS, never granted here).
-3. Token: with a token every request but /api/v1/health needs
-   "Authorization: Bearer <token>", compared in constant time. Ten wrong
-   tokens from one address within a minute block it for that minute.
+3. Token: with a token every request but /api/v1/health and the files of
+   the web page needs "Authorization: Bearer <token>", compared in
+   constant time. Ten wrong tokens from one address within a minute block
+   it for that minute.
 4. Size: a body needs a Content-Length of at most --max-body bytes.
 
 Logs name the client, method, path (without the query) and status, never
@@ -36,9 +38,9 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlsplit
 
-from tavletta.server import requests
+from tavletta.server import requests, webui
 from tavletta.server.config import LOCAL, Caller, TokenStore
 from tavletta.server.errors import ApiError, bad_request
 from tavletta.server.mcp import HttpTransport, Mcp
@@ -49,6 +51,7 @@ from tavletta.ui.i18n import _, language
 log = logging.getLogger(__name__)
 
 PREFIX = "/api/v1"
+WEB_PREFIX = "/ui/"  # the files of the web page; the page itself is /
 # a label with images, or many data rows; JSON takes up to about 30 times
 # its size once parsed, so large bodies are parsed two at a time
 MAX_BODY = 4 * 1024 * 1024
@@ -128,6 +131,7 @@ class Config:
     # reverse proxies whose X-Forwarded-For names the client (--trusted-proxy)
     trusted_proxies: tuple[ipaddress.IPv4Network | ipaddress.IPv6Network, ...] = ()
     tokens: TokenStore | None = None  # named tokens with roles (tokens.toml)
+    web_ui: bool = True  # the web page at / (off: --no-web-ui)
 
 
 def rate_key(address: str) -> str:
@@ -222,6 +226,7 @@ class Server(ThreadingHTTPServer):
         address = resolve(config.host)
         self.loopback = is_loopback(address)
         self.mcp = HttpTransport(Mcp(service)) if config.mcp else None
+        self.web_ui = config.web_ui
         self.rate_limit = RateLimit()
         self.parses = threading.BoundedSemaphore(PARSES)
         self.reaper = Reaper()
@@ -463,7 +468,7 @@ class Handler(BaseHTTPRequestHandler):
             self.close_connection = True
             self._error(ApiError(408, "timeout", _("The request took too long")))
             return
-        if method not in ("POST",) or self._path() == PREFIX + "/health":
+        if method not in ("POST", "PUT") or self._path() == PREFIX + "/health":
             self._request_in()  # no body to wait for
         with language(self.headers.get("Accept-Language")), self._admitted() as admitted:
             if admitted:
@@ -525,9 +530,18 @@ class Handler(BaseHTTPRequestHandler):
                 403, "origin_not_allowed", _("Requests from this web page are not allowed")
             )
         config = self.server.config
-        if (config.token or config.tokens) and self._path() != PREFIX + "/health":
+        if (config.token or config.tokens) and not self._public():
             self.caller = self._authorize()
             self.who = self.caller.name
+
+    def _public(self) -> bool:
+        """Answered without a token: the health check and the files of the
+        web page (the program itself; its data come from the API)."""
+        path = self._path()
+        return path == PREFIX + "/health" or self._web_page(path)
+
+    def _web_page(self, path: str) -> bool:
+        return self.server.web_ui and (path == "/" or path.startswith(WEB_PREFIX))
 
     def _authorize(self) -> Caller:
         """Who the token belongs to; 401 for a wrong, expired or revoked one.
@@ -563,7 +577,7 @@ class Handler(BaseHTTPRequestHandler):
             204,
             None,
             {
-                "Access-Control-Allow-Methods": "GET, POST, DELETE",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
                 "Access-Control-Allow-Headers": CORS_HEADERS,
                 "Access-Control-Max-Age": "600",
             },
@@ -631,6 +645,9 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/mcp" and self.server.mcp is not None:
             self._mcp(method)
             return
+        if self._web_page(path):
+            self._web(method, path)
+            return
         if not path.startswith(PREFIX + "/"):
             raise ApiError(404, "not_found", _("Not found"))
         parts = [unquote(p) for p in path[len(PREFIX) + 1 :].split("/")]
@@ -676,11 +693,49 @@ class Handler(BaseHTTPRequestHandler):
         host = self._query().get("host", [None])[-1]
         self._send(200, self.server.service.status(parts[1], host, self.caller))
 
+    def me(self, _parts: list[str]) -> None:
+        """Who the token is and what a request may ask for: the web page
+        shows what the role allows (the API refuses the rest anyway)."""
+        caller, config = self.caller, self.server.config
+        self._send(
+            200,
+            {
+                "name": caller.name,
+                "role": caller.role,
+                "printers": sorted(caller.printers) if caller.printers is not None else None,
+                "token_required": bool(config.token or config.tokens),
+                "limits": dict(self.server.service.limits(), max_body=config.max_body),
+            },
+        )
+
     def labels(self, _parts: list[str]) -> None:
         self._send(200, {"labels": self.server.service.list_labels()})
 
     def label(self, parts: list[str]) -> None:
         self._send(200, self.server.service.describe("/".join(parts[1:])))
+
+    def put_label(self, parts: list[str]) -> None:
+        """Upload a label file (admin): the body is the .tavletta file."""
+        service = self.server.service
+        if not self.caller.may("admin"):  # before the body is read and checked
+            raise ApiError(403, "forbidden", _("This access token may not do this"))
+        replace = self._query().get("replace", ["false"])[-1].lower() in ("true", "1", "yes")
+        body = self._raw_json()
+        with self._parsing(body):
+            entry, created = service.save_label("/".join(parts[1:]), body, replace, self.caller)
+        location = {"Location": "%s/labels/%s" % (PREFIX, quote(entry["name"]))}
+        self._send(201 if created else 200, entry, location)
+
+    def delete_label(self, parts: list[str]) -> None:
+        self.server.service.delete_label("/".join(parts[1:]), self.caller)
+        self._send(204, None)
+
+    def data(self, _parts: list[str]) -> None:
+        """The rows of a data file sent along (the web page's series)."""
+        body = self._raw_json()
+        with self._parsing(body):
+            request = requests.data_request(_parse(body))
+        self._send(200, self.server.service.read_data(request))
 
     def preview(self, _parts: list[str]) -> None:
         body = self._raw_json()
@@ -712,6 +767,25 @@ class Handler(BaseHTTPRequestHandler):
     def cancel(self, parts: list[str]) -> None:
         service = self.server.service
         self._send(202, service.job_dict(service.cancel(parts[1], self.caller)))
+
+    def _web(self, method: str, path: str) -> None:
+        """The web page: its files, and its texts in the language asked for."""
+        if method != "GET":
+            raise ApiError(405, "method_not_allowed", _("Method not allowed"))
+        name = "index.html" if path == "/" else path[len(WEB_PREFIX) :]
+        if name == "messages.json":
+            asked = self._query().get("lang", [None])[-1]
+            found: webui.Asset | None = webui.messages(asked, self.headers.get("Accept-Language"))
+            extra = {"Vary": "Accept-Language"}
+        else:
+            found, extra = webui.asset(name), {}
+        if found is None:
+            raise ApiError(404, "not_found", _("Not found"))
+        headers = dict(webui.HEADERS, ETag=found.etag, **extra)
+        if found.etag in _etags(self.headers.get("If-None-Match", "")):
+            self._send_bytes(304, b"", None, headers)
+            return
+        self._send_bytes(200, found.data, found.kind, headers)
 
     def _mcp(self, method: str) -> None:
         transport = self.server.mcp
@@ -751,7 +825,7 @@ class Handler(BaseHTTPRequestHandler):
     def _error(self, error: ApiError) -> None:
         extra = {"WWW-Authenticate": "Bearer"} if error.status == 401 else {}
         if error.status == 405:
-            extra["Allow"] = "GET, POST, DELETE"
+            extra["Allow"] = "GET, POST, PUT, DELETE"
         self._send(error.status, {"error": error.to_dict()}, extra)
 
     def _send(self, status: int, body: object, headers: dict[str, str] | None = None) -> None:
@@ -765,12 +839,14 @@ class Handler(BaseHTTPRequestHandler):
         self, status: int, data: bytes, kind: str | None, headers: dict[str, str] | None = None
     ) -> None:
         self.send_response(status)
+        extra = dict(self._cors(), **(headers or {}))
         if kind:
             self.send_header("Content-Type", kind)
-        self.send_header("Content-Length", str(len(data)))
-        self.send_header("Cache-Control", "no-store")
+        if status != 304:
+            self.send_header("Content-Length", str(len(data)))
+        self.send_header("Cache-Control", extra.pop("Cache-Control", "no-store"))
         self.send_header("X-Content-Type-Options", "nosniff")
-        for key, value in dict(self._cors(), **(headers or {})).items():
+        for key, value in extra.items():
             self.send_header(key, value)
         try:
             self.end_headers()
@@ -809,6 +885,11 @@ class Handler(BaseHTTPRequestHandler):
         log.debug("%s " + format, client, *args)
 
 
+def _etags(header: str) -> set[str]:
+    """The tags of If-None-Match ("W/" taken off: a weak tag of ours is ours)."""
+    return {tag.strip().removeprefix("W/") for tag in header.split(",") if tag.strip()}
+
+
 def _parse(body: bytes) -> object:
     try:
         return json.loads(body)
@@ -829,10 +910,14 @@ def _matches(pattern: tuple[str, ...], parts: list[str]) -> bool:
 ROUTES: dict[tuple[str, tuple[str, ...]], Route] = {
     ("GET", ("health",)): Handler.health,
     ("GET", ("openapi.json",)): Handler.openapi,
+    ("GET", ("me",)): Handler.me,
     ("GET", ("printers",)): Handler.printers,
     ("GET", ("printers", "?", "status")): Handler.status,
     ("GET", ("labels",)): Handler.labels,
     ("GET", ("labels", "*")): Handler.label,
+    ("PUT", ("labels", "*")): Handler.put_label,
+    ("DELETE", ("labels", "*")): Handler.delete_label,
+    ("POST", ("data",)): Handler.data,
     ("POST", ("preview",)): Handler.preview,
     ("POST", ("print",)): Handler.print_job,
     ("GET", ("jobs", "?")): Handler.job,

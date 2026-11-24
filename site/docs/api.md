@@ -83,6 +83,8 @@ Every error is JSON with a stable code and a message for people:
 | 408 | `timeout` | The request took longer than 30 s to send. |
 | 409 | `job_finished` | The job has finished: nothing to cancel. |
 | 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |
+| 409 | `label_exists` | A label of that name exists: upload with replace=true. |
+| 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |
 | 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |
 | 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |
 | 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |
@@ -101,6 +103,7 @@ Every error is JSON with a stable code and a message for people:
 | 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |
 | 429 | `queue_full` | Too many jobs waiting: retry later. |
 | 500 | `internal` | An error of the server; it is logged. |
+| 500 | `not_saved` | The labels folder could not be written (507: it is full). |
 | 502 | `printer_<code>` | The printer is unreachable or reports a problem. |
 | 503 | `busy` | All request or render slots taken: retry after a moment. |
 
@@ -142,10 +145,14 @@ general errors of the table above: 401, 403, 405, 408, 421, 429
 |---|---|---|
 | [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |
 | [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |
+| [`GET /api/v1/me`](#get-me) | `preview` | The token's name, role and printers, and the limits of a request (for the web page) |
 | [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |
 | [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |
 | [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |
 | [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |
+| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step |
+| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Delete a label file (admin); its data file stays |
+| [`POST /api/v1/data`](#post-data) | `preview` | Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept |
 | [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |
 | [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |
 | [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |
@@ -178,6 +185,21 @@ This description (OpenAPI 3.1); a token of any role.
 ```sh
 curl -H "Authorization: Bearer $TOKEN" \
      "$TAVLETTA/openapi.json"
+```
+
+### `GET /api/v1/me` { #get-me }
+
+The token's name, role and printers, and the limits of a request (for the web page).
+
+- Role: `preview`
+
+| Status | Answer | Codes |
+|---|---|---|
+| 200 | Who |  |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     "$TAVLETTA/me"
 ```
 
 ### `GET /api/v1/printers` { #get-printers }
@@ -260,6 +282,88 @@ What a label can be filled in with: elements, variables, data columns, size, cou
 ```sh
 curl -H "Authorization: Bearer $TOKEN" \
      "$TAVLETTA/labels/asset-tag"
+```
+
+### `PUT /api/v1/labels/{name}` { #put-labels-name }
+
+Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step.
+
+- Role: `admin`
+
+| Parameter | In | Meaning |
+|---|---|---|
+| `name` | path | The file's name, without folder; '`.tavletta`' may be left out. |
+| `replace` | query | Replace a label of that name. default `false` |
+
+Body: The content of a `.tavletta` file.
+
+| Status | Answer | Codes |
+|---|---|---|
+| 200 | Replaced (replace=true) |  |
+| 201 | Added |  |
+| 400 | Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to 100), in the folder itself | `invalid_field`, `not_json` |
+| 409 | A label of that name exists (send replace=true), or a print of it holds the file | `label_exists`, `label_locked` |
+| 413 | Over `--max-body`, or a label too large to render | `too_large`, `label_too_large` |
+| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |
+| 507 | No space left in the labels folder | `not_saved` |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     -X PUT \
+     -H 'Content-Type: application/json' \
+     --data-binary @asset-tag.tavletta \
+     "$TAVLETTA/labels/asset-tag"
+```
+
+### `DELETE /api/v1/labels/{name}` { #delete-labels-name }
+
+Delete a label file (admin); its data file stays.
+
+- Role: `admin`
+
+| Parameter | In | Meaning |
+|---|---|---|
+| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |
+
+| Status | Answer | Codes |
+|---|---|---|
+| 204 | Deleted |  |
+| 400 | Not a name inside the labels folder | `invalid_field` |
+| 404 | No such label | `label_not_found` |
+| 409 | A print of it holds the file | `label_locked` |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     -X DELETE \
+     "$TAVLETTA/labels/asset-tag"
+```
+
+### `POST /api/v1/data` { #post-data }
+
+Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept.
+
+- Role: `preview`
+
+Body fields:
+
+| Field | Type | Meaning |
+|---|---|---|
+| `content` | string | The file: CSV (any delimiter, UTF-8, UTF-16 or Windows-1252), ODS or XLSX, told apart by content. Pasted text is a CSV file. |
+| `name` | string | The file's name, for messages. |
+| `sheet` | string | ODS, XLSX: the sheet (default the first). |
+| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |
+
+| Status | Answer | Codes |
+|---|---|---|
+| 200 | The rows |  |
+| 400 | Invalid request | `invalid_field`, `unknown_field`, `not_json` |
+| 422 | Not a table, damaged or empty | `data_problem` |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     -H 'Content-Type: application/json' \
+     -d '{"name": "assets.csv", "content": "QXNzZXROdW1iZXIKMDAzMDAKMDAzMDEK"}' \
+     "$TAVLETTA/data"
 ```
 
 ### `POST /api/v1/preview` { #post-preview }
@@ -426,6 +530,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `data_sheet` | string or null |  |
 | `counter` | object | used (the label has `{=counter}`), next, step. |
 | `features` | array of string |  |
+| `on_sheet` | boolean | Printed on label sheets: at most 999 labels in one job. |
 
 ### NamedPrinter { #namedprinter }
 
@@ -467,6 +572,40 @@ A printer of printers.toml.
 | `height` | integer |  |
 | `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |
 | `png` | string |  |
+| `geometry` | null or Geometry | Where the elements are in the image; null for view=printer and a label turned onto its sheet. |
+
+### Geometry { #geometry }
+
+The elements' boxes in the preview image, in mm from its top left corner (tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / 25.4.
+
+| Field | Type | Meaning |
+|---|---|---|
+| `width_mm` | number | Along the tape: the length. |
+| `height_mm` | number | Across: tape or label height. |
+| `layout` | `"flow"` \| `"free"` |  |
+| `dpi` | number | The image's resolution. |
+| `elements` | array of object |  |
+
+### Me { #me }
+
+| Field | Type | Meaning |
+|---|---|---|
+| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token. |
+| `role` | `"preview"` \| `"print"` \| `"admin"` |  |
+| `printers` | array or null | The printers the token may use; null: all. |
+| `token_required` | boolean | false: the server has no token (loopback only). |
+| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |
+
+### Data { #data }
+
+| Field | Type | Meaning |
+|---|---|---|
+| `kind` | `"csv"` \| `"ods"` \| `"xlsx"` |  |
+| `delimiter` | string or null | CSV: the delimiter found; null for one column and spreadsheets. |
+| `sheets` | array of string |  |
+| `sheet` | string or null | The sheet read. |
+| `columns` | array of string |  |
+| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |
 
 Example of a job:
 

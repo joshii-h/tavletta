@@ -9,7 +9,11 @@ through it over the network. What the server does and how programs use it:
 
 - One small service: a REST API (and MCP for AI assistants) on port 8790.
   It renders the labels itself and sends them to the printers over the
-  network; no desktop, no browser, no database.
+  network; no desktop, no database.
+- A web page at the same address for people: sign in with a token, see
+  the printers, print a template or a series (from a CSV, XLSX or ODS
+  file, a pasted list or number ranges such as 3000–5685), upload and
+  delete templates with an admin token. `--no-web-ui` turns it off.
 - The printers it may use are named in `printers.toml`; no other address
   can be printed on.
 - Every program or device gets its own access token with a role
@@ -201,6 +205,10 @@ curl http://127.0.0.1:8790/api/v1/health
 
   Each printer is listed with its state; `UNREACHABLE` with a message if
   the server cannot reach it.
+- Open `http://127.0.0.1:8790/` in a browser on the server (others use
+  the proxy's address, see [Reverse proxy](#proxy)) and sign in with a
+  token: the web page shows what its role may do. The page keeps the
+  token in the browser tab only, until the tab is closed or "Sign out".
 
 ### Host network: mDNS and USB { #docker-host }
 
@@ -530,6 +538,8 @@ a stand-in that is installed counts: without one, Arial is warned about.
 - The server reachable only through the HTTPS proxy, only from the
   networks that need it; never from the internet.
 - `--trusted-proxy` set to the proxy's own address, nothing wider.
+- No one prints from a browser: `--no-web-ui` (the web page needs no
+  token to load, but shows nothing without one).
 - Updates: watch the releases and update within weeks; the image
   of each release brings Debian's security updates of its day
   (`docker compose pull`).
