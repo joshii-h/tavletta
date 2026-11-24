@@ -200,20 +200,21 @@ def verify(element: CodeElement) -> None:
 
 def encode(element: CodeElement) -> Symbol:
     """The modules of the code; CodeError if its content cannot be encoded.
-    Kept for the next renders, but not within render limits (the print
-    server): a client's content stays in no cache beyond its request."""
+    Kept for the next renders; within render limits (the print server)
+    only for the render running: a client's content stays in no cache
+    beyond its request, and a render measures a code before it draws it."""
     check(element)
-    keep = _keeps()
     if element.symbology == "qr" and element.error_correction:
-        qr = _qr if keep else _qr.__wrapped__
-        return qr(element.data, element.error_correction)
-    return (_encode if keep else _encode.__wrapped__)(element.symbology, element.data)
+        return _kept("qr", (element.data, element.error_correction), _qr)
+    return _kept("code", (element.symbology, element.data), _encode)
 
 
-def _keeps() -> bool:
-    from tavletta.render import active_limits  # render imports this module
+def _kept(kind: str, key: tuple[str, str], cached) -> Symbol:
+    from tavletta import render  # render imports this module
 
-    return active_limits() is None
+    if render.active_limits() is None:
+        return cached(*key)
+    return render._per_render(kind, key, lambda: cached.__wrapped__(*key))
 
 
 @lru_cache(maxsize=64)

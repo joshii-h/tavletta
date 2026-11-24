@@ -327,6 +327,38 @@ def test_no_client_content_stays_in_the_process_caches_within_limits():
     assert all(cache.cache_info().currsize for cache in caches)
 
 
+def test_within_limits_a_code_is_encoded_once_per_render(monkeypatch):
+    """A die-cut label is rendered, then fitted to its length (each part
+    drawn again at its size): a code encoded once for both, though nothing
+    is kept beyond the render."""
+    from tavletta import codes
+    from tavletta.backends import get_backend
+    from tavletta.backends.base import PrintOptions
+
+    made = []
+    real_encode, real_qr = codes._encode.__wrapped__, codes._qr.__wrapped__
+    monkeypatch.setattr(
+        codes._encode, "__wrapped__", lambda *key: made.append(key) or real_encode(*key)
+    )
+    monkeypatch.setattr(codes._qr, "__wrapped__", lambda *key: made.append(key) or real_qr(*key))
+    label = Label(
+        printer="cab",
+        auto_length=False,
+        elements=[
+            TextElement(text="Asset"),
+            CodeElement(data="once", symbology="qr"),
+            CodeElement(data="level", symbology="qr", error_correction="H"),
+            CodeElement(data="ONCE", symbology="code128"),
+        ],
+    )
+    cab = get_backend("cab")
+    with limited(10**8):
+        cab.render_label(label, PrintOptions())
+        assert sorted(made) == [("code128", "ONCE"), ("level", "H"), ("qr", "once")]
+        cab.render_label(label, PrintOptions())  # the next render encodes again
+    assert len(made) == 6
+
+
 def test_background_brightness_is_not_cached_within_limits():
     render_module._image_brightness_cached.cache_clear()
     label = Label(tape_mm=12, background_image=ImageElement(data=png((20, 20))))
