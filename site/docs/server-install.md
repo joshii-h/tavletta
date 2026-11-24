@@ -494,6 +494,51 @@ Caddy gets a certificate by itself. Start the server with
 - Outgoing from the server to the printers: TCP 9100 and 631.
 - Never make the server reachable from the internet.
 
+## Signing in with OpenID Connect { #oidc }
+
+People can sign in to the web page with your organisation's identity
+provider (Keycloak, Authentik, Microsoft Entra ID, Okta …) instead of an
+access token; their roles at the provider become Tavletta's roles.
+Programs keep using tokens. It needs HTTPS through the reverse proxy
+(only `http://localhost` works without, for testing).
+
+1. Register a client at the provider: confidential (with a secret), the
+   authorization code flow only, PKCE S256, redirect URI
+   `https://labels.example.com/oidc/callback`, post-logout redirect URI
+   `https://labels.example.com/`. Make the roles or groups reach the ID
+   token: in Keycloak a mapper *User Client Role* (or *User Realm Role*)
+   on the client with *Add to ID token* on; Authentik sends `groups`.
+2. Put the secret into `config/oidc-secret` (the secret alone, mode 600)
+   and write `config/oidc.toml`:
+
+   ```toml
+   [oidc]
+   issuer = "https://id.example.com/realms/example"
+   client_id = "tavletta"
+   client_secret_file = "/config/oidc-secret"
+   public_url = "https://labels.example.com"
+   provider_name = "Example ID"
+   roles_claim = "resource_access.tavletta.roles"   # Authentik: "groups"
+
+   [oidc.roles]
+   preview = ["tavletta-preview"]
+   print = ["tavletta-print"]
+   admin = ["tavletta-admin"]
+   ```
+
+3. Add `"--oidc"` and `"/config/oidc.toml"` to `command:` in
+   `compose.yaml` (native: to `ExecStart`, with `/etc/tavletta/...`),
+   keep `--trusted-proxy`, and restart.
+
+The page then shows "Sign in with Example ID". Someone without one of
+the roles gets "no access". A session lasts 8 hours, or 60 minutes
+without use (`session_hours`, `idle_minutes`); a role removed or an
+account disabled at the provider counts from the next sign in, so keep
+sessions short where admins sign in. `token_login = false` hides the
+token field on the page. Printers can be limited per role
+(`[oidc.printers]`) or by a claim (`printers_claim`). Every key and the
+security details: [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#signing-in-with-openid-connect-oidctoml).
+
 ## Fonts { #fonts }
 
 A label is drawn with the fonts of the computer that prints it. A text
@@ -538,6 +583,9 @@ a stand-in that is installed counts: without one, Arial is warned about.
 - The server reachable only through the HTTPS proxy, only from the
   networks that need it; never from the internet.
 - `--trusted-proxy` set to the proxy's own address, nothing wider.
+- With `--oidc`: `public_url` set, the client confidential with PKCE,
+  only the roles people need, short sessions where admins sign in,
+  `oidc-secret` mode 600.
 - No one prints from a browser: `--no-web-ui` (the web page needs no
   token to load, but shows nothing without one).
 - Updates: watch the releases and update within weeks; the image
@@ -564,5 +612,6 @@ pages): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch
 | `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |
 | `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |
 | Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |
+| "Signing in did not work" on the web page | The log says why: the provider cannot be reached, the redirect URI or secret is wrong at the provider, or the page is reached over plain HTTP (set `public_url`, `--trusted-proxy`). "No access": the roles do not reach the ID token (a mapper is missing) or none is mapped in `[oidc.roles]`. |
 | The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |
 | Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |
