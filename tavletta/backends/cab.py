@@ -473,20 +473,14 @@ class Cab(Backend):
         self.port = port
         # the resolutions the printers reported, by address: prepare()
         # renders for the job's printer (PrintOptions.host); one backend
-        # serves every cab printer of a print server
+        # serves every cab printer of a print server, so nothing of one
+        # printer stands in for another (or for none)
         self.reported: HostMemory[float] = HostMemory()
-        # the printer last asked: for a job whose printer is not known
-        self.dots_per_mm = DEFAULT_DOTS_PER_MM
-
-    def _learn(self, host: str, dots_per_mm: float) -> None:
-        self.reported[host] = self.dots_per_mm = dots_per_mm
 
     def _dots(self, host: str) -> float:
-        """The resolution of this printer as reported, else the default;
-        without an address the one of the printer last asked."""
-        if not host:
-            return self.dots_per_mm
-        return self.reported.get(host, DEFAULT_DOTS_PER_MM)
+        """The resolution this printer reported, else the default (also
+        without an address)."""
+        return self.reported.get(host, DEFAULT_DOTS_PER_MM) if host else DEFAULT_DOTS_PER_MM
 
     def display_name(self, info: PrinterInfo | None) -> str:
         """ "cab EOS2/300": the printer names its model and resolution."""
@@ -517,8 +511,7 @@ class Cab(Backend):
                 version, pitch = Version(), None
         dots = self._dots(host)
         if version.model:
-            dots = version.dots_per_mm
-            self._learn(host, dots)
+            dots = self.reported[host] = version.dots_per_mm
         error = status_error(status)
         return PrinterInfo(
             model=version.model or "cab",
@@ -574,8 +567,9 @@ class Cab(Backend):
             _checked(s)
             # the printer may not have been asked yet (switched on later)
             version = s.version()
-            dots = version.dots_per_mm if version.model else rendered
-            self._learn(host, dots)
+            dots = rendered  # a printer that does not tell: as rendered, nothing learned
+            if version.model:
+                dots = self.reported[host] = version.dots_per_mm
             size_mm = image.info.get("size_mm")
             image = for_resolution(image, rendered, dots)  # else rendered again (RenderAgain)
             upside_down = self.setting(options, "upside_down") is True

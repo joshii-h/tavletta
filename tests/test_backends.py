@@ -328,7 +328,7 @@ def test_host_memory_forgets_the_least_recently_used_printer():
 
     backend = cab.Cab()
     for n in range(HOSTS_REMEMBERED + 10):
-        backend._learn("192.0.2.%d" % n, 12.0)
+        backend.reported["192.0.2.%d" % n] = 12.0
     assert len(backend.reported) == HOSTS_REMEMBERED
     assert isinstance(cab._setups, HostMemory)
     assert isinstance(niimbot.Niimbot().models, HostMemory)

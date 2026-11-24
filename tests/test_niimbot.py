@@ -1156,7 +1156,8 @@ def test_print_on_a_b1_pro_with_protocol_4(fake):
     assert fake.sent(0x01) == [b"\x00\x01" + bytes(5) + b"\x01\x00"]
     assert fake.sent(0x13) == [niimbot.u16(300) + niimbot.u16(567) + niimbot.u16(1) + bytes(7)]
     assert fake.sent(0xDC) == [b"\x01"]
-    assert backend.raster(50, PrintOptions()).dpi == niimbot.DPI_300
+    assert backend.raster(50, PrintOptions(host="printer")).dpi == niimbot.DPI_300
+    assert backend.raster(50, PrintOptions()).dpi == backend.capabilities.dpi  # no printer
 
 
 def test_a_d110_m_on_protocol_4(fake):

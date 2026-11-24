@@ -328,8 +328,8 @@ def test_query_learns_the_resolution(backend, printer):
     printer.device.sync = "N0000"
     info = backend.query("cab-eos2.local")
     assert info.pitch_mm is None
-    assert backend.dots_per_mm == 8.0
-    assert backend.raster(25, PrintOptions()).dpi == pytest.approx(203.2)
+    assert backend.reported["cab-eos2.local"] == 8.0
+    assert backend.raster(25, PrintOptions(host="cab-eos2.local")).dpi == pytest.approx(203.2)
     assert info.dpi == pytest.approx(203.2)  # the preview and its warnings at it
 
 
@@ -552,6 +552,7 @@ def test_print_keeps_the_resolution_if_the_printer_does_not_say(backend, printer
     assert (
         png.size == (1267, 300) and commands[2] == "S l1;0,0,25,28,105.6"
     )  # the label's size, as cablabel sends it
+    assert "h" not in backend.reported  # what it was rendered at is not learned as reported
 
 
 def test_an_answer_without_end_is_not_read_on():
@@ -609,7 +610,7 @@ def test_query_keeps_the_status_if_text_commands_time_out(backend, printer, monk
     printer.device.error = "D"
     info = backend.query("h")
     assert (info.error, info.model, info.pitch_mm) == ("head_open", "cab", None)
-    assert backend.dots_per_mm == 12.0
+    assert "h" not in backend.reported  # nothing reported, nothing learned
 
 
 @pytest.mark.parametrize(("error", "cls"), [("D", HeadOpen), ("P", OutOfLabels)])

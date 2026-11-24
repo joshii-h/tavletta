@@ -917,20 +917,20 @@ class Niimbot(Backend):
     query_before_render = True
 
     def __init__(self) -> None:
-        self.model: Model | None = None  # of the printer last asked
         # the models the printers reported, by address: a job renders for
-        # its own printer (PrintOptions.host), also beside others
+        # its own printer (PrintOptions.host), also beside others; nothing
+        # of one printer stands in for another (or for none)
         self.models: HostMemory[Model] = HostMemory()
 
     def _model(self, info: PrinterInfo | None, host: str = "") -> Model | None:
-        """The model of the answer; else the one this printer reported,
-        without an address the one last asked."""
+        """The model of the answer; else the one this printer reported;
+        None without either."""
         if info:
             return BY_NAME.get(info.model)
-        return self.models.get(host) if host else self.model
+        return self.models.get(host) if host else None
 
     def _learn(self, host: str, model: Model) -> None:
-        self.models[host] = self.model = model
+        self.models[host] = model
 
     def display_name(self, info: PrinterInfo | None) -> str:
         if info and info.model:
