@@ -500,3 +500,20 @@ def test_every_tag_check_takes_the_same_semver_tags():
     flathub = _flathub()
     for tag in ("v1.1.2", "v2.0.0-rc.1", "v1.1", "v1.1.2.1", "v01.1.2", "1.1.2"):
         assert bool(re.fullmatch(pattern, tag)) == bool(flathub.TAG.fullmatch(tag)), tag
+
+
+def test_the_screenshots_come_from_the_github_mirror_at_this_release():
+    """Software centres and Flathub fetch them by these URLs: from the
+    GitHub mirror (no rate limit for automated clients, as flathub.py
+    explains), at the tag of this version, files that are there."""
+    import xml.etree.ElementTree as ET
+
+    from tavletta import __version__
+
+    root = ET.parse(ROOT / "data" / "xyz.joshuahirsig.Tavletta.metainfo.xml").getroot()
+    images = [image.text for image in root.iterfind("screenshots/screenshot/image")]
+    assert images
+    prefix = f"https://raw.githubusercontent.com/joshii-h/tavletta/v{__version__}/"
+    for url in images:
+        assert url.startswith(prefix), url
+        assert (ROOT / url.removeprefix(prefix)).is_file(), url
