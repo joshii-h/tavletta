@@ -73,15 +73,16 @@ function header() {
     // each name in its own language (and script direction)
     languages.map((code) => h("option", { value: code, selected: code === lang, lang: code.replace("_", "-") }, languageName(code))),
   );
+  const signedIn = Boolean(session.me?.token_required); // replaceChildren would write out a false
   box.replaceChildren(
     h("label", { for: "language", class: "visually-hidden" }, t("Language")),
     select,
-    session.me &&
-      session.me.token_required &&
-      h("span", { class: "who" }, `${session.me.name} (${roleText(session.me.role)})`),
-    session.me &&
-      session.me.token_required &&
-      h("button", { type: "button", onclick: signOut }, t("Sign out")),
+    ...(signedIn
+      ? [
+          h("span", { class: "who" }, `${session.me.name} (${roleText(session.me.role)})`),
+          h("button", { type: "button", onclick: signOut }, t("Sign out")),
+        ]
+      : []),
   );
   const skip = document.getElementById("skip");
   skip.textContent = t("Skip to content");
