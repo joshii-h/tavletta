@@ -159,6 +159,24 @@ def test_a_printer_that_keeps_talking_stops_at_the_timeout(monkeypatch):
     assert answer == b"xxx"
 
 
+def test_an_answer_ends_at_its_size_limit(monkeypatch):
+    """Something on the port that never stops talking (fast enough that the
+    timeout never ends it) is not read on and on."""
+
+    class Flood(Talker):
+        def recv(self, size):
+            return b"x" * size
+
+    looked = []
+
+    def done(answer):
+        looked.append(len(answer))
+        return False
+
+    answer = raw.Session(Flood([])).ask(b"~HS\n", done, limit=60.0)
+    assert len(answer) == raw.ANSWER_MAX and looked[-1] < raw.ANSWER_MAX
+
+
 def test_an_unplugged_printer_is_an_error():
     class Gone(Talker):
         def recv(self, size):

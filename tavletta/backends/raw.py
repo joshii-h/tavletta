@@ -53,6 +53,10 @@ SOCKET_TIMEOUT = 10.0  # connecting; sending: without progress (net.send_all)
 # printing pace (a receipt printer at 25 mm/s takes about 15 kB/s)
 MIN_RATE = 8_000
 ANSWER_TIMEOUT = 1.0  # a status answer: silence after this means "unknown"
+# an answer is a few bytes, the longest (ZPL's ^HH) about 3.5 kB: more is
+# not a printer of this language, and is not read on (nor looked through
+# for its end again and again)
+ANSWER_MAX = 64 * 1024
 SERVICE = "_pdl-datastream._tcp"  # raw printing on port 9100, announced by mDNS
 DPI_INFO = "tavletta_dpi"  # image.info: the resolution prepare() rendered for
 # PrintOptions.settings: the resolution prepare() chose, so that the render
@@ -189,10 +193,10 @@ class Session:
         timeout: float | None = None,
         limit: float | None = None,
     ) -> bytes:
-        """Send a question, read the answer until done(answer) or the
-        timeout (ANSWER_TIMEOUT). What came by then is returned, b"" if
-        nothing: many of these printers do not answer every question, which
-        is no error. With `limit` the timeout counts from the last data
+        """Send a question, read the answer until done(answer), the
+        timeout (ANSWER_TIMEOUT) or ANSWER_MAX bytes. What came by then is
+        returned, b"" if nothing: many of these printers do not answer
+        every question, which is no error. With `limit` the timeout counts from the last data
         received, up to `limit` seconds in all: a long answer on a slow
         line (a serial adapter at 9600 baud) is read while it keeps coming.
         On USB a late answer could come before the next one; each session
@@ -212,6 +216,8 @@ class Session:
                 if not chunk:  # TCP: the printer closed the connection
                     break
                 answer += chunk
+                if len(answer) >= ANSWER_MAX:
+                    break
                 if limit is not None:  # data came: wait again, within the limit
                     deadline = min(start + limit, _clock() + wait)
         except (TimeoutError, PrinterTimeout):
