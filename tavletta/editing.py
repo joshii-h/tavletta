@@ -140,8 +140,9 @@ class Geometry:
         return [b.index for b in self.boxes if test(b.box, area)]
 
     def bounds(self, indices: Iterable[int]) -> MmBox:
-        """The box around some of the elements (ValueError: none given)."""
-        chosen = [self.boxes[i] for i in indices]
+        """The box around some of the elements (ValueError: none given,
+        IndexError: no such element)."""
+        chosen = [self.boxes[i] for i in _chosen(len(self.boxes), indices)]
         if not chosen:
             raise ValueError("no elements")
         return (
@@ -322,7 +323,7 @@ def move(label: Label, indices: Collection[int], dx: float, dy: float) -> Label:
     than the one nearest the edge can go (a position is never negative),
     so they keep their places to one another."""
     _check_free(label)
-    chosen = _chosen(label, indices)
+    chosen = _chosen(len(label.elements), indices)
     _check_finite(dx, dy)
     if not chosen:
         return label
@@ -347,7 +348,7 @@ def align(label: Label, geometry: Geometry, indices: Collection[int], edge: str)
     if edge not in ALIGNMENTS:
         raise ValueError("unknown alignment %r" % edge)
     _check_free(label, geometry)
-    chosen = _chosen(label, indices)
+    chosen = _chosen(len(label.elements), indices)
     if not chosen:
         return label
     target = (
@@ -376,7 +377,7 @@ def distribute(label: Label, geometry: Geometry, indices: Collection[int], axis:
     if axis not in ("x", "y"):
         raise ValueError("unknown axis %r" % axis)
     _check_free(label, geometry)
-    chosen = _chosen(label, indices)
+    chosen = _chosen(len(label.elements), indices)
     if len(chosen) < 3:
         return label
     across = axis == "y"
@@ -415,7 +416,7 @@ def resize(label: Label, geometry: Geometry, index: int, box: MmBox) -> Label:
     The element is as close to the box as it can be drawn (a code's module
     in whole printer dots); the next render says where it is."""
     _check_free(label, geometry)
-    _chosen(label, [index])
+    _chosen(len(label.elements), [index])
     _check_finite(*box)
     left, right = sorted((box[0], box[2]))
     top, bottom = sorted((box[1], box[3]))
@@ -517,10 +518,11 @@ def _check_free(label: Label, geometry: Geometry | None = None) -> None:
         raise ValueError("the geometry is not of this label")
 
 
-def _chosen(label: Label, indices: Collection[int]) -> list[int]:
-    """The indices in order, each once (IndexError: no such element)."""
+def _chosen(count: int, indices: Iterable[int]) -> list[int]:
+    """The indices of `count` elements in order, each once (IndexError: no
+    such element)."""
     chosen = sorted(set(indices))
-    if chosen and not 0 <= chosen[0] <= chosen[-1] < len(label.elements):
+    if chosen and not 0 <= chosen[0] <= chosen[-1] < count:
         raise IndexError("no such element")
     return chosen
 

@@ -126,6 +126,8 @@ def test_bounds_of_some_elements():
     assert geometry.bounds([2, 0]) == (0, 0, 30, 30)
     with pytest.raises(ValueError):
         geometry.bounds([])
+    with pytest.raises(IndexError):
+        geometry.bounds([-1])
 
 
 box_strategy = st.tuples(
@@ -336,6 +338,11 @@ def test_distributed_boxes_have_the_same_gaps(axis):
     gaps = [b.box[start] - a.box[end] for a, b in itertools.pairwise(boxes)]
     assert max(gaps) - min(gaps) <= 2 * DOT
     assert boxes[0].box == geometry.boxes[0].box and boxes[-1].box == geometry.boxes[3].box
+
+
+def test_aligning_nothing_is_the_label_itself():
+    label = _three()
+    assert editing.align(label, editing.measure(label, dpi=DPI), [], "left") is label
 
 
 def test_two_elements_are_not_distributed():
