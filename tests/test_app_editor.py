@@ -60,7 +60,7 @@ def at(win, x_mm, y_mm) -> tuple[float, float]:
 
 
 def px(win, mm: float) -> float:
-    return mm * win.preview.canvas.view().sx
+    return mm * win.preview.canvas.view().scale
 
 
 def click(win, x_mm, y_mm, state=editor.NO_MODIFIERS) -> None:
@@ -100,7 +100,7 @@ def test_the_view_follows_the_zoom(window, zoom):
     ppm = preview.PREVIEW_PX_PER_MM * zoom
     # the VC-500W's raster is a little taller than the 25 mm tape: the
     # picture fits it in, a little smaller
-    assert view.sx == view.sy == pytest.approx(ppm, rel=0.02)
+    assert view.scale == pytest.approx(ppm, rel=0.02)
     # the picture is as large as the zoom says, not the image's pixels
     assert window.preview.picture.get_width() == round(60 * ppm)
     x, y = view.to_px(12.5, 7.25)
@@ -145,7 +145,7 @@ def test_endless_tape(window):
 def test_the_view_maps_scaled_pixels():
     """On a display of scale 2 GTK draws the logical pixels with twice the
     device pixels: the view is in logical pixels, the same at any scale."""
-    view = canvas.View(30.0, 40.0, 12.0, 12.0)
+    view = canvas.View(30.0, 40.0, 12.0)
     assert view.to_px(10, 5) == (150.0, 100.0)
     assert view.to_mm(150, 100) == (10.0, 5.0)
     assert view.mm(6) == 0.5
@@ -681,12 +681,12 @@ def test_the_canvas_draws_every_part(window):
         tag="X 8.00 mm   Y 6.00 mm",
         tag_box=(8, 6, 20, 12),
     )
-    cv.show(scene)
+    cv.set_scene(scene)
     cv.grab_focus()
     snapshot = Gtk.Snapshot()
     cv.do_snapshot(snapshot)
     assert snapshot.to_node() is not None
-    cv.show(canvas.Scene())  # nothing shown: nothing drawn
+    cv.set_scene(canvas.Scene())  # nothing shown: nothing drawn
     snapshot = Gtk.Snapshot()
     cv.do_snapshot(snapshot)
     assert snapshot.to_node() is None
@@ -724,10 +724,8 @@ def test_no_geometry_until_reordered_elements_are_rendered(window):
     ed = show(window, free(box(5, 5), box(30, 10)))
     window.move_element(0, 1)  # in place: the preview still shows the old order
     assert ed.geometry() is None
-    click(window, 6, 6)  # nothing to hit meanwhile
-    assert ed.indices() == []
-    render_now(window)
-    pump()
+    click(window, 6, 6)  # a press renders first: the boxes of the new order
+    assert ed.indices() == [1]
     assert ed.geometry().boxes[1].left == pytest.approx(5, abs=0.05)
 
 
@@ -759,3 +757,83 @@ def test_a_turned_element(window, rotation):
     # longer by about as much (editing.resize scales the bars by the box,
     # which holds the digits under them too: a little less)
     assert long_side + 2 < (b.width if tall else b.height) <= long_side + 3.1
+
+
+def test_a_label_with_variables(window):
+    """Filling in the variables makes new elements for the render: the
+    editor knows them by the window's."""
+    ed = show(window, free(TextElement(text="{=date}", size_pt=12, x_mm=5, y_mm=5), box(30, 10)))
+    assert ed.geometry() is not None
+    window.settings.set_snap(False)
+    b = ed.geometry().boxes[0]
+    drag(window, b.left + 1, b.top + 1, 2, 1)
+    assert positions(window)[0] == pytest.approx((7, 6), abs=0.06)
+
+
+def test_the_undo_toast_goes_with_another_change(window):
+    show(window, free(box(5, 5), box(30, 10), box(45, 15)))
+    window.editor.select([0, 1])
+    key(window, Gdk.KEY_Delete)
+    toast = window.toast_log[-1]
+    dismissed = []
+    toast.dismiss = lambda: dismissed.append(True)  # the test's toasts are in no overlay
+    window.editor.select([0])
+    key(window, Gdk.KEY_Right)  # another step: the toast's undo would undo it
+    assert dismissed and window.editor._toast is None
+
+
+def test_the_cursor_after_the_label_changed(window):
+    ed = show(window, free(box(5, 5)))
+    ed._on_motion(None, *at(window, 6, 6))
+    assert window.preview.canvas.get_cursor().get_name() == "move"
+    ed.select([0])
+    key(window, Gdk.KEY_Delete)
+    assert window.preview.canvas.get_cursor() is None
+
+
+def test_an_edge_snaps_only_its_own_axis(window):
+    show(window, free(box(5, 0, 10, 5), box(30, 10)))
+    click(window, 6, 2)
+    ed = window.editor
+    ed.press(*at(window, 15, 2.5))  # the right edge's handle; the top lies on the label's edge
+    ed.drag(px(window, 3), 0)
+    assert all(g.axis == "x" for g in window.preview.canvas.scene.guides)
+    ed.release()
+
+
+def test_no_guide_beyond_where_a_move_goes(window):
+    show(window, free(box(0.3, 5), box(30, 10)))
+    ed = window.editor
+    ed.press(*at(window, 2, 6))
+    ed.drag(px(window, -0.2), 0)  # the label's edge would snap it to -0.3 … 0
+    scene = window.preview.canvas.scene
+    assert all(g.position >= 0 for g in scene.guides)
+    ed.release()
+    assert positions(window)[0][0] >= 0
+
+
+def test_no_empty_step_at_the_edge(window):
+    show(window, free(box(0, 5)))
+    click(window, 1, 6)
+    assert not key(window, Gdk.KEY_Left) or not window.history.can_undo
+    assert not window.history.can_undo and not window.dirty
+
+
+def test_a_new_element_is_selected(window):
+    ed = show(window, free(box(5, 5)))
+    ed.select([0])
+    window.duplicate_element()
+    assert ed.indices() == [1]
+    window.activate_action("win.add-shape", None)
+    assert ed.indices() == [2]
+
+
+def test_the_grid_shows_while_dragging_only(window):
+    show(window, free(box(5, 5)))
+    window.settings.set_grid_mm(1.0)
+    ed = window.editor
+    ed.press(*at(window, 6, 6))
+    ed.drag(px(window, 2), 0)
+    assert window.preview.canvas.scene.grid_mm == 1.0
+    ed.release()
+    assert window.preview.canvas.scene.grid_mm == 0

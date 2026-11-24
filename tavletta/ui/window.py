@@ -479,6 +479,7 @@ class Window(Adw.ApplicationWindow):
         self.label.elements.insert(index + 1, duplicate)
         self.expand_index = index + 1
         self._structure_changed()
+        self.editor.select([index + 1], sync=False)  # the open element
 
     def remove_current(self, *_args) -> None:
         index = self._current()
@@ -540,6 +541,7 @@ class Window(Adw.ApplicationWindow):
         self.label.elements.append(element)
         self.expand_index = len(self.label.elements) - 1
         self._structure_changed()
+        self.editor.select([self.expand_index], sync=False)  # the open element
 
     def choose_symbol(self) -> None:
         """Pick a symbol from the library and add it."""
@@ -767,6 +769,9 @@ class Window(Adw.ApplicationWindow):
         and a function that renders it from those copies alone: it runs in
         the preview's thread while the label is edited further."""
         backend = self.backend
+        # the window's elements, by identity: filling in the variables makes
+        # new elements of those it fills (their boxes are the window's)
+        ids = tuple(element_id(e) for e in self.label.elements)
         label, warnings = expand_label(self.label, self.preview_values(), self.data.row)
         label = copy.deepcopy(label)  # the window's elements change while it renders
         options = copy.deepcopy(self.render_options())
@@ -774,8 +779,6 @@ class Window(Adw.ApplicationWindow):
         safe_mm, choice = self.printer_settings.safe_mm, self.label.sheet
         sheet = self.sheet if choice else None  # round labels and CDs: their shape
         rotated = bool(choice and choice.rotated)
-
-        ids = tuple(element_id(e) for e in label.elements)  # a deep copy keeps them
 
         def work() -> PreviewResult:
             rendered, image, dpi = preview_image(backend, label, options, safe_mm, sheet, rotated)
@@ -957,19 +960,20 @@ class Window(Adw.ApplicationWindow):
         dialog.connect("response", lambda _d, response: response == confirm_id and then())
         self.present_dialog(dialog)
 
-    def _add_toast(self, text: str, timeout: int, button: str = "", on_click=None) -> None:
+    def _add_toast(self, text: str, timeout: int, button: str = "", on_click=None) -> Adw.Toast:
         toast = Adw.Toast(title=GLib.markup_escape_text(text), timeout=timeout)
         if button:
             toast.set_button_label(button)
             toast.connect("button-clicked", lambda _t: on_click())
         self.toasts.add_toast(toast)
+        return toast
 
     def toast(self, text: str) -> None:
         self._add_toast(text, 4)
 
-    def offer(self, text: str, button: str, then) -> None:
+    def offer(self, text: str, button: str, then) -> Adw.Toast:
         """A toast with an action the user may take."""
-        self._add_toast(text, 8, button, then)
+        return self._add_toast(text, 8, button, then)
 
     def error(self, text: str, details: str | None = None) -> None:
         """A toast for problems, with a button to report them; the details

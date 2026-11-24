@@ -9,10 +9,11 @@ import pytest
 gi = pytest.importorskip("gi")
 gi.require_version("Gtk", "4.0")
 
+from tavletta import editing  # noqa: E402
 from tavletta.ui import canvas  # noqa: E402
 from tavletta.ui.settings import Settings  # noqa: E402
 
-VIEW = canvas.View(20.0, 30.0, 10.0, 10.0)  # 10 px per mm, the label at 20, 30
+VIEW = canvas.View(20.0, 30.0, 10.0)  # 10 px per mm, the label at 20, 30
 BOX = (2.0, 3.0, 12.0, 8.0)  # 100 x 50 px at 40, 60
 
 
@@ -61,9 +62,9 @@ def test_resized_each_handle():
 
 def test_resized_never_inside_out():
     left, _top, right, _bottom = canvas.resized(BOX, "e", -50, 0, False)
-    assert right - left == pytest.approx(canvas.LEAST_MM)
+    assert right - left == pytest.approx(editing.LEAST_MM)
     _left, top, _right, bottom = canvas.resized(BOX, "n", 0, 50, False)
-    assert bottom - top == pytest.approx(canvas.LEAST_MM)
+    assert bottom - top == pytest.approx(editing.LEAST_MM)
 
 
 def test_resized_in_proportion():
@@ -141,7 +142,7 @@ class _Picture:
 def test_view_of_a_picture_that_fits_its_image():
     # 254 dpi: 10 px per mm; drawn at half size at 30, 40
     view = canvas.view_of(_Picture((400, 200), (30, 40, 200, 100)), None, canvas.Raster(254))
-    assert view == canvas.View(30, 40, 5, 5)
+    assert view == canvas.View(30, 40, 5)
 
 
 def test_view_of_a_letterboxed_image_and_its_top_row():
@@ -149,10 +150,12 @@ def test_view_of_a_letterboxed_image_and_its_top_row():
     # 200 px wide, centred in 300; the label's top 20 rows down the image
     raster = canvas.Raster(254, top_px=20)
     view = canvas.view_of(_Picture((400, 200), (0, 0, 300, 100)), None, raster)
-    assert view.ox == 50 and view.oy == 10 and view.sx == view.sy == 5
+    assert view.ox == 50 and view.oy == 10 and view.scale == 5
 
 
 def test_no_view_without_an_image():
     assert canvas.view_of(_Picture(None, (0, 0, 10, 10)), None, canvas.Raster(254)) is None
     assert canvas.view_of(_Picture((10, 10), (0, 0, 10, 10)), None, None) is None
     assert canvas.view_of(_Picture((10, 10), (0, 0, 0, 0)), None, canvas.Raster(254)) is None
+    # a very long label fitted: a picture of no height
+    assert canvas.view_of(_Picture((10, 10), (0, 0, 50, 0)), None, canvas.Raster(254)) is None

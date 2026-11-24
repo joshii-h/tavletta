@@ -130,8 +130,7 @@ class Move:
         view = self.press.view
         if state & SHIFT:
             ox, oy = canvas.constrained(ox, oy)
-        dx = max(view.mm(ox), -self.least[0]) if ox else 0.0
-        dy = max(oy / view.sy, -self.least[1]) if oy else 0.0
+        dx, dy = view.mm(ox), view.mm(oy)
         self.guides = ()
         if snapping.on(state):
             snapped = editing.snap(
@@ -144,9 +143,11 @@ class Move:
             # an axis Shift holds stays where it is
             dx += snapped.dx if ox else 0.0
             dy += snapped.dy if oy else 0.0
-            box = editing.moved(self.start, dx, dy)
-            self.guides = tuple(g for g in snapped.guides if _on_box(g, box))
-        self.dx, self.dy = dx, dy
+            self.guides = snapped.guides
+        # no further left or up than editing.move() goes: a guide beyond is not reached
+        self.dx, self.dy = max(dx, -self.least[0]), max(dy, -self.least[1])
+        box = editing.moved(self.start, self.dx, self.dy)
+        self.guides = tuple(g for g in self.guides if _on_box(g, box))
 
     def boxes(self) -> dict[int, MmBox]:
         """Where the dragged elements' boxes are now."""
@@ -174,12 +175,11 @@ class Resize:
 
     def update(self, ox: float, oy: float, state, snapping: Snapping) -> None:
         view = self.press.view
-        dx, dy = view.mm(ox), oy / view.sy
+        dx, dy = view.mm(ox), view.mm(oy)
         keep = self.proportional or bool(state & SHIFT)
-        box = canvas.resized(self.start, self.handle, dx, dy, keep)
         self.guides = ()
         if snapping.on(state):
-            x, y = canvas.dragged_edges(box, self.handle)
+            x, y = self._snapping_edges(dx, dy, keep)
             point = (x or 0.0, y or 0.0, x or 0.0, y or 0.0)  # snaps the dragged edges alone
             snapped = editing.snap(
                 point,
@@ -190,9 +190,25 @@ class Resize:
             )
             dx += snapped.dx if x is not None else 0.0
             dy += snapped.dy if y is not None else 0.0
-            box = canvas.resized(self.start, self.handle, dx, dy, keep)
-            self.guides = tuple(g for g in snapped.guides if _on_box(g, box))
-        self.box = box
+            axes = {"x"} if x is not None else set()
+            axes |= {"y"} if y is not None else set()
+            self.guides = tuple(g for g in snapped.guides if g.axis in axes)
+        self.box = canvas.resized(self.start, self.handle, dx, dy, keep)
+        self.guides = tuple(g for g in self.guides if _on_box(g, self.box))
+
+    def _snapping_edges(self, dx: float, dy: float, keep: bool) -> tuple[float | None, ...]:
+        """The dragged edges that snap: in proportion only the one of the
+        side that leads (the other follows it, and would jump between)."""
+        free = canvas.resized(self.start, self.handle, dx, dy, False)
+        x, y = canvas.dragged_edges(free, self.handle)
+        if keep and x is not None and y is not None:
+            sx = (free[2] - free[0]) / max(self.start[2] - self.start[0], 1e-9)
+            sy = (free[3] - free[1]) / max(self.start[3] - self.start[1], 1e-9)
+            if abs(math.log(sx)) >= abs(math.log(sy)):
+                y = None
+            else:
+                x = None
+        return x, y
 
     def boxes(self) -> dict[int, MmBox]:
         return {self.index: self.box}
@@ -267,6 +283,7 @@ class PreviewEditor:
         self._committing = False
         self._syncing = False  # the sidebar follows the selection
         self._hinted = -HINT_SECONDS
+        self._toast: Adw.Toast | None = None  # undo of a removal, while it is the last step
         self._geometry: editing.Geometry | None = None
         self._geometry_of: tuple = ()  # the render, label, elements and landing it is of
         self._install()
@@ -315,13 +332,13 @@ class PreviewEditor:
 
     def _shown(self, ids: tuple[int, ...]) -> bool:
         """Whether the preview shows these elements (the render is theirs)."""
-        rendered = self.window.rendered
-        return rendered is not None and self.window.rendered_ids == ids
+        return self.window.rendered is not None and self.window.rendered_ids == ids
 
     def _measure(self, ids: tuple[int, ...]) -> editing.Geometry | None:
-        rendered, label = self.window.rendered, self.window.label
-        if rendered is None or not self._shown(ids):
+        if not self._shown(ids):
             return None
+        rendered, label = self.window.rendered, self.window.label
+        assert rendered is not None
         shown = editing.Geometry.of(label, rendered)
         if not self._landed:
             return shown
@@ -342,9 +359,9 @@ class PreviewEditor:
             self._cancel()
         ids = {element_id(e) for e in self.window.label.elements}
         self.selection = [i for i in self.selection if i in ids]
-        self._hover = None
+        self._dismiss_toast()
         self.update_actions()
-        self._update()
+        self._hovered(None, None, force=True)
 
     def rendered(self, generation: int) -> None:
         """A render is shown: one made after the last edit shows where the
@@ -390,12 +407,9 @@ class PreviewEditor:
         self._announce()
 
     def _sync_sidebar(self) -> None:
-        group = getattr(self.window, "elements_group", None)
-        if group is None:
-            return
         self._syncing = True
         try:
-            group.show_selection(self.indices(), self.primary(), expand=True)
+            self.window.elements_group.show_selection(self.indices(), self.primary(), expand=True)
         finally:
             self._syncing = False
 
@@ -430,7 +444,7 @@ class PreviewEditor:
     # --- the overlay -------------------------------------------------------------------
 
     def _update(self) -> None:
-        self.canvas.show(self._scene())
+        self.canvas.set_scene(self._scene())
 
     def _scene(self) -> Scene:
         size = self.window.preview.size_mm
@@ -451,7 +465,7 @@ class PreviewEditor:
             active_handle=drag.handle if isinstance(drag, Resize) else self._handle,
             band=drag.rect if isinstance(drag, Band) else None,
             guides=drag.guides if drag else (),
-            grid_mm=self._snapping().grid_mm if self._snapping().enabled else 0.0,
+            grid_mm=self._snapping().grid_mm if isinstance(drag, (Move, Resize)) else 0.0,
             ghosts=self._ghosts(moving),
             tag=self._tag(drag),
             tag_box=self._bounds(moving),
@@ -557,8 +571,10 @@ class PreviewEditor:
             return
         self._hovered(*self._under(view, geometry, x, y, canvas.HIT_PX))
 
-    def _hovered(self, index: int | None, handle: str | None) -> None:
-        if (index, handle) == (self._hover, self._handle):
+    def _hovered(self, index: int | None, handle: str | None, force: bool = False) -> None:
+        """The element or handle under the pointer: its outline, the cursor
+        (force: also when it is the same, the label changed under it)."""
+        if (index, handle) == (self._hover, self._handle) and not force:
             return
         self._hover, self._handle = index, handle
         if handle is not None:
@@ -573,6 +589,8 @@ class PreviewEditor:
     def _on_begin(self, gesture: Gtk.GestureDrag, x: float, y: float) -> None:
         state = gesture.get_current_event_state()
         self.press(x, y, state, _touch(gesture.get_device()))
+        if self._press is not None:  # the editor's, not the scrolled window's (touch)
+            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
 
     def _on_update(self, gesture: Gtk.GestureDrag, ox: float, oy: float) -> None:
         self.drag(ox, oy, gesture.get_current_event_state())
@@ -584,6 +602,7 @@ class PreviewEditor:
         """A press at x, y (the canvas's pixels): a click or a drag to come."""
         self.canvas.grab_focus()
         self._press = None
+        self.window.render_if_stale()  # the boxes of the label as it is now
         view, geometry = self.canvas.view(), self.geometry()
         if view is None or geometry is None:
             return
@@ -714,20 +733,27 @@ class PreviewEditor:
         if not indices:
             return False
         self.window.remove_elements(indices)
-        if len(indices) > 1:
-            self.window.offer(
+        if len(indices) > 1:  # its undo only while no other change came after it
+            self._toast = self.window.offer(
                 _("Elements removed: %d") % len(indices), _("Undo"), self.window.undo
             )
         return True
 
+    def _dismiss_toast(self) -> None:
+        if self._toast is not None:
+            toast, self._toast = self._toast, None
+            toast.dismiss()
+
     # --- arranging ---------------------------------------------------------------------
 
     def align(self, edge: str) -> None:
+        self.window.render_if_stale()  # the boxes of the label as it is now
         indices, geometry = self.indices(), self.geometry()
         if indices and geometry is not None and self.free:
             self._edited(editing.align(self.window.label, geometry, indices, edge), indices)
 
     def distribute(self, axis: str) -> None:
+        self.window.render_if_stale()
         indices, geometry = self.indices(), self.geometry()
         if len(indices) >= 3 and geometry is not None and self.free:
             self._edited(editing.distribute(self.window.label, geometry, indices, axis), indices)
@@ -765,9 +791,13 @@ class PreviewEditor:
         """An edit of some elements as one step of the window's undo
         (editing.Editor on its History); they are drawn where they landed
         until the next render. sizes: the edit changed their sizes."""
+        old = self.window.label.elements
+        if all(label.elements[i] == old[i] for i in indices):  # clamped back: no step
+            return False
         editor = editing.Editor(self.window.label, self.window.history)
         if not editor.apply(label, key):
             return False
+        self._dismiss_toast()
         self._committing = True
         try:
             self.window.edited(editor.label, indices, sizes)

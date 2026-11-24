@@ -23,14 +23,13 @@ gi.require_version("Graphene", "1.0")
 
 from gi.repository import Gdk, Graphene, Gtk  # noqa: E402
 
-from tavletta.editing import Guide  # noqa: E402
+from tavletta.editing import LEAST_MM, Guide  # noqa: E402
 from tavletta.render import MmBox  # noqa: E402
 
 HANDLE_PX = 8  # a handle as drawn
 HANDLE_HOVER_PX = 10  # the one under the pointer
 HIT_PX = 24  # a handle's target, mouse and pen (WCAG 2.5.8)
 TOUCH_HIT_PX = 44  # a finger's
-LEAST_MM = 0.1  # a box resized no smaller
 
 # the handles: where on the box, as fractions of its width and height
 HANDLES = {
@@ -58,19 +57,17 @@ CURSORS = {
 @dataclass(frozen=True)
 class View:
     """Where the label lies in the widget: its top left corner at ox, oy
-    pixels, sx and sy pixels per mm (the zoom; both the same but for the
-    rounding of the picture to whole pixels)."""
+    pixels, `scale` pixels per mm (the zoom)."""
 
     ox: float
     oy: float
-    sx: float
-    sy: float
+    scale: float
 
     def to_mm(self, x: float, y: float) -> tuple[float, float]:
-        return (x - self.ox) / self.sx, (y - self.oy) / self.sy
+        return (x - self.ox) / self.scale, (y - self.oy) / self.scale
 
     def to_px(self, x: float, y: float) -> tuple[float, float]:
-        return self.ox + x * self.sx, self.oy + y * self.sy
+        return self.ox + x * self.scale, self.oy + y * self.scale
 
     def box_px(self, box: MmBox) -> tuple[float, float, float, float]:
         left, top = self.to_px(box[0], box[1])
@@ -79,7 +76,7 @@ class View:
 
     def mm(self, px: float) -> float:
         """A distance of some pixels in mm (a snapping radius, a slop)."""
-        return px / self.sx
+        return px / self.scale
 
 
 @dataclass(frozen=True)
@@ -100,13 +97,14 @@ def view_of(picture: Gtk.Picture, canvas: Gtk.Widget, raster: Raster | None) -> 
         return None
     width, height = paintable.get_intrinsic_width(), paintable.get_intrinsic_height()
     ok, bounds = picture.compute_bounds(canvas)
-    if not ok or width <= 0 or height <= 0 or bounds.get_width() <= 0:
+    if not ok or width <= 0 or height <= 0:
         return None
     k = min(bounds.get_width() / width, bounds.get_height() / height)
+    if k <= 0:  # a picture of no width or height (a very long label, fitted)
+        return None
     left = bounds.get_x() + (bounds.get_width() - width * k) / 2
     top = bounds.get_y() + (bounds.get_height() - height * k) / 2
-    scale = k * raster.dpi / 25.4
-    return View(left, top + raster.top_px * k, scale, scale)
+    return View(left, top + raster.top_px * k, k * raster.dpi / 25.4)
 
 
 def handle_at(view: View, box: MmBox, x: float, y: float, hit: float) -> str | None:
@@ -198,7 +196,7 @@ class Scene:
     active_handle: str | None = None  # under the pointer, or dragged
     band: MmBox | None = None  # a rubber band
     guides: tuple[Guide, ...] = ()
-    grid_mm: float = 0.0  # drawn while dragging with the grid on
+    grid_mm: float = 0.0  # the grid snapped to, drawn while dragging
     # dragged elements: their pixels where the preview shows them, drawn
     # at the box they are going to (moved or resized) until the next render
     ghosts: tuple[tuple[MmBox, MmBox], ...] = ()
@@ -244,7 +242,7 @@ class Canvas(Gtk.Widget):
     def view(self) -> View | None:
         return view_of(self.picture, self, self.raster)
 
-    def show(self, scene: Scene) -> None:
+    def set_scene(self, scene: Scene) -> None:
         self.scene = scene
         self.queue_draw()
 
@@ -254,7 +252,7 @@ class Canvas(Gtk.Widget):
             return
         scene, colours = self.scene, self.colours
         self._ghosts(snapshot, view, scene)
-        if scene.grid_mm > 0 and scene.ghosts:
+        if scene.grid_mm > 0:
             self._grid(snapshot, view, scene)
         for guide in scene.guides:
             self._guide(snapshot, view, scene, guide)
@@ -311,7 +309,7 @@ class Canvas(Gtk.Widget):
     def _grid(self, snapshot: Gtk.Snapshot, view: View, scene: Scene) -> None:
         width, height = scene.size_mm
         step = scene.grid_mm
-        if step * view.sx < 4:  # denser than every 4 px: noise
+        if step * view.scale < 4:  # denser than every 4 px: noise
             return
         colour = rgba_alpha(self.colours.guide, 0.15)
         left, top, right, bottom = view.box_px((0.0, 0.0, width, height))

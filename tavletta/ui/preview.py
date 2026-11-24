@@ -76,6 +76,9 @@ class Preview(Gtk.Box):
         overlay = Gtk.Overlay(child=self.picture)
         overlay.add_overlay(self.canvas)
         self.scroller.set_child(overlay)
+        # the canvas, larger than the view when zoomed in, takes the focus on
+        # a click: the view stays where it is
+        self.scroller.get_child().set_scroll_to_focus(False)
         self.append(self.scroller)
         self.append(Gtk.Separator())
         self.append(self._build_status())

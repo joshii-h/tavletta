@@ -98,9 +98,7 @@ class ElementsGroup(Adw.PreferencesGroup):
             row = self._element_row(index, element, index == window.expand_index)
             self.rows.append(row)
             self.add(row)
-        editor = getattr(window, "editor", None)
-        if editor is not None:
-            self.show_selection(editor.indices())
+        self.show_selection(window.editor.indices())
 
     def _add_menu_button(self) -> None:
         add_menu = Gio.Menu()
@@ -174,9 +172,7 @@ class ElementsGroup(Adw.PreferencesGroup):
             built.append(self.rows[index])
         for row in self.rows[first:]:
             self.add(row)
-        editor = getattr(self.window, "editor", None)
-        if editor is not None:
-            self.show_selection(editor.indices())
+        self.show_selection(self.window.editor.indices())
         return built
 
     @staticmethod
