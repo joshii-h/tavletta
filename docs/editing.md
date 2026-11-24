@@ -38,7 +38,7 @@ placeholder's.
 from tavletta import editing
 
 geometry = editing.Geometry.of(label, rendered)  # a render the caller has
-geometry = editing.measure(label, values, row)   # or render it now
+geometry = editing.measure(label, values, row)  # or render it now
 ```
 
 `measure()` fills in the variables (`values`) and a data row's columns
