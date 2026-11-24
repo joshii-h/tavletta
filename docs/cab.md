@@ -185,8 +185,11 @@ Setting "Print method" (`method` in settings.json, per printer model):
 
 - Speed: `H` cannot leave it out. Tavletta sends the speed set on the
   printer, read from the web interface's setup
-  (`GET /cgi-bin/get?cmd=1`, entry `ID_PRINT_SPEED`, e.g. `"50 mm/s"`)
-  just before the job. If the web interface does not answer within 2 s
+  (`GET /cgi-bin/get?cmd=1`, entry `ID_PRINT_SPEED`, e.g. `"50 mm/s"`).
+  The setup is kept for 30 s per printer (a series of labels, each a job
+  of its own, asks once); asking for the printer's state reads it anew,
+  so a speed changed on the printer counts from then on, or after 30 s.
+  If the web interface does not answer within 2 s
   (switched off, behind a password, USB) or shows inch/s, it sends 50 mm/s,
   the default of cab's setup and the slowest common speed (slower prints
   cleaner, guide 4.2.4). Trade-off: then a printer set to a faster
