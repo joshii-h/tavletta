@@ -36,6 +36,7 @@ from shipping_samples import (
 
 from tavletta.backends import get_backend
 from tavletta.backends.base import PrintOptions
+from tavletta.caches import Kept, image_bytes
 from tavletta.model import Label, LabelError, PageElement, TextElement
 from tavletta.render import Inks, mm_to_px, render
 from tavletta.shipping import crop as cropping
@@ -374,12 +375,16 @@ def test_only_small_drawings_are_kept(monkeypatch):
 
 
 def test_cache_is_bounded_by_bytes():
-    cache = source._Cache(10, max_bytes=10)
+    cache = Kept(10, max_bytes=10)
     for key in "abc":
         cache.put(key, b"xxxx")
     assert len(cache) == 2 and cache.get("a") is None and cache.get("c") == b"xxxx"
+    cache.put("c", b"x")  # replaced: its bytes counted once
+    assert cache.bytes == 5
+    cache.put("big", b"x" * 11)  # larger than all of it: not kept, nothing dropped
+    assert cache.get("big") is None and len(cache) == 2
     cache.clear()
-    assert len(cache) == 0
+    assert len(cache) == 0 and cache.bytes == 0
 
 
 def tiff_pages() -> bytes:
@@ -650,10 +655,10 @@ def test_a_label_at_600_dpi_is_kept():
     data = b64(encode(square_image()))
     box = (2400, 3600)
     drawn = source.draw(data, 0, detect.FULL, 0, box)
-    assert source._image_bytes(drawn) == 2400 * 3600 * 4  # RGB takes 4 bytes a pixel
+    assert image_bytes(drawn) == 2400 * 3600 * 4  # RGB takes 4 bytes a pixel
     assert source.draw(data, 0, detect.FULL, 0, box) is drawn
     grey = source.draw(b64(encode(square_image("L"))), 0, detect.FULL, 0, (20, 30))
-    assert source._image_bytes(grey) == 600
+    assert image_bytes(grey) == 600
 
 
 def test_image_without_turning_is_not_copied(monkeypatch):

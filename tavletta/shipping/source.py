@@ -20,13 +20,13 @@ import json
 import math
 import re
 import threading
-from collections import OrderedDict
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
 from PIL import Image, ImageChops, ImageFilter, ImageOps
 
+from tavletta.caches import Kept, image_bytes
 from tavletta.imagefx import IMAGE_FORMATS
 
 POINTS_PER_MM = 72 / 25.4
@@ -151,49 +151,11 @@ def _too_large(detail: str) -> Exception:
 # --- caches ---------------------------------------------------------------------
 
 
-class _Cache:
-    """The most recently used values, at most items of them and at most
-    max_bytes together; safe to use from several threads."""
-
-    def __init__(self, items: int, max_bytes: int = 0, size: Callable[[Any], int] = len):
-        self.items, self.max_bytes, self.size = items, max_bytes, size
-        self._values: OrderedDict[Any, Any] = OrderedDict()
-        self._lock = threading.Lock()
-
-    def get(self, key: Any) -> Any:
-        with self._lock:
-            value = self._values.get(key)
-            if value is not None:
-                self._values.move_to_end(key)
-            return value
-
-    def put(self, key: Any, value: Any) -> None:
-        with self._lock:
-            self._values[key] = value
-            self._values.move_to_end(key)
-            while len(self._values) > self.items or (
-                self.max_bytes and sum(map(self.size, self._values.values())) > self.max_bytes
-            ):
-                self._values.popitem(last=False)
-
-    def clear(self) -> None:
-        with self._lock:
-            self._values.clear()
-
-    def __len__(self) -> int:
-        return len(self._values)
-
-
-def _image_bytes(image: Image.Image) -> int:
-    """Memory of the pixels: Pillow keeps RGB (and 32 bit) in 4 bytes."""
-    return image.width * image.height * (1 if image.mode in ("1", "L", "P") else 4)
-
-
 # one decoded image (the frame in use): the preview and a print share it
-_pictures = _Cache(1)
+_pictures = Kept(1)
 _generation = [0]  # counts clear_caches(): what was decoded before is not kept
 # drawn areas, bounded by their memory
-_drawings = _Cache(16, CACHE_BYTES, _image_bytes)
+_drawings = Kept(16, CACHE_BYTES, image_bytes)
 # Poppler documents are not safe to use from two threads: the preview's
 # thread (window.PreviewWorker, which keeps its documents from render to
 # render) and a print in the background each open their own document
@@ -207,7 +169,7 @@ def cached(key: tuple, make: Callable[[], Image.Image]) -> Image.Image:
     if found is not None:
         return found
     image = make()
-    if _image_bytes(image) <= CACHE_ITEM_BYTES:
+    if image_bytes(image) <= CACHE_ITEM_BYTES:
         _drawings.put(key, image)
     return image
 
@@ -591,7 +553,7 @@ def draw(
     else:
         picture = _picture(data, page).image
         image = _draw_image(picture, region, rotation, (width, height), scale, sharp)
-    if limits is None and _image_bytes(image) <= CACHE_ITEM_BYTES:
+    if limits is None and image_bytes(image) <= CACHE_ITEM_BYTES:
         _drawings.put(key, image)
     return image
 

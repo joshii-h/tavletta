@@ -24,6 +24,7 @@ from typing import NamedTuple
 from PIL import Image, ImageChops, ImageDraw, ImageOps, ImageStat
 
 from tavletta import codes, imageformats, imagefx, shapes, typeset
+from tavletta.caches import kept_images
 from tavletta.codes import CodeError
 from tavletta.model import (
     CodeElement,
@@ -633,10 +634,13 @@ def _scale_cut(data: str, cut: tuple, height: int) -> Image.Image:
     return img.resize((width, height), Image.Resampling.LANCZOS)
 
 
-_decoded_cached = lru_cache(maxsize=8)(_decode)
-_scaled_cached = lru_cache(maxsize=16)(_scale)
-_cut_cached = lru_cache(maxsize=2)(_cut_image)
-_scaled_cut_cached = lru_cache(maxsize=2)(_scale_cut)
+# kept by count and by memory: eight decoded photos of 80 megapixels would
+# be 2.5 GB. A decoded photo of that size (320 MB) and one cut of it are
+# kept; the images at the label's size are small.
+_decoded_cached = kept_images(8, 512 * 2**20)(_decode)
+_scaled_cached = kept_images(16, 128 * 2**20)(_scale)
+_cut_cached = kept_images(2, 384 * 2**20)(_cut_image)
+_scaled_cut_cached = kept_images(2, 128 * 2**20)(_scale_cut)
 
 
 def _per_render(kind: str, key, make):
