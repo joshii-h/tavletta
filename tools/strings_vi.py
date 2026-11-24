@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s là một cột dữ liệu ({%(name)s}) – hãy chỉ định tệp dữ liệu bằng --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s là một cột dữ liệu ({%(name)s}) – hãy gửi trong data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s được điền từ các hàng dữ liệu ({%(name)s}) và không thể đặt",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s quá lớn để đặt lên nhãn: tối đa %(size)d MB.",
 }

@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s एक डेटा कॉलम है ({%(name)s}) – --data के साथ डेटा फ़ाइल दें",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s एक डेटा कॉलम है ({%(name)s}) – इसे data_rows में भेजें",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s डेटा पंक्तियों से भरा जाता है ({%(name)s}) और इसे सेट नहीं किया जा सकता",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s लेबल पर रखने के लिए बहुत बड़ी है: अधिकतम %(size)d MB.",
 }

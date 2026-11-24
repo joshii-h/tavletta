@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s on andmeveerg ({%(name)s}) – anna andmefail võtmega --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s on andmeveerg ({%(name)s}) – saada see väljal data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s täidetakse andmeridadest ({%(name)s}) ja seda ei saa määrata",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s on sildile panemiseks liiga suur: kuni %(size)d MB.",
 }

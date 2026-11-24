@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s はデータ列です ({%(name)s}) – --data でデータファイルを指定してください",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s はデータ列です ({%(name)s}) – data_rows で送信してください",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s はデータ行から入力されるため ({%(name)s})、設定できません",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s はラベルに入れるには大きすぎます: 最大 %(size)d MB です。",
 }

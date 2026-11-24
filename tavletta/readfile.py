@@ -7,6 +7,7 @@ from __future__ import annotations
 import os
 import stat
 from pathlib import Path
+from typing import BinaryIO
 
 
 class NotRegularFile(Exception):
@@ -21,12 +22,10 @@ class FileTooLarge(Exception):
         self.limit = limit
 
 
-def read_limited(path: str | Path, limit: int) -> bytes:
-    """The content of a regular file of at most `limit` bytes. The file is
-    opened without blocking (a FIFO would block) and checked as opened, not
-    by its name before (it could be swapped in between); at most one byte
-    more than the limit is read, however large it is. OSError if it cannot
-    be opened, NotRegularFile, FileTooLarge."""
+def open_regular(path: str | Path) -> BinaryIO:
+    """A regular file opened for reading, without blocking (a FIFO would
+    block) and checked as opened, not by its name before (it could be
+    swapped in between). OSError if it cannot be opened, NotRegularFile."""
     fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
     try:
         regular = stat.S_ISREG(os.fstat(fd).st_mode)
@@ -36,7 +35,15 @@ def read_limited(path: str | Path, limit: int) -> bytes:
     if not regular:  # also a folder: closed here, open() would leave it open
         os.close(fd)
         raise NotRegularFile("not a regular file")
-    with open(fd, "rb") as file:  # owns fd from here on
+    return open(fd, "rb")  # owns fd from here on
+
+
+def read_limited(path: str | Path, limit: int) -> bytes:
+    """The content of a regular file (open_regular) of at most `limit`
+    bytes: at most one byte more than the limit is read, however large
+    the file is. OSError if it cannot be opened, NotRegularFile,
+    FileTooLarge."""
+    with open_regular(path) as file:
         raw = file.read(limit + 1)
     if len(raw) > limit:
         raise FileTooLarge(limit)

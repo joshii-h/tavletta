@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s is een gegevenskolom ({%(name)s}) – geef een gegevensbestand op met --data",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s is een gegevenskolom ({%(name)s}) – stuur hem mee in data_rows",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s wordt gevuld uit de gegevensrijen ({%(name)s}) en kan niet worden ingesteld",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s is te groot voor een etiket: hoogstens %(size)d MB.",
 }

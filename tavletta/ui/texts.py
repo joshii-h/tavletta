@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import errno
+import io
 from datetime import date
 from pathlib import Path
 
@@ -20,6 +21,7 @@ from tavletta.model import (
     SymbolElement,
     TextElement,
 )
+from tavletta.readfile import FileTooLarge
 from tavletta.render import RenderWarning
 from tavletta.shipping.detect import Detection
 from tavletta.shipping.source import SourceError
@@ -203,15 +205,34 @@ TARGET_NAMES = {"4x6": "4 × 6″", "a6": "A6", "a4": "A4"}
 
 def image_from_path(path) -> ImageElement:
     """Read an image file into an element; ValueError if it is not an
-    image in one of the formats a label may embed (imageformats)."""
+    image in one of the formats a label may embed (imageformats), or too
+    large to embed. Read once (ImageElement.from_file: a regular file,
+    checked as opened, so a FIFO does not block the window), and what is
+    read is checked."""
     if not path:
         raise ValueError(_("Only local files can be used"))
+    name = Path(path).name
     try:
-        with Image.open(path, formats=imageformats.FORMATS) as img:
+        element = ImageElement.from_file(path)
+    except LabelError as e:
+        if isinstance(e.__cause__, FileTooLarge):
+            raise ValueError(too_large_file_text(name, e.__cause__.limit)) from e
+        raise ValueError(unusable_image_text(name)) from e
+    except OSError as e:
+        raise ValueError(unusable_image_text(name)) from e
+    try:
+        with Image.open(io.BytesIO(element.raw()), formats=imageformats.FORMATS) as img:
             img.verify()
-        return ImageElement.from_file(path)
     except Exception as e:  # noqa: BLE001 - PIL raises many kinds
-        raise ValueError(unusable_image_text(Path(path).name)) from e
+        raise ValueError(unusable_image_text(name)) from e
+    return element
+
+
+def too_large_file_text(name: str, limit: int) -> str:
+    return _("%(name)s is too large to put on a label: at most %(size)d MB.") % {
+        "name": isolate(name),
+        "size": limit // 2**20,
+    }
 
 
 def unusable_image_text(name: str) -> str:

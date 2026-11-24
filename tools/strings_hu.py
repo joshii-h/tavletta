@@ -802,4 +802,5 @@ TRANSLATIONS = {
     "%(name)s is a data column ({%(name)s}) – give a data file with --data": "%(name)s egy adatoszlop ({%(name)s}) – adjon meg adatfájlt a --data kapcsolóval",
     "%(name)s is a data column ({%(name)s}) – send it in data_rows": "%(name)s egy adatoszlop ({%(name)s}) – küldje a data_rows mezőben",
     "%(name)s is filled from the data rows ({%(name)s}) and cannot be set": "%(name)s az adatsorokból töltődik ki ({%(name)s}), és nem állítható be",
+    "%(name)s is too large to put on a label: at most %(size)d MB.": "%(name)s túl nagy egy címkéhez: legfeljebb %(size)d MB.",
 }

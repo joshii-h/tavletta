@@ -870,10 +870,10 @@ def read_file(path: str | Path, limit: int | None = None) -> bytes:
     would block), or larger than the limit ("damaged")."""
     try:
         return read_limited(path, MAX_FILE_BYTES if limit is None else limit)
-    except NotRegularFile as e:
-        raise LabelError("not_label", str(e)) from None
+    except NotRegularFile as e:  # the cause stays: a caller may tell it apart
+        raise LabelError("not_label", str(e)) from e
     except FileTooLarge as e:
-        raise _damaged(str(e)) from None
+        raise _damaged(str(e)) from e
 
 
 def write_file(path: str | Path, data: bytes) -> None:

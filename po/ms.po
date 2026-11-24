@@ -2408,6 +2408,11 @@ msgid ""
 "%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
 msgstr "%(name)s bukan imej yang boleh digunakan oleh Tavletta. Imej dalam format %(formats)s boleh digunakan."
 
+#: tavletta/ui/texts.py:232
+#, python-format
+msgid "%(name)s is too large to put on a label: at most %(size)d MB."
+msgstr "%(name)s terlalu besar untuk diletakkan pada label: paling banyak %(size)d MB."
+
 #: tavletta/ui/texts.py:227
 #, python-format
 msgid "%(name)s is not a label, an image or a data file"
