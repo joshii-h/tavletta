@@ -17,8 +17,16 @@ from dataclasses import dataclass, field, replace
 from datetime import datetime
 
 from tavletta import codes
-from tavletta.backends.base import Backend, PrintOptions, PrintResult, Progress
-from tavletta.job import Job, PrepareFailed, merge_results
+from tavletta.backends.base import (
+    Backend,
+    PackedImage,
+    PrinterError,
+    PrintOptions,
+    PrintResult,
+    Progress,
+    RenderAgain,
+)
+from tavletta.job import Job, PrepareFailed, counted_labels, merge_results
 from tavletta.merge.fill import VARIABLE
 from tavletta.model import CodeElement, Label, TextElement
 from tavletta.render import DEFAULT_SAFE_MM
@@ -31,6 +39,12 @@ from tavletta.variables import (
     uses_counter,
     varies_per_copy,
 )
+
+# what the images of a series' job may hold at most (PackedImage, PNG):
+# a job takes fewer labels than Backend.series_batch() once they reach it.
+# An inventory label is about 1.4 KB, a 100 × 150 mm label of text a few
+# KB, one with a dithered photo several hundred KB
+BATCH_BYTES = 16 * 1024 * 1024
 
 
 def filled(label: Label, row: Mapping[str, str], values: Values | None = None) -> Label:
@@ -130,6 +144,9 @@ class SeriesProgress:
     labels: int  # labels (rows) in the series
     row: int  # the row being printed, counted from 1
     event: Progress
+    # labels of the series printed so far, as far as the backend told:
+    # rises within a row's copies and within a job of several labels
+    printed: int = 0
 
 
 @dataclass
@@ -141,6 +158,9 @@ class SeriesResult:
     stopped: bool = False  # stopped by the user before the last row
     result: PrintResult | None = None  # of the last label, if anything differed
     labels: int = 0  # labels printed, also those of a row that failed
+    # labels after those that may have printed too: the printer could not
+    # tell (PrinterError.params["printed_max"]); the counter goes on after them
+    unsure: int = 0
     counter: int | None = None  # {=counter} of the next label; None without one
 
 
@@ -167,6 +187,12 @@ class SeriesError(Exception):
         self.error = error
         self.preparing = preparing  # the label could not be rendered
         self.outcome = outcome or SeriesResult(list(printed))
+
+    @property
+    def uncertain(self) -> bool:
+        """Labels after those printed may have printed too: going on from
+        `row` may print them twice."""
+        return self.outcome.unsure > 0
 
 
 class UnprintableRows(Exception):
@@ -276,6 +302,10 @@ def print_series(
     outcome.counter = values.counter if counting else None
     if series.sheet is not None:
         return _print_on_sheets(backend, host, series, values, progress, outcome)
+    batch = backend.series_batch(series.options)
+    probe = Job(backend, series.label, series.options, series.safe_mm, values)
+    if batch > 1 and len(series.indexes) > 1 and not probe.per_copy:
+        return _print_in_batches(backend, host, series, values, batch, progress, stop, outcome)
     total = len(series.indexes)
     for position, index in enumerate(series.indexes, start=1):
         if outcome.printed and stop is not None and stop.is_set():
@@ -285,14 +315,167 @@ def print_series(
 
         def report(event: Progress, position=position, row=row) -> None:
             if progress:
-                progress(SeriesProgress(position, total, row, event))
+                done = outcome.labels + max(0, event.copy - 1)
+                progress(SeriesProgress(position, total, row, event, done))
 
         # the counter goes on from the labels before; UUID and ID are new
         start = replace(values, counter=values.counter + values.step * outcome.labels)
         job = Job(backend, series.label, series.options, series.safe_mm, start, series.rows[index])
-        _print_row(job, host, report, row, outcome, values if counting else None)
+        try:
+            _print_row(job, host, report, row, outcome, values if counting else None)
+        except SeriesError as e:
+            _of_series(e, total * max(1, series.options.copies))
+            raise
         outcome.printed.append(row)
     return outcome
+
+
+def _print_in_batches(
+    backend: Backend,
+    host: str,
+    series: Series,
+    values: Values,
+    batch: int,
+    progress: Callable[[SeriesProgress], None] | None,
+    stop: threading.Event | None,
+    outcome: SeriesResult,
+) -> SeriesResult:
+    """The rows as jobs of up to `batch` labels each (Backend.print_batch()):
+    the printer runs a job's labels through without stopping between them.
+    A job takes fewer once its images hold BATCH_BYTES. `stop` is looked
+    at between two jobs. A failure as SeriesError at the first row not
+    printed in full, the rows before it printed."""
+    options = series.options if series.options.host else replace(series.options, host=host)
+    copies = max(1, options.copies)
+    counting = uses_counter(series.label)
+    indexes = list(series.indexes)
+    total = len(indexes)
+    start = 0
+    while start < total:
+        if outcome.printed and stop is not None and stop.is_set():
+            outcome.stopped = True
+            return outcome
+        jobs, images, unprepared = _next_batch(
+            backend, series, options, values, indexes[start : start + batch], outcome
+        )
+        sent = indexes[start : start + len(images)]
+
+        def report(event: Progress, start=start, sent=sent) -> None:
+            if progress:
+                n = min(len(sent), (event.copy - 1) // copies + 1)
+                done = outcome.labels + max(0, event.copy - 1)
+                progress(SeriesProgress(start + n, total, sent[n - 1] + 1, event, done))
+
+        try:
+            if images:
+                outcome.result = merge_results(
+                    [outcome.result, _send_batch(backend, host, jobs, images, options, report)]
+                )
+        except Exception as e:
+            labels = copies * len(sent)
+            params = e.params if isinstance(e, PrinterError) else {}
+            done = counted_labels(params.get("printed"), labels)
+            outcome.unsure = max(0, counted_labels(params.get("printed_max"), labels) - done)
+            rows, partial = divmod(done, copies)
+            _done(outcome, sent[:rows], done, values if counting else None)
+            failed = SeriesError(
+                sent[min(rows, len(sent) - 1)] + 1,
+                list(outcome.printed),
+                e,
+                False,
+                outcome,
+                partial,
+            )
+            raise _of_series(failed, copies * total) from e
+        except BaseException:  # Ctrl+C: the labels sent may be out, their numbers used
+            outcome.labels += copies * len(sent)
+            if counting:
+                outcome.counter = values.counter + values.step * outcome.labels
+            raise
+        _done(outcome, sent, copies * len(sent), values if counting else None)
+        start += len(sent)
+        if unprepared is not None:  # the rows before it are printed: on from that row
+            cause = (
+                unprepared.__cause__ if isinstance(unprepared.__cause__, Exception) else unprepared
+            )
+            raise SeriesError(
+                indexes[start] + 1, list(outcome.printed), cause, True, outcome
+            ) from unprepared
+    return outcome
+
+
+def _next_batch(
+    backend: Backend,
+    series: Series,
+    options: PrintOptions,
+    values: Values,
+    indexes: Sequence[int],
+    outcome: SeriesResult,
+) -> tuple[list[Job], list[PackedImage], PrepareFailed | None]:
+    """The jobs and packed images of the next job of a series: the rows
+    of `indexes`, fewer once the images hold BATCH_BYTES (one at least),
+    up to the first row that cannot be rendered (and its error). Each
+    image is packed as soon as it is rendered: only one at a time is held
+    as an image."""
+    copies = max(1, options.copies)
+    jobs: list[Job] = []
+    images: list[PackedImage] = []
+    held = 0
+    for n, index in enumerate(indexes):
+        if held >= BATCH_BYTES:
+            break
+        # the counter goes on from the labels before; UUID and ID are new
+        first = replace(
+            values, counter=values.counter + values.step * (outcome.labels + n * copies)
+        )
+        job = Job(backend, series.label, options, series.safe_mm, first, series.rows[index])
+        try:
+            image = PackedImage.of(job.image(job.expanded(1)[0]))
+        except PrepareFailed as e:
+            return jobs, images, e
+        jobs.append(job)
+        images.append(image)
+        held += len(image.png)
+    return jobs, images, None
+
+
+def _send_batch(backend: Backend, host: str, jobs: list[Job], images, options, report):
+    """One job of `images` (of the first of `jobs`); rendered once more
+    for the resolution the printer reported if it is another
+    (RenderAgain)."""
+    try:
+        return backend.print_batch(images, host, options, report)
+    except RenderAgain:
+        again = [
+            PackedImage.of(job.image(job.expanded(1)[0], reported=True))
+            for job in jobs[: len(images)]
+        ]
+        return backend.print_batch(again, host, options, report)
+
+
+def _of_series(error: SeriesError, labels: int) -> SeriesError:
+    """The labels a printer's problem tells printed (and that may have),
+    counted for the whole series of `labels` labels, not for its job (up to
+    "Labels per job") or row: its message then agrees with the row the
+    series stopped at."""
+    cause = error.error
+    if isinstance(cause, PrinterError) and cause.params.keys() & {"printed", "printed_max"}:
+        outcome = error.outcome
+        cause.params.pop("printed_max", None)
+        cause.params.update(printed=outcome.labels, copies=labels)
+        if outcome.unsure:
+            cause.params["printed_max"] = outcome.labels + outcome.unsure
+    return error
+
+
+def _done(outcome: SeriesResult, indexes, labels: int, values: Values | None) -> None:
+    """Rows (indexes from 0) printed in full and the labels that came out;
+    the counter on by them and those that may have (`values`, None for a
+    label without one)."""
+    outcome.printed += [index + 1 for index in indexes]
+    outcome.labels += labels
+    if values is not None:
+        outcome.counter = values.counter + values.step * (outcome.labels + outcome.unsure)
 
 
 def _print_row(
@@ -311,8 +494,9 @@ def _print_row(
         raise SeriesError(row, list(outcome.printed), e, False, outcome, job.printed) from e
     finally:
         outcome.labels += job.printed
+        outcome.unsure = job.unsure
         if values is not None:
-            outcome.counter = values.counter + values.step * outcome.labels
+            outcome.counter = values.counter + values.step * (outcome.labels + outcome.unsure)
 
 
 # --- serial labels on label sheets ---------------------------------------------------
@@ -351,7 +535,8 @@ def _print_on_sheets(
         if progress:
             page = min(max(0, event.copy - 1), len(slots) - 1)
             row = rows[min(starts[page] // copies, len(rows) - 1)]
-            progress(SeriesProgress(event.copy, event.copies, row, event))
+            done = outcome.labels + starts[page]  # the labels on the sheets before
+            progress(SeriesProgress(event.copy, event.copies, row, event, done))
 
     def count(done: int) -> None:
         outcome.labels += done

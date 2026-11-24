@@ -7,6 +7,7 @@ templates live in tmp_path.
 
 from __future__ import annotations
 
+import copy
 import errno
 import html
 import io
@@ -1980,8 +1981,9 @@ def cab_window(make_window, cab_env):
 
 
 def _items(row):
+    """The texts of a combo row's items, also of one in groups."""
     model = row.get_model()
-    return [model.get_string(i) for i in range(model.get_n_items())]
+    return [model.get_item(i).get_string() for i in range(model.get_n_items())]
 
 
 def _selected(row):
@@ -2129,6 +2131,99 @@ def test_an_old_label_distance_suggests_calibrating(cab_window, cab_env, monkeyp
     assert dialog.get_body().endswith(
         "Check the label size and the gap, or calibrate the printer."
     )
+
+
+def _use_loaded(win):
+    """Print, answer "Different labels loaded" with "Use loaded labels"."""
+    win.print_flow.on_print()
+    dialog = win.get_visible_dialog()
+    assert dialog.get_heading() == "Different labels loaded"
+    assert dialog.get_response_label("adapt") == "Use loaded labels"
+    respond(dialog, "adapt")
+
+
+def test_cab_use_loaded_labels_by_the_distance(cab_window, cab_env):
+    """A printer that measures only the distance: the height along the
+    feed made to fit it, the gap kept, one step of undo; nothing printed,
+    the label shown in the preview with a toast that undoes it."""
+    win = cab_window
+    before = copy.deepcopy(win.label)
+    cab_env.info.pitch_mm = 20.0
+    win.print_flow.on_print()
+    dialog = win.get_visible_dialog()
+    assert [dialog.get_response_label(r) for r in ("cancel", "print", "adapt")] == [
+        "Cancel",
+        "Print anyway",
+        "Use loaded labels",
+    ]
+    assert dialog.get_response_appearance("adapt") == Adw.ResponseAppearance.SUGGESTED
+    assert dialog.get_response_appearance("print") == Adw.ResponseAppearance.DESTRUCTIVE
+    assert dialog.get_close_response() == "cancel"
+    assert dialog.get_default_response() == "adapt"
+    respond(dialog, "adapt")
+    assert win.get_visible_dialog() is None
+    assert win.label.media_size() == (50, 17) and win.label.gap_mm == 3.0
+    assert win.label.pitch_mm() == 20.0
+    assert one(win.sidebar, Adw.SpinRow, title="Height").get_value() == 17
+    assert win.dirty and win.preview_current
+    pump()
+    assert cab_env.prints == [] and not win.print_flow.busy
+    toast = win.toast_log[-1]
+    assert toast.get_title() == "Label adapted to the loaded labels"
+    assert toast.get_button_label() == "Undo"
+    toast.emit("button-clicked")  # one step back: the label as it was
+    assert win.label == before
+    assert one(win.sidebar, Adw.SpinRow, title="Height").get_value() == 25
+    win.redo()
+    assert win.label.media_size() == (50, 17)
+    win.print_flow.on_print()  # the loaded labels now: no warning
+    assert win.get_visible_dialog().get_heading() == "Print label"
+
+
+def test_the_undo_toast_of_the_loaded_labels_goes_with_another_change(cab_window, cab_env):
+    win = cab_window
+    cab_env.info.pitch_mm = 20.0
+    _use_loaded(win)
+    toast = win.toast_log[-1]
+    dismissed = []
+    toast.dismiss = lambda: dismissed.append(True)  # the test's toasts are in no overlay
+    win.change(gap_mm=2.0)  # the toast's undo would take back this change
+    assert dismissed and win._undo_toast is None
+
+
+def test_use_loaded_labels_warns_of_elements_outside(cab_window, cab_env):
+    """Free layout: an element beyond the smaller label is named in the toast."""
+    from tavletta.model import ShapeElement
+
+    win = cab_window
+    win.label.layout = "free"
+    win.label.elements = [
+        ShapeElement(shape="rectangle", fill="solid", x_mm=5, y_mm=18, width_mm=10, height_mm=5)
+    ]
+    win.rebuild_sidebar()
+    win.mark_changed()
+    render_now(win)
+    assert not any(w.key == "outside_label" for w in win.rendered.warnings)
+    cab_env.info.pitch_mm = 20.0
+    _use_loaded(win)
+    assert win.label.media_size() == (50, 17)
+    assert toast_titles(win)[-1] == (
+        "Label adapted to the loaded labels. Some elements reach beyond its edge."
+    )
+    assert cab_env.prints == []
+
+
+def test_use_loaded_labels_not_offered_where_they_make_no_label(cab_window, cab_env):
+    """A distance shorter than the gap and the smallest label: neither the
+    height nor the gap would make a label, only printing anyway is offered."""
+    win = cab_window
+    cab_env.info.pitch_mm = 6.0
+    win.print_flow.on_print()
+    dialog = win.get_visible_dialog()
+    assert dialog.get_heading() == "Different labels loaded"
+    assert dialog.has_response("print") and not dialog.has_response("adapt")
+    respond(dialog, "cancel")
+    assert win.label.media_size() == (50, 25)
 
 
 def test_cab_close_enough_pitch_prints_directly(cab_window, cab_env):
@@ -3020,10 +3115,11 @@ def test_stop_button(series):
     banner.set_button_label("Stop")
     banner.emit("button-clicked")
     assert series.print_flow._stop.is_set()
-    assert banner.get_title() == "Stopping after this label…"
+    assert banner.get_title() == "Stopping after the labels already sent to the printer…"
     assert not banner.get_button_label()
     series.print_flow.series_progress(SeriesProgress(2, 3, 2, Progress(1, 1, "PREHEATING")))
-    assert banner.get_title() == "Stopping after this label…"  # stays until the end
+    # stays until the end
+    assert banner.get_title() == "Stopping after the labels already sent to the printer…"
     assert series.print_button.get_label() == "Printing 2/3…"
 
 
@@ -3480,6 +3576,23 @@ def test_zpl_label_distance_only_for_a_job_that_senses_as_the_printer(
         assert dialog.get_body().endswith("or calibrate the printer.")
 
 
+def test_zpl_use_loaded_labels(make_window, raw_env):
+    """The Zebra measured a label every 52.8 mm under a 57 × 32 mm label
+    with a 3 mm gap: 57 × 49.8 mm. The print width it reports is what the
+    last job set, not the labels': the width stays."""
+    raw_env.info = PrinterInfo(
+        "ZD421-203dpi", None, None, None, "IDLE", pitch_mm=52.8, width_mm=48.0, media_type="gap"
+    )
+    win = _raw_window(make_window, "zpl")
+    win.label.set_media_size(57, 32)
+    win.label.gap_mm = 3.0
+    win.mark_changed()
+    _use_loaded(win)
+    assert win.label.media_size() == (57, 49.8) and win.label.gap_mm == 3.0
+    assert raw_env.prints == []
+    assert toast_titles(win)[-1] == "Label adapted to the loaded labels"
+
+
 def test_raw_printer_settings_are_shown_as_stored(make_window, raw_env):
     win = make_window(
         {
@@ -3747,6 +3860,30 @@ def test_ql_die_cut_labels_of_another_size(ql_window, ql_env):
     win.label.set_media_size(29, 90)  # the same size: no warning
     win.print_flow.on_print()
     assert win.last_dialog.get_heading() == "Print label"
+
+
+@pytest.mark.parametrize("orientation", ["across", "along"])
+def test_ql_use_loaded_labels_of_the_size_reported(ql_window, ql_env, orientation):
+    """A printer that reports the size of its labels: the label takes it,
+    across the print head and along the feed whichever way the content runs."""
+    win = ql_window
+    ql_env.info = PrinterInfo(
+        "QL-820NWB", None, None, None, "IDLE", label_mm=(29, 90), pitch_mm=93
+    )
+    win.set_backend("brother_ql_diecut")
+    assert pump(lambda: win.printer.info is ql_env.info)
+    win.label.set_orientation(orientation)
+    win.mark_changed()
+    assert win.label.media_size() == (62, 29)
+    _use_loaded(win)
+    assert win.label.media_size() == (29, 90) and win.label.orientation == orientation
+    assert (win.label.tape_mm, win.label.length_mm) == (
+        (90, 29) if orientation == "across" else (29, 90)
+    )
+    assert ql_env.prints == []
+    assert toast_titles(win)[-1] == "Label adapted to the loaded labels"
+    win.undo()
+    assert win.label.media_size() == (62, 29)
 
 
 def test_ql_offers_the_kind_of_the_loaded_roll(ql_window, ql_env):

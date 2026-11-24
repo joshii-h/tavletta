@@ -22,7 +22,7 @@ More in [docs/screenshots.md](docs/screenshots.md).
 - Serial labels from CSV, ODS or XLSX files; variables such as dates and counters
 - Shipping labels from a carrier's PDF or image
 - Finds printers on the network and explains printer problems in plain words
-- `tavletta print` on the command line, `tavletta serve` as a print server with a REST API and MCP
+- `tavletta print` on the command line, `tavletta serve` as a print server with a REST API, MCP and a web page
 - GTK 4 and libadwaita, in 27 languages
 
 All of it: [docs/features.md](docs/features.md). How labels are laid out: [docs/layout.md](docs/layout.md).
@@ -41,8 +41,8 @@ Details and protocols: [docs/printers.md](docs/printers.md).
 ## Install
 
 - **Flatpak**: the bundle from the [latest release](https://git.joshuahirsig.xyz/joshii/tavletta/releases/latest); Flathub is in preparation
-- **Print server**: `docker pull ghcr.io/joshii-h/tavletta:1.1` ([server installation](https://tavletta.joshuahirsig.xyz/server-install/))
-- **pip**: `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.2"`, or `./install.sh` from a clone
+- **Print server**: `docker pull ghcr.io/joshii-h/tavletta:1.2` ([server installation](https://tavletta.joshuahirsig.xyz/server-install/))
+- **pip**: `pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1"`, or `./install.sh` from a clone
 
 System packages, building the Flatpak and the first start: [docs/install.md](docs/install.md).
 

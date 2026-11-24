@@ -83,6 +83,10 @@ Every error is JSON with a stable code and a message for people:
 | 408 | `timeout` | The request took longer than 30 s to send. |
 | 409 | `job_finished` | The job has finished: nothing to cancel. |
 | 409 | `counter_not_saved` | The label file is not writable: nothing was printed. |
+| 409 | `label_exists` | A label of that name exists: upload with replace=true. |
+| 409 | `label_in_use` | Jobs of the label wait or print: retry when they are done. |
+| 409 | `label_changed` | The label file was replaced while the request was checked. |
+| 409 | `label_locked` | A print of the label holds the file: retry when it has ended. |
 | 411 | `length_required` | No Content-Length (chunked bodies are not accepted). |
 | 413 | `too_large` | Body over `--max-body`, or too many data rows, columns or cells. |
 | 413 | `too_many_labels` | Copies times rows over `--max-labels` (10000 by default); on label sheets over 999. |
@@ -101,10 +105,12 @@ Every error is JSON with a stable code and a message for people:
 | 429 | `too_many_requests` | Ten wrong tokens from this address: wait a minute. |
 | 429 | `queue_full` | Too many jobs waiting: retry later. |
 | 500 | `internal` | An error of the server; it is logged. |
+| 500 | `not_saved` | The labels folder could not be written (507: it is full). |
+| 500 | `not_deleted` | The label file could not be deleted (a read-only folder). |
 | 502 | `printer_<code>` | The printer is unreachable or reports a problem. |
 | 503 | `busy` | All request or render slots taken: retry after a moment. |
 
-`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.
+`printer_<code>`: the printer's problem, one of `generic`, `not_found`, `timeout`, `stalled`, `port_closed`, `busy`, `paused`, `out_of_memory`, `cover_open`, `head_open`, `jam`, `media_jam`, `out_of_labels`, `out_of_paper`, `label_not_found`, `wrong_media`, `paper_size`, `page_too_large`, `too_long`, `too_wide`, `code_too_large`, `ribbon`, `ribbon_out`, `ribbon_direct`, `no_cassette`, `bad_cassette`, `supplies`, `format`, `resolution`, `queue_paused`, `job_held`, `job_canceled`, `usb_not_found`, `usb_permission`, `serial_permission`, `battery`, `overheat`, `unsupported_model`, `unknown_model`, `editor_lite`.
 
 A job that fails tells why in its `error`, with these codes:
 
@@ -142,14 +148,18 @@ general errors of the table above: 401, 403, 405, 408, 421, 429
 |---|---|---|
 | [`GET /api/v1/health`](#get-health) | none | Is the server running; no token needed (for health checks) |
 | [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | This description (OpenAPI 3.1); a token of any role |
+| [`GET /api/v1/me`](#get-me) | `preview` | The token's name, role and printers, and the limits of a request (for the web page) |
 | [`GET /api/v1/printers`](#get-printers) | `preview` | The printers of `printers.toml` the token may use, with their state; without it the printer models, the address set for each and the printers found (`--discover`) |
 | [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | Ask a printer for its state: media, problems, resolution |
 | [`GET /api/v1/labels`](#get-labels) | `preview` | The label files in the labels folder and its subfolders |
 | [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | What a label can be filled in with: elements, variables, data columns, size, counter |
+| [`PUT /api/v1/labels/{name}`](#put-labels-name) | `admin` | Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step |
+| [`DELETE /api/v1/labels/{name}`](#delete-labels-name) | `admin` | Delete a label file (admin); its data file stays |
+| [`POST /api/v1/data`](#post-data) | `preview` | Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept |
 | [`POST /api/v1/preview`](#post-preview) | `preview` | The label filled in, as an image; nothing is printed |
 | [`POST /api/v1/print`](#post-print) | `print` | Print: the request is checked, then queued; each printer prints one job at a time |
 | [`GET /api/v1/jobs/{id}`](#get-jobs-id) | `print` | State of a print job (a print token: its own jobs; admin: all). Kept 24 hours after it finished |
-| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the current label while it prints |
+| [`DELETE /api/v1/jobs/{id}`](#delete-jobs-id) | `print` | Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels) |
 
 ### `GET /api/v1/health` { #get-health }
 
@@ -178,6 +188,21 @@ This description (OpenAPI 3.1); a token of any role.
 ```sh
 curl -H "Authorization: Bearer $TOKEN" \
      "$TAVLETTA/openapi.json"
+```
+
+### `GET /api/v1/me` { #get-me }
+
+The token's name, role and printers, and the limits of a request (for the web page).
+
+- Role: `preview`
+
+| Status | Answer | Codes |
+|---|---|---|
+| 200 | Who |  |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     "$TAVLETTA/me"
 ```
 
 ### `GET /api/v1/printers` { #get-printers }
@@ -262,6 +287,88 @@ curl -H "Authorization: Bearer $TOKEN" \
      "$TAVLETTA/labels/asset-tag"
 ```
 
+### `PUT /api/v1/labels/{name}` { #put-labels-name }
+
+Upload a label file (admin): checked as the app opens a file, then put into the labels folder in one step.
+
+- Role: `admin`
+
+| Parameter | In | Meaning |
+|---|---|---|
+| `name` | path | The file's name, without folder; '`.tavletta`' may be left out. |
+| `replace` | query | Replace a label of that name. default `false` |
+
+Body: The content of a `.tavletta` file.
+
+| Status | Answer | Codes |
+|---|---|---|
+| 200 | Replaced (replace=true) |  |
+| 201 | Added |  |
+| 400 | Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to 100), in the folder itself | `invalid_field`, `not_json` |
+| 409 | A label of that name exists (send replace=true), jobs of it wait or print (label_in_use), or another program's print holds the file | `label_exists`, `label_in_use`, `label_locked` |
+| 413 | Over `--max-body`, or a label too large to render | `too_large`, `label_too_large` |
+| 422 | Not a label Tavletta can open | `label_not_label`, `label_newer`, `label_damaged`, `pages_not_allowed` |
+| 507 | No space left in the labels folder | `not_saved` |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     -X PUT \
+     -H 'Content-Type: application/json' \
+     --data-binary @asset-tag.tavletta \
+     "$TAVLETTA/labels/asset-tag"
+```
+
+### `DELETE /api/v1/labels/{name}` { #delete-labels-name }
+
+Delete a label file (admin); its data file stays.
+
+- Role: `admin`
+
+| Parameter | In | Meaning |
+|---|---|---|
+| `name` | path | May contain slashes for subfolders; '`.tavletta`' may be left out. |
+
+| Status | Answer | Codes |
+|---|---|---|
+| 204 | Deleted |  |
+| 400 | Not a name inside the labels folder | `invalid_field` |
+| 404 | No such label | `label_not_found` |
+| 409 | Jobs of it wait or print (label_in_use), or another program's print holds the file | `label_in_use`, `label_locked` |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     -X DELETE \
+     "$TAVLETTA/labels/asset-tag"
+```
+
+### `POST /api/v1/data` { #post-data }
+
+Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows; nothing is kept.
+
+- Role: `preview`
+
+Body fields:
+
+| Field | Type | Meaning |
+|---|---|---|
+| `content` | string | The file: CSV (any delimiter, UTF-8, UTF-16 or Windows-1252), ODS or XLSX, told apart by content. Pasted text is a CSV file. |
+| `name` | string | The file's name, for messages. |
+| `sheet` | string | ODS, XLSX: the sheet (default the first). |
+| `header` | boolean | false: the first row is data too; the columns are named A, B, C … default `true` |
+
+| Status | Answer | Codes |
+|---|---|---|
+| 200 | The rows |  |
+| 400 | Invalid request | `invalid_field`, `unknown_field`, `not_json` |
+| 422 | Not a table, damaged or empty | `data_problem` |
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     -H 'Content-Type: application/json' \
+     -d '{"name": "assets.csv", "content": "QXNzZXROdW1iZXIKMDAzMDAKMDAzMDEK"}' \
+     "$TAVLETTA/data"
+```
+
 ### `POST /api/v1/preview` { #post-preview }
 
 The label filled in, as an image; nothing is printed.
@@ -332,7 +439,7 @@ Body fields:
 | 202 | Queued or printing; follow it at Location |  |
 | 400 | Invalid request | `bad_request`, `invalid_field`, `unknown_field`, `no_label`, `data_conflict`, `data_column`, `not_json`, `no_rows`, `no_data`, `no_printer`, `no_host`, `host_given`, `too_many_copies` |
 | 404 | No such label, printer or data file, or a printer the token may not use | `label_not_found`, `printer_not_found`, `data_not_found` |
-| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed | `counter_not_saved` |
+| 409 | The label file is not writable: the next counter value could not be saved, nothing was printed; or it was replaced while the request was checked (label_changed): send it again | `counter_not_saved`, `label_changed` |
 | 413 | Too large: body, data rows, labels in one job or the label to render | `too_large`, `too_many_labels`, `label_too_large` |
 | 422 | The label would print wrongly | `file_problem`, `label_not_label`, `label_newer`, `label_damaged`, `label_unprintable`, `data_outside`, `data_problem` |
 | 429 | Too many wrong tokens, or too many jobs waiting (100 in all, 20 per named token) | `too_many_requests`, `queue_full` |
@@ -366,7 +473,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### `DELETE /api/v1/jobs/{id}` { #delete-jobs-id }
 
-Cancel a job: at once while it waits, after the current label while it prints.
+Cancel a job: at once while it waits, after the labels already sent to the printer while it prints (cab: the job of up to labels_per_job labels).
 
 - Role: `print`
 
@@ -376,7 +483,7 @@ Cancel a job: at once while it waits, after the current label while it prints.
 
 | Status | Answer | Codes |
 |---|---|---|
-| 202 | Canceled, or stopping after the current label |  |
+| 202 | Canceled, or stopping after the labels already sent |  |
 | 404 | No such job | `job_not_found` |
 | 409 | Already finished | `job_finished` |
 
@@ -399,7 +506,8 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `host` | string | The printer's address. |
 | `owner` | string or null | Name of the token. |
 | `label` | string or null | Name in the labels folder; null for label_content. |
-| `printed` | integer | Labels printed so far. |
+| `printed` | integer | Labels printed so far, for certain; rises label by label while the job prints, as far as the printer tells. |
+| `printed_max` | integer or null | After a failure whose outcome the printer could not tell (the connection was lost while it printed): up to this many labels may have printed. The counter goes on after them; rows_printed counts the rows printed for certain, so printing again from the next one may print labels twice. null otherwise. |
 | `total` | integer | Labels to print: copies x rows. |
 | `rows_printed` | integer | Data rows printed in full: after a failure, print again with rows set to the next one (rows_printed + first row). |
 | `cancel_requested` | boolean | DELETE was sent. |
@@ -423,9 +531,11 @@ curl -H "Authorization: Bearer $TOKEN" \
 | `columns` | array of string | Placeholders `{Column}`: the keys of data_rows. |
 | `data_file` | string or null |  |
 | `data_file_unusable` | boolean |  |
+| `data_file_missing` | boolean | data_file is not there (any more): send the rows in data_rows. |
 | `data_sheet` | string or null |  |
 | `counter` | object | used (the label has `{=counter}`), next, step. |
 | `features` | array of string |  |
+| `on_sheet` | boolean | Printed on label sheets: at most 999 labels in one job. |
 
 ### NamedPrinter { #namedprinter }
 
@@ -467,6 +577,42 @@ A printer of printers.toml.
 | `height` | integer |  |
 | `warnings` | array of Warning | What would print wrongly. other_labels_loaded: the printer of `printers.toml` reports other labels loaded than the label's (their size, or the label distance it measured). Its latest answer counts if it is of the last minute, an error as nothing known (asked anew in the background); a printer not known yet is waited for up to a second after the label is rendered. |
 | `png` | string |  |
+| `geometry` | null or Geometry | Where the elements are in the image; null for view=printer and a label turned onto its sheet. |
+
+### Geometry { #geometry }
+
+The elements' boxes in the preview image, in mm from its top left corner (tavletta/editing.py, docs/editing.md); a pixel of the image is mm * dpi / 25.4.
+
+| Field | Type | Meaning |
+|---|---|---|
+| `width_mm` | number | Along the tape: the length. |
+| `height_mm` | number | Across: tape or label height. |
+| `layout` | `"flow"` \| `"free"` |  |
+| `dpi` | number | The image's resolution. |
+| `elements` | array of object |  |
+
+### Me { #me }
+
+| Field | Type | Meaning |
+|---|---|---|
+| `name` | string | The token's name in tokens.toml; 'token' for the one token of `--token-file`, 'local' without a token; 'oidc:<user>' for someone signed in to the web page with OpenID Connect. |
+| `display_name` | string | A person's name from the provider; else the same as name. |
+| `session` | boolean | true: signed in to the web page with OpenID Connect (its session cookie), not with a token. |
+| `role` | `"preview"` \| `"print"` \| `"admin"` |  |
+| `printers` | array or null | The printers the token may use; null: all. |
+| `token_required` | boolean | false: the server has no token and no `--oidc` (loopback only). |
+| `limits` | object | What one request may ask for at most: labels in one job (`--max-labels`; on label sheets at most 999), copies, data rows, columns and cells, and the body in bytes (`--max-body`; also the largest label file to upload). |
+
+### Data { #data }
+
+| Field | Type | Meaning |
+|---|---|---|
+| `kind` | `"csv"` \| `"ods"` \| `"xlsx"` |  |
+| `delimiter` | string or null | CSV: the delimiter found; null for one column and spreadsheets. |
+| `sheets` | array of string |  |
+| `sheet` | string or null | The sheet read. |
+| `columns` | array of string |  |
+| `rows` | array of object | Every cell as the text it shows: leading zeros and number formats kept (00300 stays 00300). Rows without a filled cell are left out. |
 
 Example of a job:
 
@@ -480,6 +626,7 @@ Example of a job:
   "owner": "inventory-tool",
   "label": "asset-tag.tavletta",
   "printed": 20,
+  "printed_max": null,
   "total": 20,
   "rows_printed": 20,
   "cancel_requested": false,

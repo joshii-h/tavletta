@@ -87,6 +87,17 @@ SETTING_TITLES = {
     "speed": _("Speed"),
     "upside_down": _("Print upside down"),
     "method": _("Print method"),
+    "offset_mm": _("Print offset"),
+    "labels_per_job": _("Labels per job"),
+}
+# what a setting does, under its title; for a Distance %(unit)s is the unit
+SETTING_HINTS = {
+    "offset_mm": _(
+        "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll"
+    ),
+    "labels_per_job": _(
+        "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory."
+    ),
 }
 # their values by protocol name; resolutions are shown as "203 dpi"
 CHOICE_NAMES = {
@@ -495,7 +506,22 @@ def printer_error_text(error: Exception, unit: Unit) -> str:
         return code_text("generic", unit)
     text = code_text(error.code, unit, float(error.params.get("max_mm", 0)))
     printed = error.params.get("printed")
-    if printed:  # some of the copies (or sheets) came out before the problem
+    most = error.params.get("printed_max")
+    if isinstance(most, int) and isinstance(printed, int) and most > printed:
+        # the job was sent, but the printer could not tell what it printed
+        total = error.params.get("copies", most)
+        if printed:
+            done = _(
+                "The job was sent, but its outcome is unknown: %(n)d of %(total)d labels "
+                "printed for certain, up to %(most)d may have."
+            )
+        else:
+            done = _(
+                "The job was sent, but its outcome is unknown: up to %(most)d of %(total)d "
+                "labels may have printed."
+            )
+        text += " " + done % {"n": printed, "most": most, "total": total}
+    elif printed:  # some of the copies (or sheets) came out before the problem
         if error.params.get("pages"):
             done = _("Sheets already printed: %(n)d of %(total)d.")
         else:
@@ -596,6 +622,12 @@ def code_text(code: str, unit: Unit, max_mm: float = 0.0) -> str:
         )
         % _METHOD_NAMES,
         "paused": _("The printer is paused. Resume it on its display and try again."),
+        # translators: %s is the printer setting “Labels per job”
+        "out_of_memory": _(
+            "The printer ran out of memory for the job. Lower “%s” in the printer "
+            "settings, then try again."
+        )
+        % SETTING_TITLES["labels_per_job"],
         "out_of_paper": _("The printer is out of paper. Load paper and try again."),
         "media_jam": _(
             "The paper is jammed. Remove it as the printer's display shows and try again."
@@ -734,14 +766,23 @@ def data_error_text(error: Exception, name: str) -> str:
 
 
 def series_stop_text(
-    row: int, copies_printed: int = 0, position: tuple[int, int] | None = None
+    row: int,
+    copies_printed: int = 0,
+    position: tuple[int, int] | None = None,
+    uncertain: bool = False,
 ) -> str:
     """Where a series stopped and how to go on; with the copies of that row
     the printer had already printed, so none is printed twice by mistake;
-    on label sheets where that row's label goes (position, sheet)."""
+    on label sheets where that row's label goes (position, sheet).
+    uncertain: rows from `row` on may have printed too (SeriesError)."""
     text = _("Printing stopped at row %(row)d. To continue, print again from row %(row)d.") % {
         "row": row
     }
+    if uncertain:
+        text += " " + _(
+            "Row %(row)d and the rows after it may have printed already: going on from "
+            "it may print them twice."
+        ) % {"row": row}
     if copies_printed:
         text += " " + _("Copies of row %(row)d already printed: %(copies)d.") % {
             "row": row,

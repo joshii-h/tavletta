@@ -6,6 +6,7 @@ import copy
 import os
 import threading
 from collections.abc import Callable
+from dataclasses import fields
 from datetime import datetime
 from functools import partial
 from pathlib import Path
@@ -24,7 +25,12 @@ from tavletta import imageformats, report  # noqa: E402
 from tavletta.backends import get_backend  # noqa: E402
 from tavletta.backends.base import Backend, PrintOptions, margins_for  # noqa: E402
 from tavletta.history import History, typing_key  # noqa: E402
-from tavletta.job import PREVIEW_MAX_DPI, PREVIEW_MAX_PIXELS, preview_image  # noqa: E402
+from tavletta.job import (  # noqa: E402
+    PREVIEW_MAX_DPI,
+    PREVIEW_MAX_PIXELS,
+    preview_image,
+    preview_top,
+)
 from tavletta.model import (  # noqa: E402
     MAX_COUNTER,
     CodeElement,
@@ -45,7 +51,7 @@ from tavletta.shipping.source import (  # noqa: E402
     drop_stale_documents,
     drop_thread_documents,
 )
-from tavletta.ui import shortcuts  # noqa: E402
+from tavletta.ui import editor, shortcuts  # noqa: E402
 from tavletta.ui.data import DATA_SUFFIXES, STEPS, DataGroup, DataSource  # noqa: E402
 from tavletta.ui.elements import ElementsGroup  # noqa: E402
 from tavletta.ui.files import Files  # noqa: E402
@@ -82,6 +88,9 @@ class Window(Adw.ApplicationWindow):
         self._geometries: dict[str, dict] = {}  # label size per printer model
         self._last_sheet: SheetChoice | None = None  # back to it after a single label
         self.rendered: Rendered | None = None
+        # the elements the preview shows, by identity (model.element_id): the
+        # render's boxes are theirs (the preview's editor)
+        self.rendered_ids: tuple[int, ...] = ()
         # the resolution of the render the preview shows: its code
         # warnings hold for that one
         self.rendered_dpi: float | None = None
@@ -90,6 +99,8 @@ class Window(Adw.ApplicationWindow):
         self.rendered_geometry: tuple | None = None
         self.expand_index = -1
         self.last_dialog = None
+        # a toast that undoes the last step (offer_undo()), while it is the last
+        self._undo_toast: Adw.Toast | None = None
         self._render_source = 0
         # each render request counts up; one done shows if it is newer than
         # what the preview shows and than _render_floor (a label, printer
@@ -145,6 +156,8 @@ class Window(Adw.ApplicationWindow):
         self.schedule_render()
         if not GLib.getenv("TAVLETTA_SCREENSHOT"):
             self.printer.refresh()
+            if not self.printer.found_all:  # none of the last minute's search
+                self.printer.find_all()
 
     # --- layout --------------------------------------------------------------
 
@@ -176,6 +189,7 @@ class Window(Adw.ApplicationWindow):
         ):
             button = Gtk.Button(icon_name=icon, tooltip_text=tip, action_name=action)
             header.pack_start(button)
+        header.pack_start(editor.arrange_button(self))
 
         header.pack_end(
             Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=self._main_menu())
@@ -211,6 +225,7 @@ class Window(Adw.ApplicationWindow):
         paned.set_position(720)
 
         self.preview = Preview()
+        self.editor = editor.PreviewEditor(self)
         paned.set_start_child(self.preview)
 
         side_scroller = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
@@ -333,6 +348,10 @@ class Window(Adw.ApplicationWindow):
         self.dirty = True
         if record:
             self.history.record(self.label, key)
+        if self._undo_toast is not None:  # its undo would take back this change
+            toast, self._undo_toast = self._undo_toast, None
+            toast.dismiss()
+        self.editor.label_changed()
         self.update_history_actions()
         self.update_title()
         self.counter_group.update()
@@ -467,6 +486,7 @@ class Window(Adw.ApplicationWindow):
         self.label.elements.insert(index + 1, duplicate)
         self.expand_index = index + 1
         self._structure_changed()
+        self.editor.select([index + 1], sync=False)  # the open element
 
     def remove_current(self, *_args) -> None:
         index = self._current()
@@ -528,6 +548,7 @@ class Window(Adw.ApplicationWindow):
         self.label.elements.append(element)
         self.expand_index = len(self.label.elements) - 1
         self._structure_changed()
+        self.editor.select([self.expand_index], sync=False)  # the open element
 
     def choose_symbol(self) -> None:
         """Pick a symbol from the library and add it."""
@@ -543,9 +564,46 @@ class Window(Adw.ApplicationWindow):
         self._structure_changed()
 
     def remove_element(self, index: int) -> None:
-        del self.label.elements[index]
+        self.remove_elements([index])
+
+    def remove_elements(self, indices) -> None:
+        """Remove some elements, one step of undo (the preview's selection)."""
+        for index in sorted(set(indices), reverse=True):
+            del self.label.elements[index]
         self.expand_index = -1
         self._structure_changed()
+
+    def edited(self, label: Label, indices: list[int], sizes: bool = False) -> None:
+        """The preview's editor changed some elements (its step of undo
+        recorded): their fields taken over in place, so the sidebar's rows
+        keep their elements and need not be built again (that takes seconds
+        for a label of 50 elements). sizes: their sizes changed, their rows
+        are built again. An open page of one of them opens again; the focus
+        stays where it was."""
+        focus = self.get_focus()
+        for index in indices:
+            target, source = self.label.elements[index], label.elements[index]
+            for name in (f.name for f in fields(source)):
+                setattr(target, name, getattr(source, name))
+        if sizes:
+            for row in self.elements_group.refresh(indices):
+                no_field_undo(row)
+        self._reopen_page(indices)
+        self.mark_changed(record=False)
+        if focus is not None and self.get_focus() is not focus and focus.get_root() is self:
+            focus.grab_focus()
+
+    def _reopen_page(self, indices: list[int]) -> None:
+        """The open page of options, if it belongs to one of these elements,
+        opened again: it shows their values of now."""
+        ident, title = self._subpage
+        ids = [element_id(self.label.elements[i]) for i in indices]
+        if self.sidebar_nav.get_visible_page() is self.sidebar_root or ident not in ids:
+            return
+        self.sidebar_nav.set_animate_transitions(False)
+        self.sidebar_nav.pop_to_page(self.sidebar_root)
+        self.elements_group.open_page(indices[ids.index(ident)], title)
+        self.sidebar_nav.set_animate_transitions(True)
 
     def set_background_image(self, image) -> None:
         self.label.background_image = image
@@ -568,6 +626,8 @@ class Window(Adw.ApplicationWindow):
         self.update_history_actions()
         self._geometries = {}
         self.expand_index = -1
+        self.editor.selection = []  # another label: nothing chosen in it
+        self.editor.label_changed()
         self.rebuild_sidebar()
         self.update_title()
         self.data.follow_label()
@@ -716,6 +776,9 @@ class Window(Adw.ApplicationWindow):
         and a function that renders it from those copies alone: it runs in
         the preview's thread while the label is edited further."""
         backend = self.backend
+        # the window's elements, by identity: filling in the variables makes
+        # new elements of those it fills (their boxes are the window's)
+        ids = tuple(element_id(e) for e in self.label.elements)
         label, warnings = expand_label(self.label, self.preview_values(), self.data.row)
         label = copy.deepcopy(label)  # the window's elements change while it renders
         options = copy.deepcopy(self.render_options())
@@ -727,7 +790,8 @@ class Window(Adw.ApplicationWindow):
         def work() -> PreviewResult:
             rendered, image, dpi = preview_image(backend, label, options, safe_mm, sheet, rotated)
             rendered.warnings[:0] = warnings
-            return PreviewResult(rendered, image, label.tape_mm, dpi)
+            top = preview_top(rendered, image, label.tape_mm, dpi)
+            return PreviewResult(rendered, image, label.tape_mm, dpi, ids, top)
 
         return work
 
@@ -780,6 +844,12 @@ class Window(Adw.ApplicationWindow):
         self._render_source = GLib.timeout_add(120, self.render_preview)
 
     @property
+    def render_generation(self) -> int:
+        """The latest render asked for: a render shown with a greater one
+        was made after it."""
+        return self._render_generation
+
+    @property
     def preview_current(self) -> bool:
         """The preview (and `rendered`) shows the label as it is now."""
         return self.rendered is not None and self._shown_generation == self._render_generation
@@ -827,13 +897,16 @@ class Window(Adw.ApplicationWindow):
             self._render_failed(error)
             return False
         self.rendered, self.rendered_dpi = result.rendered, result.dpi
+        self.rendered_ids = result.ids
         self._render_error = None
         self.preview.show_image(
             result.image,
             result.rendered.length_mm,
             result.tape_mm,
             self._status_text(self.rendered),
+            (result.dpi, result.top_px),
         )
+        self.editor.rendered(generation)
         return False
 
     def _status_text(self, rendered: Rendered) -> str:
@@ -873,6 +946,7 @@ class Window(Adw.ApplicationWindow):
         self.rendered = None
         message = _("The preview cannot be drawn")
         self.preview.clear(message)
+        self.editor.rendered(self._render_generation)
         details = error_details(error)
         if details != self._render_error:  # once, not on every keystroke
             self._render_error = details
@@ -893,19 +967,24 @@ class Window(Adw.ApplicationWindow):
         dialog.connect("response", lambda _d, response: response == confirm_id and then())
         self.present_dialog(dialog)
 
-    def _add_toast(self, text: str, timeout: int, button: str = "", on_click=None) -> None:
+    def _add_toast(self, text: str, timeout: int, button: str = "", on_click=None) -> Adw.Toast:
         toast = Adw.Toast(title=GLib.markup_escape_text(text), timeout=timeout)
         if button:
             toast.set_button_label(button)
             toast.connect("button-clicked", lambda _t: on_click())
         self.toasts.add_toast(toast)
+        return toast
 
     def toast(self, text: str) -> None:
         self._add_toast(text, 4)
 
-    def offer(self, text: str, button: str, then) -> None:
+    def offer(self, text: str, button: str, then) -> Adw.Toast:
         """A toast with an action the user may take."""
-        self._add_toast(text, 8, button, then)
+        return self._add_toast(text, 8, button, then)
+
+    def offer_undo(self, text: str) -> None:
+        """A toast that undoes the step just made, gone with the next change."""
+        self._undo_toast = self.offer(text, _("Undo"), self.undo)
 
     def error(self, text: str, details: str | None = None) -> None:
         """A toast for problems, with a button to report them; the details
@@ -985,6 +1064,7 @@ class Window(Adw.ApplicationWindow):
         self.data.update_forget_action()
         self.update_history_actions()
         self.lookup_action("shortcuts").set_enabled(shortcuts.available())
+        editor.install_actions(self, self.editor)
         shortcuts.install(self)
         template = Gio.SimpleAction.new("open-template", GLib.VariantType.new("s"))
         template.connect("activate", self.files.open_template)
@@ -1215,6 +1295,8 @@ class PreviewResult(NamedTuple):
     image: Image.Image
     tape_mm: float
     dpi: float
+    ids: tuple[int, ...] = ()  # its elements' identities (model.element_id)
+    top_px: int = 0  # the image's row of the label's top edge (job.preview_top)
 
 
 def _run(work: Callable[[], PreviewResult]) -> tuple:

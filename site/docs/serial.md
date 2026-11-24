@@ -87,8 +87,11 @@ data file instead of printing the placeholders.
   [[ui:To row]] limit the rows (all of them by default),
   [[ui:Copies of each label]] sets how many of each are printed.
 - Every label is a print job of its own, so this works on every printer.
+  A cab printer gets up to [[ui:Labels per job]] labels as one job, which
+  it prints without stopping between them ([cab](printer.md#cab)).
 - [[ui:Stop]] in the bar above the window ends the series after the label
-  being printed; the first label is always printed.
+  being printed (on a cab printer: after the job being printed); the
+  first label is always printed.
 - If the printer reports a problem, printing stops at that row; the
   message says how many copies of it were already printed. Solve the
   problem, then print again starting from that row.

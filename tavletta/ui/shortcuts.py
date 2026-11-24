@@ -1,4 +1,5 @@
-"""Keyboard shortcuts of the label editor and the window that lists them.
+"""Keyboard shortcuts of the label editor and the window that lists them
+(the preview's own, while it has the focus, are ui/editor.py's).
 
 The editing shortcuts (undo, the current element) are handled after the
 widget with the focus had its turn (bubble phase): in a text field Ctrl+Z
@@ -65,6 +66,24 @@ def sections() -> list[tuple[str, list[tuple[str, str]]]]:
                 (_("Remove the open element"), "Delete"),
                 (_("Move the open element up"), "<Alt>Up"),
                 (_("Move the open element down"), "<Alt>Down"),
+            ],
+        ),
+        (
+            # the preview's editor (ui/editor.py), while the preview has the focus
+            _("Preview"),
+            [
+                (_("Select all elements"), "<Control>a"),
+                (_("Select no element"), "<Shift><Control>a"),
+                (_("Move the selection by 0.1 mm"), "Left Right Up Down"),
+                (
+                    _("Move the selection by 1 mm"),
+                    "<Shift>Left <Shift>Right <Shift>Up <Shift>Down",
+                ),
+                (_("Remove the selected elements"), "Delete"),
+                (_("Cancel dragging, or select no element"), "Escape"),
+                (_("Click: add to the selection or take out"), "<Shift> <Control>"),
+                (_("Drag: along one axis, resize in proportion"), "<Shift>"),
+                (_("Drag: without snapping"), "<Alt> <Control>"),
             ],
         ),
         (

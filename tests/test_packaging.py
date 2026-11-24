@@ -894,6 +894,314 @@ def test_the_package_workflows():
     assert 'packaging/release-assets.sh notes "$TAG" "$line"' in bundle
 
 
+# Fakes for the GitHub workflows' release steps: curl answers the Forgejo
+# release from $H/answers (one line per request, the last one stays: 200 or
+# 200:NAME for $H/release.json or $H/NAME.json, html, down, or a status) and
+# downloads file:// addresses; gh keeps a GitHub release in $H/gh; sleep only
+# writes down how long. Every call is logged.
+FAKE_CURL = r"""#!/bin/bash
+out="" url="" w=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -o) out="$2"; shift 2 ;;
+    -w) w="$2"; shift 2 ;;
+    -H|-F|--connect-timeout|--max-time) shift 2 ;;
+    -*) shift ;;
+    *) url="$1"; shift ;;
+  esac
+done
+echo "$url" >> "$H/curl.log"
+case "$url" in
+  */releases/tags/*)
+    n="$(grep -c /releases/tags/ "$H/curl.log")"
+    answer="$(sed -n "${n}p" "$H/answers")"
+    [ -n "$answer" ] || answer="$(tail -n 1 "$H/answers")"
+    case "$answer" in
+      200) cp "$H/release.json" "$out"; code=200 ;;
+      200:*) cp "$H/${answer#200:}.json" "$out"; code=200 ;;
+      html) echo "<html>banned</html>" > "$out"; code=200 ;;
+      down) printf 000; exit 7 ;;
+      *) echo '{"message": "no"}' > "$out"; code="$answer" ;;
+    esac
+    printf '%s' "$code" ;;
+  */assets\?name=*) echo '{}' ;;
+  file://*)
+    if [ -f "$H/fail-download" ]; then rm "$H/fail-download"; exit 22; fi
+    cp "${url#file://}" "$out" ;;
+  *) echo "fake curl: $url" >&2; exit 2 ;;
+esac
+"""
+
+FAKE_GH = r"""#!/bin/bash
+G="$H/gh"; mkdir -p "$G/assets"
+echo "$*" >> "$H/gh.log"
+if [ -s "$H/gh-fail" ] && [ "$(head -n 1 "$H/gh-fail")" = "$1 $2" ]; then
+  sed -i 1d "$H/gh-fail"; echo "HTTP 502" >&2; exit 1
+fi
+json="" title="" notes=""
+args=("$@")
+for ((i = 0; i < ${#args[@]}; i++)); do
+  case "${args[i]}" in
+    --json) json="${args[i+1]}" ;;
+    --title) title="${args[i+1]}" ;;
+    --notes-file) notes="${args[i+1]}" ;;
+  esac
+done
+case "$1 $2" in
+  "release view")
+    [ -f "$G/created" ] || { [ -f "$H/appears" ] && [ "$(grep -c '^release view' "$H/gh.log")" -ge "$(cat "$H/appears")" ] && touch "$G/created"; }
+    [ -f "$G/created" ] || exit 1
+    case "$json" in
+      body) cat "$G/body" ;;
+      name) cat "$G/name" ;;
+      assets) ls "$G/assets" ;;
+    esac ;;
+  "release create") touch "$G/created"; cp "$notes" "$G/body"; printf '%s' "$title" > "$G/name" ;;
+  "release edit")
+    [ -z "$notes" ] || cp "$notes" "$G/body"
+    [ -z "$title" ] || printf '%s' "$title" > "$G/name" ;;
+  "release upload")
+    for f in "${args[@]:2}"; do
+      [ -f "$f" ] || continue
+      n="$(basename "$f")"
+      [ -e "$G/assets/$n" ] && [ "$*" = "${*%--clobber*}" ] && exit 1
+      cp "$f" "$G/assets/$n"; echo "$RANDOM" > "$G/id.$n"
+    done ;;
+  "api repos/"*)
+    for f in "$G"/assets/*; do
+      [ -e "$f" ] || continue
+      n="$(basename "$f")"
+      printf '%s\t%s\tsha256:%s\n' "$n" "$(cat "$G/id.$n")" "$(sha256sum < "$f" | cut -d' ' -f1)"
+    done ;;
+  *) echo "fake gh: $*" >&2; exit 2 ;;
+esac
+"""
+
+FAKE_SLEEP = '#!/bin/bash\necho "$1" >> "$H/sleeps"\n'
+
+
+class _Fakes:
+    """A folder with fake curl, gh and sleep, and what they logged."""
+
+    def __init__(self, tmp_path):
+        import shutil
+
+        if not all(shutil.which(tool) for tool in ("bash", "jq", "sha256sum", "sed")):
+            pytest.skip("needs bash, jq, sed and sha256sum")
+        self.home = tmp_path / "h"
+        self.bin = tmp_path / "bin"
+        self.work = tmp_path / "work"
+        for folder in (self.home, self.bin, self.work, self.home / "fj"):
+            folder.mkdir()
+        for name, text in (("curl", FAKE_CURL), ("gh", FAKE_GH), ("sleep", FAKE_SLEEP)):
+            (self.bin / name).write_text(text)
+            (self.bin / name).chmod(0o755)
+
+    def release(self, name: str, files: list[str], title: str = "Tavletta 1.2.1") -> None:
+        """$H/NAME.json: a Forgejo release with these files."""
+        import json
+
+        assets = []
+        for i, file in enumerate(files):
+            path = self.home / "fj" / file
+            path.write_bytes(f"content of {file}".encode())
+            assets.append({"id": 100 + i, "name": file, "browser_download_url": f"file://{path}"})
+        body = "Notes\n\n**Downloads**\n\n" + "\n".join(f"- {f}" for f in files)
+        release = {"id": 7, "name": title, "body": body, "prerelease": False, "assets": assets}
+        (self.home / f"{name}.json").write_text(json.dumps(release))
+
+    def run(self, script: str, answers: list[str], **env):
+        import os
+        import subprocess
+
+        (self.home / "answers").write_text("\n".join(answers) + "\n")
+        (self.work / "step.sh").write_text(script)
+        environment = {
+            **os.environ,
+            "PATH": f"{self.bin}{os.pathsep}{os.environ['PATH']}",
+            "H": str(self.home),
+            "TAG": "v1.2.1",
+            "GITHUB_REPOSITORY": "joshii-h/tavletta",
+            "GH_TOKEN": "x",
+            "FORGEJO_API": "https://forgejo.invalid/api/v1/repos/joshii/tavletta",
+            **env,
+        }
+        return subprocess.run(
+            ["bash", "step.sh"], cwd=self.work, env=environment, capture_output=True, text=True
+        )
+
+    def log(self, name: str) -> list[str]:
+        path = self.home / name
+        return path.read_text().splitlines() if path.exists() else []
+
+    def forgejo_requests(self) -> int:
+        return sum("/releases/tags/" in line for line in self.log("curl.log"))
+
+    def sleeps(self) -> list[int]:
+        return [int(s) for s in self.log("sleeps")]
+
+    def github(self) -> tuple[str, list[str]]:
+        gh = self.home / "gh"
+        name = (gh / "name").read_text() if (gh / "name").exists() else ""
+        return name, sorted(p.name for p in (gh / "assets").glob("*"))
+
+
+BASE = ["tavletta-1.2.1.tar.gz", "tavletta-1.2.1-py3-none-any.whl", "SHA256SUMS"]
+PACKAGES = [
+    "tavletta_1.2.1-1_all.deb",
+    "SHA256SUMS-deb",
+    "tavletta-1.2.1-1.fc44.noarch.rpm",
+    "SHA256SUMS-rpm",
+]
+
+
+def _mirror(fakes, answers, wait_minutes=100, **env):
+    job = _workflow("release-mirror.yml")["jobs"]["mirror"]
+    (step,) = job["steps"]
+    return fakes.run(
+        step["run"],
+        answers,
+        COMPLETE=job["env"]["COMPLETE"],
+        WAIT_MINUTES=str(wait_minutes),
+        POLL_SECONDS=job["env"]["POLL_SECONDS"],
+        **env,
+    )
+
+
+def test_the_mirror_creates_the_release_first_and_polls_forgejo_rarely(tmp_path):
+    """release-mirror.yml creates the GitHub release before it asks Forgejo
+    anything (flatpak-bundle.yml attaches to it; v1.2.0 had none for 40
+    minutes), and asks Forgejo once per pass, every 3 minutes, after a 403
+    twice as long each time up to 15 minutes, back to 3 after any other
+    answer: CrowdSec on the Forgejo host took polling once a minute for a
+    crawler and banned the runner's address. Files are downloaded 2 seconds
+    apart; a page instead of JSON is no release."""
+    fakes = _Fakes(tmp_path)
+    fakes.release("base", BASE, title="")  # no name: the title release.yml gives
+    fakes.release("full", BASE + PACKAGES)
+    answers = ["403", "403", "403", "403", "html", "200:base", "403", "200:full"]
+    result = _mirror(fakes, answers)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert fakes.log("gh.log")[1].startswith("release create v1.2.1 ")
+    assert fakes.forgejo_requests() == len(answers)
+    waits = [s for s in fakes.sleeps() if s != 2]
+    assert waits == [360, 720, 900, 900, 180, 180, 360]
+    assert fakes.sleeps().count(2) == len(BASE + PACKAGES) - 2  # between downloads of a pass
+    assert "Forgejo release: no JSON (HTTP 200)" in result.stdout
+    assert result.stdout.count("CrowdSec") == 5
+    assert fakes.github() == ("Tavletta 1.2.1", sorted(BASE + PACKAGES))
+    text = (ROOT / ".github" / "workflows" / "release-mirror.yml").read_text(encoding="utf-8")
+    assert "crowdsecurity/http-crawl-non_statics" in text
+    assert (
+        "group: mirror-${{ github.event_name == 'push' && github.ref_name || inputs.tag }}" in text
+    )
+
+
+@pytest.mark.parametrize(
+    ("answers", "wait_minutes", "message"),
+    [
+        (["403"], 100, "refused the requests (403): CrowdSec"),
+        (["404"], 100, "no Forgejo release for v1.2.1 (none): did release.yml fail?"),
+        (["down"], 0, "no Forgejo release for v1.2.1 (HTTP 000)"),
+        (["200:base"], 100, "not on the Forgejo release yet: SHA256SUMS-deb SHA256SUMS-rpm"),
+        (["200:base"], 0, "not on the Forgejo release yet: SHA256SUMS-deb SHA256SUMS-rpm"),
+    ],
+)
+def test_the_mirror_gives_up_naming_why_and_keeps_the_release(
+    tmp_path, answers, wait_minutes, message
+):
+    """After WAIT_MINUTES (none in a manual run) the mirror fails naming
+    what is missing; the GitHub release and the files copied so far stay.
+    In 100 minutes it asks Forgejo at most 34 times."""
+    fakes = _Fakes(tmp_path)
+    fakes.release("base", BASE)
+    result = _mirror(fakes, answers, wait_minutes)
+    assert result.returncode == 1
+    assert f"::error::git.joshuahirsig.xyz {message}" in result.stdout or (
+        f"::error::{message}" in result.stdout
+    ), result.stdout
+    assert fakes.github()[0] == "Tavletta 1.2.1"
+    assert sum(w for w in fakes.sleeps() if w != 2) <= wait_minutes * 60
+    assert fakes.forgejo_requests() <= (1 if wait_minutes == 0 else 34)
+    if answers == ["200:base"]:
+        assert fakes.github()[1] == sorted(BASE)
+
+
+def test_the_mirror_takes_errors_again_in_the_next_pass(tmp_path):
+    """A download that fails ends the pass (no more requests to Forgejo in
+    it); GitHub errors (creating the release, reading or uploading to it)
+    are tried again, also in a manual run."""
+    fakes = _Fakes(tmp_path)
+    fakes.release("full", BASE + PACKAGES)
+    (fakes.home / "fail-download").touch()
+    (fakes.home / "gh-fail").write_text(
+        "release create\napi repos/joshii-h/tavletta/releases/tags/v1.2.1\n"
+    )
+    result = _mirror(fakes, ["200:full"], wait_minutes=0)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert fakes.github()[1] == sorted(BASE + PACKAGES)
+    log = fakes.log("curl.log")
+    # the first pass: the release, then nothing (GitHub not read); the second:
+    # the release and one download that fails; the third: all of them
+    assert ["tags" in line for line in log[:3]] == [True, True, False]
+    assert "/releases/tags/" in log[3] and fakes.forgejo_requests() == 3
+    assert "not downloaded, again in the next pass" in result.stdout
+    assert 20 in fakes.sleeps()  # the GitHub release created at the second try
+
+
+def _bundle_step(name: str) -> str:
+    steps = _workflow("flatpak-bundle.yml")["jobs"]["bundle"]["steps"]
+    return next(step["run"] for step in steps if step.get("name") == name)
+
+
+@pytest.mark.parametrize("appears", [1, 5, None])
+def test_the_bundle_waits_10_minutes_for_the_github_release(tmp_path, appears):
+    """flatpak-bundle.yml: the GitHub release, which the mirror creates at
+    once, asked for every 30 seconds for 10 minutes; then a clear error."""
+    fakes = _Fakes(tmp_path)
+    (fakes.work / "Tavletta-v1.2.1-x86_64.flatpak").write_bytes(b"bundle")
+    if appears:
+        (fakes.home / "appears").write_text(str(appears))
+    result = fakes.run(_bundle_step("Attach to the GitHub release"), ["404"])
+    if appears:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert fakes.sleeps() == [30] * (appears - 1)
+        assert fakes.github()[1] == [
+            "Tavletta-v1.2.1-x86_64.flatpak",
+            "Tavletta-v1.2.1-x86_64.flatpak.sha256",
+        ]
+    else:
+        assert result.returncode == 1
+        assert "::error::no GitHub release for v1.2.1" in result.stdout
+        assert fakes.sleeps() == [30] * 19
+
+
+@pytest.mark.parametrize(
+    ("answers", "ok"), [(["404", "403", "html", "200"], True), (["403"], False)]
+)
+def test_the_bundle_asks_forgejo_for_its_release_every_3_minutes(tmp_path, answers, ok):
+    """flatpak-bundle.yml: the Forgejo release asked for every 3 minutes, 6
+    times, a 403 named as a possible ban, a page instead of JSON no release."""
+    fakes = _Fakes(tmp_path)
+    fakes.release("release", [])
+    (fakes.work / "Tavletta-v1.2.1-x86_64.flatpak").write_bytes(b"bundle")
+    (fakes.work / "Tavletta-v1.2.1-x86_64.flatpak.sha256").write_bytes(b"sum")
+    result = fakes.run(_bundle_step("Attach to the Forgejo release"), answers, FORGEJO_TOKEN="t")
+    assert "CrowdSec may have banned" in result.stdout
+    if ok:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert fakes.sleeps() == [180] * 3
+        assert "Tavletta-v1.2.1-x86_64.flatpak uploaded" in result.stdout
+    else:
+        assert result.returncode == 1
+        assert "::error::no Forgejo release for v1.2.1 (HTTP 403)" in result.stdout
+        assert fakes.sleeps() == [180] * 5
+    text = (ROOT / ".github" / "workflows" / "flatpak-bundle.yml").read_text(encoding="utf-8")
+    assert "crowdsecurity/http-crawl-non_statics" in text
+    notes = _workflow("flatpak-bundle.yml")["jobs"]["bundle"]["steps"][-1]["env"]
+    assert int(notes["RELEASE_WAIT_SECONDS"]) >= 120 and int(notes["RELEASE_WAIT_TRIES"]) <= 3
+
+
 def test_the_release_notes_name_this_workflows_downloads(tmp_path):
     """release.yml's notes step, run: the metainfo's notes of this version,
     then its own downloads (the package workflows add theirs)."""
@@ -938,7 +1246,8 @@ def test_the_package_builds_run_the_tests_as_the_ci_does():
     """CI=1 in the build and smoke scripts: a test that would skip for a
     missing tool fails instead, as on the runners (where the variable is
     set), so a missing build dependency shows in a local build too. The
-    tool tests/test_icons.py needs, librsvg's introspection, is one."""
+    tools tests/test_icons.py and tests/test_webui_js.py need, librsvg's
+    introspection and Node, are build dependencies."""
     for script in ("debian/build.sh", "debian/smoke-test.sh", "rpm/build.sh", "rpm/smoke-test.sh"):
         text = (ROOT / "packaging" / script).read_text(encoding="utf-8")
         assert "\nexport CI=1\n" in text, script
@@ -946,8 +1255,10 @@ def test_the_package_builds_run_the_tests_as_the_ci_does():
     assert "CI=1 FONTCONFIG_FILE=" in unittests
     control = (ROOT / "packaging" / "debian" / "control").read_text(encoding="utf-8")
     assert " gir1.2-rsvg-2.0 <!nocheck>,\n" in control
+    assert " nodejs <!nocheck>,\n" in control
     spec = (ROOT / "packaging" / "rpm" / "tavletta.spec").read_text(encoding="utf-8")
     assert "\nBuildRequires:  librsvg2\n" in spec
+    assert "\nBuildRequires:  nodejs\n" in spec
 
 
 def test_the_rpm_sources_are_pinned_as_the_debian_ones():

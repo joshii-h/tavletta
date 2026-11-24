@@ -435,6 +435,45 @@ def test_other_labels_by_their_size_first():
     assert other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {}) is None
 
 
+def test_fit_loaded_by_the_distance():
+    """The height along the feed from the distance, the gap kept; where
+    that is no label, the gap from it, the height kept; else nothing."""
+    from tavletta.backends import get_backend
+    from tavletta.job import LoadedFit, fit_loaded, other_labels
+
+    cab = get_backend("cab")
+    label = _die_cut("cab")  # 50 × 25 mm, 3 mm gap
+
+    def fit(pitch, gap=3.0):
+        label.gap_mm = gap
+        return fit_loaded(cab, label, other_labels(cab, label, _info(pitch_mm=pitch), {}))
+
+    assert fit(52.8) == LoadedFit((50, 49.8), 3.0)
+    assert fit(20.0) == LoadedFit((50, 17.0), 3.0)
+    assert fit(6.0) is None  # 3 mm of label, and less than the label's height
+    assert fit(28.0, gap=24.0) == LoadedFit((50, 25), 3.0)  # 4 mm of label: the gap
+    assert fit(1100.0) is None  # longer than any label
+
+
+def test_fit_loaded_by_the_size_reported():
+    from tavletta.backends import get_backend
+    from tavletta.job import LoadedFit, fit_loaded, other_labels
+
+    ql = get_backend("brother_ql_diecut")
+    label = _die_cut("brother_ql_diecut", 62, 29)
+    other = other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {})
+    assert fit_loaded(ql, label, other) == LoadedFit((29, 90), 3.0)
+    # the size is the label's, the distance not: the gap differs
+    label.set_media_size(29, 90)
+    label.gap_mm = 8.0
+    other = other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {})
+    assert other is not None and other.size_reported
+    assert fit_loaded(ql, label, other) == LoadedFit((29, 90), 3.0)
+    # wider than the printer takes
+    other = other_labels(ql, label, _info(label_mm=(200, 90), pitch_mm=93), {})
+    assert fit_loaded(ql, label, other) is None
+
+
 @pytest.mark.parametrize(
     ("media", "reported", "warned"),
     [
@@ -500,3 +539,36 @@ def test_a_busy_answer_is_no_sign_of_another_sensing():
     busy = _info()
     assert not labels_reported(get_backend("zpl"), busy, {"media": "gap"})
     assert labels_reported(get_backend("zpl"), _info(media_type="mark"), {"media": "gap"})
+
+
+@pytest.mark.parametrize(
+    ("printer", "tape"),
+    [
+        ("vc500w", 25),  # a raster taller than the tape
+        ("vc500w", 24),  # a width the printer has no tape of
+        ("ptouch", 24),  # a print head narrower than the tape: the whole tape around it
+        ("ptouch", 12),
+        ("brother_ql", 62),
+        ("zpl", 50),
+    ],
+)
+def test_the_previews_row_of_the_labels_top_edge(printer, tape):
+    """Rendered.boxes are from the label's top edge; the preview's image
+    has it at preview_top(): an element's ink lies where its box says."""
+    from tavletta.backends import get_backend
+    from tavletta.job import preview_image, preview_top
+    from tavletta.render import px_to_mm
+
+    label = Label(
+        printer=printer,
+        tape_mm=tape,
+        layout="free",
+        auto_length=False,
+        length_mm=40,
+        elements=[TextElement(text="Hx", size_pt=20, x_mm=4, y_mm=3)],
+    )
+    rendered, image, dpi = preview_image(get_backend(printer), label, PrintOptions())
+    top = preview_top(rendered, image, label.tape_mm, dpi)
+    ink = image.convert("L").point(lambda v: 255 if v < 128 else 0).getbbox()  # as ink_box()
+    assert px_to_mm(ink[1] - top, dpi) == pytest.approx(rendered.boxes[0][1], abs=0.01)
+    assert px_to_mm(ink[0], dpi) == pytest.approx(rendered.boxes[0][0], abs=0.01)

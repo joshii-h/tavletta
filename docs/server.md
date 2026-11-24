@@ -1,4 +1,4 @@
-# Print server: REST API and MCP
+# Print server: REST API, MCP and web page
 
 `tavletta serve` prints labels without a window, for other programs and
 for AI clients. It renders with Pango and Cairo like the command line and
@@ -19,9 +19,10 @@ state, render a preview, and print with values, data rows and copies,
 with each named printer's settings (print method, print upside down,
 quality …) from `printers.toml`. Jobs
 are queued, one per printer at a time, and can be canceled between two
-labels; counters are saved as on the command line. `--mcp` serves the same
-as MCP tools at `/mcp`; `tavletta mcp` speaks MCP on standard input and
-output for Claude Desktop and Claude Code:
+labels; counters are saved as on the command line. A web page at `/`
+does the same for people in a browser ([Web page](#web-page)). `--mcp`
+serves the same as MCP tools at `/mcp`; `tavletta mcp` speaks MCP on
+standard input and output for Claude Desktop and Claude Code:
 
 ```sh
 tavletta serve --labels-dir ~/Labels --token-file ~/.config/tavletta/token --mcp
@@ -44,7 +45,7 @@ build provenance and a signature
 ([how to check them](#container)):
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.1.2
+docker pull ghcr.io/joshii-h/tavletta:1.2.1
 ```
 
 ## Options
@@ -54,6 +55,7 @@ tavletta serve [--host 127.0.0.1] [--port 8790] [--labels-dir DIR] [--mcp]
                [--printers printers.toml | --allow-printer ADDR] [--discover]
                [--tokens tokens.toml | --token-file FILE] [--allow-origin URL]
                [--max-body MB] [--max-labels N] [--trusted-proxy CIDR]
+               [--no-web-ui] [--oidc oidc.toml]
 tavletta mcp [--labels-dir DIR] [--printers printers.toml | --allow-printer ADDR]
              [--discover] [--max-labels N]
 tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
@@ -71,9 +73,11 @@ tavletta token new NAME [--role preview|print|admin] [--tokens FILE]
 | `--token-file` | one access token for everything (role admin); else the variable `TAVLETTA_TOKEN`; at least 16 characters |
 | `--labels-dir` | the only folder label and data files are read from; `~/.local/share/tavletta/labels` by default (made if missing) |
 | `--mcp` | MCP (Streamable HTTP) at `/mcp` as well |
+| `--oidc` | `oidc.toml`: people sign in to the web page with an OpenID Connect provider ([below](#signing-in-with-openid-connect-oidctoml)); tokens keep working for programs. Not with `--no-web-ui`; needs PyJWT with cryptography (not in the Flatpak); with `--trusted-proxy` it needs `public_url` |
+| `--no-web-ui` | no web page at `/` (and `/ui/`): those paths answer 404, as before there was one; for servers that only serve programs |
 | `--allow-origin` | web origin whose pages may call the server (`https://app.example`): CORS preflights are answered and the answers carry `Access-Control-Allow-Origin`; repeatable |
 | `--allow-printer` | without a printer list: only these printers, compared with the host of the address (never the whole address). A pattern of only digits, dots and `*` is an address pattern: four IPv4 parts, `*` standing for whole parts (`192.168.1.*`, `10.*`, `*.5`, `*.*`); a network as Python's ipaddress reads it (`192.168.1.0/24`, `2001:db8::/32`) is one too. Address patterns match IP addresses only, a host name if every address it resolves to matches one of them (so `192.168.1.evil.example` is not in `192.168.1.*`, and `*.*` matches `printer.local` only by the addresses it resolves to, not by its name). Any other pattern is a name pattern (`*.local`, `cups.example.com`) and matches host names. The server then prints on the first address the resolver gives (only that one; there is no trying the others), not on the name (a name looked up again could point elsewhere; an `ipps` printer must then accept its IP address). `*` alone allows everything without a lookup. A pattern that can never match is refused at startup: a network that is none (`10.0.0.0/33`), an address pattern with a part over 255 or a leading zero (`010.1.1.1`), a `*` within a part (`10*`), more than four parts, or fewer than four without a `*` (`1.2.3`, `10`); repeatable |
-| `--max-body` | largest request body in MB, 4 by default (parsed JSON takes many times its size) |
+| `--max-body` | largest request body in MB, 4 by default (parsed JSON takes many times its size); also the largest label file to upload and data file to read (base64: three quarters of it) |
 | `--max-labels` | most labels in one print job, copies times rows; 10 000 by default, on label sheets at most 999 (413 `too_many_labels`) |
 | `--trusted-proxy` | a reverse proxy, best its own address (`172.30.0.10/32`), whose `X-Forwarded-For` names the client: the rate limit, the 8 requests per client and the log use that address (all header lines together, ports taken off; anything that is no address stops the search at the proxy), the proxy itself is not held to 8 connections. `0.0.0.0/0` or `::/0` (everyone) is warned about. With a proxy, publish the server's port nowhere else; repeatable |
 
@@ -110,6 +114,8 @@ media = "57 x 32 mm, ribbon"
 [printers.inventory.settings]         # the printer settings of the app
 method = "transfer"                  # print method: printer, transfer, direct
 upside_down = true                   # print turned by 180 degrees (cab: O R)
+offset_mm = 0.5                      # the print moved along the feed (cab)
+labels_per_job = 250                 # labels of a series sent as one job (cab)
 ```
 
 - Names: letters, digits, `.`, `_`, `-`, up to 64 characters. `backend` and
@@ -124,7 +130,7 @@ upside_down = true                   # print turned by 180 degrees (cab: O R)
 - `[printers.<name>.settings]`: the printer settings the app keeps for the
   model, with the same keys and values as in `settings.json`, and used the
   same way (`PrinterSettings`): the model's own settings (cab: `method`,
-  `upside_down`; ZPL and TSPL: `dpi`, `media`, `finish`, `darkness`,
+  `upside_down`, `offset_mm` from −5 to 5, `labels_per_job` from 1 to 1000; ZPL and TSPL: `dpi`, `media`, `finish`, `darkness`,
   `speed`, `upside_down`; EPL2: `dpi`, `media`, `darkness`, `upside_down`; ESC/POS: `dpi`, `upside_down`; DYMO: `darkness`,
   `upside_down`; NIIMBOT: `media`, `density`), `quality` (Brother QL:
   `standard`, `high`), the extras (P-touch: `chain`, `high_res`,
@@ -228,6 +234,181 @@ description = "PC at gate 2"
   role admin, named `token`. Without any token (loopback only) requests
   count as `local`, role admin.
 
+## Signing in with OpenID Connect (oidc.toml)
+
+`--oidc oidc.toml` lets people sign in to the web page with the
+organisation's identity provider (Keycloak, Authentik, Microsoft Entra
+ID, Okta, Zitadel, Google …): any provider that follows OpenID Connect
+Core and Discovery. Their roles at the provider become Tavletta's roles.
+Access tokens (`tokens.toml`, `--token-file`) stay as they are, for
+programs and MCP clients; the page offers both, or only the provider.
+
+```toml
+[oidc]
+issuer = "https://id.example.com/realms/example"   # as the provider names itself
+client_id = "tavletta"
+client_secret_file = "/etc/tavletta/oidc-secret"   # mode 600, the secret alone
+public_url = "https://labels.example.com"          # the page's address in the browser
+provider_name = "Example ID"                       # "Sign in with Example ID"
+roles_claim = "realm_access.roles"                 # where the role names are
+
+[oidc.roles]                                       # names at the provider
+preview = ["tavletta-preview"]
+print = ["tavletta-print"]
+admin = ["tavletta-admin"]
+```
+
+| Key | Meaning |
+|---|---|
+| `issuer` | the provider's issuer, exactly as its `/.well-known/openid-configuration` names it; `https://` (`http://` only for an address of this computer, for testing) |
+| `client_id`, `client_secret_file` | the client registered at the provider (confidential); the file holds the secret only (read at startup, a file others can read is warned about) |
+| `token_auth` | how the secret is sent to the token endpoint: `client_secret_basic` (default) or `client_secret_post`. `private_key_jwt` is not supported |
+| `public_url` | the page's origin as the browser sees it (`https://host[:port]`, no path). Required with `--trusted-proxy` (the server does not start without it), recommended behind every reverse proxy; without it the origin comes from `Host`, or from the last value of `X-Forwarded-Proto` and `X-Forwarded-Host` of a `--trusted-proxy` (the one it appended), lower case and without the scheme's own port (`:443`) |
+| `provider_name` | the button's text: "Sign in with …" (default `OpenID Connect`) |
+| `scopes` | `["openid", "profile", "email"]` by default; must contain `openid` |
+| `roles_claim` | required: the claim with the role or group names, a path through nested objects: `realm_access.roles`, `resource_access.tavletta.roles`, `groups`, `roles`. For a name with a dot: a list (`["resource_access", "my.client", "roles"]`). The claim is a text, a list of texts, or an object whose keys are the names |
+| `[oidc.roles]` | for `preview`, `print`, `admin`: the names (a text or a list) at the provider. The highest role someone has counts; at least one role must be mapped |
+| `username_claim` | names the person in the log and as the owner of jobs, as `oidc:<value>` (no token name can have a colon): `preferred_username` by default, else `sub`. Must be unique and stable at the provider |
+| `name_claim` | shown on the page: `name` by default |
+| `printers_claim` | a claim with the printer names someone may use (needs `--printers`; names not in `printers.toml` are ignored; no claim: no printer) |
+| `[oidc.printers]` | instead: printers per role or group name, `"*"` for all: `tavletta-lager = ["lager-cab"]`. Someone gets the printers of all their names in the table, none if none is in it (needs `--printers`) |
+| `userinfo` | `true`: the claims of the userinfo endpoint too (for providers that put groups only there); the ID token's claims win |
+| `token_login` | `false`: the page offers only the provider (tokens still work for the API) |
+| `session_hours`, `idle_minutes` | a session ends after 8 hours, or after 60 minutes without a request (0.1 to 168 hours, 1 minute to a week). Where admins sign in, shorter is better (e.g. 2 hours, 15 minutes): signing out at the provider, a disabled account or a removed role count only once the Tavletta session has ended (there is no back-channel logout) |
+| `ca_file` | certificates to trust for the provider (an internal CA) besides the system's |
+
+Everything is read strictly, as `tokens.toml`: an unknown key, a wrong
+type, a printer that is not in `printers.toml` stops the server with the
+file and key. Changes need a restart (sessions are in memory and end
+with it). PyJWT with cryptography must be installed (`pip install
+tavletta[oidc]`; Debian and Fedora: `python3-jwt`, `python3-cryptography`;
+the container image and the server packages have them). The Flatpak has
+not, and nothing can be installed into it: for `--oidc` run the server
+from the deb or rpm package, the container image or pip; `tavletta serve
+--oidc` in the Flatpak says so. A server with `--oidc` may listen beyond
+loopback without a token: every request then needs a session or a
+token. Behind a reverse proxy give it with `--trusted-proxy` (and
+`public_url`): without, every client is the proxy's address for the
+limits per client, which the server warns about at startup when it
+listens beyond loopback.
+
+**How it works.** The page shows "Sign in with <provider_name>"; that is
+`GET /oidc/login?return=#/…`, which redirects to the provider with the
+authorization code flow: PKCE with S256, a random `state` and `nonce`
+(256 bits each), the scopes, and `redirect_uri = <public_url>/oidc/callback`.
+A sign in started at another address than `public_url` is sent there
+first (once). The provider redirects back to `/oidc/callback`, which
+
+- takes the sign in of that `state` (once; at most 10 minutes old) from
+  the browser that started it: a second cookie, `__Host-tavletta-login`,
+  holds the sign in itself (state, nonce, PKCE verifier, the page to go
+  back to), encrypted and signed with a key the server makes when it
+  starts (Fernet), so a callback address sent to someone else does not
+  sign them in as another person, and the server keeps nothing for a
+  sign in under way (a restart ends those). A new `/oidc/login` of the
+  browser replaces it (its own action); a callback removes it only when
+  its `state` is the one the cookie holds, so a callback someone else
+  makes the browser load does not end a sign in under way;
+- refuses an `iss` parameter of another issuer (RFC 9207) and an error
+  answer (`access_denied`: "Signing in was canceled");
+- exchanges the code at the token endpoint with the secret and the PKCE
+  verifier (no redirects followed; 10 s; at most 1 MB);
+- checks the ID token with PyJWT: signed with RS256/384/512,
+  PS256/384/512, ES256/384/512 or EdDSA by a key of the provider's
+  `jwks_uri` (`none` and HS* are refused; a key with an `alg` is used for
+  that algorithm only), `iss` and `aud` exactly, `azp` when present or
+  when there are several audiences, `exp`, `iat` and `nbf` with 60 s of
+  leeway, `sub`, and the `nonce`;
+- maps the claims: without a mapped role there is no session, the page
+  says "you are signed in at <provider>, but have no access" and the log
+  names the user;
+- starts a new session (a new id on every sign in; a session cookie sent
+  along is ended) and redirects to the page the user was on (only
+  addresses of the page, `#/…`: no open redirect).
+
+The provider's settings (discovery) and keys are fetched when first
+needed (and at startup, in the background: a provider that is away does
+not stop the server) and kept for an hour; a key id not seen before
+fetches the keys again, at most every 30 s (keys rotate). As nothing is
+kept for a sign in under way, there is no store to fill and no limit of
+sign ins: many people behind one address (NAT, a proxy) sign in at
+once, a browser starting again replaces its own sign in, and nothing of
+another browser is ever dropped. Sign ins are not counted with wrong
+tokens. A code the provider does not take (or an ID token that does not
+check out) costs a request to it with the client's secret: 60 of them a
+minute from one address, then 429 for a minute; at most 4 token
+exchanges run at once (a callback waits up to 10 s for one). A provider
+that cannot be reached counts too, so behind NAT the limit is generous. The states taken are
+remembered for 10 minutes (at most 10 000; a callback of one forgotten
+sent again still fails at the provider, which takes a code once). With
+`--oidc`, a request with neither a token nor a session (the page loading
+while signed out) is 401 but not counted, so people behind one address
+do not block each other.
+
+Sessions and the key of the login cookies are in the memory of one
+server process: several instances behind a load balancer do not share
+them (a sign in started at one fails at another, a session counts at its
+own instance only). Run one instance per web address, or make the load
+balancer keep each browser at one instance.
+
+**The session.** The cookie `__Host-tavletta-session` is `Secure`,
+`HttpOnly`, `SameSite=Lax`, `Path=/`, no `Domain` (the `__Host-` prefix
+makes browsers insist on that), and holds 256 random bits; the server
+keeps the session in memory under the SHA-256 of that value (at most
+10 000 sessions, 20 per person, the least used gives way). It counts for
+the REST API only, never for `/mcp` (MCP clients use tokens), and only
+from the page itself: with `X-Tavletta-Request`, an `Origin` (required
+for anything but GET) that is the page's own (`public_url`), and a
+`Sec-Fetch-Site` of `same-origin` if the browser sends one; a request
+with `Authorization` uses its token, not the cookie. Roles and printers
+are taken at sign in and kept for the session: a change at the provider
+(a role removed, the account disabled, a sign out there) counts from the
+next sign in; Tavletta does not take part in back-channel or front-channel
+logout, so keep `session_hours` and `idle_minutes` short where that
+matters. A restart of the server ends every session. Over plain HTTP (only `http://localhost`
+or `127.0.0.1`, for testing) the cookies are `tavletta-session` and
+`tavletta-login` without `Secure`; any other plain HTTP origin is refused
+("Signing in did not work"; the log says why).
+
+**Signing out** (`POST /oidc/logout`, from the page) ends the session and
+sends the browser to the provider's `end_session_endpoint` with
+`id_token_hint`, `client_id` and `post_logout_redirect_uri =
+<public_url>/`, if the provider offers one, which ends the session there
+too and comes back to the page.
+
+**At the provider** (Keycloak as the example; other providers have the
+same settings under other names):
+
+- a client `tavletta`, OpenID Connect, *Client authentication* on
+  (confidential), *Standard flow* only (no direct access grants, no
+  implicit flow), *PKCE method* S256;
+- *Valid redirect URIs* `https://labels.example.com/oidc/callback`,
+  *Valid post logout redirect URIs* `https://labels.example.com/`, *Web
+  origins* `+`;
+- the secret from *Credentials* into `client_secret_file`;
+- the roles, either as client roles of `tavletta` (`tavletta-preview`,
+  `tavletta-print`, `tavletta-admin`) or as realm roles, given to users or
+  groups. Keycloak puts both only into the access token by default; Tavletta
+  reads the ID token (and, with `userinfo = true`, the userinfo), so the
+  client needs a mapper (*Client scopes* → `tavletta-dedicated` → *Add
+  mapper* → *By configuration*): *User Client Role*
+  (`oidc-usermodel-client-role-mapper`), client `tavletta`, claim name
+  `resource_access.${client_id}.roles`, multivalued, *Add to ID token* on,
+  and `roles_claim = "resource_access.tavletta.roles"`; or *User Realm
+  Role* (`oidc-usermodel-realm-role-mapper`), claim name
+  `realm_access.roles`, *Add to ID token* on, and `roles_claim =
+  "realm_access.roles"`. Without the mapper everyone gets "no access".
+  The issuer is `https://<keycloak>/realms/<realm>`.
+
+Other providers: Authentik sends the user's groups as `groups`
+(`roles_claim = "groups"`, the groups named as in `[oidc.roles]`), its
+issuer is `https://<authentik>/application/o/<application slug>/`;
+Microsoft Entra ID sends app roles as `roles`, Zitadel project roles as
+`urn:zitadel:iam:org:project:roles` (an object: its keys are the names).
+
+Tested against Keycloak 26 (sign in, roles, no role, signing out at the
+provider too).
+
 ## REST API
 
 JSON in and out under `/api/v1`. The full description is served at
@@ -236,20 +417,27 @@ token of any role, like the list of labels (it shows nothing a `preview`
 token cannot see otherwise, but the version). `docs/openapi.yaml` and the
 reference page `site/docs/api.md` are written from it by
 `tools/openapi_docs.py`; a test fails when they are out of date.
+`HEAD` of a `GET` request (and of the web page and its files) answers
+with the same status and headers, without the body; `/mcp` and `/oidc/`
+take no `HEAD` (405).
 
 | Request | Answer |
 |---|---|
-| `GET /health` | `{"status": "ok", "version": …}`; the only request without a token |
+| `GET /health` | `{"status": "ok", "version": …}`; the only request without a token (besides the files of the web page) |
 | `GET /openapi.json` | the OpenAPI description |
+| `GET /me` | the token's `name`, `role` and `printers`, whether the server needs a token, and the `limits` of a request (labels in one job, on sheets, copies, data rows, columns, cells, body bytes); for someone signed in with OpenID Connect also `display_name` and `session: true` |
 | `GET /printers?status=false` | with `printers.toml`: its printers the token may use, with `name`, `printer` (model), `host`, `description`, `location`, `media`, `default`, `max_copies` and `status` |
 | `GET /printers?discover=false` | without it: printer models: id, name, kind (`tape`, `labels`, `pages`), resolution, tape widths or label sizes, the address set in the app (`configured_host`) and, with `--discover`, the printers found on the network (`found`; remembered for 30 s) |
-| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, print width, print method and media type set on the printer, cassette; from the server's settings for the printer: `job_print_method` and `job_media_type`, what the server's jobs print with and how they find the labels, which the printer's `method` and `media` settings may choose for each job, else as set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
+| `GET /printers/{name}/status` | the printer's state: `state`, `error` (code and message), `dpi`, `modes`, `media` (tape, remaining, label pitch, the size of the labels loaded (`label_mm`, if the printer tells it), print width, print method and media type set on the printer, cassette; from the server's settings for the printer: `job_print_method` and `job_media_type`, what the server's jobs print with and how they find the labels, which the printer's `method` and `media` settings may choose for each job, else as set on the printer). Without a printer list `{id}` is a model and `?host=` the address (default: set in the app). 502 if the printer cannot be reached |
 | `GET /labels` | label files in the labels folder and below: `name`, `bytes`, `modified` |
-| `GET /labels/{name}` | elements with their names (what `set` fills in), `variables`, `builtin_variables`, `columns` of the placeholders, `data_file` (if usable), size, counter, features |
-| `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings and the PNG in base64; `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |
+| `GET /labels/{name}` | elements with their names (what `set` fills in), `variables`, `builtin_variables`, `columns` of the placeholders, `data_file` (if usable), size, counter, features, `on_sheet` (printed on label sheets: at most 999 labels in one job) |
+| `PUT /labels/{name}` | admin: upload a label file (the body is the `.tavletta` file, `Content-Type: application/json`); 201, or 200 with `?replace=true` for an existing one; 409 `label_exists`. See [Uploading labels](#uploading-labels) |
+| `DELETE /labels/{name}` | admin: delete a label file (its data file stays); 204 |
+| `POST /data` | read a data file sent along (`{"content": base64, "name", "sheet", "header"}`): `kind` (`csv`, `ods`, `xlsx`), `delimiter`, `sheets`, `sheet`, `columns`, `rows`, every cell as the text it shows (leading zeros and number formats kept). Nothing is kept on the server; the web page sends the rows it chose as `data_rows` |
+| `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings, the PNG in base64 and `geometry`: where the elements are (boxes in mm, `tavletta/editing.py`) and the image's resolution (`null` for `"view": "printer"`); `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |
 | `POST /print` | 202 and the job (`Location: /api/v1/jobs/{id}`); 200 if it finished within `wait` seconds |
 | `GET /jobs/{id}` | `state` (`queued`, `waiting` for the label file, `printing`, `done`, `failed`, `canceled`), `printed` of `total` labels, `rows_printed`, `printer_name`, `owner`, `error` (code, message), `remark`, `warnings`, times |
-| `DELETE /jobs/{id}` | cancel: a waiting job at once, a printing one after the label being printed. 409 if it has finished |
+| `DELETE /jobs/{id}` | cancel: a waiting job at once, a printing one after the label being printed (cab: after the job of up to `labels_per_job` labels being printed). 409 if it has finished |
 
 Fields of `POST /preview` and `POST /print` (unknown fields are refused):
 
@@ -363,9 +551,165 @@ restored backup cannot hand out a number twice.
   saved is refused before printing (409), as on the command line.
 - Cancel is looked at between two labels: between copies rendered one by
   one and between data rows. Copies the printer makes of one image cannot
-  be stopped.
+  be stopped. A cab printer gets a series as jobs of up to
+  `labels_per_job` labels (250 by default, see [cab.md](cab.md)): cancel
+  is looked at between those jobs, a job that has started is printed in
+  full.
 - `SIGTERM` (systemd, `docker stop`): waiting jobs are canceled, a printing
   one stops after its label and saves its counter.
+
+## Web page
+
+`tavletta serve` also serves a web page at `/` for people who print from a
+browser: no app to install, the same server, tokens and printers. It is
+plain HTML, CSS and JavaScript (`tavletta/server/web/`, about 110 KB, no
+framework, no build step) and is part of the Python package, so every
+installation has it (pip, the container image, the Debian and Fedora
+packages, Flatpak). `--no-web-ui` turns it off.
+
+- **Signing in**: with an access token. The page keeps it in the tab's
+  `sessionStorage` only (gone with the tab; never in `localStorage`, a
+  cookie or the address) and sends it as `Authorization: Bearer` with
+  every request. "Sign out" forgets it and everything shown or entered.
+  A 401 (token expired or revoked) asks for a token again and keeps what
+  was entered. Without a token on the server (loopback only) the page
+  needs no sign in. With `--oidc` the page offers "Sign in with
+  <provider>" too, or only that ([Signing in with OpenID
+  Connect](#signing-in-with-openid-connect-oidctoml)); the header shows the
+  person's name and role, and "Sign out" also signs out at the provider.
+- **Roles**: the page asks `GET /me` and leaves out what the role may not
+  do: a `preview` token sees templates, printers and previews, the print
+  buttons say why they cannot be used; `print` prints; `admin` also
+  uploads and deletes templates. The server checks every request anyway.
+- **Printers**: their state (text and symbol, never colour alone), the
+  labels or tape loaded, problems; a printer that cannot be reached
+  cannot be chosen for printing.
+- **Templates**: the labels folder with a preview, size and fields of
+  each. A template with data fields is previewed with the first row of
+  its own data file, else with sample values, never the placeholders
+  (`{Inventory number}` is longer than most values and runs off the
+  label): digits for fields named like a number (number, Nr., ID,
+  counter, code) and as many as a code of only digits takes (EAN, UPC,
+  ITF-14), else the field's name, shortened while the boxes of the
+  preview's `geometry` run off the label or into another text or code.
+  A data file that is missing (`data_file_missing` of
+  `GET /labels/{name}`) or unreadable is a note under the preview. Print one: the fields filled in (data columns, variables, named
+  elements), a preview that follows the input; the elements a field
+  fills are outlined in the preview, and pointing at an element names
+  it (the boxes come with the preview, `geometry`).
+- **Series**: values from a CSV, XLSX or ODS file (`POST /data` reads it
+  as the app does: cells as shown, `00300` stays `00300`) or a pasted
+  list, their columns assigned to the template's fields beside a preview
+  of the first label (the field in use is outlined in it, each field says
+  its value on the first label, each column's choice its first values;
+  columns named as a field, case and spaces aside, are assigned
+  automatically and the page says so), and all rows,
+  some rows (`1-20, 25, 30-`, or checkboxes) or the rows whose values lie
+  in ranges of a field. Without data, ranges make the values: an
+  inventory number from 3000 to 5685 is 2686 labels; leading zeros keep
+  the width (`00300`–`00450`), text around the number stays
+  (`INV-0001`–`INV-0250`), a step is optional, and `3000-5685` typed
+  into "From" is split. Several fields are combined row by row, never
+  every combination. The count updates as one types; the first and last
+  label are shown before printing, and the limits (`--max-labels`, the
+  printer's `max_copies`, 999 on label sheets, `--max-body` for the rows
+  sent) before the request is sent. From 100 labels on, a dialog with
+  the number, template and printer asks first. The job shows its
+  progress and can be canceled (labels printed stay printed); after a
+  cancel or a failure it continues with the first row not printed in
+  full. The result says when not all numbers from the first to the last
+  label were printed.
+- **Languages**: every language of the app (`po/*.po`); the texts come
+  from its catalogs (`/ui/messages.json?lang=de`, by default in the
+  language of the browser; a region without a catalog takes the
+  language's, `zh-Hant` and `zh-MO` traditional Chinese), from the
+  compiled ones of the installation or, in a checkout, from `po/`
+  directly. Arabic is laid out right to left (`dir` of messages.json).
+  Numbers follow the page's language in the region the browser names
+  for it, German always Swiss as `2'686`. Times are on a 24-hour clock
+  in every language (`15:49`): browsers tell neither the system's clock
+  setting nor its region, and English browsers say `en-US` wherever they
+  are. The scripts' texts are
+  `t("…")` calls, which `xgettext --language=JavaScript --keyword=t`
+  extracts (see CONTRIBUTING.md).
+- **Accessibility**: one `<h1>` per view, focused after each change of
+  view, landmarks, a skip link, visible labels and hints, errors under
+  the field and in a summary at the top that links to them, live regions
+  for counts and progress (not for every label), `<dialog>` for
+  confirmations, everything by keyboard, focus visible, light and dark
+  from the system, forced colours, reduced motion, from 320 px wide.
+
+### Uploading labels
+
+`PUT /api/v1/labels/{name}` (role `admin`) takes a `.tavletta` file as it
+is, `Content-Type: application/json`. It is checked as the app opens a
+file (`Label.load()` of exactly these bytes, written to a hidden file in
+the labels folder that is never listed), held to the limits of a label
+sent with a request (200 elements, 50 images and codes; document pages
+only with `--allow-pdf-pages`) and of `--max-body`, then put in place in
+one step (a hard link, so a name taken meanwhile is not overwritten; a
+file system without hard links: the name is taken first). The name is
+one file in the folder itself: letters of any script, digits, spaces and
+`. _ - ( ) + ,`, up to 100 characters and 255 bytes, not starting with
+a dot or a space, taken as given (not normalised), no name Windows
+keeps for devices (`con`, `nul`, `com1` …); anything else (`..`, `/`,
+`\`, NUL) is 400. An existing label is
+replaced only with `?replace=true`, and only if it is a file (not a
+folder or link). `DELETE /api/v1/labels/{name}` removes a label file of
+the folder (links leading out of it are not found; a file that cannot be
+removed, a read-only folder, is 500 `not_deleted`). Neither happens
+while a job of this server waits or prints for that label (409
+`label_in_use` at once: it would print a label deleted, or print the
+layout replaced and then save its counter into the new file), nor while
+the window or the command line prints it (the file lock; 409
+`label_locked` after 5 s). A print request checked just before its label
+is deleted is not queued (404 `label_not_found`), nor one checked while
+the label is replaced (409 `label_changed`: send it again; a counter a
+print saved meanwhile is no change). Both are logged
+with the token's name. Uploads a server left behind when it was killed
+while checking one (`.upload-…` in the folder) are removed at the next
+start once they are an hour old.
+
+The upload and `/data` are not MCP tools: an AI client fills in and
+prints the labels it is given; changing the labels everyone prints with
+is for an administrator, by the web page or the REST API with an admin
+token, not for a model that can be talked into it by the text it reads.
+A client of MCP sends rows as `data_rows` itself.
+
+### Security of the page
+
+- The page and its files (`/`, `/ui/…`) are answered without a token:
+  they are the program, the same for everyone. Only these files, by
+  name; nothing else of the package or the disk.
+- `Content-Security-Policy: default-src 'none'; script-src 'self';
+  style-src 'self'; img-src 'self' data: blob:; connect-src 'self';
+  frame-ancestors 'none'; base-uri 'none'; form-action 'none'`: no inline
+  script or style, no `eval`, no frames, requests to this server only.
+  Also `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`,
+  `Cross-Origin-Opener-Policy` and `-Resource-Policy: same-origin`,
+  `X-Content-Type-Options: nosniff`.
+- What the page shows from files and labels (CSV cells, names, messages)
+  is set as text (`textContent`), never as markup.
+- The page sends `X-Tavletta-Request` and JSON with every request: the
+  checks of the API against other web pages ([Security](#security))
+  apply to it unchanged. Signed in with OpenID Connect, its session
+  cookie (HttpOnly, the page never sees it) counts only with that header
+  and from the page's own origin, never for MCP.
+- `/oidc/info`, `/oidc/login` and `/oidc/callback` are answered without a
+  token (only with `--oidc`; 404 otherwise); their redirects carry
+  `Referrer-Policy: no-referrer`, and nothing of the callback's address
+  (code, state) is logged.
+- `/data` answers at most 500 000 cells and 16 MB of names and values
+  (413): a small file with a long cell or column name in every row would
+  otherwise make a huge answer. A file is read in a slot of its own, not
+  a render slot (previews and prints do not wait for a spreadsheet): one
+  at a time, one per client address (503 `busy`, after up to 20 s for
+  the slot), and within 10 s (413): a few MB of XLSX can unpack to
+  millions of XML elements, which the app reads, but a server should not
+  spend half a minute on for anyone with the role preview.
+- The files are sent with an `ETag` and `Cache-Control: no-cache`: a
+  browser asks again and gets 304 while they are unchanged, and the new
+  files right after an update.
 
 ## MCP
 
@@ -602,9 +946,11 @@ With the Flatpak: `"command": "flatpak"`, `"args": ["run",
   memory (1 GB) and processes, and `MALLOC_ARENA_MAX=2` keeps threads
   from holding on to memory a large label used.
 - **Logs** (stderr, the journal): client address, token name (`-` before
-  a token was accepted), method, path without the query (`-` for both if
+  a token was accepted; `oidc:<user>` for someone signed in to the page),
+  method, path without the query (`-` for both if
   the request line could not be read), status; for each job its id, token name, label,
-  printer and outcome. Never headers, tokens or label content.
+  printer and outcome; sign ins and outs, and why a sign in failed. Never
+  headers, tokens, cookies, codes or label content.
 - No shell is run and no path from a request is used outside the labels
   folder.
 
@@ -656,7 +1002,7 @@ two), so the option is off by default.
   whatever user the container runs as. It listens on all interfaces of
   the container, so it does not start without a token.
 - `packaging/docker/compose.yaml`: the published image
-  `ghcr.io/joshii-h/tavletta:1.1` ([Container image](#container)), network
+  `ghcr.io/joshii-h/tavletta:1.2` ([Container image](#container)), network
   printers, running as the owner of `config/` and `labels/` (`user:`, `TAVLETTA_UID` and
   `TAVLETTA_GID`, 1000 by default), 1 GB memory, 128 processes. `config/` with
   `printers.toml` and `tokens.toml` mounted read-only as a folder (a single
@@ -702,7 +1048,7 @@ cd packaging/docker
 mkdir -p config labels && cp printers.example.toml config/printers.toml
 docker compose pull
 docker run --rm --user "$(id -u)" -v ./config:/config --entrypoint tavletta \
-    ghcr.io/joshii-h/tavletta:1.1 token new shipping-pc --role print \
+    ghcr.io/joshii-h/tavletta:1.2 token new shipping-pc --role print \
     --tokens /config/tokens.toml --printers /config/printers.toml
 docker compose up -d
 ```
@@ -711,7 +1057,7 @@ For a quick try without files:
 
 ```sh
 docker run -e TAVLETTA_TOKEN="$(openssl rand -hex 32)" \
-    -v ~/Labels:/labels -p 127.0.0.1:8790:8790 ghcr.io/joshii-h/tavletta:1.1
+    -v ~/Labels:/labels -p 127.0.0.1:8790:8790 ghcr.io/joshii-h/tavletta:1.2
 ```
 
 ## Container image { #container }
@@ -722,13 +1068,13 @@ for `linux/amd64` and `linux/arm64` and publishes it as
 
 | Tag | |
 |---|---|
-| `1.1.2` | a release, from its tag `v1.1.2` |
-| `1.1` | the latest bug fix release of 1.1 (what `compose.yaml` uses) |
+| `1.2.1` | a release, from its tag `v1.2.1` |
+| `1.2` | the latest bug fix release of 1.2 (what `compose.yaml` uses) |
 | `latest` | the latest release (not a pre-release) |
 | `edge` | the state of `main`, not a release |
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.1.2
+docker pull ghcr.io/joshii-h/tavletta:1.2.1
 ```
 
 Before anything is pushed the amd64 image is started with
@@ -740,20 +1086,21 @@ cosign signature. To check that an image was built by this workflow from
 this repository:
 
 ```sh
-gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.1.2 --repo joshii-h/tavletta
-cosign verify ghcr.io/joshii-h/tavletta:1.1.2 \
+gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.1 --repo joshii-h/tavletta
+cosign verify ghcr.io/joshii-h/tavletta:1.2.1 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     --certificate-identity-regexp '^https://github\.com/joshii-h/tavletta/\.github/workflows/docker\.yml@refs/tags/v'
-docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.1.2 --format '{{ json .SBOM }}'
+docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.2.1 --format '{{ json .SBOM }}'
 ```
 
 ## Roadmap
 
 Planned for the server, not there yet:
 
-- **Single sign-on**: OpenID Connect (Keycloak and others) as a second way
-  to authenticate, roles from token claims mapped onto preview, print and
-  admin, per-user printer limits.
+- **Single sign-on, further**: back-channel logout (a sign out or a
+  disabled account at the provider ending the Tavletta session at once)
+  and `private_key_jwt` for the client; signing in with OpenID Connect
+  itself is there ([oidc.toml](#signing-in-with-openid-connect-oidctoml)).
 - **Audit log**: who printed what, where and when, as JSON lines in a file
   of its own, kept apart from the operational log.
 - **Metrics**: Prometheus at `/metrics` (jobs by state and printer, labels

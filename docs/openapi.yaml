@@ -4,12 +4,13 @@
 openapi: 3.1.0
 info:
   title: Tavletta
-  version: 1.1.2
+  version: 1.2.1
   description: 'Print labels made with Tavletta. JSON in and out. All requests but /health need ''Authorization:
     Bearer <token>'' when the server has a token. Named tokens (tokens.toml) have a role: preview (look
     only), print (also print and follow its own jobs) or admin (also all jobs); x-tavletta-role names
     the least role of each operation. Errors are {"error": {"code", "message"}}: the code is stable,
-    the message in the language of Accept-Language; x-tavletta-codes lists the codes of each answer.'
+    the message in the language of Accept-Language; x-tavletta-codes lists the codes of each answer.
+    HEAD of a GET request answers with its status and headers.'
   license:
     name: AGPL-3.0-or-later
     identifier: AGPL-3.0-or-later
@@ -97,6 +98,18 @@ x-tavletta-error-codes:
 - status: 409
   code: counter_not_saved
   meaning: 'The label file is not writable: nothing was printed.'
+- status: 409
+  code: label_exists
+  meaning: 'A label of that name exists: upload with replace=true.'
+- status: 409
+  code: label_in_use
+  meaning: 'Jobs of the label wait or print: retry when they are done.'
+- status: 409
+  code: label_changed
+  meaning: The label file was replaced while the request was checked.
+- status: 409
+  code: label_locked
+  meaning: 'A print of the label holds the file: retry when it has ended.'
 - status: 411
   code: length_required
   meaning: No Content-Length (chunked bodies are not accepted).
@@ -151,6 +164,12 @@ x-tavletta-error-codes:
 - status: 500
   code: internal
   meaning: An error of the server; it is logged.
+- status: 500
+  code: not_saved
+  meaning: 'The labels folder could not be written (507: it is full).'
+- status: 500
+  code: not_deleted
+  meaning: The label file could not be deleted (a read-only folder).
 - status: 502
   code: printer_<code>
   meaning: The printer is unreachable or reports a problem.
@@ -174,6 +193,7 @@ x-tavletta-printer-codes:
 - port_closed
 - busy
 - paused
+- out_of_memory
 - cover_open
 - head_open
 - jam
@@ -295,6 +315,88 @@ paths:
             application/json:
               schema:
                 type: object
+        '401':
+          description: Access token missing, wrong, expired or revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - unauthorized
+        '403':
+          description: Not allowed for this token's role, a web page (Origin) not allowed, or X-Tavletta-Request
+            missing (no token, a request that contacts printers)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - forbidden
+          - origin_not_allowed
+          - header_required
+        '405':
+          description: Not a method of this path
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - method_not_allowed
+        '408':
+          description: The request took longer than 30 s to send
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - timeout
+        '421':
+          description: Not a loopback Host on a loopback server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - wrong_host
+        '429':
+          description: Too many wrong tokens from this address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - too_many_requests
+        '500':
+          description: An error of the server (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - internal
+        '501':
+          description: A method HTTP knows but the server does not
+        '503':
+          description: 'Busy: no request slot, render slot or thread free'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - busy
+  /me:
+    get:
+      summary: The token's name, role and printers, and the limits of a request (for the web page)
+      x-tavletta-role: preview
+      parameters:
+      - *id001
+      responses:
+        '200':
+          description: Who
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Me'
         '401':
           description: Access token missing, wrong, expired or revoked
           content:
@@ -592,6 +694,7 @@ paths:
           - printer_port_closed
           - printer_busy
           - printer_paused
+          - printer_out_of_memory
           - printer_cover_open
           - printer_head_open
           - printer_jam
@@ -725,10 +828,11 @@ paths:
       x-tavletta-role: preview
       parameters:
       - *id001
-      - name: name
+      - &id004
+        name: name
         in: path
         required: true
-        schema:
+        schema: &id003
           type: string
         description: May contain slashes for subfolders; '.tavletta' may be left out.
       responses:
@@ -834,6 +938,423 @@ paths:
                 $ref: '#/components/schemas/Error'
           x-tavletta-codes:
           - busy
+    put:
+      summary: 'Upload a label file (admin): checked as the app opens a file, then put into the labels
+        folder in one step'
+      x-tavletta-role: admin
+      parameters:
+      - *id001
+      - name: name
+        in: path
+        required: true
+        schema: *id003
+        description: The file's name, without folder; '.tavletta' may be left out.
+      - name: replace
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Replace a label of that name.
+      responses:
+        '200':
+          description: Replaced (replace=true)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabelFile'
+        '201':
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabelFile'
+          headers:
+            Location:
+              description: /api/v1/labels/{name} of the label.
+              schema:
+                type: string
+        '400':
+          description: 'Not a name for a new label: letters, digits, spaces and . _ - ( ) + , (up to
+            100), in the folder itself'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - invalid_field
+          - not_json
+        '401':
+          description: Access token missing, wrong, expired or revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - unauthorized
+        '403':
+          description: Not allowed for this token's role, a web page (Origin) not allowed, or X-Tavletta-Request
+            missing (no token, a request that contacts printers)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - forbidden
+          - origin_not_allowed
+          - header_required
+        '405':
+          description: Not a method of this path
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - method_not_allowed
+        '408':
+          description: The request took longer than 30 s to send
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - timeout
+        '409':
+          description: A label of that name exists (send replace=true), jobs of it wait or print (label_in_use),
+            or another program's print holds the file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - label_exists
+          - label_in_use
+          - label_locked
+        '411':
+          description: No Content-Length
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - length_required
+        '413':
+          description: Over --max-body, or a label too large to render
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - too_large
+          - label_too_large
+        '415':
+          description: Not application/json
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - not_json
+        '421':
+          description: Not a loopback Host on a loopback server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - wrong_host
+        '422':
+          description: Not a label Tavletta can open
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - label_not_label
+          - label_newer
+          - label_damaged
+          - pages_not_allowed
+        '429':
+          description: Too many wrong tokens from this address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - too_many_requests
+        '500':
+          description: Not saved (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - not_saved
+          - internal
+        '501':
+          description: A method HTTP knows but the server does not
+        '503':
+          description: 'Busy: no request slot, render slot or thread free'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - busy
+        '507':
+          description: No space left in the labels folder
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - not_saved
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: The content of a .tavletta file.
+    delete:
+      summary: Delete a label file (admin); its data file stays
+      x-tavletta-role: admin
+      parameters:
+      - *id001
+      - *id004
+      responses:
+        '204':
+          description: Deleted
+        '400':
+          description: Not a name inside the labels folder
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - invalid_field
+        '401':
+          description: Access token missing, wrong, expired or revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - unauthorized
+        '403':
+          description: Not allowed for this token's role, a web page (Origin) not allowed, or X-Tavletta-Request
+            missing (no token, a request that contacts printers)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - forbidden
+          - origin_not_allowed
+          - header_required
+        '404':
+          description: No such label
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - label_not_found
+        '405':
+          description: Not a method of this path
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - method_not_allowed
+        '408':
+          description: The request took longer than 30 s to send
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - timeout
+        '409':
+          description: Jobs of it wait or print (label_in_use), or another program's print holds the
+            file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - label_in_use
+          - label_locked
+        '421':
+          description: Not a loopback Host on a loopback server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - wrong_host
+        '429':
+          description: Too many wrong tokens from this address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - too_many_requests
+        '500':
+          description: Not deleted (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - not_deleted
+          - internal
+        '501':
+          description: A method HTTP knows but the server does not
+        '503':
+          description: 'Busy: no request slot, render slot or thread free'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - busy
+  /data:
+    post:
+      summary: 'Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its rows for data_rows;
+        nothing is kept'
+      x-tavletta-role: preview
+      parameters:
+      - *id001
+      responses:
+        '200':
+          description: The rows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Data'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - invalid_field
+          - unknown_field
+          - not_json
+        '401':
+          description: Access token missing, wrong, expired or revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - unauthorized
+        '403':
+          description: Not allowed for this token's role, a web page (Origin) not allowed, or X-Tavletta-Request
+            missing (no token, a request that contacts printers)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - forbidden
+          - origin_not_allowed
+          - header_required
+        '405':
+          description: Not a method of this path
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - method_not_allowed
+        '408':
+          description: The request took longer than 30 s to send
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - timeout
+        '411':
+          description: No Content-Length
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - length_required
+        '413':
+          description: Over --max-body (the file in base64), over the limits of data files, more than
+            500000 cells (rows times columns), or longer than 10 s to read
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - too_large
+        '415':
+          description: Not application/json
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - not_json
+        '421':
+          description: Not a loopback Host on a loopback server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - wrong_host
+        '422':
+          description: Not a table, damaged or empty
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - data_problem
+        '429':
+          description: Too many wrong tokens from this address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - too_many_requests
+        '500':
+          description: An error of the server (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - internal
+        '501':
+          description: A method HTTP knows but the server does not
+        '503':
+          description: Another file is being read (one at a time, one per client address)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          x-tavletta-codes:
+          - busy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataRequest'
+            example:
+              name: assets.csv
+              content: QXNzZXROdW1iZXIKMDAzMDAKMDAzMDEK
   /preview:
     post:
       summary: The label filled in, as an image; nothing is printed
@@ -1098,13 +1619,14 @@ paths:
           - timeout
         '409':
           description: 'The label file is not writable: the next counter value could not be saved, nothing
-            was printed'
+            was printed; or it was replaced while the request was checked (label_changed): send it again'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
           x-tavletta-codes:
           - counter_not_saved
+          - label_changed
         '411':
           description: No Content-Length
           content:
@@ -1219,7 +1741,7 @@ paths:
       x-tavletta-role: print
       parameters:
       - *id001
-      - &id003
+      - &id005
         name: id
         in: path
         required: true
@@ -1311,14 +1833,15 @@ paths:
           x-tavletta-codes:
           - busy
     delete:
-      summary: 'Cancel a job: at once while it waits, after the current label while it prints'
+      summary: 'Cancel a job: at once while it waits, after the labels already sent to the printer while
+        it prints (cab: the job of up to labels_per_job labels)'
       x-tavletta-role: print
       parameters:
       - *id001
-      - *id003
+      - *id005
       responses:
         '202':
-          description: Canceled, or stopping after the current label
+          description: Canceled, or stopping after the labels already sent
           content:
             application/json:
               schema:
@@ -1463,7 +1986,7 @@ components:
           type: string
       example:
         status: ok
-        version: 1.1.2
+        version: 1.2.1
     NamedPrinter:
       type: object
       description: A printer of printers.toml.
@@ -1618,6 +2141,14 @@ components:
               - 'null'
               description: 'Die-cut labels: the distance from one label to the next, as the printer measured
                 it.'
+            label_mm:
+              type:
+              - array
+              - 'null'
+              items:
+                type: number
+              description: 'Die-cut labels: the size of the labels loaded (width, height), if the printer
+                tells it.'
             width_mm:
               type:
               - number
@@ -1752,6 +2283,9 @@ components:
           - 'null'
         data_file_unusable:
           type: boolean
+        data_file_missing:
+          type: boolean
+          description: 'data_file is not there (any more): send the rows in data_rows.'
         data_sheet:
           type:
           - string
@@ -1763,32 +2297,35 @@ components:
           type: array
           items:
             type: string
+        on_sheet:
+          type: boolean
+          description: 'Printed on label sheets: at most 999 labels in one job.'
     PreviewRequest:
       type: object
       additionalProperties: false
       properties:
-        label: &id005
+        label: &id007
           type: string
           maxLength: 1024
           description: Name of a label file in the labels folder (see GET /labels), subfolders with '/';
             '.tavletta' may be left out. Either label or label_content.
           examples:
           - asset-tag
-        label_content: &id006
+        label_content: &id008
           type: object
           description: Or the label itself, as the JSON of a .tavletta file, checked like a file that
             is opened. Its data file is ignored (send data_rows instead), its counter never saved.
-        printer: &id007
+        printer: &id009
           type: string
           description: 'With printers.toml on the server: the printer''s name (default: the default printer
             the token may use, or the only one). Without it: a printer model id, if not the label''s
             own (the label is fitted as in the app).'
           examples:
           - it-cab
-        set: &id008
+        set: &id010
           type: object
           maxProperties: 1000
-          additionalProperties: &id004
+          additionalProperties: &id006
             type:
             - string
             - number
@@ -1799,18 +2336,18 @@ components:
           examples:
           - title: Flour
             lot: A-17
-        set_literal: &id009
+        set_literal: &id011
           type: object
           maxProperties: 1000
-          additionalProperties: *id004
+          additionalProperties: *id006
           description: Like set, but braces in a value are text, not variables.
-        counter_start: &id010
+        counter_start: &id012
           type: integer
           minimum: 0
           maximum: 999999999999999
           description: The {=counter} of the first label; it goes up by the label's step with every label,
             copy and row.
-        data_rows: &id011
+        data_rows: &id013
           type: array
           minItems: 1
           maxItems: 100000
@@ -1827,11 +2364,11 @@ components:
             rows, 1000 columns, 2000000 cells, 100000 characters a value.'
           examples:
           - - AssetNumber: '100001'
-        data_file: &id012
+        data_file: &id014
           type: string
           description: Or a CSV, TSV, ODS or XLSX file in the labels folder. Without data_rows and data_file,
             the label's own data file is used if it lies beside the label in the labels folder.
-        sheet: &id013
+        sheet: &id015
           type: string
           description: Sheet of the data file, the first by default.
         row:
@@ -1876,19 +2413,222 @@ components:
         png:
           type: string
           contentEncoding: base64
+        geometry:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Geometry'
+          description: Where the elements are in the image; null for view=printer and a label turned
+            onto its sheet.
+    Geometry:
+      type: object
+      description: The elements' boxes in the preview image, in mm from its top left corner (tavletta/editing.py,
+        docs/editing.md); a pixel of the image is mm * dpi / 25.4.
+      required:
+      - width_mm
+      - height_mm
+      - layout
+      - elements
+      - dpi
+      properties:
+        width_mm:
+          type: number
+          description: 'Along the tape: the length.'
+        height_mm:
+          type: number
+          description: 'Across: tape or label height.'
+        layout:
+          enum:
+          - flow
+          - free
+        dpi:
+          type: number
+          description: The image's resolution.
+        elements:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+                description: From 0, in the order of the label's elements (GET /labels/{name} counts
+                  them from 1).
+              kind:
+                type: string
+              box:
+                type: array
+                items:
+                  type: number
+                minItems: 4
+                maxItems: 4
+                description: 'left, top, right, bottom in mm: its ink.'
+              rotation:
+                type: integer
+      example:
+        width_mm: 40.0
+        height_mm: 18.6
+        layout: free
+        dpi: 300.0
+        elements:
+        - index: 0
+          kind: text
+          box:
+          - 2.0
+          - 1.5
+          - 21.83
+          - 6.2
+          rotation: 0
+    Me:
+      type: object
+      required:
+      - name
+      - role
+      - token_required
+      - limits
+      properties:
+        name:
+          type: string
+          description: The token's name in tokens.toml; 'token' for the one token of --token-file, 'local'
+            without a token; 'oidc:<user>' for someone signed in to the web page with OpenID Connect.
+        display_name:
+          type: string
+          description: A person's name from the provider; else the same as name.
+        session:
+          type: boolean
+          description: 'true: signed in to the web page with OpenID Connect (its session cookie), not
+            with a token.'
+        role:
+          enum:
+          - preview
+          - print
+          - admin
+        printers:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'The printers the token may use; null: all.'
+        token_required:
+          type: boolean
+          description: 'false: the server has no token and no --oidc (loopback only).'
+        limits:
+          type: object
+          description: 'What one request may ask for at most: labels in one job (--max-labels; on label
+            sheets at most 999), copies, data rows, columns and cells, and the body in bytes (--max-body;
+            also the largest label file to upload).'
+          properties:
+            max_labels:
+              type: integer
+            max_sheet_labels:
+              type: integer
+            max_copies:
+              type: integer
+            max_rows:
+              type: integer
+            max_columns:
+              type: integer
+            max_cells:
+              type: integer
+            max_body:
+              type: integer
+      example:
+        name: shipping-terminal
+        role: print
+        printers:
+        - it-cab
+        token_required: true
+        limits:
+          max_labels: 10000
+          max_sheet_labels: 999
+          max_copies: 9999
+          max_rows: 100000
+          max_columns: 1000
+          max_cells: 2000000
+          max_body: 4194304
+    DataRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - content
+      properties:
+        content:
+          type: string
+          contentEncoding: base64
+          description: 'The file: CSV (any delimiter, UTF-8, UTF-16 or Windows-1252), ODS or XLSX, told
+            apart by content. Pasted text is a CSV file.'
+        name:
+          type: string
+          maxLength: 255
+          description: The file's name, for messages.
+        sheet:
+          type: string
+          description: 'ODS, XLSX: the sheet (default the first).'
+        header:
+          type: boolean
+          default: true
+          description: 'false: the first row is data too; the columns are named A, B, C …'
+    Data:
+      type: object
+      required:
+      - kind
+      - columns
+      - rows
+      properties:
+        kind:
+          enum:
+          - csv
+          - ods
+          - xlsx
+        delimiter:
+          type:
+          - string
+          - 'null'
+          description: 'CSV: the delimiter found; null for one column and spreadsheets.'
+        sheets:
+          type: array
+          items:
+            type: string
+        sheet:
+          type:
+          - string
+          - 'null'
+          description: The sheet read.
+        columns:
+          type: array
+          items:
+            type: string
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+          description: 'Every cell as the text it shows: leading zeros and number formats kept (00300
+            stays 00300). Rows without a filled cell are left out.'
+      example:
+        kind: csv
+        delimiter: ;
+        sheets: []
+        sheet: null
+        columns:
+        - AssetNumber
+        - Room
+        rows:
+        - AssetNumber: '00300'
+          Room: B 2.14
     PrintRequest:
       type: object
       additionalProperties: false
       properties:
-        label: *id005
-        label_content: *id006
-        printer: *id007
-        set: *id008
-        set_literal: *id009
-        counter_start: *id010
-        data_rows: *id011
-        data_file: *id012
-        sheet: *id013
+        label: *id007
+        label_content: *id008
+        printer: *id009
+        set: *id010
+        set_literal: *id011
+        counter_start: *id012
+        data_rows: *id013
+        data_file: *id014
+        sheet: *id015
         host:
           type: string
           maxLength: 512
@@ -1962,7 +2702,16 @@ components:
           description: Name in the labels folder; null for label_content.
         printed:
           type: integer
-          description: Labels printed so far.
+          description: Labels printed so far, for certain; rises label by label while the job prints,
+            as far as the printer tells.
+        printed_max:
+          type:
+          - integer
+          - 'null'
+          description: 'After a failure whose outcome the printer could not tell (the connection was
+            lost while it printed): up to this many labels may have printed. The counter goes on after
+            them; rows_printed counts the rows printed for certain, so printing again from the next one
+            may print labels twice. null otherwise.'
         total:
           type: integer
           description: 'Labels to print: copies x rows.'
@@ -2014,6 +2763,7 @@ components:
         owner: inventory-tool
         label: asset-tag.tavletta
         printed: 20
+        printed_max: null
         total: 20
         rows_printed: 20
         cancel_requested: false

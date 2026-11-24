@@ -9,7 +9,11 @@ through it over the network. What the server does and how programs use it:
 
 - One small service: a REST API (and MCP for AI assistants) on port 8790.
   It renders the labels itself and sends them to the printers over the
-  network; no desktop, no browser, no database.
+  network; no desktop, no database.
+- A web page at the same address for people: sign in with a token, see
+  the printers, print a template or a series (from a CSV, XLSX or ODS
+  file, a pasted list or number ranges such as 3000–5685), upload and
+  delete templates with an admin token. `--no-web-ui` turns it off.
 - The printers it may use are named in `printers.toml`; no other address
   can be printed on.
 - Every program or device gets its own access token with a role
@@ -50,9 +54,9 @@ through it over the network. What the server does and how programs use it:
 ```sh
 sudo git clone https://git.joshuahirsig.xyz/joshii/tavletta.git /opt/tavletta
 cd /opt/tavletta
-sudo git checkout v1.1.2      # the release to run: git tag lists them
+sudo git checkout v1.2.1      # the release to run: git tag lists them
 cd packaging/docker
-sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.1, for x86-64 and ARM64
+sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.2, for x86-64 and ARM64
 ```
 
 The image (about 230 MB), built and tested by the project's CI and
@@ -142,7 +146,7 @@ file keeps only its hash.
 
 ```sh
 sudo docker run --rm --user 1000:1000 -v ./config:/config --entrypoint tavletta \
-    ghcr.io/joshii-h/tavletta:1.1 token new inventory-tool --role print --printer it-cab \
+    ghcr.io/joshii-h/tavletta:1.2 token new inventory-tool --role print --printer it-cab \
     --description "Inventory tool" \
     --tokens /config/tokens.toml --printers /config/printers.toml
 ```
@@ -185,7 +189,7 @@ curl http://127.0.0.1:8790/api/v1/health
 ```
 
 ```text
-{"status": "ok", "version": "1.1.2"}
+{"status": "ok", "version": "1.2.1"}
 ```
 
 - The container restarts by itself after a crash or a reboot.
@@ -201,6 +205,10 @@ curl http://127.0.0.1:8790/api/v1/health
 
   Each printer is listed with its state; `UNREACHABLE` with a message if
   the server cannot reach it.
+- Open `http://127.0.0.1:8790/` in a browser on the server (others use
+  the proxy's address, see [Reverse proxy](#proxy)) and sign in with a
+  token: the web page shows what its role may do. The page keeps the
+  token in the browser tab only, until the tab is closed or "Sign out".
 
 ### Host network: mDNS and USB { #docker-host }
 
@@ -230,7 +238,7 @@ and label contents are never logged.
 ```sh
 cd /opt/tavletta
 sudo git fetch --tags
-sudo git checkout v1.2.0         # the new release
+sudo git checkout v1.2.1         # the new release
 cd packaging/docker
 sudo docker compose pull
 sudo docker compose up -d
@@ -252,7 +260,7 @@ image can be pulled again at any time.
 ```sh
 cd /opt/tavletta/packaging/docker
 sudo docker compose down
-sudo docker image rm ghcr.io/joshii-h/tavletta:1.1
+sudo docker image rm ghcr.io/joshii-h/tavletta:1.2
 sudo rm -r /opt/tavletta     # also deletes config, labels and fonts
 ```
 
@@ -286,7 +294,7 @@ system's PyGObject:
 
 ```sh
 sudo python3 -m venv --system-site-packages /opt/tavletta
-sudo /opt/tavletta/bin/pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.1.2"
+sudo /opt/tavletta/bin/pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1"
 /opt/tavletta/bin/tavletta --version
 ```
 
@@ -323,7 +331,7 @@ capabilities, 1 GB memory):
 
 ```sh
 sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \
-    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.1.2/packaging/systemd/tavletta-server.service
+    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now tavletta-server
 systemctl status tavletta-server
@@ -343,9 +351,9 @@ For a single user on a desktop there is the user service
 ### Updating { #native-update }
 
 ```sh
-sudo /opt/tavletta/bin/pip install --upgrade "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.0"
+sudo /opt/tavletta/bin/pip install --upgrade "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1"
 sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \
-    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.0/packaging/systemd/tavletta-server.service
+    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service
 sudo systemctl daemon-reload
 sudo systemctl restart tavletta-server
 ```
@@ -486,6 +494,57 @@ Caddy gets a certificate by itself. Start the server with
 - Outgoing from the server to the printers: TCP 9100 and 631.
 - Never make the server reachable from the internet.
 
+## Signing in with OpenID Connect { #oidc }
+
+People can sign in to the web page with your organisation's identity
+provider (Keycloak, Authentik, Microsoft Entra ID, Okta …) instead of an
+access token; their roles at the provider become Tavletta's roles.
+Programs keep using tokens. It needs HTTPS through the reverse proxy
+(only `http://localhost` works without, for testing).
+
+1. Register a client at the provider: confidential (with a secret), the
+   authorization code flow only, PKCE S256, redirect URI
+   `https://labels.example.com/oidc/callback`, post-logout redirect URI
+   `https://labels.example.com/`. Make the roles or groups reach the ID
+   token: in Keycloak a mapper *User Client Role* (or *User Realm Role*)
+   on the client with *Add to ID token* on; Authentik sends `groups`.
+2. Put the secret into `config/oidc-secret` (the secret alone, mode 600)
+   and write `config/oidc.toml` (`cp oidc.example.toml config/oidc.toml`
+   gives a commented start):
+
+   ```toml
+   [oidc]
+   issuer = "https://id.example.com/realms/example"
+   client_id = "tavletta"
+   client_secret_file = "/config/oidc-secret"
+   public_url = "https://labels.example.com"
+   provider_name = "Example ID"
+   roles_claim = "resource_access.tavletta.roles"   # Authentik: "groups"
+
+   [oidc.roles]
+   preview = ["tavletta-preview"]
+   print = ["tavletta-print"]
+   admin = ["tavletta-admin"]
+   ```
+
+3. Add `"--oidc"` and `"/config/oidc.toml"` to `command:` in
+   `compose.yaml` (native: to `ExecStart`, with `/etc/tavletta/...`),
+   keep `--trusted-proxy`, and restart. With `--trusted-proxy` the server
+   needs `public_url` and does not start without it.
+
+Signing in needs PyJWT, which the container image and the deb and rpm
+packages have; the Flatpak has not, and nothing can be installed into
+it: run the server from one of the others for `--oidc`.
+
+The page then shows "Sign in with Example ID". Someone without one of
+the roles gets "no access". A session lasts 8 hours, or 60 minutes
+without use (`session_hours`, `idle_minutes`); a role removed or an
+account disabled at the provider counts from the next sign in, so keep
+sessions short where admins sign in. `token_login = false` hides the
+token field on the page. Printers can be limited per role
+(`[oidc.printers]`) or by a claim (`printers_claim`). Every key and the
+security details: [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#signing-in-with-openid-connect-oidctoml).
+
 ## Fonts { #fonts }
 
 A label is drawn with the fonts of the computer that prints it. A text
@@ -530,6 +589,11 @@ a stand-in that is installed counts: without one, Arial is warned about.
 - The server reachable only through the HTTPS proxy, only from the
   networks that need it; never from the internet.
 - `--trusted-proxy` set to the proxy's own address, nothing wider.
+- With `--oidc`: `public_url` set, the client confidential with PKCE,
+  only the roles people need, short sessions where admins sign in,
+  `oidc-secret` mode 600.
+- No one prints from a browser: `--no-web-ui` (the web page needs no
+  token to load, but shows nothing without one).
 - Updates: watch the releases and update within weeks; the image
   of each release brings Debian's security updates of its day
   (`docker compose pull`).
@@ -544,7 +608,7 @@ pages): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch
 |---|---|
 | A printer is `UNREACHABLE` (`printer_timeout`, `printer_not_found`) | The server cannot reach it: test from the server with `nc -vz <printer> 9100` (631 for IPP); check the address, the firewall, that the printer is on. In Docker the container must reach the printer's network. |
 | `401 unauthorized` | Token missing, mistyped, expired or removed from `tokens.toml`. The header is `Authorization: Bearer <token>`. |
-| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. |
+| `429 too_many_requests` | Ten wrong tokens from this address within a minute: fix the token, wait a minute. Behind a reverse proxy not given with `--trusted-proxy` everyone shares the proxy's address. |
 | `429 queue_full` | 100 jobs (20 per token) are waiting: the printer is slow or stopped; check it, retry later. |
 | `503 busy` | All request or render slots are taken for a moment: retry after a second or two. |
 | `404 printer_not_found` | Not in `printers.toml`, or the token may not use it (`--printer`). |
@@ -554,5 +618,6 @@ pages): [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch
 | `other_labels_loaded` in the warnings | The printer has other labels loaded than the label's: load the matching roll, or check the label's size and gap. A ZPL printer may report a distance it measured on an earlier roll: calibrate it. |
 | `409 counter_not_saved` | The label file is not writable for the server's user: `chown` it to the user (Docker: 1000, native: `tavletta`). |
 | Date or time on labels off by an hour or two | The container runs on UTC: set `TAVLETTA_TZ=Europe/Zurich` in `.env`, then `docker compose up -d`. |
+| "Signing in did not work" on the web page | The log says why: the provider cannot be reached, the redirect URI or secret is wrong at the provider, or the page is reached over plain HTTP (set `public_url`, `--trusted-proxy`). "No access": the roles do not reach the ID token (a mapper is missing) or none is mapped in `[oidc.roles]`. |
 | The server does not start | `docker compose logs` or `journalctl -u tavletta-server`: a mistake in `printers.toml` or `tokens.toml` is named with its key. |
 | Permission denied on the folders (Fedora, RHEL with SELinux and Podman) | Add `:Z` to the volumes in `compose.yaml`. |

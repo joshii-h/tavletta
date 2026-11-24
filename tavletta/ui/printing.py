@@ -20,7 +20,7 @@ from tavletta.backends.base import (
     PrintResult,
     Progress,
 )
-from tavletta.job import Job, OtherLabels, PrepareFailed
+from tavletta.job import Job, LoadedFit, OtherLabels, PrepareFailed, fit_loaded
 from tavletta.merge import MergeError
 from tavletta.model import Label
 from tavletta.serial import (
@@ -175,7 +175,48 @@ class PrintFlow:
         )
 
     def _other_labels_dialog(self, other: OtherLabels) -> None:
-        self._warn(_("Different labels loaded"), other_labels_text(other, self.window.unit))
+        """Print anyway, or, where the loaded labels make a label the model
+        allows (job.fit_loaded()), take them over and print not yet."""
+        window = self.window
+        heading, body = _("Different labels loaded"), other_labels_text(other, window.unit)
+        fit = fit_loaded(window.backend, window.label, other)
+        if fit is None:
+            self._warn(heading, body)
+            return
+        dialog = Adw.AlertDialog(heading=heading, body=body)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("print", _("Print anyway"))
+        dialog.add_response("adapt", _("Use loaded labels"))
+        dialog.set_response_appearance("print", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_response_appearance("adapt", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("adapt")
+        dialog.set_close_response("cancel")
+
+        def answered(_dialog, response: str) -> None:
+            if response == "print":
+                self.dialog()
+            elif response == "adapt":
+                self.use_loaded(fit)
+
+        dialog.connect("response", answered)
+        window.present_dialog(dialog)
+
+    def use_loaded(self, fit: LoadedFit) -> None:
+        """The label's size and gap set to the loaded labels', one step of
+        undo; not printed: the preview shows it to be checked first, with a
+        warning if elements now reach beyond the label."""
+        window = self.window
+        window.label.set_media_size(*fit.size_mm)
+        window.label.gap_mm = fit.gap_mm
+        window.rebuild_sidebar()
+        window.mark_changed()
+        window.render_if_stale()
+        rendered = window.rendered
+        if rendered and any(w.key == "outside_label" for w in rendered.warnings):
+            text = _("Label adapted to the loaded labels. Some elements reach beyond its edge.")
+        else:
+            text = _("Label adapted to the loaded labels")
+        window.offer_undo(text)
 
     # --- print dialog ------------------------------------------------------------
 
@@ -565,8 +606,9 @@ class PrintFlow:
         self, options: PrintOptions, indexes: Sequence[int], sheet: SheetJob | None = None
     ) -> None:
         """One label per row in `indexes`; a Stop button in the banner ends
-        the series after the label being printed. On label sheets (`sheet`)
-        one job of sheets, each position a label: it cannot be stopped."""
+        the series after the label being printed (a cab printer: after the
+        job being printed, "labels_per_job"). On label sheets (`sheet`) one
+        job of sheets, each position a label: it cannot be stopped."""
         window = self.window
         # the file may have been read again, with fewer rows, since the dialog
         indexes = [index for index in indexes if 0 <= index < len(window.data.rows)]
@@ -615,12 +657,14 @@ class PrintFlow:
         self.thread.start()
 
     def stop(self) -> None:
-        """Stop a series after the label being printed."""
+        """Stop a series after the labels already sent to the printer."""
         if not self.busy:
             return
         self._stop.set()
         banner = self.window.banner
-        banner.set_title(GLib.markup_escape_text(_("Stopping after this label…")))
+        banner.set_title(
+            GLib.markup_escape_text(_("Stopping after the labels already sent to the printer…"))
+        )
         banner.set_button_label(None)
 
     def series_progress(self, event: SeriesProgress) -> bool:
@@ -705,7 +749,7 @@ class PrintFlow:
             message = _("The label cannot be prepared for printing.")
         else:  # also a code too large for the printer (CodeTooLarge)
             message = printer_error_text(error.error, self.window.unit)
-        where = series_stop_text(error.row, error.copies_printed, error.position)
+        where = series_stop_text(error.row, error.copies_printed, error.position, error.uncertain)
         self.failed(error.error, message + "\n\n" + where)
         return False
 

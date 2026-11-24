@@ -1,7 +1,7 @@
 %global app_id xyz.joshuahirsig.Tavletta
 
 Name:           tavletta
-Version:        1.1.2
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Design and print labels on label printers
 
@@ -32,6 +32,8 @@ BuildRequires:  libadwaita
 BuildRequires:  dejavu-sans-fonts
 # tools/icons.py's tests: librsvg's GObject introspection (Rsvg 2.0)
 BuildRequires:  librsvg2
+# the web page's JavaScript tests (Node's own test runner)
+BuildRequires:  nodejs
 # the print server's unit and user (tavletta-server), the udev rule
 BuildRequires:  systemd-rpm-macros
 
@@ -61,7 +63,7 @@ label printers with endless tape or die-cut labels (Brother VC-500W, QL and
 P-touch, cab, NIIMBOT, ZPL, EPL, TSPL, ESC/POS and DYMO printers), and on
 office printers through CUPS or IPP, one label per page or on label sheets.
 It also prints label files from the command line and runs a print server
-with a REST API and MCP.
+with a REST API, MCP and a web page.
 
 A device rule lets the user at the computer use the USB label printers of
 Brother, cab, DYMO, TSC, Zebra and NIIMBOT without joining further groups;
@@ -72,14 +74,16 @@ system service is in tavletta-server.
 %package        server
 Summary:        Print server of the Tavletta label designer, as a system service
 Requires:       %{name} = %{version}-%{release}
+# signing in to the web page with OpenID Connect (--oidc): the extra "oidc"
+Requires:       python3-jwt+crypto
 %{?systemd_requires}
 
 %description    server
-The print server of Tavletta, with a REST API and MCP, as the system service
-tavletta-server: as a user of its own (made by this package), in a sandbox, on
-the local address 127.0.0.1, port 8790, with its printers, access tokens
-and labels in folders of its own. It is installed but not enabled; an
-upgrade restarts it if it runs.
+The print server of Tavletta, with a REST API, MCP and a web page, as the
+system service tavletta-server: as a user of its own (made by this package),
+in a sandbox, on the local address 127.0.0.1, port 8790, with its printers,
+access tokens and labels in folders of its own. It is installed but not
+enabled; an upgrade restarts it if it runs.
 
 
 %prep
@@ -91,7 +95,8 @@ grep -q '"labelprinter"' pyproject.toml
 
 
 %generate_buildrequires
-%pyproject_buildrequires
+# the extra "oidc" (PyJWT with cryptography) too: its tests run
+%pyproject_buildrequires -x oidc
 
 
 %build
@@ -161,5 +166,13 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 
 
 %changelog
+* Tue Nov 24 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.2.1-1
+- New upstream release: test fixes, the packages for 1.2
+- BuildRequires: nodejs, for the web page's JavaScript tests
+
+* Tue Nov 24 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.2.0-1
+- New upstream release: the print server's web page, signing in with
+  OpenID Connect, editing with the mouse, cab series as one job
+
 * Mon Nov 23 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.1.2-1
 - Initial package

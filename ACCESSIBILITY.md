@@ -24,6 +24,17 @@ us about a barrier.
 - **Keyboard**: every function is reachable with the keyboard; the print
   dialog, the element list and the option pages follow the usual GNOME
   keys (Tab, arrow keys, Enter, Escape).
+- **Arranging in the preview** (free layout): everything the mouse does
+  has a keyboard way. With the preview focused, the arrow keys move the
+  selected elements (Shift: in larger steps), Ctrl+A and Shift+Ctrl+A
+  select all or none, Delete removes; opening an element's row in the
+  element list selects it, and its **Position and size** page sets exact
+  numbers; **Arrange** in the header bar aligns and distributes. The
+  preview tells screen readers which element is selected and where it
+  is. Handles and touch targets are at least 24 pixels (44 for a finger
+  or pen); touch and pen drag like the mouse. Outlines are not told apart
+  by colour alone (hover dashed, selection solid), and the overlay has no
+  animation.
 - **Display**: follows the system settings for dark style, high contrast
   and large text.
 - **Languages**: the app is available in 27 languages.
@@ -35,9 +46,8 @@ us about a barrier.
 
 - The label preview is an image. Its content is described in the element
   list beside it, but a screen reader cannot read the drawn label itself.
-- Placing elements by dragging in the free layout is not yet possible;
-  positions are set with number fields, which work with the keyboard and
-  screen readers.
+- Resizing has no keys of its own in the preview: sizes are set with the
+  number fields of the element's row and its **Position and size** page.
 - Colour choices on labels are checked for contrast on black-and-white
   printers, but there is no colour-blindness simulation of the preview yet.
 - Printer status comes from the printers themselves; some models report

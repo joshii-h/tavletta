@@ -28,8 +28,8 @@ from tavletta.backends.base import (
     RenderAgain,
     check_codes,
 )
-from tavletta.model import Label, measured_differs
-from tavletta.render import DEFAULT_SAFE_MM, Rendered, RenderWarning, whole_tape
+from tavletta.model import MAX_GAP_MM, MAX_SIZE_MM, MIN_SIZE_MM, Label, measured_differs
+from tavletta.render import DEFAULT_SAFE_MM, Rendered, RenderWarning, mm_to_px, whole_tape
 from tavletta.sheets import Sheet
 from tavletta.sheets.layout import Copies, LabelSource, Pages, SheetJob, clip_preview
 from tavletta.variables import Values, expand_label, uses_counter, varies_per_copy
@@ -69,6 +69,15 @@ def preview_image(
     return rendered, image, dpi
 
 
+def preview_top(rendered: Rendered, image: Image.Image, tape_mm: float, dpi: float) -> int:
+    """The row of preview_image()'s image where the label's top edge lies,
+    from which Rendered.boxes are measured: the nominal tape centred on the
+    rendered raster (render.label_top()), that raster centred on the whole
+    tape where it is narrower (render.whole_tape())."""
+    top = (rendered.image.height - mm_to_px(tape_mm, dpi)) // 2
+    return top + max(0, (image.height - rendered.image.height) // 2)
+
+
 @dataclass(frozen=True)
 class OtherLabels:
     """Die-cut labels loaded that are not the label's: their size, or the
@@ -86,6 +95,9 @@ class OtherLabels:
     # the printer may have measured it on an earlier roll: calibrate it
     # (Backend.pitch_may_be_old)
     calibrate: bool = False
+    # the printer reports the loaded labels' size too, and it is the
+    # label's: the gap is what differs (fit_loaded())
+    size_reported: bool = False
 
 
 def other_labels(
@@ -115,8 +127,59 @@ def other_labels(
     if not loaded and not measured:
         return None
     return OtherLabels(
-        size, label.gap_mm, label.pitch_mm(), loaded, measured, backend.pitch_may_be_old
+        size,
+        label.gap_mm,
+        label.pitch_mm(),
+        loaded,
+        measured,
+        backend.pitch_may_be_old,
+        size_reported=bool(info.label_mm),
     )
+
+
+@dataclass(frozen=True)
+class LoadedFit:
+    """The label's size (Label.media_size(): width across the print head,
+    height along the feed) and gap made to fit the loaded labels."""
+
+    size_mm: tuple[float, float]
+    gap_mm: float
+
+
+def fit_loaded(backend: Backend, label: Label, other: OtherLabels) -> LoadedFit | None:
+    """The label made to fit the loaded labels (other_labels()), for the
+    window to offer: their size if the printer reports it (the gap kept);
+    from the distance measured the height along the feed, the gap kept, so
+    that height and gap make the distance; where that height is no label
+    the model allows (below MIN_SIZE_MM, too long for the printer), or the
+    printer reports the label's size, the gap, the height kept. The width
+    stays: no printer reports it reliably (ZPL's print width is what the
+    last job set). None if neither makes a label the model allows."""
+    if other.loaded_mm:
+        size = (float(other.loaded_mm[0]), float(other.loaded_mm[1]))
+        fit = LoadedFit(size, other.gap_mm)
+        return fit if _allowed(backend, fit) else None
+    if other.measured_mm is None:
+        return None
+    width, height = label.media_size()
+    measured = other.measured_mm
+    gap = LoadedFit((width, height), round(measured - height, 1))
+    if other.size_reported:  # the size is the label's: the gap differs
+        fits = [gap]
+    else:
+        fits = [LoadedFit((width, round(measured - other.gap_mm, 1)), other.gap_mm), gap]
+    return next((fit for fit in fits if _allowed(backend, fit)), None)
+
+
+def _allowed(backend: Backend, fit: LoadedFit) -> bool:
+    """A size and gap the label may have on this printer."""
+    caps = backend.capabilities
+    width, height = fit.size_mm
+    if not MIN_SIZE_MM <= width <= MAX_SIZE_MM or caps.too_wide(width):
+        return False
+    if not max(MIN_SIZE_MM, caps.min_length_mm) <= height <= MAX_SIZE_MM:
+        return False
+    return not caps.too_long(height) and 0 <= fit.gap_mm <= MAX_GAP_MM
 
 
 def labels_reported(backend: Backend, info: PrinterInfo, chosen: Mapping[str, object]) -> bool:
@@ -128,6 +191,13 @@ def labels_reported(backend: Backend, info: PrinterInfo, chosen: Mapping[str, ob
     if info.label_mm or info.pitch_mm:
         return True
     return bool(info.media_type) and not backend.senses_as_reported(chosen, info)
+
+
+def counted_labels(value: object, most: int) -> int:
+    """A count of labels in PrinterError.params, from 0 to `most`."""
+    if not isinstance(value, int) or isinstance(value, bool):
+        return 0
+    return max(0, min(value, most))
 
 
 class PrepareFailed(Exception):
@@ -173,6 +243,10 @@ class Job:
         self.positions = positions
         self.position: int | None = None  # on sheets: the position being rendered
         self.printed = 0
+        # labels after `printed` that may have printed too: the printer could
+        # not tell (PrinterError.params["printed_max"]); the counter goes on
+        # after them, a number skipped rather than one printed twice
+        self.unsure = 0
         self.stopped = False  # run() ended early because `stop` was set
         # the first label is filled in once: its UUID is the same in the
         # check and the print; the others are made as they are needed, a
@@ -273,9 +347,10 @@ class Job:
         failure, and those a backend reports in PrinterError.params
         ["printed"] for the failed send (copies of one job before the
         problem). The error then carries "printed" and "copies" of the
-        whole job. Interrupted (Ctrl+C) during a send, the labels of that
-        send count as printed: the printer may have them, and a number
-        skipped is better than one printed twice."""
+        whole job, and "printed_max" if more may have printed (the
+        backend could not tell). Interrupted (Ctrl+C) during a send, the
+        labels of that send count as printed: the printer may have them,
+        and a number skipped is better than one printed twice."""
         if not self.options.host:  # prepare() renders for this printer
             self.options = replace(self.options, host=host)
         if self.sheet is not None:
@@ -299,10 +374,14 @@ class Job:
         try:
             result = self._print_label(image, label, host, options, progress)
         except PrinterError as e:
-            done = e.params.get("printed", 0)
-            if isinstance(done, int) and not isinstance(done, bool):
-                self.printed += max(0, min(done, options.copies))
-            if self.printed:
+            before = self.printed
+            self.printed += counted_labels(e.params.get("printed"), options.copies)
+            most = counted_labels(e.params.get("printed_max"), options.copies)
+            e.params.pop("printed_max", None)
+            if most > self.printed - before:  # more may have printed: the job's labels
+                e.params["printed_max"] = before + most
+                self.unsure = before + most - self.printed
+            if self.printed or "printed_max" in e.params:
                 e.params.update(printed=self.printed, copies=self.options.copies)
             raise
         except Exception:
@@ -362,7 +441,7 @@ class Job:
         """The counter for the next print, None if the label has none."""
         if not uses_counter(self.label):
             return None
-        return self.values.counter + self.values.step * self.printed
+        return self.values.counter + self.values.step * (self.printed + self.unsure)
 
 
 class _EachCopy:

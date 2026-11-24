@@ -24,9 +24,13 @@ Build-Depends:
  gir1.2-pangocairo-1.0 <!nocheck>,
  gir1.2-poppler-0.18 <!nocheck>,
  gir1.2-rsvg-2.0 <!nocheck>,
+# the web page's JavaScript tests (Node's own test runner)
+ nodejs <!nocheck>,
  python3-gi <!nocheck>,
  python3-gi-cairo <!nocheck>,
+ python3-cryptography <!nocheck>,
  python3-hypothesis <!nocheck>,
+ python3-jwt <!nocheck>,
  python3-pytest <!nocheck>,
  python3-pytest-xdist <!nocheck>,
  python3-yaml <!nocheck>,
@@ -76,6 +80,8 @@ Description: design and print labels on label printers
 Package: tavletta-server
 Architecture: all
 Depends:
+ python3-cryptography,
+ python3-jwt,
  systemd | systemd-standalone-tmpfiles,
  tavletta (= ${binary:Version}),
  ${misc:Depends},
@@ -84,8 +90,10 @@ Description: print server of the Tavletta label designer, as a system service
  DYMO, NIIMBOT and printers with ZPL, EPL2, TSPL or ESC/POS) and office
  printers.
  .
- This package runs its print server, with a REST API and MCP, as the
- system service tavletta-server: as the user tavletta (made by the
- package), sandboxed, on 127.0.0.1:8790, with its printers and access
- tokens in /etc/tavletta and the labels in /var/lib/tavletta/labels. It is
- installed but neither enabled nor started.
+ This package runs its print server, with a REST API, MCP and a web
+ page, as the system service tavletta-server: as the user tavletta (made
+ by the package), sandboxed, on 127.0.0.1:8790, with its printers and
+ access tokens in /etc/tavletta and the labels in
+ /var/lib/tavletta/labels. People can sign in to the web page with an
+ OpenID Connect provider. It is installed but neither enabled nor
+ started.

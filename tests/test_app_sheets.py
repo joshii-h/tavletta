@@ -21,7 +21,7 @@ from test_app import find, one, respond, walk  # noqa: E402
 
 from tavletta.backends import get_backend  # noqa: E402
 from tavletta.backends.base import Margins, PrinterInfo, PrintOptions, Progress  # noqa: E402
-from tavletta.model import Label, SheetChoice, TextElement  # noqa: E402
+from tavletta.model import Label, ShapeElement, SheetChoice, TextElement  # noqa: E402
 from tavletta.sheets import find as find_sheet  # noqa: E402
 from tavletta.sheets import search  # noqa: E402
 from tavletta.ui import sheets as ui_sheets  # noqa: E402
@@ -695,3 +695,24 @@ def test_print_reuses_the_preview_for_its_code_check(office, system_env, monkeyp
     win.schedule_render()  # not current: drawn anew
     assert win.render_for(win.render_options()) is not win.rendered
     assert drawn == [1]
+
+
+@pytest.mark.parametrize("rotated", [False, True])
+def test_moving_an_element_on_a_sheet_label(office, rotated):
+    """The preview's editor on a label of a sheet (turned on it or not):
+    the label as designed, its millimetres as on a single label."""
+    from test_app_editor import drag, positions
+
+    win = office
+    sheet = next(s for s in search("", "A4") if s.shape != "round")
+    win.set_sheet(SheetChoice(sheet.id, [0], rotated))
+    win.label.layout = "free"
+    win.label.elements = [ShapeElement(shape="rectangle", fill="solid", x_mm=3, y_mm=3)]
+    win.label.elements[0].height_mm = 4
+    win.mark_changed()
+    win.present()
+    render_now(win)
+    assert pump(lambda: win.preview.canvas.view() is not None and win.editor.geometry())
+    win.settings.set_snap(False)
+    drag(win, 5, 4, 2, 1.5)
+    assert positions(win)[0] == pytest.approx((5, 4.5), abs=0.06)

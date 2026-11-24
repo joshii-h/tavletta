@@ -1,8 +1,9 @@
 # Print server
 
-Other programs and AI assistants can print labels through Tavletta without
-opening the window: `tavletta serve` offers a web interface for programs
-(REST API), `tavletta mcp` connects AI assistants such as Claude.
+Other programs, AI assistants and people in a browser can print labels
+through Tavletta without opening the window: `tavletta serve` offers a web
+page for people and a web interface for programs (REST API), `tavletta
+mcp` connects AI assistants such as Claude.
 
 - Setting up the server for a company, with Docker or systemd, HTTPS and
   fonts: [Server installation](server-install.md).
@@ -22,6 +23,7 @@ tavletta serve --labels-dir ~/Labels
   `~/.local/share/tavletta/labels`.
 - Printer address, safety margin and print settings are those set in the
   app.
+- Open `http://127.0.0.1:8790/` in a browser: the [web page](#web-page).
 - `--mcp` adds the connection for AI assistants at `/mcp`.
 - Stop with Ctrl+C: waiting jobs are canceled, a label being printed is
   finished and the counter saved.
@@ -57,7 +59,9 @@ tavletta serve --labels-dir ~/Labels
   ```
 
 - `method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`),
-  `upside_down` [[ui:Print upside down]]; others are `quality`, `chain`,
+  `upside_down` [[ui:Print upside down]], `offset_mm` the
+  [[ui:Print offset]] (−5 to 5), `labels_per_job`
+  [[ui:Labels per job]] (1 to 1000, 250 by default); others are `quality`, `chain`,
   `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see
   [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers).
 - The printer's state tells the print method set on the printer
@@ -99,11 +103,54 @@ tavletta serve --labels-dir ~/Labels
 - The token is shown only once; the file keeps only a fingerprint (hash)
   of it.
 - `preview` only lists and shows previews, `print` also prints and
-  follows its own jobs, `admin` sees and cancels all jobs.
+  follows its own jobs, `admin` sees and cancels all jobs and uploads
+  and deletes templates.
 - `--printer shipping` limits a token to that printer, `--expires
   2027-12-31` to a date.
 - To take a token back, delete its entry in `tokens.toml`. The server
   notices it at once.
+
+## Web page { #web-page }
+
+The server's own page, at its address (`http://127.0.0.1:8790/`, or the
+address of the [reverse proxy](server-install.md#proxy)):
+
+- **Sign in** with an access token (without a token on the server there is
+  nothing to sign in to). The browser keeps it in this tab only; "Sign
+  out" forgets it. Where the server is set up for it, "Sign in with …"
+  uses your organisation's account instead ([OpenID
+  Connect](server-install.md#oidc)).
+- **Printers**: their state, the labels or tape loaded and problems, in
+  words.
+- **Templates**: the label files of the labels folder with a preview.
+  Data fields show the first row of the template's data file, or sample
+  values if it has none or it is missing. "Print" fills in the fields of one label and shows the preview as it
+  is typed; the elements a field fills are outlined in it. With an
+  `admin` token, templates are uploaded (`.tavletta` files) and deleted
+  here.
+- **Series**, step by step:
+  1. Data: a CSV, XLSX or ODS file, a list pasted from a spreadsheet, or
+     no data at all. Leading zeros stay (`00300`).
+  2. Assign: which column fills which field of the template (the same
+     names are assigned already, case and spaces aside). The preview of
+     the first label beside it outlines the field in use; each field
+     shows its value, each column its first values.
+  3. Choose: all rows, some rows (`1-20, 25, 30-`), or by ranges of a
+     field. Without data, ranges make the values: Inventory number from
+     `3000` to `5685` is 2686 labels, `00300` to `00450` keeps the zeros,
+     a step makes every second or tenth number; `3000-5685` can be typed
+     or pasted at once.
+  4. Check: the number of labels, the first and the last one, the limits
+     of the server and the printer.
+  5. Print: from 100 labels on, the page asks first. The progress shows
+     how many are printed; Cancel stops after the current label (a cab
+     printer: after the current job of up to [[ui:Labels per job]]
+     labels). After a cancel or a printer problem, "Continue from …"
+     prints the rest.
+- The page speaks the language of the browser, or the one chosen at the
+  top: every language of the app, Arabic right to left. Times are on a
+  24-hour clock.
+- `--no-web-ui` turns the page off, for servers that only programs use.
 
 ## Programs (REST API) { #api }
 
@@ -114,7 +161,8 @@ tavletta serve --labels-dir ~/Labels
   shows what can be filled in: element names, variables and columns.
 - `POST /api/v1/preview` returns the label as a PNG image.
 - `POST /api/v1/print` queues a print job; `GET /api/v1/jobs/<id>` shows
-  its state, `DELETE` cancels it between two labels.
+  its state, `DELETE` cancels it between two labels (a cab printer:
+  between two jobs of a series).
 - Each printer prints one job after the other.
 - Messages come in the language of the `Accept-Language` header.
 - Without an access token, requests that ask printers need the header
@@ -196,10 +244,10 @@ The print server is published as a container image for amd64 and arm64
 (also a Raspberry Pi with a 64-bit system):
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.1.2
+docker pull ghcr.io/joshii-h/tavletta:1.2.1
 ```
 
-- `1.1.2` is a release, `1.1` the latest bug fix release of 1.1, `latest`
+- `1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest`
   the latest release. `edge` is the state of development, not a release.
 - `packaging/docker/compose.yaml` uses the published image:
   `docker compose pull`, then `docker compose up -d`.
@@ -211,8 +259,8 @@ docker pull ghcr.io/joshii-h/tavletta:1.1.2
   [GitHub CLI](https://cli.github.com) or [cosign](https://docs.sigstore.dev):
 
 ```sh
-gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.1.2 --repo joshii-h/tavletta
-cosign verify ghcr.io/joshii-h/tavletta:1.1.2 \
+gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.1 --repo joshii-h/tavletta
+cosign verify ghcr.io/joshii-h/tavletta:1.2.1 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     --certificate-identity-regexp '^https://github\.com/joshii-h/tavletta/\.github/workflows/docker\.yml@refs/tags/v'
 ```

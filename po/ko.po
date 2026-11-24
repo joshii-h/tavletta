@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-23 15:25+0100\n"
+"PO-Revision-Date: 2026-11-24 19:56+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ko\n"
 "Language: ko\n"
@@ -10,34 +10,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: tavletta/app.py:147 tavletta/ui/styles.py:183
+#: tavletta/app.py:150 tavletta/ui/styles.py:183
 msgid "Box and frame"
 msgstr "상자 및 틀"
 
-#: tavletta/app.py:221 tavletta/cli.py:185
+#: tavletta/app.py:224 tavletta/cli.py:186
 msgid "Design and print labels"
 msgstr "라벨 디자인 및 인쇄"
 
-#: tavletta/app.py:224
+#: tavletta/app.py:227
 msgid ""
 "Tavletta is Romansh for a small tablet (from tavla, table/board). Pronounced "
 "tav-LET-ta."
 msgstr "Tavletta는 로망슈어로 작은 판을 뜻합니다(tavla, 판·탁자에서 유래). 발음은 tav-LET-ta입니다."
 
 #. translators: replace with your name to be credited in the About dialog
-#: tavletta/app.py:230
+#: tavletta/app.py:233
 msgid "translator-credits"
 msgstr "Tavletta contributors"
 
-#: tavletta/app.py:238
+#: tavletta/app.py:241
 msgid "Ideas for the variables (counter, date, UUID), no code"
 msgstr "변수(카운터, 날짜, UUID)에 대한 아이디어, 코드는 포함되지 않음"
 
-#: tavletta/app.py:241
+#: tavletta/app.py:244
 msgid "Protocol knowledge"
 msgstr "프로토콜 지식"
 
-#: tavletta/app.py:246
+#: tavletta/app.py:249
 #, python-format
 msgid ""
 "From %(projects)s and the manufacturers' manuals, written anew without their "
@@ -64,55 +64,55 @@ msgstr "NAME=VALUE 형식이어야 합니다: %s"
 msgid "expected a whole number from %(min)d to %(max)d: %(value)s"
 msgstr "%(min)d에서 %(max)d 사이의 정수여야 합니다: %(value)s"
 
-#: tavletta/cli.py:179
+#: tavletta/cli.py:180
 #, python-format
 msgid "expected rows such as 3-10, 5 or 7-: %s"
 msgstr "3-10, 5 또는 7- 같은 행이 필요합니다: %s"
 
-#: tavletta/cli.py:186
+#: tavletta/cli.py:187
 msgid "Without a command the application starts; label files given open in it."
 msgstr "명령 없이 실행하면 앱이 시작되고, 지정한 라벨 파일이 앱에서 열립니다."
 
-#: tavletta/cli.py:192
+#: tavletta/cli.py:193
 msgid "print a label file without opening a window"
 msgstr "창을 열지 않고 라벨 파일을 인쇄합니다"
 
-#: tavletta/cli.py:193
+#: tavletta/cli.py:194
 msgid "Print a label file without opening a window."
 msgstr "창을 열지 않고 라벨 파일을 인쇄합니다."
 
-#: tavletta/cli.py:195
+#: tavletta/cli.py:196
 msgid "the label (.tavletta)"
 msgstr "라벨 (.tavletta)"
 
-#: tavletta/cli.py:198
+#: tavletta/cli.py:199
 #, python-format
 msgid "printer model, by default the label's: %s"
 msgstr "프린터 모델, 기본값은 라벨의 모델: %s"
 
-#: tavletta/cli.py:201
+#: tavletta/cli.py:202
 msgid "printer address, by default the one set in the app"
 msgstr "프린터 주소, 기본값은 앱에서 설정한 주소"
 
-#: tavletta/cli.py:204
+#: tavletta/cli.py:205
 msgid "number of copies"
 msgstr "매수"
 
-#: tavletta/cli.py:214
+#: tavletta/cli.py:215
 msgid ""
 "text of the element NAME, or value of the variable {=NAME}; variables in a "
 "text are filled in; repeatable"
 msgstr "요소 NAME의 텍스트 또는 변수 {=NAME}의 값, 텍스트 안의 변수는 채워짐, 여러 번 지정 가능"
 
-#: tavletta/cli.py:224
+#: tavletta/cli.py:225
 msgid "like --set, but the value is used as it is: braces are no variables"
 msgstr "--set과 같지만 값을 그대로 사용: 중괄호는 변수가 아님"
 
-#: tavletta/cli.py:230
+#: tavletta/cli.py:231
 msgid "counter of the first label, instead of the one saved in the label"
 msgstr "라벨에 저장된 값 대신 사용할 첫 라벨의 카운터"
 
-#: tavletta/cli.py:236
+#: tavletta/cli.py:237
 msgid ""
 "print with the printer model's defaults instead of the cut, colours, "
 "quality, extras (chain printing, high resolution, tape feed), printer "
@@ -120,7 +120,7 @@ msgid ""
 "the safety margin stay"
 msgstr "앱에서 마지막으로 선택한 절단, 색상, 품질, 추가 기능(연속 인쇄, 고해상도, 테이프 이송), 프린터 설정, 라벨 시트 윤곽선 대신 프린터 모델의 기본값으로 인쇄; 주소와 안전 여백은 유지"
 
-#: tavletta/cli.py:245
+#: tavletta/cli.py:246
 msgid ""
 "print method of a thermal printer that has the setting: printer (as set on "
 "the printer), transfer (with a ribbon) or direct (thermal direct, no "
@@ -128,326 +128,341 @@ msgid ""
 "one set on the printer"
 msgstr "이 설정이 있는 감열 프린터의 인쇄 방식: printer(프린터에 설정된 대로), transfer(리본 사용) 또는 direct(직접 감열, 리본 없음). 기본값은 앱에서 선택한 방식이며 --printer-defaults를 쓰면 프린터에 설정된 방식입니다"
 
-#: tavletta/cli.py:254
+#: tavletta/cli.py:255
 msgid ""
 "do not ask the printer before rendering (its model, tape and resolution)"
 msgstr "렌더링 전에 프린터에 묻지 않음 (모델, 테이프, 해상도)"
 
-#: tavletta/cli.py:260
+#: tavletta/cli.py:261
 msgid ""
 "do not save the next counter value in the label (a read-only file); the next "
 "print starts from the same number"
 msgstr "다음 카운터 값을 라벨에 저장하지 않음 (읽기 전용 파일), 다음 인쇄는 같은 번호부터 시작"
 
-#: tavletta/cli.py:269
+#: tavletta/cli.py:270
 msgid ""
 "serial labels: one label for each row of this CSV, ODS or XLSX file; by "
 "default the data file of the label"
 msgstr "데이터 병합 라벨: 이 CSV, ODS 또는 XLSX 파일의 각 행마다 라벨 하나, 기본값은 라벨의 데이터 파일"
 
-#: tavletta/cli.py:274
+#: tavletta/cli.py:275
 msgid "the sheet of the data file, by default the first"
 msgstr "데이터 파일의 시트, 기본값은 첫 번째 시트"
 
-#: tavletta/cli.py:280
+#: tavletta/cli.py:281
 msgid "only these rows of the data file, e.g. 3-10, 5 or 7- (counted from 1)"
 msgstr "데이터 파일의 이 행들만, 예: 3-10, 5 또는 7- (1부터 셈)"
 
-#: tavletta/cli.py:283
+#: tavletta/cli.py:284
 msgid "check and render only, do not print"
 msgstr "확인과 렌더링만 하고 인쇄하지 않음"
 
-#: tavletta/cli.py:289
+#: tavletta/cli.py:290
 msgid ""
 "with --dry-run: save each label as PNG as the window exports it, at most 600 "
 "dpi (- for stdout: the first only)"
 msgstr "--dry-run과 함께: 창에서 내보내는 그대로 각 라벨을 PNG로 저장, 최대 600 dpi (- 는 표준 출력: 첫 번째만)"
 
-#: tavletta/cli.py:295
+#: tavletta/cli.py:296
 msgid "list the printers found on the network"
 msgstr "네트워크에서 찾은 프린터 목록 표시"
 
-#: tavletta/cli.py:296
+#: tavletta/cli.py:297
 msgid "List the printers found on the network: model, address, name."
 msgstr "네트워크에서 찾은 프린터 목록을 표시합니다: 모델, 주소, 이름."
 
-#: tavletta/cli.py:298
+#: tavletta/cli.py:299
 #, python-format
 msgid "only this printer model: %s"
 msgstr "이 프린터 모델만: %s"
 
-#: tavletta/cli.py:310
+#: tavletta/cli.py:311
 #, python-format
 msgid "expected an address or network such as 172.16.0.0/12: %s"
 msgstr "172.16.0.0/12 같은 주소나 네트워크가 필요함: %s"
 
-#: tavletta/cli.py:320
+#: tavletta/cli.py:321
 msgid "the folder with the label files the server may use"
 msgstr "서버가 사용할 수 있는 라벨 파일이 있는 폴더"
 
-#: tavletta/cli.py:327
+#: tavletta/cli.py:328
 msgid "only print on this printer address (* matches anything); repeatable"
 msgstr "이 프린터 주소로만 인쇄 (*는 모든 것과 일치), 여러 번 지정 가능"
 
-#: tavletta/cli.py:333
+#: tavletta/cli.py:334
 msgid "printers.toml: the printers clients may use, by name"
 msgstr "printers.toml: 클라이언트가 이름으로 사용할 수 있는 프린터"
 
-#: tavletta/cli.py:340
+#: tavletta/cli.py:341
 msgid "most labels in one print job, copies times rows (default 10000)"
 msgstr "인쇄 작업 하나의 최대 라벨 수, 매수 곱하기 행 수 (기본값 10000)"
 
-#: tavletta/cli.py:345
+#: tavletta/cli.py:346
 msgid "search the network for printers (off by default)"
 msgstr "네트워크에서 프린터 찾기 (기본값은 꺼짐)"
 
-#: tavletta/cli.py:351
+#: tavletta/cli.py:352
 msgid ""
 "allow document pages (PDF, images) in labels sent with the request; PDFs are "
 "then drawn in a separate process with limits (off by default)"
 msgstr "요청과 함께 보낸 라벨에 문서 페이지(PDF, 이미지)를 허용합니다. PDF는 제한이 있는 별도 프로세스에서 그려집니다(기본값: 꺼짐)"
 
-#: tavletta/cli.py:360
+#: tavletta/cli.py:361
 msgid "run a print server with a REST API"
 msgstr "REST API를 제공하는 인쇄 서버 실행"
 
-#: tavletta/cli.py:361
+#: tavletta/cli.py:362
 msgid "Run a print server: a REST API and, with --mcp, MCP for AI clients."
 msgstr "인쇄 서버를 실행합니다: REST API와, --mcp를 지정하면 AI 클라이언트용 MCP."
 
-#: tavletta/cli.py:364
+#: tavletta/cli.py:365
 msgid "address to listen on (default 127.0.0.1)"
 msgstr "수신 대기할 주소 (기본값 127.0.0.1)"
 
-#: tavletta/cli.py:370
+#: tavletta/cli.py:371
 #, python-format
 msgid "port to listen on (default %d)"
 msgstr "수신 대기할 포트 (기본값 %d)"
 
-#: tavletta/cli.py:376
+#: tavletta/cli.py:377
 msgid ""
 "file with the access token; else the environment variable TAVLETTA_TOKEN"
 msgstr "액세스 토큰이 든 파일, 지정하지 않으면 환경 변수 TAVLETTA_TOKEN"
 
-#: tavletta/cli.py:382
+#: tavletta/cli.py:383
 msgid "tokens.toml: named access tokens with roles"
 msgstr "tokens.toml: 역할이 있는 이름 붙은 액세스 토큰"
 
-#: tavletta/cli.py:384
+#: tavletta/cli.py:389
+msgid "oidc.toml: people sign in to the web page with OpenID Connect"
+msgstr "oidc.toml: OpenID Connect로 웹 페이지에 로그인"
+
+#: tavletta/cli.py:391
 msgid "also serve MCP at /mcp"
 msgstr "/mcp에서 MCP도 제공"
 
-#: tavletta/cli.py:390
+#: tavletta/cli.py:395
+msgid "do not serve the web page at /: only the REST API (and MCP)"
+msgstr "/에서 웹 페이지를 제공하지 않음: REST API(및 MCP)만 제공"
+
+#: tavletta/cli.py:402
 msgid "largest request body in MB (default 4)"
 msgstr "요청 본문의 최대 크기(MB) (기본값 4)"
 
-#: tavletta/cli.py:399
+#: tavletta/cli.py:411
 msgid ""
 "a reverse proxy whose X-Forwarded-For header names the client, e.g. "
 "172.16.0.0/12; repeatable"
 msgstr "X-Forwarded-For 헤더로 클라이언트를 알려 주는 리버스 프록시, 예: 172.16.0.0/12, 여러 번 지정 가능"
 
-#: tavletta/cli.py:408
+#: tavletta/cli.py:420
 msgid "allow requests from web pages of this origin; repeatable"
 msgstr "이 출처의 웹 페이지에서 오는 요청 허용, 여러 번 지정 가능"
 
-#: tavletta/cli.py:413
+#: tavletta/cli.py:425
 msgid "serve MCP on standard input and output"
 msgstr "표준 입력과 출력으로 MCP 제공"
 
-#: tavletta/cli.py:415
+#: tavletta/cli.py:427
 msgid ""
 "Serve MCP on standard input and output, for AI clients such as Claude "
 "Desktop."
 msgstr "Claude Desktop 같은 AI 클라이언트를 위해 표준 입력과 출력으로 MCP를 제공합니다."
 
-#: tavletta/cli.py:425
+#: tavletta/cli.py:437
 msgid "manage the access tokens of the print server"
 msgstr "인쇄 서버의 액세스 토큰 관리"
 
-#: tavletta/cli.py:426
+#: tavletta/cli.py:438
 msgid "Manage the access tokens of the print server."
 msgstr "인쇄 서버의 액세스 토큰을 관리합니다."
 
-#: tavletta/cli.py:431
+#: tavletta/cli.py:443
 msgid "make a token and add its hash to tokens.toml"
 msgstr "토큰을 만들고 그 해시를 tokens.toml에 추가"
 
-#: tavletta/cli.py:432
+#: tavletta/cli.py:444
 msgid "Make a token, add its hash to tokens.toml and show the token once."
 msgstr "토큰을 만들고 그 해시를 tokens.toml에 추가한 뒤 토큰을 한 번만 표시합니다."
 
-#: tavletta/cli.py:434
+#: tavletta/cli.py:446
 msgid "name of the token, e.g. the device"
 msgstr "토큰 이름, 예: 장치"
 
-#: tavletta/cli.py:439
+#: tavletta/cli.py:451
 msgid "preview: look only; print: also print; admin: also all jobs"
 msgstr "preview: 보기만, print: 인쇄도 가능, admin: 모든 인쇄 작업도 가능"
 
-#: tavletta/cli.py:441
+#: tavletta/cli.py:453
 msgid "tokens.toml to add it to"
 msgstr "추가할 대상 tokens.toml"
 
-#: tavletta/cli.py:447
+#: tavletta/cli.py:459
 msgid "only this printer of printers.toml; repeatable"
 msgstr "printers.toml의 이 프린터만, 여러 번 지정 가능"
 
-#: tavletta/cli.py:450
+#: tavletta/cli.py:462
 msgid "printers.toml, to check --printer"
 msgstr "--printer를 확인할 printers.toml"
 
-#: tavletta/cli.py:452
+#: tavletta/cli.py:464
 msgid "valid until, e.g. 2027-12-31"
 msgstr "유효 기한, 예: 2027-12-31"
 
-#: tavletta/cli.py:453
+#: tavletta/cli.py:465
 msgid "a note for people"
 msgstr "사람을 위한 메모"
 
-#: tavletta/cli.py:455
+#: tavletta/cli.py:467
 msgid "store the hash with scrypt instead of SHA-256"
 msgstr "해시를 SHA-256 대신 scrypt로 저장"
 
-#: tavletta/cli.py:461
+#: tavletta/cli.py:473
 msgid ""
 "take a token you chose from standard input (stored with scrypt) instead of "
 "making one"
 msgstr "토큰을 만드는 대신 직접 고른 토큰을 표준 입력에서 받음 (scrypt로 저장)"
 
-#: tavletta/cli.py:481 tavletta/server/config.py:219
-#: tavletta/server/service.py:590
+#: tavletta/cli.py:493 tavletta/server/config.py:221
+#: tavletta/server/service.py:646
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "알 수 없는 프린터 모델: %s"
 
-#: tavletta/cli.py:488 tavletta/ui/files.py:84 tavletta/ui/files.py:137
-#: tavletta/ui/texts.py:319 tavletta/ui/texts.py:701
-#: tavletta/server/service.py:747
+#: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
+#: tavletta/ui/texts.py:351 tavletta/ui/texts.py:754
+#: tavletta/server/service.py:988
 #, python-format
 msgid "Cannot open %s"
 msgstr "열 수 없음: %s"
 
-#: tavletta/cli.py:510 tavletta/server/main.py:260
+#: tavletta/cli.py:522 tavletta/server/main.py:337
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s은(는) 날짜가 아닙니다. 예: 2026-12-31 또는 2026-12-31T08:30"
 
-#: tavletta/cli.py:558
+#: tavletta/cli.py:570
 #, python-format
 msgid "{=%s} is filled in when printing and cannot be set"
 msgstr "{=%s}은(는) 인쇄할 때 채워지므로 설정할 수 없습니다"
 
-#: tavletta/cli.py:564
+#: tavletta/cli.py:576
 #, python-format
 msgid "The label has no element or variable named %s"
 msgstr "라벨에 %s라는 이름의 요소나 변수가 없습니다"
 
-#: tavletta/cli.py:592 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1123
+#: tavletta/cli.py:605 tavletta/ui/printing.py:123
+#: tavletta/server/service.py:1390
 msgid "The label is empty"
 msgstr "라벨이 비어 있습니다"
 
-#: tavletta/cli.py:629
+#: tavletta/cli.py:642
 msgid "Cannot write the output"
 msgstr "출력을 쓸 수 없습니다"
 
-#: tavletta/cli.py:660
+#: tavletta/cli.py:673
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output은 PNG 이미지를 씁니다: .png로 끝나는 이름을 지정하세요"
 
-#: tavletta/cli.py:685 tavletta/cli.py:894 tavletta/ui/printing.py:535
-#: tavletta/ui/printing.py:699 tavletta/server/service.py:989
-#: tavletta/server/service.py:1012 tavletta/server/service.py:1307
-#: tavletta/server/service.py:1477
+#: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
+#: tavletta/ui/printing.py:749 tavletta/server/service.py:1235
+#: tavletta/server/service.py:1258 tavletta/server/service.py:1580
+#: tavletta/server/service.py:1852
 msgid "The label cannot be prepared for printing."
 msgstr "라벨을 인쇄용으로 준비할 수 없습니다."
 
-#: tavletta/cli.py:772
+#: tavletta/cli.py:785
 msgid "No printer found – give its address with --host"
 msgstr "프린터를 찾을 수 없습니다 – --host로 주소를 지정하세요"
 
-#: tavletta/cli.py:774
+#: tavletta/cli.py:787
 msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "프린터가 여러 대 발견되었습니다 – --host로 하나를 선택하세요 (tavletta list-printers)"
 
-#: tavletta/cli.py:785 tavletta/ui/texts.py:744 tavletta/server/service.py:1467
+#: tavletta/cli.py:798 tavletta/ui/texts.py:806 tavletta/server/service.py:1842
 #, python-format
 msgid "Cannot save %s"
 msgstr "저장할 수 없음: %s"
 
-#: tavletta/cli.py:787 tavletta/server/service.py:1470
+#: tavletta/cli.py:800 tavletta/server/service.py:1845
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "라벨은 인쇄되었지만 다음 카운터 값은 저장되지 않았습니다"
 
-#: tavletta/cli.py:802 tavletta/server/service.py:1152
+#: tavletta/cli.py:815 tavletta/server/service.py:1419
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "아무것도 인쇄되지 않았습니다: 다음 카운터 값을 저장할 수 없습니다"
 
-#: tavletta/cli.py:862 tavletta/cli.py:889 tavletta/cli.py:1251
+#: tavletta/cli.py:875 tavletta/cli.py:902 tavletta/cli.py:1266
 msgid "Interrupted"
 msgstr "중단됨"
 
-#: tavletta/cli.py:962
+#: tavletta/cli.py:958 tavletta/ui/printing.py:488
+#: tavletta/server/service.py:1281
+#, python-format
+msgid "At most %d labels in one print job"
+msgstr "인쇄 작업 하나에 라벨은 최대 %d개까지 가능합니다"
+
+#: tavletta/cli.py:977
 #, python-format
 msgid "--print-method: this printer model has no print method setting: %s"
 msgstr "--print-method: 이 프린터 모델에는 인쇄 방식 설정이 없습니다: %s"
 
-#: tavletta/cli.py:1004
+#: tavletta/cli.py:1019
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet와 --rows에는 데이터 파일(--data)이 필요합니다"
 
-#: tavletta/cli.py:1013 tavletta/ui/printing.py:568
-#: tavletta/server/service.py:849
+#: tavletta/cli.py:1028 tavletta/ui/printing.py:616
+#: tavletta/server/service.py:1093
 msgid "No rows to print"
 msgstr "인쇄할 행이 없습니다"
 
-#: tavletta/cli.py:1023
+#: tavletta/cli.py:1038
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "라벨이 폴더 밖에 있는 데이터 파일을 사용합니다: --data로 지정하십시오"
 
-#: tavletta/cli.py:1050 tavletta/ui/window.py:849
-#: tavletta/server/service.py:906
+#: tavletta/cli.py:1065 tavletta/ui/window.py:922
+#: tavletta/server/service.py:1152
 #, python-format
 msgid "No such column: %s"
 msgstr "없는 열: %s"
 
-#: tavletta/cli.py:1055 tavletta/ui/printing.py:648
+#: tavletta/cli.py:1070 tavletta/ui/printing.py:698
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "이 행들의 값으로는 바코드나 QR 코드를 만들 수 없습니다(예: 문자가 들어간 EAN-13 또는 빈 셀). 데이터 파일을 고친 다음 다시 읽거나, 이 행들을 빼고 인쇄하십시오."
 
-#: tavletta/cli.py:1060 tavletta/ui/printing.py:653
+#: tavletta/cli.py:1075 tavletta/ui/printing.py:703
 #, python-format
 msgid "Rows: %s"
 msgstr "행: %s"
 
-#: tavletta/cli.py:1068
+#: tavletta/cli.py:1083
 #, python-format
 msgid "Waiting for another print of %s to finish…"
 msgstr "%s의 다른 인쇄가 끝나기를 기다리는 중…"
 
-#: tavletta/cli.py:1075 tavletta/server/service.py:1301
+#: tavletta/cli.py:1090 tavletta/server/service.py:843
+#: tavletta/server/service.py:1574
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s이(가) 아직 다른 인쇄에 의해 잠겨 있습니다 – 나중에 다시 시도하세요"
 
-#: tavletta/cli.py:1081
+#: tavletta/cli.py:1096
 msgid "--output needs --dry-run"
 msgstr "--output에는 --dry-run이 필요합니다"
 
-#: tavletta/cli.py:1098
+#: tavletta/cli.py:1113
 msgid "The next counter value is not saved: the next print repeats the numbers"
 msgstr "다음 카운터 값이 저장되지 않습니다: 다음 인쇄에서 번호가 반복됩니다"
 
-#: tavletta/cli.py:1194
+#: tavletta/cli.py:1209
 msgid "Waiting for the printer's answer…"
 msgstr "프린터의 응답을 기다리는 중…"
 
-#: tavletta/cli.py:1222 tavletta/ui/printer.py:199
+#: tavletta/cli.py:1237 tavletta/ui/printer.py:356
 msgid "No printer found"
 msgstr "프린터를 찾을 수 없습니다"
 
@@ -460,7 +475,7 @@ msgid "Choose data file"
 msgstr "데이터 파일 선택"
 
 #: tavletta/ui/data.py:108 tavletta/ui/files.py:104 tavletta/ui/files.py:126
-#: tavletta/ui/files.py:207 tavletta/ui/texts.py:208
+#: tavletta/ui/files.py:207 tavletta/ui/texts.py:224
 msgid "Only local files can be used"
 msgstr "로컬 파일만 사용할 수 있습니다"
 
@@ -503,7 +518,7 @@ msgstr "읽지 않음: 라벨 폴더 밖에 있음"
 msgid "Rows: %(rows)d · Columns: %(columns)d"
 msgstr "행: %(rows)d · 열: %(columns)d"
 
-#: tavletta/ui/data.py:281 tavletta/ui/shortcuts.py:71
+#: tavletta/ui/data.py:281 tavletta/ui/shortcuts.py:90
 msgid "Serial labels"
 msgstr "데이터 병합 라벨"
 
@@ -521,8 +536,8 @@ msgstr "데이터 파일 없음"
 msgid "CSV, ODS or XLSX"
 msgstr "CSV, ODS 또는 XLSX"
 
-#: tavletta/ui/data.py:291 tavletta/ui/elements.py:316
-#: tavletta/ui/elements.py:334 tavletta/ui/elements.py:347
+#: tavletta/ui/data.py:291 tavletta/ui/elements.py:355
+#: tavletta/ui/elements.py:373 tavletta/ui/elements.py:386
 msgid "Choose…"
 msgstr "선택…"
 
@@ -542,7 +557,7 @@ msgstr "다른 파일 선택"
 msgid "Remove data file"
 msgstr "데이터 파일 제거"
 
-#: tavletta/ui/data.py:337
+#: tavletta/ui/data.py:337 tavletta/server/web/batch.js:404
 msgid "Sheet"
 msgstr "시트"
 
@@ -550,7 +565,106 @@ msgstr "시트"
 msgid "Insert column"
 msgstr "열 넣기"
 
-#: tavletta/ui/elements.py:83 tavletta/ui/shortcuts.py:57
+#: tavletta/ui/editor.py:738
+#, python-format
+msgid "Elements removed: %d"
+msgstr "제거한 요소: %d"
+
+#: tavletta/ui/editor.py:738 tavletta/ui/shortcuts.py:53
+#: tavletta/ui/window.py:187 tavletta/ui/window.py:987
+msgid "Undo"
+msgstr "실행 취소"
+
+#: tavletta/ui/editor.py:819
+msgid "Elements can be moved in the free layout"
+msgstr "자유 배치에서 요소를 옮길 수 있습니다"
+
+#: tavletta/ui/editor.py:820
+msgid "Use free layout"
+msgstr "자유 배치 사용"
+
+#: tavletta/ui/editor.py:830
+msgid "No element selected"
+msgstr "선택한 요소 없음"
+
+#: tavletta/ui/editor.py:832
+#, python-format
+msgid "Elements selected: %(n)d of %(total)d"
+msgstr "선택한 요소: %(n)d / %(total)d"
+
+#: tavletta/ui/editor.py:838
+#, python-format
+msgid "Element %(n)d of %(total)d: %(name)s"
+msgstr "요소 %(n)d / %(total)d: %(name)s"
+
+#: tavletta/ui/editor.py:883
+msgid "Arrange"
+msgstr "배열"
+
+#: tavletta/ui/editor.py:884
+msgid "Align, distribute and snap the selected elements"
+msgstr "선택한 요소 정렬, 분배, 맞춤"
+
+#: tavletta/ui/editor.py:900 tavletta/ui/image_crop.py:82
+#: tavletta/ui/texts.py:124
+msgid "Left"
+msgstr "왼쪽"
+
+#: tavletta/ui/editor.py:901 tavletta/ui/texts.py:76 tavletta/ui/texts.py:124
+msgid "Centre"
+msgstr "가운데"
+
+#: tavletta/ui/editor.py:902 tavletta/ui/texts.py:124
+msgid "Right"
+msgstr "오른쪽"
+
+#: tavletta/ui/editor.py:903 tavletta/ui/image_crop.py:82
+#: tavletta/ui/texts.py:175
+msgid "Top"
+msgstr "위"
+
+#: tavletta/ui/editor.py:904 tavletta/ui/texts.py:175
+msgid "Middle"
+msgstr "가운데"
+
+#: tavletta/ui/editor.py:905 tavletta/ui/texts.py:175
+msgid "Bottom"
+msgstr "아래"
+
+#: tavletta/ui/editor.py:908
+msgid "Align"
+msgstr "정렬"
+
+#: tavletta/ui/editor.py:910
+msgid "Horizontally"
+msgstr "가로로"
+
+#: tavletta/ui/editor.py:911
+msgid "Vertically"
+msgstr "세로로"
+
+#: tavletta/ui/editor.py:912
+msgid "Distribute"
+msgstr "분배"
+
+#: tavletta/ui/editor.py:914
+msgid "Snap to guides"
+msgstr "안내선에 맞춤"
+
+#: tavletta/ui/editor.py:915
+msgid "No grid"
+msgstr "격자 없음"
+
+#: tavletta/ui/editor.py:918
+msgid "Snapping"
+msgstr "맞춤"
+
+#: tavletta/ui/editor.py:924 tavletta/ui/editor.py:925
+#, python-format
+msgid "Grid of %s"
+msgstr "%s 격자"
+
+#: tavletta/ui/elements.py:83 tavletta/ui/shortcuts.py:58
 msgid "Content"
 msgstr "내용"
 
@@ -562,130 +676,130 @@ msgstr "아직 내용이 없습니다"
 msgid "Add text, an image, a symbol or a code"
 msgstr "텍스트, 이미지, 기호 또는 코드를 추가하십시오"
 
-#: tavletta/ui/elements.py:104 tavletta/ui/texts.py:259
-#: tavletta/ui/window.py:961
+#: tavletta/ui/elements.py:105 tavletta/ui/texts.py:291
+#: tavletta/ui/window.py:1040 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "텍스트"
 
-#: tavletta/ui/elements.py:105
+#: tavletta/ui/elements.py:106
 msgid "Image…"
 msgstr "이미지…"
 
-#: tavletta/ui/elements.py:106
+#: tavletta/ui/elements.py:107
 msgid "Symbol…"
 msgstr "기호…"
 
-#: tavletta/ui/elements.py:107
+#: tavletta/ui/elements.py:108
 msgid "QR code / barcode"
 msgstr "QR 코드 / 바코드"
 
-#: tavletta/ui/elements.py:108
+#: tavletta/ui/elements.py:109
 msgid "Line or shape"
 msgstr "선 또는 도형"
 
-#: tavletta/ui/elements.py:110
+#: tavletta/ui/elements.py:111
 msgid "Add"
 msgstr "추가"
 
-#: tavletta/ui/elements.py:204 tavletta/ui/label_group.py:145
+#: tavletta/ui/elements.py:243 tavletta/ui/label_group.py:145
 msgid "Remove"
 msgstr "제거"
 
-#: tavletta/ui/elements.py:207
+#: tavletta/ui/elements.py:246
 msgid "Move down"
 msgstr "뒤로 이동"
 
-#: tavletta/ui/elements.py:208
+#: tavletta/ui/elements.py:247
 msgid "Move up"
 msgstr "앞으로 이동"
 
-#: tavletta/ui/elements.py:226 tavletta/ui/elements.py:363
+#: tavletta/ui/elements.py:265 tavletta/ui/elements.py:402
 #: tavletta/ui/freelayout.py:190
 msgid "Size"
 msgstr "크기"
 
-#: tavletta/ui/elements.py:233
+#: tavletta/ui/elements.py:272
 msgid "pt, 0 = fill tape height"
 msgstr "pt, 0 = 테이프 높이에 맞춤"
 
-#: tavletta/ui/elements.py:238
+#: tavletta/ui/elements.py:277
 msgid "Line alignment"
 msgstr "줄 정렬"
 
-#: tavletta/ui/elements.py:246
+#: tavletta/ui/elements.py:285
 msgid "Name for the command line"
 msgstr "명령줄용 이름"
 
-#: tavletta/ui/elements.py:285
+#: tavletta/ui/elements.py:324
 msgid "Font"
 msgstr "글꼴"
 
-#: tavletta/ui/elements.py:302 tavletta/ui/freelayout.py:214
+#: tavletta/ui/elements.py:341 tavletta/ui/freelayout.py:214
 msgid "Bold"
 msgstr "굵게"
 
-#: tavletta/ui/elements.py:304
+#: tavletta/ui/elements.py:343
 msgid "Italic"
 msgstr "기울임꼴"
 
-#: tavletta/ui/elements.py:305
+#: tavletta/ui/elements.py:344
 msgid "Underline"
 msgstr "밑줄"
 
-#: tavletta/ui/elements.py:306
+#: tavletta/ui/elements.py:345
 msgid "Strikethrough"
 msgstr "취소선"
 
-#: tavletta/ui/elements.py:314
+#: tavletta/ui/elements.py:353
 msgid "Image file"
 msgstr "이미지 파일"
 
-#: tavletta/ui/elements.py:315 tavletta/ui/elements.py:346
+#: tavletta/ui/elements.py:354 tavletta/ui/elements.py:385
 #: tavletta/ui/label_group.py:133
 msgid "None"
 msgstr "없음"
 
-#: tavletta/ui/elements.py:324
+#: tavletta/ui/elements.py:363
 msgid "Crop, turn and adjustments reset for the new image"
 msgstr "새 이미지에 맞게 자르기, 회전 및 조정이 초기화되었습니다"
 
-#: tavletta/ui/elements.py:332
+#: tavletta/ui/elements.py:371
 msgid "Area"
 msgstr "영역"
 
-#: tavletta/ui/elements.py:338 tavletta/ui/shipping.py:295
+#: tavletta/ui/elements.py:377 tavletta/ui/shipping.py:295
 msgid "Scale"
 msgstr "크기 조정"
 
-#: tavletta/ui/elements.py:344 tavletta/ui/texts.py:263
+#: tavletta/ui/elements.py:383 tavletta/ui/texts.py:295
 msgid "Symbol"
 msgstr "기호"
 
-#: tavletta/ui/elements.py:369 tavletta/ui/styles.py:513
+#: tavletta/ui/elements.py:408 tavletta/ui/styles.py:513
 #, python-format
 msgid "%(unit)s, 0 = fill tape height"
 msgstr "%(unit)s, 0 = 테이프 높이에 맞춤"
 
-#: tavletta/ui/elements.py:374
+#: tavletta/ui/elements.py:413
 msgid ""
 "Black-and-white printers print symbols in black, or in white if the colour "
 "is light"
 msgstr "흑백 프린터는 기호를 검은색으로, 색이 밝으면 흰색으로 인쇄합니다"
 
-#: tavletta/ui/elements.py:381 tavletta/ui/freelayout.py:166
+#: tavletta/ui/elements.py:420 tavletta/ui/freelayout.py:166
 #: tavletta/ui/styles.py:113
 msgid "Rotation"
 msgstr "회전"
 
-#: tavletta/ui/elements.py:394
+#: tavletta/ui/elements.py:433
 msgid "Type"
 msgstr "종류"
 
-#: tavletta/ui/elements.py:398
+#: tavletta/ui/elements.py:437
 msgid "Content (link, text, number)"
 msgstr "내용(링크, 텍스트, 번호)"
 
-#: tavletta/ui/elements.py:408 tavletta/ui/styles.py:548
+#: tavletta/ui/elements.py:447 tavletta/ui/styles.py:548
 msgid "Colour"
 msgstr "색"
 
@@ -726,7 +840,7 @@ msgstr "라벨"
 msgid "Save label"
 msgstr "라벨 저장"
 
-#: tavletta/ui/files.py:233 tavletta/ui/window.py:196
+#: tavletta/ui/files.py:233 tavletta/ui/window.py:210
 msgid "Save as template…"
 msgstr "서식으로 저장…"
 
@@ -739,7 +853,7 @@ msgstr "저장함: %s"
 msgid "Export PNG"
 msgstr "PNG로 내보내기"
 
-#: tavletta/ui/files.py:276 tavletta/ui/window.py:874
+#: tavletta/ui/files.py:276 tavletta/ui/window.py:947
 msgid "The preview cannot be drawn"
 msgstr "미리 보기를 그릴 수 없습니다"
 
@@ -752,8 +866,8 @@ msgid "No templates yet – use “Save as template…”"
 msgstr "아직 서식이 없습니다 – “서식으로 저장…”을 사용하십시오"
 
 #: tavletta/ui/files.py:315 tavletta/ui/label_group.py:67
-#: tavletta/ui/shortcuts.py:45 tavletta/ui/window.py:76
-#: tavletta/ui/window.py:222
+#: tavletta/ui/shortcuts.py:46 tavletta/ui/window.py:82
+#: tavletta/ui/window.py:237
 msgid "Label"
 msgstr "라벨"
 
@@ -956,10 +1070,11 @@ msgstr "이미지 자르기"
 msgid "Drag to choose the part of the image to keep"
 msgstr "끌어서 남길 이미지 부분을 선택하세요"
 
-#: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:233
-#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:657
-#: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
-#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:890
+#: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:390
+#: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
+#: tavletta/ui/printing.py:707 tavletta/ui/sheets.py:206
+#: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
+#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:223
 msgid "Cancel"
 msgstr "취소"
 
@@ -967,14 +1082,6 @@ msgstr "취소"
 #: tavletta/ui/shipping.py:230
 msgid "Apply"
 msgstr "적용"
-
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:111
-msgid "Left"
-msgstr "왼쪽"
-
-#: tavletta/ui/image_crop.py:82 tavletta/ui/texts.py:162
-msgid "Top"
-msgstr "위"
 
 #: tavletta/ui/image_crop.py:82 tavletta/ui/label_group.py:326
 msgid "Width"
@@ -1117,232 +1224,244 @@ msgstr "롤에서 라벨 사이 간격 (%(unit)s)"
 msgid "Content direction"
 msgstr "내용 방향"
 
-#: tavletta/ui/preview.py:65
+#: tavletta/ui/preview.py:75
+msgid "Label preview"
+msgstr "라벨 미리 보기"
+
+#: tavletta/ui/preview.py:92
 msgid "Fit to window"
 msgstr "창에 맞추기"
 
-#: tavletta/ui/preview.py:68
+#: tavletta/ui/preview.py:95
 msgid "Zoom out"
 msgstr "축소"
 
-#: tavletta/ui/preview.py:72
+#: tavletta/ui/preview.py:99
 msgid "Zoom in"
 msgstr "확대"
 
-#: tavletta/ui/preview.py:81 tavletta/ui/shortcuts.py:73
+#: tavletta/ui/preview.py:108 tavletta/ui/shortcuts.py:92
 msgid "First row"
 msgstr "첫 행"
 
-#: tavletta/ui/preview.py:82 tavletta/ui/shortcuts.py:74
+#: tavletta/ui/preview.py:109 tavletta/ui/shortcuts.py:93
 msgid "Previous row"
 msgstr "이전 행"
 
-#: tavletta/ui/preview.py:83 tavletta/ui/shortcuts.py:75
+#: tavletta/ui/preview.py:110 tavletta/ui/shortcuts.py:94
 msgid "Next row"
 msgstr "다음 행"
 
-#: tavletta/ui/preview.py:84 tavletta/ui/shortcuts.py:76
+#: tavletta/ui/preview.py:111 tavletta/ui/shortcuts.py:95
 msgid "Last row"
 msgstr "마지막 행"
 
-#: tavletta/ui/preview.py:98
+#: tavletta/ui/preview.py:125
 #, python-format
 msgid "Row %(n)d of %(total)d"
 msgstr "%(total)d행 중 %(n)d행"
 
-#: tavletta/ui/printer.py:66
+#: tavletta/ui/printer.py:117 tavletta/server/web/print.js:71
 msgid "Printer"
 msgstr "프린터"
 
-#: tavletta/ui/printer.py:71
+#: tavletta/ui/printer.py:122
 msgid "Host name or IP address"
 msgstr "호스트 이름 또는 IP 주소"
 
-#: tavletta/ui/printer.py:85
+#: tavletta/ui/printer.py:136
 msgid "Safety margin"
 msgstr "안전 여백"
 
-#: tavletta/ui/printer.py:92
+#: tavletta/ui/printer.py:143
 #, python-format
 msgid ""
 "%(unit)s kept free for content and border; the background is printed edge to "
 "edge"
 msgstr "내용과 테두리용 여백(%(unit)s). 배경은 여백 없이 인쇄됩니다"
 
-#: tavletta/ui/printer.py:97 tavletta/ui/printer.py:103
+#: tavletta/ui/printer.py:148 tavletta/ui/printer.py:154
 msgid "Millimetres"
 msgstr "밀리미터"
 
-#: tavletta/ui/printer.py:97 tavletta/ui/printer.py:104
+#: tavletta/ui/printer.py:148 tavletta/ui/printer.py:155
 msgid "Inches"
 msgstr "인치"
 
-#: tavletta/ui/printer.py:100
+#: tavletta/ui/printer.py:151
 msgid "Units"
 msgstr "단위"
 
-#: tavletta/ui/printer.py:102
+#: tavletta/ui/printer.py:153
 #, python-format
 msgid "Automatic (%s)"
 msgstr "자동(%s)"
 
-#: tavletta/ui/printer.py:115
+#: tavletta/ui/printer.py:166
 msgid "Printer model"
 msgstr "프린터 모델"
 
-#: tavletta/ui/printer.py:149 tavletta/ui/printer.py:363
+#: tavletta/ui/printer.py:182
+msgid "Found"
+msgstr "찾음"
+
+#: tavletta/ui/printer.py:182
+msgid "All models"
+msgstr "모든 모델"
+
+#: tavletta/ui/printer.py:298 tavletta/ui/printer.py:530
 msgid "Searching…"
 msgstr "찾는 중…"
 
-#: tavletta/ui/printer.py:152 tavletta/ui/printer.py:470
+#: tavletta/ui/printer.py:301 tavletta/ui/printer.py:637
 msgid "Printer details"
 msgstr "프린터 세부 정보"
 
-#: tavletta/ui/printer.py:155
+#: tavletta/ui/printer.py:304
 msgid "Refresh"
 msgstr "새로 고침"
 
-#: tavletta/ui/printer.py:159
+#: tavletta/ui/printer.py:308
 msgid "Search for printers"
 msgstr "프린터 찾기"
 
-#: tavletta/ui/printer.py:185
+#: tavletta/ui/printer.py:341
 msgid "Searching for printers…"
 msgstr "프린터 찾는 중…"
 
-#: tavletta/ui/printer.py:201
+#: tavletta/ui/printer.py:358
 msgid ""
 "Make sure the printer is switched on and in the same network, or enter its "
 "address below"
 msgstr "프린터가 켜져 있고 같은 네트워크에 있는지 확인하거나 아래에 주소를 입력하십시오"
 
-#: tavletta/ui/printer.py:207
+#: tavletta/ui/printer.py:364
 #, python-format
 msgid "Found %s"
 msgstr "찾음: %s"
 
-#: tavletta/ui/printer.py:215 tavletta/ui/printer.py:229
+#: tavletta/ui/printer.py:372 tavletta/ui/printer.py:386
 msgid "Choose a printer"
 msgstr "프린터 선택"
 
-#: tavletta/ui/printer.py:257
+#: tavletta/ui/printer.py:424
 msgid "Connecting…"
 msgstr "연결 중…"
 
-#: tavletta/ui/printer.py:318
+#: tavletta/ui/printer.py:485
 #, python-format
 msgid "The loaded roll is for “%s”"
 msgstr "넣은 롤은 “%s”용입니다"
 
-#: tavletta/ui/printer.py:319
+#: tavletta/ui/printer.py:486
 msgid "Switch"
 msgstr "전환"
 
-#: tavletta/ui/printer.py:345
+#: tavletta/ui/printer.py:512
 msgid "Printer not reachable"
 msgstr "프린터에 연결할 수 없습니다"
 
-#: tavletta/ui/printer.py:347 tavletta/ui/printer.py:361
+#: tavletta/ui/printer.py:514 tavletta/ui/printer.py:528
 msgid "Printer needs attention"
 msgstr "프린터 확인 필요"
 
-#: tavletta/ui/printer.py:376
+#: tavletta/ui/printer.py:543
 #, python-format
 msgid "%(left)s of %(total)s left"
 msgstr "남은 양 %(left)s / %(total)s"
 
-#: tavletta/ui/printer.py:387
+#: tavletta/ui/printer.py:554
 msgid "Reachable · the printer reports no status"
 msgstr "연결 가능 · 프린터가 상태를 알리지 않음"
 
-#: tavletta/ui/printer.py:390
+#: tavletta/ui/printer.py:557 tavletta/server/web/ui.js:385
 msgid "Printing"
 msgstr "인쇄 중"
 
-#: tavletta/ui/printer.py:392
+#: tavletta/ui/printer.py:559
 #, python-format
 msgid "Ready · a label every %s"
 msgstr "준비됨 · %s마다 라벨 1개"
 
-#: tavletta/ui/printer.py:393
+#: tavletta/ui/printer.py:560 tavletta/server/web/ui.js:47
 msgid "Ready"
 msgstr "준비됨"
 
-#: tavletta/ui/printer.py:396
+#: tavletta/ui/printer.py:563
 msgid "No roll loaded"
 msgstr "넣은 롤 없음"
 
-#: tavletta/ui/printer.py:396
+#: tavletta/ui/printer.py:563
 msgid "No cassette inserted"
 msgstr "카세트가 없습니다"
 
-#: tavletta/ui/printer.py:398
+#: tavletta/ui/printer.py:565
 #, python-format
 msgid "%s roll"
 msgstr "%s 롤"
 
-#: tavletta/ui/printer.py:398
+#: tavletta/ui/printer.py:565
 #, python-format
 msgid "%s cassette"
 msgstr "%s 카세트"
 
-#: tavletta/ui/printer.py:417
+#: tavletta/ui/printer.py:584
 msgid "Model"
 msgstr "모델"
 
-#: tavletta/ui/printer.py:418
+#: tavletta/ui/printer.py:585
 msgid "Address"
 msgstr "주소"
 
-#: tavletta/ui/printer.py:419
+#: tavletta/ui/printer.py:586
 msgid "Firmware"
 msgstr "펌웨어"
 
-#: tavletta/ui/printer.py:421
+#: tavletta/ui/printer.py:588
 msgid "Label distance"
 msgstr "라벨 간격"
 
-#: tavletta/ui/printer.py:424
+#: tavletta/ui/printer.py:591
 msgid "Print width set on the printer"
 msgstr "프린터에 설정된 인쇄 폭"
 
-#: tavletta/ui/printer.py:429
+#: tavletta/ui/printer.py:596
 msgid "Print method set on the printer"
 msgstr "프린터에 설정된 인쇄 방식"
 
-#: tavletta/ui/printer.py:432
+#: tavletta/ui/printer.py:599
 msgid "Remaining tape"
 msgstr "남은 테이프"
 
-#: tavletta/ui/printer.py:439 tavletta/ui/printer.py:442
+#: tavletta/ui/printer.py:606 tavletta/ui/printer.py:609
 msgid "Roll"
 msgstr "롤"
 
-#: tavletta/ui/printer.py:443
+#: tavletta/ui/printer.py:610
 msgid "Cassette"
 msgstr "카세트"
 
-#: tavletta/ui/printer.py:452
+#: tavletta/ui/printer.py:619
 msgid "Tape type"
 msgstr "테이프 종류"
 
-#: tavletta/ui/printer.py:453
+#: tavletta/ui/printer.py:620
 msgid "Printable width"
 msgstr "인쇄 가능 폭"
 
-#: tavletta/ui/printer.py:454
+#: tavletta/ui/printer.py:621
 msgid "Lot number"
 msgstr "로트 번호"
 
-#: tavletta/ui/printer.py:455
+#: tavletta/ui/printer.py:622
 msgid "Serial number"
 msgstr "일련번호"
 
-#: tavletta/ui/printer.py:457
+#: tavletta/ui/printer.py:624
 msgid "Probably made"
 msgstr "추정 제조 시기"
 
-#: tavletta/ui/printer.py:471 tavletta/ui/printing.py:755
+#: tavletta/ui/printer.py:638 tavletta/ui/printing.py:805
 msgid "Close"
 msgstr "닫기"
 
@@ -1354,8 +1473,9 @@ msgstr "이 버전에서 알 수 없는 라벨 시트입니다 – 다른 시트
 msgid "The data file is still being read. Try again in a moment."
 msgstr "데이터 파일을 아직 읽는 중입니다. 잠시 후 다시 시도하십시오."
 
-#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:478
-#: tavletta/ui/printing.py:503
+#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:188
+#: tavletta/ui/printing.py:525 tavletta/ui/printing.py:550
+#: tavletta/server/web/ui.js:265
 msgid "Print anyway"
 msgstr "그래도 인쇄"
 
@@ -1381,102 +1501,118 @@ msgid ""
 "inserted. The printer would scale it to the tape."
 msgstr "이 라벨은 %(label)s 테이프용이지만 %(tape)s 카세트가 들어 있습니다. 프린터가 테이프에 맞게 크기를 조정합니다."
 
-#: tavletta/ui/printing.py:178
+#: tavletta/ui/printing.py:181
 msgid "Different labels loaded"
 msgstr "다른 라벨이 들어 있습니다"
 
-#: tavletta/ui/printing.py:227
+#: tavletta/ui/printing.py:189
+msgid "Use loaded labels"
+msgstr "들어 있는 라벨 사용"
+
+#: tavletta/ui/printing.py:216
+msgid ""
+"Label adapted to the loaded labels. Some elements reach beyond its edge."
+msgstr "라벨을 들어 있는 라벨에 맞췄습니다. 일부 요소가 가장자리를 벗어납니다."
+
+#: tavletta/ui/printing.py:218
+msgid "Label adapted to the loaded labels"
+msgstr "라벨을 들어 있는 라벨에 맞췄습니다"
+
+#: tavletta/ui/printing.py:268
 msgid "Labels"
 msgstr "라벨 수"
 
-#: tavletta/ui/printing.py:239
+#: tavletta/ui/printing.py:280
 msgid "Print outlines"
 msgstr "윤곽선 인쇄"
 
-#: tavletta/ui/printing.py:239
+#: tavletta/ui/printing.py:280
 msgid "To test on plain paper"
 msgstr "일반 용지로 테스트할 때"
 
-#: tavletta/ui/printing.py:266
+#: tavletta/ui/printing.py:307
 #, python-format
 msgid "Sheets: %d"
 msgstr "시트 수: %d"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:789
 msgid "Copies of each label"
 msgstr "라벨당 매수"
 
-#: tavletta/ui/printing.py:287
+#: tavletta/ui/printing.py:328 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr "매수"
 
-#: tavletta/ui/printing.py:298
+#: tavletta/ui/printing.py:339
 msgid "Cut"
 msgstr "절단"
 
-#: tavletta/ui/printing.py:304
+#: tavletta/ui/printing.py:345
 msgid "Colours"
 msgstr "색상"
 
-#: tavletta/ui/printing.py:312
+#: tavletta/ui/printing.py:353
 msgid "Quality"
 msgstr "품질"
 
-#: tavletta/ui/printing.py:323
+#: tavletta/ui/printing.py:364
 msgid "From row"
 msgstr "시작 행"
 
-#: tavletta/ui/printing.py:324
+#: tavletta/ui/printing.py:365
 msgid "To row"
 msgstr "끝 행"
 
-#: tavletta/ui/printing.py:355
+#: tavletta/ui/printing.py:396
 msgid "Tape feed"
 msgstr "테이프 이송"
 
-#: tavletta/ui/printing.py:361
+#: tavletta/ui/printing.py:402
 #, python-format
 msgid "%(unit)s of blank tape before and after each label"
 msgstr "각 라벨 앞뒤의 빈 테이프 (%(unit)s)"
 
-#: tavletta/ui/printing.py:368
+#: tavletta/ui/printing.py:409
 msgid "Colour adjustment"
 msgstr "색 조정"
 
-#: tavletta/ui/printing.py:371
+#: tavletta/ui/printing.py:412
 msgid "Reset"
 msgstr "초기화"
 
-#: tavletta/ui/printing.py:397
+#: tavletta/ui/printing.py:438
 msgid "Not adjusted"
 msgstr "조정 안 함"
 
-#: tavletta/ui/printing.py:397
+#: tavletta/ui/printing.py:438
 msgid "Adjusted"
 msgstr "조정함"
 
-#: tavletta/ui/printing.py:410
+#: tavletta/ui/printing.py:451
 msgid "Print serial labels"
 msgstr "데이터 병합 라벨 인쇄"
 
-#: tavletta/ui/printing.py:410
+#: tavletta/ui/printing.py:451
 msgid "Print label"
 msgstr "라벨 인쇄"
 
-#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:742
-#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:184
+#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:792
+#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
+#: tavletta/server/web/app.js:384 tavletta/server/web/batch.js:56
+#: tavletta/server/web/batch.js:121 tavletta/server/web/batch.js:942
+#: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "인쇄"
 
-#: tavletta/ui/printing.py:475
+#: tavletta/ui/printing.py:522
 msgid "Codes may not scan"
 msgstr "코드가 스캔되지 않을 수 있습니다"
 
-#: tavletta/ui/printing.py:495
+#: tavletta/ui/printing.py:542
 msgid "Labels in the printer's margin"
 msgstr "프린터 여백에 걸친 라벨"
 
-#: tavletta/ui/printing.py:497
+#: tavletta/ui/printing.py:544
 #, python-format
 msgid ""
 "The printer cannot print near the edges of the paper. The content of labels "
@@ -1484,63 +1620,63 @@ msgid ""
 "safety margin, or leave these positions out."
 msgstr "프린터는 용지 가장자리 근처에 인쇄할 수 없습니다. 라벨 %(positions)s의 내용이 이 여백에 걸쳐 잘리게 됩니다. 안전 여백을 늘리거나 이 위치를 제외하세요."
 
-#: tavletta/ui/printing.py:515
+#: tavletta/ui/printing.py:562
 msgid "No printer yet – search for one or enter its address"
 msgstr "아직 프린터가 없습니다 – 찾거나 주소를 입력하십시오"
 
-#: tavletta/ui/printing.py:519
+#: tavletta/ui/printing.py:566
 msgid "Printing…"
 msgstr "인쇄 중…"
 
-#: tavletta/ui/printing.py:587 tavletta/ui/printing.py:627
+#: tavletta/ui/printing.py:635 tavletta/ui/printing.py:677
 msgid "Printing serial labels"
 msgstr "데이터 병합 라벨 인쇄 중"
 
-#: tavletta/ui/printing.py:588
+#: tavletta/ui/printing.py:636
 msgid "Stop"
 msgstr "중지"
 
-#: tavletta/ui/printing.py:617
-msgid "Stopping after this label…"
-msgstr "이 라벨 다음에 중지하는 중…"
+#: tavletta/ui/printing.py:666 tavletta/server/web/ui.js:433
+msgid "Stopping after the labels already sent to the printer…"
+msgstr "프린터에 이미 보낸 라벨 다음에 중지하는 중…"
 
-#: tavletta/ui/printing.py:624 tavletta/ui/printing.py:710
+#: tavletta/ui/printing.py:674 tavletta/ui/printing.py:760
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "인쇄 중 %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:656
+#: tavletta/ui/printing.py:706
 msgid "Rows that cannot be printed"
 msgstr "인쇄할 수 없는 행"
 
-#: tavletta/ui/printing.py:659
+#: tavletta/ui/printing.py:709
 msgid "Print without these rows"
 msgstr "이 행들을 빼고 인쇄"
 
-#: tavletta/ui/printing.py:684
+#: tavletta/ui/printing.py:734
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "%(row)d행 다음에 중지함"
 
-#: tavletta/ui/printing.py:689
+#: tavletta/ui/printing.py:739
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "%(row)d행을 인쇄함"
 
-#: tavletta/ui/printing.py:691
+#: tavletta/ui/printing.py:741
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "%(first)d행부터 %(last)d행까지 인쇄함"
 
-#: tavletta/ui/printing.py:750
+#: tavletta/ui/printing.py:800
 msgid "Printing failed"
 msgstr "인쇄 실패"
 
-#: tavletta/ui/printing.py:751
+#: tavletta/ui/printing.py:801 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "자세히"
 
-#: tavletta/ui/printing.py:754 tavletta/ui/window.py:914
+#: tavletta/ui/printing.py:804 tavletta/ui/window.py:993
 msgid "Report"
 msgstr "보고"
 
@@ -1617,7 +1753,7 @@ msgstr "라벨을 클릭하면 제외하거나 다시 인쇄하도록 할 수 �
 msgid "Labels %s reach into the margin the printer cannot print on"
 msgstr "라벨 %s이(가) 프린터가 인쇄할 수 없는 여백에 걸칩니다"
 
-#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:276
+#: tavletta/ui/shipping.py:199 tavletta/ui/texts.py:308
 msgid "Shipping label"
 msgstr "배송 라벨"
 
@@ -1653,75 +1789,112 @@ msgstr "다음 제안"
 msgid "Page"
 msgstr "페이지"
 
-#: tavletta/ui/shortcuts.py:47 tavletta/ui/window.py:193
+#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:207
 msgid "New label"
 msgstr "새 라벨"
 
-#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:156
+#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:169
 msgid "Open"
 msgstr "열기"
 
-#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:169
+#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:182
 msgid "Save"
 msgstr "저장"
 
-#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:195
+#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:209
 msgid "Save as…"
 msgstr "다른 이름으로 저장…"
 
-#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:174
-msgid "Undo"
-msgstr "실행 취소"
-
-#: tavletta/ui/shortcuts.py:53 tavletta/ui/window.py:175
+#: tavletta/ui/shortcuts.py:54 tavletta/ui/window.py:188
 msgid "Redo"
 msgstr "다시 실행"
 
-#: tavletta/ui/shortcuts.py:59
+#: tavletta/ui/shortcuts.py:60
 msgid "Add text"
 msgstr "텍스트 추가"
 
-#: tavletta/ui/shortcuts.py:60
+#: tavletta/ui/shortcuts.py:61
 msgid "Add an image"
 msgstr "이미지 추가"
 
-#: tavletta/ui/shortcuts.py:61
+#: tavletta/ui/shortcuts.py:62
 msgid "Add a symbol"
 msgstr "기호 추가"
 
-#: tavletta/ui/shortcuts.py:62
+#: tavletta/ui/shortcuts.py:63
 msgid "Add a code"
 msgstr "코드 추가"
 
-#: tavletta/ui/shortcuts.py:63
+#: tavletta/ui/shortcuts.py:64
 msgid "Add a line or shape"
 msgstr "선 또는 도형 추가"
 
-#: tavletta/ui/shortcuts.py:64
+#: tavletta/ui/shortcuts.py:65
 msgid "Duplicate the open element"
 msgstr "열린 요소 복제"
 
-#: tavletta/ui/shortcuts.py:65
+#: tavletta/ui/shortcuts.py:66
 msgid "Remove the open element"
 msgstr "열린 요소 제거"
 
-#: tavletta/ui/shortcuts.py:66
+#: tavletta/ui/shortcuts.py:67
 msgid "Move the open element up"
 msgstr "열린 요소를 앞으로 이동"
 
-#: tavletta/ui/shortcuts.py:67
+#: tavletta/ui/shortcuts.py:68
 msgid "Move the open element down"
 msgstr "열린 요소를 뒤로 이동"
 
-#: tavletta/ui/shortcuts.py:80
+#: tavletta/ui/shortcuts.py:73 tavletta/server/web/print.js:121
+#: tavletta/server/web/ui.js:62
+msgid "Preview"
+msgstr "미리 보기"
+
+#: tavletta/ui/shortcuts.py:75
+msgid "Select all elements"
+msgstr "모든 요소 선택"
+
+#: tavletta/ui/shortcuts.py:76
+msgid "Select no element"
+msgstr "선택 해제"
+
+#: tavletta/ui/shortcuts.py:77
+msgid "Move the selection by 0.1 mm"
+msgstr "선택 항목을 0.1 mm 이동"
+
+#: tavletta/ui/shortcuts.py:79
+msgid "Move the selection by 1 mm"
+msgstr "선택 항목을 1 mm 이동"
+
+#: tavletta/ui/shortcuts.py:82
+msgid "Remove the selected elements"
+msgstr "선택한 요소 제거"
+
+#: tavletta/ui/shortcuts.py:83
+msgid "Cancel dragging, or select no element"
+msgstr "끌기 취소 또는 선택 해제"
+
+#: tavletta/ui/shortcuts.py:84
+msgid "Click: add to the selection or take out"
+msgstr "클릭: 선택에 추가하거나 빼기"
+
+#: tavletta/ui/shortcuts.py:85
+msgid "Drag: along one axis, resize in proportion"
+msgstr "끌기: 한 축으로만, 비율 유지 크기 조정"
+
+#: tavletta/ui/shortcuts.py:86
+msgid "Drag: without snapping"
+msgstr "끌기: 맞춤 없이"
+
+#: tavletta/ui/shortcuts.py:99
 msgid "General"
 msgstr "일반"
 
-#: tavletta/ui/shortcuts.py:82 tavletta/ui/window.py:201
+#: tavletta/ui/shortcuts.py:101 tavletta/ui/window.py:215
 msgid "Keyboard shortcuts"
 msgstr "키보드 단축키"
 
-#: tavletta/ui/shortcuts.py:83 tavletta/ui/window.py:202
+#: tavletta/ui/shortcuts.py:102 tavletta/ui/window.py:216
 msgid "Help"
 msgstr "도움말"
 
@@ -1904,7 +2077,7 @@ msgstr "이미지를 읽을 수 없습니다"
 msgid "Crop…"
 msgstr "자르기…"
 
-#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:69
+#: tavletta/ui/styles.py:403 tavletta/ui/texts.py:71
 msgid "Brightness"
 msgstr "밝기"
 
@@ -2005,777 +2178,797 @@ msgstr "최근 사용"
 msgid "No symbol found"
 msgstr "기호를 찾을 수 없습니다"
 
-#: tavletta/ui/texts.py:34
+#: tavletta/ui/texts.py:36
 msgid "Full cut"
 msgstr "완전 절단"
 
-#: tavletta/ui/texts.py:35
+#: tavletta/ui/texts.py:37
 msgid "Half cut"
 msgstr "반 절단"
 
-#: tavletta/ui/texts.py:36
+#: tavletta/ui/texts.py:38
 msgid "Cut after the last label"
 msgstr "마지막 라벨 뒤에서 절단"
 
-#: tavletta/ui/texts.py:37
+#: tavletta/ui/texts.py:39
 msgid "No cut"
 msgstr "절단 안 함"
 
-#: tavletta/ui/texts.py:43
+#: tavletta/ui/texts.py:45
 msgid "Chain printing"
 msgstr "연속 인쇄"
 
-#: tavletta/ui/texts.py:44
+#: tavletta/ui/texts.py:46
 msgid "Saves tape: the last label stays in the printer until the next print"
 msgstr "테이프 절약: 마지막 라벨은 다음 인쇄 때까지 프린터 안에 남습니다"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "High resolution"
 msgstr "고해상도"
 
-#: tavletta/ui/texts.py:46
+#: tavletta/ui/texts.py:48
 msgid "Twice as fine along the tape, prints more slowly"
 msgstr "테이프 방향으로 두 배 더 정밀하며 인쇄가 느려집니다"
 
-#: tavletta/ui/texts.py:50
+#: tavletta/ui/texts.py:52
 msgid "Laminated tape"
 msgstr "라미네이트 테이프"
 
-#: tavletta/ui/texts.py:51
+#: tavletta/ui/texts.py:53
 msgid "Non-laminated tape"
 msgstr "비라미네이트 테이프"
 
-#: tavletta/ui/texts.py:52
+#: tavletta/ui/texts.py:54
 msgid "Fabric tape"
 msgstr "패브릭 테이프"
 
-#: tavletta/ui/texts.py:53
+#: tavletta/ui/texts.py:55
 msgid "FLe tape"
 msgstr "FLe 테이프"
 
-#: tavletta/ui/texts.py:54
+#: tavletta/ui/texts.py:56
 msgid "Flexible ID tape"
 msgstr "플렉시블 ID 테이프"
 
-#: tavletta/ui/texts.py:55
+#: tavletta/ui/texts.py:57
 msgid "Satin tape"
 msgstr "새틴 테이프"
 
-#: tavletta/ui/texts.py:56
+#: tavletta/ui/texts.py:58
 msgid "Heat-shrink tube 2:1"
 msgstr "열수축 튜브 2:1"
 
-#: tavletta/ui/texts.py:57
+#: tavletta/ui/texts.py:59
 msgid "Heat-shrink tube 3:1"
 msgstr "열수축 튜브 3:1"
 
-#: tavletta/ui/texts.py:61
+#: tavletta/ui/texts.py:63
 msgid "Vivid"
 msgstr "선명하게"
 
-#: tavletta/ui/texts.py:62
+#: tavletta/ui/texts.py:64
 msgid "Normal"
 msgstr "보통"
 
-#: tavletta/ui/texts.py:63
+#: tavletta/ui/texts.py:65
 msgid "Black and white (sharper)"
 msgstr "흑백(더 선명하게)"
 
-#: tavletta/ui/texts.py:64
+#: tavletta/ui/texts.py:66
 msgid "Black"
 msgstr "검정"
 
-#: tavletta/ui/texts.py:65
+#: tavletta/ui/texts.py:67
 msgid "Red and black"
 msgstr "빨강과 검정"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "Standard"
 msgstr "표준"
 
-#: tavletta/ui/texts.py:67
+#: tavletta/ui/texts.py:69
 msgid "High resolution (600 dpi)"
 msgstr "고해상도(600dpi)"
 
-#: tavletta/ui/texts.py:70
+#: tavletta/ui/texts.py:72
 msgid "Red"
 msgstr "빨강"
 
-#: tavletta/ui/texts.py:71
+#: tavletta/ui/texts.py:73
 msgid "Green"
 msgstr "초록"
 
-#: tavletta/ui/texts.py:72
+#: tavletta/ui/texts.py:74
 msgid "Blue"
 msgstr "파랑"
 
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "Start"
 msgstr "시작"
 
-#: tavletta/ui/texts.py:74 tavletta/ui/texts.py:111
-msgid "Centre"
-msgstr "가운데"
-
-#: tavletta/ui/texts.py:74
+#: tavletta/ui/texts.py:76
 msgid "End"
 msgstr "끝"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Across the roll"
 msgstr "롤 가로 방향"
 
-#: tavletta/ui/texts.py:75
+#: tavletta/ui/texts.py:77
 msgid "Along the roll"
 msgstr "롤 진행 방향"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Single label"
 msgstr "단일 라벨"
 
-#: tavletta/ui/texts.py:77
+#: tavletta/ui/texts.py:79
 msgid "Label sheet"
 msgstr "라벨 시트"
 
-#: tavletta/ui/texts.py:80
+#: tavletta/ui/texts.py:82
 msgid "Resolution"
 msgstr "해상도"
 
-#: tavletta/ui/texts.py:81
+#: tavletta/ui/texts.py:83
 msgid "Label sensor"
 msgstr "라벨 센서"
 
-#: tavletta/ui/texts.py:82
+#: tavletta/ui/texts.py:84
 msgid "After printing"
 msgstr "인쇄 후"
 
-#: tavletta/ui/texts.py:83
+#: tavletta/ui/texts.py:85
 msgid "Darkness"
 msgstr "인쇄 농도"
 
-#: tavletta/ui/texts.py:84
+#: tavletta/ui/texts.py:86
 msgid "Print density"
 msgstr "인쇄 농도"
 
-#: tavletta/ui/texts.py:85
+#: tavletta/ui/texts.py:87
 msgid "Speed"
 msgstr "속도"
 
-#: tavletta/ui/texts.py:86
+#: tavletta/ui/texts.py:88
 msgid "Print upside down"
 msgstr "거꾸로 인쇄"
 
-#: tavletta/ui/texts.py:87
+#: tavletta/ui/texts.py:89
 msgid "Print method"
 msgstr "인쇄 방식"
 
+#: tavletta/ui/texts.py:90
+msgid "Print offset"
+msgstr "인쇄 오프셋"
+
 #: tavletta/ui/texts.py:91
+msgid "Labels per job"
+msgstr "작업당 라벨 수"
+
+#: tavletta/ui/texts.py:96
+#, python-format
+msgid ""
+"%(unit)s the print is moved along the feed, for a printer that prints off "
+"the label's place; positive moves it down on labels across the roll"
+msgstr "급지 방향으로 인쇄를 옮기는 거리(%(unit)s). 라벨 위치에서 벗어나게 인쇄하는 프린터용이며, 양수 값은 롤을 가로지르는 라벨에서 아래로 옮깁니다"
+
+#: tavletta/ui/texts.py:99
+msgid ""
+"Labels of a series sent to the printer as one job, which it prints without "
+"stopping between them. Stop and cancel take effect between jobs: a job that "
+"has started is printed in full. Lower it if the printer runs out of memory."
+msgstr "한 시리즈의 라벨을 하나의 작업으로 프린터에 보내며, 프린터는 그 사이에 멈추지 않고 인쇄합니다. 중지와 취소는 작업 사이에 적용됩니다. 이미 시작된 작업은 끝까지 인쇄됩니다. 프린터 메모리가 부족하면 값을 줄이십시오."
+
+#: tavletta/ui/texts.py:104
 msgid "As reported by the printer"
 msgstr "프린터가 알려 준 값"
 
-#: tavletta/ui/texts.py:92
+#: tavletta/ui/texts.py:105
 msgid "As set on the printer"
 msgstr "프린터에 설정된 대로"
 
-#: tavletta/ui/texts.py:93
+#: tavletta/ui/texts.py:106
 msgid "Gap between labels"
 msgstr "라벨 사이 간격"
 
-#: tavletta/ui/texts.py:94
+#: tavletta/ui/texts.py:107
 msgid "Black mark"
 msgstr "블랙 마크"
 
-#: tavletta/ui/texts.py:95
+#: tavletta/ui/texts.py:108
 msgid "Continuous media"
 msgstr "연속 용지"
 
-#: tavletta/ui/texts.py:96
+#: tavletta/ui/texts.py:109
 msgid "Transparent labels"
 msgstr "투명 라벨"
 
-#: tavletta/ui/texts.py:97
+#: tavletta/ui/texts.py:110
 msgid "Tear off"
 msgstr "뜯기"
 
-#: tavletta/ui/texts.py:98
+#: tavletta/ui/texts.py:111
 msgid "Peel off"
 msgstr "벗기기"
 
-#: tavletta/ui/texts.py:99
+#: tavletta/ui/texts.py:112
 msgid "Cut off"
 msgstr "자르기"
 
-#: tavletta/ui/texts.py:100
+#: tavletta/ui/texts.py:113
 msgid "Thermal transfer (ribbon)"
 msgstr "열전사(리본)"
 
-#: tavletta/ui/texts.py:101
+#: tavletta/ui/texts.py:114
 msgid "Thermal direct"
 msgstr "직접 감열"
 
-#: tavletta/ui/texts.py:111
-msgid "Right"
-msgstr "오른쪽"
-
-#: tavletta/ui/texts.py:116
+#: tavletta/ui/texts.py:129
 msgid "2D codes"
 msgstr "2차원 코드"
 
-#: tavletta/ui/texts.py:118
+#: tavletta/ui/texts.py:131
 msgid "QR code"
 msgstr "QR 코드"
 
-#: tavletta/ui/texts.py:125
+#: tavletta/ui/texts.py:138
 msgid "Linear barcodes"
 msgstr "1차원 바코드"
 
-#: tavletta/ui/texts.py:140
+#: tavletta/ui/texts.py:153
 msgid ""
 "Application identifiers in brackets, e.g. "
 "(01)09501101530003(17)261231(10)AB12"
 msgstr "괄호로 묶은 응용 식별자(예: (01)09501101530003(17)261231(10)AB12)"
 
-#: tavletta/ui/texts.py:143
+#: tavletta/ui/texts.py:156
 msgid "Links, text, Wi-Fi access; phones read it"
 msgstr "링크, 텍스트, Wi-Fi 접속. 휴대폰으로 읽을 수 있습니다"
 
-#: tavletta/ui/texts.py:144
+#: tavletta/ui/texts.py:157
 msgid "Text or numbers in little space, e.g. on small parts"
 msgstr "좁은 공간의 텍스트나 숫자(예: 작은 부품)"
 
-#: tavletta/ui/texts.py:145
+#: tavletta/ui/texts.py:158
 msgid "Much text, e.g. an address or a document number"
 msgstr "많은 텍스트(예: 주소나 문서 번호)"
 
-#: tavletta/ui/texts.py:146
+#: tavletta/ui/texts.py:159
 msgid "Text or numbers; needs no blank margin, e.g. on tickets"
 msgstr "텍스트나 숫자. 주위 여백이 필요 없음(예: 티켓)"
 
-#: tavletta/ui/texts.py:147
+#: tavletta/ui/texts.py:160
 msgid "Latin letters, digits and punctuation"
 msgstr "라틴 문자, 숫자, 문장 부호"
 
-#: tavletta/ui/texts.py:148
+#: tavletta/ui/texts.py:161
 msgid "Capital letters, digits, spaces and - . $ / + %"
 msgstr "대문자, 숫자, 공백 및 - . $ / + %"
 
-#: tavletta/ui/texts.py:149
+#: tavletta/ui/texts.py:162
 msgid "Latin letters, digits and punctuation; shorter than Code 39"
 msgstr "라틴 문자, 숫자, 문장 부호. Code 39보다 짧음"
 
-#: tavletta/ui/texts.py:150
+#: tavletta/ui/texts.py:163
 msgid "12 digits, the check digit is added (or 13 with it)"
 msgstr "숫자 12자리, 검사 숫자는 자동 추가(검사 숫자 포함 시 13자리)"
 
-#: tavletta/ui/texts.py:151
+#: tavletta/ui/texts.py:164
 msgid "7 digits, the check digit is added (or 8 with it)"
 msgstr "숫자 7자리, 검사 숫자는 자동 추가(검사 숫자 포함 시 8자리)"
 
-#: tavletta/ui/texts.py:152
+#: tavletta/ui/texts.py:165
 msgid "11 digits, the check digit is added (or 12 with it)"
 msgstr "숫자 11자리, 검사 숫자는 자동 추가(검사 숫자 포함 시 12자리)"
 
-#: tavletta/ui/texts.py:153
+#: tavletta/ui/texts.py:166
 msgid "7 digits starting with 0 or 1, the check digit is added (or 8 with it)"
 msgstr "0 또는 1로 시작하는 숫자 7자리, 검사 숫자는 자동 추가(검사 숫자 포함 시 8자리)"
 
-#: tavletta/ui/texts.py:154
+#: tavletta/ui/texts.py:167
 msgid ""
 "13 digits of a shipping carton's GTIN, the check digit is added (or 14 with "
 "it)"
 msgstr "운송 상자 GTIN의 숫자 13자리, 검사 숫자는 자동 추가(검사 숫자 포함 시 14자리)"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:173
 msgid "Whole area, centred"
 msgstr "전체 영역, 가운데"
 
-#: tavletta/ui/texts.py:160
+#: tavletta/ui/texts.py:173
 msgid "Fill the label, edges cut off"
 msgstr "라벨 채우기, 가장자리 잘림"
 
-#: tavletta/ui/texts.py:162
-msgid "Middle"
-msgstr "가운데"
-
-#: tavletta/ui/texts.py:162
-msgid "Bottom"
-msgstr "아래"
-
-#: tavletta/ui/texts.py:164
+#: tavletta/ui/texts.py:177
 msgid "Automatic"
 msgstr "자동"
 
-#: tavletta/ui/texts.py:165
+#: tavletta/ui/texts.py:178
 msgid "Threshold (drawings, logos)"
 msgstr "임계값 (그림, 로고)"
 
-#: tavletta/ui/texts.py:166
+#: tavletta/ui/texts.py:179
 msgid "Dithering (photos)"
 msgstr "디더링 (사진)"
 
-#: tavletta/ui/texts.py:167
+#: tavletta/ui/texts.py:180
 msgid "Ordered pattern"
 msgstr "규칙적인 패턴"
 
-#: tavletta/ui/texts.py:170
+#: tavletta/ui/texts.py:183
 msgctxt "line style"
 msgid "Solid"
 msgstr "실선"
 
-#: tavletta/ui/texts.py:171
+#: tavletta/ui/texts.py:184
 msgid "Dashed"
 msgstr "파선"
 
-#: tavletta/ui/texts.py:172 tavletta/ui/texts.py:197
+#: tavletta/ui/texts.py:185 tavletta/ui/texts.py:210
 msgid "Dotted"
 msgstr "도트"
 
-#: tavletta/ui/texts.py:174
+#: tavletta/ui/texts.py:187
 msgid "Double"
 msgstr "이중선"
 
-#: tavletta/ui/texts.py:176
+#: tavletta/ui/texts.py:189
 msgid "Line"
 msgstr "선"
 
-#: tavletta/ui/texts.py:177
+#: tavletta/ui/texts.py:190
 msgid "Rectangle"
 msgstr "직사각형"
 
-#: tavletta/ui/texts.py:178
+#: tavletta/ui/texts.py:191
 msgid "Ellipse"
 msgstr "타원"
 
-#: tavletta/ui/texts.py:179
+#: tavletta/ui/texts.py:192
 msgid "Separator"
 msgstr "구분선"
 
-#: tavletta/ui/texts.py:182
+#: tavletta/ui/texts.py:195
 msgid "Horizontal"
 msgstr "가로"
 
-#: tavletta/ui/texts.py:183
+#: tavletta/ui/texts.py:196
 msgid "Vertical"
 msgstr "세로"
 
-#: tavletta/ui/texts.py:184
+#: tavletta/ui/texts.py:197
 msgid "Diagonal, rising"
 msgstr "대각선, 오름"
 
-#: tavletta/ui/texts.py:185
+#: tavletta/ui/texts.py:198
 msgid "Diagonal, falling"
 msgstr "대각선, 내림"
 
-#: tavletta/ui/texts.py:188
+#: tavletta/ui/texts.py:201
 msgctxt "arrows"
 msgid "None"
 msgstr "없음"
 
-#: tavletta/ui/texts.py:189
+#: tavletta/ui/texts.py:202
 msgid "At the start"
 msgstr "시작 부분"
 
-#: tavletta/ui/texts.py:190
+#: tavletta/ui/texts.py:203
 msgid "At the end"
 msgstr "끝 부분"
 
-#: tavletta/ui/texts.py:191
+#: tavletta/ui/texts.py:204
 msgid "At both ends"
 msgstr "양쪽 끝"
 
-#: tavletta/ui/texts.py:194
+#: tavletta/ui/texts.py:207
 msgctxt "fill"
 msgid "None"
 msgstr "없음"
 
-#: tavletta/ui/texts.py:195
+#: tavletta/ui/texts.py:208
 msgctxt "fill"
 msgid "Solid"
 msgstr "단색"
 
-#: tavletta/ui/texts.py:196
+#: tavletta/ui/texts.py:209
 msgid "Hatched"
 msgstr "빗금"
 
-#: tavletta/ui/texts.py:198
+#: tavletta/ui/texts.py:211
 msgid "Grid"
 msgstr "격자"
 
+#: tavletta/ui/texts.py:243
+#, python-format
+msgid "%(name)s is too large to put on a label: at most %(size)d MB."
+msgstr "%(name)s은(는) 라벨에 넣기에 너무 큽니다: 최대 %(size)d MB입니다."
+
 #. translators: %(formats)s is a list of file formats: PNG, JPEG, …
-#: tavletta/ui/texts.py:219
+#: tavletta/ui/texts.py:251
 #, python-format
 msgid ""
 "%(name)s is not an image Tavletta can use. Images in %(formats)s can be used."
 msgstr "%(name)s은(는) Tavletta에서 사용할 수 있는 이미지가 아닙니다. 사용 가능한 형식: %(formats)s"
 
-#: tavletta/ui/texts.py:232
-#, python-format
-msgid "%(name)s is too large to put on a label: at most %(size)d MB."
-msgstr "%(name)s은(는) 라벨에 넣기에 너무 큽니다: 최대 %(size)d MB입니다."
-
-#: tavletta/ui/texts.py:227
+#: tavletta/ui/texts.py:259
 #, python-format
 msgid "%(name)s is not a label, an image or a data file"
 msgstr "%(name)s은(는) 라벨, 이미지, 데이터 파일 중 어느 것도 아닙니다"
 
 #. translators: the print density a NIIMBOT model uses by default
-#: tavletta/ui/texts.py:245
+#: tavletta/ui/texts.py:277
 msgctxt "print density"
 msgid "Default"
 msgstr "기본값"
 
-#: tavletta/ui/texts.py:249
+#: tavletta/ui/texts.py:281
 #, python-format
 msgid "%d %%"
 msgstr "%d%%"
 
 #. translators: print speed in inches per second, as label printers state it
-#: tavletta/ui/texts.py:252
+#: tavletta/ui/texts.py:284
 #, python-format
 msgid "%d in/s"
 msgstr "%d인치/초"
 
-#: tavletta/ui/texts.py:261
+#: tavletta/ui/texts.py:293 tavletta/server/web/ui.js:66
 msgid "Image"
 msgstr "이미지"
 
-#: tavletta/ui/texts.py:296
+#: tavletta/ui/texts.py:328
 #, python-format
 msgid "Endless, %(width)s wide"
 msgstr "연속, 너비 %(width)s"
 
-#: tavletta/ui/texts.py:306
+#: tavletta/ui/texts.py:338
 msgid ""
 "Check that all of the label is inside the selection. Drag to move it or its "
 "edges, or draw a new one."
 msgstr "라벨 전체가 선택 영역 안에 있는지 확인하십시오. 끌어서 선택 영역이나 가장자리를 옮기거나 새로 그리십시오."
 
-#: tavletta/ui/texts.py:310
+#: tavletta/ui/texts.py:342
 msgid ""
 "Several areas could be the label. Check the selection or try the next one."
 msgstr "여러 영역이 라벨일 수 있습니다. 선택 영역을 확인하거나 다음 영역을 시도하십시오."
 
-#: tavletta/ui/texts.py:312
+#: tavletta/ui/texts.py:344
 msgid "Everything printed on the page is selected. Drag to choose the label."
 msgstr "페이지에 인쇄된 모든 것이 선택되었습니다. 끌어서 라벨을 선택하십시오."
 
-#: tavletta/ui/texts.py:313
+#: tavletta/ui/texts.py:345
 msgid "Nothing is printed on this page."
 msgstr "이 페이지에는 인쇄된 것이 없습니다."
 
-#: tavletta/ui/texts.py:318
+#: tavletta/ui/texts.py:350
 msgid "PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "PDF 파일에는 Poppler(poppler-glib)가 필요하지만 설치되어 있지 않습니다"
 
-#: tavletta/ui/texts.py:329
+#: tavletta/ui/texts.py:361
 msgid "System printer (CUPS, IPP)"
 msgstr "시스템 프린터 (CUPS, IPP)"
 
-#: tavletta/ui/texts.py:330
+#: tavletta/ui/texts.py:362
 msgid "Receipt printer (ESC/POS)"
 msgstr "영수증 프린터(ESC/POS)"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:332
+#: tavletta/ui/texts.py:364
 #, python-format
 msgid "%s, continuous rolls"
 msgstr "%s, 연속 롤"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
-#: tavletta/ui/texts.py:334
+#: tavletta/ui/texts.py:366
 #, python-format
 msgid "%s, die-cut labels"
 msgstr "%s, 다이컷 라벨"
 
-#: tavletta/ui/texts.py:357
+#: tavletta/ui/texts.py:389
 #, python-format
 msgid "Element %(n)d: the code is empty"
 msgstr "요소 %(n)d: 코드가 비어 있습니다"
 
-#: tavletta/ui/texts.py:358
+#: tavletta/ui/texts.py:390
 #, python-format
 msgid "Element %(n)d: EAN-13 needs exactly 12 digits"
 msgstr "요소 %(n)d: EAN-13에는 정확히 12자리 숫자가 필요합니다"
 
-#: tavletta/ui/texts.py:359
+#: tavletta/ui/texts.py:391
 #, python-format
 msgid "Element %(n)d: the EAN-13 check digit is wrong"
 msgstr "요소 %(n)d: EAN-13 검사 숫자가 잘못되었습니다"
 
-#: tavletta/ui/texts.py:360
+#: tavletta/ui/texts.py:392
 #, python-format
 msgid "Element %(n)d: Code 128 holds at most %(max)d characters"
 msgstr "요소 %(n)d: Code 128에는 최대 %(max)d자까지 넣을 수 있습니다"
 
-#: tavletta/ui/texts.py:362
+#: tavletta/ui/texts.py:394
 #, python-format
 msgid ""
 "Element %(n)d: the bars are too thin to scan reliably – use a longer or "
 "larger label, or shorter content"
 msgstr "요소 %(n)d: 바가 너무 가늘어 안정적으로 스캔할 수 없습니다. 더 길거나 큰 라벨을 사용하거나 내용을 줄이세요"
 
-#: tavletta/ui/texts.py:366
+#: tavletta/ui/texts.py:398
 #, python-format
 msgid ""
 "Element %(n)d: Code 128 only accepts Latin letters, digits and punctuation"
 msgstr "요소 %(n)d: Code 128에는 라틴 문자, 숫자, 문장 부호만 쓸 수 있습니다"
 
-#: tavletta/ui/texts.py:368
+#: tavletta/ui/texts.py:400
 #, python-format
 msgid "Element %(n)d: EAN-8 needs 7 digits, or 8 with the check digit"
 msgstr "요소 %(n)d: EAN-8에는 숫자 7자리 또는 검사 숫자 포함 8자리가 필요합니다"
 
-#: tavletta/ui/texts.py:369
+#: tavletta/ui/texts.py:401
 #, python-format
 msgid "Element %(n)d: UPC-A needs 11 digits, or 12 with the check digit"
 msgstr "요소 %(n)d: UPC-A에는 숫자 11자리 또는 검사 숫자 포함 12자리가 필요합니다"
 
-#: tavletta/ui/texts.py:371
+#: tavletta/ui/texts.py:403
 #, python-format
 msgid ""
 "Element %(n)d: UPC-E needs 7 digits starting with 0 or 1, or 8 with the "
 "check digit"
 msgstr "요소 %(n)d: UPC-E에는 0 또는 1로 시작하는 숫자 7자리 또는 검사 숫자 포함 8자리가 필요합니다"
 
-#: tavletta/ui/texts.py:373
+#: tavletta/ui/texts.py:405
 #, python-format
 msgid "Element %(n)d: ITF-14 needs 13 digits, or 14 with the check digit"
 msgstr "요소 %(n)d: ITF-14에는 숫자 13자리 또는 검사 숫자 포함 14자리가 필요합니다"
 
-#: tavletta/ui/texts.py:374
+#: tavletta/ui/texts.py:406
 #, python-format
 msgid "Element %(n)d: the check digit is wrong"
 msgstr "요소 %(n)d: 검사 숫자가 잘못되었습니다"
 
-#: tavletta/ui/texts.py:376
+#: tavletta/ui/texts.py:408
 #, python-format
 msgid ""
 "Element %(n)d: Code 39 only accepts capital letters, digits, spaces and - . "
 "$ / + %%"
 msgstr "요소 %(n)d: Code 39에는 대문자, 숫자, 공백 및 - . $ / + %%만 쓸 수 있습니다"
 
-#: tavletta/ui/texts.py:379
+#: tavletta/ui/texts.py:411
 #, python-format
 msgid ""
 "Element %(n)d: Code 93 only accepts Latin letters, digits and punctuation"
 msgstr "요소 %(n)d: Code 93에는 라틴 문자, 숫자, 문장 부호만 쓸 수 있습니다"
 
-#: tavletta/ui/texts.py:382
+#: tavletta/ui/texts.py:414
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data only accepts Latin letters, digits and punctuation"
 msgstr "요소 %(n)d: GS1 데이터에는 라틴 문자, 숫자, 문장 부호만 쓸 수 있습니다"
 
-#: tavletta/ui/texts.py:385
+#: tavletta/ui/texts.py:417
 #, python-format
 msgid ""
 "Element %(n)d: GS1 data must be application identifiers in brackets, each "
 "followed by its value, e.g. (01)09501101530003(10)AB12"
 msgstr "요소 %(n)d: GS1 데이터는 괄호로 묶은 응용 식별자와 그 뒤에 오는 값으로 이루어져야 합니다(예: (01)09501101530003(10)AB12)"
 
-#: tavletta/ui/texts.py:388
+#: tavletta/ui/texts.py:420
 #, python-format
 msgid "Element %(n)d: (%(ai)s) is not a GS1 application identifier"
 msgstr "요소 %(n)d: (%(ai)s)은(는) GS1 응용 식별자가 아닙니다"
 
-#: tavletta/ui/texts.py:390
+#: tavletta/ui/texts.py:422
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) has the wrong "
 "length"
 msgstr "요소 %(n)d: 응용 식별자 (%(ai)s)의 값 길이가 잘못되었습니다"
 
-#: tavletta/ui/texts.py:393
+#: tavletta/ui/texts.py:425
 #, python-format
 msgid ""
 "Element %(n)d: the check digit of application identifier (%(ai)s) is wrong"
 msgstr "요소 %(n)d: 응용 식별자 (%(ai)s)의 검사 숫자가 잘못되었습니다"
 
-#: tavletta/ui/texts.py:396
+#: tavletta/ui/texts.py:428
 #, python-format
 msgid ""
 "Element %(n)d: the value of application identifier (%(ai)s) is not valid: a "
 "date, number or character it does not allow"
 msgstr "요소 %(n)d: 응용 식별자 (%(ai)s)의 값이 올바르지 않습니다. 허용되지 않는 날짜, 숫자 또는 문자가 있습니다"
 
-#: tavletta/ui/texts.py:400
+#: tavletta/ui/texts.py:432
 #, python-format
 msgid ""
 "Element %(n)d: no UPC-A number shortens to these UPC-E digits – check them "
 "or use UPC-A"
 msgstr "요소 %(n)d: 이 UPC-E 숫자로 줄어드는 UPC-A 번호가 없습니다 – 숫자를 확인하거나 UPC-A를 사용하세요"
 
-#: tavletta/ui/texts.py:404
+#: tavletta/ui/texts.py:436
 #, python-format
 msgid ""
 "Element %(n)d: scanners set to Full ASCII read a $, /, + or %% before a "
 "capital letter as another character"
 msgstr "요소 %(n)d: Full ASCII로 설정된 스캐너는 대문자 앞의 $, /, + 또는 %%를 다른 문자로 읽습니다"
 
-#: tavletta/ui/texts.py:407
+#: tavletta/ui/texts.py:439
 #, python-format
 msgid "Element %(n)d: the content is too long for this type of code"
 msgstr "요소 %(n)d: 이 코드 종류에 비해 내용이 너무 깁니다"
 
-#: tavletta/ui/texts.py:408
+#: tavletta/ui/texts.py:440
 #, python-format
 msgid "Element %(n)d: the content cannot be encoded in this type of code"
 msgstr "요소 %(n)d: 이 내용은 이 코드 종류로 인코딩할 수 없습니다"
 
-#: tavletta/ui/texts.py:410
+#: tavletta/ui/texts.py:442
 #, python-format
 msgid ""
 "Element %(n)d: this type of code needs the Zint library (zint-bindings), "
 "which is not installed"
 msgstr "요소 %(n)d: 이 코드 종류에는 Zint 라이브러리(zint-bindings)가 필요하지만 설치되어 있지 않습니다"
 
-#: tavletta/ui/texts.py:413
+#: tavletta/ui/texts.py:445
 #, python-format
 msgid "Element %(n)d: the image cannot be read"
 msgstr "요소 %(n)d: 이미지를 읽을 수 없습니다"
 
-#: tavletta/ui/texts.py:414
+#: tavletta/ui/texts.py:446
 #, python-format
 msgid "Element %(n)d: this symbol is not in the symbol library"
 msgstr "요소 %(n)d: 이 기호는 기호 라이브러리에 없습니다"
 
-#: tavletta/ui/texts.py:415
+#: tavletta/ui/texts.py:447
 #, python-format
 msgid "Element %(n)d: the document cannot be read"
 msgstr "요소 %(n)d: 문서를 읽을 수 없습니다"
 
-#: tavletta/ui/texts.py:417
+#: tavletta/ui/texts.py:449
 #, python-format
 msgid ""
 "Element %(n)d: PDF files need Poppler (poppler-glib), which is not installed"
 msgstr "요소 %(n)d: PDF 파일에는 Poppler(poppler-glib)가 필요하지만 설치되어 있지 않습니다"
 
-#: tavletta/ui/texts.py:419
+#: tavletta/ui/texts.py:451
 #, python-format
 msgid "Element %(n)d cannot be drawn"
 msgstr "요소 %(n)d을(를) 그릴 수 없습니다"
 
-#: tavletta/ui/texts.py:421
+#: tavletta/ui/texts.py:453
 #, python-format
 msgid ""
 "Element %(n)d: the text is too long to be drawn in one line – break it into "
 "lines or shorten it"
 msgstr "요소 %(n)d: 텍스트가 너무 길어 한 줄로 그릴 수 없습니다 – 여러 줄로 나누거나 줄이세요"
 
-#: tavletta/ui/texts.py:425
+#: tavletta/ui/texts.py:457
 #, python-format
 msgid ""
 "Element %(n)d: the text is too tall to be drawn – use fewer lines or a "
 "smaller size"
 msgstr "요소 %(n)d: 텍스트가 너무 높아 그릴 수 없습니다 – 줄 수를 줄이거나 크기를 작게 하세요"
 
-#: tavletta/ui/texts.py:428
+#: tavletta/ui/texts.py:460
 #, python-format
 msgid ""
 "Element %(n)d: the font %(font)s is not installed – another font is used"
 msgstr "요소 %(n)d: 글꼴 %(font)s이(가) 설치되어 있지 않아 다른 글꼴을 사용합니다"
 
-#: tavletta/ui/texts.py:431
+#: tavletta/ui/texts.py:463
 msgid ""
 "Safety margin, border, its inset and edge spacing leave no room – reduce them"
 msgstr "안전 여백, 테두리, 테두리의 안쪽 거리, 가장자리 간격 때문에 공간이 없습니다 – 줄이십시오"
 
-#: tavletta/ui/texts.py:433
+#: tavletta/ui/texts.py:465
 msgid "The fixed length is shorter than the spacing – increase it"
 msgstr "고정 길이가 간격보다 짧습니다 – 늘리십시오"
 
-#: tavletta/ui/texts.py:434
+#: tavletta/ui/texts.py:466
 msgid "The background image cannot be read"
 msgstr "배경 이미지를 읽을 수 없습니다"
 
-#: tavletta/ui/texts.py:436
+#: tavletta/ui/texts.py:468
 #, python-format
 msgid ""
 "Element %(n)d: the code's modules are only one printer dot wide and may not "
 "scan – make the code larger"
 msgstr "요소 %(n)d: 코드의 모듈 너비가 인쇄 점 하나뿐이라 스캔되지 않을 수 있습니다 – 코드를 크게 하세요"
 
-#: tavletta/ui/texts.py:440
+#: tavletta/ui/texts.py:472
 #, python-format
 msgid ""
 "Element %(n)d: the blank space the code needs around it does not fit – make "
 "the code larger"
 msgstr "요소 %(n)d: 코드 주위에 필요한 여백이 들어가지 않습니다 – 코드를 크게 하세요"
 
-#: tavletta/ui/texts.py:444
+#: tavletta/ui/texts.py:476
 #, python-format
 msgid ""
 "Element %(n)d: the code does not fit in its space, even at one printer dot "
 "per module – make the label larger or the content shorter"
 msgstr "요소 %(n)d: 모듈당 인쇄 점 하나로도 코드가 자리에 들어가지 않습니다 – 라벨을 크게 하거나 내용을 줄이세요"
 
-#: tavletta/ui/texts.py:447
+#: tavletta/ui/texts.py:479
 #, python-format
 msgid "Element %(n)d: %(name)s is not a known variable"
 msgstr "요소 %(n)d: %(name)s은(는) 알려진 변수가 아닙니다"
 
-#: tavletta/ui/texts.py:449
+#: tavletta/ui/texts.py:481
 #, python-format
 msgid "Element %(n)d: the date of %(name)s is before the year 1 or after 9999"
 msgstr "요소 %(n)d: %(name)s의 날짜가 1년 이전이거나 9999년 이후입니다"
 
-#: tavletta/ui/texts.py:452
+#: tavletta/ui/texts.py:484
 #, python-format
 msgid "Element %(n)d: the variable %(name)s… is not closed – end it with }"
 msgstr "요소 %(n)d: 변수 %(name)s…이(가) 닫히지 않았습니다 – }로 끝내세요"
 
-#: tavletta/ui/texts.py:455
+#: tavletta/ui/texts.py:487
 #, python-format
 msgid ""
 "Element %(n)d: on a black-and-white printer it hardly stands out from what "
 "lies behind it, as a whole or in part – choose another colour or move it"
 msgstr "요소 %(n)d: 흑백 프린터에서는 전체 또는 일부가 뒤에 있는 것과 거의 구별되지 않습니다 – 다른 색을 선택하거나 위치를 옮기세요"
 
-#: tavletta/ui/texts.py:458
+#: tavletta/ui/texts.py:490
 #, python-format
 msgid "Element %(n)d: the shape has neither a line nor a fill"
 msgstr "요소 %(n)d: 도형에 선도 채우기도 없습니다"
 
-#: tavletta/ui/texts.py:460
+#: tavletta/ui/texts.py:492
 #, python-format
 msgid ""
 "Element %(n)d reaches beyond the edge of the label and is cut off there – "
 "move it or make it smaller"
 msgstr "요소 %(n)d이(가) 라벨 가장자리를 넘어 그곳에서 잘립니다 – 옮기거나 작게 하세요"
 
-#: tavletta/ui/texts.py:464
+#: tavletta/ui/texts.py:496
 #, python-format
 msgid ""
 "Element %(n)d: the padding, frame, outline or shadow leave no room for the "
 "text – make them smaller"
 msgstr "요소 %(n)d: 안쪽 여백, 틀, 윤곽선 또는 그림자 때문에 텍스트 공간이 없습니다 – 더 작게 하세요"
 
-#: tavletta/ui/texts.py:479
+#: tavletta/ui/texts.py:515
+#, python-format
+msgid ""
+"The job was sent, but its outcome is unknown: %(n)d of %(total)d labels "
+"printed for certain, up to %(most)d may have."
+msgstr "작업을 보냈지만 결과를 알 수 없습니다: %(total)d개 중 %(n)d개는 확실히 인쇄되었고 최대 %(most)d개까지 인쇄되었을 수 있습니다."
+
+#: tavletta/ui/texts.py:520
+#, python-format
+msgid ""
+"The job was sent, but its outcome is unknown: up to %(most)d of %(total)d "
+"labels may have printed."
+msgstr "작업을 보냈지만 결과를 알 수 없습니다: %(total)d개 중 최대 %(most)d개의 라벨이 인쇄되었을 수 있습니다."
+
+#: tavletta/ui/texts.py:526
 #, python-format
 msgid "Sheets already printed: %(n)d of %(total)d."
 msgstr "이미 인쇄된 시트: %(total)d장 중 %(n)d장."
 
-#: tavletta/ui/texts.py:481
+#: tavletta/ui/texts.py:528
 #, python-format
 msgid "Labels already printed: %(n)d of %(total)d."
 msgstr "이미 인쇄된 라벨: %(total)d개 중 %(n)d개."
 
-#: tavletta/ui/texts.py:485
+#: tavletta/ui/texts.py:532
 msgid "The sheets still waiting in the queue were canceled."
 msgstr "대기열에서 기다리던 시트는 취소되었습니다."
 
-#: tavletta/ui/texts.py:487
+#: tavletta/ui/texts.py:534
 msgid "The labels still waiting in the queue were canceled."
 msgstr "대기열에서 기다리던 라벨은 취소되었습니다."
 
-#: tavletta/ui/texts.py:498
+#: tavletta/ui/texts.py:545
 #, python-format
 msgid ""
 "The label is %(size)s, but labels of %(loaded)s are loaded. Check the label "
 "size, or load the matching roll."
 msgstr "라벨은 %(size)s이지만 %(loaded)s 라벨이 들어 있습니다. 라벨 크기를 확인하거나 맞는 롤을 넣으세요."
 
-#: tavletta/ui/texts.py:506
+#: tavletta/ui/texts.py:553
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2783,7 +2976,7 @@ msgid ""
 "size and the gap, or calibrate the printer."
 msgstr "라벨은 %(size)s이고 간격은 %(gap)s이므로 %(pitch)s마다 새 라벨이 시작됩니다. 프린터는 %(measured)s마다 라벨을 측정했습니다. 라벨 크기와 간격을 확인하거나 프린터를 보정하세요."
 
-#: tavletta/ui/texts.py:512
+#: tavletta/ui/texts.py:559
 #, python-format
 msgid ""
 "The label is %(size)s with a gap of %(gap)s, so a new one starts every "
@@ -2791,92 +2984,92 @@ msgid ""
 "size and the gap."
 msgstr "라벨은 %(size)s이고 간격은 %(gap)s이므로 %(pitch)s마다 새 라벨이 시작됩니다. 프린터는 %(measured)s마다 라벨을 측정했습니다. 라벨 크기와 간격을 확인하세요."
 
-#: tavletta/ui/texts.py:529
+#: tavletta/ui/texts.py:576
 msgid ""
 "The printer cannot be found. Check that it is switched on and in the same "
 "network, or enter its IP address."
 msgstr "프린터를 찾을 수 없습니다. 프린터가 켜져 있고 같은 네트워크에 있는지 확인하거나 IP 주소를 입력하십시오."
 
-#: tavletta/ui/texts.py:533
+#: tavletta/ui/texts.py:580
 msgid ""
 "The printer cannot be found on USB. Check the cable and that the printer is "
 "switched on and awake, then search again."
 msgstr "USB에서 프린터를 찾을 수 없습니다. 케이블을 확인하고 프린터가 켜져 있으며 절전 상태가 아닌지 확인한 다음 다시 검색하십시오."
 
-#: tavletta/ui/texts.py:536
+#: tavletta/ui/texts.py:583
 msgid "The printer does not answer. Check that it is switched on and awake."
 msgstr "프린터가 응답하지 않습니다. 프린터가 켜져 있고 절전 상태가 아닌지 확인하십시오."
 
-#: tavletta/ui/texts.py:538
+#: tavletta/ui/texts.py:585
 msgid ""
 "The printer stopped taking data. Check whether it shows a problem, such as "
 "no labels or an open cover, then try again."
 msgstr "프린터가 더 이상 데이터를 받지 않습니다. 라벨이 없거나 덮개가 열려 있는 등 프린터에 문제가 표시되는지 확인한 후 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:542
+#: tavletta/ui/texts.py:589
 msgid ""
 "The printer refuses the connection. Switch it off and on again. If its web "
 "interface offers a “Port 9100” option, turn it on."
 msgstr "프린터가 연결을 거부합니다. 프린터를 껐다가 다시 켜십시오. 웹 인터페이스에 “Port 9100” 옵션이 있으면 켜십시오."
 
-#: tavletta/ui/texts.py:545
+#: tavletta/ui/texts.py:592
 msgid "No cassette is inserted. Insert one and try again."
 msgstr "카세트가 없습니다. 카세트를 넣고 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:546
+#: tavletta/ui/texts.py:593
 msgid "The printer's cover is open. Close it and try again."
 msgstr "프린터 덮개가 열려 있습니다. 덮개를 닫고 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:547
+#: tavletta/ui/texts.py:594
 msgid "The label is jammed. Open the cover, remove it and try again."
 msgstr "라벨이 걸렸습니다. 덮개를 열고 라벨을 빼낸 뒤 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:548
+#: tavletta/ui/texts.py:595
 msgid "The cassette is not recognised. Insert it again or try another one."
 msgstr "카세트를 인식할 수 없습니다. 다시 넣거나 다른 카세트를 사용하십시오."
 
-#: tavletta/ui/texts.py:549
+#: tavletta/ui/texts.py:596
 msgid "The printer is busy. Wait a moment and try again."
 msgstr "프린터가 사용 중입니다. 잠시 후 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:550
+#: tavletta/ui/texts.py:597
 #, python-format
 msgid "The label is too long for this printer: at most %(max)s."
 msgstr "이 프린터에는 라벨이 너무 깁니다. 최대 %(max)s입니다."
 
-#: tavletta/ui/texts.py:551
+#: tavletta/ui/texts.py:598
 #, python-format
 msgid "The label is too wide for this printer: at most %(max)s."
 msgstr "라벨이 이 프린터에는 너무 넓습니다. 최대 %(max)s입니다."
 
-#: tavletta/ui/texts.py:552
+#: tavletta/ui/texts.py:599
 msgid "The printer is out of labels. Load a new roll and try again."
 msgstr "프린터에 라벨이 없습니다. 새 롤을 넣고 다시 시도하세요."
 
-#: tavletta/ui/texts.py:553
+#: tavletta/ui/texts.py:600
 msgid "The print head is open. Close it and try again."
 msgstr "프린트 헤드가 열려 있습니다. 닫고 다시 시도하세요."
 
-#: tavletta/ui/texts.py:555
+#: tavletta/ui/texts.py:602
 msgid ""
 "The printer cannot find the next label. Check that the labels are loaded "
 "correctly and run through the label sensor."
 msgstr "프린터가 다음 라벨을 찾지 못합니다. 라벨이 올바르게 들어 있고 라벨 센서를 통과하는지 확인하세요."
 
-#: tavletta/ui/texts.py:559
+#: tavletta/ui/texts.py:606
 msgid ""
 "There is a problem with the ribbon. Check that it is inserted correctly and "
 "matches the print method set on the printer."
 msgstr "리본에 문제가 있습니다. 올바르게 끼워졌는지, 프린터에 설정된 인쇄 방식과 맞는지 확인하세요."
 
-#: tavletta/ui/texts.py:565
+#: tavletta/ui/texts.py:612
 #, python-format
 msgid ""
 "The printer finds no ribbon. Load a ribbon and try again. Labels that print "
 "without one need “%(direct)s” under “%(method)s”."
 msgstr "프린터가 리본을 찾지 못합니다. 리본을 끼우고 다시 시도하십시오. 리본 없이 인쇄하는 라벨은 “%(method)s”에서 “%(direct)s”을(를) 선택해야 합니다."
 
-#: tavletta/ui/texts.py:572
+#: tavletta/ui/texts.py:619
 #, python-format
 msgid ""
 "A ribbon is loaded, but the printer prints without it (thermal direct). For "
@@ -2884,239 +3077,253 @@ msgid ""
 "remove the ribbon."
 msgstr "리본이 끼워져 있지만 프린터가 리본 없이 인쇄합니다(직접 감열). 리본이 필요한 라벨은 “%(method)s”에서 “%(transfer)s”을(를) 선택하거나 리본을 빼십시오."
 
-#: tavletta/ui/texts.py:577
+#: tavletta/ui/texts.py:624
 msgid "The printer is paused. Resume it on its display and try again."
 msgstr "프린터가 일시 정지되었습니다. 프린터 화면에서 다시 시작한 뒤 다시 시도하세요."
 
-#: tavletta/ui/texts.py:578
+#: tavletta/ui/texts.py:627
+#, python-format
+msgid ""
+"The printer ran out of memory for the job. Lower “%s” in the printer "
+"settings, then try again."
+msgstr "작업에 필요한 프린터 메모리가 부족합니다. 프린터 설정에서 “%s”을(를) 줄인 다음 다시 시도하십시오."
+
+#: tavletta/ui/texts.py:631
 msgid "The printer is out of paper. Load paper and try again."
 msgstr "프린터에 용지가 없습니다. 용지를 넣고 다시 시도하세요."
 
-#: tavletta/ui/texts.py:580
+#: tavletta/ui/texts.py:633
 msgid ""
 "The paper is jammed. Remove it as the printer's display shows and try again."
 msgstr "용지가 걸렸습니다. 프린터 화면의 안내에 따라 제거한 뒤 다시 시도하세요."
 
-#: tavletta/ui/texts.py:582
+#: tavletta/ui/texts.py:635
 msgid "The printer is out of toner or ink. Replace it and try again."
 msgstr "프린터의 토너 또는 잉크가 떨어졌습니다. 교체한 뒤 다시 시도하세요."
 
-#: tavletta/ui/texts.py:583
+#: tavletta/ui/texts.py:636
 msgid "The printer cannot print this size. Choose a paper size it offers."
 msgstr "프린터가 이 크기를 인쇄할 수 없습니다. 프린터가 지원하는 용지 크기를 선택하세요."
 
-#: tavletta/ui/texts.py:585
+#: tavletta/ui/texts.py:638
 msgid ""
 "The printer takes none of the formats Tavletta can send (PDF, PWG Raster, "
 "JPEG)."
 msgstr "프린터가 Tavletta에서 보낼 수 있는 형식(PDF, PWG Raster, JPEG)을 하나도 받지 않습니다."
 
-#: tavletta/ui/texts.py:588
+#: tavletta/ui/texts.py:641
 msgid ""
 "The printer's queue is paused. Resume it in the system's printer settings "
 "and try again."
 msgstr "프린터 대기열이 일시 정지되었습니다. 시스템 프린터 설정에서 다시 시작한 뒤 다시 시도하세요."
 
-#: tavletta/ui/texts.py:592
+#: tavletta/ui/texts.py:645
 msgid ""
 "The print job was held in the queue, for example until it is released or a "
 "password is entered. Check the queue in the system's printer settings and "
 "try again."
 msgstr "인쇄 작업이 대기열에서 보류되었습니다. 예를 들어 해제되거나 암호가 입력될 때까지입니다. 시스템 프린터 설정에서 대기열을 확인한 뒤 다시 시도하세요."
 
-#: tavletta/ui/texts.py:596
+#: tavletta/ui/texts.py:649
 msgid "The print job was canceled at the printer or in the queue."
 msgstr "인쇄 작업이 프린터 또는 대기열에서 취소되었습니다."
 
-#: tavletta/ui/texts.py:597
+#: tavletta/ui/texts.py:650
 #, python-format
 msgid ""
 "The printer did not report its resolution in time. Choose it under “%s”."
 msgstr "프린터가 제때 해상도를 알리지 않았습니다. “%s”에서 선택하십시오."
 
-#: tavletta/ui/texts.py:600
+#: tavletta/ui/texts.py:653
 msgid ""
 "The loaded roll does not match the label. Load a matching roll, or choose "
 "the label size or printer model of the roll that is loaded."
 msgstr "넣은 롤이 라벨과 맞지 않습니다. 맞는 롤을 넣거나, 넣은 롤에 맞는 라벨 크기나 프린터 모델을 선택하세요."
 
-#: tavletta/ui/texts.py:603
+#: tavletta/ui/texts.py:656
 msgid "The printer's battery is low – charge it or connect the power adapter."
 msgstr "프린터 배터리가 부족합니다 – 충전하거나 전원 어댑터를 연결하세요."
 
-#: tavletta/ui/texts.py:604
+#: tavletta/ui/texts.py:657
 msgid ""
 "The print head is too hot. Wait until it has cooled down, then try again."
 msgstr "프린트 헤드가 너무 뜨겁습니다. 식을 때까지 기다린 다음 다시 시도하세요."
 
-#: tavletta/ui/texts.py:606
+#: tavletta/ui/texts.py:659
 msgid ""
 "Tavletta cannot print on this printer model: it does not take the raster "
 "images Tavletta sends."
 msgstr "Tavletta는 이 프린터 모델에서 인쇄할 수 없습니다: Tavletta가 보내는 래스터 이미지를 받지 않습니다."
 
-#: tavletta/ui/texts.py:610
+#: tavletta/ui/texts.py:663
 msgid "Tavletta does not know this printer model and cannot print on it yet."
 msgstr "Tavletta는 이 프린터 모델을 알지 못해 아직 인쇄할 수 없습니다."
 
-#: tavletta/ui/texts.py:613
+#: tavletta/ui/texts.py:666
 msgid ""
 "The printer is in Editor Lite mode and shows up as a USB drive. Switch "
 "Editor Lite off on the printer (its lamp goes out), then search again."
 msgstr "프린터가 Editor Lite 모드여서 USB 드라이브로 표시됩니다. 프린터에서 Editor Lite를 끈 다음(램프가 꺼짐) 다시 검색하세요."
 
-#: tavletta/ui/texts.py:617
+#: tavletta/ui/texts.py:670
 msgid ""
 "Tavletta is not allowed to use the printer's USB port. Add your user to the "
 "group “lp” (sudo usermod -aG lp $USER), then log out and in again."
 msgstr "Tavletta에 프린터의 USB 포트를 사용할 권한이 없습니다. 사용자를 “lp” 그룹에 추가한(sudo usermod -aG lp $USER) 뒤 로그아웃했다가 다시 로그인하세요."
 
-#: tavletta/ui/texts.py:621
+#: tavletta/ui/texts.py:674
 msgid ""
 "The page is too large to make at the resolution the printer takes. Choose a "
 "smaller paper size, or print on a printer that takes PDF."
 msgstr "프린터가 받는 해상도로 만들기에는 페이지가 너무 큽니다. 더 작은 용지 크기를 선택하거나 PDF를 받는 프린터로 인쇄하세요."
 
-#: tavletta/ui/texts.py:625
+#: tavletta/ui/texts.py:678
 msgid ""
 "A code does not fit on the label at this printer's resolution and would be "
 "cut off. Make the label larger or the code's content shorter."
 msgstr "이 프린터의 해상도에서는 코드가 라벨에 들어가지 않아 잘립니다. 라벨을 크게 하거나 코드 내용을 줄이세요."
 
-#: tavletta/ui/texts.py:629
+#: tavletta/ui/texts.py:682
 msgid ""
 "Tavletta is not allowed to use the printer's serial port. Add your user to "
 "the group “dialout” (sudo usermod -aG dialout $USER; on Arch Linux the group "
 "is “uucp”), then log out and in again."
 msgstr "Tavletta에 프린터의 직렬 포트를 사용할 권한이 없습니다. 사용자를 “dialout” 그룹에 추가한(sudo usermod -aG dialout $USER, Arch Linux에서는 그룹 이름이 “uucp”) 뒤 로그아웃했다가 다시 로그인하세요."
 
-#: tavletta/ui/texts.py:634
+#: tavletta/ui/texts.py:687
 msgid ""
 "The printer reported a problem. Switch it off and on again, then try once "
 "more."
 msgstr "프린터에서 문제를 보고했습니다. 프린터를 껐다가 다시 켠 뒤 다시 시도하십시오."
 
-#: tavletta/ui/texts.py:645
+#: tavletta/ui/texts.py:698 tavletta/server/web/ui.js:452
 msgid "Printed"
 msgstr "인쇄함"
 
-#: tavletta/ui/texts.py:651
+#: tavletta/ui/texts.py:704
 msgid "Sent to the printer – it prints when its turn comes"
 msgstr "프린터로 보냄 – 차례가 되면 인쇄됩니다"
 
-#: tavletta/ui/texts.py:653
+#: tavletta/ui/texts.py:706
 msgid "Sent to the printer – it did not confirm printing"
 msgstr "프린터로 보냈습니다 – 프린터가 인쇄를 확인하지 않았습니다"
 
-#: tavletta/ui/texts.py:657
+#: tavletta/ui/texts.py:710
 #, python-format
 msgid "Printed with “%(used)s”, as the loaded roll needs it"
 msgstr "넣은 롤에 필요하므로 “%(used)s”(으)로 인쇄했습니다"
 
-#: tavletta/ui/texts.py:661
+#: tavletta/ui/texts.py:714
 #, python-format
 msgid ""
 "Colour mode “%(wanted)s” is not available on this printer, printed with "
 "“%(used)s”"
 msgstr "이 프린터에서는 “%(wanted)s” 색상 모드를 쓸 수 없어 “%(used)s”(으)로 인쇄했습니다"
 
-#: tavletta/ui/texts.py:671
+#: tavletta/ui/texts.py:724
 msgid "Warming up…"
 msgstr "예열 중…"
 
-#: tavletta/ui/texts.py:672
+#: tavletta/ui/texts.py:725
 msgid "Cooling down…"
 msgstr "냉각 중…"
 
-#: tavletta/ui/texts.py:673
+#: tavletta/ui/texts.py:726
 msgid "Cleaning…"
 msgstr "청소 중…"
 
-#: tavletta/ui/texts.py:674
+#: tavletta/ui/texts.py:727
 msgid "Swipe the printer's panel to cut the label"
 msgstr "프린터 패널을 밀어 라벨을 자르십시오"
 
-#: tavletta/ui/texts.py:676
+#: tavletta/ui/texts.py:729
 msgid "Out of paper – load paper to continue"
 msgstr "용지 없음 – 계속하려면 용지를 넣으세요"
 
-#: tavletta/ui/texts.py:677
+#: tavletta/ui/texts.py:730
 msgid "Cover open – close it to continue"
 msgstr "덮개 열림 – 계속하려면 덮개를 닫으세요"
 
-#: tavletta/ui/texts.py:678
+#: tavletta/ui/texts.py:731
 msgid "Paper jammed – remove it to continue"
 msgstr "용지 걸림 – 계속하려면 용지를 제거하세요"
 
-#: tavletta/ui/texts.py:689
+#: tavletta/ui/texts.py:742
 msgid "This label needs a newer version of Tavletta"
 msgstr "이 라벨을 열려면 새 버전의 Tavletta가 필요합니다"
 
-#: tavletta/ui/texts.py:691
+#: tavletta/ui/texts.py:744
 #, python-format
 msgid "%s is not a Tavletta label"
 msgstr "Tavletta 라벨이 아님: %s"
 
-#: tavletta/ui/texts.py:692 tavletta/ui/texts.py:712
-#: tavletta/server/service.py:758
+#: tavletta/ui/texts.py:745 tavletta/ui/texts.py:765
+#: tavletta/server/service.py:999
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "파일이 손상됨: %s"
 
-#: tavletta/ui/texts.py:699
+#: tavletta/ui/texts.py:752
 #, python-format
 msgid "The data file %s is not there any more. Choose it again or remove it."
 msgstr "데이터 파일 %s이(가) 더 이상 없습니다. 다시 선택하거나 제거하십시오."
 
-#: tavletta/ui/texts.py:703
+#: tavletta/ui/texts.py:756
 #, python-format
 msgid "%(file)s has no sheet named %(sheet)s"
 msgstr "%(file)s에 %(sheet)s 시트가 없습니다"
 
-#: tavletta/ui/texts.py:705
+#: tavletta/ui/texts.py:758
 #, python-format
 msgid "%s is not a table. Use a CSV, ODS or XLSX file."
 msgstr "%s은(는) 표가 아닙니다. CSV, ODS 또는 XLSX 파일을 사용하십시오."
 
-#: tavletta/ui/texts.py:707
+#: tavletta/ui/texts.py:760
 #, python-format
 msgid ""
 "%s is too large for serial labels. Split it into smaller files or remove "
 "rows and columns that are not needed."
 msgstr "%s은(는) 데이터 병합 라벨에 쓰기에 너무 큽니다. 더 작은 파일로 나누거나 필요 없는 행과 열을 제거하십시오."
 
-#: tavletta/ui/texts.py:710
+#: tavletta/ui/texts.py:763
 #, python-format
 msgid "%s contains no data."
 msgstr "%s에 데이터가 없습니다."
 
-#: tavletta/ui/texts.py:721
+#: tavletta/ui/texts.py:778
 #, python-format
 msgid ""
 "Printing stopped at row %(row)d. To continue, print again from row %(row)d."
 msgstr "%(row)d행에서 인쇄가 멈췄습니다. 계속하려면 %(row)d행부터 다시 인쇄하십시오."
 
-#: tavletta/ui/texts.py:725
+#: tavletta/ui/texts.py:783
+#, python-format
+msgid ""
+"Row %(row)d and the rows after it may have printed already: going on from it "
+"may print them twice."
+msgstr "%(row)d행과 그 이후 행은 이미 인쇄되었을 수 있습니다: 그 행부터 계속하면 두 번 인쇄될 수 있습니다."
+
+#: tavletta/ui/texts.py:787
 #, python-format
 msgid "Copies of row %(row)d already printed: %(copies)d."
 msgstr "%(row)d행에서 이미 인쇄된 매수: %(copies)d."
 
-#: tavletta/ui/texts.py:730
+#: tavletta/ui/texts.py:792
 #, python-format
 msgid "Row %(row)d goes at position %(position)d of sheet %(sheet)d."
 msgstr "%(row)d행은 %(sheet)d번째 시트의 %(position)d번 위치에 들어갑니다."
 
-#: tavletta/ui/texts.py:741
+#: tavletta/ui/texts.py:803
 #, python-format
 msgid "Cannot save %s: no permission to write there"
 msgstr "저장할 수 없음: %s (쓰기 권한 없음)"
 
-#: tavletta/ui/texts.py:743
+#: tavletta/ui/texts.py:805
 #, python-format
 msgid "Cannot save %s: the disk is full"
 msgstr "저장할 수 없음: %s (디스크 공간 부족)"
 
-#: tavletta/ui/texts.py:753
+#: tavletta/ui/texts.py:815
 #, python-format
 msgid ""
 "This cassette seems to be from %(month)s %(year)d. Old ZINK paper prints "
@@ -3178,172 +3385,177 @@ msgstr "라벨을 인쇄할 때마다 증가 단위만큼 올라갑니다"
 msgid "Next number"
 msgstr "다음 번호"
 
-#: tavletta/ui/variables.py:122
+#: tavletta/ui/variables.py:122 tavletta/server/web/batch.js:628
 msgid "Step"
 msgstr "증가 단위"
 
-#: tavletta/ui/window.py:163
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:49
+#: tavletta/server/web/app.js:342
 msgid "Templates"
 msgstr "서식"
 
-#: tavletta/ui/window.py:194
+#: tavletta/ui/window.py:208
 msgid "Shipping label…"
 msgstr "배송 라벨…"
 
-#: tavletta/ui/window.py:197
+#: tavletta/ui/window.py:211
 msgid "Data for serial labels…"
 msgstr "데이터 병합 라벨 데이터…"
 
-#: tavletta/ui/window.py:198
+#: tavletta/ui/window.py:212
 msgid "Forget allowed data files"
 msgstr "허용한 데이터 파일 잊기"
 
-#: tavletta/ui/window.py:199
+#: tavletta/ui/window.py:213
 msgid "Export PNG…"
 msgstr "PNG로 내보내기…"
 
-#: tavletta/ui/window.py:203
+#: tavletta/ui/window.py:217
 msgid "Report a problem…"
 msgstr "문제 보고…"
 
-#: tavletta/ui/window.py:204
+#: tavletta/ui/window.py:218
 msgid "About Tavletta"
 msgstr "Tavletta 정보"
 
-#: tavletta/ui/window.py:683
+#: tavletta/ui/window.py:743
 msgid "Unsaved label"
 msgstr "저장하지 않은 라벨"
 
-#: tavletta/ui/window.py:842
+#: tavletta/ui/window.py:915
 msgid "content scaled down to fit"
 msgstr "맞도록 내용을 축소함"
 
-#: tavletta/ui/window.py:846
+#: tavletta/ui/window.py:919
 #, python-format
 msgid "Problem: %s"
 msgstr "문제: %s"
 
-#: tavletta/ui/window.py:865
+#: tavletta/ui/window.py:938
 #, python-format
 msgid "Too long for this printer: at most %s"
 msgstr "이 프린터에는 너무 김: 최대 %s"
 
-#: tavletta/ui/window.py:869
+#: tavletta/ui/window.py:942
 #, python-format
 msgid "Too wide for this printer: at most %s"
 msgstr "이 프린터에는 너무 넓음: 최대 %s"
 
-#: tavletta/ui/window.py:941
+#: tavletta/ui/window.py:1020
 msgid "The browser cannot be opened"
 msgstr "브라우저를 열 수 없습니다"
 
-#: tavletta/ui/window.py:943
+#: tavletta/ui/window.py:1022
 msgid "Copy link"
 msgstr "링크 복사"
 
-#: tavletta/ui/window.py:1014
+#: tavletta/ui/window.py:1094
 msgid "Only local files can be dropped"
 msgstr "로컬 파일만 끌어다 놓을 수 있습니다"
 
-#: tavletta/ui/window.py:1067
+#: tavletta/ui/window.py:1147
 msgid "Please wait until printing has finished"
 msgstr "인쇄가 끝날 때까지 기다리십시오"
 
-#: tavletta/server/config.py:78
+#: tavletta/server/config.py:80
 #, python-format
 msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
-#: tavletta/server/config.py:88 tavletta/server/config.py:92
-#: tavletta/server/config.py:98 tavletta/server/main.py:342
+#: tavletta/server/config.py:90 tavletta/server/config.py:94
+#: tavletta/server/config.py:100 tavletta/server/main.py:419
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "%(file)s 파일을 읽을 수 없음: %(reason)s"
 
-#: tavletta/server/config.py:108
+#: tavletta/server/config.py:110
 msgid "expected a table"
 msgstr "테이블이 필요함"
 
-#: tavletta/server/config.py:118 tavletta/server/config.py:450
+#: tavletta/server/config.py:120 tavletta/server/config.py:457
+#: tavletta/server/oidc.py:226 tavletta/server/oidc.py:318
 msgid "missing"
 msgstr "없음"
 
-#: tavletta/server/config.py:121
+#: tavletta/server/config.py:123
 msgid "expected text"
 msgstr "텍스트가 필요함"
 
-#: tavletta/server/config.py:123
+#: tavletta/server/config.py:125
 msgid "control characters are not allowed"
 msgstr "제어 문자는 허용되지 않음"
 
-#: tavletta/server/config.py:129
+#: tavletta/server/config.py:131
 msgid "expected true or false"
 msgstr "true 또는 false가 필요함"
 
-#: tavletta/server/config.py:140
+#: tavletta/server/config.py:142
 #, python-format
 msgid "expected a number from %(min)s to %(max)s"
 msgstr "%(min)s에서 %(max)s 사이의 숫자가 필요함"
 
-#: tavletta/server/config.py:147
+#: tavletta/server/config.py:149
 #, python-format
 msgid "expected one of: %s"
 msgstr "다음 중 하나가 필요함: %s"
 
-#: tavletta/server/config.py:152 tavletta/server/config.py:158
+#: tavletta/server/config.py:154 tavletta/server/config.py:160
+#: tavletta/server/oidc.py:287
 msgid "unknown key"
 msgstr "알 수 없는 키"
 
-#: tavletta/server/config.py:161
+#: tavletta/server/config.py:163
 msgid "nothing defined"
 msgstr "정의된 항목 없음"
 
-#: tavletta/server/config.py:167
+#: tavletta/server/config.py:169
 msgid "not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "올바른 이름이 아님: 영문자, 숫자, . _ - (최대 64자)"
 
-#: tavletta/server/config.py:208
+#: tavletta/server/config.py:210
 msgid "only one printer can be the default"
 msgstr "기본 프린터는 하나만 지정할 수 있음"
 
-#: tavletta/server/config.py:222
+#: tavletta/server/config.py:224
 msgid "not a valid printer address"
 msgstr "올바른 프린터 주소가 아님"
 
-#: tavletta/server/config.py:244
+#: tavletta/server/config.py:246
 msgid "this printer model does not cut"
 msgstr "이 프린터 모델은 절단하지 않음"
 
-#: tavletta/server/config.py:246
+#: tavletta/server/config.py:248
 msgid "this printer model has no colour settings"
 msgstr "이 프린터 모델에는 색 설정이 없음"
 
-#: tavletta/server/config.py:405
+#: tavletta/server/config.py:412
 msgid "expected a date such as 2027-12-31"
 msgstr "2027-12-31 같은 날짜가 필요함"
 
-#: tavletta/server/config.py:424
+#: tavletta/server/config.py:431
 msgid "the same token twice"
 msgstr "같은 토큰이 두 번 있음"
 
-#: tavletta/server/config.py:437
+#: tavletta/server/config.py:444
 #, python-format
 msgid "%s can be changed by every user of this computer: chmod 600 it"
 msgstr "이 컴퓨터의 모든 사용자가 %s을(를) 변경할 수 있습니다: chmod 600을 적용하십시오"
 
-#: tavletta/server/config.py:447
+#: tavletta/server/config.py:454
 msgid "not a token hash: expected sha256:… or scrypt:…"
 msgstr "토큰 해시가 아님: sha256:… 또는 scrypt:…가 필요함"
 
-#: tavletta/server/config.py:473
+#: tavletta/server/config.py:480
 msgid "expected a list of printer names"
 msgstr "프린터 이름 목록이 필요함"
 
-#: tavletta/server/config.py:477 tavletta/server/main.py:368
+#: tavletta/server/config.py:484 tavletta/server/main.py:445
+#: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "프린터 제한은 --printers와 함께일 때만 가능"
 
-#: tavletta/server/config.py:479 tavletta/server/service.py:529
+#: tavletta/server/config.py:486 tavletta/server/oidc.py:251
+#: tavletta/server/service.py:585
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "알 수 없는 프린터: %s"
@@ -3353,68 +3565,77 @@ msgstr "알 수 없는 프린터: %s"
 msgid "Invalid value for %s"
 msgstr "%s에 잘못된 값"
 
-#: tavletta/server/http.py:464 tavletta/server/http.py:513
+#: tavletta/server/http.py:486 tavletta/server/http.py:535
 msgid "The request took too long"
 msgstr "요청 시간이 너무 오래 걸렸습니다"
 
-#: tavletta/server/http.py:473 tavletta/server/service.py:1388
+#: tavletta/server/http.py:495 tavletta/server/service.py:1763
 msgid "The server is busy – try again later"
 msgstr "서버가 사용 중입니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/http.py:516
+#: tavletta/server/http.py:538
 msgid "Internal error"
 msgstr "내부 오류"
 
-#: tavletta/server/http.py:521
+#: tavletta/server/http.py:543
 msgid "This server only answers on its local address"
 msgstr "이 서버는 로컬 주소에서만 응답합니다"
 
-#: tavletta/server/http.py:525
+#: tavletta/server/http.py:547 tavletta/server/http.py:670
+#: tavletta/server/http.py:674
 msgid "Requests from this web page are not allowed"
 msgstr "이 웹 페이지에서 온 요청은 허용되지 않습니다"
 
-#: tavletta/server/http.py:543
-msgid "Too many requests – try again later"
-msgstr "요청이 너무 많습니다 – 나중에 다시 시도하십시오"
-
-#: tavletta/server/http.py:545
+#: tavletta/server/http.py:575 tavletta/server/http.py:585
+#: tavletta/server/http.py:683
 msgid "Access token missing or wrong"
 msgstr "액세스 토큰이 없거나 잘못되었습니다"
 
-#: tavletta/server/http.py:586 tavletta/server/http.py:591
-msgid "The request needs a Content-Length"
-msgstr "요청에 Content-Length가 필요합니다"
+#: tavletta/server/http.py:583
+msgid "Too many requests – try again later"
+msgstr "요청이 너무 많습니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/http.py:588
-msgid "The request has more than one Content-Length"
-msgstr "요청에 Content-Length가 두 개 이상 있습니다"
-
-#: tavletta/server/http.py:594
-msgid "The request is too large"
-msgstr "요청이 너무 큽니다"
-
-#: tavletta/server/http.py:599
-msgid "The request body is incomplete"
-msgstr "요청 본문이 불완전합니다"
-
-#: tavletta/server/http.py:606
-msgid "Send the request as application/json"
-msgstr "요청을 application/json으로 보내십시오"
-
-#: tavletta/server/http.py:635 tavletta/server/http.py:645
-msgid "Not found"
-msgstr "찾을 수 없음"
-
-#: tavletta/server/http.py:644
-msgid "Method not allowed"
-msgstr "허용되지 않는 메서드"
-
-#: tavletta/server/http.py:661
+#: tavletta/server/http.py:663 tavletta/server/http.py:815
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "이 요청과 함께 %s 헤더를 보내십시오"
 
-#: tavletta/server/http.py:816
+#: tavletta/server/http.py:694 tavletta/server/http.py:789
+#: tavletta/server/http.py:799 tavletta/server/http.py:922
+msgid "Not found"
+msgstr "찾을 수 없음"
+
+#: tavletta/server/http.py:696 tavletta/server/http.py:798
+#: tavletta/server/http.py:913
+msgid "Method not allowed"
+msgstr "허용되지 않는 메서드"
+
+#: tavletta/server/http.py:731 tavletta/server/http.py:736
+msgid "The request needs a Content-Length"
+msgstr "요청에 Content-Length가 필요합니다"
+
+#: tavletta/server/http.py:733
+msgid "The request has more than one Content-Length"
+msgstr "요청에 Content-Length가 두 개 이상 있습니다"
+
+#: tavletta/server/http.py:739 tavletta/server/service.py:904
+msgid "The request is too large"
+msgstr "요청이 너무 큽니다"
+
+#: tavletta/server/http.py:744
+msgid "The request body is incomplete"
+msgstr "요청 본문이 불완전합니다"
+
+#: tavletta/server/http.py:751
+msgid "Send the request as application/json"
+msgstr "요청을 application/json으로 보내십시오"
+
+#: tavletta/server/http.py:860 tavletta/server/service.py:661
+#: tavletta/server/service.py:1736
+msgid "This access token may not do this"
+msgstr "이 액세스 토큰으로는 이 작업을 할 수 없습니다"
+
+#: tavletta/server/http.py:1045
 msgid "The request is not valid JSON"
 msgstr "요청이 올바른 JSON이 아닙니다"
 
@@ -3428,12 +3649,12 @@ msgstr "라벨 폴더가 없음: %s"
 msgid "Cannot read the token file %s"
 msgstr "토큰 파일을 읽을 수 없음: %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:313
+#: tavletta/server/main.py:54 tavletta/server/main.py:390
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "액세스 토큰에는 공백 없이 인쇄 가능한 ASCII 문자만 포함할 수 있습니다"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:318
+#: tavletta/server/main.py:59 tavletta/server/main.py:395
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "액세스 토큰은 %d자 이상이어야 합니다"
@@ -3451,171 +3672,1098 @@ msgstr "--tokens와 --token-file 중 하나만 사용하십시오"
 msgid "Not a valid printer address pattern: %s"
 msgstr "유효하지 않은 프린터 주소 패턴: %s"
 
-#: tavletta/server/main.py:117
+#: tavletta/server/main.py:118
 #, python-format
 msgid ""
 "Refusing to listen on %s without an access token: set TAVLETTA_TOKEN or use "
 "--token-file"
 msgstr "액세스 토큰 없이 %s에서 수신 대기하지 않습니다: TAVLETTA_TOKEN을 설정하거나 --token-file을 사용하십시오"
 
-#: tavletta/server/main.py:140
+#: tavletta/server/main.py:143
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "%(address)s에서 수신 대기할 수 없음: %(reason)s"
 
-#: tavletta/server/main.py:272
+#: tavletta/server/main.py:160
+msgid "--oidc signs in to the web page: not with --no-web-ui"
+msgstr "--oidc는 웹 페이지 로그인용입니다: --no-web-ui와 함께 쓸 수 없습니다"
+
+#: tavletta/server/main.py:167
+msgid ""
+"--oidc is not available in the Flatpak: install Tavletta from the deb or rpm "
+"package, the container image or with pip for it"
+msgstr "--oidc는 Flatpak에서 사용할 수 없습니다: 사용하려면 deb 또는 rpm 패키지, 컨테이너 이미지 또는 pip로 Tavletta를 설치하십시오"
+
+#: tavletta/server/main.py:173
+msgid ""
+"--oidc needs PyJWT with cryptography (python3-jwt, pip install "
+"tavletta[oidc])"
+msgstr "--oidc에는 cryptography가 포함된 PyJWT가 필요합니다 (python3-jwt, pip install tavletta[oidc])"
+
+#: tavletta/server/main.py:210
+msgid ""
+"--oidc with --trusted-proxy needs public_url in the OIDC settings: the "
+"address people open the web page at"
+msgstr "--trusted-proxy와 함께 쓰는 --oidc에는 OIDC 설정의 public_url(웹 페이지를 여는 주소)이 필요합니다"
+
+#: tavletta/server/main.py:349
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "올바른 이름이 아닙니다: 영문자, 숫자, . _ - (최대 64자)"
 
-#: tavletta/server/main.py:283
+#: tavletta/server/main.py:360
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "다른 프로그램이 %s을(를) 사용 중입니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/main.py:290
+#: tavletta/server/main.py:367
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "토큰 %(name)s을(를) %(file)s에 추가했습니다."
 
-#: tavletta/server/main.py:297
+#: tavletta/server/main.py:374
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "토큰은 이번 한 번만 표시됩니다. %s에는 해시만 저장됩니다."
 
-#: tavletta/server/main.py:308
+#: tavletta/server/main.py:385
 msgid "Access token: "
 msgstr "액세스 토큰: "
 
-#: tavletta/server/main.py:323
+#: tavletta/server/main.py:400
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "직접 정한 토큰은 생성된 토큰처럼 보이면 안 됩니다 (tav_…)"
 
-#: tavletta/server/main.py:373
+#: tavletta/server/main.py:450
 #, python-format
 msgid "A token named %s exists already"
 msgstr "이름이 %s인 토큰이 이미 있습니다"
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:477
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "이 토큰은 이미 파일에 %s(으)로 있습니다"
 
-#: tavletta/server/paths.py:39
+#: tavletta/server/oidc.py:153 tavletta/server/oidc.py:157
+#: tavletta/server/oidc.py:267
+msgid "expected an https:// address (http:// only on this computer)"
+msgstr "https:// 주소가 필요함 (http://는 이 컴퓨터에서만)"
+
+#: tavletta/server/oidc.py:183 tavletta/server/oidc.py:199
+#: tavletta/server/oidc.py:259
+msgid "expected a list of texts"
+msgstr "텍스트 목록이 필요함"
+
+#: tavletta/server/oidc.py:215 tavletta/server/oidc.py:219
+#, python-format
+msgid "Cannot read the client secret file %s"
+msgstr "클라이언트 시크릿 파일 %s을(를) 읽을 수 없습니다"
+
+#: tavletta/server/oidc.py:231
+msgid "map at least one role"
+msgstr "역할을 하나 이상 매핑하세요"
+
+#: tavletta/server/oidc.py:277
+msgid "use either printers_claim or [oidc.printers]"
+msgstr "printers_claim 또는 [oidc.printers] 중 하나만 사용하세요"
+
+#: tavletta/server/paths.py:46 tavletta/server/service.py:877
+#: tavletta/server/service.py:1310
 #, python-format
 msgid "No such label: %s"
 msgstr "없는 라벨: %s"
 
-#: tavletta/server/paths.py:46
+#: tavletta/server/paths.py:67
 #, python-format
 msgid "No such data file: %s"
 msgstr "없는 데이터 파일: %s"
 
-#: tavletta/server/requests.py:95
+#: tavletta/server/requests.py:127
 msgid "The request must be a JSON object"
 msgstr "요청은 JSON 객체여야 합니다"
 
-#: tavletta/server/requests.py:97
+#: tavletta/server/requests.py:129
 #, python-format
 msgid "Unknown field: %s"
 msgstr "알 수 없는 필드: %s"
 
-#: tavletta/server/requests.py:104
+#: tavletta/server/requests.py:136
 msgid "Give the label either by name or as content"
 msgstr "라벨을 이름 또는 내용으로 지정하십시오"
 
-#: tavletta/server/requests.py:109
+#: tavletta/server/requests.py:141
 msgid "Give data rows or a data file, not both"
 msgstr "데이터 행과 데이터 파일 중 하나만 지정하십시오"
 
-#: tavletta/server/requests.py:196
+#: tavletta/server/requests.py:228
 #, python-format
 msgid "Too many data rows: at most %d"
 msgstr "데이터 행이 너무 많음: 최대 %d"
 
-#: tavletta/server/requests.py:204
+#: tavletta/server/requests.py:236
 #, python-format
 msgid "Too many columns: at most %d"
 msgstr "열이 너무 많음: 최대 %d"
 
-#: tavletta/server/requests.py:207
+#: tavletta/server/requests.py:239 tavletta/server/service.py:902
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "셀이 너무 많음: 최대 %d"
 
-#: tavletta/server/service.py:541
+#: tavletta/server/service.py:597
 msgid "Choose a printer by its name"
 msgstr "이름으로 프린터를 선택하십시오"
 
-#: tavletta/server/service.py:605 tavletta/server/service.py:1361
-msgid "This access token may not do this"
-msgstr "이 액세스 토큰으로는 이 작업을 할 수 없습니다"
-
-#: tavletta/server/service.py:662
+#: tavletta/server/service.py:719
 msgid "No printer address: give it as host"
 msgstr "프린터 주소 없음: host로 지정하십시오"
 
-#: tavletta/server/service.py:671
+#: tavletta/server/service.py:728
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "허용되지 않는 프린터 주소: %s"
 
-#: tavletta/server/service.py:766
+#: tavletta/server/service.py:812 tavletta/server/service.py:1007
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content에서는 문서 페이지를 사용할 수 없습니다 (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:799
+#: tavletta/server/service.py:848
+#, python-format
+msgid "%s has print jobs waiting or printing – try again when they are done"
+msgstr "%s의 인쇄 작업이 대기 중이거나 인쇄 중입니다 – 완료된 후 다시 시도하십시오"
+
+#: tavletta/server/service.py:895
+msgid "Reading the file takes too long – send a smaller one"
+msgstr "파일을 읽는 데 너무 오래 걸립니다 – 더 작은 파일을 보내십시오"
+
+#: tavletta/server/service.py:1042
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s은(는) 데이터 열입니다 ({%(name)s}) – data_rows로 보내세요"
 
-#: tavletta/server/service.py:857
+#: tavletta/server/service.py:1101
 msgid "A sheet needs a data file"
 msgstr "시트에는 데이터 파일이 필요합니다"
 
-#: tavletta/server/service.py:863
+#: tavletta/server/service.py:1107
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "라벨이 라벨 폴더 밖에 있는 데이터 파일을 사용합니다: 그 행도 함께 보내십시오"
 
-#: tavletta/server/service.py:1033
+#: tavletta/server/service.py:1315
 #, python-format
-msgid "At most %d labels in one print job"
-msgstr "인쇄 작업 하나에 라벨은 최대 %d개까지 가능합니다"
+msgid "%s was changed while the request was checked – send it again"
+msgstr "요청을 확인하는 동안 %s이(가) 변경되었습니다 – 다시 보내십시오"
 
-#: tavletta/server/service.py:1059
+#: tavletta/server/service.py:1321
 msgid "Too many print jobs are waiting – try again later"
 msgstr "대기 중인 인쇄 작업이 너무 많습니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/service.py:1323
+#: tavletta/server/service.py:1596
 #, python-format
 msgid "No such print job: %s"
 msgstr "없는 인쇄 작업: %s"
 
-#: tavletta/server/service.py:1335
+#: tavletta/server/service.py:1608
 msgid "The print job has already finished"
 msgstr "인쇄 작업이 이미 끝났습니다"
 
-#: tavletta/server/service.py:1392
+#: tavletta/server/service.py:1680
+#, python-format
+msgid "A label named %s exists already"
+msgstr "이름이 %s인 라벨이 이미 있습니다"
+
+#: tavletta/server/service.py:1698
+msgid "The label could not be deleted from the labels folder"
+msgstr "라벨 폴더에서 라벨을 삭제할 수 없습니다"
+
+#: tavletta/server/service.py:1709
+msgid "The label could not be saved in the labels folder"
+msgstr "라벨을 라벨 폴더에 저장할 수 없습니다"
+
+#: tavletta/server/service.py:1767
 msgid "The label is too large to render"
 msgstr "라벨이 너무 커서 렌더링할 수 없습니다"
 
-#: tavletta/server/service.py:1406
+#: tavletta/server/service.py:1781
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "라벨이 너무 큽니다: 이미지와 코드는 최대 %d개까지 가능합니다"
 
-#: tavletta/server/service.py:1429
+#: tavletta/server/service.py:1804
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "라벨이 너무 큽니다: 요소는 최대 %(elements)d개, 텍스트당 최대 %(chars)d자까지 가능합니다"
 
-#: tavletta/server/service.py:1448
+#: tavletta/server/service.py:1823
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "이 프린터에서는 최대 %d매까지 가능합니다"
 
-#: tavletta/server/service.py:1453
+#: tavletta/server/service.py:1828
 msgid "Printers are chosen by name: leave out host"
 msgstr "프린터는 이름으로 선택합니다: host를 지정하지 마십시오"
+
+#: tavletta/server/web/api.js:68 tavletta/server/web/app.js:561
+msgid "No connection to the server. Your input is kept."
+msgstr "서버에 연결되지 않았습니다. 입력한 내용은 유지됩니다."
+
+#: tavletta/server/web/app.js:50 tavletta/server/web/app.js:260
+msgid "Printers"
+msgstr "프린터"
+
+#: tavletta/server/web/app.js:55
+msgid "Main"
+msgstr "주 탐색"
+
+#: tavletta/server/web/app.js:81
+msgid "Language"
+msgstr "언어"
+
+#: tavletta/server/web/app.js:84
+msgid "Sign out"
+msgstr "로그아웃"
+
+#: tavletta/server/web/app.js:88
+msgid "Skip to content"
+msgstr "본문으로 건너뛰기"
+
+#: tavletta/server/web/app.js:185
+msgid ""
+"You are signed in at {provider}, but have no access to Tavletta. Ask the "
+"administrator for it."
+msgstr "{provider}에 로그인했지만 Tavletta에 접근할 권한이 없습니다. 관리자에게 요청하세요."
+
+#: tavletta/server/web/app.js:186
+msgid "Signing in took too long or was started in another window. Try again."
+msgstr "로그인이 너무 오래 걸렸거나 다른 창에서 시작되었습니다. 다시 시도하세요."
+
+#: tavletta/server/web/app.js:187
+msgid "Signing in was canceled."
+msgstr "로그인이 취소되었습니다."
+
+#: tavletta/server/web/app.js:189
+msgid "Signing in did not work. Try again, or ask the administrator."
+msgstr "로그인하지 못했습니다. 다시 시도하거나 관리자에게 문의하세요."
+
+#: tavletta/server/web/app.js:199
+msgid "Sign in with {provider}"
+msgstr "{provider}(으)로 로그인"
+
+#: tavletta/server/web/app.js:201 tavletta/server/web/app.js:214
+#: tavletta/server/web/app.js:252
+msgid "Sign in"
+msgstr "로그인"
+
+#: tavletta/server/web/app.js:204
+msgid "Or with an access token"
+msgstr "또는 액세스 토큰으로"
+
+#: tavletta/server/web/app.js:208
+msgid "Access token"
+msgstr "액세스 토큰"
+
+#: tavletta/server/web/app.js:209
+msgid ""
+"The administrator gives it to you. It is kept in this tab only and forgotten "
+"when the tab is closed."
+msgstr "관리자에게서 받습니다. 이 탭에만 보관되며 탭을 닫으면 삭제됩니다."
+
+#: tavletta/server/web/app.js:221
+msgid "Show token"
+msgstr "토큰 표시"
+
+#: tavletta/server/web/app.js:229
+msgid "Enter the access token."
+msgstr "액세스 토큰을 입력하세요."
+
+#: tavletta/server/web/app.js:245
+msgid ""
+"The token was not accepted. Check it, or ask the administrator for a new one."
+msgstr "토큰이 승인되지 않았습니다. 토큰을 확인하거나 관리자에게 새 토큰을 요청하세요."
+
+#: tavletta/server/web/app.js:259
+msgid "Check again"
+msgstr "다시 확인"
+
+#: tavletta/server/web/app.js:271 tavletta/server/web/print.js:74
+msgid "No printer this token may use. Ask the administrator."
+msgstr "이 토큰으로 사용할 수 있는 프린터가 없습니다. 관리자에게 문의하세요."
+
+#: tavletta/server/web/app.js:284
+msgid "Location: {place}"
+msgstr "위치: {place}"
+
+#: tavletta/server/web/app.js:285
+msgid "Meant for: {media}"
+msgstr "용도: {media}"
+
+#: tavletta/server/web/app.js:286
+msgid "Model: {model}"
+msgstr "모델: {model}"
+
+#: tavletta/server/web/app.js:292
+msgid "Default"
+msgstr "기본값"
+
+#: tavletta/server/web/app.js:306
+msgid "Asking the printer…"
+msgstr "프린터에 확인하는 중…"
+
+#: tavletta/server/web/app.js:317
+msgid "Ask for its state"
+msgstr "상태 확인"
+
+#: tavletta/server/web/app.js:323
+msgid "Address: {host}"
+msgstr "주소: {host}"
+
+#: tavletta/server/web/app.js:323
+msgid "No address set"
+msgstr "주소가 설정되지 않음"
+
+#: tavletta/server/web/app.js:358
+msgid "No templates yet. Upload one above."
+msgstr "아직 서식이 없습니다. 위에서 업로드하세요."
+
+#: tavletta/server/web/app.js:358
+msgid "No templates yet. Ask the administrator."
+msgstr "아직 서식이 없습니다. 관리자에게 문의하세요."
+
+#: tavletta/server/web/app.js:385
+msgid "Series"
+msgstr "데이터 병합"
+
+#: tavletta/server/web/app.js:386
+msgid "Delete"
+msgstr "삭제"
+
+#: tavletta/server/web/app.js:394
+msgid "Size: {width} × {height} mm"
+msgstr "크기: {width} × {height} mm"
+
+#: tavletta/server/web/app.js:395
+msgid "Fields: {count}"
+msgstr "필드: {count}"
+
+#: tavletta/server/web/app.js:396
+msgid "Printer model: {model}"
+msgstr "프린터 모델: {model}"
+
+#: tavletta/server/web/app.js:402
+msgid "Preview of {name} with sample values"
+msgstr "샘플 값으로 본 {name} 미리 보기"
+
+#: tavletta/server/web/app.js:402 tavletta/server/web/print.js:188
+msgid "Preview of {name}"
+msgstr "{name} 미리 보기"
+
+#: tavletta/server/web/app.js:404
+msgid "The preview shows sample values; a series can read another data file."
+msgstr "미리 보기는 샘플 값을 보여 줍니다. 시리즈는 다른 데이터 파일을 읽을 수 있습니다."
+
+#: tavletta/server/web/app.js:421
+msgid "The data file {name} is missing."
+msgstr "데이터 파일 {name}이(가) 없습니다."
+
+#: tavletta/server/web/app.js:430
+msgid "The template's data file is not in the labels folder."
+msgstr "템플릿의 데이터 파일이 라벨 폴더에 없습니다."
+
+#: tavletta/server/web/app.js:438
+msgid "Delete template?"
+msgstr "서식을 삭제할까요?"
+
+#: tavletta/server/web/app.js:439
+msgid "The template {name} is deleted from the server. Its data file stays."
+msgstr "서식 {name}이(가) 서버에서 삭제됩니다. 데이터 파일은 남습니다."
+
+#: tavletta/server/web/app.js:440
+msgid "Delete {name}"
+msgstr "{name} 삭제"
+
+#: tavletta/server/web/app.js:447
+msgid "{name} deleted."
+msgstr "{name}을(를) 삭제했습니다."
+
+#: tavletta/server/web/app.js:460
+msgid "Template file"
+msgstr "서식 파일"
+
+#: tavletta/server/web/app.js:461
+msgid "A .tavletta file saved by Tavletta, at most {size} MB."
+msgstr "Tavletta로 저장한 .tavletta 파일, 최대 {size} MB."
+
+#: tavletta/server/web/app.js:465
+msgid "Upload"
+msgstr "업로드"
+
+#: tavletta/server/web/app.js:469
+msgid "Upload a template"
+msgstr "서식 업로드"
+
+#: tavletta/server/web/app.js:471
+msgid "Replace a template of the same name"
+msgstr "같은 이름의 서식 바꾸기"
+
+#: tavletta/server/web/app.js:479
+msgid "Choose a template file."
+msgstr "서식 파일을 선택하세요."
+
+#: tavletta/server/web/app.js:484
+msgid "The file is too large: at most {size} MB."
+msgstr "파일이 너무 큽니다. 최대 {size} MB입니다."
+
+#: tavletta/server/web/app.js:495
+msgid "{name} uploaded."
+msgstr "{name}을(를) 업로드했습니다."
+
+#: tavletta/server/web/app.js:499
+msgid ""
+"A template of this name exists. Choose \"Replace a template of the same "
+"name\" to replace it."
+msgstr "이 이름의 서식이 이미 있습니다. 바꾸려면 \"같은 이름의 서식 바꾸기\"를 선택하세요."
+
+#: tavletta/server/web/app.js:501
+msgid ""
+"The file name can have letters, digits, spaces and . _ - ( ) + , and must "
+"not start with a dot. Rename the file."
+msgstr "파일 이름에는 문자, 숫자, 공백과 . _ - ( ) + , 를 사용할 수 있으며 점으로 시작할 수 없습니다. 파일 이름을 바꾸세요."
+
+#: tavletta/server/web/app.js:516
+msgid "Print job"
+msgstr "인쇄 작업"
+
+#: tavletta/server/web/app.js:523 tavletta/server/web/batch.js:908
+#: tavletta/server/web/print.js:243
+msgid "Template: {name}"
+msgstr "서식: {name}"
+
+#: tavletta/server/web/app.js:523 tavletta/server/web/batch.js:909
+#: tavletta/server/web/print.js:243
+msgid "Printer: {name}"
+msgstr "프린터: {name}"
+
+#: tavletta/server/web/app.js:528 tavletta/server/web/batch.js:951
+msgid "Print job ended: {printed} of {total} labels printed."
+msgstr "인쇄 작업 종료: 라벨 {total}장 중 {printed}장 인쇄됨."
+
+#: tavletta/server/web/batch.js:52 tavletta/server/web/batch.js:275
+msgid "Data"
+msgstr "데이터"
+
+#: tavletta/server/web/batch.js:53 tavletta/server/web/batch.js:401
+msgid "Assign"
+msgstr "지정"
+
+#: tavletta/server/web/batch.js:54 tavletta/server/web/batch.js:530
+msgid "Choose"
+msgstr "선택"
+
+#: tavletta/server/web/batch.js:55 tavletta/server/web/batch.js:771
+msgid "Check"
+msgstr "확인"
+
+#: tavletta/server/web/batch.js:88
+msgid "From needs a number."
+msgstr "'시작'에 숫자가 필요합니다."
+
+#: tavletta/server/web/batch.js:89
+msgid "To needs a number."
+msgstr "'끝'에 숫자가 필요합니다."
+
+#: tavletta/server/web/batch.js:90
+msgid "Step must be a whole number from 1."
+msgstr "'간격'은 1 이상의 정수여야 합니다."
+
+#: tavletta/server/web/batch.js:91
+msgid "From and To must be the same apart from the number ({from}, {to})."
+msgstr "'시작'과 '끝'은 숫자 부분 외에는 같아야 합니다({from}, {to})."
+
+#: tavletta/server/web/batch.js:92
+msgid ""
+"From has {from} digits, To {to}. Enter both with the same number of digits."
+msgstr "'시작'은 {from}자리, '끝'은 {to}자리입니다. 두 값을 같은 자릿수로 입력하세요."
+
+#: tavletta/server/web/batch.js:93
+msgid "To must be greater than or equal to From ({from})."
+msgstr "'끝'은 '시작'({from})보다 크거나 같아야 합니다."
+
+#: tavletta/server/web/batch.js:94
+msgid ""
+"The ranges make different numbers of labels: {counts}. Make them the same "
+"length."
+msgstr "범위마다 라벨 수가 다릅니다: {counts}. 길이를 같게 맞추세요."
+
+#: tavletta/server/web/batch.js:103
+msgid "Series of {name}"
+msgstr "{name} 데이터 병합"
+
+#: tavletta/server/web/batch.js:120
+msgid ""
+"This template has no data fields ({placeholder}). For many equal labels, set "
+"the copies when printing."
+msgstr "이 서식에는 데이터 필드({placeholder})가 없습니다. 같은 라벨을 여러 장 인쇄하려면 인쇄할 때 매수를 설정하세요."
+
+#: tavletta/server/web/batch.js:130
+msgid "Steps"
+msgstr "단계"
+
+#: tavletta/server/web/batch.js:165 tavletta/server/web/batch.js:184
+msgid "Enter a range for at least one field."
+msgstr "하나 이상의 필드에 범위를 입력하세요."
+
+#: tavletta/server/web/batch.js:194 tavletta/server/web/batch.js:706
+msgid "Row {n}"
+msgstr "{n}행"
+
+#: tavletta/server/web/batch.js:210 tavletta/server/web/batch.js:583
+#: tavletta/server/web/batch.js:773
+msgid "No row selected."
+msgstr "선택한 행이 없습니다."
+
+#: tavletta/server/web/batch.js:214
+msgid "{count} labels ({span})"
+msgstr "라벨 {count}장({span})"
+
+#: tavletta/server/web/batch.js:229
+msgid "not needed"
+msgstr "필요 없음"
+
+#: tavletta/server/web/batch.js:251 tavletta/server/web/batch.js:305
+msgid "Next"
+msgstr "다음"
+
+#: tavletta/server/web/batch.js:255 tavletta/server/web/batch.js:824
+msgid "Back"
+msgstr "뒤로"
+
+#: tavletta/server/web/batch.js:279
+msgid "Where do the values come from?"
+msgstr "값을 어디에서 가져올까요?"
+
+#: tavletta/server/web/batch.js:280
+msgid "A file (CSV, XLSX, ODS)"
+msgstr "파일(CSV, XLSX, ODS)"
+
+#: tavletta/server/web/batch.js:281
+msgid "A pasted list"
+msgstr "붙여 넣은 목록"
+
+#: tavletta/server/web/batch.js:282
+msgid "No data: make numbers from ranges"
+msgstr "데이터 없음: 범위에서 번호 생성"
+
+#: tavletta/server/web/batch.js:290
+msgid "Data file"
+msgstr "데이터 파일"
+
+#: tavletta/server/web/batch.js:290
+msgid ""
+"At most {size} MB. Every cell is read as the text it shows: leading zeros "
+"stay."
+msgstr "최대 {size} MB. 모든 셀은 표시되는 텍스트 그대로 읽히므로 앞의 0이 유지됩니다."
+
+#: tavletta/server/web/batch.js:292 tavletta/server/web/batch.js:299
+msgid "The first row holds the column names"
+msgstr "첫 행에 열 이름이 있음"
+
+#: tavletta/server/web/batch.js:293
+msgid "Last file read: {name}"
+msgstr "마지막으로 읽은 파일: {name}"
+
+#: tavletta/server/web/batch.js:297 tavletta/server/web/batch.js:346
+msgid "List"
+msgstr "목록"
+
+#: tavletta/server/web/batch.js:297
+msgid ""
+"One label per line; columns separated by tab, semicolon or comma (as copied "
+"from a spreadsheet)."
+msgstr "한 줄에 라벨 하나, 열은 탭, 세미콜론 또는 쉼표로 구분합니다(스프레드시트에서 복사한 형식)."
+
+#: tavletta/server/web/batch.js:301
+msgid ""
+"The next steps make the values from ranges, such as 3000–5685 or 00300–00450."
+msgstr "다음 단계에서 3000–5685 또는 00300–00450 같은 범위로 값을 만듭니다."
+
+#: tavletta/server/web/batch.js:305
+msgid "Read and continue"
+msgstr "읽고 계속"
+
+#: tavletta/server/web/batch.js:337
+msgid "Choose a data file."
+msgstr "데이터 파일을 선택하세요."
+
+#: tavletta/server/web/batch.js:345
+msgid "Paste the list first."
+msgstr "먼저 목록을 붙여 넣으세요."
+
+#: tavletta/server/web/batch.js:350
+msgid "The data are too large: at most {size} MB."
+msgstr "데이터가 너무 큽니다. 최대 {size} MB입니다."
+
+#: tavletta/server/web/batch.js:369
+msgid "semicolon"
+msgstr "세미콜론"
+
+#: tavletta/server/web/batch.js:369
+msgid "comma"
+msgstr "쉼표"
+
+#: tavletta/server/web/batch.js:369
+msgid "tab"
+msgstr "탭"
+
+#: tavletta/server/web/batch.js:371
+msgid "{name}: {kind}"
+msgstr "{name}: {kind}"
+
+#: tavletta/server/web/batch.js:372
+msgid "Separated by {delimiter}"
+msgstr "구분 기호: {delimiter}"
+
+#: tavletta/server/web/batch.js:373
+msgid "Sheet: {sheet}"
+msgstr "시트: {sheet}"
+
+#: tavletta/server/web/batch.js:374
+msgid "{rows} rows, {columns} columns"
+msgstr "{rows}행, {columns}열"
+
+#: tavletta/server/web/batch.js:376
+msgid "The first {count} rows"
+msgstr "처음 {count}행"
+
+#: tavletta/server/web/batch.js:387 tavletta/server/web/batch.js:700
+msgid "Row"
+msgstr "행"
+
+#: tavletta/server/web/batch.js:416
+msgid ""
+"Choose the data column for each field of the template. The preview shows the "
+"first label; the field in use is outlined in it."
+msgstr "템플릿의 각 필드에 데이터 열을 선택하세요. 미리 보기는 첫 번째 라벨을 보여 주며, 사용 중인 필드는 테두리로 표시됩니다."
+
+#: tavletta/server/web/batch.js:419
+msgid ""
+"Assigned automatically (the same name, or the only column): {fields}. Check "
+"them below."
+msgstr "자동으로 지정됨(같은 이름 또는 유일한 열): {fields}. 아래에서 확인하세요."
+
+#: tavletta/server/web/batch.js:421
+msgid "The first label"
+msgstr "첫 번째 라벨"
+
+#: tavletta/server/web/batch.js:430
+msgid "– not assigned –"
+msgstr "– 지정 안 됨 –"
+
+#: tavletta/server/web/batch.js:431
+msgid "The same value for all"
+msgstr "모두 같은 값"
+
+#: tavletta/server/web/batch.js:435
+msgid "Value for {name}"
+msgstr "{name}의 값"
+
+#: tavletta/server/web/batch.js:440
+msgid "Data field {placeholder} of the template, required"
+msgstr "서식의 데이터 필드 {placeholder}, 필수"
+
+#: tavletta/server/web/batch.js:466
+msgid "{name} has no data column. Choose one, or the same value for all."
+msgstr "{name}에 데이터 열이 없습니다. 열을 선택하거나 모두 같은 값을 지정하세요."
+
+#: tavletta/server/web/batch.js:499
+msgid "Not assigned yet: the preview shows a sample value."
+msgstr "아직 지정되지 않음: 미리 보기는 샘플 값을 보여 줍니다."
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: empty"
+msgstr "첫 번째 라벨: 비어 있음"
+
+#: tavletta/server/web/batch.js:500
+msgid "On the first label: {value}"
+msgstr "첫 번째 라벨: {value}"
+
+#: tavletta/server/web/batch.js:510
+msgid "Preview of the first label"
+msgstr "첫 번째 라벨 미리 보기"
+
+#: tavletta/server/web/batch.js:541
+msgid "Continuing: {count} rows left."
+msgstr "이어서 진행: {count}행 남음."
+
+#: tavletta/server/web/batch.js:545
+msgid "Choose again"
+msgstr "다시 선택"
+
+#: tavletta/server/web/batch.js:551 tavletta/server/web/batch.js:677
+msgid "All rows"
+msgstr "모든 행"
+
+#: tavletta/server/web/batch.js:552
+msgid "Some rows"
+msgstr "일부 행"
+
+#: tavletta/server/web/batch.js:553
+msgid "Ranges of a field"
+msgstr "필드의 범위"
+
+#: tavletta/server/web/batch.js:559
+msgid "Which rows?"
+msgstr "어떤 행을 사용할까요?"
+
+#: tavletta/server/web/batch.js:594
+msgid ""
+"Several fields: their values are put together row by row (the first with the "
+"first), never every combination."
+msgstr "필드가 여러 개인 경우: 값은 행 단위로 짝지어지며(첫 번째는 첫 번째와), 모든 조합을 만들지는 않습니다."
+
+#: tavletta/server/web/batch.js:595
+msgid ""
+"Several fields: a row is printed if its values lie in the ranges of all of "
+"them."
+msgstr "필드가 여러 개인 경우: 값이 모든 필드의 범위 안에 있는 행만 인쇄됩니다."
+
+#: tavletta/server/web/batch.js:626
+msgid "From"
+msgstr "시작"
+
+#: tavletta/server/web/batch.js:626
+msgid "For example 3000, 00300 or INV-0001; or the whole range, 3000-5685"
+msgstr "예: 3000, 00300 또는 INV-0001, 또는 전체 범위 3000-5685"
+
+#: tavletta/server/web/batch.js:627
+msgid "To"
+msgstr "끝"
+
+#: tavletta/server/web/batch.js:633
+msgid "Remove range"
+msgstr "범위 제거"
+
+#: tavletta/server/web/batch.js:655
+msgid "Add a range"
+msgstr "범위 추가"
+
+#: tavletta/server/web/batch.js:663
+msgid "Or the same value for all"
+msgstr "또는 모두 같은 값"
+
+#: tavletta/server/web/batch.js:663
+msgid "Used if no range is given for this field."
+msgstr "이 필드에 범위가 없으면 사용됩니다."
+
+#: tavletta/server/web/batch.js:676 tavletta/server/web/batch.js:695
+msgid "Rows"
+msgstr "행"
+
+#: tavletta/server/web/batch.js:676
+msgid "For example 1-20, 25, 30-"
+msgstr "예: 1-20, 25, 30-"
+
+#: tavletta/server/web/batch.js:699
+msgid "Rows {first} to {last} of {total}"
+msgstr "{total}행 중 {first}~{last}행"
+
+#: tavletta/server/web/batch.js:735
+msgid "Page {page} of {pages}"
+msgstr "{pages}페이지 중 {page}페이지"
+
+#: tavletta/server/web/batch.js:741
+msgid "Previous page"
+msgstr "이전 페이지"
+
+#: tavletta/server/web/batch.js:742
+msgid "Next page"
+msgstr "다음 페이지"
+
+#: tavletta/server/web/batch.js:756
+msgid "Write the rows as numbers and ranges, such as 1-20, 25."
+msgstr "행을 1-20, 25처럼 번호와 범위로 입력하세요."
+
+#: tavletta/server/web/batch.js:818
+msgid "The same for all labels"
+msgstr "모든 라벨에 동일"
+
+#: tavletta/server/web/batch.js:835 tavletta/server/web/print.js:203
+msgid "Printing needs a token with the role Print or Admin."
+msgstr "인쇄하려면 역할이 '인쇄' 또는 '관리자'인 토큰이 필요합니다."
+
+#: tavletta/server/web/batch.js:837 tavletta/server/web/print.js:222
+msgid "Copies must be a whole number from 1."
+msgstr "매수는 1 이상의 정수여야 합니다."
+
+#: tavletta/server/web/batch.js:838 tavletta/server/web/print.js:223
+msgid "At most {max} copies on this printer."
+msgstr "이 프린터에서는 최대 {max}매입니다."
+
+#: tavletta/server/web/batch.js:839
+msgid "At most {max} rows in one print job."
+msgstr "인쇄 작업 하나에 최대 {max}행입니다."
+
+#: tavletta/server/web/batch.js:840
+msgid ""
+"At most {max} labels in one print job. Choose fewer rows, or print them in "
+"several jobs."
+msgstr "인쇄 작업 하나에 라벨은 최대 {max}장입니다. 행을 줄이거나 여러 작업으로 나누어 인쇄하세요."
+
+#: tavletta/server/web/batch.js:841 tavletta/server/web/print.js:204
+msgid "Confirm above that it should print on the labels loaded."
+msgstr "들어 있는 라벨에 인쇄할지 위에서 확인하세요."
+
+#: tavletta/server/web/batch.js:848
+msgid "At most {max} labels in one print job; {left} more could be added."
+msgstr "인쇄 작업 하나에 라벨은 최대 {max}장이며, {left}장 더 추가할 수 있습니다."
+
+#: tavletta/server/web/batch.js:849 tavletta/server/web/batch.js:911
+#: tavletta/server/web/print.js:244
+msgid "Print {count} labels"
+msgstr "라벨 {count}장 인쇄"
+
+#: tavletta/server/web/batch.js:871
+msgid "First: {value}"
+msgstr "처음: {value}"
+
+#: tavletta/server/web/batch.js:872
+msgid "Last: {value}"
+msgstr "마지막: {value}"
+
+#: tavletta/server/web/batch.js:875 tavletta/server/web/batch.js:876
+msgid "Preview of the label {value}"
+msgstr "라벨 {value} 미리 보기"
+
+#: tavletta/server/web/batch.js:905 tavletta/server/web/print.js:242
+msgid "Print {count} labels?"
+msgstr "라벨 {count}장을 인쇄할까요?"
+
+#: tavletta/server/web/batch.js:919
+msgid "Too much data for one print job ({size} MB). Choose fewer rows."
+msgstr "인쇄 작업 하나에 데이터가 너무 많습니다({size} MB). 행을 줄이세요."
+
+#: tavletta/server/web/batch.js:971
+msgid "First printed: {first}, last printed in full: {last}"
+msgstr "처음 인쇄: {first}, 마지막으로 완전히 인쇄: {last}"
+
+#: tavletta/server/web/batch.js:971
+msgid "(not all numbers in between)"
+msgstr "(사이의 모든 번호는 아님)"
+
+#: tavletta/server/web/batch.js:982
+msgid "Continue from {value}"
+msgstr "{value}부터 계속"
+
+#: tavletta/server/web/batch.js:984
+msgid "A label of a row that was printed in part is printed again in full."
+msgstr "일부만 인쇄된 행의 라벨은 처음부터 다시 인쇄됩니다."
+
+#: tavletta/server/web/batch.js:992
+msgid "New series"
+msgstr "새 데이터 병합"
+
+#: tavletta/server/web/print.js:38
+msgid "Back to the templates"
+msgstr "서식으로 돌아가기"
+
+#: tavletta/server/web/print.js:47
+msgid "Printer: {model}, at the address set on the server"
+msgstr "프린터: {model}, 서버에 설정된 주소"
+
+#: tavletta/server/web/print.js:80
+msgid "No printer chosen."
+msgstr "선택한 프린터가 없습니다."
+
+#: tavletta/server/web/print.js:81
+msgid ""
+"The printer is unreachable. Check that it is on and connected, then reload "
+"the page."
+msgstr "프린터에 연결할 수 없습니다. 프린터가 켜져 있고 연결되어 있는지 확인한 뒤 페이지를 새로 고치세요."
+
+#: tavletta/server/web/print.js:90
+msgid "Data field {placeholder}"
+msgstr "데이터 필드 {placeholder}"
+
+#: tavletta/server/web/print.js:93
+msgid "Variable {placeholder}"
+msgstr "변수 {placeholder}"
+
+#: tavletta/server/web/print.js:98
+msgid "Text of the element; changed here for this print only"
+msgstr "요소의 텍스트. 여기서 바꾸면 이번 인쇄에만 적용됨"
+
+#: tavletta/server/web/print.js:105
+msgid "Print {name}"
+msgstr "{name} 인쇄"
+
+#: tavletta/server/web/print.js:145
+msgid "Start number"
+msgstr "시작 번호"
+
+#: tavletta/server/web/print.js:145
+msgid ""
+"The counter {placeholder} starts here; next number saved in the template: "
+"{next}"
+msgstr "카운터 {placeholder}이(가) 여기서 시작됩니다. 서식에 저장된 다음 번호: {next}"
+
+#: tavletta/server/web/print.js:150
+msgid "At most {max}"
+msgstr "최대 {max}"
+
+#: tavletta/server/web/print.js:160
+msgid "Fields"
+msgstr "필드"
+
+#: tavletta/server/web/print.js:160
+msgid "This template has no fields to fill in."
+msgstr "이 서식에는 입력할 필드가 없습니다."
+
+#: tavletta/server/web/print.js:216
+msgid "{name} is empty. Enter a value."
+msgstr "{name}이(가) 비어 있습니다. 값을 입력하세요."
+
+#: tavletta/server/web/print.js:219
+msgid "The start number must be a whole number from 0."
+msgstr "시작 번호는 0 이상의 정수여야 합니다."
+
+#: tavletta/server/web/print.js:224
+msgid "At most {max} labels in one print job."
+msgstr "인쇄 작업 하나에 라벨은 최대 {max}장입니다."
+
+#: tavletta/server/web/print.js:254 tavletta/server/web/ui.js:184
+msgid "There is a problem"
+msgstr "문제가 있습니다"
+
+#: tavletta/server/web/ui.js:48
+msgid "Busy"
+msgstr "사용 중"
+
+#: tavletta/server/web/ui.js:49
+msgid "Paused"
+msgstr "일시 정지됨"
+
+#: tavletta/server/web/ui.js:50
+msgid "Problem"
+msgstr "문제"
+
+#: tavletta/server/web/ui.js:51
+msgid "Reachable, no status"
+msgstr "연결 가능, 상태 없음"
+
+#: tavletta/server/web/ui.js:52
+msgid "Unreachable"
+msgstr "연결할 수 없음"
+
+#: tavletta/server/web/ui.js:62
+msgid "Admin"
+msgstr "관리자"
+
+#: tavletta/server/web/ui.js:66
+msgid "Code"
+msgstr "코드"
+
+#: tavletta/server/web/ui.js:66
+msgid "Element"
+msgstr "요소"
+
+#: tavletta/server/web/ui.js:71
+msgid "Something went wrong in the page."
+msgstr "페이지에서 오류가 발생했습니다."
+
+#: tavletta/server/web/ui.js:72
+msgid "This needs a token with more rights."
+msgstr "더 많은 권한이 있는 토큰이 필요합니다."
+
+#: tavletta/server/web/ui.js:74
+msgid ""
+"Too many wrong tokens from this computer. Wait a minute, then sign in again."
+msgstr "이 컴퓨터에서 잘못된 토큰이 너무 많이 입력되었습니다. 1분 기다린 뒤 다시 로그인하세요."
+
+#: tavletta/server/web/ui.js:82
+msgid "Labels loaded: {width} × {height} mm"
+msgstr "들어 있는 라벨: {width} × {height} mm"
+
+#: tavletta/server/web/ui.js:83
+msgid "Tape loaded: {width} mm"
+msgstr "들어 있는 테이프: {width} mm"
+
+#: tavletta/server/web/ui.js:84
+msgid "Label distance measured: {length} mm"
+msgstr "측정된 라벨 간격: {length} mm"
+
+#: tavletta/server/web/ui.js:85
+msgid "Left on the roll: {length} mm"
+msgstr "롤에 남은 길이: {length} mm"
+
+#: tavletta/server/web/ui.js:92
+msgid "Unreachable (checked {time})"
+msgstr "연결할 수 없음({time}에 확인)"
+
+#: tavletta/server/web/ui.js:106
+msgid "Loading…"
+msgstr "불러오는 중…"
+
+#: tavletta/server/web/ui.js:122
+msgid "Try again"
+msgstr "다시 시도"
+
+#: tavletta/server/web/ui.js:151
+msgid "optional"
+msgstr "선택 사항"
+
+#: tavletta/server/web/ui.js:263
+msgid "Other labels are loaded in the printer than the template needs."
+msgstr "프린터에 들어 있는 라벨이 서식에 필요한 라벨과 다릅니다."
+
+#: tavletta/server/web/ui.js:322
+msgid "Element {n}: {kind}"
+msgstr "요소 {n}: {kind}"
+
+#: tavletta/server/web/ui.js:381
+msgid "Cancel printing"
+msgstr "인쇄 취소"
+
+#: tavletta/server/web/ui.js:382
+msgid "Labels already printed stay printed."
+msgstr "이미 인쇄된 라벨은 그대로 남습니다."
+
+#: tavletta/server/web/ui.js:394
+msgid "{printed} of {total}"
+msgstr "{printed}/{total}"
+
+#: tavletta/server/web/ui.js:403
+msgid "About {minutes} min left"
+msgstr "약 {minutes}분 남음"
+
+#: tavletta/server/web/ui.js:405
+msgid "Waiting for the printer…"
+msgstr "프린터를 기다리는 중…"
+
+#: tavletta/server/web/ui.js:452
+msgid "Canceled"
+msgstr "취소됨"
+
+#: tavletta/server/web/ui.js:452
+msgid "Failed"
+msgstr "실패"
+
+#: tavletta/server/web/ui.js:464
+msgid "Copied"
+msgstr "복사됨"
+
+#: tavletta/server/web/ui.js:470
+msgid "Copy"
+msgstr "복사"
+
+#: tavletta/server/web/ui.js:476
+msgid "{printed} of {total} labels printed."
+msgstr "라벨 {total}장 중 {printed}장 인쇄됨."
+
+#: tavletta/server/web/ui.js:479
+msgid "Took {seconds} s, finished at {time}."
+msgstr "{seconds}초 걸림, {time}에 완료됨."
+
+#: tavletta/server/web/ui.js:481
+msgid "Job number"
+msgstr "작업 번호"

@@ -3,8 +3,10 @@
 A job is accepted (and checked) when it is asked for and printed when its
 turn comes, by a worker thread of its printer (backend and address). It
 can be canceled while it waits, and between two labels while it prints:
-the label being printed is finished. Finished jobs are kept for a while,
-so their state can still be asked for.
+the label being printed is finished (a cab printer: between two jobs of a
+series, the job of up to labels_per_job labels being printed is
+finished). Finished jobs are kept for a while, so their state can still
+be asked for.
 
 Messages are made when the job is asked for, in the language of that
 request: a job keeps what happened (the exception), not a text.
@@ -61,6 +63,9 @@ class PrintJob:
     id: str = field(default_factory=lambda: secrets.token_urlsafe(12))
     state: str = QUEUED
     printed: int = 0
+    # labels after `printed` that may have printed too: the printer could
+    # not tell (a lost connection); "printed_max" in the API
+    unsure: int = 0
     rows_printed: int = 0
     failure: Failure | None = None
     remark: Callable[[], str | None] | None = None
@@ -91,6 +96,7 @@ class PrintJob:
             "owner": self.owner or None,
             "label": self.label or None,
             "printed": self.printed,
+            "printed_max": self.printed + self.unsure if self.unsure else None,
             "total": self.total,
             "rows_printed": self.rows_printed,
             "cancel_requested": self.stop.is_set(),
@@ -201,13 +207,21 @@ class JobQueue:
                 for job in self._jobs.values()
             )
 
+    def uses_label(self, name: str) -> bool:
+        """Whether a job of the label of this name (in the labels folder)
+        waits or prints."""
+        with self._lock:
+            return any(
+                job.label == name and job.state not in FINISHED for job in self._jobs.values()
+            )
+
     def get(self, job_id: str) -> PrintJob | None:
         with self._lock:
             return self._jobs.get(job_id)
 
     def cancel(self, job: PrintJob) -> None:
         """A waiting job is canceled at once; a printing one stops after
-        the label being printed."""
+        the labels already sent to the printer (print_series())."""
         with self._lock:
             job.stop.set()
             if job.state == QUEUED:

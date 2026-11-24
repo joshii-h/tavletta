@@ -357,12 +357,19 @@ class ElementError(ValueError):
         self.params = params
 
 
+Box = tuple[int, int, int, int]  # left, top, right, bottom (exclusive), pixels
+MmBox = tuple[float, float, float, float]  # left, top, right, bottom in mm
+
+
 @dataclass
 class Rendered:
     image: Image.Image  # label space, RGB
     length_mm: float  # a fixed length: the label's, not the rounded pixels
     warnings: list[RenderWarning] = field(default_factory=list)
     overflow: bool = False  # content was scaled down to fit a fixed length
+    # where each element (in the order of label.elements) was drawn: its
+    # ink (element_boxes()), in mm from the label's top left corner
+    boxes: list[MmBox] = field(default_factory=list)
 
 
 def mm_to_px(mm: float, dpi: float = PRINT_DPI) -> int:
@@ -1245,6 +1252,32 @@ def _cover(img: Image.Image, size: tuple[int, int]) -> Image.Image:
     return ImageOps.fit(img, size, Image.Resampling.LANCZOS)
 
 
+def ink_box(image: Image.Image) -> Box | None:
+    """Where an RGBA image has ink (alpha at least half)."""
+    return image.getchannel("A").point(imagefx.HALF).getbbox()
+
+
+def element_boxes(parts, places, top: int, dpi: float) -> list[MmBox]:
+    """Where each part pasted at its place shows: its ink, or all of it if
+    it has none (an empty text, a shape that draws nothing), in mm from the
+    label's top left corner, which lies `top` pixels down the image (the
+    nominal tape's edge, see label_top()). The boxes the parts are pasted
+    with, so they are what the label shows (Rendered.boxes)."""
+    boxes = []
+    for part, (x, y) in zip(parts, places, strict=True):
+        box = ink_box(part) if "A" in part.getbands() else None
+        left, upper, right, lower = box or (0, 0, part.width, part.height)
+        boxes.append(
+            (
+                px_to_mm(x + left, dpi),
+                px_to_mm(y + upper - top, dpi),
+                px_to_mm(x + right, dpi),
+                px_to_mm(y + lower - top, dpi),
+            )
+        )
+    return boxes
+
+
 # --- label ------------------------------------------------------------------
 
 
@@ -1278,6 +1311,12 @@ def _frame(label: Label, dpi: float, safe_mm: float, tape_px, bleed_px, warnings
         frame = min(safe + border, max(0, tape // 2 - edge - 1))
         inner = max(1, tape - 2 * (edge + frame))
     return _Frame(tape, max(0, bleed_px), margin, safe, border, frame, inner, inset)
+
+
+def label_top(label: Label, f: _Frame, dpi: float) -> int:
+    """The image row of the label's top edge: the nominal tape's, the
+    printable part (and the bleed) centred on it."""
+    return f.bleed + (f.tape - mm_to_px(label.tape_mm, dpi)) // 2
 
 
 def _inset(label: Label, dpi: float, room: int, warnings) -> int:
@@ -1825,7 +1864,8 @@ def _render(label: Label, dpi: float, safe_mm: float, raster, min_length_mm, col
         isinstance(e, PageElement) for e in label.elements
     )
     length_mm = label.length_mm if user_length else px_to_mm(length, dpi)
-    return Rendered(img, length_mm, warnings, overflow)
+    boxes = element_boxes(parts, places, label_top(label, f, dpi), dpi)
+    return Rendered(img, length_mm, warnings, overflow, boxes)
 
 
 def whole_tape(image: Image.Image, tape: int) -> Image.Image:

@@ -1,4 +1,4 @@
-# Tavletta print server: REST API and MCP, no window (docs/server.md).
+# Tavletta print server: REST API, MCP and a web page, no window (docs/server.md).
 #
 #   docker build -f packaging/docker/Dockerfile -t tavletta-server .
 #   docker run -e TAVLETTA_TOKEN=... -v ./labels:/labels -p 127.0.0.1:8790:8790 tavletta-server
@@ -39,9 +39,12 @@ RUN apt-get update \
 # More Debian packages: --build-arg FONTS="... fonts-noto-core" (about
 # 40 MB more); fonts of your own: mount a folder at /usr/local/share/fonts.
 ARG FONTS="fonts-dejavu-core fonts-adobe-sourcesans3 fonts-liberation fonts-crosextra-carlito"
+# python3-jwt and python3-cryptography: signing in to the web page with
+# OpenID Connect (--oidc), from Debian so security fixes come with the image
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        python3 python3-gi python3-gi-cairo gir1.2-pango-1.0 fontconfig ${FONTS} \
+        python3 python3-gi python3-gi-cairo gir1.2-pango-1.0 python3-jwt python3-cryptography \
+        fontconfig ${FONTS} \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --system --uid 10001 --home-dir /data --create-home tavletta \
     && install -d -o tavletta -g tavletta -m 0755 /labels /config /usr/local/share/fonts

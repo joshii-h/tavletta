@@ -95,9 +95,10 @@ class ElementsGroup(Adw.PreferencesGroup):
             empty.add_css_class("dim-label")
             self.add(empty)
         for index, element in enumerate(window.label.elements):
-            row = self._element_row(index, element)
+            row = self._element_row(index, element, index == window.expand_index)
             self.rows.append(row)
             self.add(row)
+        self.show_selection(window.editor.indices())
 
     def _add_menu_button(self) -> None:
         add_menu = Gio.Menu()
@@ -112,14 +113,15 @@ class ElementsGroup(Adw.PreferencesGroup):
         add.add_css_class("flat")
         self.set_header_suffix(add)
 
-    def _element_row(self, index: int, element) -> Adw.ExpanderRow:
+    def _element_row(self, index: int, element, expanded: bool) -> Adw.ExpanderRow:
         row = Adw.ExpanderRow()
         # a symbol shows itself
         prefix = SymbolIcon(element.path) if isinstance(element, SymbolElement) else None
         row.add_prefix(prefix or Gtk.Image(icon_name=element_icon(element)))
-        if index == self.window.expand_index:
+        if expanded:
             row.set_expanded(True)
-            self._open.append(index)
+            if index not in self._open:
+                self._open.append(index)
         row.connect("notify::expanded", lambda r, _p: self._on_expanded(index, r.get_expanded()))
         self._add_header_buttons(row, index)
 
@@ -156,6 +158,23 @@ class ElementsGroup(Adw.PreferencesGroup):
         else:
             self._code_rows(row, element, set_attr)
 
+    def refresh(self, indices: list[int]) -> list[Adw.ExpanderRow]:
+        """The rows of some elements built again, in their places, open as
+        they were (their values changed elsewhere: the preview's editor
+        resized them); the new rows."""
+        first = min(indices)
+        for row in self.rows[first:]:
+            self.remove(row)
+        built = []
+        for index in indices:
+            element = self.window.label.elements[index]
+            self.rows[index] = self._element_row(index, element, index in self._open)
+            built.append(self.rows[index])
+        for row in self.rows[first:]:
+            self.add(row)
+        self.show_selection(self.window.editor.indices())
+        return built
+
     @staticmethod
     def _fields(widget) -> list:
         """The text fields of a row: the window's undo is the one that counts
@@ -190,12 +209,32 @@ class ElementsGroup(Adw.PreferencesGroup):
 
     def _on_expanded(self, index: int, expanded: bool) -> None:
         """The open element is the one the shortcuts (Ctrl+D, Delete,
-        Alt+Up/Down) act on: the row opened last of those still open."""
+        Alt+Up/Down) act on: the row opened last of those still open. The
+        preview selects it (ui/editor.py)."""
         if index in self._open:
             self._open.remove(index)
         if expanded:
             self._open.append(index)
         self.window.expand_index = self._open[-1] if self._open else -1
+        self.window.editor.row_expanded(index, expanded)
+
+    def show_selection(
+        self, selected: list[int], primary: int | None = None, expand=False
+    ) -> None:
+        """The preview's selection: its elements' rows marked; expand: the
+        element chosen last (primary) open, the others closed."""
+        for index, row in enumerate(self.rows):
+            if index in selected:
+                row.add_css_class("selected-element")
+            else:
+                row.remove_css_class("selected-element")
+        if not expand:
+            return
+        for index, row in enumerate(self.rows):
+            if index != primary:
+                row.set_expanded(False)
+        if primary is not None and 0 <= primary < len(self.rows):
+            self.rows[primary].set_expanded(True)
 
     def _add_header_buttons(self, row: Adw.ExpanderRow, index: int) -> None:
         window = self.window

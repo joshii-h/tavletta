@@ -19,6 +19,8 @@ chooses a printer by name and nothing else can be printed on:
     [printers.lager-cab.settings]   # the printer settings of the app
     method = "transfer"             # cab: print method (printer, transfer, direct)
     upside_down = true              # cab, ZPL, …: printed turned by 180 degrees
+    offset_mm = 1.25                # cab: the print moved along the feed (docs/cab.md)
+    labels_per_job = 250            # cab: labels of a series sent as one job (1 to 1000)
 
 tokens.toml names the access tokens, with a role, never the token itself:
 
@@ -55,7 +57,7 @@ from pathlib import Path
 from typing import Any
 
 from tavletta.backends import get_backend
-from tavletta.backends.base import Backend, Choice, ColorAdjust, Level, Toggle
+from tavletta.backends.base import Backend, Choice, ColorAdjust, Count, Distance, Level, Toggle
 from tavletta.ui.i18n import _
 
 log = logging.getLogger(__name__)
@@ -258,17 +260,20 @@ def _settings(table: _Table, caps, host: str) -> dict[str, Any]:
 def _printer_settings(parent: _Table, backend: Backend, data: object) -> dict[str, Any]:
     """[printers.<name>.settings]: what the app keeps for the model besides
     the keys above, the same values (settings.json): the model's own
-    settings (print method, label sensor, darkness, print upside down …),
-    the quality, the extras (chain printing, high resolution, tape feed)
-    and the outlines on a label sheet. Only what the model has."""
+    settings (print method, label sensor, darkness, print upside down,
+    labels per job …), the quality, the extras (chain printing, high
+    resolution, tape feed) and the outlines on a label sheet. Only what
+    the model has."""
     table = _Table(parent.path, parent.where + ".settings", data)
     caps = backend.capabilities
     found: dict[str, Any] = {}
     for setting in caps.settings:
         if isinstance(setting, Choice):
             found[setting.key] = table.choice(setting.key, setting.choices)
-        elif isinstance(setting, Level):
+        elif isinstance(setting, (Level, Count)):
             found[setting.key] = table.number(setting.key, setting.lower, setting.upper, True)
+        elif isinstance(setting, Distance):
+            found[setting.key] = table.number(setting.key, setting.lower, setting.upper)
         elif isinstance(setting, Toggle) and setting.key in table.data:
             found[setting.key] = table.flag(setting.key)
     if caps.qualities:
@@ -299,12 +304,14 @@ def _color(parent: _Table, data: object) -> dict[str, int]:
 @dataclass(frozen=True)
 class Caller:
     """Who sends a request: the token's name, its role and the printers it
-    may use (None: all)."""
+    may use (None: all). Someone signed in to the web page (oidc.py) is
+    named "oidc:<user name>", which no token can be."""
 
     name: str
     role: str = "admin"
     printers: frozenset[str] | None = None
-    named: bool = False  # a token of tokens.toml (not the one token, not none)
+    named: bool = False  # a token of tokens.toml or a person (not the one token, not none)
+    display: str = ""  # a person's name, for the web page
 
     def may(self, role: str) -> bool:
         return ROLES.index(self.role) >= ROLES.index(role)

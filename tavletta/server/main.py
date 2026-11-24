@@ -111,7 +111,8 @@ def serve(args) -> int:
     loaded.append(tokens)
     _warn(args, printers, tokens)
     token = read_token(args.token_file) if tokens is None else None
-    if token is None and tokens is None and not binds_loopback(args.host):
+    login = _web_login(args, printers)
+    if token is None and tokens is None and login is None and not binds_loopback(args.host):
         raise CliError(
             _(
                 "Refusing to listen on %s without an access token: set TAVLETTA_TOKEN or "
@@ -131,6 +132,8 @@ def serve(args) -> int:
         max_body=args.max_body * 1024 * 1024,
         tokens=tokens,
         trusted_proxies=tuple(args.trusted_proxy),
+        web_ui=not args.no_web_ui,
+        login=login,
     )
     try:
         server = Server(config, service)
@@ -142,6 +145,79 @@ def serve(args) -> int:
             EXIT_USAGE,
         ) from None
     return _run(server, service)
+
+
+def _web_login(args, printers):
+    """--oidc: signing in to the web page with OpenID Connect. PyJWT is
+    needed for it only; the provider is asked for its settings now, in the
+    background (a provider that is away does not stop the server)."""
+    import threading
+
+    path = getattr(args, "oidc", None)
+    if path is None:
+        return None
+    if args.no_web_ui:
+        raise CliError(_("--oidc signs in to the web page: not with --no-web-ui"), EXIT_USAGE)
+    try:
+        import jwt  # noqa: F401 - only whether it is there
+    except ImportError:
+        if _in_flatpak():  # no PyJWT in it, and nothing can be installed into it
+            raise CliError(
+                _(
+                    "--oidc is not available in the Flatpak: install Tavletta from the deb "
+                    "or rpm package, the container image or with pip for it"
+                ),
+                EXIT_USAGE,
+            ) from None
+        raise CliError(
+            _("--oidc needs PyJWT with cryptography (python3-jwt, pip install tavletta[oidc])"),
+            EXIT_USAGE,
+        ) from None
+    from tavletta.server.config import ConfigError
+    from tavletta.server.oidc import OidcError, load_oidc
+    from tavletta.server.weblogin import WebLogin
+
+    try:
+        login = WebLogin(load_oidc(path, printers), printers=printers)
+    except ConfigError as e:
+        raise CliError(str(e), EXIT_FILE) from None
+    _check_proxy(args, login.settings.public_url)
+
+    def discover() -> None:
+        try:
+            login.provider.metadata()
+        except OidcError as e:
+            log.warning("OIDC provider not reachable yet (tried again at sign in): %s", e)
+
+    threading.Thread(target=discover, daemon=True, name="oidc-discovery").start()
+    return login
+
+
+def _in_flatpak() -> bool:
+    return bool(os.environ.get("FLATPAK_ID")) or os.path.exists("/.flatpak-info")
+
+
+def _check_proxy(args, public_url: str | None) -> None:
+    """--oidc behind a reverse proxy: the page's address from public_url,
+    not from what the proxy forwards (X-Forwarded-Host may carry a port or
+    a client's own value); without --trusted-proxy every request comes
+    from the proxy's address and shares its limits per client."""
+    from tavletta.server.http import binds_loopback
+
+    if getattr(args, "trusted_proxy", []) and not public_url:
+        raise CliError(
+            _(
+                "--oidc with --trusted-proxy needs public_url in the OIDC settings: "
+                "the address people open the web page at"
+            ),
+            EXIT_USAGE,
+        )
+    if not getattr(args, "trusted_proxy", []) and not binds_loopback(args.host):
+        log.warning(
+            "--oidc without --trusted-proxy: behind a reverse proxy every request comes "
+            "from the proxy's address and shares its limits per client; give the proxy "
+            "with --trusted-proxy"
+        )
 
 
 def _warn(args, printers, tokens) -> None:
@@ -179,10 +255,11 @@ def _run(server, service) -> int:
     signal.signal(signal.SIGTERM, stop)
     host, port = server.server_address[:2]
     log.info(
-        "listening on http://%s:%d%s (labels: %s)",
+        "listening on http://%s:%d%s%s (labels: %s)",
         "[%s]" % host if ":" in host else host,
         port,
         " with MCP at /mcp" if server.mcp else "",
+        ", the web page at /" if getattr(server, "web_ui", False) else "",
         service.labels.root,
     )
     notify("READY=1")  # systemd (Type=notify): started, a reload may come now

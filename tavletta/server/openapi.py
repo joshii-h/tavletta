@@ -18,7 +18,13 @@ from typing import Any
 from tavletta import __version__
 from tavletta.merge import limits
 from tavletta.model import MAX_COUNTER
-from tavletta.server.requests import MAX_ASSIGNMENTS, MAX_COPIES, MAX_VALUE, MAX_WAIT
+from tavletta.server.requests import (
+    MAX_ASSIGNMENTS,
+    MAX_COPIES,
+    MAX_NAME,
+    MAX_VALUE,
+    MAX_WAIT,
+)
 
 ROLE = "x-tavletta-role"
 CODES = "x-tavletta-codes"
@@ -33,6 +39,7 @@ PRINTER_CODES = (
     "port_closed",
     "busy",
     "paused",
+    "out_of_memory",
     "cover_open",
     "head_open",
     "jam",
@@ -282,6 +289,12 @@ SCHEMAS: dict[str, Any] = {
                         "description": "Die-cut labels: the distance from one label to "
                         "the next, as the printer measured it.",
                     },
+                    "label_mm": {
+                        "type": ["array", "null"],
+                        "items": {"type": "number"},
+                        "description": "Die-cut labels: the size of the labels loaded "
+                        "(width, height), if the printer tells it.",
+                    },
                     "width_mm": {
                         "type": ["number", "null"],
                         "description": "The print width set on the printer (ZPL): a "
@@ -372,12 +385,20 @@ SCHEMAS: dict[str, Any] = {
             },
             "data_file": {"type": ["string", "null"]},
             "data_file_unusable": {"type": "boolean"},
+            "data_file_missing": {
+                "type": "boolean",
+                "description": "data_file is not there (any more): send the rows in data_rows.",
+            },
             "data_sheet": {"type": ["string", "null"]},
             "counter": {
                 "type": "object",
                 "description": "used (the label has {=counter}), next, step.",
             },
             "features": {"type": "array", "items": {"type": "string"}},
+            "on_sheet": {
+                "type": "boolean",
+                "description": "Printed on label sheets: at most 999 labels in one job.",
+            },
         },
     },
     "PreviewRequest": {
@@ -422,6 +443,172 @@ SCHEMAS: dict[str, Any] = {
                 "the label is rendered.",
             },
             "png": {"type": "string", "contentEncoding": "base64"},
+            "geometry": {
+                "oneOf": [{"type": "null"}, _ref("Geometry")],
+                "description": "Where the elements are in the image; null for "
+                "view=printer and a label turned onto its sheet.",
+            },
+        },
+    },
+    "Geometry": {
+        "type": "object",
+        "description": "The elements' boxes in the preview image, in mm from its top left "
+        "corner (tavletta/editing.py, docs/editing.md); a pixel of the image is "
+        "mm * dpi / 25.4.",
+        "required": ["width_mm", "height_mm", "layout", "elements", "dpi"],
+        "properties": {
+            "width_mm": {"type": "number", "description": "Along the tape: the length."},
+            "height_mm": {"type": "number", "description": "Across: tape or label height."},
+            "layout": {"enum": ["flow", "free"]},
+            "dpi": {"type": "number", "description": "The image's resolution."},
+            "elements": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "index": {
+                            "type": "integer",
+                            "description": "From 0, in the order of the label's elements "
+                            "(GET /labels/{name} counts them from 1).",
+                        },
+                        "kind": {"type": "string"},
+                        "box": {
+                            "type": "array",
+                            "items": {"type": "number"},
+                            "minItems": 4,
+                            "maxItems": 4,
+                            "description": "left, top, right, bottom in mm: its ink.",
+                        },
+                        "rotation": {"type": "integer"},
+                    },
+                },
+            },
+        },
+        "example": {
+            "width_mm": 40.0,
+            "height_mm": 18.6,
+            "layout": "free",
+            "dpi": 300.0,
+            "elements": [
+                {"index": 0, "kind": "text", "box": [2.0, 1.5, 21.83, 6.2], "rotation": 0}
+            ],
+        },
+    },
+    "Me": {
+        "type": "object",
+        "required": ["name", "role", "token_required", "limits"],
+        "properties": {
+            "name": {
+                "type": "string",
+                "description": "The token's name in tokens.toml; 'token' for the one token of "
+                "--token-file, 'local' without a token; 'oidc:<user>' for someone signed in "
+                "to the web page with OpenID Connect.",
+            },
+            "display_name": {
+                "type": "string",
+                "description": "A person's name from the provider; else the same as name.",
+            },
+            "session": {
+                "type": "boolean",
+                "description": "true: signed in to the web page with OpenID Connect (its "
+                "session cookie), not with a token.",
+            },
+            "role": {"enum": ["preview", "print", "admin"]},
+            "printers": {
+                "type": ["array", "null"],
+                "items": {"type": "string"},
+                "description": "The printers the token may use; null: all.",
+            },
+            "token_required": {
+                "type": "boolean",
+                "description": "false: the server has no token and no --oidc (loopback only).",
+            },
+            "limits": {
+                "type": "object",
+                "description": "What one request may ask for at most: labels in one job "
+                "(--max-labels; on label sheets at most 999), copies, data rows, columns "
+                "and cells, and the body in bytes (--max-body; also the largest label "
+                "file to upload).",
+                "properties": {
+                    "max_labels": {"type": "integer"},
+                    "max_sheet_labels": {"type": "integer"},
+                    "max_copies": {"type": "integer"},
+                    "max_rows": {"type": "integer"},
+                    "max_columns": {"type": "integer"},
+                    "max_cells": {"type": "integer"},
+                    "max_body": {"type": "integer"},
+                },
+            },
+        },
+        "example": {
+            "name": "shipping-terminal",
+            "role": "print",
+            "printers": ["it-cab"],
+            "token_required": True,
+            "limits": {
+                "max_labels": 10000,
+                "max_sheet_labels": 999,
+                "max_copies": MAX_COPIES,
+                "max_rows": limits.MAX_ROWS,
+                "max_columns": limits.MAX_COLUMNS,
+                "max_cells": limits.MAX_CELLS,
+                "max_body": 4194304,
+            },
+        },
+    },
+    "DataRequest": {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["content"],
+        "properties": {
+            "content": {
+                "type": "string",
+                "contentEncoding": "base64",
+                "description": "The file: CSV (any delimiter, UTF-8, UTF-16 or Windows-1252), "
+                "ODS or XLSX, told apart by content. Pasted text is a CSV file.",
+            },
+            "name": {
+                "type": "string",
+                "maxLength": MAX_NAME,
+                "description": "The file's name, for messages.",
+            },
+            "sheet": {
+                "type": "string",
+                "description": "ODS, XLSX: the sheet (default the first).",
+            },
+            "header": {
+                "type": "boolean",
+                "default": True,
+                "description": "false: the first row is data too; the columns are named A, B, C …",
+            },
+        },
+    },
+    "Data": {
+        "type": "object",
+        "required": ["kind", "columns", "rows"],
+        "properties": {
+            "kind": {"enum": ["csv", "ods", "xlsx"]},
+            "delimiter": {
+                "type": ["string", "null"],
+                "description": "CSV: the delimiter found; null for one column and spreadsheets.",
+            },
+            "sheets": {"type": "array", "items": {"type": "string"}},
+            "sheet": {"type": ["string", "null"], "description": "The sheet read."},
+            "columns": {"type": "array", "items": {"type": "string"}},
+            "rows": {
+                "type": "array",
+                "items": {"type": "object", "additionalProperties": {"type": "string"}},
+                "description": "Every cell as the text it shows: leading zeros and number "
+                "formats kept (00300 stays 00300). Rows without a filled cell are left out.",
+            },
+        },
+        "example": {
+            "kind": "csv",
+            "delimiter": ";",
+            "sheets": [],
+            "sheet": None,
+            "columns": ["AssetNumber", "Room"],
+            "rows": [{"AssetNumber": "00300", "Room": "B 2.14"}],
         },
     },
     "PrintRequest": {
@@ -488,7 +675,19 @@ SCHEMAS: dict[str, Any] = {
                 "type": ["string", "null"],
                 "description": "Name in the labels folder; null for label_content.",
             },
-            "printed": {"type": "integer", "description": "Labels printed so far."},
+            "printed": {
+                "type": "integer",
+                "description": "Labels printed so far, for certain; rises label by label "
+                "while the job prints, as far as the printer tells.",
+            },
+            "printed_max": {
+                "type": ["integer", "null"],
+                "description": "After a failure whose outcome the printer could not tell "
+                "(the connection was lost while it printed): up to this many labels may "
+                "have printed. The counter goes on after them; rows_printed counts the "
+                "rows printed for certain, so printing again from the next one may print "
+                "labels twice. null otherwise.",
+            },
             "total": {"type": "integer", "description": "Labels to print: copies x rows."},
             "rows_printed": {
                 "type": "integer",
@@ -528,6 +727,7 @@ SCHEMAS: dict[str, Any] = {
             "owner": "inventory-tool",
             "label": "asset-tag.tavletta",
             "printed": 20,
+            "printed_max": None,
             "total": 20,
             "rows_printed": 20,
             "cancel_requested": False,
@@ -779,17 +979,146 @@ def _label_paths() -> dict:
                         "label_damaged",
                     ),
                 },
-                parameters=[
-                    _LANGUAGE,
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "required": True,
-                        "schema": {"type": "string"},
-                        "description": "May contain slashes for subfolders; '.tavletta' may "
-                        "be left out.",
+                parameters=[_LANGUAGE, _LABEL_NAME],
+            ),
+            **_label_admin_paths(),
+        },
+    }
+
+
+_LABEL_NAME = {
+    "name": "name",
+    "in": "path",
+    "required": True,
+    "schema": {"type": "string"},
+    "description": "May contain slashes for subfolders; '.tavletta' may be left out.",
+}
+
+
+def _label_admin_paths() -> dict:
+    return {
+        "put": _operation(
+            "Upload a label file (admin): checked as the app opens a file, then put into "
+            "the labels folder in one step",
+            "admin",
+            {
+                "200": _json(_ref("LabelFile"), "Replaced (replace=true)"),
+                "201": dict(
+                    _json(_ref("LabelFile"), "Added"),
+                    headers={
+                        "Location": {
+                            "description": "/api/v1/labels/{name} of the label.",
+                            "schema": {"type": "string"},
+                        }
                     },
-                ],
+                ),
+                "400": _error(
+                    "Not a name for a new label: letters, digits, spaces and . _ - ( ) + , "
+                    "(up to 100), in the folder itself",
+                    "invalid_field",
+                    "not_json",
+                ),
+                "409": _error(
+                    "A label of that name exists (send replace=true), jobs of it wait or "
+                    "print (label_in_use), or another program's print holds the file",
+                    "label_exists",
+                    "label_in_use",
+                    "label_locked",
+                ),
+                "413": _error(
+                    "Over --max-body, or a label too large to render",
+                    "too_large",
+                    "label_too_large",
+                ),
+                "422": _error(
+                    "Not a label Tavletta can open",
+                    "label_not_label",
+                    "label_newer",
+                    "label_damaged",
+                    "pages_not_allowed",
+                ),
+                "500": _error("Not saved (logged)", "not_saved", "internal"),
+                "507": _error("No space left in the labels folder", "not_saved"),
+            },
+            parameters=[
+                _LANGUAGE,
+                dict(
+                    _LABEL_NAME,
+                    description="The file's name, without folder; '.tavletta' may be left out.",
+                ),
+                {
+                    "name": "replace",
+                    "in": "query",
+                    "schema": {"type": "boolean", "default": False},
+                    "description": "Replace a label of that name.",
+                },
+            ],
+            requestBody={
+                "required": True,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "description": "The content of a .tavletta file.",
+                        }
+                    }
+                },
+            },
+        ),
+        "delete": _operation(
+            "Delete a label file (admin); its data file stays",
+            "admin",
+            {
+                "204": {"description": "Deleted"},
+                "400": _error("Not a name inside the labels folder", "invalid_field"),
+                "404": _error("No such label", "label_not_found"),
+                "409": _error(
+                    "Jobs of it wait or print (label_in_use), or another program's print "
+                    "holds the file",
+                    "label_in_use",
+                    "label_locked",
+                ),
+                "500": _error("Not deleted (logged)", "not_deleted", "internal"),
+            },
+            parameters=[_LANGUAGE, _LABEL_NAME],
+        ),
+    }
+
+
+def _data_paths() -> dict:
+    return {
+        "/data": {
+            "post": _operation(
+                "Read a data file sent along (CSV, ODS, XLSX) as the app reads one: its "
+                "rows for data_rows; nothing is kept",
+                "preview",
+                {
+                    "200": _json(_ref("Data"), "The rows"),
+                    "400": _error("Invalid request", "invalid_field", "unknown_field", "not_json"),
+                    "413": _error(
+                        "Over --max-body (the file in base64), over the limits of data files, "
+                        "more than 500000 cells (rows times columns), or longer than 10 s "
+                        "to read",
+                        "too_large",
+                    ),
+                    "422": _error("Not a table, damaged or empty", "data_problem"),
+                    "503": _error(
+                        "Another file is being read (one at a time, one per client address)",
+                        "busy",
+                    ),
+                },
+                requestBody={
+                    "required": True,
+                    "content": {
+                        "application/json": {
+                            "schema": _ref("DataRequest"),
+                            "example": {
+                                "name": "assets.csv",
+                                "content": "QXNzZXROdW1iZXIKMDAzMDAKMDAzMDEK",
+                            },
+                        }
+                    },
+                },
             )
         },
     }
@@ -887,8 +1216,10 @@ def _print_paths() -> dict:
                     ),
                     "409": _error(
                         "The label file is not writable: the next counter value could not "
-                        "be saved, nothing was printed",
+                        "be saved, nothing was printed; or it was replaced while the request "
+                        "was checked (label_changed): send it again",
                         "counter_not_saved",
+                        "label_changed",
                     ),
                     "413": _error(
                         "Too large: body, data rows, labels in one job or the label to render",
@@ -934,10 +1265,13 @@ def _print_paths() -> dict:
                 parameters=[_LANGUAGE, _JOB_ID],
             ),
             "delete": _operation(
-                "Cancel a job: at once while it waits, after the current label while it prints",
+                "Cancel a job: at once while it waits, after the labels already sent to the printer "
+                "while it prints (cab: the job of up to labels_per_job labels)",
                 "print",
                 {
-                    "202": _json(_ref("Job"), "Canceled, or stopping after the current label"),
+                    "202": _json(
+                        _ref("Job"), "Canceled, or stopping after the labels already sent"
+                    ),
                     "404": _error("No such job", "job_not_found"),
                     "409": _error("Already finished", "job_finished"),
                 },
@@ -963,8 +1297,17 @@ def _paths() -> dict:
                 {"200": _json({"type": "object"}, "OpenAPI")},
             )
         },
+        "/me": {
+            "get": _operation(
+                "The token's name, role and printers, and the limits of a request (for the "
+                "web page)",
+                "preview",
+                {"200": _json(_ref("Me"), "Who")},
+            )
+        },
         **_status_paths(),
         **_label_paths(),
+        **_data_paths(),
         **_print_paths(),
     }
 
@@ -999,6 +1342,10 @@ ERROR_CODES: tuple[tuple[int, str, str], ...] = (
     (408, "timeout", "The request took longer than 30 s to send."),
     (409, "job_finished", "The job has finished: nothing to cancel."),
     (409, "counter_not_saved", "The label file is not writable: nothing was printed."),
+    (409, "label_exists", "A label of that name exists: upload with replace=true."),
+    (409, "label_in_use", "Jobs of the label wait or print: retry when they are done."),
+    (409, "label_changed", "The label file was replaced while the request was checked."),
+    (409, "label_locked", "A print of the label holds the file: retry when it has ended."),
     (411, "length_required", "No Content-Length (chunked bodies are not accepted)."),
     (413, "too_large", "Body over --max-body, or too many data rows, columns or cells."),
     (
@@ -1025,6 +1372,8 @@ ERROR_CODES: tuple[tuple[int, str, str], ...] = (
     (429, "too_many_requests", "Ten wrong tokens from this address: wait a minute."),
     (429, "queue_full", "Too many jobs waiting: retry later."),
     (500, "internal", "An error of the server; it is logged."),
+    (500, "not_saved", "The labels folder could not be written (507: it is full)."),
+    (500, "not_deleted", "The label file could not be deleted (a read-only folder)."),
     (502, "printer_<code>", "The printer is unreachable or reports a problem."),
     (503, "busy", "All request or render slots taken: retry after a moment."),
 )
@@ -1044,7 +1393,7 @@ DESCRIPTION = (
     "jobs) or admin (also all jobs); x-tavletta-role names the least role of each "
     'operation. Errors are {"error": {"code", "message"}}: the code is stable, the '
     "message in the language of Accept-Language; x-tavletta-codes lists the codes of each "
-    "answer."
+    "answer. HEAD of a GET request answers with its status and headers."
 )
 
 

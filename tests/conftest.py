@@ -53,6 +53,14 @@ from tavletta.backends import (
 from tavletta.backends.base import PrinterInfo, Progress
 from tavletta.model import Label, TextElement
 
+# The fake OIDC provider listens on loopback: a proxy of the environment must
+# not carry the requests to it (urllib takes it from http_proxy). Debian's
+# pybuild sets http_proxy to a closed port to keep a package build offline.
+for _name in ("no_proxy", "NO_PROXY"):
+    os.environ[_name] = ",".join(
+        filter(None, (os.environ.get(_name), "127.0.0.1", "localhost", "::1"))
+    )
+
 
 def _png_b64(size=(20, 10), color="red", mode="RGB", fmt="PNG", exif=None) -> str:
     buf = io.BytesIO()
@@ -130,7 +138,9 @@ def _no_network(request, monkeypatch):
     monkeypatch.setattr(vc500w, "_connect", refusal("printer"))
     monkeypatch.setattr(cab, "_connect", refusal("printer"))
     monkeypatch.setattr(cab, "_fetch_setup", refusal("printer"))  # nor its web interface
+    monkeypatch.setattr(cab, "_fetch_counters", refusal("printer"))
     monkeypatch.setattr(cab, "_setups", cab.HostMemory())  # nor remember one of another test
+    monkeypatch.setattr(cab, "_no_counters", cab.HostMemory())
     monkeypatch.setattr(zpl, "unanswered", zpl.HostMemory())
     monkeypatch.setattr(zpl, "truncated", zpl.HostMemory())
     monkeypatch.setattr(brother_ql, "_connect", refusal("printer"))
@@ -406,6 +416,8 @@ def gui_env(monkeypatch, tmp_path):
         print_result=None,
         stages=[],  # printer stages reported while printing
         found=[],
+        found_all=[],  # (backend, FoundPrinter) the search of all models finds
+        finds=0,
         configured=None,
         tmp=tmp_path,
         backend=backend,
@@ -434,6 +446,14 @@ def gui_env(monkeypatch, tmp_path):
         monkeypatch.setattr(each, "print_label", print_label)
         monkeypatch.setattr(each, "discover", discover)
         monkeypatch.setattr(each, "configured_host", lambda: env.configured)
+    from tavletta.ui import printer as ui_printer
+
+    def find_all(timeout=3.0):
+        env.finds += 1
+        return list(env.found_all)
+
+    monkeypatch.setattr(ui_printer, "find_all", find_all)
+    monkeypatch.setattr(ui_printer, "_found", None)  # nothing of another test's search
     monkeypatch.setattr(config, "CONFIG_DIR", tmp_path / "config")
     monkeypatch.setattr(config, "SETTINGS_FILE", tmp_path / "config" / "settings.json")
     monkeypatch.setattr(config, "TEMPLATE_DIR", tmp_path / "templates")

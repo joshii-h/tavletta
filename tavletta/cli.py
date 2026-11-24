@@ -382,7 +382,18 @@ def _server_parsers(commands) -> None:
         type=Path,
         help=_("tokens.toml: named access tokens with roles"),
     )
+    serve.add_argument(
+        "--oidc",
+        metavar="FILE",
+        type=Path,
+        help=_("oidc.toml: people sign in to the web page with OpenID Connect"),
+    )
     serve.add_argument("--mcp", action="store_true", help=_("also serve MCP at /mcp"))
+    serve.add_argument(
+        "--no-web-ui",
+        action="store_true",
+        help=_("do not serve the web page at /: only the REST API (and MCP)"),
+    )
     serve.add_argument(
         "--max-body",
         metavar="MB",
@@ -896,7 +907,7 @@ def _send_series(args, series: Series, host: str, unit) -> int:
                 message, code = _("The label cannot be prepared for printing."), EXIT_LABEL
             else:
                 message, code = printer_error_text(e.error, unit), EXIT_PRINTER
-            where = series_stop_text(e.row, e.copies_printed, e.position)
+            where = series_stop_text(e.row, e.copies_printed, e.position, e.uncertain)
             raise CliError(message + " " + where, code) from None
         finally:
             with _uninterrupted():

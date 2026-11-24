@@ -39,7 +39,10 @@ Thai, Vietnamese, Indonesian, Malay, Korean, Japanese and Chinese
   under it, and a warning where it would not stand out from the background
 - Free layout: instead of one after another, each element at its own
   position (x and y), with its size, a code's module size and a QR code's
-  error correction; switching keeps the places the elements had
+  error correction; switching keeps the places the elements had. Arranged
+  in the preview with the mouse, touch or keys: select (also with a rubber
+  band), move with snapping guides, resize by handles, align and
+  distribute; each gesture one step of undo
 - Undo and redo, keyboard shortcuts to add, duplicate, remove and move
   elements, a shortcuts window
 - Codes: QR code, Data Matrix, PDF417, Aztec; Code 128, Code 39, Code 93,

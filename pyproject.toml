@@ -33,6 +33,12 @@ dependencies = [
 # PyGObject (GTK 4, libadwaita, Pango) and pycairo come from the system,
 # install with a venv that has --system-site-packages (see install.sh).
 
+[project.optional-dependencies]
+# signing in to the print server's web page with OpenID Connect (--oidc):
+# the ID token's signature checked by PyJWT with cryptography (Debian and
+# Fedora: python3-jwt, python3-cryptography)
+oidc = ["PyJWT[crypto]>=2.6"]
+
 [project.scripts]
 tavletta = "tavletta.launch:main"
 
@@ -44,6 +50,8 @@ include = ["tavletta*"]
 "tavletta.sheets" = ["templates.json", "LICENSE.glabels"]
 # symbols from Material Design Icons, with their Apache-2.0 license
 "tavletta.symbols" = ["mdi.json.gz", "LICENSE.mdi"]
+# the print server's web page (tavletta serve, docs/server.md)
+"tavletta.server" = ["web/*.html", "web/*.css", "web/*.js", "web/*.svg"]
 
 [tool.setuptools.dynamic]
 version = {attr = "tavletta.__version__"}
@@ -63,6 +71,7 @@ dev = [
     "xenon>=0.9",
     "pip-audit>=2.7",
     "pyyaml>=6",  # tests/test_packaging.py reads the Flatpak manifest
+    "PyJWT[crypto]>=2.6",  # the OIDC tests (the extra "oidc")
     # tests/test_icons.py runs setup.py itself; a venv of Python 3.12 or newer
     # has no setuptools of its own (pip builds in an isolated environment)
     "setuptools>=77",

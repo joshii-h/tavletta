@@ -17,7 +17,7 @@ import pytest
 from PIL import Image
 
 from tavletta import cli
-from tavletta.backends.base import PaperJam, PrinterInfo
+from tavletta.backends.base import PaperJam, PrinterInfo, PrinterNotFound, Progress
 from tavletta.model import CodeElement, Label, TextElement
 from tavletta.server import http as server_http
 from tavletta.server import jobs as jobs_module
@@ -355,6 +355,7 @@ def test_describe_label(api, server_env):
     assert body["variables"] == ["lot"] and body["builtin_variables"] == ["date"]
     assert body["columns"] == ["Name", "Code"]
     assert body["data_file"] == "items.csv" and not body["data_file_unusable"]
+    assert not body["data_file_missing"]
     assert body["counter"] == {"used": False, "next": 5, "step": 1}
     assert set(body["features"]) == {"serial", "variables"}
 
@@ -372,9 +373,29 @@ def test_describe_label_with_a_data_file_elsewhere(api, server_env, tmp_path, pn
     )
     status, _r, body = call(api.base, "GET", "/api/v1/labels/far")
     assert body["data_file"] is None and body["data_file_unusable"]
+    assert not body["data_file_missing"]
     assert body["elements"] == [{"index": 1, "kind": "image", "file": "logo.png"}]
     status, _r, body = call(api.base, "POST", "/api/v1/preview", body={"label": "far"})
     assert status == 422 and body["error"]["code"] == "data_outside"
+
+
+def test_describe_label_whose_data_file_is_gone(api, server_env):
+    """The web page's card shows sample values then: the rows sent along
+    preview it, the label's own (missing) file is not asked for."""
+    label_file(
+        server_env.labels,
+        "gone.tavletta",
+        TextElement(text="{Name}"),
+        data_file=str(server_env.labels / "gone.csv"),
+    )
+    status, _r, body = call(api.base, "GET", "/api/v1/labels/gone")
+    assert body["data_file"] == "gone.csv" and body["data_file_missing"]
+    assert not body["data_file_unusable"]
+    status, _r, body = call(api.base, "POST", "/api/v1/preview", body={"label": "gone"})
+    assert status == 422 and body["error"]["code"] == "data_problem"
+    request = {"label": "gone", "data_rows": [{"Name": "Name"}], "format": "json"}
+    status, _r, body = call(api.base, "POST", "/api/v1/preview", body=request)
+    assert status == 200 and body["png"] and body["warnings"] == []
 
 
 # --- printers -------------------------------------------------------------------------
@@ -935,6 +956,65 @@ def test_serial_rows_that_cannot_print_are_refused(api, server_env):
     assert "2" in answer["error"]["message"]
 
 
+@pytest.mark.parametrize("rows", [None, [{"Name": "a"}, {"Name": "b"}]])
+def test_printed_rises_label_by_label_while_a_job_prints(api, server_env, monkeypatch, rows):
+    """A job of copies (or a row's copies, a cab printer's job of a
+    series' labels) tells its labels printed while it prints, not only
+    when it is done."""
+    import threading
+
+    label_file(server_env.labels, "named.tavletta", TextElement(text="{Name}"))
+    reached, go_on = threading.Event(), threading.Event()
+
+    def print_label(image, host, options, progress=None):
+        for copy in range(1, options.copies + 1):
+            progress(Progress(copy, options.copies))
+            if copy == 3 and not reached.is_set():
+                reached.set()
+                go_on.wait(10)
+
+    monkeypatch.setattr(server_env.printer, "print_label", print_label)
+    body = {"label": "named", "copies": 4}
+    if rows:
+        body["data_rows"] = rows
+    _status, _r, job = call(api.base, "POST", "/api/v1/print", body=body)
+    assert reached.wait(10)
+    _status, _r, running = call(api.base, "GET", "/api/v1/jobs/" + job["id"])
+    go_on.set()
+    assert running["state"] == "printing" and running["printed"] == 2
+    url = "/api/v1/jobs/" + job["id"]
+    wait_for(lambda: call(api.base, "GET", url)[2]["state"] == "done")
+    done = call(api.base, "GET", url)[2]
+    assert done["printed"] == done["total"] == 4 * len(rows or [1])
+
+
+def test_serial_printer_failure_of_unknown_outcome(api, server_env, monkeypatch):
+    """The printer could not tell what printed (a lost connection): printed
+    and rows_printed for certain, printed_max what may have; the counter
+    goes on after that, the message says rows may print twice."""
+    label_file(server_env.labels, "named.tavletta", TextElement(text="{Name} {=counter}"))
+    sent = []
+
+    def print_label(image, host, options, progress=None):
+        if len(sent) == 1:
+            raise PrinterNotFound("connection reset", printed=0, copies=1, printed_max=1)
+        sent.append(image)
+
+    monkeypatch.setattr(server_env.printer, "print_label", print_label)
+    rows = [{"Name": "a"}, {"Name": "b"}, {"Name": "c"}]
+    body = {"label": "named", "data_rows": rows, "wait": 10}
+    _status, _r, job = call(api.base, "POST", "/api/v1/print", body=body)
+    assert job["state"] == "failed" and job["error"]["code"] == "printer_not_found"
+    assert (job["printed"], job["printed_max"], job["rows_printed"]) == (1, 2, 1)
+    assert "outcome is unknown" in job["error"]["message"]
+    assert "may print them twice" in job["error"]["message"]
+    assert Label.saved_counter(server_env.labels / "named.tavletta") == 3
+    sent.clear()
+    monkeypatch.setattr(server_env.printer, "print_label", lambda *a, **k: None)
+    _status, _r, job = call(api.base, "POST", "/api/v1/print", body=body)
+    assert job["state"] == "done" and job["printed_max"] is None
+
+
 def test_serial_printer_failure(api, server_env, monkeypatch):
     label_file(server_env.labels, "named.tavletta", TextElement(text="{Name}"))
     sent = []
@@ -1174,3 +1254,29 @@ def test_default_labels_folder(monkeypatch, tmp_path):
 def test_real_default_labels_folder():
     path = server_main.default_labels_dir()
     assert path.parts[-2:] == ("tavletta", "labels")
+
+
+def test_head_answers_as_get_without_the_body(make_server):
+    """HEAD of the page, its files and the API's GET routes: GET's status
+    and headers, no body; not for MCP (whose GET is no read)."""
+    _server, base = make_server(token=TOKEN)
+
+    def head(path, token=None):
+        url = urlsplit(base)
+        connection = http.client.HTTPConnection(url.hostname, url.port, timeout=20)
+        headers = {"Authorization": "Bearer " + token} if token else {}
+        connection.request("HEAD", path, headers=headers)
+        response = connection.getresponse()
+        body = response.read()
+        connection.close()
+        return response.status, response, body
+
+    for path, token in (("/", None), ("/api/v1/health", None), ("/api/v1/labels", TOKEN)):
+        get_status, get_response, _body = call(base, "GET", path, token=token)
+        status, response, body = head(path, token)
+        assert (status, body) == (get_status, b""), path
+        assert response.getheader("Content-Length") == get_response.getheader("Content-Length")
+        assert response.getheader("Content-Type") == get_response.getheader("Content-Type")
+    assert head("/api/v1/labels")[0] == 401
+    assert head("/api/v1/print", TOKEN)[0] == 405
+    assert head("/mcp", TOKEN)[0] == 405

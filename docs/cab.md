@@ -86,8 +86,11 @@ Markers: **[manual]** from cab's manual, **[confirmed]** seen on the device,
   accepted. [confirmed]
 - The print head reports itself in the web interface as "106 mm 12 dots/mm"
   on the EOS2/300; Tavletta renders at exactly 12 dots per mm (8 for /200,
-  23.6 for /600 models), so a 100 mm label is 1200 dots. Each print asks
-  `qv` first. [confirmed for the /300]
+  23.6 for /600 models), so a 100 mm label is 1200 dots. A print asks
+  `qv` first, unless the printer answered it in the last 30 s
+  (`VERSION_SECONDS`): `qv` keeps the interpreter active for about a
+  second, which each label of a series would wait for. [confirmed for the
+  /300] [decided]
 - An image rendered for another resolution than `qv` reports is scaled
   dot by dot if the ratio is a whole one upwards, else the label is
   rendered again for the printer's resolution (as for ZPL: scaling down
@@ -125,17 +128,43 @@ A 1                       (number of labels)
   the setting "Print upside down" (`upside_down`, off by default), directly
   after `S` as the manual asks; no other `O` options (tear-off, backfeed):
   the printer's setup stays in charge of those. [manual]
+- "Print offset" (`offset_mm`, −5 to 5 mm, 0 by default) moves the
+  image's content along y before it is sent, by whole dots: positive
+  down (towards the image's last rows), the rows it leaves white, what
+  moves out cut off. `S` keeps offset 0,0, the label's size and the
+  image's place stay. Only the job moves: the preview, the editor's
+  boxes and the server's preview keep showing the label; the server's
+  `"view": "printer"` is the image as sent, moved. [decided]
 - Images are not erased before the download: Tavletta always uses the one
-  name `TAVLETTA`, which each download replaces, so the RAM does not fill
-  up, and images other programs left in the printer stay. [manual]
+  name `TAVLETTA` (a series' jobs: `TAV00001` onwards, see below), which
+  each download replaces, so the RAM does not fill up, and images other
+  programs left in the printer stay. [manual]
 - `A [PREVIEW]` instead of `A 1` renders the label without printing; the
   result is shown at `http://<printer>/cgi-bin/bitmap` (behind the web
   interface's password). The job above was accepted that way without a
   protocol error. [confirmed]
 - While a job runs, the label counter of `ESC s` counts down to 0 and the
-  last character goes back to `N`. Tavletta counts a job as done once it saw
-  labels pending and then none, or after 3 s without any activity.
-  [manual] [open: how fast it counts on a real printout]
+  last character goes back to `N`. [manual] Tavletta counts a job as done
+  once it saw labels pending and then none (the interpreter may still be
+  active: the second after a job, a tear-off feed); a job whose labels
+  were never seen pending (a short label printed between two polls, which
+  are at least 0.5 s apart) once the printer, seen active after the job
+  was sent, is idle at two polls in a row; a job not seen at all after
+  3 s without any activity. [decided] [open: how fast it counts on a real
+  printout]
+- Label after label (a series, or copies with variables): the next job
+  is sent as soon as the one before counted down to 0, also while its
+  interpreter is still active (within 2 s, `TAIL_SECONDS`); otherwise a
+  job waits until the printer is idle, as another program's job may be
+  running. Each label is still confirmed before the next is sent, so the
+  labels printed are known exactly when one fails. With a timed fake
+  printer (0.2 s to read the image, 0.4 s to print a 20 mm label, the
+  interpreter active 1 s after) a label took 3.0 s, 5.5 s when the print
+  fell between two polls; now 1.0 to 2.3 s. Sending the labels of a
+  series without waiting (the printer queues them) would reach the
+  printer's speed, but then a failing label could not be told from those
+  queued behind it. [measured with the fake printer] [open: on a real
+  printout]
 - On an error while sending or during a job (out of labels, head open,
   timeout) Tavletta sends `ESC c` (cancel job), so that the remaining
   labels are not printed once the problem is solved and the user prints
@@ -229,7 +258,12 @@ Setting "Print method" (`method` in settings.json, per printer model):
   set on the printer". Only a hint: the web interface may be off or behind
   a password, and the media loaded is not known. [confirmed]
 - `/cgi-bin/get?cmd=3` (status) has the counters `thermalTransfer` and
-  `thermalDirect` in metres; not used. [confirmed]
+  `thermalDirect` in metres, not used, and `"labels": [2686, "-"]`, the
+  labels printed in the printer's life, with `serialno` and
+  `printerModel`; without a password on firmware 5.47. Tavletta compares
+  the label counter with what `ESC s` tells of a job that failed (see
+  "What a job printed").
+  [confirmed]
 - `ESC s` error `R` "Ribbon detected in thermal direct mode" and `F` "Out
   of ribbon" [manual]: Tavletta reports `F` as "the printer finds no
   ribbon" (load one, or choose thermal direct) and `R` as "a ribbon is
@@ -269,7 +303,7 @@ A 1
 
 | Line | Meaning [manual] | Tavletta |
 |---|---|---|
-| `e IMG;*` | erase all images of type IMG from RAM (3.4; `*` is a wildcard) | not sent: one image name, replaced each time |
+| `e IMG;*` | erase all images of type IMG from RAM (3.4; `*` is a wildcard) | not sent: one image name, replaced each time (a series: `TAV00001` onwards, used again by each job) |
 | `d IMG;name` + `ESC .` … `ESC .` | download in GEM IMG format, binary between `ESC .` (3.3, 2.3) | `d PNG;TAVLETTA` in base 64 (3rd method of 3.3) |
 | `l SG` | locale Switzerland/German: date and number formats of printer-side fields (3.8) | not needed: no printer-side fields |
 | `zO` | unslashed zero, bitmap fonts only (3.17) | not needed |
@@ -296,6 +330,155 @@ A 1
 - `O P` keeps the label in place instead of pulling it back after the
   tear-off feed; the manual warns of a thin white line where the label
   stood under the head. Tavletta leaves this to the setup ("Backfeed").
+
+## A series as jobs of several labels
+
+Each label of a series as a job of its own (`J` … `A 1`) makes the
+printer feed the label to the tear-off edge at the end of each job and
+pull it back at the start of the next: the labels do not run through.
+[confirmed on a printout] Copies of one label (`A n`) run through. So a
+series without variables that change from copy to copy goes as jobs of
+up to "Labels per job" labels (`labels_per_job`, 1 to 1000, 250 by
+default; 1 prints label by label), in one transmission each:
+
+```
+d PNG;TAV00001   <BASE64> … </BASE64>      (every label's image first)
+d PNG;TAV00002   …
+m m
+J
+H 50,0,T
+S l1;0,0,18.6,20,40
+O R
+I:Label;0,0,0;TAV00001
+A 1
+R Label;TAV00002         (the next label's image into the same field)
+A 1
+…
+```
+
+- `R name;data` replaces a field's data and is followed by another `A`
+  in the same job: the manual shows it for a text field (`T:REP;…` /
+  `A1` / `R REP;cab printers` / `A2` / …) and names text and barcode
+  fields. [manual] It puts another image into an image field too: 5
+  labels of an inventory series came out with 5 different numbers, run
+  through in 3.2 s, centred with "Print offset" 1.25, the gap sensor
+  (`S l1`) synchronising on every label. [confirmed on an EOS2/300,
+  firmware 5.47.7, 2026-11-24]
+- The images are named `TAV00001` onwards (8 characters), each job using
+  the names again: the RAM holds at most "Labels per job" of them,
+  besides `TAVLETTA`. They stay after the job, as `TAVLETTA` does.
+  [decided] An inventory label (40 × 18.6 mm) is a PNG of about 1.4 KB,
+  2 KB in base 64: 250 labels take about 0.5 MB. [measured] A printer
+  that runs out of memory reports `O` in `ESC s`: Tavletta cancels the
+  job and says to lower "Labels per job" (`printer_out_of_memory`).
+- Tavletta holds a job's labels as PNG until it is sent, each packed as
+  soon as it is rendered (`PackedImage`): as images, 250 labels of
+  100 × 150 mm would take over 2 GB (four bytes a dot). A job takes fewer
+  labels than "Labels per job" once their PNGs reach 16 MB
+  (`serial.BATCH_BYTES`), which only labels with large dithered images
+  do. With the fake printer, 250 labels of 100 × 150 mm in one job: 2.3 GB
+  of memory before, 0.26 GB packed. [measured]
+- Whether `ESC s`'s labels to print are those of the whole job (all its
+  `A`) or of the `A` being printed is not known. [open: the printout of 5
+  labels was reported as 5 of 5; a count while a longer job runs and the
+  count at a problem in the middle of a job are not confirmed yet] What a
+  series' job printed does not depend on it (see "What a job printed"):
+  a series stops at the first row not printed for certain and says so,
+  as label by label, and "Continue from" goes on from that row.
+- A series stops (the stop button, a cancelled job of the server)
+  between two jobs: a job that has started is printed in full, up to
+  "Labels per job" labels after the request. A problem cancels the job
+  (`ESC c`) at once.
+- With a fake printer that reads an image in 0.2 s and prints a 20 mm
+  label in 0.4 s: 0.43 s a label instead of 1.0 s label by label.
+  [measured with the fake printer]
+- Labels whose variables change from copy to copy (`{=copy}`) go label
+  by label, one job each.
+
+## What a job printed
+
+A job of one label and its copies (one `A`) counts its labels down in
+`ESC s` [manual]; a series' job has an `A` for each label, and whether
+`ESC s` counts all of them is not confirmed (above). The web interface's
+label counter (`/cgi-bin/get?cmd=3`) counts the labels of the printer's
+life, but when it counts a label (as it is printed, later, in blocks, at
+the end of a job) has not been watched during a print. So `ESC s`
+decides, and the counter only checks it:
+
+- A job's end comes from `ESC s` alone: a job of one label is over when
+  the printer counted its labels down, as the manual has it; a series'
+  job only once the printer is idle at two polls in a row, not when the
+  labels to print reached 0 with the interpreter still active (that may
+  be one `A` of many), nor at a moment idle between two `A`. Nothing
+  waits for the counter. A series' job counts as stuck only after 180 s
+  and 10 s for each label still to print (`LABEL_SECONDS`), as a label
+  printed may not show. Waiting for idle costs a series' job the
+  interpreter's second after it and a poll: with a timed fake printer
+  (0.2 s to read an image, 0.4 s a label, the interpreter active 1 s after
+  a job) 45 labels in jobs of 20 took 32.5 s instead of 28 s, in one job
+  29.5 s; label by label 80 s as before. [decided] [measured with the
+  fake printer]
+- At a problem the labels printed for certain are, from `ESC s`, those it
+  was seen to count down before the answer that reports the problem (both
+  readings of it agree on them: fewer than printed if it counts each `A`
+  on its own); that answer only tells the most, the job's labels minus
+  those it still has to print: a printer that drops the job at the
+  problem may say 0, and the rest is not booked as printed. The same for
+  a job of one label and its copies. A lost connection (or a job
+  that never ended): up to every label of the job may have printed, the
+  ones seen counted down for certain. Cut off while the images were sent
+  (before `m m`, which Tavletta sends on its own): nothing printed.
+  [decided]
+- The counter (network only, read in 2 s or not at all) is read with the
+  printer idle just before a job (once it is idle, if another job was
+  printing; not right after a label of the job before whose interpreter
+  is still active: that label may not be counted yet), and once more when
+  the job fails, after `ESC c` (three tries, 0.5 s apart). Where it tells another number than `ESC s`, the outcome
+  is the range of both: printed for certain the smaller, at most the
+  larger; a number only the counter tells is never taken as certain. A
+  counter lower than at the start (reset) or higher by more than the
+  job's labels (another program printing) tells nothing. It is not read
+  while a job prints; after a series' job that ended well once, and if it
+  tells another number than the job's labels that is only logged (it may
+  count later than the labels print). A printer whose web
+  interface did not answer is not asked again for 30 s. [decided] [open:
+  when the counter counts a label]
+- When more may have printed than for certain, the message says so ("The
+  job was sent, but its outcome is unknown: … up to N may have"), the
+  counter goes on after every label that may have printed (a number
+  skipped rather than one printed twice), and "Continue from" starts
+  after the last label printed for certain: rows may print twice, none is
+  left out, and the message says that too. In a series the numbers are
+  those of the series, not of its job of up to "Labels per job". The
+  server's job tells `printed` (for certain) and `printed_max`.
+- The model and resolution `qv` told are kept for 30 s, a job's last
+  label for 2 s (the next label of a series does not wait for the
+  interpreter's second after it). The web interface's serial number,
+  read with the printer idle, tells another printer at the address: both
+  are dropped then. Without the web interface, or during a series sent
+  label by label (the printer not idle between them), a printer swapped
+  at the same network address within those 30 s would be taken for the
+  one before (on USB its address names its serial number, so it is
+  another printer). [decided]
+
+## Where the print lands
+
+The test printer (EOS2/300, gap sensor, tear-off mode on, setup "Print
+position Y" 0 mm) prints the image about 1.25 mm higher on the label (with
+`O R`) than its place: the job places it at 0,0 on a label of the label's
+size (`S l1;0,0,18.6,20,40` / `I:Label;0,0,0;…`), and the preview is that
+image. A label for 40 × 18.6 mm laid out in cablabel S3 had its content
+low in cablabel's own preview too (ink 3.4 mm from the top, 0.8 mm from
+the bottom; Tavletta's render of it agrees within 0.07 mm) and comes out
+centred from Tavletta [confirmed], as from cablabel for its users
+[assumed]: the layout made up for the printer.
+In Tavletta the label is laid out as it should come out (the preview
+shows the content centred) and "Print offset" 1.25 makes up for the
+printer; the job is then the one the old layout sent, dot for dot.
+[confirmed by comparing the images]
+Where the shift comes from (the gap sensor's distance to the head, the
+tear-off feed) is not known; the setup's "Print position Y" would move
+cablabel's prints too. [open]
 
 ## Label start, tear-off and backfeed
 

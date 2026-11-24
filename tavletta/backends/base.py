@@ -8,6 +8,7 @@ printer means adding one module (see CONTRIBUTING.md).
 
 from __future__ import annotations
 
+import io
 import math
 import socket
 import threading
@@ -252,7 +253,62 @@ class Toggle:
         return raw is True
 
 
-Setting = Choice | Level | Toggle
+@dataclass(frozen=True)
+class Distance:
+    """A printer setting in millimetres, e.g. how far the print is moved
+    along the feed; 0 by default. The window offers it in steps of `step`
+    (in its units), printers.toml and settings.json take any value within
+    the range."""
+
+    key: str
+    lower: float
+    upper: float
+    step: float = 0.1
+
+    def value(self, raw: object) -> float:
+        """A stored value, clamped to the range; junk is 0."""
+        if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+            return 0.0
+        try:  # an int too large for a float
+            number = float(raw)
+        except OverflowError:
+            return 0.0
+        if not math.isfinite(number):
+            return 0.0
+        return max(self.lower, min(self.upper, number))
+
+
+@dataclass(frozen=True)
+class Count:
+    """A printer setting that is a whole number with a default of its own,
+    e.g. how many labels go to the printer as one job. The window offers
+    every value of the range."""
+
+    key: str
+    lower: int
+    upper: int
+    default: int
+
+    def value(self, raw: object) -> int:
+        """A stored value, clamped to the range; junk is the default."""
+        number = Level(self.key, self.lower, self.upper).value(raw)
+        return self.default if number is None else number
+
+
+Setting = Choice | Level | Toggle | Distance | Count
+
+
+def shift_along(image: Image.Image, mm: float, dots_per_mm: float) -> Image.Image:
+    """The image's content moved `mm` along y (positive: down), as many
+    whole rows; what moves out is cut off, the rows it leaves are white
+    (no ink). The same image if that is no row."""
+    rows = round(mm * dots_per_mm)
+    if not rows:
+        return image
+    shifted = Image.new(image.mode, image.size, "white")
+    shifted.paste(image, (0, rows))
+    shifted.info.update(image.info)
+    return shifted
 
 
 @dataclass(frozen=True)
@@ -587,6 +643,13 @@ class PrinterPaused(PrinterError):
     code = "paused"
 
 
+class PrinterOutOfMemory(PrinterError):
+    """The printer has no room left for the data of a job (cab: the
+    images of a series' job, see "labels_per_job")."""
+
+    code = "out_of_memory"
+
+
 class OutOfPaper(PrinterError):
     code = "out_of_paper"
 
@@ -657,6 +720,43 @@ def for_resolution(image: Image.Image, rendered: float, printer: float) -> Image
     resized = image.resize(size, Image.Resampling.NEAREST)
     resized.info.update(image.info)
     return resized
+
+
+@dataclass(frozen=True, eq=False)
+class PackedImage:
+    """A black and white label image kept as PNG until it is sent: the
+    labels of a series' job wait for it together (Backend.print_batch()).
+    As an image each would take four bytes a dot (RGB), a 100 × 150 mm
+    label at 300 dpi 8.6 MB; as PNG a few KB. Size and info are the
+    image's; open() makes the image again."""
+
+    png: bytes
+    size: tuple[int, int]
+    info: dict
+
+    @classmethod
+    def of(cls, image: Image.Image | PackedImage) -> PackedImage:
+        """The image in black and white (below half brightness black, no
+        dithering: a mono backend's prepare() has dithered it already)."""
+        if isinstance(image, PackedImage):
+            return image
+        buffer = io.BytesIO()
+        image.convert("1", dither=Image.Dither.NONE).save(buffer, format="PNG", optimize=True)
+        return cls(buffer.getvalue(), image.size, dict(image.info))
+
+    @property
+    def width(self) -> int:
+        return self.size[0]
+
+    @property
+    def height(self) -> int:
+        return self.size[1]
+
+    def open(self) -> Image.Image:
+        image = Image.open(io.BytesIO(self.png))
+        image.load()
+        image.info.update(self.info)
+        return image
 
 
 class WrongMedia(PrinterError):
@@ -847,7 +947,7 @@ class Backend(ABC):
         """The connected printer's name for the interface; the model family by default."""
         return self.name
 
-    def setting(self, options: PrintOptions, key: str) -> str | int | bool | None:
+    def setting(self, options: PrintOptions, key: str) -> str | int | float | bool | None:
         """The value of one of the printer's settings for a job (settings()
         of the printer in options.info): what the options carry if valid,
         else the default. KeyError for other keys."""
@@ -1039,6 +1139,28 @@ class Backend(ABC):
     ) -> PrintResult | None:
         """Print an image made by prepare(); raises PrinterError. Returns a
         PrintResult if something differed from the request (or None)."""
+
+    def series_batch(self, options: PrintOptions) -> int:
+        """How many labels of a series this backend prints as one job at
+        most (print_batch()), so the printer runs them through without
+        stopping between them; 0: one job per label (print_label()). Only
+        for a mono backend: the images come packed in black and white. A
+        job may get fewer labels (serial.BATCH_BYTES)."""
+        return 0
+
+    def print_batch(
+        self,
+        images: Sequence[PackedImage],
+        host: str,
+        options: PrintOptions,
+        progress: ProgressCallback | None = None,
+    ) -> PrintResult | None:
+        """The labels of a series as one job, `options.copies` of each
+        image (made by prepare(), PackedImage.of()); progress counts the
+        labels of the whole job. A PrinterError carries params["printed"],
+        the labels done before the problem. Only for a backend whose
+        series_batch() is not 0."""
+        raise NotImplementedError
 
     def print_pages(
         self,

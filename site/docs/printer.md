@@ -1,7 +1,12 @@
 # Printers and troubleshooting
 
 Choose the printer under [[ui:Printer model]]; each one has its own
-section below.
+section below. Printers Tavletta finds on USB and in the network come
+first in that list, under [[ui:Found]], with their model: choosing one
+takes its model and its address. The models follow under
+[[ui:All models]]. Tavletta looks for them when the window opens and
+with [[ui:Search for printers]], every model at the same time, in the
+background.
 
 ## All printers { #common }
 
@@ -26,6 +31,19 @@ section below.
 - [[ui:content scaled down to fit]]: the content does not fit the label.
   Make the label longer or larger, use [[ui:Automatic length]] on tape, or
   shorten the content.
+- [[ui:Different labels loaded]] (die-cut labels): the printer reports
+  labels of another size, or measured another distance from one label to
+  the next than height plus [[ui:Gap]] of your label.
+  [[ui:Use loaded labels]] changes the label and prints nothing yet: it
+  takes the size the printer reports (Brother QL), or sets the height
+  along the roll so that height plus gap make the measured distance (cab,
+  Zebra). The gap and the width stay; a Zebra's print width is what the
+  last print set, not the width of the labels. Where that height would be
+  less than 5 mm, the gap is changed instead; where neither makes a
+  label, only [[ui:Print anyway]] is offered.
+- After [[ui:Use loaded labels]], check the label in the preview, then
+  print. [[ui:Undo]] in the message takes the change back; the message
+  says so if elements now reach beyond the edge of the label.
 
 ## Brother VC-500W { #vc500w }
 
@@ -184,6 +202,19 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
   printer.
 - [[ui:Print upside down]]: the label comes out turned by 180°, as
   the manufacturer's label software prints it.
+- [[ui:Print offset]]: a printer that prints off the label's place (the
+  print a little higher or lower on every label than the preview shows
+  it) is made up for here: measure on a printed label how far the print
+  lies off, and enter it, positive to move the print down on labels
+  across the roll, negative to move it up. The preview keeps showing the
+  label as it should come out; only what is sent to the printer moves. Content
+  within this distance of the edge the print moves to is cut off.
+- [[ui:Labels per job]]: the labels of a series go to the printer
+  together, up to this many (250 by default, 1 to 1000) in one job, and
+  run through without stopping between them. [[ui:Stop]] takes effect
+  between two jobs: a job that has started is printed in full. 1 sends
+  every label as a job of its own, as other printers get them. Labels
+  whose content changes from copy to copy always go one by one.
 - Heat and tear-off position stay as set on the printer.
 
 ### Problems { #cab-problems }
@@ -191,7 +222,14 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
 - [[ui:Different labels loaded]]: the printer measured another distance
   between the labels than height plus gap of your label. Check
   [[ui:Label size]] and [[ui:Gap]], or load the right roll. Press Feed on
-  the printer once after changing the roll so it measures again.
+  the printer once after changing the roll so it measures again, then
+  [[ui:Use loaded labels]] adapts the label to it
+  ([All printers](#common)).
+- Everything printed a little too high or too low, the same on every
+  label, while the preview shows it in its place: set
+  [[ui:Print offset]]. A label laid out to make up for this in another
+  program prints off its place in the preview; move its content back
+  into place and set the offset instead.
 - A print that stopped because of a problem is cancelled, so printing again
   does not give extra labels.
 - Out of labels: load a new roll, the printer then synchronises by itself.
@@ -201,6 +239,17 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
 - Ribbon problem: no ribbon in thermal transfer mode, or a ribbon in thermal
   direct mode. Load or remove the ribbon, or choose the other
   [[ui:Print method]].
+- Out of memory: the printer had no room for the labels of a job. Lower
+  [[ui:Labels per job]], then print again from the row the message
+  names.
+- "The job was sent, but its outcome is unknown": the connection to the
+  printer broke while it printed (or the printer could not tell how far it
+  got). Tavletta counts the labels it knows were printed; the printer may
+  have printed more. Check the labels that came out: printing again from
+  the row the message names may print some twice, but leaves none out.
+  With the printer's web interface reachable on the network (the
+  default), Tavletta also checks the number against the printer's label
+  counter; where the two differ, the message gives the range.
 - Labels with a ribbon print blank or smeared, the ribbon does not move:
   the printer is set to thermal direct. Choose
   [[ui:Thermal transfer (ribbon)]] under [[ui:Print method]].
@@ -378,6 +427,11 @@ you have one, a report of what works and what does not helps a lot
   please report it with the printer model; the orientation was tried on a
   Zebra GX420d only.
 - Print too pale or too dark: change [[ui:Darkness]].
+- [[ui:Different labels loaded]] (Zebra ZPL): the printer reports the
+  distance it measured last, perhaps on an earlier roll. After changing
+  the roll, let it measure the labels again (most printers do that with a
+  long press on Feed) before you use [[ui:Use loaded labels]]
+  ([All printers](#common)).
 - The printer prints several blank labels or stops between labels: the
   [[ui:Label sensor]] does not match the roll, or the printer has to measure
   the labels again (most printers do that with a long press on Feed).

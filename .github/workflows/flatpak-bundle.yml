@@ -8,6 +8,12 @@
 # the tavletta-bot user (write access to joshii/tavletta only).
 #
 # Forgejo also reads .github/workflows, hence the server_url guard.
+#
+# CrowdSec on the Forgejo host bans an address that asks for non-static
+# pages often (scenario crowdsecurity/http-crawl-non_statics) and then
+# answers 403: the steps that wait for the Forgejo release ask every 3
+# minutes (see release-mirror.yml). tests/test_packaging.py runs the waits
+# with fake curl and gh.
 
 name: Flatpak bundle
 
@@ -24,7 +30,9 @@ jobs:
   bundle:
     if: github.server_url == 'https://github.com'
     runs-on: ubuntu-26.04
-    timeout-minutes: 60
+    # the build (about 10 minutes), the waits below at most 10 + 15 + 9 and the
+    # notes' checks: an ::error:: names what is missing well before this
+    timeout-minutes: 90
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-51
       options: --privileged
@@ -65,11 +73,12 @@ jobs:
           set -euo pipefail
           bundle="Tavletta-$TAG-x86_64.flatpak"
           sha256sum "$bundle" > "$bundle.sha256"
-          # the release is created by release-mirror.yml from the Forgejo release
-          for i in $(seq 120); do
+          # release-mirror.yml creates the release as soon as the tag arrives, before
+          # Forgejo's files (GitHub's API: no CrowdSec there)
+          for i in $(seq 20); do
             gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 && break
-            [ "$i" = 120 ] && { echo "::error::no GitHub release for $TAG"; exit 1; }
-            sleep 15
+            [ "$i" = 20 ] && { echo "::error::no GitHub release for $TAG: did release-mirror.yml fail?"; exit 1; }
+            sleep 30
           done
           gh release upload "$TAG" "$bundle" "$bundle.sha256" --clobber -R "$GITHUB_REPOSITORY"
 
@@ -82,13 +91,25 @@ jobs:
           set -euo pipefail
           bundle="Tavletta-$TAG-x86_64.flatpak"
           auth=(-H "Authorization: token $FORGEJO_TOKEN")
-          release="$(curl -sS --fail "${auth[@]}" "$FORGEJO_API/releases/tags/$TAG")"
+          # release.yml creates it within minutes of the tag: asked every 3
+          # minutes, 6 times (not a page in between: JSON with an id)
+          for i in $(seq 6); do
+            code="$(curl -sS --connect-timeout 20 --max-time 60 "${auth[@]}" -o release.json \
+              -w '%{http_code}' "$FORGEJO_API/releases/tags/$TAG")" || code=000
+            [ "$code" = 200 ] && jq -e .id release.json > /dev/null 2>&1 && break
+            if [ "$code" = 403 ] || [ "$code" = 429 ]; then
+              echo "::warning::git.joshuahirsig.xyz answers $code: CrowdSec may have banned this runner's address"
+            fi
+            [ "$i" = 6 ] && { echo "::error::no Forgejo release for $TAG (HTTP $code)"; exit 1; }
+            sleep 180
+          done
+          release="$(cat release.json)"
           id="$(jq -r .id <<<"$release")"
           for f in "$bundle" "$bundle.sha256"; do
             if jq -e --arg n "$f" 'any(.assets[]?; .name == $n)' <<<"$release" > /dev/null; then
               echo "$f exists"; continue
             fi
-            curl -sS --fail-with-body "${auth[@]}" -F "attachment=@$f" \
+            curl -sS --fail-with-body --connect-timeout 20 --max-time 600 "${auth[@]}" -F "attachment=@$f" \
               "$FORGEJO_API/releases/$id/assets?name=$(jq -rn --arg n "$f" '$n|@uri')" > /dev/null
             echo "$f uploaded"
           done
@@ -100,15 +121,31 @@ jobs:
           FORGEJO_REPOSITORY: joshii/tavletta
           TOKEN: ${{ secrets.FORGEJO_TOKEN }}
           GH_TOKEN: ${{ github.token }}
+          # release-assets.sh's wait for the Forgejo release (there by now, the
+          # step before attached to it): every 3 minutes, 3 times
+          RELEASE_WAIT_SECONDS: "180"
+          RELEASE_WAIT_TRIES: "3"
         run: |
           set -euo pipefail
           line="- Any Linux distribution with Flatpak, x86-64: \`Tavletta-$TAG-x86_64.flatpak\`; checksum in \`.sha256\`"
           # Forgejo's notes, which release-mirror.yml copies here, then this
           # release's own, so the line is here also when the mirror has finished
           GITHUB_REPOSITORY="$FORGEJO_REPOSITORY" packaging/release-assets.sh notes "$TAG" "$line"
-          body="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)"
-          if ! grep -qxF -- "$line" <<<"$body"; then
+          # release-mirror.yml may write the notes at the same moment and drop the
+          # line again: checked again after 30 seconds, added again if missing
+          checked=0
+          for i in 1 2 3 4; do
+            body="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body)"
+            if grep -qxF -- "$line" <<<"$body"; then
+              [ "$checked" = 1 ] && { echo "release notes: $line"; exit 0; }
+              checked=1
+              sleep 30
+              continue
+            fi
             grep -qxF -- "**Downloads**" <<<"$body" || body="${body%$'\n'}"$'\n\n'"**Downloads**"$'\n\n'
             printf '%s\n%s\n' "${body%$'\n'}" "$line" > notes.md
-            gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md
-          fi
+            gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md > /dev/null
+            checked=0
+          done
+          echo "::error::the GitHub release notes of $TAG keep losing: $line"
+          exit 1
