@@ -109,6 +109,8 @@ def build_job(
         lines.append(sensor)
     lines.append("DIRECTION %d,0" % (1 if upside_down else 0))
     if darkness is not None:
+        # rounded as LPrint's TSPL driver does (ZPL and EPL2 round down, as
+        # LPrint's drivers for them do): docs/tspl.md
         lines.append("DENSITY %d" % ((darkness * 15 + 50) // 100))
     if speed is not None:
         lines.append("SPEED %d" % speed)
