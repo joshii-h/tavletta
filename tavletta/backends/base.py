@@ -1078,6 +1078,26 @@ class Backend(ABC):
         """Print an image made by prepare(); raises PrinterError. Returns a
         PrintResult if something differed from the request (or None)."""
 
+    def series_batch(self, options: PrintOptions) -> int:
+        """How many labels of a series this backend prints as one job
+        (print_batch()), so the printer runs them through without stopping
+        between them; 0: one job per label (print_label())."""
+        return 0
+
+    def print_batch(
+        self,
+        images: Sequence[Image.Image],
+        host: str,
+        options: PrintOptions,
+        progress: ProgressCallback | None = None,
+    ) -> PrintResult | None:
+        """The labels of a series as one job, `options.copies` of each
+        image (made by prepare()); progress counts the labels of the whole
+        job. A PrinterError carries params["printed"], the labels done
+        before the problem. Only for a backend whose series_batch() is
+        not 0."""
+        raise NotImplementedError
+
     def print_pages(
         self,
         pages: Sequence[Image.Image],

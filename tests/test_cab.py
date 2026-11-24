@@ -81,7 +81,7 @@ class FakeCab:
         return answer.encode()
 
     def printed(self) -> int:
-        return sum(int(re.search(rb"\nA (\d+)", job).group(1)) for job in self.jobs)
+        return sum(int(n) for job in self.jobs for n in re.findall(rb"\nA (\d+)", job))
 
 
 class FakeSocket:
@@ -108,7 +108,8 @@ class FakeSocket:
         else:
             assert data.startswith(b"d PNG;"), data[:40]
             device.jobs.append(data)
-            device.pending = int(re.search(rb"\nA (\d+)", data).group(1))
+            # all labels of the job: a series' job has an A for each label
+            device.pending = sum(int(n) for n in re.findall(rb"\nA (\d+)", data))
 
     def recv(self, size: int) -> bytes:
         if self.device.silent:
@@ -1139,3 +1140,167 @@ def test_a_series_stops_at_the_label_the_printer_fails(printer, monkeypatch):
         print_series(Cab(), "h", series)
     assert failed.value.outcome.printed == [1, 2] and failed.value.outcome.labels == 2
     assert len(printer.device.jobs) == 3 and printer.device.cancelled == 1
+
+
+# --- a series as one job (TAVLETTA_CAB_SERIES_JOB=1) --------------------------------------
+
+
+def _series_parts(job: bytes) -> tuple[list[tuple[str, Image.Image]], list[str]]:
+    """The images downloaded (name, image) and the label commands of a series' job."""
+    lines = job.decode().split("\r\n")[:-1]
+    images = []
+    while lines[0].startswith("d PNG;"):
+        assert lines[1] == "<BASE64>" and lines[3] == "</BASE64>"
+        image = Image.open(io.BytesIO(base64.b64decode(lines[2])))
+        image.load()
+        images.append((lines[0][6:], image))
+        lines = lines[4:]
+    return images, lines
+
+
+def test_build_series_job():
+    """Every image downloaded first, then one job: the first image placed
+    and printed, each further one put into the same field (R) and printed."""
+    images = [Image.new("RGB", (480, 223), c) for c in ("white", "black", "white")]
+    job = cab.build_series_job(images, 12.0, 1.4, 2, "transfer", 50, True, (40, 18.6))
+    downloaded, commands = _series_parts(job)
+    assert [name for name, _i in downloaded] == ["TAV00001", "TAV00002", "TAV00003"]
+    assert downloaded[1][1].getpixel((0, 0)) == 0
+    assert commands == [
+        "m m",
+        "J",
+        "H 50,0,T",
+        "S l1;0,0,18.6,20,40",
+        "O R",
+        "I:Label;0,0,0;TAV00001",
+        "A 2",
+        "R Label;TAV00002",
+        "A 2",
+        "R Label;TAV00003",
+        "A 2",
+    ]
+    with pytest.raises(ValueError):
+        cab.build_series_job(images * 7, 12.0, 1.4, 1)  # 21: more than SERIES_CHUNK
+
+
+def test_a_series_in_one_job_only_when_asked_for(monkeypatch):
+    monkeypatch.delenv(cab.SERIES_ENV, raising=False)
+    assert Cab().series_batch(PrintOptions()) == 0
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    assert Cab().series_batch(PrintOptions()) == cab.SERIES_CHUNK
+
+
+def _series(n, copies=1, text="{Number}", **label):
+    from tavletta.serial import Series
+
+    lab = _label(40, 18.6, elements=[TextElement(text=text)], **label)
+    rows = [{"Number": str(70000 + i)} for i in range(n)]
+    return Series(
+        label=lab, rows=rows, indexes=list(range(n)), options=PrintOptions(copies=copies)
+    )
+
+
+def test_a_series_as_jobs_of_twenty_labels(printer, monkeypatch):
+    from tavletta.serial import print_series
+
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    events = []
+    outcome = print_series(Cab(), "h", _series(45, text="{Number} {=counter}"), events.append)
+    assert outcome.printed == list(range(1, 46)) and outcome.labels == 45
+    assert len(printer.device.jobs) == 3 and printer.device.printed() == 45
+    counts = [len(_series_parts(job)[0]) for job in printer.device.jobs]
+    assert counts == [20, 20, 5]
+    # each label its own image; the names used again by the next job
+    first, _commands = _series_parts(printer.device.jobs[1])
+    assert first[0][0] == "TAV00001" and first[0][1].tobytes() != first[1][1].tobytes()
+    assert outcome.counter is not None and outcome.counter == 45 + _series(1).label.counter_next
+    # progress: the label of the series and its row
+    assert {(e.label, e.row) for e in events} >= {(1, 1), (20, 20), (21, 21), (45, 45)}
+    assert all(e.labels == 45 for e in events)
+
+
+def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
+    """Out of labels after 7 labels of the second job: rows 1 to 27
+    printed, row 28 failed, nothing after it sent; the job cancelled."""
+    from tavletta.serial import SeriesError, print_series
+
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    real = FakeCab.status
+
+    def status(self):
+        if len(self.jobs) == 2 and self.pending == 13:
+            return b"YP000013N"
+        return real(self)
+
+    monkeypatch.setattr(FakeCab, "status", status)
+    with pytest.raises(SeriesError) as failed:
+        print_series(Cab(), "h", _series(45))
+    error = failed.value
+    assert error.row == 28 and error.printed == list(range(1, 28))
+    assert error.outcome.labels == 27 and isinstance(error.error, OutOfLabels)
+    assert len(printer.device.jobs) == 2 and printer.device.cancelled == 1
+
+
+def test_a_series_job_with_copies_counts_rows_by_their_copies(printer, monkeypatch):
+    from tavletta.serial import SeriesError, print_series
+
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    real = FakeCab.status
+
+    def status(self):
+        if self.pending == 3:  # 5 of 8 labels: rows 1 and 2, and one copy of row 3
+            return b"YD000003N"
+        return real(self)
+
+    monkeypatch.setattr(FakeCab, "status", status)
+    with pytest.raises(SeriesError) as failed:
+        print_series(Cab(), "h", _series(4, copies=2))
+    error = failed.value
+    assert (error.row, error.printed, error.copies_printed) == (3, [1, 2], 1)
+    assert error.outcome.labels == 5 and isinstance(error.error, HeadOpen)
+    assert re.findall(rb"\nA (\d+)", printer.device.jobs[0]) == [b"2"] * 4
+
+
+def test_a_series_job_stops_between_jobs(printer, monkeypatch):
+    from tavletta.serial import print_series
+
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    stop = threading.Event()
+    outcome = print_series(Cab(), "h", _series(45), lambda _e: stop.set(), stop)
+    assert outcome.stopped and outcome.printed == list(range(1, 21))
+    assert len(printer.device.jobs) == 1
+
+
+def test_a_series_job_prints_the_rows_before_one_that_cannot_be_drawn(printer, monkeypatch):
+    from tavletta.job import Job
+    from tavletta.serial import SeriesError, print_series
+
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    real = Job.image
+
+    def image(self, label, reported=False):
+        if self.columns and self.columns["Number"] == "70003":
+            raise PrinterError("cannot draw") from None
+        return real(self, label, reported)
+
+    def failing(self, label, reported=False):
+        from tavletta.job import PrepareFailed
+
+        try:
+            return image(self, label, reported)
+        except PrinterError as e:
+            raise PrepareFailed(str(e)) from e
+
+    monkeypatch.setattr(Job, "image", failing)
+    with pytest.raises(SeriesError) as failed:
+        print_series(Cab(), "h", _series(6), check=False)
+    assert failed.value.row == 4 and failed.value.preparing
+    assert failed.value.printed == [1, 2, 3] and printer.device.printed() == 3
+
+
+def test_labels_varying_per_copy_are_printed_one_by_one(printer, monkeypatch):
+    from tavletta.serial import print_series
+
+    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    print_series(Cab(), "h", _series(3, copies=2, text="{Number} {=copy}"))
+    assert len(printer.device.jobs) == 6  # one job per label, as without the setting

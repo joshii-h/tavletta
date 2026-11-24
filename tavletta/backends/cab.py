@@ -20,10 +20,12 @@ import base64
 import http.client
 import io
 import json
+import os
 import re
 import socket
 import threading
 import time
+from collections.abc import Sequence
 from contextlib import AbstractContextManager, suppress
 from dataclasses import dataclass, replace
 
@@ -86,6 +88,15 @@ RUN_GRACE = POLL_INTERVAL
 # for that
 TAIL_SECONDS = 2.0
 IMAGE_NAME = "TAVLETTA"  # at most 8 characters; each job replaces the previous image
+# a series as one job (print_batch()): its images TAV00001, TAV00002, … (8
+# characters), each job of a series using the same names again, so the RAM
+# holds at most SERIES_CHUNK of them; the labels after the first replace
+# the image of the one field (R). Only with TAVLETTA_CAB_SERIES_JOB=1: that
+# R replaces an image field's image is not in the manual (it names text
+# and barcode fields), to be confirmed on a printer (docs/cab.md)
+SERIES_IMAGE = "TAV%05d"
+SERIES_CHUNK = 20
+SERIES_ENV = "TAVLETTA_CAB_SERIES_JOB"
 CR = b"\r\n"
 ESC = b"\x1b"
 
@@ -382,6 +393,49 @@ def build_job(
     return CR.join(lines) + CR
 
 
+def build_series_job(
+    images: list[Image.Image],
+    dots_per_mm: float,
+    gap_mm: float,
+    copies: int,
+    method: str = "printer",
+    speed: int = DEFAULT_SPEED,
+    upside_down: bool = False,
+    size_mm: tuple[float, float] | None = None,
+) -> bytes:
+    """Several labels of the same size as one job (build_job()): every
+    image downloaded first (TAV00001, …), then one label whose image field
+    shows the first, printed `copies` times, and for each further label its
+    image put into that field (R) and printed. One job: the printer runs
+    the labels through without the tear-off feed and backfeed between
+    jobs."""
+    if not images or len(images) > SERIES_CHUNK:
+        raise ValueError("1 to %d images" % SERIES_CHUNK)
+    first = images[0]
+    width = _size(first.width, dots_per_mm, size_mm[0] if size_mm else None)
+    height = _size(first.height, dots_per_mm, size_mm[1] if size_mm else None)
+    names = [SERIES_IMAGE % n for n in range(1, len(images) + 1)]
+    lines: list[bytes] = []
+    for name, image in zip(names, images, strict=True):
+        lines += [
+            b"d PNG;" + name.encode(),
+            b"<BASE64>",
+            base64.b64encode(encode_png(image)),
+            b"</BASE64>",
+        ]
+    lines += [b"m m", b"J"]
+    if method in METHOD_CODES:
+        lines.append(("H %d,0,%s" % (speed, METHOD_CODES[method])).encode())
+    lines.append(("S l1;0,0,%s,%s,%s" % (_mm(height), _mm(height + gap_mm), _mm(width))).encode())
+    if upside_down:
+        lines.append(b"O R")
+    lines.append(("I:Label;0,0,0;%s" % names[0]).encode())
+    lines.append(b"A %d" % max(1, copies))
+    for name in names[1:]:
+        lines += [("R Label;%s" % name).encode(), b"A %d" % max(1, copies)]
+    return CR.join(lines) + CR
+
+
 def _size(pixels: int, dots_per_mm: float, mm: float | None) -> float:
     """The label's size in mm if the pixels make it within a dot, else
     the pixels' size."""
@@ -584,14 +638,40 @@ class Cab(Backend):
         options: PrintOptions,
         progress: ProgressCallback | None = None,
     ) -> PrintResult | None:
-        rendered = float(image.info.get("dots_per_mm", self._dots(host)))
-        check_width(image.width / rendered, self.capabilities)
+        return self._print([image], host, options, progress)
+
+    def series_batch(self, options: PrintOptions) -> int:
+        """A series as jobs of SERIES_CHUNK labels, with TAVLETTA_CAB_SERIES_JOB=1."""
+        return SERIES_CHUNK if os.environ.get(SERIES_ENV) == "1" else 0
+
+    def print_batch(
+        self,
+        images: Sequence[Image.Image],
+        host: str,
+        options: PrintOptions,
+        progress: ProgressCallback | None = None,
+    ) -> PrintResult | None:
+        return self._print(list(images), host, options, progress)
+
+    def _print(
+        self,
+        images: list[Image.Image],
+        host: str,
+        options: PrintOptions,
+        progress: ProgressCallback | None,
+    ) -> PrintResult | None:
+        """One job: a label (build_job()) or several (build_series_job()),
+        options.copies of each."""
+        first = images[0]
+        rendered = float(first.info.get("dots_per_mm", self._dots(host)))
+        check_width(first.width / rendered, self.capabilities)
         copies = max(1, options.copies)
+        total = copies * len(images)
         method = str(self.setting(options, "method"))
         # H needs a speed: the printer's own, if its web interface tells it
         speed = (web_setup(host).speed if method in METHOD_CODES else None) or DEFAULT_SPEED
         with session(host, self.port, usb.PRINT_WAIT) as s:
-            report_progress(progress, 1, copies)
+            report_progress(progress, 1, total)
             # a printer with a problem may not answer text commands (see
             # query()): its status first, so that it tells the problem
             # (out of labels, head open) instead of timing out on qv
@@ -602,24 +682,36 @@ class Cab(Backend):
             dots = rendered  # a printer that does not tell: as rendered, nothing learned
             if version.model:
                 dots = self.reported[host] = version.dots_per_mm
-            size_mm = image.info.get("size_mm")
-            image = for_resolution(image, rendered, dots)  # else rendered again (RenderAgain)
+            size_mm = first.info.get("size_mm")
+            # else rendered again (RenderAgain)
+            images = [for_resolution(image, rendered, dots) for image in images]
             upside_down = self.setting(options, "upside_down") is True
-            job = build_job(
-                image, dots, options.gap_mm, copies, method, speed, upside_down, size_mm
-            )
+            if len(images) == 1:
+                job = build_job(
+                    images[0], dots, options.gap_mm, copies, method, speed, upside_down, size_mm
+                )
+            else:
+                job = build_series_job(
+                    images, dots, options.gap_mm, copies, method, speed, upside_down, size_mm
+                )
             # the label before of a series ended a moment ago: its
             # interpreter's second of activity is no other job to wait for
             ended = self._ended.get(host)
             _wait_idle(s, ended is not None and 0 <= _clock() - ended < TAIL_SECONDS)
             self._ended.pop(host, None)
+            counted = _Counted()
             try:
                 # a job cut off while sending would leave a partial image
                 # download in the printer, which spoils the next job
                 s.send(job)
-                if _wait_done(s, progress, copies):
+                if _wait_done(s, progress, total, counted):
                     self._ended[host] = _clock()
-            except (PrinterError, OSError):
+            except PrinterError as e:
+                s.cancel()
+                if len(images) > 1:  # the labels before the problem: the series goes on after them
+                    e.params["printed"] = counted.done
+                raise
+            except OSError:
                 s.cancel()
                 raise
         return None
@@ -667,24 +759,46 @@ def _wait_idle(s: _Session, own_tail: bool = False) -> None:
         _sleep(POLL_INTERVAL)
 
 
-def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> bool:
+@dataclass
+class _Counted:
+    """The labels of a job seen printed (_wait_done())."""
+
+    done: int = 0
+
+
+def _wait_done(
+    s: _Session,
+    progress: ProgressCallback | None,
+    copies: int,
+    counted: _Counted | None = None,
+) -> bool:
     """Until the job has run: the printer counted its labels down to 0
     (True: its interpreter still active, the job's second after it; the
     next job need not wait for that); or, the labels never seen pending
     (printed between two polls), it stayed idle for RUN_GRACE after its
     interpreter was seen active, for START_GRACE if it was not seen at all. While the image is read the
     interpreter is active without labels pending, which is not yet the
-    job. The timeout restarts with every printed label."""
+    job. The timeout restarts with every printed label. `counted` keeps
+    the labels seen printed, also when the printer reports a problem."""
     started = False  # labels of the job seen pending
     active = False  # the interpreter seen active since the job was sent
     last = None
     idle_since = None
     deadline = _clock() + PRINT_TIMEOUT
     while True:
-        status = _checked(s)
+        status = s.status()
+        error = status_error(status)
+        if error:
+            # the labels still to print when the problem came: those
+            # before were printed
+            if counted is not None and status.pending and status.pending <= copies:
+                counted.done = max(counted.done, copies - status.pending)
+            raise error
         if status.pending:
             started, idle_since = True, None
             done = max(0, copies - status.pending)
+            if counted is not None:
+                counted.done = done
             if done != last:
                 last = done
                 deadline = _clock() + PRINT_TIMEOUT
@@ -692,6 +806,8 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> b
         elif status.running and started:
             # counted down to 0: printed; the rest is the interpreter's
             # second of activity after a job (and a tear-off feed)
+            if counted is not None:
+                counted.done = copies
             report_progress(progress, copies, copies)
             return True
         elif status.running:
@@ -704,6 +820,8 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, copies: int) -> b
             idle_since = _clock() if idle_since is None else idle_since
             grace = RUN_GRACE if active else START_GRACE
             if started or _clock() - idle_since >= grace:
+                if counted is not None:
+                    counted.done = copies
                 report_progress(progress, copies, copies)
                 return False
         if _clock() > deadline:
