@@ -491,8 +491,9 @@ def test_shortcuts_window(window):
     titles = [title for _heading, items in shortcuts.sections() for title, _accel in items]
     assert "Undo" in titles and "Duplicate the open element" in titles
     for _heading, items in shortcuts.sections():
-        for _title, accel in items:
-            assert Gtk.accelerator_parse(accel)[0], accel
+        for _title, accels in items:  # alternatives apart by spaces
+            for accel in accels.split():
+                assert Gtk.accelerator_parse(accel)[0], accel
     window.last_dialog.force_close()
 
 
