@@ -5,6 +5,7 @@ asked for, and not at all with --no-web-ui."""
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 from test_server import TOKEN, call
@@ -12,6 +13,9 @@ from test_server import TOKEN, call
 from tavletta.server import webui
 
 JSON = {"Content-Type": "application/json"}
+# the po files of the tree the tests are in: webui.PO_DIR is next to the
+# module, which in a package's tests (autopkgtest) is the installed one
+PO_DIR = Path(__file__).resolve().parent.parent / "po"
 
 
 @pytest.fixture
@@ -192,6 +196,7 @@ def test_the_icon_is_the_apps():
 def checkout(monkeypatch, tmp_path):
     """No compiled catalog (an editable install): the po files of po/."""
     monkeypatch.setattr(webui, "LOCALE_DIR", tmp_path)
+    monkeypatch.setattr(webui, "PO_DIR", PO_DIR)
     webui.languages.cache_clear()
     webui._messages.cache_clear()
     yield
@@ -200,7 +205,7 @@ def checkout(monkeypatch, tmp_path):
 
 
 def test_every_catalog_of_the_app_is_offered(checkout):
-    catalogs = sorted(p.stem for p in webui.PO_DIR.glob("*.po"))
+    catalogs = sorted(p.stem for p in PO_DIR.glob("*.po"))
     assert len(catalogs) >= 26 and {"ar", "zh_HK", "zh_TW", "zh_CN", "pt", "pt_BR"} <= set(
         catalogs
     )
@@ -251,7 +256,9 @@ def test_the_po_files_read_as_msgfmt_compiles_them(tmp_path):
 
     if which("msgfmt") is None:
         pytest.skip("no msgfmt")
-    for po in sorted(webui.PO_DIR.glob("*.po")):
+    catalogs = sorted(PO_DIR.glob("*.po"))
+    assert catalogs
+    for po in catalogs:
         mo = tmp_path / po.stem / "LC_MESSAGES" / "tavletta.mo"
         mo.parent.mkdir(parents=True)
         subprocess.run(["msgfmt", "-o", str(mo), str(po)], check=True)
