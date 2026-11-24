@@ -14,13 +14,14 @@ takes the end of the request from the send queue.
 from __future__ import annotations
 
 import http.client
+import io
 import select
 import socket
 import ssl
 import struct
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 from urllib.parse import quote, urlsplit
 
 from tavletta.backends import mdns, net
@@ -66,6 +67,7 @@ MAX_DEPTH = 8  # nested collections (media-col holds media-size: depth 2)
 # one stalled; as the raw backends)
 MIN_RATE = 8_000
 POLL = 0.2  # seconds between two looks at the send queue while waiting for the answer
+HEAD_BYTES = 64 * 1024  # the HTTP head of an answer, beyond its body
 
 _clock = time.monotonic  # replaced in tests
 
@@ -246,6 +248,7 @@ def decode(data: bytes) -> Response:
         if tag < 0x10:  # a new group
             attrs = {}
             groups.append((tag, attrs))
+            last = None  # an additional value names no attribute of the group before
             continue
         if attrs is None:
             raise IppError("attribute outside a group")
@@ -293,8 +296,14 @@ def send(uri: str, body: bytes, timeout: float) -> Response:
         assert connection.sock is not None
         net.send_all(connection.sock, body, timeout, MIN_RATE)
         _wait_for_answer(connection.sock, timeout)
-        answer = connection.getresponse()
-        data = answer.read(MAX_RESPONSE + 1)
+        # http.client only calls makefile() on what it reads the answer from
+        reader = cast(socket.socket, _Answer(connection.sock, timeout))
+        answer = http.client.HTTPResponse(reader, method="POST")
+        try:
+            answer.begin()
+            data = answer.read(MAX_RESPONSE + 1)
+        finally:
+            answer.close()  # before the reader it reads from goes
     finally:
         connection.close()
     if answer.status != 200:
@@ -302,6 +311,42 @@ def send(uri: str, body: bytes, timeout: float) -> Response:
     if len(data) > MAX_RESPONSE:
         raise IppError("answer larger than %d bytes" % MAX_RESPONSE)
     return decode(data)
+
+
+class _Answer(io.RawIOBase):
+    """The connection's socket as http.client reads the answer from it: a
+    socket timeout only limits each read, so a printer sending a byte now
+    and then would hold the request for ever. Here the whole answer has
+    `timeout` plus a second for every MIN_RATE bytes (as net.send_all()
+    sends), and at most MAX_RESPONSE + HEAD_BYTES bytes."""
+
+    def __init__(self, sock: socket.socket, timeout: float):
+        super().__init__()
+        self.sock, self.timeout = sock, timeout
+        self.start = _clock()
+        self.got = 0
+
+    def makefile(self, _mode: str) -> io.BufferedReader:  # what http.client calls
+        return io.BufferedReader(self)
+
+    def readable(self) -> bool:
+        return True
+
+    def readinto(self, buffer) -> int:
+        room = MAX_RESPONSE + HEAD_BYTES - self.got
+        if room < 0:
+            raise IppError("answer larger than %d bytes" % MAX_RESPONSE)
+        late = TimeoutError("the answer did not come in time, %d bytes of it" % self.got)
+        remaining = self.start + self.timeout + self.got / MIN_RATE - _clock()
+        if remaining <= 0:
+            raise late
+        self.sock.settimeout(remaining)
+        try:
+            count = self.sock.recv_into(memoryview(buffer)[: room + 1])  # one more: too large
+        except TimeoutError:
+            raise late from None
+        self.got += count
+        return count
 
 
 def _wait_for_answer(sock: socket.socket, timeout: float) -> None:

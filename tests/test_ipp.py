@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import socket
 import struct
 import threading
@@ -229,8 +230,9 @@ class SlowPrinter:
     seconds apart), or stops taking it after `stop_after` bytes; then
     answers, unless `answer` is None."""
 
-    def __init__(self, pause=0.0, stop_after=None, answer=b""):
+    def __init__(self, pause=0.0, stop_after=None, answer=b"", trickle=0.0, head=b""):
         self.pause, self.stop_after, self.answer = pause, stop_after, answer
+        self.trickle, self.head = trickle, head  # the answer a byte at a time; more headers
         self.taken = 0
         self.listener = socket.create_server(("127.0.0.1", 0))
         self.port = self.listener.getsockname()[1]
@@ -252,10 +254,18 @@ class SlowPrinter:
                 self.taken += len(conn.recv(16384))
                 time.sleep(self.pause)
             if self.answer is not None:
-                conn.sendall(
-                    b"HTTP/1.1 200 OK\r\nContent-Type: application/ipp\r\n"
-                    b"Content-Length: %d\r\n\r\n%s" % (len(self.answer), self.answer)
+                answer = (
+                    b"HTTP/1.1 200 OK\r\nContent-Type: application/ipp\r\n%s"
+                    b"Content-Length: %d\r\n\r\n%s" % (self.head, len(self.answer), self.answer)
                 )
+                if self.trickle:
+                    for n in range(len(answer)):
+                        if self.done.wait(self.trickle):
+                            return
+                        conn.sendall(answer[n : n + 1])
+                else:
+                    with contextlib.suppress(OSError):  # closed after reading enough
+                        conn.sendall(answer)
             self.done.wait(10)
 
     def close(self):
@@ -305,6 +315,37 @@ def test_a_printer_that_takes_everything_but_never_answers_times_out(slow_printe
     with pytest.raises(TimeoutError, match="no answer within 0.5 s"):
         ipp.send("ipp://p:%d/" % printer.port, bytes(100), timeout=0.5)
     assert time.monotonic() - start < 5
+
+
+@pytest.mark.real_ipp
+def test_an_answer_that_trickles_in_ends_in_time(slow_printer):
+    """Each read has the timeout, but the answer as a whole too: a printer
+    that sends a byte now and then cannot hold the request."""
+    printer = slow_printer(answer=response(), trickle=0.05)
+    start = time.monotonic()
+    with pytest.raises(TimeoutError, match="did not come in time"):
+        ipp.send("ipp://p:%d/" % printer.port, b"request", timeout=0.3)
+    assert time.monotonic() - start < 2
+
+
+@pytest.mark.real_ipp
+def test_an_answer_with_a_huge_head_is_refused(slow_printer, monkeypatch):
+    monkeypatch.setattr(ipp, "MAX_RESPONSE", 1000)
+    monkeypatch.setattr(ipp, "HEAD_BYTES", 1000)
+    head = b"".join(b"X-Filler-%d: %s\r\n" % (n, b"y" * 1000) for n in range(50))
+    printer = slow_printer(answer=response(), head=head)
+    with pytest.raises(ipp.IppError, match="larger than 1000 bytes"):
+        ipp.send("ipp://p:%d/" % printer.port, b"request", timeout=5)
+    small = slow_printer(answer=response(), head=b"X-Small: 1\r\n")
+    assert ipp.send("ipp://p:%d/" % small.port, b"request", timeout=5).ok
+
+
+def test_an_additional_value_does_not_reach_into_the_group_before():
+    data = struct.pack(">BBHi", 2, 0, 0, 1) + bytes([ipp.OPERATION_GROUP])
+    data += ipp._field(ipp.KEYWORD, b"a", b"x") + bytes([ipp.PRINTER_GROUP])
+    data += ipp._field(ipp.KEYWORD, b"", b"y") + bytes([ipp.END_OF_ATTRIBUTES])
+    with pytest.raises(ipp.IppError, match="additional value without an attribute"):
+        ipp.decode(data)
 
 
 def test_host_header():
