@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import socket
 import struct
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
 
 from tavletta.backends import ipp, mdns
+from tavletta.backends.base import PrinterStalled
 
 
 def response(status: int = 0, groups: list[tuple[int, list[ipp.Attribute]]] = ()) -> bytes:
@@ -219,6 +222,89 @@ def test_send_refuses_http_errors_and_huge_answers(fake_printer, monkeypatch):
     )
     with pytest.raises(ipp.IppError, match="larger than 10 bytes"):
         ipp.send("ipp://p:%d/" % big.port, b"", timeout=5)
+
+
+class SlowPrinter:
+    """A printer on 127.0.0.1 that takes a request in small bites (`pause`
+    seconds apart), or stops taking it after `stop_after` bytes; then
+    answers, unless `answer` is None."""
+
+    def __init__(self, pause=0.0, stop_after=None, answer=b""):
+        self.pause, self.stop_after, self.answer = pause, stop_after, answer
+        self.taken = 0
+        self.listener = socket.create_server(("127.0.0.1", 0))
+        self.port = self.listener.getsockname()[1]
+        self.done = threading.Event()
+        threading.Thread(target=self._serve, daemon=True).start()
+
+    def _serve(self):
+        conn, _address = self.listener.accept()
+        conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 16384)
+        with conn:
+            head = b""
+            while b"\r\n\r\n" not in head:
+                head += conn.recv(1)
+            length = int(head.split(b"Content-Length: ")[1].split(b"\r\n")[0])
+            while self.taken < length:
+                if self.stop_after is not None and self.taken >= self.stop_after:
+                    self.done.wait(10)
+                    return
+                self.taken += len(conn.recv(16384))
+                time.sleep(self.pause)
+            if self.answer is not None:
+                conn.sendall(
+                    b"HTTP/1.1 200 OK\r\nContent-Type: application/ipp\r\n"
+                    b"Content-Length: %d\r\n\r\n%s" % (len(self.answer), self.answer)
+                )
+            self.done.wait(10)
+
+    def close(self):
+        self.done.set()
+        self.listener.close()
+
+
+@pytest.fixture
+def slow_printer(monkeypatch):
+    monkeypatch.setattr(mdns, "resolve_host", lambda host, family=0: "127.0.0.1")
+    printers = []
+
+    def make(**kwargs):
+        printers.append(SlowPrinter(**kwargs))
+        return printers[-1]
+
+    yield make
+    for printer in printers:
+        printer.close()
+
+
+@pytest.mark.real_ipp
+def test_a_document_sent_longer_than_the_timeout_is_not_cut_off(slow_printer):
+    """The printer takes the request steadily, but all of it takes longer
+    than the timeout: as long as it keeps taking, the request goes on (a
+    socket timeout would cap the whole send), and its answer is waited
+    for while it takes the end of the request from the send queue."""
+    printer = slow_printer(pause=0.01, answer=response())
+    body = bytes(256 << 10)
+    start = time.monotonic()
+    answer = ipp.send("ipp://p:%d/" % printer.port, body, timeout=0.3)
+    assert answer.ok and printer.taken == len(body)
+    assert time.monotonic() - start > 0.3  # longer than the timeout in all
+
+
+@pytest.mark.real_ipp
+def test_a_printer_that_stops_taking_the_request_stalls(slow_printer):
+    printer = slow_printer(stop_after=64 << 10)
+    with pytest.raises(PrinterStalled):
+        ipp.send("ipp://p:%d/" % printer.port, bytes(8 << 20), timeout=0.5)
+
+
+@pytest.mark.real_ipp
+def test_a_printer_that_takes_everything_but_never_answers_times_out(slow_printer):
+    printer = slow_printer(answer=None)
+    start = time.monotonic()
+    with pytest.raises(TimeoutError, match="no answer within 0.5 s"):
+        ipp.send("ipp://p:%d/" % printer.port, bytes(100), timeout=0.5)
+    assert time.monotonic() - start < 5
 
 
 def test_host_header():

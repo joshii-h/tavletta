@@ -4,18 +4,26 @@ a printer or a CUPS queue for its state and media, and to send a job.
 Answers come from the network, so decoding is defensive: a size limit, bounds
 checks on every length, a depth limit for collections; anything malformed
 raises IppError instead of an exception from deep inside struct.
+
+A request with a document is sent as net.send_all() sends a raw job: the
+timeout restarts with every bit the printer takes (a socket timeout would
+cap the whole send), and the answer is waited for while the printer still
+takes the end of the request from the send queue.
 """
 
 from __future__ import annotations
 
 import http.client
+import select
+import socket
 import ssl
 import struct
+import time
 from dataclasses import dataclass, field
 from typing import Any
 from urllib.parse import quote, urlsplit
 
-from tavletta.backends import mdns
+from tavletta.backends import mdns, net
 
 # operations
 PRINT_JOB = 0x0002
@@ -54,6 +62,12 @@ STRING_TAGS = frozenset({0x35, 0x36, TEXT, NAME, KEYWORD, URI, 0x46, CHARSET, LA
 DEFAULT_PORT = 631
 MAX_RESPONSE = 8 * 1024 * 1024  # a printer's attributes are some kB; CUPS lists can be more
 MAX_DEPTH = 8  # nested collections (media-col holds media-size: depth 2)
+# bytes a second a printer takes at least while a request is sent (a slower
+# one stalled; as the raw backends)
+MIN_RATE = 8_000
+POLL = 0.2  # seconds between two looks at the send queue while waiting for the answer
+
+_clock = time.monotonic  # replaced in tests
 
 
 class IppError(ValueError):
@@ -275,7 +289,10 @@ def send(uri: str, body: bytes, timeout: float) -> Response:
         connection.putheader("Host", "%s:%d" % (_header_host(host), port))
         connection.putheader("Content-Type", "application/ipp")
         connection.putheader("Content-Length", str(len(body)))
-        connection.endheaders(body)
+        connection.endheaders()  # connects and sends the head
+        assert connection.sock is not None
+        net.send_all(connection.sock, body, timeout, MIN_RATE)
+        _wait_for_answer(connection.sock, timeout)
         answer = connection.getresponse()
         data = answer.read(MAX_RESPONSE + 1)
     finally:
@@ -285,6 +302,22 @@ def send(uri: str, body: bytes, timeout: float) -> Response:
     if len(data) > MAX_RESPONSE:
         raise IppError("answer larger than %d bytes" % MAX_RESPONSE)
     return decode(data)
+
+
+def _wait_for_answer(sock: socket.socket, timeout: float) -> None:
+    """Until the printer starts to answer. The request may still sit in the
+    send queue (megabytes of a document): `timeout` counts from the last
+    byte the printer took (net.unsent), not from the end of sending.
+    TimeoutError if it takes nothing and says nothing for that long."""
+    left, since = net.unsent(sock), _clock()
+    while not select.select([sock], [], [], POLL)[0]:
+        outstanding, now = net.unsent(sock), _clock()
+        if outstanding < left:
+            left, since = outstanding, now
+        elif now - since >= timeout:
+            raise TimeoutError(
+                "no answer within %g s, %d bytes of the request not taken" % (timeout, outstanding)
+            )
 
 
 def _header_host(host: str) -> str:

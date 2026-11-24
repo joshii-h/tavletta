@@ -38,6 +38,12 @@ CUPS classes are addressed as CUPS lists them (`/classes/<name>`).
 
 ## Printing
 
+- Every request goes over HTTP with a timeout of 10 s that counts from the
+  last byte the printer took, as for the raw printers (`net.py`): a
+  document of many megabytes on a slow connection goes on as long as the
+  printer keeps taking it (at least 8000 bytes a second), and the answer
+  is waited for while the printer still takes the end of the request from
+  the send queue. [decided]
 - `Get-Printer-Attributes` first: state, `printer-state-reasons`, the
   formats, `print-scaling-supported`, `media-size-supported`,
   `printer-resolution-default` and `-supported`, `copies-supported`,
