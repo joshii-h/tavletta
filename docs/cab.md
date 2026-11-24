@@ -136,8 +136,9 @@ A 1                       (number of labels)
   boxes and the server's preview keep showing the label; the server's
   `"view": "printer"` is the image as sent, moved. [decided]
 - Images are not erased before the download: Tavletta always uses the one
-  name `TAVLETTA`, which each download replaces, so the RAM does not fill
-  up, and images other programs left in the printer stay. [manual]
+  name `TAVLETTA` (a series' jobs: `TAV00001` onwards, see below), which
+  each download replaces, so the RAM does not fill up, and images other
+  programs left in the printer stay. [manual]
 - `A [PREVIEW]` instead of `A 1` renders the label without printing; the
   result is shown at `http://<printer>/cgi-bin/bitmap` (behind the web
   interface's password). The job above was accepted that way without a
@@ -297,7 +298,7 @@ A 1
 
 | Line | Meaning [manual] | Tavletta |
 |---|---|---|
-| `e IMG;*` | erase all images of type IMG from RAM (3.4; `*` is a wildcard) | not sent: one image name, replaced each time |
+| `e IMG;*` | erase all images of type IMG from RAM (3.4; `*` is a wildcard) | not sent: one image name, replaced each time (a series: `TAV00001` onwards, used again by each job) |
 | `d IMG;name` + `ESC .` … `ESC .` | download in GEM IMG format, binary between `ESC .` (3.3, 2.3) | `d PNG;TAVLETTA` in base 64 (3rd method of 3.3) |
 | `l SG` | locale Switzerland/German: date and number formats of printer-side fields (3.8) | not needed: no printer-side fields |
 | `zO` | unslashed zero, bitmap fonts only (3.17) | not needed |
@@ -325,15 +326,15 @@ A 1
   tear-off feed; the manual warns of a thin white line where the label
   stood under the head. Tavletta leaves this to the setup ("Backfeed").
 
-## A series as one job (to be tried)
+## A series as jobs of several labels
 
 Each label of a series as a job of its own (`J` … `A 1`) makes the
 printer feed the label to the tear-off edge at the end of each job and
 pull it back at the start of the next: the labels do not run through.
-[confirmed on a printout] Copies of one label (`A n`) run through. With
-`TAVLETTA_CAB_SERIES_JOB=1` in the environment of the app or the server, a
-series without variables that change from copy to copy goes as jobs of up
-to 20 labels (`SERIES_CHUNK`), in one transmission each:
+[confirmed on a printout] Copies of one label (`A n`) run through. So a
+series without variables that change from copy to copy goes as jobs of
+up to "Labels per job" labels (`labels_per_job`, 1 to 1000, 250 by
+default; 1 prints label by label), in one transmission each:
 
 ```
 d PNG;TAV00001   <BASE64> … </BASE64>      (every label's image first)
@@ -353,24 +354,35 @@ A 1
 - `R name;data` replaces a field's data and is followed by another `A`
   in the same job: the manual shows it for a text field (`T:REP;…` /
   `A1` / `R REP;cab printers` / `A2` / …) and names text and barcode
-  fields. [manual] That it puts another image into an image field is not
-  in the manual. [open: to be tried with `A [PREVIEW]` and a printout]
-- The images are named `TAV00001` to `TAV00020` (8 characters), each job
-  using the names again: the RAM holds at most 20 of them, besides
-  `TAVLETTA`. They stay after the job, as `TAVLETTA` does. [decided]
+  fields. [manual] It puts another image into an image field too: 5
+  labels of an inventory series came out with 5 different numbers, run
+  through in 3.2 s, centred with "Print offset" 1.25, the gap sensor
+  (`S l1`) synchronising on every label. [confirmed on an EOS2/300,
+  firmware 5.47.7, 2026-11-24]
+- The images are named `TAV00001` onwards (8 characters), each job using
+  the names again: the RAM holds at most "Labels per job" of them,
+  besides `TAVLETTA`. They stay after the job, as `TAVLETTA` does.
+  [decided] An inventory label (40 × 18.6 mm) is a PNG of about 1.4 KB,
+  2 KB in base 64: 250 labels take about 0.5 MB. [measured] A printer
+  that runs out of memory reports `O` in `ESC s`: Tavletta cancels the
+  job and says to lower "Labels per job" (`printer_out_of_memory`).
 - Tavletta takes `ESC s`'s labels to print as those of the whole job (all
-  its `A`), counting down to 0. [assumed: to be confirmed on a printout]
-  The labels printed before a problem are the job's labels minus those
-  still to print in the answer that reports it; a series then stops at the
-  first row not printed in full and says so, as label by label.
-- A series stops (the stop button, a cancelled job of the server) between
-  two jobs, so up to 20 labels after the request; a problem cancels the
-  job (`ESC c`) at once.
+  its `A`), counting down to 0. [assumed: the printout of 5 labels was
+  reported as 5 of 5; a count while a longer job runs and the count at a
+  problem in the middle of a job are not confirmed yet] The labels
+  printed before a problem are the job's labels minus those still to
+  print in the answer that reports it; a series then stops at the first
+  row not printed in full and says so, as label by label, and "Continue
+  from" goes on from that row.
+- A series stops (the stop button, a cancelled job of the server)
+  between two jobs: a job that has started is printed in full, up to
+  "Labels per job" labels after the request. A problem cancels the job
+  (`ESC c`) at once.
 - With a fake printer that reads an image in 0.2 s and prints a 20 mm
   label in 0.4 s: 0.43 s a label instead of 1.0 s label by label.
   [measured with the fake printer]
-- Without the variable, or for labels whose variables change from copy to
-  copy, nothing changes: one job a label.
+- Labels whose variables change from copy to copy (`{=copy}`) go label
+  by label, one job each.
 
 ## Where the print lands
 

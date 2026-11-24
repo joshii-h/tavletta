@@ -115,6 +115,7 @@ media = "57 x 32 mm, ribbon"
 method = "transfer"                  # print method: printer, transfer, direct
 upside_down = true                   # print turned by 180 degrees (cab: O R)
 offset_mm = 0.5                      # the print moved along the feed (cab)
+labels_per_job = 250                 # labels of a series sent as one job (cab)
 ```
 
 - Names: letters, digits, `.`, `_`, `-`, up to 64 characters. `backend` and
@@ -129,7 +130,7 @@ offset_mm = 0.5                      # the print moved along the feed (cab)
 - `[printers.<name>.settings]`: the printer settings the app keeps for the
   model, with the same keys and values as in `settings.json`, and used the
   same way (`PrinterSettings`): the model's own settings (cab: `method`,
-  `upside_down`, `offset_mm` from −5 to 5; ZPL and TSPL: `dpi`, `media`, `finish`, `darkness`,
+  `upside_down`, `offset_mm` from −5 to 5, `labels_per_job` from 1 to 1000; ZPL and TSPL: `dpi`, `media`, `finish`, `darkness`,
   `speed`, `upside_down`; EPL2: `dpi`, `media`, `darkness`, `upside_down`; ESC/POS: `dpi`, `upside_down`; DYMO: `darkness`,
   `upside_down`; NIIMBOT: `media`, `density`), `quality` (Brother QL:
   `standard`, `high`), the extras (P-touch: `chain`, `high_res`,
@@ -406,7 +407,7 @@ reference page `site/docs/api.md` are written from it by
 | `POST /preview` | PNG of the label filled in; `"format": "json"` gives width, height, warnings, the PNG in base64 and `geometry`: where the elements are (boxes in mm, `tavletta/editing.py`) and the image's resolution (`null` for `"view": "printer"`); `"view": "printer"` the image as the printer gets it. Warning codes also in `X-Tavletta-Warnings` |
 | `POST /print` | 202 and the job (`Location: /api/v1/jobs/{id}`); 200 if it finished within `wait` seconds |
 | `GET /jobs/{id}` | `state` (`queued`, `waiting` for the label file, `printing`, `done`, `failed`, `canceled`), `printed` of `total` labels, `rows_printed`, `printer_name`, `owner`, `error` (code, message), `remark`, `warnings`, times |
-| `DELETE /jobs/{id}` | cancel: a waiting job at once, a printing one after the label being printed. 409 if it has finished |
+| `DELETE /jobs/{id}` | cancel: a waiting job at once, a printing one after the label being printed (cab: after the job of up to `labels_per_job` labels being printed). 409 if it has finished |
 
 Fields of `POST /preview` and `POST /print` (unknown fields are refused):
 
@@ -520,7 +521,10 @@ restored backup cannot hand out a number twice.
   saved is refused before printing (409), as on the command line.
 - Cancel is looked at between two labels: between copies rendered one by
   one and between data rows. Copies the printer makes of one image cannot
-  be stopped.
+  be stopped. A cab printer gets a series as jobs of up to
+  `labels_per_job` labels (250 by default, see [cab.md](cab.md)): cancel
+  is looked at between those jobs, a job that has started is printed in
+  full.
 - `SIGTERM` (systemd, `docker stop`): waiting jobs are canceled, a printing
   one stops after its label and saves its counter.
 
