@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 15:59+0100\n"
+"POT-Creation-Date: 2026-11-24 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -367,8 +367,8 @@ msgstr ""
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr ""
 
-#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
-#: tavletta/ui/printing.py:705 tavletta/server/service.py:1146
+#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:582
+#: tavletta/ui/printing.py:746 tavletta/server/service.py:1146
 #: tavletta/server/service.py:1169 tavletta/server/service.py:1471
 #: tavletta/server/service.py:1707
 msgid "The label cannot be prepared for printing."
@@ -400,7 +400,7 @@ msgstr ""
 msgid "Interrupted"
 msgstr ""
 
-#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/cli.py:952 tavletta/ui/printing.py:488
 #: tavletta/server/service.py:1192
 #, python-format
 msgid "At most %d labels in one print job"
@@ -415,7 +415,7 @@ msgstr ""
 msgid "--sheet and --rows need a data file (--data)"
 msgstr ""
 
-#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/cli.py:1022 tavletta/ui/printing.py:615
 #: tavletta/server/service.py:1004
 msgid "No rows to print"
 msgstr ""
@@ -424,20 +424,20 @@ msgstr ""
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr ""
 
-#: tavletta/cli.py:1059 tavletta/ui/window.py:917
+#: tavletta/cli.py:1059 tavletta/ui/window.py:922
 #: tavletta/server/service.py:1063
 #, python-format
 msgid "No such column: %s"
 msgstr ""
 
-#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:695
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr ""
 
-#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
+#: tavletta/cli.py:1069 tavletta/ui/printing.py:700
 #, python-format
 msgid "Rows: %s"
 msgstr ""
@@ -574,7 +574,7 @@ msgid "Elements removed: %d"
 msgstr ""
 
 #: tavletta/ui/editor.py:738 tavletta/ui/shortcuts.py:53
-#: tavletta/ui/window.py:185
+#: tavletta/ui/window.py:187 tavletta/ui/window.py:987
 msgid "Undo"
 msgstr ""
 
@@ -680,7 +680,7 @@ msgid "Add text, an image, a symbol or a code"
 msgstr ""
 
 #: tavletta/ui/elements.py:105 tavletta/ui/texts.py:287
-#: tavletta/ui/window.py:1031 tavletta/server/web/ui.js:66
+#: tavletta/ui/window.py:1040 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr ""
 
@@ -843,7 +843,7 @@ msgstr ""
 msgid "Save label"
 msgstr ""
 
-#: tavletta/ui/files.py:233 tavletta/ui/window.py:208
+#: tavletta/ui/files.py:233 tavletta/ui/window.py:210
 msgid "Save as template…"
 msgstr ""
 
@@ -856,7 +856,7 @@ msgstr ""
 msgid "Export PNG"
 msgstr ""
 
-#: tavletta/ui/files.py:276 tavletta/ui/window.py:942
+#: tavletta/ui/files.py:276 tavletta/ui/window.py:947
 msgid "The preview cannot be drawn"
 msgstr ""
 
@@ -870,7 +870,7 @@ msgstr ""
 
 #: tavletta/ui/files.py:315 tavletta/ui/label_group.py:67
 #: tavletta/ui/shortcuts.py:46 tavletta/ui/window.py:82
-#: tavletta/ui/window.py:235
+#: tavletta/ui/window.py:237
 msgid "Label"
 msgstr ""
 
@@ -1074,10 +1074,10 @@ msgid "Drag to choose the part of the image to keep"
 msgstr ""
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:377
-#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
-#: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
-#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:959
-#: tavletta/server/web/ui.js:220
+#: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
+#: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
+#: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
+#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:220
 msgid "Cancel"
 msgstr ""
 
@@ -1464,7 +1464,7 @@ msgstr ""
 msgid "Probably made"
 msgstr ""
 
-#: tavletta/ui/printer.py:625 tavletta/ui/printing.py:761
+#: tavletta/ui/printer.py:625 tavletta/ui/printing.py:802
 msgid "Close"
 msgstr ""
 
@@ -1476,8 +1476,9 @@ msgstr ""
 msgid "The data file is still being read. Try again in a moment."
 msgstr ""
 
-#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
-#: tavletta/ui/printing.py:509 tavletta/server/web/ui.js:262
+#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:188
+#: tavletta/ui/printing.py:525 tavletta/ui/printing.py:550
+#: tavletta/server/web/ui.js:262
 msgid "Print anyway"
 msgstr ""
 
@@ -1503,105 +1504,118 @@ msgid ""
 "inserted. The printer would scale it to the tape."
 msgstr ""
 
-#: tavletta/ui/printing.py:178
+#: tavletta/ui/printing.py:181
 msgid "Different labels loaded"
 msgstr ""
 
-#: tavletta/ui/printing.py:227
+#: tavletta/ui/printing.py:189
+msgid "Use loaded labels"
+msgstr ""
+
+#: tavletta/ui/printing.py:216
+msgid ""
+"Label adapted to the loaded labels. Some elements reach beyond its edge."
+msgstr ""
+
+#: tavletta/ui/printing.py:218
+msgid "Label adapted to the loaded labels"
+msgstr ""
+
+#: tavletta/ui/printing.py:268
 msgid "Labels"
 msgstr ""
 
-#: tavletta/ui/printing.py:239
+#: tavletta/ui/printing.py:280
 msgid "Print outlines"
 msgstr ""
 
-#: tavletta/ui/printing.py:239
+#: tavletta/ui/printing.py:280
 msgid "To test on plain paper"
 msgstr ""
 
-#: tavletta/ui/printing.py:266
+#: tavletta/ui/printing.py:307
 #, python-format
 msgid "Sheets: %d"
 msgstr ""
 
-#: tavletta/ui/printing.py:287 tavletta/server/web/batch.js:724
+#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:724
 msgid "Copies of each label"
 msgstr ""
 
-#: tavletta/ui/printing.py:287 tavletta/server/web/print.js:150
+#: tavletta/ui/printing.py:328 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr ""
 
-#: tavletta/ui/printing.py:298
+#: tavletta/ui/printing.py:339
 msgid "Cut"
 msgstr ""
 
-#: tavletta/ui/printing.py:304
+#: tavletta/ui/printing.py:345
 msgid "Colours"
 msgstr ""
 
-#: tavletta/ui/printing.py:312
+#: tavletta/ui/printing.py:353
 msgid "Quality"
 msgstr ""
 
-#: tavletta/ui/printing.py:323
+#: tavletta/ui/printing.py:364
 msgid "From row"
 msgstr ""
 
-#: tavletta/ui/printing.py:324
+#: tavletta/ui/printing.py:365
 msgid "To row"
 msgstr ""
 
-#: tavletta/ui/printing.py:355
+#: tavletta/ui/printing.py:396
 msgid "Tape feed"
 msgstr ""
 
-#: tavletta/ui/printing.py:361
+#: tavletta/ui/printing.py:402
 #, python-format
 msgid "%(unit)s of blank tape before and after each label"
 msgstr ""
 
-#: tavletta/ui/printing.py:368
+#: tavletta/ui/printing.py:409
 msgid "Colour adjustment"
 msgstr ""
 
-#: tavletta/ui/printing.py:371
+#: tavletta/ui/printing.py:412
 msgid "Reset"
 msgstr ""
 
-#: tavletta/ui/printing.py:397
+#: tavletta/ui/printing.py:438
 msgid "Not adjusted"
 msgstr ""
 
-#: tavletta/ui/printing.py:397
+#: tavletta/ui/printing.py:438
 msgid "Adjusted"
 msgstr ""
 
-#: tavletta/ui/printing.py:410
+#: tavletta/ui/printing.py:451
 msgid "Print serial labels"
 msgstr ""
 
-#: tavletta/ui/printing.py:410
+#: tavletta/ui/printing.py:451
 msgid "Print label"
 msgstr ""
 
-#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
-#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:196
+#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
+#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
 #: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
 #: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr ""
 
-#: tavletta/ui/printing.py:481
+#: tavletta/ui/printing.py:522
 msgid "Codes may not scan"
 msgstr ""
 
-#: tavletta/ui/printing.py:501
+#: tavletta/ui/printing.py:542
 msgid "Labels in the printer's margin"
 msgstr ""
 
-#: tavletta/ui/printing.py:503
+#: tavletta/ui/printing.py:544
 #, python-format
 msgid ""
 "The printer cannot print near the edges of the paper. The content of labels "
@@ -1609,63 +1623,63 @@ msgid ""
 "safety margin, or leave these positions out."
 msgstr ""
 
-#: tavletta/ui/printing.py:521
+#: tavletta/ui/printing.py:562
 msgid "No printer yet – search for one or enter its address"
 msgstr ""
 
-#: tavletta/ui/printing.py:525
+#: tavletta/ui/printing.py:566
 msgid "Printing…"
 msgstr ""
 
-#: tavletta/ui/printing.py:593 tavletta/ui/printing.py:633
+#: tavletta/ui/printing.py:634 tavletta/ui/printing.py:674
 msgid "Printing serial labels"
 msgstr ""
 
-#: tavletta/ui/printing.py:594
+#: tavletta/ui/printing.py:635
 msgid "Stop"
 msgstr ""
 
-#: tavletta/ui/printing.py:623
+#: tavletta/ui/printing.py:664
 msgid "Stopping after this label…"
 msgstr ""
 
-#: tavletta/ui/printing.py:630 tavletta/ui/printing.py:716
+#: tavletta/ui/printing.py:671 tavletta/ui/printing.py:757
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr ""
 
-#: tavletta/ui/printing.py:662
+#: tavletta/ui/printing.py:703
 msgid "Rows that cannot be printed"
 msgstr ""
 
-#: tavletta/ui/printing.py:665
+#: tavletta/ui/printing.py:706
 msgid "Print without these rows"
 msgstr ""
 
-#: tavletta/ui/printing.py:690
+#: tavletta/ui/printing.py:731
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr ""
 
-#: tavletta/ui/printing.py:695
+#: tavletta/ui/printing.py:736
 #, python-format
 msgid "Printed row %(row)d"
 msgstr ""
 
-#: tavletta/ui/printing.py:697
+#: tavletta/ui/printing.py:738
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr ""
 
-#: tavletta/ui/printing.py:756
+#: tavletta/ui/printing.py:797
 msgid "Printing failed"
 msgstr ""
 
-#: tavletta/ui/printing.py:757 tavletta/server/web/ui.js:125
+#: tavletta/ui/printing.py:798 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr ""
 
-#: tavletta/ui/printing.py:760 tavletta/ui/window.py:984
+#: tavletta/ui/printing.py:801 tavletta/ui/window.py:993
 msgid "Report"
 msgstr ""
 
@@ -1778,23 +1792,23 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:205
+#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:207
 msgid "New label"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:167
+#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:169
 msgid "Open"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:180
+#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:182
 msgid "Save"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:207
+#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:209
 msgid "Save as…"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:54 tavletta/ui/window.py:186
+#: tavletta/ui/shortcuts.py:54 tavletta/ui/window.py:188
 msgid "Redo"
 msgstr ""
 
@@ -1879,11 +1893,11 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:101 tavletta/ui/window.py:213
+#: tavletta/ui/shortcuts.py:101 tavletta/ui/window.py:215
 msgid "Keyboard shortcuts"
 msgstr ""
 
-#: tavletta/ui/shortcuts.py:102 tavletta/ui/window.py:214
+#: tavletta/ui/shortcuts.py:102 tavletta/ui/window.py:216
 msgid "Help"
 msgstr ""
 
@@ -3339,71 +3353,71 @@ msgstr ""
 msgid "Step"
 msgstr ""
 
-#: tavletta/ui/window.py:174 tavletta/server/web/app.js:45
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:45
 #: tavletta/server/web/app.js:288
 msgid "Templates"
 msgstr ""
 
-#: tavletta/ui/window.py:206
+#: tavletta/ui/window.py:208
 msgid "Shipping label…"
 msgstr ""
 
-#: tavletta/ui/window.py:209
+#: tavletta/ui/window.py:211
 msgid "Data for serial labels…"
 msgstr ""
 
-#: tavletta/ui/window.py:210
+#: tavletta/ui/window.py:212
 msgid "Forget allowed data files"
 msgstr ""
 
-#: tavletta/ui/window.py:211
+#: tavletta/ui/window.py:213
 msgid "Export PNG…"
 msgstr ""
 
-#: tavletta/ui/window.py:215
+#: tavletta/ui/window.py:217
 msgid "Report a problem…"
 msgstr ""
 
-#: tavletta/ui/window.py:216
+#: tavletta/ui/window.py:218
 msgid "About Tavletta"
 msgstr ""
 
-#: tavletta/ui/window.py:738
+#: tavletta/ui/window.py:743
 msgid "Unsaved label"
 msgstr ""
 
-#: tavletta/ui/window.py:910
+#: tavletta/ui/window.py:915
 msgid "content scaled down to fit"
 msgstr ""
 
-#: tavletta/ui/window.py:914
+#: tavletta/ui/window.py:919
 #, python-format
 msgid "Problem: %s"
 msgstr ""
 
-#: tavletta/ui/window.py:933
+#: tavletta/ui/window.py:938
 #, python-format
 msgid "Too long for this printer: at most %s"
 msgstr ""
 
-#: tavletta/ui/window.py:937
+#: tavletta/ui/window.py:942
 #, python-format
 msgid "Too wide for this printer: at most %s"
 msgstr ""
 
-#: tavletta/ui/window.py:1011
+#: tavletta/ui/window.py:1020
 msgid "The browser cannot be opened"
 msgstr ""
 
-#: tavletta/ui/window.py:1013
+#: tavletta/ui/window.py:1022
 msgid "Copy link"
 msgstr ""
 
-#: tavletta/ui/window.py:1085
+#: tavletta/ui/window.py:1094
 msgid "Only local files can be dropped"
 msgstr ""
 
-#: tavletta/ui/window.py:1138
+#: tavletta/ui/window.py:1147
 msgid "Please wait until printing has finished"
 msgstr ""
 

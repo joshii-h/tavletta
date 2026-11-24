@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s لإزاحة الطباعة في اتجاه التغذية، لطابعة تطبع خارج موضع الملصق؛ القيمة الموجبة تنقلها إلى الأسفل في الملصقات العرضية على اللفة",
     "Found": "تم العثور عليها",
     "All models": "كل الطرازات",
+    "Use loaded labels": "استخدام الملصقات المحمّلة",
+    "Label adapted to the loaded labels": "تم تكييف الملصق مع الملصقات المحمّلة",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "تم تكييف الملصق مع الملصقات المحمّلة. بعض العناصر تتجاوز حافته.",
 }

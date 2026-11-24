@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "급지 방향으로 인쇄를 옮기는 거리(%(unit)s). 라벨 위치에서 벗어나게 인쇄하는 프린터용이며, 양수 값은 롤을 가로지르는 라벨에서 아래로 옮깁니다",
     "Found": "찾음",
     "All models": "모든 모델",
+    "Use loaded labels": "들어 있는 라벨 사용",
+    "Label adapted to the loaded labels": "라벨을 들어 있는 라벨에 맞췄습니다",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "라벨을 들어 있는 라벨에 맞췄습니다. 일부 요소가 가장자리를 벗어납니다.",
 }

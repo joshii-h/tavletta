@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s som utskriften flyttas i matningsriktningen, för en skrivare som skriver ut bredvid etikettens plats; positivt flyttar den nedåt på etiketter tvärs över rullen",
     "Found": "Hittade",
     "All models": "Alla modeller",
+    "Use loaded labels": "Använd isatta etiketter",
+    "Label adapted to the loaded labels": "Etiketten anpassad till de isatta etiketterna",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Etiketten anpassad till de isatta etiketterna. Vissa element går utanför kanten.",
 }

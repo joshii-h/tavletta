@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "打印沿进纸方向移动的距离（%(unit)s），用于打印偏离标签位置的打印机；正值会让横跨卷筒的标签上的打印下移",
     "Found": "已找到",
     "All models": "所有型号",
+    "Use loaded labels": "使用装入的标签",
+    "Label adapted to the loaded labels": "已按装入的标签调整标签",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "已按装入的标签调整标签。部分元素超出了标签边缘。",
 }

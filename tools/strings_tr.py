@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "Baskının besleme yönünde kaydırıldığı %(unit)s, etiketin yerinin dışına basan bir yazıcı için; pozitif değer, rulonun enine yerleşen etiketlerde baskıyı aşağı kaydırır",
     "Found": "Bulunanlar",
     "All models": "Tüm modeller",
+    "Use loaded labels": "Takılı etiketleri kullan",
+    "Label adapted to the loaded labels": "Etiket takılı etiketlere uyarlandı",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Etiket takılı etiketlere uyarlandı. Bazı öğeler kenarının dışına taşıyor.",
 }

@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s जितना प्रिंट फ़ीड की दिशा में खिसकाया जाता है, उस प्रिंटर के लिए जो लेबल की जगह से हटकर प्रिंट करता है; धनात्मक मान रोल के आर-पार लगे लेबल पर इसे नीचे ले जाता है",
     "Found": "मिले",
     "All models": "सभी मॉडल",
+    "Use loaded labels": "लगे हुए लेबल इस्तेमाल करें",
+    "Label adapted to the loaded labels": "लेबल को लगे हुए लेबलों के अनुसार बदला गया",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "लेबल को लगे हुए लेबलों के अनुसार बदला गया। कुछ तत्व उसके किनारे से बाहर जाते हैं।",
 }

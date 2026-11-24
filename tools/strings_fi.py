@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s, jonka verran tulostetta siirretään syöttösuunnassa tulostimelle, joka tulostaa tarran kohdan ohi; positiivinen arvo siirtää sitä alaspäin rullan poikki olevissa tarroissa",
     "Found": "Löydetyt",
     "All models": "Kaikki mallit",
+    "Use loaded labels": "Käytä asetettuja tarroja",
+    "Label adapted to the loaded labels": "Tarra sovitettiin asetettuihin tarroihin",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Tarra sovitettiin asetettuihin tarroihin. Osa elementeistä ulottuu sen reunan yli.",
 }

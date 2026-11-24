@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s pergeseran cetakan searah umpan, untuk printer yang mencetak meleset dari tempat label; nilai positif menggesernya ke bawah pada label yang melintang gulungan",
     "Found": "Ditemukan",
     "All models": "Semua model",
+    "Use loaded labels": "Gunakan label yang dimuat",
+    "Label adapted to the loaded labels": "Label disesuaikan dengan label yang dimuat",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Label disesuaikan dengan label yang dimuat. Beberapa elemen melewati tepinya.",
 }

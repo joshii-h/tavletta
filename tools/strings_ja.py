@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "送り方向に印刷をずらす量 (%(unit)s)。ラベルの位置からずれて印刷するプリンター用で、正の値はロール横向きのラベルで下へずらします",
     "Found": "見つかったプリンター",
     "All models": "すべてのモデル",
+    "Use loaded labels": "セットされたラベルに合わせる",
+    "Label adapted to the loaded labels": "ラベルをセットされたラベルに合わせました",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "ラベルをセットされたラベルに合わせました。一部の要素が端からはみ出しています。",
 }

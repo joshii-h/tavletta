@@ -31,6 +31,19 @@ background.
 - [[ui:content scaled down to fit]]: the content does not fit the label.
   Make the label longer or larger, use [[ui:Automatic length]] on tape, or
   shorten the content.
+- [[ui:Different labels loaded]] (die-cut labels): the printer reports
+  labels of another size, or measured another distance from one label to
+  the next than height plus [[ui:Gap]] of your label.
+  [[ui:Use loaded labels]] changes the label and prints nothing yet: it
+  takes the size the printer reports (Brother QL), or sets the height
+  along the roll so that height plus gap make the measured distance (cab,
+  Zebra). The gap and the width stay; a Zebra's print width is what the
+  last print set, not the width of the labels. Where that height would be
+  less than 5 mm, the gap is changed instead; where neither makes a
+  label, only [[ui:Print anyway]] is offered.
+- After [[ui:Use loaded labels]], check the label in the preview, then
+  print. [[ui:Undo]] in the message takes the change back; the message
+  says so if elements now reach beyond the edge of the label.
 
 ## Brother VC-500W { #vc500w }
 
@@ -203,7 +216,9 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
 - [[ui:Different labels loaded]]: the printer measured another distance
   between the labels than height plus gap of your label. Check
   [[ui:Label size]] and [[ui:Gap]], or load the right roll. Press Feed on
-  the printer once after changing the roll so it measures again.
+  the printer once after changing the roll so it measures again, then
+  [[ui:Use loaded labels]] adapts the label to it
+  ([All printers](#common)).
 - Everything printed a little too high or too low, the same on every
   label, while the preview shows it in its place: set
   [[ui:Print offset]]. A label laid out to make up for this in another
@@ -395,6 +410,11 @@ you have one, a report of what works and what does not helps a lot
   please report it with the printer model; the orientation was tried on a
   Zebra GX420d only.
 - Print too pale or too dark: change [[ui:Darkness]].
+- [[ui:Different labels loaded]] (Zebra ZPL): the printer reports the
+  distance it measured last, perhaps on an earlier roll. After changing
+  the roll, let it measure the labels again (most printers do that with a
+  long press on Feed) before you use [[ui:Use loaded labels]]
+  ([All printers](#common)).
 - The printer prints several blank labels or stops between labels: the
   [[ui:Label sensor]] does not match the roll, or the printer has to measure
   the labels again (most printers do that with a long press on Feed).

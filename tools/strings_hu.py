@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s, amennyivel a nyomat az előtolás irányában eltolódik, olyan nyomtatóhoz, amely a címke helye mellé nyomtat; pozitív érték lefelé tolja a tekercsre keresztben álló címkéken",
     "Found": "Megtalált",
     "All models": "Minden modell",
+    "Use loaded labels": "A betöltött címkék használata",
+    "Label adapted to the loaded labels": "A címke a betöltött címkékhez igazítva",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "A címke a betöltött címkékhez igazítva. Néhány elem túlnyúlik a szélén.",
 }

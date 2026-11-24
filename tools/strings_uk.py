@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s зміщення друку в напрямку подачі для принтера, який друкує повз місце етикетки; додатне значення зсуває його вниз на етикетках поперек рулону",
     "Found": "Знайдені",
     "All models": "Усі моделі",
+    "Use loaded labels": "Використати завантажені етикетки",
+    "Label adapted to the loaded labels": "Етикетку підлаштовано під завантажені етикетки",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Етикетку підлаштовано під завантажені етикетки. Деякі елементи виходять за її край.",
 }

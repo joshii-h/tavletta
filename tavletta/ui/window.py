@@ -99,6 +99,8 @@ class Window(Adw.ApplicationWindow):
         self.rendered_geometry: tuple | None = None
         self.expand_index = -1
         self.last_dialog = None
+        # a toast that undoes the last step (offer_undo()), while it is the last
+        self._undo_toast: Adw.Toast | None = None
         self._render_source = 0
         # each render request counts up; one done shows if it is newer than
         # what the preview shows and than _render_floor (a label, printer
@@ -346,6 +348,9 @@ class Window(Adw.ApplicationWindow):
         self.dirty = True
         if record:
             self.history.record(self.label, key)
+        if self._undo_toast is not None:  # its undo would take back this change
+            toast, self._undo_toast = self._undo_toast, None
+            toast.dismiss()
         self.editor.label_changed()
         self.update_history_actions()
         self.update_title()
@@ -976,6 +981,10 @@ class Window(Adw.ApplicationWindow):
     def offer(self, text: str, button: str, then) -> Adw.Toast:
         """A toast with an action the user may take."""
         return self._add_toast(text, 8, button, then)
+
+    def offer_undo(self, text: str) -> None:
+        """A toast that undoes the step just made, gone with the next change."""
+        self._undo_toast = self.offer(text, _("Undo"), self.undo)
 
     def error(self, text: str, details: str | None = None) -> None:
         """A toast for problems, with a button to report them; the details

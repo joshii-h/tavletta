@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 15:59+0100\n"
+"PO-Revision-Date: 2026-11-24 16:14+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: hu\n"
 "Language: hu\n"
@@ -360,8 +360,8 @@ msgstr "A kimenet nem írható"
 msgid "--output writes PNG images: give a name ending in .png"
 msgstr "a --output PNG-képeket ír: .png végű nevet adjon meg"
 
-#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:541
-#: tavletta/ui/printing.py:705 tavletta/server/service.py:1146
+#: tavletta/cli.py:692 tavletta/cli.py:901 tavletta/ui/printing.py:582
+#: tavletta/ui/printing.py:746 tavletta/server/service.py:1146
 #: tavletta/server/service.py:1169 tavletta/server/service.py:1471
 #: tavletta/server/service.py:1707
 msgid "The label cannot be prepared for printing."
@@ -393,7 +393,7 @@ msgstr "semmi sem lett kinyomtatva: a számláló következő értéke nem lenne
 msgid "Interrupted"
 msgstr "Megszakítva"
 
-#: tavletta/cli.py:952 tavletta/ui/printing.py:447
+#: tavletta/cli.py:952 tavletta/ui/printing.py:488
 #: tavletta/server/service.py:1192
 #, python-format
 msgid "At most %d labels in one print job"
@@ -408,7 +408,7 @@ msgstr "--print-method: ennek a nyomtatótípusnak nincs nyomtatási mód beáll
 msgid "--sheet and --rows need a data file (--data)"
 msgstr "A --sheet és a --rows adatfájlt igényel (--data)"
 
-#: tavletta/cli.py:1022 tavletta/ui/printing.py:574
+#: tavletta/cli.py:1022 tavletta/ui/printing.py:615
 #: tavletta/server/service.py:1004
 msgid "No rows to print"
 msgstr "Nincs nyomtatandó sor"
@@ -417,20 +417,20 @@ msgstr "Nincs nyomtatandó sor"
 msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "A címke a mappáján kívüli adatfájlt használ: adja meg a --data kapcsolóval"
 
-#: tavletta/cli.py:1059 tavletta/ui/window.py:917
+#: tavletta/cli.py:1059 tavletta/ui/window.py:922
 #: tavletta/server/service.py:1063
 #, python-format
 msgid "No such column: %s"
 msgstr "Ismeretlen oszlop: %s"
 
-#: tavletta/cli.py:1064 tavletta/ui/printing.py:654
+#: tavletta/cli.py:1064 tavletta/ui/printing.py:695
 msgid ""
 "The barcode or QR code of these rows cannot be made from their values, for "
 "example an EAN-13 with letters or an empty cell. Correct the data file and "
 "read it again, or print without these rows."
 msgstr "Ezeknek a soroknak a vonalkódja vagy QR-kódja nem hozható létre az értékeikből, például betűket tartalmazó EAN-13 vagy üres cella miatt. Javítsa az adatfájlt, és olvassa be újra, vagy nyomtasson ezen sorok nélkül."
 
-#: tavletta/cli.py:1069 tavletta/ui/printing.py:659
+#: tavletta/cli.py:1069 tavletta/ui/printing.py:700
 #, python-format
 msgid "Rows: %s"
 msgstr "Sorok: %s"
@@ -567,7 +567,7 @@ msgid "Elements removed: %d"
 msgstr "Eltávolított elemek: %d"
 
 #: tavletta/ui/editor.py:738 tavletta/ui/shortcuts.py:53
-#: tavletta/ui/window.py:185
+#: tavletta/ui/window.py:187 tavletta/ui/window.py:987
 msgid "Undo"
 msgstr "Visszavonás"
 
@@ -673,7 +673,7 @@ msgid "Add text, an image, a symbol or a code"
 msgstr "Adjon hozzá szöveget, képet, szimbólumot vagy kódot"
 
 #: tavletta/ui/elements.py:105 tavletta/ui/texts.py:287
-#: tavletta/ui/window.py:1031 tavletta/server/web/ui.js:66
+#: tavletta/ui/window.py:1040 tavletta/server/web/ui.js:66
 msgid "Text"
 msgstr "Szöveg"
 
@@ -836,7 +836,7 @@ msgstr "címke"
 msgid "Save label"
 msgstr "Címke mentése"
 
-#: tavletta/ui/files.py:233 tavletta/ui/window.py:208
+#: tavletta/ui/files.py:233 tavletta/ui/window.py:210
 msgid "Save as template…"
 msgstr "Mentés sablonként…"
 
@@ -849,7 +849,7 @@ msgstr "Mentve: %s"
 msgid "Export PNG"
 msgstr "Exportálás PNG-ként"
 
-#: tavletta/ui/files.py:276 tavletta/ui/window.py:942
+#: tavletta/ui/files.py:276 tavletta/ui/window.py:947
 msgid "The preview cannot be drawn"
 msgstr "Az előnézet nem rajzolható meg"
 
@@ -863,7 +863,7 @@ msgstr "Még nincsenek sablonok – használja a „Mentés sablonként…” le
 
 #: tavletta/ui/files.py:315 tavletta/ui/label_group.py:67
 #: tavletta/ui/shortcuts.py:46 tavletta/ui/window.py:82
-#: tavletta/ui/window.py:235
+#: tavletta/ui/window.py:237
 msgid "Label"
 msgstr "Címke"
 
@@ -1067,10 +1067,10 @@ msgid "Drag to choose the part of the image to keep"
 msgstr "Húzással válassza ki a kép megtartandó részét"
 
 #: tavletta/ui/image_crop.py:64 tavletta/ui/printer.py:377
-#: tavletta/ui/printing.py:413 tavletta/ui/printing.py:663
-#: tavletta/ui/sheets.py:206 tavletta/ui/sheets.py:365
-#: tavletta/ui/symbols.py:79 tavletta/ui/window.py:959
-#: tavletta/server/web/ui.js:220
+#: tavletta/ui/printing.py:187 tavletta/ui/printing.py:454
+#: tavletta/ui/printing.py:704 tavletta/ui/sheets.py:206
+#: tavletta/ui/sheets.py:365 tavletta/ui/symbols.py:79
+#: tavletta/ui/window.py:964 tavletta/server/web/ui.js:220
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1457,7 +1457,7 @@ msgstr "Sorozatszám"
 msgid "Probably made"
 msgstr "Valószínű gyártás"
 
-#: tavletta/ui/printer.py:625 tavletta/ui/printing.py:761
+#: tavletta/ui/printer.py:625 tavletta/ui/printing.py:802
 msgid "Close"
 msgstr "Bezárás"
 
@@ -1469,8 +1469,9 @@ msgstr "Ezt a címkeívet ez a verzió nem ismeri – válasszon másikat"
 msgid "The data file is still being read. Try again in a moment."
 msgstr "Az adatfájl beolvasása még tart. Próbálja újra egy pillanat múlva."
 
-#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:484
-#: tavletta/ui/printing.py:509 tavletta/server/web/ui.js:262
+#: tavletta/ui/printing.py:148 tavletta/ui/printing.py:188
+#: tavletta/ui/printing.py:525 tavletta/ui/printing.py:550
+#: tavletta/server/web/ui.js:262
 msgid "Print anyway"
 msgstr "Nyomtatás mégis"
 
@@ -1496,105 +1497,118 @@ msgid ""
 "inserted. The printer would scale it to the tape."
 msgstr "A címke szalagszélessége %(label)s, de a behelyezett kazettáé %(tape)s. A nyomtató a szalaghoz méretezné."
 
-#: tavletta/ui/printing.py:178
+#: tavletta/ui/printing.py:181
 msgid "Different labels loaded"
 msgstr "Más címkék vannak betöltve"
 
-#: tavletta/ui/printing.py:227
+#: tavletta/ui/printing.py:189
+msgid "Use loaded labels"
+msgstr "A betöltött címkék használata"
+
+#: tavletta/ui/printing.py:216
+msgid ""
+"Label adapted to the loaded labels. Some elements reach beyond its edge."
+msgstr "A címke a betöltött címkékhez igazítva. Néhány elem túlnyúlik a szélén."
+
+#: tavletta/ui/printing.py:218
+msgid "Label adapted to the loaded labels"
+msgstr "A címke a betöltött címkékhez igazítva"
+
+#: tavletta/ui/printing.py:268
 msgid "Labels"
 msgstr "Címkék"
 
-#: tavletta/ui/printing.py:239
+#: tavletta/ui/printing.py:280
 msgid "Print outlines"
 msgstr "Körvonalak nyomtatása"
 
-#: tavletta/ui/printing.py:239
+#: tavletta/ui/printing.py:280
 msgid "To test on plain paper"
 msgstr "Próbához sima papíron"
 
-#: tavletta/ui/printing.py:266
+#: tavletta/ui/printing.py:307
 #, python-format
 msgid "Sheets: %d"
 msgstr "Ívek: %d"
 
-#: tavletta/ui/printing.py:287 tavletta/server/web/batch.js:724
+#: tavletta/ui/printing.py:328 tavletta/server/web/batch.js:724
 msgid "Copies of each label"
 msgstr "Példányszám címkénként"
 
-#: tavletta/ui/printing.py:287 tavletta/server/web/print.js:150
+#: tavletta/ui/printing.py:328 tavletta/server/web/print.js:150
 msgid "Copies"
 msgstr "Példányszám"
 
-#: tavletta/ui/printing.py:298
+#: tavletta/ui/printing.py:339
 msgid "Cut"
 msgstr "Vágás"
 
-#: tavletta/ui/printing.py:304
+#: tavletta/ui/printing.py:345
 msgid "Colours"
 msgstr "Színek"
 
-#: tavletta/ui/printing.py:312
+#: tavletta/ui/printing.py:353
 msgid "Quality"
 msgstr "Minőség"
 
-#: tavletta/ui/printing.py:323
+#: tavletta/ui/printing.py:364
 msgid "From row"
 msgstr "Ettől a sortól"
 
-#: tavletta/ui/printing.py:324
+#: tavletta/ui/printing.py:365
 msgid "To row"
 msgstr "Eddig a sorig"
 
-#: tavletta/ui/printing.py:355
+#: tavletta/ui/printing.py:396
 msgid "Tape feed"
 msgstr "Szalagtovábbítás"
 
-#: tavletta/ui/printing.py:361
+#: tavletta/ui/printing.py:402
 #, python-format
 msgid "%(unit)s of blank tape before and after each label"
 msgstr "%(unit)s üres szalag minden címke előtt és után"
 
-#: tavletta/ui/printing.py:368
+#: tavletta/ui/printing.py:409
 msgid "Colour adjustment"
 msgstr "Színbeállítás"
 
-#: tavletta/ui/printing.py:371
+#: tavletta/ui/printing.py:412
 msgid "Reset"
 msgstr "Visszaállítás"
 
-#: tavletta/ui/printing.py:397
+#: tavletta/ui/printing.py:438
 msgid "Not adjusted"
 msgstr "Nincs módosítva"
 
-#: tavletta/ui/printing.py:397
+#: tavletta/ui/printing.py:438
 msgid "Adjusted"
 msgstr "Módosítva"
 
-#: tavletta/ui/printing.py:410
+#: tavletta/ui/printing.py:451
 msgid "Print serial labels"
 msgstr "Sorozatcímkék nyomtatása"
 
-#: tavletta/ui/printing.py:410
+#: tavletta/ui/printing.py:451
 msgid "Print label"
 msgstr "Címke nyomtatása"
 
-#: tavletta/ui/printing.py:414 tavletta/ui/printing.py:748
-#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:196
+#: tavletta/ui/printing.py:455 tavletta/ui/printing.py:789
+#: tavletta/ui/shortcuts.py:52 tavletta/ui/window.py:198
 #: tavletta/server/web/app.js:330 tavletta/server/web/batch.js:54
 #: tavletta/server/web/batch.js:118 tavletta/server/web/batch.js:877
 #: tavletta/server/web/print.js:151 tavletta/server/web/ui.js:62
 msgid "Print"
 msgstr "Nyomtatás"
 
-#: tavletta/ui/printing.py:481
+#: tavletta/ui/printing.py:522
 msgid "Codes may not scan"
 msgstr "Lehet, hogy a kódok nem olvashatók be"
 
-#: tavletta/ui/printing.py:501
+#: tavletta/ui/printing.py:542
 msgid "Labels in the printer's margin"
 msgstr "Címkék a nyomtató margójában"
 
-#: tavletta/ui/printing.py:503
+#: tavletta/ui/printing.py:544
 #, python-format
 msgid ""
 "The printer cannot print near the edges of the paper. The content of labels "
@@ -1602,63 +1616,63 @@ msgid ""
 "safety margin, or leave these positions out."
 msgstr "A nyomtató nem tud a papír széleihez közel nyomtatni. A következő címkék tartalma belelóg ebbe a margóba, és levágódna: %(positions)s. Növelje a biztonsági margót, vagy hagyja ki ezeket a pozíciókat."
 
-#: tavletta/ui/printing.py:521
+#: tavletta/ui/printing.py:562
 msgid "No printer yet – search for one or enter its address"
 msgstr "Még nincs nyomtató – keressen egyet, vagy adja meg a címét"
 
-#: tavletta/ui/printing.py:525
+#: tavletta/ui/printing.py:566
 msgid "Printing…"
 msgstr "Nyomtatás…"
 
-#: tavletta/ui/printing.py:593 tavletta/ui/printing.py:633
+#: tavletta/ui/printing.py:634 tavletta/ui/printing.py:674
 msgid "Printing serial labels"
 msgstr "Sorozatcímkék nyomtatása folyamatban"
 
-#: tavletta/ui/printing.py:594
+#: tavletta/ui/printing.py:635
 msgid "Stop"
 msgstr "Leállítás"
 
-#: tavletta/ui/printing.py:623
+#: tavletta/ui/printing.py:664
 msgid "Stopping after this label…"
 msgstr "Leállás ezután a címke után…"
 
-#: tavletta/ui/printing.py:630 tavletta/ui/printing.py:716
+#: tavletta/ui/printing.py:671 tavletta/ui/printing.py:757
 #, python-format
 msgid "Printing %(n)d/%(total)d…"
 msgstr "Nyomtatás: %(n)d/%(total)d…"
 
-#: tavletta/ui/printing.py:662
+#: tavletta/ui/printing.py:703
 msgid "Rows that cannot be printed"
 msgstr "Nem nyomtatható sorok"
 
-#: tavletta/ui/printing.py:665
+#: tavletta/ui/printing.py:706
 msgid "Print without these rows"
 msgstr "Nyomtatás ezen sorok nélkül"
 
-#: tavletta/ui/printing.py:690
+#: tavletta/ui/printing.py:731
 #, python-format
 msgid "Stopped after row %(row)d"
 msgstr "Leállítva a(z) %(row)d. sor után"
 
-#: tavletta/ui/printing.py:695
+#: tavletta/ui/printing.py:736
 #, python-format
 msgid "Printed row %(row)d"
 msgstr "A(z) %(row)d. sor kinyomtatva"
 
-#: tavletta/ui/printing.py:697
+#: tavletta/ui/printing.py:738
 #, python-format
 msgid "Printed rows %(first)d to %(last)d"
 msgstr "A(z) %(first)d–%(last)d. sor kinyomtatva"
 
-#: tavletta/ui/printing.py:756
+#: tavletta/ui/printing.py:797
 msgid "Printing failed"
 msgstr "A nyomtatás sikertelen"
 
-#: tavletta/ui/printing.py:757 tavletta/server/web/ui.js:125
+#: tavletta/ui/printing.py:798 tavletta/server/web/ui.js:125
 msgid "Details"
 msgstr "Részletek"
 
-#: tavletta/ui/printing.py:760 tavletta/ui/window.py:984
+#: tavletta/ui/printing.py:801 tavletta/ui/window.py:993
 msgid "Report"
 msgstr "Jelentés"
 
@@ -1771,23 +1785,23 @@ msgstr "Következő javaslat"
 msgid "Page"
 msgstr "Oldal"
 
-#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:205
+#: tavletta/ui/shortcuts.py:48 tavletta/ui/window.py:207
 msgid "New label"
 msgstr "Új címke"
 
-#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:167
+#: tavletta/ui/shortcuts.py:49 tavletta/ui/window.py:169
 msgid "Open"
 msgstr "Megnyitás"
 
-#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:180
+#: tavletta/ui/shortcuts.py:50 tavletta/ui/window.py:182
 msgid "Save"
 msgstr "Mentés"
 
-#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:207
+#: tavletta/ui/shortcuts.py:51 tavletta/ui/window.py:209
 msgid "Save as…"
 msgstr "Mentés másként…"
 
-#: tavletta/ui/shortcuts.py:54 tavletta/ui/window.py:186
+#: tavletta/ui/shortcuts.py:54 tavletta/ui/window.py:188
 msgid "Redo"
 msgstr "Újra"
 
@@ -1872,11 +1886,11 @@ msgstr "Húzás: illesztés nélkül"
 msgid "General"
 msgstr "Általános"
 
-#: tavletta/ui/shortcuts.py:101 tavletta/ui/window.py:213
+#: tavletta/ui/shortcuts.py:101 tavletta/ui/window.py:215
 msgid "Keyboard shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: tavletta/ui/shortcuts.py:102 tavletta/ui/window.py:214
+#: tavletta/ui/shortcuts.py:102 tavletta/ui/window.py:216
 msgid "Help"
 msgstr "Súgó"
 
@@ -3332,71 +3346,71 @@ msgstr "Következő szám"
 msgid "Step"
 msgstr "Lépésköz"
 
-#: tavletta/ui/window.py:174 tavletta/server/web/app.js:45
+#: tavletta/ui/window.py:176 tavletta/server/web/app.js:45
 #: tavletta/server/web/app.js:288
 msgid "Templates"
 msgstr "Sablonok"
 
-#: tavletta/ui/window.py:206
+#: tavletta/ui/window.py:208
 msgid "Shipping label…"
 msgstr "Szállítási címke…"
 
-#: tavletta/ui/window.py:209
+#: tavletta/ui/window.py:211
 msgid "Data for serial labels…"
 msgstr "Sorozatcímkék adatai…"
 
-#: tavletta/ui/window.py:210
+#: tavletta/ui/window.py:212
 msgid "Forget allowed data files"
 msgstr "Engedélyezett adatfájlok elfelejtése"
 
-#: tavletta/ui/window.py:211
+#: tavletta/ui/window.py:213
 msgid "Export PNG…"
 msgstr "Exportálás PNG-ként…"
 
-#: tavletta/ui/window.py:215
+#: tavletta/ui/window.py:217
 msgid "Report a problem…"
 msgstr "Probléma jelentése…"
 
-#: tavletta/ui/window.py:216
+#: tavletta/ui/window.py:218
 msgid "About Tavletta"
 msgstr "A Tavletta névjegye"
 
-#: tavletta/ui/window.py:738
+#: tavletta/ui/window.py:743
 msgid "Unsaved label"
 msgstr "Mentetlen címke"
 
-#: tavletta/ui/window.py:910
+#: tavletta/ui/window.py:915
 msgid "content scaled down to fit"
 msgstr "a tartalom kicsinyítve, hogy elférjen"
 
-#: tavletta/ui/window.py:914
+#: tavletta/ui/window.py:919
 #, python-format
 msgid "Problem: %s"
 msgstr "Probléma: %s"
 
-#: tavletta/ui/window.py:933
+#: tavletta/ui/window.py:938
 #, python-format
 msgid "Too long for this printer: at most %s"
 msgstr "Túl hosszú ehhez a nyomtatóhoz: legfeljebb %s"
 
-#: tavletta/ui/window.py:937
+#: tavletta/ui/window.py:942
 #, python-format
 msgid "Too wide for this printer: at most %s"
 msgstr "Túl széles ehhez a nyomtatóhoz: legfeljebb %s"
 
-#: tavletta/ui/window.py:1011
+#: tavletta/ui/window.py:1020
 msgid "The browser cannot be opened"
 msgstr "A böngésző nem nyitható meg"
 
-#: tavletta/ui/window.py:1013
+#: tavletta/ui/window.py:1022
 msgid "Copy link"
 msgstr "Hivatkozás másolása"
 
-#: tavletta/ui/window.py:1085
+#: tavletta/ui/window.py:1094
 msgid "Only local files can be dropped"
 msgstr "Csak helyi fájlok húzhatók ide"
 
-#: tavletta/ui/window.py:1138
+#: tavletta/ui/window.py:1147
 msgid "Please wait until printing has finished"
 msgstr "Várjon, amíg a nyomtatás befejeződik"
 

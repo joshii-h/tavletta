@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s ที่เลื่อนงานพิมพ์ตามทิศทางการป้อน สำหรับเครื่องพิมพ์ที่พิมพ์คลาดจากตำแหน่งของฉลาก ค่าบวกเลื่อนลงบนฉลากที่วางขวางม้วน",
     "Found": "ที่พบ",
     "All models": "ทุกรุ่น",
+    "Use loaded labels": "ใช้ฉลากที่ใส่อยู่",
+    "Label adapted to the loaded labels": "ปรับฉลากให้ตรงกับฉลากที่ใส่อยู่แล้ว",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "ปรับฉลากให้ตรงกับฉลากที่ใส่อยู่แล้ว บางองค์ประกอบล้นขอบฉลาก",
 }

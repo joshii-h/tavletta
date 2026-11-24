@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 15:59+0100\n"
+"POT-Creation-Date: 2026-11-24 16:14+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2650,6 +2650,41 @@ msgstr ""
 "Das Etikett länger oder grösser machen, auf Band [[ui:Automatic length]] "
 "verwenden oder den Inhalt kürzen."
 
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"[[ui:Different labels loaded]] (die-cut labels): the printer reports labels "
+"of another size, or measured another distance from one label to the next "
+"than height plus [[ui:Gap]] of your label.  [[ui:Use loaded labels]] changes "
+"the label and prints nothing yet: it takes the size the printer reports "
+"(Brother QL), or sets the height along the roll so that height plus gap make "
+"the measured distance (cab, Zebra). The gap and the width stay; a Zebra's "
+"print width is what the last print set, not the width of the labels. Where "
+"that height would be less than 5 mm, the gap is changed instead; where "
+"neither makes a label, only [[ui:Print anyway]] is offered."
+msgstr ""
+"[[ui:Different labels loaded]] (gestanzte Etiketten): Der Drucker meldet "
+"Etiketten einer anderen Grösse oder hat von einem Etikett zum nächsten einen "
+"anderen Abstand gemessen als Höhe plus [[ui:Gap]] des Etiketts. [[ui:Use "
+"loaded labels]] ändert das Etikett und druckt noch nichts: Es übernimmt die "
+"Grösse, die der Drucker meldet (Brother QL), oder setzt die Höhe entlang der "
+"Rolle so, dass Höhe plus Lücke den gemessenen Abstand ergeben (cab, Zebra). "
+"Lücke und Breite bleiben; die Druckbreite eines Zebra ist, was der letzte "
+"Druck eingestellt hat, nicht die Breite der Etiketten. Wäre diese Höhe "
+"kleiner als 5 mm, wird stattdessen die Lücke geändert; ergibt keines von "
+"beidem ein Etikett, wird nur [[ui:Print anyway]] angeboten."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"After [[ui:Use loaded labels]], check the label in the preview, then print. "
+"[[ui:Undo]] in the message takes the change back; the message says so if "
+"elements now reach beyond the edge of the label."
+msgstr ""
+"Nach [[ui:Use loaded labels]] das Etikett in der Vorschau prüfen, dann "
+"drucken. [[ui:Undo]] in der Meldung nimmt die Änderung zurück; die Meldung "
+"sagt es, wenn Elemente nun über den Rand des Etiketts hinausragen."
+
 #. type: Title ##
 #: docs/printer.md
 #, no-wrap
@@ -3207,12 +3242,15 @@ msgid ""
 "[[ui:Different labels loaded]]: the printer measured another distance "
 "between the labels than height plus gap of your label. Check [[ui:Label "
 "size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer "
-"once after changing the roll so it measures again."
+"once after changing the roll so it measures again, then [[ui:Use loaded "
+"labels]] adapts the label to it ([All printers](#common))."
 msgstr ""
 "[[ui:Different labels loaded]]: Der Drucker hat einen anderen Abstand "
 "zwischen den Etiketten gemessen als Höhe plus Lücke des Etiketts. [[ui:Label "
 "size]] und [[ui:Gap]] prüfen oder die richtige Rolle einlegen. Nach dem "
-"Rollenwechsel einmal Vorschub am Drucker drücken, damit er neu misst."
+"Rollenwechsel einmal Vorschub am Drucker drücken, damit er neu misst; danach "
+"passt [[ui:Use loaded labels]] das Etikett daran an ([Alle Drucker]"
+"(#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3893,6 +3931,20 @@ msgstr ""
 #: docs/printer.md
 msgid "Print too pale or too dark: change [[ui:Darkness]]."
 msgstr "Druck zu blass oder zu dunkel: [[ui:Darkness]] ändern."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"[[ui:Different labels loaded]] (Zebra ZPL): the printer reports the distance "
+"it measured last, perhaps on an earlier roll. After changing the roll, let "
+"it measure the labels again (most printers do that with a long press on "
+"Feed) before you use [[ui:Use loaded labels]] ([All printers](#common))."
+msgstr ""
+"[[ui:Different labels loaded]] (Zebra ZPL): Der Drucker meldet den Abstand, "
+"den er zuletzt gemessen hat, womöglich auf einer früheren Rolle. Nach dem "
+"Rollenwechsel die Etiketten neu ausmessen lassen (bei den meisten Druckern "
+"mit einem langen Druck auf Feed), bevor du [[ui:Use loaded labels]] "
+"verwendest ([Alle Drucker](#common))."
 
 #. type: Bullet: '- '
 #: docs/printer.md

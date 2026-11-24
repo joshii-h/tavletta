@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s de deslocamento da impressão no sentido do avanço, para uma impressora que não imprime no lugar da etiqueta; um valor positivo desloca-a para baixo nas etiquetas transversais ao rolo",
     "Found": "Encontradas",
     "All models": "Todos os modelos",
+    "Use loaded labels": "Usar as etiquetas carregadas",
+    "Label adapted to the loaded labels": "Etiqueta adaptada às etiquetas carregadas",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Etiqueta adaptada às etiquetas carregadas. Alguns elementos ultrapassam o rebordo.",
 }

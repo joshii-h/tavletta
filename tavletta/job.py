@@ -28,7 +28,7 @@ from tavletta.backends.base import (
     RenderAgain,
     check_codes,
 )
-from tavletta.model import Label, measured_differs
+from tavletta.model import MAX_GAP_MM, MAX_SIZE_MM, MIN_SIZE_MM, Label, measured_differs
 from tavletta.render import DEFAULT_SAFE_MM, Rendered, RenderWarning, mm_to_px, whole_tape
 from tavletta.sheets import Sheet
 from tavletta.sheets.layout import Copies, LabelSource, Pages, SheetJob, clip_preview
@@ -95,6 +95,9 @@ class OtherLabels:
     # the printer may have measured it on an earlier roll: calibrate it
     # (Backend.pitch_may_be_old)
     calibrate: bool = False
+    # the printer reports the loaded labels' size too, and it is the
+    # label's: the gap is what differs (fit_loaded())
+    size_reported: bool = False
 
 
 def other_labels(
@@ -124,8 +127,59 @@ def other_labels(
     if not loaded and not measured:
         return None
     return OtherLabels(
-        size, label.gap_mm, label.pitch_mm(), loaded, measured, backend.pitch_may_be_old
+        size,
+        label.gap_mm,
+        label.pitch_mm(),
+        loaded,
+        measured,
+        backend.pitch_may_be_old,
+        size_reported=bool(info.label_mm),
     )
+
+
+@dataclass(frozen=True)
+class LoadedFit:
+    """The label's size (Label.media_size(): width across the print head,
+    height along the feed) and gap made to fit the loaded labels."""
+
+    size_mm: tuple[float, float]
+    gap_mm: float
+
+
+def fit_loaded(backend: Backend, label: Label, other: OtherLabels) -> LoadedFit | None:
+    """The label made to fit the loaded labels (other_labels()), for the
+    window to offer: their size if the printer reports it (the gap kept);
+    from the distance measured the height along the feed, the gap kept, so
+    that height and gap make the distance; where that height is no label
+    the model allows (below MIN_SIZE_MM, too long for the printer), or the
+    printer reports the label's size, the gap, the height kept. The width
+    stays: no printer reports it reliably (ZPL's print width is what the
+    last job set). None if neither makes a label the model allows."""
+    if other.loaded_mm:
+        size = (float(other.loaded_mm[0]), float(other.loaded_mm[1]))
+        fit = LoadedFit(size, other.gap_mm)
+        return fit if _allowed(backend, fit) else None
+    if other.measured_mm is None:
+        return None
+    width, height = label.media_size()
+    measured = other.measured_mm
+    gap = LoadedFit((width, height), round(measured - height, 1))
+    if other.size_reported:  # the size is the label's: the gap differs
+        fits = [gap]
+    else:
+        fits = [LoadedFit((width, round(measured - other.gap_mm, 1)), other.gap_mm), gap]
+    return next((fit for fit in fits if _allowed(backend, fit)), None)
+
+
+def _allowed(backend: Backend, fit: LoadedFit) -> bool:
+    """A size and gap the label may have on this printer."""
+    caps = backend.capabilities
+    width, height = fit.size_mm
+    if not MIN_SIZE_MM <= width <= MAX_SIZE_MM or caps.too_wide(width):
+        return False
+    if not max(MIN_SIZE_MM, caps.min_length_mm) <= height <= MAX_SIZE_MM:
+        return False
+    return not caps.too_long(height) and 0 <= fit.gap_mm <= MAX_GAP_MM
 
 
 def labels_reported(backend: Backend, info: PrinterInfo, chosen: Mapping[str, object]) -> bool:

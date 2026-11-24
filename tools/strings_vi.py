@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s dịch bản in theo hướng nạp, cho máy in in lệch khỏi vị trí của nhãn; giá trị dương dịch xuống trên nhãn nằm ngang cuộn",
     "Found": "Đã tìm thấy",
     "All models": "Tất cả các mẫu",
+    "Use loaded labels": "Dùng nhãn đã lắp",
+    "Label adapted to the loaded labels": "Đã điều chỉnh nhãn theo nhãn đã lắp",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Đã điều chỉnh nhãn theo nhãn đã lắp. Một số thành phần vượt ra ngoài mép nhãn.",
 }

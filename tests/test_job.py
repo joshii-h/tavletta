@@ -435,6 +435,45 @@ def test_other_labels_by_their_size_first():
     assert other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {}) is None
 
 
+def test_fit_loaded_by_the_distance():
+    """The height along the feed from the distance, the gap kept; where
+    that is no label, the gap from it, the height kept; else nothing."""
+    from tavletta.backends import get_backend
+    from tavletta.job import LoadedFit, fit_loaded, other_labels
+
+    cab = get_backend("cab")
+    label = _die_cut("cab")  # 50 × 25 mm, 3 mm gap
+
+    def fit(pitch, gap=3.0):
+        label.gap_mm = gap
+        return fit_loaded(cab, label, other_labels(cab, label, _info(pitch_mm=pitch), {}))
+
+    assert fit(52.8) == LoadedFit((50, 49.8), 3.0)
+    assert fit(20.0) == LoadedFit((50, 17.0), 3.0)
+    assert fit(6.0) is None  # 3 mm of label, and less than the label's height
+    assert fit(28.0, gap=24.0) == LoadedFit((50, 25), 3.0)  # 4 mm of label: the gap
+    assert fit(1100.0) is None  # longer than any label
+
+
+def test_fit_loaded_by_the_size_reported():
+    from tavletta.backends import get_backend
+    from tavletta.job import LoadedFit, fit_loaded, other_labels
+
+    ql = get_backend("brother_ql_diecut")
+    label = _die_cut("brother_ql_diecut", 62, 29)
+    other = other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {})
+    assert fit_loaded(ql, label, other) == LoadedFit((29, 90), 3.0)
+    # the size is the label's, the distance not: the gap differs
+    label.set_media_size(29, 90)
+    label.gap_mm = 8.0
+    other = other_labels(ql, label, _info(label_mm=(29, 90), pitch_mm=93), {})
+    assert other is not None and other.size_reported
+    assert fit_loaded(ql, label, other) == LoadedFit((29, 90), 3.0)
+    # wider than the printer takes
+    other = other_labels(ql, label, _info(label_mm=(200, 90), pitch_mm=93), {})
+    assert fit_loaded(ql, label, other) is None
+
+
 @pytest.mark.parametrize(
     ("media", "reported", "warned"),
     [

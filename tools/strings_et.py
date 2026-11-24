@@ -1028,4 +1028,7 @@ TRANSLATIONS = {
     "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s, mille võrra prinditut etteande suunas nihutatakse, printerile, mis prindib sildi kohast mööda; positiivne väärtus nihutab seda rulliga risti olevatel siltidel allapoole",
     "Found": "Leitud",
     "All models": "Kõik mudelid",
+    "Use loaded labels": "Kasuta sisestatud silte",
+    "Label adapted to the loaded labels": "Silt kohandati sisestatud siltidele",
+    "Label adapted to the loaded labels. Some elements reach beyond its edge.": "Silt kohandati sisestatud siltidele. Mõni element ulatub üle sildi serva.",
 }
