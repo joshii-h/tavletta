@@ -19,6 +19,8 @@ from dataclasses import MISSING, asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
+from tavletta.readfile import FileTooLarge, NotRegularFile, read_limited
+
 # Version 1: every label. Version 2: the file lists "features" it needs; an
 # Tavletta that does not know one of them refuses the file ("newer") instead
 # of printing it wrongly. A file is written with version 2 only if it uses a
@@ -81,6 +83,9 @@ MAX_COUNTER_STEP = 10**6
 # a label file is read whole before it is parsed: refuse absurd sizes (the
 # json documentation advises a limit for data from untrusted sources)
 MAX_FILE_BYTES = 200 * 1024 * 1024
+# an image or PDF file a label embeds: in base64 it takes 4/3 of its size,
+# and the label file with it must stay within MAX_FILE_BYTES to open again
+MAX_EMBEDDED_BYTES = MAX_FILE_BYTES // 2
 # what a printer model decides about a label: kept per model when switching
 GEOMETRY_FIELDS = ("tape_mm", "auto_length", "length_mm", "orientation", "gap_mm", "sheet")
 MAX_SHEET_POSITIONS = 10000  # far more than any sheet has
@@ -213,8 +218,11 @@ class ImageElement(Placed):
 
     @classmethod
     def from_file(cls, path: str | Path) -> ImageElement:
+        """OSError if unreadable, LabelError if no regular file or too large
+        to embed (MAX_EMBEDDED_BYTES)."""
         path = Path(path)
-        return cls(data=base64.b64encode(path.read_bytes()).decode(), name=path.name)
+        raw = read_file(path, MAX_EMBEDDED_BYTES)
+        return cls(data=base64.b64encode(raw).decode(), name=path.name)
 
     def raw(self) -> bytes:
         return base64.b64decode(self.data)
@@ -303,11 +311,11 @@ class PageElement(Placed):
 
     @classmethod
     def from_file(cls, path: str | Path) -> PageElement:
-        """OSError if unreadable, LabelError if absurdly large."""
+        """OSError if unreadable, LabelError if no regular file or too large
+        to embed (MAX_EMBEDDED_BYTES)."""
         path = Path(path)
-        if path.stat().st_size > MAX_FILE_BYTES:
-            raise _damaged("file larger than %d MB" % (MAX_FILE_BYTES // 2**20))
-        return cls(data=base64.b64encode(path.read_bytes()).decode(), name=path.name)
+        raw = read_file(path, MAX_EMBEDDED_BYTES)
+        return cls(data=base64.b64encode(raw).decode(), name=path.name)
 
 
 SHAPES = ("line", "rectangle", "ellipse", "separator")
@@ -854,24 +862,18 @@ def resolved_data_path(data_file: str, directory: Path) -> str:
 # --- files ------------------------------------------------------------------
 
 
-def read_file(path: str | Path) -> bytes:
-    """The content of a label file, read only up to MAX_FILE_BYTES. Only a
-    regular file: a device like /dev/zero never ends, a FIFO would block
-    (opened without blocking to find out)."""
-    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+def read_file(path: str | Path, limit: int | None = None) -> bytes:
+    """The content of a label file (or, with its `limit`, of a file to
+    embed), read only up to MAX_FILE_BYTES or the limit (readfile.
+    read_limited). OSError if it cannot be read; LabelError: not a
+    regular file ("not_label", a device like /dev/zero never ends, a FIFO
+    would block), or larger than the limit ("damaged")."""
     try:
-        regular = stat.S_ISREG(os.fstat(fd).st_mode)
-    except BaseException:
-        os.close(fd)
-        raise
-    if not regular:  # also a folder: closed here, open() would leave it open
-        os.close(fd)
-        raise LabelError("not_label", "not a regular file")
-    with open(fd, "rb") as f:  # owns fd from here on
-        raw = f.read(MAX_FILE_BYTES + 1)
-    if len(raw) > MAX_FILE_BYTES:
-        raise _damaged("file larger than %d MB" % (MAX_FILE_BYTES // 2**20))
-    return raw
+        return read_limited(path, MAX_FILE_BYTES if limit is None else limit)
+    except NotRegularFile as e:
+        raise LabelError("not_label", str(e)) from None
+    except FileTooLarge as e:
+        raise _damaged(str(e)) from None
 
 
 def write_file(path: str | Path, data: bytes) -> None:

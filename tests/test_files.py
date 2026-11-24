@@ -3,6 +3,7 @@ links or losing permissions, read with a size limit, locked while printing."""
 
 from __future__ import annotations
 
+import base64
 import fcntl
 import json
 import os
@@ -12,7 +13,15 @@ import pytest
 from conftest import read_only
 
 from tavletta import model
-from tavletta.model import FORMAT_VERSION, CodeElement, Label, LabelError, TextElement
+from tavletta.model import (
+    FORMAT_VERSION,
+    CodeElement,
+    ImageElement,
+    Label,
+    LabelError,
+    PageElement,
+    TextElement,
+)
 
 
 def test_save_through_a_symbolic_link_replaces_the_file_it_points_to(tmp_path):
@@ -117,6 +126,45 @@ def test_reading_stops_at_the_size_limit(tmp_path, monkeypatch):
     with pytest.raises(LabelError) as e:
         Label.load(path)
     assert e.value.code == "damaged"
+
+
+@pytest.mark.parametrize("element", [ImageElement, PageElement])
+def test_a_file_to_embed_is_read_within_its_limit(tmp_path, monkeypatch, element):
+    """Embedded in base64 it takes 4/3: no larger than a label file can
+    hold and open again; and only a regular file, checked as opened."""
+    assert model.MAX_EMBEDDED_BYTES * 4 // 3 < model.MAX_FILE_BYTES
+    path = tmp_path / "file.png"
+    path.write_bytes(b"x" * 11)
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 11)
+    assert base64.b64decode(element.from_file(path).data) == b"x" * 11
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 10)
+    with pytest.raises(LabelError) as info:
+        element.from_file(path)
+    assert info.value.code == "damaged"
+    fifo = tmp_path / "fifo"
+    os.mkfifo(fifo)  # nobody writes: an open that waits would hang
+    with pytest.raises(LabelError) as info:
+        element.from_file(fifo)
+    assert info.value.code == "not_label"
+
+
+def test_a_data_file_is_checked_as_opened(tmp_path, monkeypatch):
+    """Not by its name before opening it: swapped for a FIFO in between,
+    the read would block."""
+    from tavletta import readfile
+    from tavletta.merge import MergeError, read_book
+
+    fifo = tmp_path / "rows.csv"
+    os.mkfifo(fifo)
+    with pytest.raises(MergeError) as info:
+        read_book(fifo)
+    assert info.value.code == "not_table"
+    opened = []
+    real = readfile.os.open
+    monkeypatch.setattr(readfile.os, "open", lambda *a: opened.append(a) or real(*a))
+    with pytest.raises(MergeError):
+        read_book(fifo)
+    assert opened and opened[0][1] & os.O_NONBLOCK
 
 
 @pytest.mark.parametrize("special", ["/dev/zero", "fifo", "dir"])

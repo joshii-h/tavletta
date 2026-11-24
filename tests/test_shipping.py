@@ -1323,9 +1323,10 @@ def test_page_element_from_file(tmp_path, monkeypatch):
     assert (element.name, base64.b64decode(element.data)) == ("label.pdf", b"%PDF-1.4")
     import tavletta.model as model
 
-    monkeypatch.setattr(model, "MAX_FILE_BYTES", 3)
-    with pytest.raises(LabelError):
+    monkeypatch.setattr(model, "MAX_EMBEDDED_BYTES", 3)
+    with pytest.raises(LabelError) as info:
         PageElement.from_file(path)
+    assert info.value.code == "damaged"
 
 
 def test_render_draws_the_area_at_the_label_size():
