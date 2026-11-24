@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} / {total} címke kinyomtatva.",
     "Took {seconds} s, finished at {time}.": "Időtartam: {seconds} mp, befejezve: {time}.",
     "Job number": "Feladatszám",
+    "Print offset": "Nyomtatási eltolás",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s, amennyivel a nyomat az előtolás irányában eltolódik, olyan nyomtatóhoz, amely a címke helye mellé nyomtat; pozitív érték lefelé tolja a tekercsre keresztben álló címkéken",
+    "Found": "Megtalált",
+    "All models": "Minden modell",
 }

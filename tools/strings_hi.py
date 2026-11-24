@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{total} में से {printed} लेबल प्रिंट हुए।",
     "Took {seconds} s, finished at {time}.": "{seconds} सेकंड लगे, {time} पर पूरा हुआ।",
     "Job number": "जॉब नंबर",
+    "Print offset": "प्रिंट ऑफ़सेट",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s जितना प्रिंट फ़ीड की दिशा में खिसकाया जाता है, उस प्रिंटर के लिए जो लेबल की जगह से हटकर प्रिंट करता है; धनात्मक मान रोल के आर-पार लगे लेबल पर इसे नीचे ले जाता है",
+    "Found": "मिले",
+    "All models": "सभी मॉडल",
 }

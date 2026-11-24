@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Wydrukowane etykiety: {printed} z {total}.",
     "Took {seconds} s, finished at {time}.": "Trwało {seconds} s, zakończono o {time}.",
     "Job number": "Numer zadania",
+    "Print offset": "Przesunięcie wydruku",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s przesunięcia wydruku w kierunku podawania, dla drukarki, która drukuje obok miejsca etykiety; wartość dodatnia przesuwa go w dół na etykietach w poprzek rolki",
+    "Found": "Znalezione",
+    "All models": "Wszystkie modele",
 }

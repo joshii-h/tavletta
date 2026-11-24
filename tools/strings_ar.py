@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "طُبع {printed} من {total} ملصق.",
     "Took {seconds} s, finished at {time}.": "استغرقت {seconds} ث، وانتهت في {time}.",
     "Job number": "رقم المهمة",
+    "Print offset": "إزاحة الطباعة",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s لإزاحة الطباعة في اتجاه التغذية، لطابعة تطبع خارج موضع الملصق؛ القيمة الموجبة تنقلها إلى الأسفل في الملصقات العرضية على اللفة",
+    "Found": "تم العثور عليها",
+    "All models": "كل الطرازات",
 }

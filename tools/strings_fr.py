@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} étiquettes imprimées sur {total}.",
     "Took {seconds} s, finished at {time}.": "Durée\xa0: {seconds} s, terminé à {time}.",
     "Job number": "Numéro de tâche",
+    "Print offset": "Décalage d’impression",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s de décalage de l’impression dans le sens d’avance, pour une imprimante qui n’imprime pas à la place de l’étiquette\u202f; une valeur positive la descend sur les étiquettes en travers du rouleau",
+    "Found": "Trouvées",
+    "All models": "Tous les modèles",
 }

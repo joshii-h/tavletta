@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Tarroja tulostettu {printed}/{total}.",
     "Took {seconds} s, finished at {time}.": "Kesti {seconds} s, valmis klo {time}.",
     "Job number": "Työn numero",
+    "Print offset": "Tulosteen siirto",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s, jonka verran tulostetta siirretään syöttösuunnassa tulostimelle, joka tulostaa tarran kohdan ohi; positiivinen arvo siirtää sitä alaspäin rullan poikki olevissa tarroissa",
+    "Found": "Löydetyt",
+    "All models": "Kaikki mallit",
 }

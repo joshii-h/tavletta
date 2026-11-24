@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{total} 枚中 {printed} 枚のラベルを印刷しました。",
     "Took {seconds} s, finished at {time}.": "所要時間 {seconds} 秒、{time} に完了しました。",
     "Job number": "ジョブ番号",
+    "Print offset": "印刷位置の補正",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "送り方向に印刷をずらす量 (%(unit)s)。ラベルの位置からずれて印刷するプリンター用で、正の値はロール横向きのラベルで下へずらします",
+    "Found": "見つかったプリンター",
+    "All models": "すべてのモデル",
 }

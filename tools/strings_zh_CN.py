@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "已打印 {printed} / {total} 张标签。",
     "Took {seconds} s, finished at {time}.": "耗时 {seconds} 秒，于 {time} 完成。",
     "Job number": "作业编号",
+    "Print offset": "打印偏移",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "打印沿进纸方向移动的距离（%(unit)s），用于打印偏离标签位置的打印机；正值会让横跨卷筒的标签上的打印下移",
+    "Found": "已找到",
+    "All models": "所有型号",
 }

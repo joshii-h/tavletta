@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 15:25+0100\n"
+"POT-Creation-Date: 2026-11-24 15:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1877,7 +1877,7 @@ msgstr ""
 #. type: Bullet: '1. '
 #: docs/index.md
 #, markdown-text
-msgid "Switch the printer on and choose it under [[ui:Printer model]]. Tavletta finds it in the network (Bonjour) and reads what is loaded: the tape width or the distance between the labels."
+msgid "Switch the printer on and choose it under [[ui:Printer model]]: a printer found on USB or in the network (Bonjour) is at the top of the list. Tavletta reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
 
 #. type: Bullet: '2. '
@@ -1907,7 +1907,7 @@ msgstr ""
 #. type: Plain text
 #: docs/printer.md
 #, markdown-text
-msgid "Choose the printer under [[ui:Printer model]]; each one has its own section below."
+msgid "Choose the printer under [[ui:Printer model]]; each one has its own section below. Printers Tavletta finds on USB and in the network come first in that list, under [[ui:Found]], with their model: choosing one takes its model and its address. The models follow under [[ui:All models]]. Tavletta looks for them when the window opens and with [[ui:Search for printers]], every model at the same time, in the background."
 msgstr ""
 
 #. type: Title ##
@@ -2304,6 +2304,12 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 #, markdown-text
+msgid "[[ui:Print offset]]: a printer that prints off the label's place (the print a little higher or lower on every label than the preview shows it) is made up for here: measure on a printed label how far the print lies off, and enter it, positive to move the print down on labels across the roll, negative to move it up. The preview keeps showing the label as it should come out; only what is sent to the printer moves. Content within this distance of the edge the print moves to is cut off."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+#, markdown-text
 msgid "Heat and tear-off position stay as set on the printer."
 msgstr ""
 
@@ -2317,6 +2323,12 @@ msgstr ""
 #: docs/printer.md
 #, markdown-text
 msgid "[[ui:Different labels loaded]]: the printer measured another distance between the labels than height plus gap of your label. Check [[ui:Label size]] and [[ui:Gap]], or load the right roll. Press Feed on the printer once after changing the roll so it measures again."
+msgstr ""
+
+#. type: Bullet: '- '
+#: docs/printer.md
+#, markdown-text
+msgid "Everything printed a little too high or too low, the same on every label, while the preview shows it in its place: set [[ui:Print offset]]. A label laid out to make up for this in another program prints off its place in the preview; move its content back into place and set the offset instead."
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4181,7 +4193,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 #, markdown-text
-msgid "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), `upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
+msgid "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), `upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] (−5 to 5); others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 
 #. type: Bullet: '- '

@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "라벨 {total}장 중 {printed}장 인쇄됨.",
     "Took {seconds} s, finished at {time}.": "{seconds}초 걸림, {time}에 완료됨.",
     "Job number": "작업 번호",
+    "Print offset": "인쇄 오프셋",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "급지 방향으로 인쇄를 옮기는 거리(%(unit)s). 라벨 위치에서 벗어나게 인쇄하는 프린터용이며, 양수 값은 롤을 가로지르는 라벨에서 아래로 옮깁니다",
+    "Found": "찾음",
+    "All models": "모든 모델",
 }

@@ -194,8 +194,8 @@ SQUIX 4 and MACH 4S, at 203, 300 or 600 dpi. Developed with an EOS2/300.
   it) is made up for here: measure on a printed label how far the print
   lies off, and enter it, positive to move the print down on labels
   across the roll, negative to move it up. The preview keeps showing the
-  label as it should come out; only what is sent to the printer moves.
-  Content within this distance of the edge the print moves to is cut off.
+  label as it should come out; only what is sent to the printer moves. Content
+  within this distance of the edge the print moves to is cut off.
 - Heat and tear-off position stay as set on the printer.
 
 ### Problems { #cab-problems }

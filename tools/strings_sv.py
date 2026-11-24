@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} av {total} etiketter utskrivna.",
     "Took {seconds} s, finished at {time}.": "Tog {seconds} s, klart {time}.",
     "Job number": "Jobbnummer",
+    "Print offset": "Utskriftsförskjutning",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s som utskriften flyttas i matningsriktningen, för en skrivare som skriver ut bredvid etikettens plats; positivt flyttar den nedåt på etiketter tvärs över rullen",
+    "Found": "Hittade",
+    "All models": "Alla modeller",
 }

@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Надруковано етикеток: {printed} із {total}.",
     "Took {seconds} s, finished at {time}.": "Тривало {seconds} с, завершено о {time}.",
     "Job number": "Номер завдання",
+    "Print offset": "Зміщення друку",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s зміщення друку в напрямку подачі для принтера, який друкує повз місце етикетки; додатне значення зсуває його вниз на етикетках поперек рулону",
+    "Found": "Знайдені",
+    "All models": "Усі моделі",
 }

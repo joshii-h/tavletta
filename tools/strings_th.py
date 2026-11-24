@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "พิมพ์ฉลากแล้ว {printed} จาก {total} ดวง",
     "Took {seconds} s, finished at {time}.": "ใช้เวลา {seconds} วินาที เสร็จเมื่อ {time}",
     "Job number": "หมายเลขงาน",
+    "Print offset": "ระยะเลื่อนการพิมพ์",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s ที่เลื่อนงานพิมพ์ตามทิศทางการป้อน สำหรับเครื่องพิมพ์ที่พิมพ์คลาดจากตำแหน่งของฉลาก ค่าบวกเลื่อนลงบนฉลากที่วางขวางม้วน",
+    "Found": "ที่พบ",
+    "All models": "ทุกรุ่น",
 }

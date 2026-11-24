@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 15:25+0100\n"
+"POT-Creation-Date: 2026-11-24 15:59+0100\n"
 "PO-Revision-Date: 2026-11-05 14:51+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2501,13 +2501,14 @@ msgstr "Erstes Etikett"
 #. type: Bullet: '1. '
 #: docs/index.md
 msgid ""
-"Switch the printer on and choose it under [[ui:Printer model]]. Tavletta "
-"finds it in the network (Bonjour) and reads what is loaded: the tape width "
-"or the distance between the labels."
+"Switch the printer on and choose it under [[ui:Printer model]]: a printer "
+"found on USB or in the network (Bonjour) is at the top of the list. Tavletta "
+"reads what is loaded: the tape width or the distance between the labels."
 msgstr ""
-"Drucker einschalten und unter [[ui:Printer model]] wählen. Tavletta findet "
-"ihn im Netzwerk (Bonjour) und liest aus, was eingelegt ist: die Bandbreite "
-"oder den Abstand der Etiketten."
+"Drucker einschalten und unter [[ui:Printer model]] wählen: ein Drucker, der "
+"an USB oder im Netzwerk (Bonjour) gefunden wurde, steht zuoberst in der "
+"Liste. Tavletta liest aus, was eingelegt ist: die Bandbreite oder den "
+"Abstand der Etiketten."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2544,10 +2545,18 @@ msgstr "Drucker und Fehlerbehebung"
 #: docs/printer.md
 msgid ""
 "Choose the printer under [[ui:Printer model]]; each one has its own section "
-"below."
+"below. Printers Tavletta finds on USB and in the network come first in that "
+"list, under [[ui:Found]], with their model: choosing one takes its model and "
+"its address. The models follow under [[ui:All models]]. Tavletta looks for "
+"them when the window opens and with [[ui:Search for printers]], every model "
+"at the same time, in the background."
 msgstr ""
 "Den Drucker unter [[ui:Printer model]] wählen; jeder hat unten einen eigenen "
-"Abschnitt."
+"Abschnitt. Drucker, die Tavletta an USB und im Netzwerk findet, stehen in "
+"dieser Liste zuerst, unter [[ui:Found]], mit ihrem Modell: wer einen wählt, "
+"übernimmt sein Modell und seine Adresse. Darunter folgen die Modelle unter "
+"[[ui:All models]]. Tavletta sucht sie, wenn das Fenster aufgeht, und mit "
+"[[ui:Search for printers]], alle Modelle gleichzeitig, im Hintergrund."
 
 #. type: Title ##
 #: docs/printer.md
@@ -3162,6 +3171,26 @@ msgstr ""
 
 #. type: Bullet: '- '
 #: docs/printer.md
+msgid ""
+"[[ui:Print offset]]: a printer that prints off the label's place (the print "
+"a little higher or lower on every label than the preview shows it) is made "
+"up for here: measure on a printed label how far the print lies off, and "
+"enter it, positive to move the print down on labels across the roll, "
+"negative to move it up. The preview keeps showing the label as it should "
+"come out; only what is sent to the printer moves. Content within this "
+"distance of the edge the print moves to is cut off."
+msgstr ""
+"[[ui:Print offset]]: ein Drucker, der neben die Stelle des Etiketts druckt "
+"(der Druck auf jedem Etikett etwas höher oder tiefer, als die Vorschau ihn "
+"zeigt), wird hier ausgeglichen: auf einem gedruckten Etikett messen, wie "
+"weit der Druck daneben liegt, und das eintragen, positiv, um den Druck bei "
+"Etiketten quer zur Rolle nach unten zu verschieben, negativ nach oben. Die "
+"Vorschau zeigt weiter das Etikett, wie es herauskommen soll; nur was an den "
+"Drucker geht, wird verschoben. Inhalt, der näher als diese Strecke am Rand "
+"liegt, zu dem der Druck verschoben wird, wird abgeschnitten."
+
+#. type: Bullet: '- '
+#: docs/printer.md
 msgid "Heat and tear-off position stay as set on the printer."
 msgstr ""
 "Heizstufe und Abreissposition bleiben, wie sie am Drucker eingestellt sind."
@@ -3184,6 +3213,20 @@ msgstr ""
 "zwischen den Etiketten gemessen als Höhe plus Lücke des Etiketts. [[ui:Label "
 "size]] und [[ui:Gap]] prüfen oder die richtige Rolle einlegen. Nach dem "
 "Rollenwechsel einmal Vorschub am Drucker drücken, damit er neu misst."
+
+#. type: Bullet: '- '
+#: docs/printer.md
+msgid ""
+"Everything printed a little too high or too low, the same on every label, "
+"while the preview shows it in its place: set [[ui:Print offset]]. A label "
+"laid out to make up for this in another program prints off its place in the "
+"preview; move its content back into place and set the offset instead."
+msgstr ""
+"Alles etwas zu hoch oder zu tief gedruckt, auf jedem Etikett gleich, während "
+"die Vorschau es an seinem Platz zeigt: [[ui:Print offset]] einstellen. Ein "
+"Etikett, das in einem anderen Programm so angelegt wurde, dass es das "
+"ausgleicht, liegt in der Vorschau daneben; seinen Inhalt zurück an seinen "
+"Platz schieben und stattdessen den Versatz einstellen."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -5783,15 +5826,16 @@ msgstr ""
 #: docs/server.md
 msgid ""
 "`method` is the [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` [[ui:Print upside down]]; others are `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` and `outlines`, see [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
-"server.md#printers)."
+"`upside_down` [[ui:Print upside down]], `offset_mm` the [[ui:Print offset]] "
+"(−5 to 5); others are `quality`, `chain`, `high_res`, `feed_mm`, `darkness`, "
+"`media` and `outlines`, see [docs/server.md](https://git.joshuahirsig.xyz/"
+"joshii/tavletta/src/branch/main/docs/server.md#printers)."
 msgstr ""
 "`method` ist die [[ui:Print method]] (`printer`, `transfer`, `direct`), "
-"`upside_down` [[ui:Print upside down]]; weitere sind `quality`, `chain`, "
-"`high_res`, `feed_mm`, `darkness`, `media` und `outlines`, siehe [docs/"
-"server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
+"`upside_down` [[ui:Print upside down]], `offset_mm` der [[ui:Print offset]] "
+"(−5 bis 5); weitere sind `quality`, `chain`, `high_res`, `feed_mm`, "
+"`darkness`, `media` und `outlines`, siehe [docs/server.md](https://"
+"git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/"
 "server.md#printers)."
 
 #. type: Bullet: '- '

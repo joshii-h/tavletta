@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{total} etiketten {printed} tanesi yazdırıldı.",
     "Took {seconds} s, finished at {time}.": "Süre: {seconds} sn, bitiş: {time}.",
     "Job number": "İş numarası",
+    "Print offset": "Baskı kayması",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "Baskının besleme yönünde kaydırıldığı %(unit)s, etiketin yerinin dışına basan bir yazıcı için; pozitif değer, rulonun enine yerleşen etiketlerde baskıyı aşağı kaydırır",
+    "Found": "Bulunanlar",
+    "All models": "Tüm modeller",
 }

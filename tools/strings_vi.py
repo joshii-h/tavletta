@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "Đã in {printed} trên {total} nhãn.",
     "Took {seconds} s, finished at {time}.": "Mất {seconds} giây, hoàn tất lúc {time}.",
     "Job number": "Số lệnh in",
+    "Print offset": "Độ lệch in",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s dịch bản in theo hướng nạp, cho máy in in lệch khỏi vị trí của nhãn; giá trị dương dịch xuống trên nhãn nằm ngang cuộn",
+    "Found": "Đã tìm thấy",
+    "All models": "Tất cả các mẫu",
 }

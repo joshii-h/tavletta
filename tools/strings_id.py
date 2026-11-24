@@ -1024,4 +1024,8 @@ TRANSLATIONS = {
     "{printed} of {total} labels printed.": "{printed} dari {total} label dicetak.",
     "Took {seconds} s, finished at {time}.": "Memakan waktu {seconds} dtk, selesai pukul {time}.",
     "Job number": "Nomor tugas",
+    "Print offset": "Pergeseran cetak",
+    "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll": "%(unit)s pergeseran cetakan searah umpan, untuk printer yang mencetak meleset dari tempat label; nilai positif menggesernya ke bawah pada label yang melintang gulungan",
+    "Found": "Ditemukan",
+    "All models": "Semua model",
 }
