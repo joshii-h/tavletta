@@ -1013,62 +1013,99 @@ def _wait_done(s: _Session, progress: ProgressCallback | None, tally: _Tally) ->
     without it once the printer is idle (ESC s may count each A on its
     own). The timeout restarts with every printed label. `tally` keeps
     what printed, also when the printer reports a problem."""
-    total = tally.total
-    started = False  # labels of the job seen pending
-    active = False  # the interpreter seen active since the job was sent
-    last = None
-    idle_since = None
-    deadline = _clock() + tally.allowance()
+    watch = _Watch(tally, progress, _clock() + tally.allowance())
     while True:
         status = s.status()
+        ended = watch.poll(status)
+        if ended is not None:
+            return ended
+        if _clock() > watch.deadline:
+            raise PrinterTimeout("printer stayed busy: %s" % status.raw)
+        _sleep(POLL_INTERVAL)
+
+
+@dataclass
+class _Watch:
+    """What _wait_done() saw of a job so far, one ESC s answer after the
+    other (poll())."""
+
+    tally: _Tally
+    progress: ProgressCallback | None
+    deadline: float  # stuck after this without a label seen printed
+    started: bool = False  # labels of the job seen pending
+    active: bool = False  # the interpreter seen active since the job was sent
+    last: int | None = None  # the labels printed at the last progress told
+    idle_since: float | None = None
+
+    def poll(self, status: Status) -> bool | None:
+        """The job's end after this answer: True if it ended with the
+        interpreter still active, False if idle; None while it runs. The
+        problem the printer reports is raised."""
+        tally = self.tally
         error = status_error(status)
         if error:
             tally.stopped = status
             raise error
         tally.seen(status.pending)
         counted = None if tally.whole_job else tally.counted()
-        if counted is not None and counted >= total:
+        if counted is not None and counted >= tally.total:
             # the counter counted every label: printed, also while the
             # interpreter is still active (its second after a job)
-            report_progress(progress, total, total)
-            return status.running
-        if tally.done != last:
-            last = tally.done
-            deadline = _clock() + tally.allowance()
-            report_progress(progress, min(total, tally.done + 1), total)
+            return self._finished(status.running)
+        self._progressed()
         if status.pending:
-            started, idle_since = True, None
-        elif status.running and started and tally.whole_job:
+            self.started, self.idle_since = True, None
+            return None
+        if status.running:
+            return self._running()
+        return self._idle(status, counted)
+
+    def _finished(self, running: bool) -> bool:
+        tally = self.tally
+        tally.done = tally.total
+        report_progress(self.progress, tally.total, tally.total)
+        return running
+
+    def _progressed(self) -> None:
+        """A label more printed: told, and the timeout starts again."""
+        tally = self.tally
+        if tally.done != self.last:
+            self.last = tally.done
+            self.deadline = _clock() + tally.allowance()
+            report_progress(self.progress, min(tally.total, tally.done + 1), tally.total)
+
+    def _running(self) -> bool | None:
+        """The interpreter active, no labels pending."""
+        if self.started and self.tally.whole_job:
             # counted down to 0: printed; the rest is the interpreter's
             # second of activity after a job (and a tear-off feed)
-            tally.done = total
-            report_progress(progress, total, total)
-            return True
-        elif status.running:
-            # the job's own: _wait_idle() saw the interpreter idle before
-            # it was sent. A job that printed between two polls shows only
-            # this (and the second of activity after it): done once the
-            # printer stayed idle for RUN_GRACE, not START_GRACE
-            active, idle_since = True, None
-        else:
-            idle_since = _clock() if idle_since is None else idle_since
-            idle = _clock() - idle_since
-            grace = RUN_GRACE if active else START_GRACE
-            # a series' job: idle at two polls in a row (not a moment
-            # between two of its A)
-            if (started and (tally.whole_job or idle >= RUN_GRACE)) or idle >= grace:
-                # all its labels printed; with the label counter a series'
-                # job only once that counted them all: short of it for
-                # SETTLE_SECONDS, the job ended early (the labels exact)
-                if counted is None:
-                    tally.done = total
-                    report_progress(progress, total, total)
-                    return False
-                if idle >= SETTLE_SECONDS:
-                    tally.stopped = status
-                    raise PrinterError(
-                        "the job ended after %d of %d labels (label counter)" % (counted, total)
-                    )
-        if _clock() > deadline:
-            raise PrinterTimeout("printer stayed busy: %s" % status.raw)
-        _sleep(POLL_INTERVAL)
+            return self._finished(True)
+        # the job's own: _wait_idle() saw the interpreter idle before it
+        # was sent. A job that printed between two polls shows only this
+        # (and the second of activity after it): done once the printer
+        # stayed idle for RUN_GRACE, not START_GRACE
+        self.active, self.idle_since = True, None
+        return None
+
+    def _idle(self, status: Status, counted: int | None) -> bool | None:
+        """The printer idle: the job's end once it stayed so long enough."""
+        tally = self.tally
+        if self.idle_since is None:
+            self.idle_since = _clock()
+        idle = _clock() - self.idle_since
+        grace = RUN_GRACE if self.active else START_GRACE
+        # a series' job: idle at two polls in a row (not a moment between
+        # two of its A)
+        if not (self.started and (tally.whole_job or idle >= RUN_GRACE)) and idle < grace:
+            return None
+        # all its labels printed; with the label counter a series' job only
+        # once that counted them all: short of it for SETTLE_SECONDS, the
+        # job ended early (the labels exact)
+        if counted is None:
+            return self._finished(False)
+        if idle >= SETTLE_SECONDS:
+            tally.stopped = status
+            raise PrinterError(
+                "the job ended after %d of %d labels (label counter)" % (counted, tally.total)
+            )
+        return None
