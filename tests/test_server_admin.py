@@ -426,3 +426,42 @@ def test_data_answers_no_more_cells_than_a_print_could_send(base, monkeypatch):
     status, _response, body = data(base, b"A;B\n1;2\n3;4\n")
     assert status == 413 and body["error"]["code"] == "too_large"
     assert data(base, b"A\n1\n2\n3\n")[0] == 200
+
+
+def test_data_answers_no_more_characters_than_it_may(base, monkeypatch):
+    """A long column name or cell in every row: a small file, a huge answer."""
+    monkeypatch.setattr(service_module, "MAX_DATA_CHARS", 1000)
+    status, _response, body = data(base, b"N" * 100 + b"\n" + b"1\n" * 20)
+    assert status == 413 and body["error"]["code"] == "too_large"
+    assert data(base, b"N\n" + b"1\n" * 20)[0] == 200
+
+
+@pytest.mark.parametrize("name", ["con", "NUL.x", "lpt1", "%F0%9D%94%84" * 70])
+def test_upload_names_a_file_system_refuses(base, server_env, name):
+    status, _response, body = put(base, name, label_json())
+    assert status == 400 and body["error"]["code"] == "invalid_field"
+
+
+def test_an_upload_is_found_by_the_name_it_was_given(base, server_env):
+    """Names are not normalised: what is uploaded is found by that name; a
+    combining mark (NFD) is no letter of its own, such a name is refused."""
+    composed = "K%C3%A4se"  # "Käse", NFC
+    assert put(base, composed, label_json())[0] == 201
+    assert call(base, "GET", "/api/v1/labels/" + composed, token=VIEWER)[0] == 200
+    assert call(base, "DELETE", "/api/v1/labels/" + composed, token=ADMIN)[0] == 204
+    assert put(base, "Ka%CC%88se", label_json())[0] == 400
+
+
+def test_a_label_another_program_prints_is_not_replaced(base, server_env, monkeypatch):
+    """The file lock of the window and the command line counts too."""
+    from tavletta.model import LockTimeout
+
+    monkeypatch.setattr(service_module, "LABEL_FREE_SECONDS", 0.2)
+
+    def held(*_args, **_kwargs):
+        raise LockTimeout("held")
+
+    monkeypatch.setattr(service_module, "locked", held)
+    status, _response, body = call(base, "DELETE", "/api/v1/labels/box", token=ADMIN)
+    assert status == 409 and body["error"]["code"] == "label_locked"
+    assert (server_env.labels / "box.tavletta").exists()

@@ -116,7 +116,7 @@ export async function printView(name, ctx) {
   done();
   if (!ctx.live()) return;
 
-  if (!drafts.has(name)) drafts.set(name, {});
+  if (!drafts.has(name)) drafts.set(name, Object.create(null));
   const draft = drafts.get(name);
   const pane = previewPane(label, t("Preview"));
   ctx.onDispose(() => pane.dispose());
@@ -170,7 +170,7 @@ export async function printView(name, ctx) {
     const request = { label: name };
     const printer = picker.value();
     if (printer) request.printer = printer;
-    const set = {};
+    const set = Object.create(null); // keys are names from the template
     for (const f of inputs) {
       if (f.kind === "variable" && f.input.value !== "") set[f.name] = f.input.value;
       if (f.kind === "element" && f.input.value !== f.original) set[f.name] = f.input.value;

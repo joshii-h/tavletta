@@ -168,3 +168,11 @@ test("a list of rows", () => {
   assert.equal(rowListText([0, 1, 2, 4, 6, 7]), "1-3, 5, 7-8");
   assert.equal(rowListText([]), "");
 });
+
+test("a column may be called __proto__", () => {
+  const checked = checkFields([{ column: "__proto__", ranges: [{ from: "1", to: "2" }] }]);
+  const row = generatedRow(checked.fields, 1, { constructor: "x" });
+  assert.deepEqual(Object.keys(row), ["constructor", "__proto__"]);
+  assert.equal(JSON.stringify(row), '{"constructor":"x","__proto__":"2"}');
+  assert.deepEqual(matchingRows([JSON.parse('{"__proto__": "2"}'), {}], checked.fields), [0]);
+});

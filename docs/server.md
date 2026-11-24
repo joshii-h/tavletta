@@ -442,13 +442,16 @@ only with `--allow-pdf-pages`) and of `--max-body`, then put in place in
 one step (a hard link, so a name taken meanwhile is not overwritten; a
 file system without hard links: the name is taken first). The name is
 one file in the folder itself: letters of any script, digits, spaces and
-`. _ - ( ) + ,`, up to 100 characters, not starting with a dot or a
-space; anything else (`..`, `/`, `\`, NUL) is 400. An existing label is
+`. _ - ( ) + ,`, up to 100 characters and 255 bytes, not starting with
+a dot or a space, taken as given (not normalised), no name Windows
+keeps for devices (`con`, `nul`, `com1` …); anything else (`..`, `/`,
+`\`, NUL) is 400. An existing label is
 replaced only with `?replace=true`, and only if it is a file (not a
 folder or link). `DELETE /api/v1/labels/{name}` removes a label file of
 the folder (links leading out of it are not found). Neither happens
-while a job of this server prints that label (409 `label_locked` after
-5 s): the job holds its counter. Both are logged with the token's name.
+while a job of this server, the window or the command line prints that
+label (its lock, and the file lock; 409 `label_locked` after 5 s): the
+job holds its counter. Both are logged with the token's name.
 
 The upload and `/data` are not MCP tools: an AI client fills in and
 prints the labels it is given; changing the labels everyone prints with
@@ -473,6 +476,9 @@ A client of MCP sends rows as `data_rows` itself.
 - The page sends `X-Tavletta-Request` and JSON with every request: the
   checks of the API against other web pages ([Security](#security))
   apply to it unchanged.
+- `/data` answers at most 500 000 cells and 16 MB of names and values
+  (413): a small file with a long cell or column name in every row would
+  otherwise make a huge answer.
 - The files are sent with an `ETag` and `Cache-Control: no-cache`: a
   browser asks again and gets 304 while they are unchanged, and the new
   files right after an update.

@@ -138,10 +138,11 @@ function valueAt(field, i) {
 }
 
 // The row at position i of generated values, with the fixed values.
+// (entries, not assignments: a column may be called "__proto__")
 export function generatedRow(checked, i, fixed = {}) {
-  const row = { ...fixed };
-  for (const field of checked) row[field.column] = valueAt(field, i);
-  return row;
+  const values = new Map(Object.entries(fixed));
+  for (const field of checked) values.set(field.column, valueAt(field, i));
+  return Object.fromEntries(values);
 }
 
 // Rows made of the ranges, from position `start` on (to continue a series),
@@ -159,7 +160,7 @@ export function generateRows(checked, fixed = {}, start = 0, limit = Infinity) {
 export function matchingRows(rows, checked) {
   const found = [];
   rows.forEach((row, index) => {
-    if (checked.every((f) => f.checked.some((r) => r.matches(row[f.column] ?? "")))) {
+    if (checked.every((f) => f.checked.some((r) => r.matches(Object.hasOwn(row, f.column) ? row[f.column] : "")))) {
       found.push(index);
     }
   });

@@ -63,12 +63,13 @@ function fresh() {
     pasted: "",
     pasteHeader: false,
     data: null, // POST /data
-    mapping: {}, // template column -> {column} or {fixed}
+    // keyed by names from files and templates: no prototype ("__proto__")
+    mapping: Object.create(null), // template column -> {column} or {fixed}
     mode: "all", // all, pick, ranges
     picked: new Set(),
-    ranges: {}, // template column -> [{from, to, step}]
-    fixed: {}, // template column -> value, numbers without a range
-    variables: {},
+    ranges: Object.create(null), // template column -> [{from, to, step}]
+    fixed: Object.create(null), // template column -> value, numbers without a range
+    variables: Object.create(null),
     copies: "1",
     printer: undefined,
     resume: null, // rows still to print after a job stopped
@@ -134,14 +135,15 @@ export async function batchView(name, ctx) {
 
   function mapped() {
     if (!st.data) return [];
-    return st.data.rows.map((row) => {
-      const out = {};
-      for (const column of columns) {
-        const how = st.mapping[column];
-        out[column] = how?.column !== undefined ? (row[how.column] ?? "") : (how?.fixed ?? "");
-      }
-      return out;
-    });
+    const cell = (row, name) => (Object.hasOwn(row, name) ? row[name] : "");
+    return st.data.rows.map((row) =>
+      Object.fromEntries(
+        columns.map((column) => {
+          const how = st.mapping[column];
+          return [column, how?.column !== undefined ? cell(row, how.column) : (how?.fixed ?? "")];
+        }),
+      ),
+    );
   }
 
   function rangeFields() {
@@ -353,7 +355,7 @@ export async function batchView(name, ctx) {
       throw new Error(errorText(error));
     }
     // a new file: assignments by equal names, nothing picked
-    st.mapping = {};
+    st.mapping = Object.create(null);
     for (const column of columns) {
       const same = st.data.columns.find((c) => c.toLowerCase() === column.toLowerCase());
       st.mapping[column] = same !== undefined ? { column: same } : st.data.columns.length === 1 && columns.length === 1 ? { column: st.data.columns[0] } : {};
@@ -384,7 +386,7 @@ export async function batchView(name, ctx) {
         null,
         h("caption", null, caption),
         h("thead", null, h("tr", null, h("th", { scope: "col" }, t("Row")), names.map((n) => h("th", { scope: "col" }, n)))),
-        h("tbody", null, rows.map((row, i) => h("tr", null, h("th", { scope: "row" }, num(first + i + 1)), names.map((n) => h("td", null, row[n] ?? ""))))),
+        h("tbody", null, rows.map((row, i) => h("tr", null, h("th", { scope: "row" }, num(first + i + 1)), names.map((n) => h("td", null, Object.hasOwn(row, n) ? row[n] : ""))))),
       ),
     );
   }
@@ -659,7 +661,7 @@ export async function batchView(name, ctx) {
                 }
                 next.focus();
               });
-              return h("tr", null, h("td", null, box), h("th", { scope: "row" }, num(index + 1)), names.map((n) => h("td", null, row[n] ?? "")));
+              return h("tr", null, h("td", null, box), h("th", { scope: "row" }, num(index + 1)), names.map((n) => h("td", null, Object.hasOwn(row, n) ? row[n] : "")));
             }),
           ),
         ),

@@ -13,7 +13,6 @@ from __future__ import annotations
 import os
 import re
 import stat
-import unicodedata
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
@@ -28,6 +27,8 @@ MAX_LISTED = 10_000  # files listed at most
 # the name of a label uploaded (PUT /labels/{name}): one file in the folder
 # itself, letters (of any script), digits, spaces and . _ - ( ) + , ; not
 # starting with a dot or a space, not ending with one
+MAX_FILE_NAME = 255  # bytes, in most file systems
+DEVICE = re.compile(r"(?i)(con|prn|aux|nul|com\d|lpt\d)(\..*)?\Z")
 NEW_NAME = re.compile(r"[^\W_](?:[\w .()+,-]{0,98}[\w)])?\Z")
 
 
@@ -51,9 +52,11 @@ class LabelsDir:
         file system and shell. 400 for any other name; the file may exist."""
         if not isinstance(name, str) or len(name) > MAX_NAME:
             raise invalid_field("name")
-        name = unicodedata.normalize("NFC", name)
         stem = name[: -len(LABEL_SUFFIX)] if name.endswith(LABEL_SUFFIX) else name
-        if not NEW_NAME.match(stem):
+        # as given (GET and DELETE find it by the same name), within the 255
+        # bytes of a file name, no name Windows keeps for devices
+        too_long = len((stem + LABEL_SUFFIX).encode()) > MAX_FILE_NAME
+        if not NEW_NAME.match(stem) or too_long or DEVICE.match(stem):
             raise invalid_field("name")
         return self.root / (stem + LABEL_SUFFIX)
 

@@ -135,6 +135,7 @@ LABEL_FREE_SECONDS = 5.0
 # cells of a data file read for the web page (POST /data): its rows come
 # back as JSON and go out again as data_rows, which --max-body limits
 MAX_DATA_CELLS = 500_000
+MAX_DATA_CHARS = 16 * 1024 * 1024  # of the answer's names and values together
 
 
 @dataclass
@@ -786,14 +787,17 @@ class Service:
         key = os.path.realpath(path)
         with self._found_lock:
             lock = self._label_locks.setdefault(key, threading.Lock())
+        busy = ApiError(
+            409, "label_locked", _("%s is still locked by another print – try again later") % shown
+        )
         if not lock.acquire(timeout=LABEL_FREE_SECONDS):
-            raise ApiError(
-                409,
-                "label_locked",
-                _("%s is still locked by another print – try again later") % shown,
-            )
+            raise busy
         try:
-            yield
+            # and the file lock: a print of the window or the command line
+            with locked(path, timeout=LABEL_FREE_SECONDS):
+                yield
+        except LockTimeout:
+            raise busy from None
         except OSError as e:
             raise _not_saved(e) from None
         finally:
@@ -823,9 +827,13 @@ class Service:
                 table = book.table if request.header else without_header(book.table)
         except MergeError as e:
             raise ApiError(422, "data_problem", data_error_text(e, name)) from None
-        # the rows go back as JSON: no more than a print request could send
+        # the rows go back as JSON: no more than a print request could send,
+        # counted in cells and in characters (a long cell or column name in
+        # every row: a small file, a huge answer)
         if len(table.rows) * max(1, len(table.columns)) > MAX_DATA_CELLS:
             raise ApiError(413, "too_large", _("Too many cells: at most %d") % MAX_DATA_CELLS)
+        if _answer_chars(table.rows) > MAX_DATA_CHARS:
+            raise ApiError(413, "too_large", _("The request is too large"))
         return {
             "kind": book.kind,
             "delimiter": table.delimiter or None,
@@ -1505,6 +1513,16 @@ def _geometry(label: Label, rendered, dpi: float, sheet: SheetJob | None) -> dic
     except ValueError:  # a backend whose render does not tell the boxes
         return None
     return dict(geometry.to_dict(), dpi=api_dpi(dpi))
+
+
+def _answer_chars(rows: list[dict[str, str]]) -> int:
+    """About the characters of rows as JSON: names and values, a few more each."""
+    total = 0
+    for row in rows:
+        total += sum(len(name) + len(value) + 6 for name, value in row.items())
+        if total > MAX_DATA_CHARS:  # enough to know
+            break
+    return total
 
 
 def _place(upload: Path, path: Path, shown: str, replace_it: bool) -> bool:

@@ -131,7 +131,7 @@ async function render() {
     batch: (ctx) => batchView(argument, ctx),
     job: (ctx) => jobView(argument, ctx),
   };
-  const show = views[view];
+  const show = Object.hasOwn(views, view) ? views[view] : null;
   if (!show || ((view === "print" || view === "batch" || view === "job") && !argument)) {
     location.replace("#/templates");
     return;
