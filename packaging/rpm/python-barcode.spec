@@ -49,8 +49,8 @@ sed -i '/--cov/d;/--no-cov-on-fail/d' setup.cfg
 # the wheel also has its docs/ and tests/ as top-level packages
 rm -rf %{buildroot}%{python3_sitelib}/{docs,tests}
 %pyproject_save_files -l barcode
-# the bundled DejaVu Sans Mono: the system's font instead
-ln -sf %{_datadir}/fonts/dejavu-sans-mono-fonts/DejaVuSansMono.ttf \
+# the bundled DejaVu Sans Mono: the system's font instead, by a relative link
+ln -srf %{buildroot}%{_datadir}/fonts/dejavu-sans-mono-fonts/DejaVuSansMono.ttf \
     %{buildroot}%{python3_sitelib}/barcode/fonts/DejaVuSansMono.ttf
 
 

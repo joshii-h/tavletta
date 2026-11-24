@@ -7,12 +7,14 @@
 %global commitdate 20261105
 
 Name:           python-labelprinter
-Version:        0.1.0^git%{commitdate}.%{shortcommit}
+# a snapshot after 0.1.0, as Fedora's guidelines write it
+Version:        0.1.0^%{commitdate}git%{shortcommit}
 Release:        1%{?dist}
 Summary:        Control the Brother VC-500W label printer
 
-# README: "AGPLv3"; no "or later" stated anywhere
-License:        AGPL-3.0-only
+# the source files' headers: "either version 3 of the License, or (at your
+# option) any later version" (the README just says "AGPLv3")
+License:        AGPL-3.0-or-later
 URL:            %{forgeurl}
 Source:         %{forgeurl}/archive/%{commit}/labelprinter-vc500w-%{shortcommit}.tar.gz
 
@@ -29,8 +31,6 @@ configuration and printing of images.}
 
 %package -n     python3-labelprinter
 Summary:        %{summary}
-# the print queue and the CUPS backend (label-queue*, vc500w-cups-backend)
-Suggests:       python3-cups
 
 %description -n python3-labelprinter %_description
 
@@ -51,6 +51,11 @@ sed -i '1{/^#!/d}' labelprinter/*.py labelprinter/test/*.py
 
 %install
 %pyproject_install
+# the library only, as in Debian: the command line tools (label-text, the
+# print queue, the CUPS backend) would take generic command names, and
+# Tavletta does not use them; nor the tests
+rm %{buildroot}%{_bindir}/{label-raw,label-text,label-queue,label-queue-setup,label-queue-worker,vc500w-cups-backend}
+rm -r %{buildroot}%{python3_sitelib}/labelprinter/test
 %pyproject_save_files -l labelprinter
 
 
@@ -62,14 +67,8 @@ sed -i '1{/^#!/d}' labelprinter/*.py labelprinter/test/*.py
 
 %files -n python3-labelprinter -f %{pyproject_files}
 %doc README.md
-%{_bindir}/label-raw
-%{_bindir}/label-text
-%{_bindir}/label-queue
-%{_bindir}/label-queue-setup
-%{_bindir}/label-queue-worker
-%{_bindir}/vc500w-cups-backend
 
 
 %changelog
-* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 0.1.0^git20261105.a6f2957-1
+* Tue Nov 17 2026 Joshua Hirsig <joshuahirsig@gmail.com> - 0.1.0^20261105gita6f2957-1
 - Initial package
