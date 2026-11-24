@@ -113,7 +113,9 @@ Markers: **[LPrint]** as LPrint sends it, **[spec]** from Zebra's manual,
   under the head, and they centre the `^PW` area with them: a label of the
   right size prints centred (seen on the GX420d with 75 mm labels). So
   Tavletta only shows it (printer details, the API's `width_mm`) and
-  warns about nothing. The print method is `~HS` frame 2 field q (1
+  warns about nothing; "Use loaded labels" in the window keeps the
+  label's width and fits only its height to LABEL LENGTH
+  (`job.fit_loaded()`). The print method is `~HS` frame 2 field q (1
   thermal transfer), or PRINT METHOD in `^HH`. SGD (`! U1 getvar`) would
   give the same values on printers that have it; not used yet.
 - Before a job Tavletta asks `~HS` (and `~HQES`) and stops if the printer
