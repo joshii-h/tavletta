@@ -26,6 +26,7 @@ from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
 from tavletta import freelayout
+from tavletta.history import History
 from tavletta.model import (
     MAX_SIZE_MM,
     CodeElement,
@@ -515,3 +516,70 @@ def _chosen(label: Label, indices: Collection[int]) -> list[int]:
 def _check_finite(*values: float) -> None:
     if not all(math.isfinite(v) for v in values):
         raise ValueError("not a finite number")
+
+
+# --- undo -----------------------------------------------------------------------
+
+
+class Editor:
+    """The label being edited and its undo: the window's History (copies
+    of the label after each step), shared, so undo goes back over the
+    sidebar's changes and the mouse's alike. An edit is a step of its own
+    (apply()); a drag shows labels without a step (show()) until it ends
+    (commit(), one step) or is called off (cancel()). A change made
+    elsewhere and recorded there is the editor's label from then on
+    (changed())."""
+
+    def __init__(self, label: Label, history: History | None = None):
+        self.history = history if history is not None else History(label)
+        self.label = label  # what is shown: the last step, or a drag's label
+        self._step = label  # the label of the last step
+
+    @property
+    def dragging(self) -> bool:
+        """Whether a label is shown that is no step yet."""
+        return self.label is not self._step
+
+    def show(self, label: Label) -> None:
+        """Show a label while dragging, without a step."""
+        self.label = label
+
+    def commit(self, key: str | None = None) -> bool:
+        """The label shown becomes a step (History.record(); key: what
+        changed, see there); False if it is the last step already."""
+        if not self.dragging:
+            return False
+        self.history.record(self.label, key)
+        self._step = self.label
+        return True
+
+    def apply(self, label: Label, key: str | None = None) -> bool:
+        """An edit's label as a step of its own; False if nothing changed
+        (the edit gave the label itself)."""
+        self.show(label)
+        return self.commit(key)
+
+    def cancel(self) -> Label:
+        """Back to the last step: the drag is called off."""
+        self.label = self._step
+        return self.label
+
+    def changed(self, label: Label) -> None:
+        """The label was changed and recorded elsewhere (the sidebar): the
+        editor's from now on; a drag still going on ends."""
+        self.label = self._step = label
+
+    def undo(self) -> Label | None:
+        """The label before the last step (a drag going on is called off
+        first), None if there is none."""
+        self.cancel()
+        return self._took(self.history.undo())
+
+    def redo(self) -> Label | None:
+        self.cancel()
+        return self._took(self.history.redo())
+
+    def _took(self, label: Label | None) -> Label | None:
+        if label is not None:
+            self.changed(label)
+        return label

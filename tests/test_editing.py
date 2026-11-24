@@ -15,6 +15,7 @@ from hypothesis import strategies as st
 
 from tavletta import editing, freelayout
 from tavletta.editing import ElementBox, Geometry
+from tavletta.history import History
 from tavletta.model import (
     CodeElement,
     ImageElement,
@@ -487,3 +488,89 @@ def test_a_resize_is_checked_as_a_file_is():
     assert (huge.elements[0].size_pt, huge.elements[0].frame_mm) == (300, 5)  # the largest
     with pytest.raises(ValueError):
         editing.resize(text, geometry, 0, (0, 0, math.inf, 1))
+
+
+# --- undo -----------------------------------------------------------------------------
+
+
+def _places(label: Label) -> list[tuple[float, float]]:
+    return [(e.x_mm, e.y_mm) for e in label.elements]
+
+
+def test_an_edit_is_one_step_and_undone_and_redone():
+    label = _three()
+    editor = editing.Editor(label)
+    assert editor.apply(editing.move(editor.label, [0], 1, 1))
+    assert editor.history.can_undo
+    assert _places(editor.undo()) == _places(label)
+    assert _places(editor.label) == _places(label)
+    assert editor.redo().elements[0].x_mm == 3
+    assert editor.undo() is not None and editor.undo() is None  # nothing more
+
+
+def test_an_edit_that_changes_nothing_is_no_step():
+    editor = editing.Editor(_three())
+    assert not editor.apply(editing.move(editor.label, [0], 0, 0))
+    assert not editor.history.can_undo
+
+
+def test_a_drag_is_one_step_when_it_ends():
+    label = _three()
+    editor = editing.Editor(label)
+    for step in range(1, 30):
+        editor.show(editing.move(label, [1], step / 10, 0))
+        assert editor.dragging
+    assert not editor.history.can_undo  # nothing recorded while dragging
+    assert editor.commit()
+    assert not editor.dragging and not editor.commit()
+    assert editor.label.elements[1].x_mm == 22.9
+    assert _places(editor.undo()) == _places(label)
+
+
+def test_a_drag_called_off_leaves_no_step():
+    label = _three()
+    editor = editing.Editor(label)
+    editor.show(editing.move(label, [1], 5, 0))
+    assert editor.cancel() is label
+    assert not editor.history.can_undo and not editor.dragging
+
+
+def test_undo_while_dragging_calls_the_drag_off_and_undoes_the_step_before():
+    label = _three()
+    editor = editing.Editor(label)
+    editor.apply(editing.move(label, [0], 1, 0))
+    editor.show(editing.move(editor.label, [0], 9, 0))
+    assert _places(editor.undo()) == _places(label)
+    assert not editor.dragging
+
+
+def test_the_window_history_shared_with_the_sidebar():
+    """The window keeps its History; the sidebar records into it as before,
+    the editor's steps go between them, and undo takes them back in turn."""
+    label = _three()
+    history = History(label)
+    editor = editing.Editor(label, history)
+    # the sidebar: a change in place, recorded (as Window.mark_changed does)
+    label.elements[2].text = "Changed"
+    history.record(label)
+    editor.changed(label)
+    editor.apply(editing.move(editor.label, [2], 2, 0))
+    assert editor.label.elements[2].text == "Changed"
+    first = editor.undo()
+    assert (first.elements[2].text, first.elements[2].x_mm) == ("Changed", 40)
+    second = editor.undo()
+    assert second.elements[2].text == "Tx"
+    assert editor.redo().elements[2].text == "Changed"
+
+
+def test_steps_join_by_their_key_as_typing_does():
+    """Nudges with the arrow keys can be one step, as typing is (History's key)."""
+    now = [0.0]
+    label = _three()
+    editor = editing.Editor(label, History(label, clock=lambda: now[0]))
+    for _ in range(5):
+        editor.apply(editing.move(editor.label, [0], 0.1, 0), key="nudge:0")
+        now[0] += 0.2
+    assert editor.label.elements[0].x_mm == 2.5
+    assert _places(editor.undo()) == _places(label)
+    assert not editor.history.can_undo
