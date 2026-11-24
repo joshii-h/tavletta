@@ -7,7 +7,9 @@ and places it on a die-cut label of the given size. The print method
 (thermal transfer with a ribbon, or thermal direct) is the printer's own
 setting unless the "method" setting chooses one for each job;
 "upside_down" turns the label by 180° (O R); "offset_mm" moves the print
-along the feed, for a printer that prints off the label's place; heat,
+along the feed, for a printer that prints off the label's place;
+"labels_per_job" is how many labels of a series go as one job, which the
+printer runs through without stopping between them; heat,
 backfeed and tear-off position stay as set on the printer. Status comes from the ESC
 commands, which the printer answers on the same connection; the setup of
 the web interface, if it answers, tells the print method and speed set on
@@ -20,7 +22,6 @@ import base64
 import http.client
 import io
 import json
-import os
 import re
 import socket
 import threading
@@ -36,6 +37,7 @@ from tavletta.backends.base import (
     Backend,
     Capabilities,
     Choice,
+    Count,
     Distance,
     FoundPrinter,
     HeadOpen,
@@ -88,15 +90,15 @@ RUN_GRACE = POLL_INTERVAL
 # for that
 TAIL_SECONDS = 2.0
 IMAGE_NAME = "TAVLETTA"  # at most 8 characters; each job replaces the previous image
-# a series as one job (print_batch()): its images TAV00001, TAV00002, … (8
-# characters), each job of a series using the same names again, so the RAM
-# holds at most SERIES_CHUNK of them; the labels after the first replace
-# the image of the one field (R). Only with TAVLETTA_CAB_SERIES_JOB=1: that
-# R replaces an image field's image is not in the manual (it names text
-# and barcode fields), to be confirmed on a printer (docs/cab.md)
+# a series as jobs of "labels_per_job" labels (print_batch()): their images
+# TAV00001, TAV00002, … (8 characters), each job of a series using the same
+# names again, so the RAM holds at most that many of them; the labels after
+# the first replace the image of the one field (R), confirmed on an
+# EOS2/300 (docs/cab.md). An image of a label is a few KB: 250 of 40 ×
+# 18.6 mm take about 0.5 MB of the printer's RAM
 SERIES_IMAGE = "TAV%05d"
-SERIES_CHUNK = 20
-SERIES_ENV = "TAVLETTA_CAB_SERIES_JOB"
+LABELS_PER_JOB = 250
+MAX_LABELS_PER_JOB = 1000
 CR = b"\r\n"
 ESC = b"\x1b"
 
@@ -409,8 +411,8 @@ def build_series_job(
     image put into that field (R) and printed. One job: the printer runs
     the labels through without the tear-off feed and backfeed between
     jobs."""
-    if not images or len(images) > SERIES_CHUNK:
-        raise ValueError("1 to %d images" % SERIES_CHUNK)
+    if not 0 < len(images) <= MAX_LABELS_PER_JOB:
+        raise ValueError("1 to %d images" % MAX_LABELS_PER_JOB)
     first = images[0]
     width = _size(first.width, dots_per_mm, size_mm[0] if size_mm else None)
     height = _size(first.height, dots_per_mm, size_mm[1] if size_mm else None)
@@ -542,6 +544,7 @@ class Cab(Backend):
             Choice("method", METHODS),
             Toggle("upside_down"),
             Distance("offset_mm", -MAX_OFFSET_MM, MAX_OFFSET_MM),
+            Count("labels_per_job", 1, MAX_LABELS_PER_JOB, LABELS_PER_JOB),
         ),
     )
 
@@ -641,8 +644,9 @@ class Cab(Backend):
         return self._print([image], host, options, progress)
 
     def series_batch(self, options: PrintOptions) -> int:
-        """A series as jobs of SERIES_CHUNK labels, with TAVLETTA_CAB_SERIES_JOB=1."""
-        return SERIES_CHUNK if os.environ.get(SERIES_ENV) == "1" else 0
+        """A series as jobs of "labels_per_job" labels (1: label by label)."""
+        labels = self.setting(options, "labels_per_job")  # a Count: always an int
+        return labels if isinstance(labels, int) else LABELS_PER_JOB
 
     def print_batch(
         self,

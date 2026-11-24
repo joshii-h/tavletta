@@ -63,6 +63,11 @@ def test_settings_are_read_for_the_model(tmp_path, server_env):
     printers = load_printers(write(tmp_path / "p.toml", CAB))
     settings = printers["lager-cab"].settings
     assert settings["method"] == "transfer" and settings["upside_down"] is True
+    assert "labels_per_job" not in settings  # left out: the model's default
+    for labels in (1, 1000):
+        text = '[printers.a]\nbackend = "cab"\nhost = "h"\n[printers.a.settings]\n'
+        found = load_printers(write(tmp_path / "c.toml", text + "labels_per_job = %d\n" % labels))
+        assert found["a"].settings["labels_per_job"] == labels
     ql = load_printers(
         write(
             tmp_path / "ql.toml",
@@ -94,6 +99,10 @@ def test_settings_are_read_for_the_model(tmp_path, server_env):
         ("chain = true", "settings.chain: unknown key"),
         ("darkness = 5", "settings.darkness: unknown key"),
         ("outlines = true", "settings.outlines: unknown key"),  # not a page printer
+        ("labels_per_job = 0", "settings.labels_per_job: expected a number from 1 to 1000"),
+        ("labels_per_job = 1001", "settings.labels_per_job: expected a number from 1 to 1000"),
+        ("labels_per_job = 2.5", "settings.labels_per_job: expected a number from 1 to 1000"),
+        ('labels_per_job = "250"', "settings.labels_per_job: expected a number"),
     ],
 )
 def test_settings_the_model_does_not_have_are_refused(tmp_path, server_env, settings, where):

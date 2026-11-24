@@ -17,6 +17,7 @@ from tavletta.backends import backends, find_all, get_backend  # noqa: E402
 from tavletta.backends.base import (  # noqa: E402
     Backend,
     Choice,
+    Count,
     Distance,
     FoundPrinter,
     PrinterInfo,
@@ -43,6 +44,7 @@ from tavletta.ui.widgets import (  # noqa: E402
     length_row,
     list_dialog,
     set_groups,
+    spin_row,
 )
 from tavletta.units import default_unit  # noqa: E402
 
@@ -262,6 +264,17 @@ class Printer:
                 lambda mm: self._on_setting(key, mm),
                 SETTING_HINTS.get(key),
                 digits=2,  # a dot of a 300 dpi head is 0.08 mm
+            )
+        if isinstance(setting, Count):
+            return spin_row(
+                setting_title(key),
+                setting.value(stored),
+                setting.lower,
+                setting.upper,
+                1,
+                0,
+                lambda v: self._on_setting(key, int(v)),
+                SETTING_HINTS.get(key),
             )
         level = setting.value(stored)
         values = sorted(set(setting.steps()) | ({level} if level is not None else set()))

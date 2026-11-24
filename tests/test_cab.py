@@ -19,6 +19,7 @@ from PIL import Image
 
 from tavletta.backends import cab, mdns, net, usb, zpl
 from tavletta.backends.base import (
+    Count,
     FoundPrinter,
     HeadOpen,
     LabelNotFound,
@@ -817,7 +818,7 @@ def _setup(**kwargs) -> bytes:
 
 
 def test_print_method_is_a_printer_setting(backend):
-    setting, upside_down, _offset = backend.settings(None)
+    setting, upside_down, _offset, _labels_per_job = backend.settings(None)
     assert setting.key == "method" and setting.choices == ("printer", "transfer", "direct")
     assert upside_down.key == "upside_down" and upside_down.value(None) is False
     # the default keeps the printer's own setting, as before the setting existed
@@ -1122,8 +1123,9 @@ def test_the_next_label_does_not_wait_for_the_interpreters_second(backend, print
 
 
 def test_a_series_stops_at_the_label_the_printer_fails(printer, monkeypatch):
-    """Out of labels at the third label: rows 1 and 2 printed, the error
-    names the third, nothing after it is sent."""
+    """Label by label ("labels_per_job" 1): out of labels at the third
+    label, rows 1 and 2 printed, the error names the third, nothing after
+    it is sent."""
     from tavletta.serial import Series, SeriesError, print_series
 
     def status(self):
@@ -1135,14 +1137,15 @@ def test_a_series_stops_at_the_label_the_printer_fails(printer, monkeypatch):
     monkeypatch.setattr(FakeCab, "status", status)
     label = _label(40, 18.6, elements=[TextElement(text="{Number}")])
     rows = [{"Number": str(n)} for n in range(70000, 70005)]
-    series = Series(label=label, rows=rows, indexes=list(range(5)), options=PrintOptions())
+    options = PrintOptions(settings={"labels_per_job": 1})
+    series = Series(label=label, rows=rows, indexes=list(range(5)), options=options)
     with pytest.raises(SeriesError) as failed:
         print_series(Cab(), "h", series)
     assert failed.value.outcome.printed == [1, 2] and failed.value.outcome.labels == 2
     assert len(printer.device.jobs) == 3 and printer.device.cancelled == 1
 
 
-# --- a series as one job (TAVLETTA_CAB_SERIES_JOB=1) --------------------------------------
+# --- a series as jobs of "labels_per_job" labels ----------------------------------------
 
 
 def _series_parts(job: bytes) -> tuple[list[tuple[str, Image.Image]], list[str]]:
@@ -1180,32 +1183,68 @@ def test_build_series_job():
         "A 2",
     ]
     with pytest.raises(ValueError):
-        cab.build_series_job(images * 7, 12.0, 1.4, 1)  # 21: more than SERIES_CHUNK
+        cab.build_series_job([], 12.0, 1.4, 1)
+    with pytest.raises(ValueError):  # more than MAX_LABELS_PER_JOB
+        cab.build_series_job(images[:1] * 1001, 12.0, 1.4, 1)
 
 
-def test_a_series_in_one_job_only_when_asked_for(monkeypatch):
-    monkeypatch.delenv(cab.SERIES_ENV, raising=False)
-    assert Cab().series_batch(PrintOptions()) == 0
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
-    assert Cab().series_batch(PrintOptions()) == cab.SERIES_CHUNK
+@pytest.mark.parametrize(
+    ("raw", "labels"),
+    [(None, 250), (1, 1), (3, 3), (1000, 1000), (0, 1), (5000, 1000), ("9", 250), (True, 250)]
+    + [(2.6, 3), (float("nan"), 250)],
+)
+def test_labels_per_job_is_a_setting_with_a_default(raw, labels):
+    """A series as jobs by default: 250 labels each, 1 to 1000; junk is the default."""
+    options = PrintOptions(settings={} if raw is None else {"labels_per_job": raw})
+    assert Cab().series_batch(options) == labels
+    assert Count("labels_per_job", 1, 1000, 250) in Cab.capabilities.settings
 
 
-def _series(n, copies=1, text="{Number}", **label):
+def _series(n, copies=1, text="{Number}", labels_per_job=None, **label):
     from tavletta.serial import Series
 
     lab = _label(40, 18.6, elements=[TextElement(text=text)], **label)
     rows = [{"Number": str(70000 + i)} for i in range(n)]
-    return Series(
-        label=lab, rows=rows, indexes=list(range(n)), options=PrintOptions(copies=copies)
-    )
+    settings = {} if labels_per_job is None else {"labels_per_job": labels_per_job}
+    options = PrintOptions(copies=copies, settings=settings)
+    return Series(label=lab, rows=rows, indexes=list(range(n)), options=options)
 
 
-def test_a_series_as_jobs_of_twenty_labels(printer, monkeypatch):
+def test_a_series_is_one_job_by_default(printer):
+    """Without a setting: up to 250 labels in one job, each its own image."""
     from tavletta.serial import print_series
 
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
+    outcome = print_series(Cab(), "h", _series(5))
+    assert outcome.printed == [1, 2, 3, 4, 5] and outcome.labels == 5
+    assert len(printer.device.jobs) == 1 and printer.device.printed() == 5
+    downloaded, commands = _series_parts(printer.device.jobs[0])
+    assert [name for name, _i in downloaded] == ["TAV%05d" % n for n in range(1, 6)]
+    assert commands.count("A 1") == 5 and len({i.tobytes() for _n, i in downloaded}) == 5
+
+
+@pytest.mark.parametrize(
+    ("labels_per_job", "rows", "jobs"),
+    [(1, 4, [1, 1, 1, 1]), (3, 7, [3, 3, 1]), (250, 251, [250, 1]), (250, 7, [7])],
+)
+def test_a_series_is_sent_in_jobs_of_labels_per_job(printer, labels_per_job, rows, jobs):
+    from tavletta.serial import print_series
+
+    outcome = print_series(Cab(), "h", _series(rows, labels_per_job=labels_per_job))
+    assert outcome.printed == list(range(1, rows + 1)) and outcome.labels == rows
+    assert printer.device.printed() == rows
+    if labels_per_job == 1:  # label by label: the job of a single label
+        assert all(job.startswith(b"d PNG;TAVLETTA\r\n") for job in printer.device.jobs)
+        assert len(printer.device.jobs) == rows
+    else:
+        assert [len(_series_parts(job)[0]) for job in printer.device.jobs] == jobs
+
+
+def test_a_series_as_jobs_of_twenty_labels(printer):
+    from tavletta.serial import print_series
+
     events = []
-    outcome = print_series(Cab(), "h", _series(45, text="{Number} {=counter}"), events.append)
+    series = _series(45, text="{Number} {=counter}", labels_per_job=20)
+    outcome = print_series(Cab(), "h", series, events.append)
     assert outcome.printed == list(range(1, 46)) and outcome.labels == 45
     assert len(printer.device.jobs) == 3 and printer.device.printed() == 45
     counts = [len(_series_parts(job)[0]) for job in printer.device.jobs]
@@ -1224,7 +1263,6 @@ def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
     printed, row 28 failed, nothing after it sent; the job cancelled."""
     from tavletta.serial import SeriesError, print_series
 
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
     real = FakeCab.status
 
     def status(self):
@@ -1234,7 +1272,7 @@ def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
 
     monkeypatch.setattr(FakeCab, "status", status)
     with pytest.raises(SeriesError) as failed:
-        print_series(Cab(), "h", _series(45))
+        print_series(Cab(), "h", _series(45, labels_per_job=20))
     error = failed.value
     assert error.row == 28 and error.printed == list(range(1, 28))
     assert error.outcome.labels == 27 and isinstance(error.error, OutOfLabels)
@@ -1244,7 +1282,6 @@ def test_a_series_job_that_fails_tells_the_rows_printed(printer, monkeypatch):
 def test_a_series_job_with_copies_counts_rows_by_their_copies(printer, monkeypatch):
     from tavletta.serial import SeriesError, print_series
 
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
     real = FakeCab.status
 
     def status(self):
@@ -1261,21 +1298,24 @@ def test_a_series_job_with_copies_counts_rows_by_their_copies(printer, monkeypat
     assert re.findall(rb"\nA (\d+)", printer.device.jobs[0]) == [b"2"] * 4
 
 
-def test_a_series_job_stops_between_jobs(printer, monkeypatch):
+@pytest.mark.parametrize("labels_per_job", [3, 20])
+def test_a_series_job_stops_between_jobs(printer, labels_per_job):
+    """Stop asked for during the first job: that job is printed in full,
+    nothing after it is sent."""
     from tavletta.serial import print_series
 
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
     stop = threading.Event()
-    outcome = print_series(Cab(), "h", _series(45), lambda _e: stop.set(), stop)
-    assert outcome.stopped and outcome.printed == list(range(1, 21))
-    assert len(printer.device.jobs) == 1
+    series = _series(45, labels_per_job=labels_per_job)
+    outcome = print_series(Cab(), "h", series, lambda _e: stop.set(), stop)
+    assert outcome.stopped and outcome.printed == list(range(1, labels_per_job + 1))
+    assert len(printer.device.jobs) == 1 and printer.device.printed() == labels_per_job
+
 
 
 def test_a_series_job_prints_the_rows_before_one_that_cannot_be_drawn(printer, monkeypatch):
     from tavletta.job import Job
     from tavletta.serial import SeriesError, print_series
 
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
     real = Job.image
 
     def image(self, label, reported=False):
@@ -1298,9 +1338,31 @@ def test_a_series_job_prints_the_rows_before_one_that_cannot_be_drawn(printer, m
     assert failed.value.printed == [1, 2, 3] and printer.device.printed() == 3
 
 
-def test_labels_varying_per_copy_are_printed_one_by_one(printer, monkeypatch):
+def test_labels_varying_per_copy_are_printed_one_by_one(printer):
     from tavletta.serial import print_series
 
-    monkeypatch.setenv(cab.SERIES_ENV, "1")
     print_series(Cab(), "h", _series(3, copies=2, text="{Number} {=copy}"))
-    assert len(printer.device.jobs) == 6  # one job per label, as without the setting
+    assert len(printer.device.jobs) == 6  # one job per label: each copy its own image
+    assert all(job.startswith(b"d PNG;TAVLETTA\r\n") for job in printer.device.jobs)
+
+
+@pytest.mark.gui
+def test_the_window_offers_labels_per_job_in_the_printer_group(make_window):
+    gi = pytest.importorskip("gi")
+    gi.require_version("Adw", "1")
+    from conftest import gtk_available
+    from gi.repository import Adw
+    from test_app import one
+
+    if not gtk_available():
+        pytest.skip("no display for GTK")
+    win = make_window({"printers": {"cab": {"host": "cab.local"}}})
+    win.set_label(_label(40, 18.6, elements=[TextElement(text="x")]), None)
+    win.rebuild_sidebar()
+    row = one(win.sidebar, Adw.SpinRow, title="Labels per job")
+    assert row.get_value() == 250 and "Stop" in row.get_subtitle()
+    assert row.get_adjustment().get_lower() == 1 and row.get_adjustment().get_upper() == 1000
+    row.set_value(20)
+    assert win.printer_settings.get("labels_per_job") == 20
+    assert Cab().series_batch(PrintOptions(settings=win.printer_settings.backend_settings())) == 20
+    assert not win.dirty  # a printer setting, not the label's

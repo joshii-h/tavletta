@@ -20,6 +20,7 @@ chooses a printer by name and nothing else can be printed on:
     method = "transfer"             # cab: print method (printer, transfer, direct)
     upside_down = true              # cab, ZPL, …: printed turned by 180 degrees
     offset_mm = 1.25                # cab: the print moved along the feed (docs/cab.md)
+    labels_per_job = 250            # cab: labels of a series sent as one job (1 to 1000)
 
 tokens.toml names the access tokens, with a role, never the token itself:
 
@@ -56,7 +57,7 @@ from pathlib import Path
 from typing import Any
 
 from tavletta.backends import get_backend
-from tavletta.backends.base import Backend, Choice, ColorAdjust, Distance, Level, Toggle
+from tavletta.backends.base import Backend, Choice, ColorAdjust, Count, Distance, Level, Toggle
 from tavletta.ui.i18n import _
 
 log = logging.getLogger(__name__)
@@ -259,16 +260,17 @@ def _settings(table: _Table, caps, host: str) -> dict[str, Any]:
 def _printer_settings(parent: _Table, backend: Backend, data: object) -> dict[str, Any]:
     """[printers.<name>.settings]: what the app keeps for the model besides
     the keys above, the same values (settings.json): the model's own
-    settings (print method, label sensor, darkness, print upside down …),
-    the quality, the extras (chain printing, high resolution, tape feed)
-    and the outlines on a label sheet. Only what the model has."""
+    settings (print method, label sensor, darkness, print upside down,
+    labels per job …), the quality, the extras (chain printing, high
+    resolution, tape feed) and the outlines on a label sheet. Only what
+    the model has."""
     table = _Table(parent.path, parent.where + ".settings", data)
     caps = backend.capabilities
     found: dict[str, Any] = {}
     for setting in caps.settings:
         if isinstance(setting, Choice):
             found[setting.key] = table.choice(setting.key, setting.choices)
-        elif isinstance(setting, Level):
+        elif isinstance(setting, (Level, Count)):
             found[setting.key] = table.number(setting.key, setting.lower, setting.upper, True)
         elif isinstance(setting, Distance):
             found[setting.key] = table.number(setting.key, setting.lower, setting.upper)

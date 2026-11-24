@@ -88,11 +88,15 @@ SETTING_TITLES = {
     "upside_down": _("Print upside down"),
     "method": _("Print method"),
     "offset_mm": _("Print offset"),
+    "labels_per_job": _("Labels per job"),
 }
-# what a Distance setting does, under its title; %(unit)s is the unit
+# what a setting does, under its title; for a Distance %(unit)s is the unit
 SETTING_HINTS = {
     "offset_mm": _(
         "%(unit)s the print is moved along the feed, for a printer that prints off the label's place; positive moves it down on labels across the roll"
+    ),
+    "labels_per_job": _(
+        "Labels of a series sent to the printer as one job, which it prints without stopping between them. Stop and cancel take effect between jobs: a job that has started is printed in full. Lower it if the printer runs out of memory."
     ),
 }
 # their values by protocol name; resolutions are shown as "203 dpi"

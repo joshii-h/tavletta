@@ -277,7 +277,24 @@ class Distance:
         return max(self.lower, min(self.upper, number))
 
 
-Setting = Choice | Level | Toggle | Distance
+@dataclass(frozen=True)
+class Count:
+    """A printer setting that is a whole number with a default of its own,
+    e.g. how many labels go to the printer as one job. The window offers
+    every value of the range."""
+
+    key: str
+    lower: int
+    upper: int
+    default: int
+
+    def value(self, raw: object) -> int:
+        """A stored value, clamped to the range; junk is the default."""
+        number = Level(self.key, self.lower, self.upper).value(raw)
+        return self.default if number is None else number
+
+
+Setting = Choice | Level | Toggle | Distance | Count
 
 
 def shift_along(image: Image.Image, mm: float, dots_per_mm: float) -> Image.Image:
