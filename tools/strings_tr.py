@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "%s için bekleyen veya yazdırılan yazdırma işleri var – bittiklerinde yeniden deneyin",
     "Reading the file takes too long – send a smaller one": "Dosyayı okumak çok uzun sürüyor – daha küçük bir dosya gönderin",
     "The label could not be deleted from the labels folder": "Etiket, etiketler klasöründen silinemedi",
+    "%s was changed while the request was checked – send it again": "%s, istek denetlenirken değiştirildi – yeniden gönderin",
 }

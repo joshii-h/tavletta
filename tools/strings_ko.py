@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "%s의 인쇄 작업이 대기 중이거나 인쇄 중입니다 – 완료된 후 다시 시도하십시오",
     "Reading the file takes too long – send a smaller one": "파일을 읽는 데 너무 오래 걸립니다 – 더 작은 파일을 보내십시오",
     "The label could not be deleted from the labels folder": "라벨 폴더에서 라벨을 삭제할 수 없습니다",
+    "%s was changed while the request was checked – send it again": "요청을 확인하는 동안 %s이(가) 변경되었습니다 – 다시 보내십시오",
 }

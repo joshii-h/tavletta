@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "%s の印刷ジョブが待機中または印刷中です – 完了してからもう一度お試しください",
     "Reading the file takes too long – send a smaller one": "ファイルの読み込みに時間がかかりすぎます – もっと小さいファイルを送ってください",
     "The label could not be deleted from the labels folder": "ラベルをラベルフォルダーから削除できませんでした",
+    "%s was changed while the request was checked – send it again": "リクエストの確認中に %s が変更されました – もう一度送信してください",
 }

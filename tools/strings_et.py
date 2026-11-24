@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "%s jaoks on prinditöid ootel või printimisel – proovi uuesti, kui need on valmis",
     "Reading the file takes too long – send a smaller one": "Faili lugemine võtab liiga kaua aega – saada väiksem fail",
     "The label could not be deleted from the labels folder": "Silti ei õnnestunud siltide kaustast kustutada",
+    "%s was changed while the request was checked – send it again": "%s muutus päringu kontrollimise ajal – saada see uuesti",
 }

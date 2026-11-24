@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "A(z) %s nyomtatási feladatai várakoznak vagy nyomtatás alatt vannak – próbálja újra, ha elkészültek",
     "Reading the file takes too long – send a smaller one": "A fájl beolvasása túl sokáig tart – küldjön kisebbet",
     "The label could not be deleted from the labels folder": "A címkét nem sikerült törölni a címkemappából",
+    "%s was changed while the request was checked – send it again": "A(z) %s megváltozott a kérés ellenőrzése közben – küldje el újra",
 }

@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "%s 有正在等待或正在列印的列印工作，請在完成後再試一次",
     "Reading the file takes too long – send a smaller one": "讀取檔案耗時過久，請傳送較小的檔案",
     "The label could not be deleted from the labels folder": "無法從標籤資料夾中刪除標籤",
+    "%s was changed while the request was checked – send it again": "檢查要求期間 %s 已被變更，請重新傳送",
 }

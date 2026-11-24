@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "Kohteella %s on odottavia tai tulostuvia tulostustöitä – yritä uudelleen, kun ne ovat valmiita",
     "Reading the file takes too long – send a smaller one": "Tiedoston lukeminen kestää liian kauan – lähetä pienempi tiedosto",
     "The label could not be deleted from the labels folder": "Tarraa ei voitu poistaa tarrakansiosta",
+    "%s was changed while the request was checked – send it again": "%s muuttui pyyntöä tarkistettaessa – lähetä se uudelleen",
 }

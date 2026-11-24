@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "Для %s есть задания печати в очереди или в работе – повторите попытку, когда они завершатся",
     "Reading the file takes too long – send a smaller one": "Чтение файла занимает слишком много времени – отправьте файл поменьше",
     "The label could not be deleted from the labels folder": "Не удалось удалить этикетку из папки этикеток",
+    "%s was changed while the request was checked – send it again": "%s изменён во время проверки запроса – отправьте его снова",
 }

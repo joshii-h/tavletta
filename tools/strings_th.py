@@ -1066,4 +1066,5 @@ TRANSLATIONS = {
     "%s has print jobs waiting or printing – try again when they are done": "%s มีงานพิมพ์ที่รออยู่หรือกำลังพิมพ์ – โปรดลองอีกครั้งเมื่องานเสร็จแล้ว",
     "Reading the file takes too long – send a smaller one": "การอ่านไฟล์ใช้เวลานานเกินไป – โปรดส่งไฟล์ที่เล็กลง",
     "The label could not be deleted from the labels folder": "ลบฉลากออกจากโฟลเดอร์ฉลากไม่ได้",
+    "%s was changed while the request was checked – send it again": "%s ถูกเปลี่ยนระหว่างตรวจสอบคำขอ – โปรดส่งใหม่อีกครั้ง",
 }
