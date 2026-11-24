@@ -9,6 +9,7 @@
 # not root) with a throwaway token and a printers.toml whose printer is never
 # reached, then checks: /api/v1/health answers, a request without the token
 # is refused, a preview of docs/examples/shelf.tavletta comes back as a PNG,
+# the web page is served without a token and with its Content-Security-Policy,
 # and Docker's healthcheck reports the container healthy.
 # EXPECT_VERSION=1.2.0 also checks the version the server reports.
 set -eu
@@ -94,6 +95,13 @@ curl -fsS -H "Authorization: Bearer $TAVLETTA_TOKEN" -H 'Content-Type: applicati
 magic="$(head -c 8 "$WORK/preview.png" | od -An -tx1 | tr -d ' \n')"
 [ "$magic" = 89504e470d0a1a0a ] || fail "the preview is not a PNG"
 echo "preview: PNG, $(wc -c < "$WORK/preview.png") bytes"
+
+page="http://127.0.0.1:$port"
+curl -fsS -D "$WORK/headers" -o "$WORK/index.html" "$page/" || fail "no web page at /"
+grep -qi "^content-security-policy: default-src 'none'" "$WORK/headers" || fail "the web page has no CSP"
+grep -q 'src="/ui/app.js"' "$WORK/index.html" || fail "the web page is not Tavletta's"
+curl -fsS -o /dev/null "$page/ui/app.js" || fail "the web page's script is missing"
+echo "web page: served"
 
 i=0
 until [ "$(docker inspect -f '{{.State.Health.Status}}' "$NAME")" = healthy ]; do

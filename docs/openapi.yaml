@@ -1272,7 +1272,8 @@ paths:
           x-tavletta-codes:
           - length_required
         '413':
-          description: Over --max-body (the file in base64), or over the limits of data files
+          description: Over --max-body (the file in base64), over the limits of data files, or more than
+            500000 cells (rows times columns)
           content:
             application/json:
               schema:

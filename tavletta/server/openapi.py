@@ -1062,7 +1062,8 @@ def _data_paths() -> dict:
                     "200": _json(_ref("Data"), "The rows"),
                     "400": _error("Invalid request", "invalid_field", "unknown_field", "not_json"),
                     "413": _error(
-                        "Over --max-body (the file in base64), or over the limits of data files",
+                        "Over --max-body (the file in base64), over the limits of data files, "
+                        "or more than 500000 cells (rows times columns)",
                         "too_large",
                     ),
                     "422": _error("Not a table, damaged or empty", "data_problem"),

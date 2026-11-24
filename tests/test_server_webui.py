@@ -173,3 +173,13 @@ def test_the_texts_are_translated(monkeypatch, tmp_path):
         i18n.translation_for.cache_clear()
         webui.languages.cache_clear()
         webui._messages.cache_clear()
+
+
+def test_the_icon_is_the_apps():
+    """web/icon.svg is the app's own 32 px drawing (a copy: the package
+    data cannot reach data/)."""
+    from pathlib import Path
+
+    root = Path(webui.__file__).parents[2]
+    drawing = root / "data" / "icons" / "tavletta-32.svg"
+    assert (webui.WEB_DIR / "icon.svg").read_bytes() == drawing.read_bytes()
