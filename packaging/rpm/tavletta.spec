@@ -72,6 +72,8 @@ system service is in tavletta-server.
 %package        server
 Summary:        Print server of the Tavletta label designer, as a system service
 Requires:       %{name} = %{version}-%{release}
+# signing in to the web page with OpenID Connect (--oidc): the extra "oidc"
+Requires:       python3-jwt+crypto
 %{?systemd_requires}
 
 %description    server
@@ -91,7 +93,8 @@ grep -q '"labelprinter"' pyproject.toml
 
 
 %generate_buildrequires
-%pyproject_buildrequires
+# the extra "oidc" (PyJWT with cryptography) too: its tests run
+%pyproject_buildrequires -x oidc
 
 
 %build
