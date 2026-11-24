@@ -177,8 +177,8 @@ msgid ""
 "after the label is rendered, and one that does not answer by then gives no "
 "such warning."
 msgstr ""
-"`warnings` 内の `other_labels_loaded`: プリンターにラベルと異なるラベルが装填されています "
-"(サイズが異なる、または測定されたラベル間隔が異なる)。適合するロールを装填するか、ラベルのサイズと間隔を確認してください。プリンターの最新の応答は、直近1分以内のものであれば採用されます"
+"`warnings` 内の `other_labels_loaded`: プリンターにラベルと異なるラベルがセットされています "
+"(サイズが異なる、または測定されたラベル間隔が異なる)。適合するロールをセットするか、ラベルのサイズと間隔を確認してください。プリンターの最新の応答は、直近1分以内のものであれば採用されます"
 " "
 "(エラーの後は何も分かりません)。サーバーがまだ何も把握していないプリンターについては、ラベルのレンダリング後に最大1秒待ち、その間に応答しないプリンターについてはこの警告は出ません。"
 
@@ -1103,7 +1103,7 @@ msgstr ""
 "|---|---|---|\n"
 "| [`GET /api/v1/health`](#get-health) | なし | サーバーが稼働しているかどうか。トークンは不要 (ヘルスチェック用) |\n"
 "| [`GET /api/v1/openapi.json`](#get-openapi-json) | `preview` | この記述 (OpenAPI 3.1)。任意のロールのトークン |\n"
-"| [`GET /api/v1/printers`](#get-printers) | `preview` | トークンが使用できる `printers.toml` のプリンターとその状態。トークンなしの場合は、プリンターモデル、それぞれに設定されたアドレス、検出されたプリンター (`--discover`) |\n"
+"| [`GET /api/v1/printers`](#get-printers) | `preview` | トークンが使用できる `printers.toml` のプリンターとその状態。トークンなしの場合は、プリンターの機種、それぞれに設定されたアドレス、検出されたプリンター (`--discover`) |\n"
 "| [`GET /api/v1/printers/{id}/status`](#get-printers-id-status) | `preview` | プリンターの状態 (メディア、問題、解像度) を問い合わせる |\n"
 "| [`GET /api/v1/labels`](#get-labels) | `preview` | ラベルフォルダーとそのサブフォルダー内のラベルファイル |\n"
 "| [`GET /api/v1/labels/{name}`](#get-labels-name) | `preview` | ラベルに入力できる内容: 要素、変数、データ列、サイズ、カウンター |\n"
@@ -1196,7 +1196,7 @@ msgid ""
 "(`--discover`)."
 msgstr ""
 "トークンが使用できる `printers.toml` "
-"のプリンターを、その状態とともに返します。トークンがない場合は、プリンターモデル、それぞれに設定されたアドレス、および検出されたプリンター "
+"のプリンターを、その状態とともに返します。トークンがない場合は、プリンターの機種、それぞれに設定されたアドレス、および検出されたプリンター "
 "(`--discover`) を返します。"
 
 #. type: Plain text
@@ -1259,7 +1259,7 @@ msgstr ""
 "| パラメーター | 場所 | 意味 |\n"
 "|---|---|---|\n"
 "| `X-Tavletta-Request` | header | サーバーにトークンがない場合に必要 (任意の値)。Webページは送信できないため、サーバーにプリンターへ接続させることはできません。 |\n"
-"| `id` | path | プリンター名 (`printers.toml`) またはプリンターモデルID。 |\n"
+"| `id` | path | プリンター名 (`printers.toml`) またはプリンター機種ID。 |\n"
 "| `host` | query | `printers.toml` がない場合のみ。ロール print が必要です。 |\n"
 
 #. type: Plain text
@@ -1409,11 +1409,11 @@ msgstr ""
 "|---|---|---|\n"
 "| `label` | string | ラベルフォルダー内のラベルファイルの名前 (GET /labels を参照)。サブフォルダーは '/' で区切ります。'`.tavletta`' は省略できます。label または label_content のどちらかを指定します。 |\n"
 "| `label_content` | object | または、`.tavletta` ファイルのJSONとしてのラベルそのもの。開いたファイルと同様に検証されます。そのデータファイルは無視され (代わりに data_rows を送信してください)、カウンターは保存されません。 |\n"
-"| `printer` | string | サーバーに `printers.toml` がある場合: プリンターの名前 (既定: トークンが使用できる既定のプリンター、または唯一のプリンター)。ない場合: ラベル自身のものと異なる場合のプリンターモデルID (ラベルはアプリと同様に調整されます)。 |\n"
+"| `printer` | string | サーバーに `printers.toml` がある場合: プリンターの名前 (既定: トークンが使用できる既定のプリンター、または唯一のプリンター)。ない場合: ラベル自身のものと異なる場合のプリンター機種ID (ラベルはアプリと同様に調整されます)。 |\n"
 "| `set` | object | 要素名または変数名 -> 値。コマンドラインの `--set` と同様です。値の中の変数は入力されます。'date' は、`{=date}` と `{=time}` の基準となる時刻を設定します (ISO 8601)。最大1000件。 |\n"
 "| `set_literal` | object | set と同様ですが、値の中の波括弧は変数ではなくテキストとして扱われます。 |\n"
 "| `counter_start` | integer | 最初のラベルの `{=counter}`。ラベル、コピー、行ごとに、ラベルのステップ分だけ増えます。0から999999999999999 |\n"
-"| `data_rows` | array of object | 連番ラベル: 1行につき1枚のラベル、列名 -> 値。ラベルの `{Column}` プレースホルダーに値が入ります。数値はテキストとして扱われ、null は空のセルとして扱われます。最大100000行、1000列、2000000セル、1つの値につき100000文字。 |\n"
+"| `data_rows` | array of object | 差し込み印刷ラベル: 1行につき1枚のラベル、列名 -> 値。ラベルの `{Column}` プレースホルダーに値が入ります。数値はテキストとして扱われ、null は空のセルとして扱われます。最大100000行、1000列、2000000セル、1つの値につき100000文字。 |\n"
 "| `data_file` | string | または、ラベルフォルダー内のCSV、TSV、ODS、XLSXファイル。data_rows と data_file がない場合は、ラベル自身のデータファイルが、ラベルフォルダー内のラベルの隣にあれば使用されます。 |\n"
 "| `sheet` | string | データファイルのシート。既定は最初のシートです。 |\n"
 "| `row` | integer | 表示するデータ行 (1から)。1から100000。既定は `1` |\n"
@@ -1494,11 +1494,11 @@ msgstr ""
 "|---|---|---|\n"
 "| `label` | string | ラベルフォルダー内のラベルファイルの名前 (GET /labels を参照)。サブフォルダーは '/' で区切ります。'`.tavletta`' は省略できます。label または label_content のどちらかを指定します。 |\n"
 "| `label_content` | object | または、`.tavletta` ファイルのJSONとしてのラベルそのもの。開いたファイルと同様に検証されます。そのデータファイルは無視され (代わりに data_rows を送信してください)、カウンターは保存されません。 |\n"
-"| `printer` | string | サーバーに `printers.toml` がある場合: プリンターの名前 (既定: トークンが使用できる既定のプリンター、または唯一のプリンター)。ない場合: ラベル自身のものと異なる場合のプリンターモデルID (ラベルはアプリと同様に調整されます)。 |\n"
+"| `printer` | string | サーバーに `printers.toml` がある場合: プリンターの名前 (既定: トークンが使用できる既定のプリンター、または唯一のプリンター)。ない場合: ラベル自身のものと異なる場合のプリンター機種ID (ラベルはアプリと同様に調整されます)。 |\n"
 "| `set` | object | 要素名または変数名 -> 値。コマンドラインの `--set` と同様です。値の中の変数は入力されます。'date' は、`{=date}` と `{=time}` の基準となる時刻を設定します (ISO 8601)。最大1000件。 |\n"
 "| `set_literal` | object | set と同様ですが、値の中の波括弧は変数ではなくテキストとして扱われます。 |\n"
 "| `counter_start` | integer | 最初のラベルの `{=counter}`。ラベル、コピー、行ごとに、ラベルのステップ分だけ増えます。0から999999999999999 |\n"
-"| `data_rows` | array of object | 連番ラベル: 1行につき1枚のラベル、列名 -> 値。ラベルの `{Column}` プレースホルダーに値が入ります。数値はテキストとして扱われ、null は空のセルとして扱われます。最大100000行、1000列、2000000セル、1つの値につき100000文字。 |\n"
+"| `data_rows` | array of object | 差し込み印刷ラベル: 1行につき1枚のラベル、列名 -> 値。ラベルの `{Column}` プレースホルダーに値が入ります。数値はテキストとして扱われ、null は空のセルとして扱われます。最大100000行、1000列、2000000セル、1つの値につき100000文字。 |\n"
 "| `data_file` | string | または、ラベルフォルダー内のCSV、TSV、ODS、XLSXファイル。data_rows と data_file がない場合は、ラベル自身のデータファイルが、ラベルフォルダー内のラベルの隣にあれば使用されます。 |\n"
 "| `sheet` | string | データファイルのシート。既定は最初のシートです。 |\n"
 "| `host` | string | プリンターのアドレス。`printers.toml` がない場合のみ (既定: アプリで設定されたもの、なければ `--discover` で見つかった唯一のプリンター)。`printers.toml` がある場合は拒否されます (host_given)。 |\n"
@@ -1668,7 +1668,7 @@ msgstr ""
 "|---|---|---|\n"
 "| `id` | string | ランダムな16文字。 |\n"
 "| `state` | `\"queued\"` \\| `\"waiting\"` \\| `\"printing\"` \\| `\"done\"` \\| `\"failed\"` \\| `\"canceled\"` | waiting: 順番が来たが、別のジョブがラベルファイル (そのカウンター) を保持しています。done、failed、canceled は最終状態です。 |\n"
-"| `printer` | string | プリンターモデルID。 |\n"
+"| `printer` | string | プリンター機種ID。 |\n"
 "| `printer_name` | string or null | `printers.toml` での名前。 |\n"
 "| `host` | string | プリンターのアドレス。 |\n"
 "| `owner` | string or null | トークンの名前。 |\n"
@@ -1679,7 +1679,7 @@ msgstr ""
 "| `cancel_requested` | boolean | DELETE が送信されました。 |\n"
 "| `error` | null or Warning | 失敗した理由: `printer_<code>`、counter_not_saved、label_locked、または prepare_failed。 |\n"
 "| `remark` | string or null | プリンターからの、人間向けのメモ。 |\n"
-"| `warnings` | array of Warning | 検証時に見つかったもの。それでも印刷されました。other_labels_loaded: プリンターに、ラベルと異なるラベルが装填されていると報告されています (そのサイズ、または測定されたラベル間隔)。`printers.toml` のプリンターについては、ジョブがキューに入った時点ではプレビューと同様で、ジョブの印刷時にプリンターが装填されたラベルについて報告した場合は、その報告内容に置き換えられます。 |\n"
+"| `warnings` | array of Warning | 検証時に見つかったもの。それでも印刷されました。other_labels_loaded: プリンターに、ラベルと異なるラベルがセットされていると報告されています (そのサイズ、または測定されたラベル間隔)。`printers.toml` のプリンターについては、ジョブがキューに入った時点ではプレビューと同様で、ジョブの印刷時にプリンターがセットされたラベルについて報告した場合は、その報告内容に置き換えられます。 |\n"
 "| `created` | string | UTC. |\n"
 "| `started` | string or null |  |\n"
 "| `finished` | string or null |  |\n"
@@ -1712,7 +1712,7 @@ msgstr ""
 "| フィールド | 型 | 意味 |\n"
 "|---|---|---|\n"
 "| `name` | string |  |\n"
-"| `printer` | object | モデルIDと名前。 |\n"
+"| `printer` | object | 機種IDと名前。 |\n"
 "| `size` | object | テープ、長さ、向き、mm。 |\n"
 "| `elements` | array of object |  |\n"
 "| `variables` | array of string | 独自の変数 `{=lot}`: 'set' で入力されます。 |\n"
@@ -1755,8 +1755,8 @@ msgstr ""
 "| フィールド | 型 | 意味 |\n"
 "|---|---|---|\n"
 "| `name` | string | リクエストが 'printer' で指定するもの。 |\n"
-"| `printer` | string | プリンターモデルID。 |\n"
-"| `model` | string | 人間向けのプリンターモデル。 |\n"
+"| `printer` | string | プリンター機種ID。 |\n"
+"| `model` | string | 人間向けのプリンターの機種。 |\n"
 "| `host` | string |  |\n"
 "| `description` | string or null |  |\n"
 "| `location` | string or null |  |\n"
@@ -1799,7 +1799,7 @@ msgstr ""
 "| `dpi` | number |  |\n"
 "| `firmware` | string or null |  |\n"
 "| `modes` | array of string |  |\n"
-"| `media` | object | 装填されているものとプリンターの設定。プリンターが報告する範囲で示されます (null: 報告なし): tape_mm、remaining_mm、total_mm、pitch_mm (ダイカットラベル: 測定されたラベル間隔)、width_mm (ZPLプリンターに設定された印刷幅: 設定であり、装填されたラベルではありません)、print_method (プリンターに設定された direct または transfer)、media_type (gap、mark、または continuous: プリンターがラベルを検出するために設定された方法)、cassette。プリンターからではなく、サーバーのそのプリンターに対する設定からのもの: job_print_method と job_media_type。このサーバーのジョブの動作です。 |\n"
+"| `media` | object | セットされているものとプリンターの設定。プリンターが報告する範囲で示されます (null: 報告なし): tape_mm、remaining_mm、total_mm、pitch_mm (ダイカットラベル: 測定されたラベル間隔)、width_mm (ZPLプリンターに設定された印刷幅: 設定であり、セットされたラベルではありません)、print_method (プリンターに設定された direct または transfer)、media_type (gap、mark、または continuous: プリンターがラベルを検出するために設定された方法)、cassette。プリンターからではなく、サーバーのそのプリンターに対する設定からのもの: job_print_method と job_media_type。このサーバーのジョブの動作です。 |\n"
 
 #. type: Title ###
 #: docs/api.md
@@ -1822,7 +1822,7 @@ msgstr ""
 "|---|---|---|\n"
 "| `width` | integer |  |\n"
 "| `height` | integer |  |\n"
-"| `warnings` | array of Warning | 正しく印刷されないもの。other_labels_loaded: `printers.toml` のプリンターに、ラベルと異なるラベルが装填されていると報告されています (そのサイズ、または測定されたラベル間隔)。その最新の応答は、直近1分以内のものであれば採用され、エラーは何も分からないものとして扱われます (バックグラウンドで再度問い合わせます)。まだ把握していないプリンターは、ラベルのレンダリング後に最大1秒待たれます。 |\n"
+"| `warnings` | array of Warning | 正しく印刷されないもの。other_labels_loaded: `printers.toml` のプリンターに、ラベルと異なるラベルがセットされていると報告されています (そのサイズ、または測定されたラベル間隔)。その最新の応答は、直近1分以内のものであれば採用され、エラーは何も分からないものとして扱われます (バックグラウンドで再度問い合わせます)。まだ把握していないプリンターは、ラベルのレンダリング後に最大1秒待たれます。 |\n"
 "| `png` | string |  |\n"
 
 #. type: Plain text
@@ -1982,7 +1982,7 @@ msgid ""
 "[Serial labels](serial.md): one label for each row of a CSV, ODS or XLSX "
 "file; variables such as date and counter, and a command line"
 msgstr ""
-"[連番ラベル](serial.md): CSV、ODS、XLSXファイルの各行に1枚のラベル。日付やカウンターなどの変数、およびコマンドライン"
+"[差し込み印刷ラベル](serial.md): CSV、ODS、XLSXファイルの各行に1枚のラベル。日付やカウンターなどの変数、およびコマンドライン"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -1996,7 +1996,7 @@ msgstr "オフィス用プリンターでの[ラベルシート](sheets.md)、�
 msgid ""
 "Finds the printer in the network and on USB, reads what is loaded and "
 "explains printer problems in plain words"
-msgstr "ネットワークとUSB上でプリンターを検出し、装填されているものを読み取り、プリンターの問題を分かりやすい言葉で説明します"
+msgstr "ネットワークとUSB上でプリンターを検出し、セットされているものを読み取り、プリンターの問題を分かりやすい言葉で説明します"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -2105,7 +2105,7 @@ msgid ""
 "or the distance between the labels."
 msgstr ""
 "プリンターの電源を入れ、[[ui:Printer model]] で選択します。Tavlettaはネットワーク (Bonjour) "
-"上でプリンターを検出し、装填されているもの (テープ幅やラベル間隔) を読み取ります。"
+"上でプリンターを検出し、セットされているもの (テープ幅やラベル間隔) を読み取ります。"
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2488,7 +2488,7 @@ msgid ""
 msgstr ""
 "[[ui:Printer model]]: QLは2回表示されます。連続DKロール (ラベルの長さが内容に合わせられるか固定長) には「Brother "
 "QL, continuous rolls」、固定サイズのダイカットDKラベルには「Brother QL, die-cut "
-"labels」を選んでください。どちらも同じプリンターと設定を使います。プリンターにもう一方の種類のロールが装填されている場合、Tavlettaは "
+"labels」を選んでください。どちらも同じプリンターと設定を使います。プリンターにもう一方の種類のロールがセットされている場合、Tavlettaは "
 "[[ui:Switch]] を提案します。"
 
 #. type: Bullet: '- '
@@ -2497,7 +2497,7 @@ msgid ""
 "Network: models with Wi-Fi or LAN are reached on port 9100.  [[ui:Search for"
 " printers]] finds them, or enter the address."
 msgstr ""
-"ネットワーク: Wi-FiまたはLAN搭載モデルは、ポート9100で接続します。[[ui:Search for printers]] "
+"ネットワーク: Wi-FiまたはLAN搭載機種は、ポート9100で接続します。[[ui:Search for printers]] "
 "で検出されるか、アドレスを入力してください。"
 
 #. type: Bullet: '- '
@@ -2520,7 +2520,7 @@ msgid ""
 "die-cut labels of another size get a warning too ([[ui:Different labels "
 "loaded]])."
 msgstr ""
-"Tavlettaは、各印刷の前に、どのロールが装填されているかを読み取ります。幅の異なる連続ロールは、警告 ([[ui:Wrong roll]]) "
+"Tavlettaは、各印刷の前に、どのロールがセットされているかを読み取ります。幅の異なる連続ロールは、警告 ([[ui:Wrong roll]]) "
 "の後、その幅に合わせて縮小して印刷されます。サイズの異なるダイカットラベルにも警告が出ます ([[ui:Different labels "
 "loaded]])。"
 
@@ -2570,7 +2570,7 @@ msgid ""
 "follows the roll."
 msgstr ""
 "[[ui:Colours]]: [[ui:Red and black]] は、62 "
-"mmの連続ロールが装填されているときにQL-800シリーズで表示されます。ラベルの赤い部分は、赤黒ロールDK-22251で赤く印刷されます。このロールでは、黒だけのラベルでも赤黒のジョブが必要です。選択が装填されたロールに合っていない場合、プリンターはジョブを拒否しますが、Tavlettaはもう一方の方法で印刷し、その旨を知らせます。それ以降は、選択がロールに合わせられます。"
+"mmの連続ロールがセットされているときにQL-800シリーズで表示されます。ラベルの赤い部分は、赤黒ロールDK-22251で赤く印刷されます。このロールでは、黒だけのラベルでも赤黒のジョブが必要です。選択がセットされたロールに合っていない場合、プリンターはジョブを拒否しますが、Tavlettaはもう一方の方法で印刷し、その旨を知らせます。それ以降は、選択がロールに合わせられます。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2606,7 +2606,7 @@ msgid ""
 "the roll first."
 msgstr ""
 "[[ui:Reachable · the printer reports no status]]: "
-"一部のモデルは、ネットワーク経由のステータス要求に応答しません。印刷はできますが、Tavlettaは事前にロールを確認できません。"
+"一部の機種は、ネットワーク経由のステータス要求に応答しません。印刷はできますが、Tavlettaは事前にロールを確認できません。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2615,8 +2615,8 @@ msgid ""
 " label on continuous roll, or the other way round. Load the other roll or "
 "choose the other entry under [[ui:Printer model]]."
 msgstr ""
-"「装填されているロールがラベルと一致しません」: "
-"連続ロール用のラベルにダイカットロールが装填されている、またはその逆です。もう一方のロールを装填するか、[[ui:Printer model]] "
+"「セットされているロールがラベルと一致しません」: "
+"連続ロール用のラベルにダイカットロールがセットされている、またはその逆です。もう一方のロールをセットするか、[[ui:Printer model]] "
 "でもう一方の項目を選んでください。"
 
 #. type: Bullet: '- '
@@ -2625,7 +2625,8 @@ msgid ""
 "Out of labels: load a new roll. Cover open: close it. Label jammed: open the"
 " cover and remove it, check the cutter."
 msgstr ""
-"ラベル切れ: 新しいロールを装填してください。カバーが開いている: 閉じてください。ラベル詰まり: カバーを開けて取り除き、カッターを確認してください。"
+"ラベル切れ: 新しいロールをセットしてください。カバーが開いている: 閉じてください。ラベル詰まり: "
+"カバーを開けて取り除き、カッターを確認してください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2677,8 +2678,8 @@ msgid ""
 "sets the sensor for each job. Continuous media and a cutter are not "
 "supported yet."
 msgstr ""
-"ラベル: ギャップのあるダイカットラベルで、ラベルセンサーは「Gap "
-"Sensor」です。Tavlettaはジョブごとにセンサーを設定します。連続メディアとカッターにはまだ対応していません。"
+"ラベル: 間隔のあるダイカットラベルで、ラベルセンサーは「Gap "
+"Sensor」です。Tavlettaはジョブごとにセンサーを設定します。連続紙とカッターにはまだ対応していません。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2722,8 +2723,8 @@ msgid ""
 "once after changing the roll so it measures again."
 msgstr ""
 "[[ui:Different labels loaded]]: "
-"プリンターが測定したラベル間の距離が、ラベルの高さとギャップの合計と異なります。[[ui:Label size]] と [[ui:Gap]] "
-"を確認するか、正しいロールを装填してください。ロールを交換した後は、プリンターが再測定するように、プリンターのFeedを一度押してください。"
+"プリンターが測定したラベル間の距離が、ラベルの高さと間隔の合計と異なります。[[ui:Label size]] と [[ui:Gap]] "
+"を確認するか、正しいロールをセットしてください。ロールを交換した後は、プリンターが再測定するように、プリンターのFeedを一度押してください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2736,7 +2737,7 @@ msgstr "問題のため停止した印刷はキャンセルされるため、も
 #: docs/printer.md
 msgid ""
 "Out of labels: load a new roll, the printer then synchronises by itself."
-msgstr "ラベル切れ: 新しいロールを装填してください。プリンターは自動的に同期します。"
+msgstr "ラベル切れ: 新しいロールをセットしてください。プリンターは自動的に同期します。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2748,8 +2749,7 @@ msgstr "印字ヘッドが開いている: 印字ヘッドを閉じてくださ�
 msgid ""
 "Next label not found: labels not threaded through the label sensor, or "
 "labels without gaps (continuous media is not supported yet)."
-msgstr ""
-"次のラベルが見つかりません: ラベルがラベルセンサーに通されていないか、ラベルにギャップがありません (連続メディアにはまだ対応していません)。"
+msgstr "次のラベルが見つかりません: ラベルがラベルセンサーに通されていないか、ラベルに間隔がありません (連続紙にはまだ対応していません)。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2758,8 +2758,8 @@ msgid ""
 "direct mode. Load or remove the ribbon, or choose the other [[ui:Print "
 "method]]."
 msgstr ""
-"リボンの問題: 熱転写モードでリボンがない、または感熱モードでリボンがあります。リボンを装填または取り外すか、もう一方の [[ui:Print "
-"method]] を選んでください。"
+"リボンの問題: 熱転写モードでリボンがない、またはダイレクトサーマルモードでリボンがあります。リボンをセットまたは取り外すか、もう一方の "
+"[[ui:Print method]] を選んでください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2768,8 +2768,8 @@ msgid ""
 "printer is set to thermal direct. Choose [[ui:Thermal transfer (ribbon)]] "
 "under [[ui:Print method]]."
 msgstr ""
-"リボン使用のラベルが空白またはにじんで印刷され、リボンが動かない: プリンターが感熱 (direct) に設定されています。[[ui:Print "
-"method]] で [[ui:Thermal transfer (ribbon)]] を選んでください。"
+"リボン使用のラベルが空白またはにじんで印刷され、リボンが動かない: プリンターがダイレクトサーマル (direct) "
+"に設定されています。[[ui:Print method]] で [[ui:Thermal transfer (ribbon)]] を選んでください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2798,7 +2798,7 @@ msgid ""
 msgstr ""
 "Tavlettaは、TZeテープとHSe熱収縮チューブを使用するBrother "
 "P-touchテープライターで印刷できます。PT-P700、PT-P750W、PT-E550W、PT-P710BT、PT-P900シリーズ、PT-"
-"Dシリーズ、およびPT-2430PCなどの旧モデルです。まだ実機では試されていません。"
+"Dシリーズ、およびPT-2430PCなどの旧機種です。まだ実機では試されていません。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2817,7 +2817,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid "Bluetooth is not supported; models with Bluetooth print over USB."
-msgstr "Bluetoothには対応していません。Bluetooth搭載モデルは、USB経由で印刷します。"
+msgstr "Bluetoothには対応していません。Bluetooth搭載機種は、USB経由で印刷します。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2880,7 +2880,7 @@ msgid ""
 msgstr ""
 "[[ui:Cut]]: [[ui:Full cut]] は各ラベルを切り離します。[[ui:Half cut]] "
 "はラベルだけを切り、台紙でラベルがつながったままになります。[[ui:No cut]] "
-"はラベルを1本の帯として印刷します。帯は最後のラベルの後でカットされます。カッターレバー付きのモデルには、カットの設定がありません。"
+"はラベルを1本の帯として印刷します。帯は最後のラベルの後でカットされます。カッターレバー付きの機種には、カットの設定がありません。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2942,7 +2942,7 @@ msgstr "印字ヘッドが熱すぎる: 数分待ってください。"
 #. type: Bullet: '- '
 #: docs/printer.md
 msgid "Model not supported: Tavletta knows the models listed above."
-msgstr "モデルに非対応: Tavlettaは、上に挙げたモデルに対応しています。"
+msgstr "機種に非対応: Tavlettaは、上に挙げた機種に対応しています。"
 
 #. type: Title ##
 #: docs/printer.md
@@ -2957,7 +2957,7 @@ msgid ""
 "D110, D101 and related models. It has not been tried on a printer yet; "
 "please report how it works."
 msgstr ""
-"Tavlettaは、USB経由でNIIMBOTラベルプリンターで印刷できます。B1、B21、B3S、B4、D11、D110、D101および関連モデルです。まだ実機では試されていません。動作状況を報告してください。"
+"Tavlettaは、USB経由でNIIMBOTラベルプリンターで印刷できます。B1、B21、B3S、B4、D11、D110、D101および関連機種です。まだ実機では試されていません。動作状況を報告してください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3020,7 +3020,7 @@ msgid ""
 "takes and remembers the choice."
 msgstr ""
 "プリンターのグループ内: [[ui:Print density]] (大きいほど濃く印刷されます) と [[ui:Label sensor]] "
-"(装填されているとおり、ギャップのあるラベル、ブラックマーク、連続ロール、透明ラベル)。Tavlettaは、接続されたモデルが対応するものを提示し、選択を記憶します。"
+"(セットされているとおり、間隔のあるラベル、黒マーク、連続ロール、透明ラベル)。Tavlettaは、接続された機種が対応するものを提示し、選択を記憶します。"
 
 #. type: Title ###
 #: docs/printer.md
@@ -3050,7 +3050,7 @@ msgid ""
 "charge the printer, then [[ui:Refresh]]."
 msgstr ""
 "カバーが開いている、ラベル切れ、またはバッテリー残量が少ない: "
-"カバーを閉じるか、ロールを装填するか、プリンターを充電してから、[[ui:Refresh]] してください。"
+"カバーを閉じるか、ロールをセットするか、プリンターを充電してから、[[ui:Refresh]] してください。"
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3068,7 +3068,7 @@ msgid ""
 "not know its model number yet. Please [[ui:Report a problem…]], the report "
 "contains the number."
 msgstr ""
-"プリンターは検出されたが、印刷時に不明なモデルと報告される: Tavlettaはまだそのモデル番号を把握していません。[[ui:Report a "
+"プリンターは検出されたが、印刷時に不明な機種と報告される: Tavlettaはまだそのモデル番号を把握していません。[[ui:Report a "
 "problem…]] で報告してください。報告には番号が含まれます。"
 
 #. type: Title ##
@@ -3209,7 +3209,7 @@ msgid ""
 "| [[ui:Receipt printer (ESC/POS)]] | Epson TM and compatible receipt printers on 58 or 80 mm paper |\n"
 "| DYMO LabelWriter | LabelWriter 300, 400 and 450 series, 4XL (not the 550 and 5XL) |\n"
 msgstr ""
-"| Tavlettaでのプリンターモデル | プリンター |\n"
+"| Tavlettaでのプリンターの機種 | プリンター |\n"
 "|---|---|\n"
 "| Zebra ZPL | Zebra GK、GX、ZD、ZT、およびZPLを使うその他のプリンター。他社製のZPL互換プリンターも含みます |\n"
 "| Zebra EPL2 | EPL2に設定されたZebra LP/TLP 2824と2844、GK420、GX420 |\n"
@@ -3247,7 +3247,7 @@ msgid ""
 msgstr ""
 "[[ui:Label sensor]]: [[ui:As set on the printer]] はプリンター自身の設定を維持します。[[ui:Gap"
 " between labels]] はダイカットラベル用、[[ui:Black mark]] "
-"は裏に黒いマークのあるラベル用、[[ui:Continuous media]] はギャップのないロール用です。[[ui:Label size]] と "
+"は裏に黒いマークのあるラベル用、[[ui:Continuous media]] は間隔のないロール用です。[[ui:Label size]] と "
 "[[ui:Gap]] (またはマークの高さ) を、ロールに合わせて設定してください。"
 
 #. type: Bullet: '- '
@@ -3320,7 +3320,7 @@ msgid ""
 "please report it with the printer model; the orientation was tried on a "
 "Zebra GX420d only."
 msgstr ""
-"ラベルが逆さまに出てくる: [[ui:Print upside down]] をオンにし、プリンターのモデルとともに報告してください。向きはZebra "
+"ラベルが逆さまに出てくる: [[ui:Print upside down]] をオンにし、プリンターの機種とともに報告してください。向きはZebra "
 "GX420dでしか試されていません。"
 
 #. type: Bullet: '- '
@@ -3368,7 +3368,7 @@ msgstr ""
 #: docs/serial.md
 #, no-wrap
 msgid "Serial labels"
-msgstr "連番ラベル"
+msgstr "差し込み印刷ラベル"
 
 #. type: Plain text
 #: docs/serial.md
@@ -3386,8 +3386,8 @@ msgid ""
 "![Serial labels](media/serial.png#only-light)  ![Serial "
 "labels](media/serial-dark.png#only-dark)"
 msgstr ""
-"![連番ラベル](media/serial.png#only-light)  ![連番ラベル](media/serial-dark.png#only-"
-"dark)"
+"![差し込み印刷ラベル](media/serial.png#only-light)  ![差し込み印刷ラベル](media/serial-"
+"dark.png#only-dark)"
 
 #. type: Title ##
 #: docs/serial.md
@@ -3947,7 +3947,7 @@ msgid ""
 "`ptouch`, `vc500w`, `zpl`, `epl`, `tspl`, `escpos`, `dymo`, `niimbot`, "
 "`system` (`tavletta list-printers` shows them)."
 msgstr ""
-"`backend` はプリンターモデルです: "
+"`backend` はプリンターの機種です: "
 "`cab`、`brother_ql`、`brother_ql_diecut`、`ptouch`、`vc500w`、`zpl`、`epl`、`tspl`、`escpos`、`dymo`、`niimbot`、`system`"
 " (`tavletta list-printers` で表示されます)。"
 
@@ -3967,7 +3967,7 @@ msgid ""
 "list is in "
 "[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)."
 msgstr ""
-"モデルの設定は、アプリのプリンター設定のものです。完全な一覧は "
+"機種の設定は、アプリのプリンター設定のものです。完全な一覧は "
 "[docs/server.md](https://git.joshuahirsig.xyz/joshii/tavletta/src/branch/main/docs/server.md)"
 " にあります。"
 
@@ -4931,7 +4931,7 @@ msgstr ""
 "| `413 label_too_large` | ラベルの要素が多すぎる、テキストが長すぎる、またはレンダリングが40メガピクセルを超えています: ラベルを簡素化するか、1回のリクエストあたりのデータ行を減らしてください。 |\n"
 "| `421 wrong_host` | リバースプロキシが、公開ホスト名を `127.0.0.1` のサーバーに渡しています: [nginx](#nginx) と [Caddy](#caddy) を参照してください。 |\n"
 "| 警告に `font_missing` があり、テキストの表示がおかしい | フォントがサーバーにインストールされていません: [フォント](#fonts)を参照してください。 |\n"
-"| 警告に `other_labels_loaded` がある | プリンターに、ラベルと異なるラベルが装填されています: 適合するロールを装填するか、ラベルのサイズとギャップを確認してください。ZPLプリンターは、以前のロールで測定した距離を報告する場合があります: キャリブレーションしてください。 |\n"
+"| 警告に `other_labels_loaded` がある | プリンターに、ラベルと異なるラベルがセットされています: 適合するロールをセットするか、ラベルのサイズと間隔を確認してください。ZPLプリンターは、以前のロールで測定した距離を報告する場合があります: キャリブレーションしてください。 |\n"
 "| `409 counter_not_saved` | ラベルファイルが、サーバーのユーザーによって書き込めません: ユーザーに `chown` してください (Docker: 1000、ネイティブ: `tavletta`)。 |\n"
 "| ラベルの日付や時刻が1～2時間ずれている | コンテナーはUTCで動作しています: `.env` に `TAVLETTA_TZ=Europe/Zurich` を設定してから、`docker compose up -d` を実行してください。 |\n"
 "| サーバーが起動しない | `docker compose logs` または `journalctl -u tavletta-server`: `printers.toml` または `tokens.toml` の誤りは、そのキーとともに示されます。 |\n"
@@ -5051,14 +5051,14 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "`backend` is the printer model, `host` the printer's address."
-msgstr "`backend` はプリンターモデル、`host` はプリンターのアドレスです。"
+msgstr "`backend` はプリンターの機種、`host` はプリンターのアドレスです。"
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
 "The printer's settings, as in the app's printer settings, go into a table of"
 " their own; only the ones the model has:"
-msgstr "アプリのプリンター設定にあるようなプリンターの設定は、専用のテーブルに記述します。モデルが持つものだけを指定します。"
+msgstr "アプリのプリンター設定にあるようなプリンターの設定は、専用のテーブルに記述します。機種が持つものだけを指定します。"
 
 #. type: Fenced code block (toml)
 #: docs/server.md
@@ -5098,8 +5098,8 @@ msgid ""
 msgstr ""
 "プリンターの状態には、プリンターに設定されている印刷方式 (`media.print_method`) と、そのジョブの印刷に使用される方式 "
 "(`media.job_print_method`) が示されます。`method = \"transfer\"` "
-"では、感熱に設定されたcabでも、サーバーのジョブはリボンを使って印刷されます。ラベルの検出方法についても同様で、`media.media_type` "
-"と `media.job_media_type` があります。"
+"では、ダイレクトサーマルに設定されたcabでも、サーバーのジョブはリボンを使って印刷されます。ラベルの検出方法についても同様で、`media.media_type`"
+" と `media.job_media_type` があります。"
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5294,8 +5294,8 @@ msgid ""
 "label uses (`[{\"Name\": \"Tea\", …}, {\"Name\": \"Rice\", …}]`), or "
 "`\"data_file\"` with a table in the labels folder."
 msgstr ""
-"連番ラベル: `\"data_rows\"` は、ラベルが使用するすべての列を持つ、ラベルごとに1つのオブジェクトです (`[{\"Name\": "
-"\"Tea\", …}, {\"Name\": \"Rice\", …}]`)。または、`\"data_file\"` "
+"差し込み印刷ラベル: `\"data_rows\"` は、ラベルが使用するすべての列を持つ、ラベルごとに1つのオブジェクトです "
+"(`[{\"Name\": \"Tea\", …}, {\"Name\": \"Rice\", …}]`)。または、`\"data_file\"` "
 "でラベルフォルダー内の表を指定します。"
 
 #. type: Bullet: '- '
@@ -5610,7 +5610,7 @@ msgid ""
 "the rows times the copies of each."
 msgstr ""
 "[[ui:Labels]]: "
-"印刷するラベルの枚数です。最初は、選択した位置の数と同じです。それを超えると、次のシートに続きます。ダイアログには、そのために必要なシートの枚数が表示されます。1回の印刷ジョブで印刷できるのは最大999枚です。連番ラベルでは、行数×各行のコピー数になります。"
+"印刷するラベルの枚数です。最初は、選択した位置の数と同じです。それを超えると、次のシートに続きます。ダイアログには、そのために必要なシートの枚数が表示されます。1回の印刷ジョブで印刷できるのは最大999枚です。差し込み印刷ラベルでは、行数×各行のコピー数になります。"
 
 #. type: Bullet: '- '
 #: docs/sheets.md
@@ -6277,7 +6277,7 @@ msgstr ""
 msgid ""
 "Texts and codes can contain [variables](#variables), e.g. a date or a "
 "running number."
-msgstr "テキストとコードには、[変数](#variables)、たとえば日付や連番を含めることができます。"
+msgstr "テキストとコードには、[変数](#variables)、たとえば日付やカウンターを含めることができます。"
 
 #. type: Title ##
 #: docs/use.md
@@ -6367,7 +6367,7 @@ msgid ""
 "measured."
 msgstr ""
 "[[ui:Gap]]: ロール上の2枚のラベルの間隔で、通常は2～3 "
-"mmです。印刷の前に、Tavlettaは高さとギャップを、プリンターが測定した距離と比較します。"
+"mmです。印刷の前に、Tavlettaは高さと間隔を、プリンターが測定した距離と比較します。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6559,7 +6559,7 @@ msgid ""
 "parcel on its way; for labels that must last, use thermal transfer labels "
 "with a ribbon."
 msgstr ""
-"ほとんどの配送ラベル用ロールは感熱ラベルです。リボンは不要ですが、熱や日光で数か月のうちに印字が薄れます。移動中の荷物には問題ありません。長期間保存が必要なラベルには、リボンを使う熱転写ラベルを使用してください。"
+"ほとんどの配送ラベル用ロールはダイレクトサーマルラベルです。リボンは不要ですが、熱や日光で数か月のうちに印字が薄れます。移動中の荷物には問題ありません。長期間保存が必要なラベルには、リボンを使う熱転写ラベルを使用してください。"
 
 #. type: Plain text
 #: docs/use.md
@@ -6627,7 +6627,7 @@ msgstr ""
 "| `{=date:%d.%m.%Y}` | 独自の書式での今日。例: 31.12.2026 |\n"
 "| `{=date+30d}` | 30日後。たとえば「賞味期限」。`w` (週)、`m` (月)、`y` (年)、`h` (時間) も使え、`{=date+1m-1d}` のように組み合わせられます |\n"
 "| `{=time}`, `{=time:%H:%M}` | 時刻 |\n"
-"| `{=counter}` | 連番 |\n"
+"| `{=counter}` | カウンター |\n"
 "| `{=counter:0001}` | 先頭にゼロを付けた、パターンと同じ桁数 |\n"
 "| `{=copy}`, `{=copies}` | このコピーと全コピーの番号 |\n"
 "| `{=id}`, `{=id:12}` | 短いランダムID。既定は8文字 |\n"
@@ -6674,7 +6674,7 @@ msgid ""
 "[serial labels](serial.md): then `{{` and `}}` always print one brace."
 msgstr ""
 "波括弧を印刷するには、二重にします: `{{=date}}` は `{=date}` "
-"と印刷されます。変数のないテキストは、入力したとおりに印刷されます。ただし、ラベルに[連番ラベル](serial.md)用のデータファイルがある場合は、`{{`"
+"と印刷されます。変数のないテキストは、入力したとおりに印刷されます。ただし、ラベルに[差し込み印刷ラベル](serial.md)用のデータファイルがある場合は、`{{`"
 " と `}}` は常に波括弧1つとして印刷されます。"
 
 #. type: Plain text
@@ -6733,7 +6733,7 @@ msgid ""
 msgstr ""
 "`--host` "
 "を指定しない場合、Tavlettaはアプリで設定されたプリンター、またはネットワーク上で見つかった唯一のプリンターを使います。`tavletta "
-"list-printers` は、見つかった各プリンターのモデル、アドレス、名前を表示します。"
+"list-printers` は、見つかった各プリンターの機種、アドレス、名前を表示します。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6774,9 +6774,9 @@ msgid ""
 "takes the model's defaults for these instead (no outlines); the printer's "
 "address and the [[ui:Safety margin]] stay as set in the app."
 msgstr ""
-"アプリでそのプリンターモデルに対して最後に行った選択で印刷します: "
+"アプリでそのプリンターの機種に対して最後に行った選択で印刷します: "
 "カット、色、品質、連続印刷、高解像度、テープ送り、プリンターの設定、およびラベルシートでの [[ui:Print "
-"outlines]]。`--printer-defaults` を付けると、代わりにモデルの既定値が使われます (輪郭なし)。プリンターのアドレスと "
+"outlines]]。`--printer-defaults` を付けると、代わりに機種の既定値が使われます (輪郭なし)。プリンターのアドレスと "
 "[[ui:Safety margin]] は、アプリでの設定のままです。"
 
 #. type: Bullet: '- '
@@ -6787,7 +6787,8 @@ msgid ""
 "ribbon, thermal direct), also with `--printer-defaults`."
 msgstr ""
 "`--print-method printer|transfer|direct` は、それを持つ感熱プリンターの [[ui:Print method]]"
-" を、この印刷に限り設定します (プリンターの設定どおり、リボンあり、感熱)。`--printer-defaults` と併用することもできます。"
+" を、この印刷に限り設定します (プリンターの設定どおり、リボンあり、ダイレクトサーマル)。`--printer-defaults` "
+"と併用することもできます。"
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6810,7 +6811,7 @@ msgid ""
 "says so); an answer in that time is used.  `--no-query` skips the question."
 msgstr ""
 "一部のプリンターには、ラベルを描画する前に問い合わせが行われます。報告される内容 (テープ、解像度) "
-"に依存するためで、上記のヒントのために、DKラベルのBrother QL (装填されているラベル) にも問い合わせます。5秒以内 (`--dry-"
+"に依存するためで、上記のヒントのために、DKラベルのBrother QL (セットされているラベル) にも問い合わせます。5秒以内 (`--dry-"
 "run` では2秒) "
 "に応答しないプリンターは、問い合わせなしでラベルが描画されます。まだ進行中の問い合わせには、ラベルが送信される前に、終了するまで最大10秒がさらに与えられ"
 " (Tavlettaがそれを知らせます)、その間に応答があれば使用されます。`--no-query` は問い合わせを省略します。"
@@ -6825,10 +6826,10 @@ msgid ""
 "column or a code a row cannot make stops the print before the first label. "
 "See [Serial labels](serial.md)."
 msgstr ""
-"連番ラベル: データファイルの各行に1枚のラベルを、それぞれ `--copies` 枚ずつ印刷します。`--data` はデータファイル "
+"差し込み印刷ラベル: データファイルの各行に1枚のラベルを、それぞれ `--copies` 枚ずつ印刷します。`--data` はデータファイル "
 "(既定では、ラベルのフォルダーにあればラベル自身のもの)、`--sheet` はシート、`--rows` は行 (`3-10`、`5`、`7-` "
 "は最後まで) "
-"を指定します。カウンターは行から行へと続きます。列のないプレースホルダー、または行が作れないコードがあると、最初のラベルの前に印刷が停止します。[連番ラベル](serial.md)を参照してください。"
+"を指定します。カウンターは行から行へと続きます。列のないプレースホルダー、または行が作れないコードがあると、最初のラベルの前に印刷が停止します。[差し込み印刷ラベル](serial.md)を参照してください。"
 
 #. type: Bullet: '- '
 #: docs/use.md

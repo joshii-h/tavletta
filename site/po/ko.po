@@ -132,7 +132,7 @@ msgstr ""
 #: docs/api-guide.md
 #, no-wrap
 msgid "2. Preview { #preview }"
-msgstr "2. 미리보기 { #preview }"
+msgstr "2. 미리 보기 { #preview }"
 
 #. type: Plain text
 #: docs/api-guide.md
@@ -140,7 +140,7 @@ msgid ""
 "A preview prints nothing and returns the label as a PNG image, for example "
 "to show it in the tool before printing:"
 msgstr ""
-"미리보기는 아무것도 인쇄하지 않고 라벨을 PNG 이미지로 반환합니다. 예를 들어 인쇄 전에 도구에서 보여 주는 용도로 사용합니다."
+"미리 보기는 아무것도 인쇄하지 않고 라벨을 PNG 이미지로 반환합니다. 예를 들어 인쇄 전에 도구에서 보여 주는 용도로 사용합니다."
 
 #. type: Fenced code block (sh)
 #: docs/api-guide.md
@@ -176,15 +176,15 @@ msgid ""
 "after the label is rendered, and one that does not answer by then gives no "
 "such warning."
 msgstr ""
-"`warnings`의 `other_labels_loaded`: 프린터에 라벨과 다른 라벨이 장착되어 있습니다(다른 크기이거나 측정된 라벨"
-" 간격이 다름). 맞는 롤을 장착하거나 라벨의 크기와 간격을 확인하십시오. 프린터의 가장 최근 응답은 최근 1분 이내의 것이면 "
-"반영됩니다(오류 후에는 아무것도 알 수 없음). 서버가 아직 아무것도 모르는 프린터는 라벨 렌더링 후 최대 1초 동안 기다리며, 그 시간"
-" 안에 응답하지 않는 프린터에는 이 경고가 표시되지 않습니다."
+"`warnings`의 `other_labels_loaded`: 프린터에 라벨과 다른 라벨이 들어 있습니다(다른 크기이거나 측정된 라벨 "
+"간격이 다름). 맞는 롤을 넣거나 라벨의 크기와 간격을 확인하십시오. 프린터의 가장 최근 응답은 최근 1분 이내의 것이면 반영됩니다(오류"
+" 후에는 아무것도 알 수 없음). 서버가 아직 아무것도 모르는 프린터는 라벨 렌더링 후 최대 1초 동안 기다리며, 그 시간 안에 응답하지"
+" 않는 프린터에는 이 경고가 표시되지 않습니다."
 
 #. type: Bullet: '- '
 #: docs/api-guide.md
 msgid "A preview needs only the role `preview`."
-msgstr "미리보기에는 `preview` 역할만 필요합니다."
+msgstr "미리 보기에는 `preview` 역할만 필요합니다."
 
 #. type: Title ##
 #: docs/api-guide.md
@@ -848,7 +848,7 @@ msgid ""
 msgstr ""
 "| 역할 | 가능한 것 |\n"
 "|---|---|\n"
-"| `preview` | 프린터와 라벨 나열, 라벨 설명, 미리보기, 프린터 상태, 이 설명 |\n"
+"| `preview` | 프린터와 라벨 나열, 라벨 설명, 미리 보기, 프린터 상태, 이 설명 |\n"
 "| `print` | `preview`와 같으며, 인쇄도 가능. 자신의 작업을 보고 취소 |\n"
 "| `admin` | `print`와 같으며, 모든 작업을 보고 취소 |\n"
 
@@ -1417,7 +1417,7 @@ msgstr ""
 "| `set` | object | 요소 이름 또는 변수 이름 -> 값. 명령줄의 `--set`과 같습니다. 값 안의 변수는 채워집니다. 'date'는 `{=date}`와 `{=time}`이 시작되는 시점을 설정합니다(ISO 8601). 최대 1000개 항목. |\n"
 "| `set_literal` | object | set과 같지만 값 안의 중괄호는 변수가 아니라 텍스트입니다. |\n"
 "| `counter_start` | integer | 첫 번째 라벨의 `{=counter}`. 라벨, 사본, 행마다 라벨의 단계만큼 증가합니다. 0에서 999999999999999 |\n"
-"| `data_rows` | array of object | 연속 라벨: 행마다 라벨 한 장, 열 이름 -> 값. 라벨의 `{Column}` 플레이스홀더가 값을 받습니다. 숫자는 텍스트로, null은 빈 셀로 취급됩니다. 최대 100000행, 1000열, 2000000셀, 값당 100000자. |\n"
+"| `data_rows` | array of object | 데이터 병합 라벨: 행마다 라벨 한 장, 열 이름 -> 값. 라벨의 `{Column}` 플레이스홀더가 값을 받습니다. 숫자는 텍스트로, null은 빈 셀로 취급됩니다. 최대 100000행, 1000열, 2000000셀, 값당 100000자. |\n"
 "| `data_file` | string | 또는 라벨 폴더의 CSV, TSV, ODS, XLSX 파일. data_rows와 data_file이 없으면, 라벨 자체의 데이터 파일이 라벨 폴더에서 라벨 옆에 있는 경우 사용됩니다. |\n"
 "| `sheet` | string | 데이터 파일의 시트. 기본값은 첫 번째 시트입니다. |\n"
 "| `row` | integer | 표시할 데이터 행(1부터). 1에서 100000. 기본값 `1` |\n"
@@ -1502,7 +1502,7 @@ msgstr ""
 "| `set` | object | 요소 이름 또는 변수 이름 -> 값. 명령줄의 `--set`과 같습니다. 값 안의 변수는 채워집니다. 'date'는 `{=date}`와 `{=time}`이 시작되는 시점을 설정합니다(ISO 8601). 최대 1000개 항목. |\n"
 "| `set_literal` | object | set과 같지만 값 안의 중괄호는 변수가 아니라 텍스트입니다. |\n"
 "| `counter_start` | integer | 첫 번째 라벨의 `{=counter}`. 라벨, 사본, 행마다 라벨의 단계만큼 증가합니다. 0에서 999999999999999 |\n"
-"| `data_rows` | array of object | 연속 라벨: 행마다 라벨 한 장, 열 이름 -> 값. 라벨의 `{Column}` 플레이스홀더가 값을 받습니다. 숫자는 텍스트로, null은 빈 셀로 취급됩니다. 최대 100000행, 1000열, 2000000셀, 값당 100000자. |\n"
+"| `data_rows` | array of object | 데이터 병합 라벨: 행마다 라벨 한 장, 열 이름 -> 값. 라벨의 `{Column}` 플레이스홀더가 값을 받습니다. 숫자는 텍스트로, null은 빈 셀로 취급됩니다. 최대 100000행, 1000열, 2000000셀, 값당 100000자. |\n"
 "| `data_file` | string | 또는 라벨 폴더의 CSV, TSV, ODS, XLSX 파일. data_rows와 data_file이 없으면, 라벨 자체의 데이터 파일이 라벨 폴더에서 라벨 옆에 있는 경우 사용됩니다. |\n"
 "| `sheet` | string | 데이터 파일의 시트. 기본값은 첫 번째 시트입니다. |\n"
 "| `host` | string | 프린터 주소. `printers.toml`이 없을 때만(기본값: 앱에서 설정한 것, 없으면 `--discover`로 찾은 유일한 프린터). `printers.toml`이 있으면 거부됩니다(host_given). |\n"
@@ -1683,7 +1683,7 @@ msgstr ""
 "| `cancel_requested` | boolean | DELETE가 전송되었습니다. |\n"
 "| `error` | null or Warning | 실패한 이유: `printer_<code>`, counter_not_saved, label_locked 또는 prepare_failed. |\n"
 "| `remark` | string or null | 프린터의, 사람을 위한 메모. |\n"
-"| `warnings` | array of Warning | 확인할 때 발견되었으며, 그래도 인쇄되었습니다. other_labels_loaded: 프린터에 라벨과 다른 라벨이 장착되어 있다고 보고합니다(그 크기, 또는 측정된 라벨 간격). `printers.toml`의 프린터에서는 작업이 대기열에 들어갈 때 미리보기와 같고, 작업이 인쇄될 때 프린터가 장착된 라벨에 대해 알려 주면 프린터가 보고하는 내용으로 대체됩니다. |\n"
+"| `warnings` | array of Warning | 확인할 때 발견되었으며, 그래도 인쇄되었습니다. other_labels_loaded: 프린터에 라벨과 다른 라벨이 들어 있다고 보고합니다(그 크기, 또는 측정된 라벨 간격). `printers.toml`의 프린터에서는 작업이 대기열에 들어갈 때 미리 보기와 같고, 작업이 인쇄될 때 프린터가 넣은 라벨에 대해 알려 주면 프린터가 보고하는 내용으로 대체됩니다. |\n"
 "| `created` | string | UTC. |\n"
 "| `started` | string or null |  |\n"
 "| `finished` | string or null |  |\n"
@@ -1803,13 +1803,13 @@ msgstr ""
 "| `dpi` | number |  |\n"
 "| `firmware` | string or null |  |\n"
 "| `modes` | array of string |  |\n"
-"| `media` | object | 장착된 것과 프린터의 설정으로, 프린터가 알려 주는 범위입니다(null: 알려 주지 않음): tape_mm, remaining_mm, total_mm, pitch_mm(다이컷 라벨: 측정된 라벨 간격), width_mm(ZPL 프린터에 설정된 인쇄 폭: 설정이며 장착된 라벨이 아님), print_method(프린터에 설정된 direct 또는 transfer), media_type(gap, mark 또는 continuous: 프린터가 라벨을 찾도록 설정된 방식), cassette. 프린터가 알려 주는 것이 아니라 서버의 해당 프린터 설정에서 온 것: job_print_method와 job_media_type, 이 서버의 작업이 하는 방식입니다. |\n"
+"| `media` | object | 넣은 것과 프린터의 설정으로, 프린터가 알려 주는 범위입니다(null: 알려 주지 않음): tape_mm, remaining_mm, total_mm, pitch_mm(다이컷 라벨: 측정된 라벨 간격), width_mm(ZPL 프린터에 설정된 인쇄 폭: 설정이며 넣은 라벨이 아님), print_method(프린터에 설정된 direct 또는 transfer), media_type(gap, mark 또는 continuous: 프린터가 라벨을 찾도록 설정된 방식), cassette. 프린터가 알려 주는 것이 아니라 서버의 해당 프린터 설정에서 온 것: job_print_method와 job_media_type, 이 서버의 작업이 하는 방식입니다. |\n"
 
 #. type: Title ###
 #: docs/api.md
 #, no-wrap
 msgid "Preview { #preview }"
-msgstr "미리보기 { #preview }"
+msgstr "미리 보기 { #preview }"
 
 #. type: Plain text
 #: docs/api.md
@@ -1826,7 +1826,7 @@ msgstr ""
 "|---|---|---|\n"
 "| `width` | integer |  |\n"
 "| `height` | integer |  |\n"
-"| `warnings` | array of Warning | 잘못 인쇄될 것. other_labels_loaded: `printers.toml`의 프린터에 라벨과 다른 라벨이 장착되어 있다고 보고합니다(그 크기, 또는 측정된 라벨 간격). 가장 최근의 응답은 최근 1분 이내의 것이면 반영되고, 오류는 아무것도 알 수 없는 것으로 취급됩니다(백그라운드에서 다시 질의함). 아직 알려지지 않은 프린터는 라벨 렌더링 후 최대 1초 동안 기다립니다. |\n"
+"| `warnings` | array of Warning | 잘못 인쇄될 것. other_labels_loaded: `printers.toml`의 프린터에 라벨과 다른 라벨이 들어 있다고 보고합니다(그 크기, 또는 측정된 라벨 간격). 가장 최근의 응답은 최근 1분 이내의 것이면 반영되고, 오류는 아무것도 알 수 없는 것으로 취급됩니다(백그라운드에서 다시 질의함). 아직 알려지지 않은 프린터는 라벨 렌더링 후 최대 1초 동안 기다립니다. |\n"
 "| `png` | string |  |\n"
 
 #. type: Plain text
@@ -1972,7 +1972,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/index.md
 msgid "Preview at print resolution: what you see is what is printed"
-msgstr "인쇄 해상도의 미리보기: 보이는 그대로 인쇄됩니다"
+msgstr "인쇄 해상도의 미리 보기: 보이는 그대로 인쇄됩니다"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -1985,7 +1985,8 @@ msgid ""
 "[Serial labels](serial.md): one label for each row of a CSV, ODS or XLSX "
 "file; variables such as date and counter, and a command line"
 msgstr ""
-"[연속 라벨](serial.md): CSV, ODS, XLSX 파일의 각 행마다 라벨 한 장. 날짜와 카운터 같은 변수, 그리고 명령줄"
+"[데이터 병합 라벨](serial.md): CSV, ODS, XLSX 파일의 각 행마다 라벨 한 장. 날짜와 카운터 같은 변수, 그리고 "
+"명령줄"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -1999,7 +2000,7 @@ msgstr "사무용 프린터의 [라벨 시트](sheets.md), 그리고 운송업�
 msgid ""
 "Finds the printer in the network and on USB, reads what is loaded and "
 "explains printer problems in plain words"
-msgstr "네트워크와 USB에서 프린터를 찾고, 장착된 것을 읽어 오며, 프린터 문제를 쉬운 말로 설명합니다"
+msgstr "네트워크와 USB에서 프린터를 찾고, 넣은 것을 읽어 오며, 프린터 문제를 쉬운 말로 설명합니다"
 
 #. type: Bullet: '- '
 #: docs/index.md
@@ -2109,7 +2110,7 @@ msgid ""
 "or the distance between the labels."
 msgstr ""
 "프린터의 전원을 켜고 [[ui:Printer model]]에서 선택합니다. Tavletta는 네트워크(Bonjour)에서 프린터를 찾고,"
-" 장착된 것(테이프 너비 또는 라벨 간 간격)을 읽어 옵니다."
+" 넣은 것(테이프 폭 또는 라벨 간 간격)을 읽어 옵니다."
 
 #. type: Bullet: '2. '
 #: docs/index.md
@@ -2339,7 +2340,7 @@ msgid ""
 "paler and yellowish, Tavletta warns about old cassettes. Store cassettes "
 "cool and dry."
 msgstr ""
-"Tavletta는 삽입된 카세트, 남은 테이프, 인쇄 가능한 너비, 로트 번호, 추정 제조일을 표시합니다. ZINK 용지는 노화됩니다. "
+"Tavletta는 삽입된 카세트, 남은 테이프, 인쇄 가능 폭, 로트 번호, 추정 제조일을 표시합니다. ZINK 용지는 노화됩니다. "
 "오래된 용지는 인쇄가 옅고 누렇게 나오며, Tavletta는 오래된 카세트에 대해 경고합니다. 카세트는 서늘하고 건조한 곳에 "
 "보관하십시오."
 
@@ -2493,7 +2494,7 @@ msgid ""
 msgstr ""
 "[[ui:Printer model]]: QL이 두 번 표시됩니다. 연속 DK 롤(라벨 길이가 내용에 맞춰지거나 고정 길이)에는 "
 "\"Brother QL, continuous rolls\"를, 고정 크기의 다이컷 DK 라벨에는 \"Brother QL, die-cut "
-"labels\"를 선택하십시오. 둘 다 같은 프린터와 설정을 사용합니다. 프린터에 다른 종류의 롤이 장착되어 있으면 Tavletta가 "
+"labels\"를 선택하십시오. 둘 다 같은 프린터와 설정을 사용합니다. 프린터에 다른 종류의 롤이 들어 있으면 Tavletta가 "
 "[[ui:Switch]]를 제안합니다."
 
 #. type: Bullet: '- '
@@ -2525,8 +2526,8 @@ msgid ""
 "die-cut labels of another size get a warning too ([[ui:Different labels "
 "loaded]])."
 msgstr ""
-"Tavletta는 인쇄 전에 매번 어떤 롤이 장착되어 있는지 읽어 옵니다. 다른 너비의 연속 롤은 경고([[ui:Wrong roll]])"
-" 후 그 너비에 맞춰 축소되어 인쇄되며, 다른 크기의 다이컷 라벨에도 경고([[ui:Different labels loaded]])가 "
+"Tavletta는 인쇄 전에 매번 어떤 롤이 들어 있는지 읽어 옵니다. 다른 너비의 연속 롤은 경고([[ui:Wrong roll]]) 후"
+" 그 너비에 맞춰 축소되어 인쇄되며, 다른 크기의 다이컷 라벨에도 경고([[ui:Different labels loaded]])가 "
 "표시됩니다."
 
 #. type: Bullet: '- '
@@ -2546,7 +2547,7 @@ msgstr ""
 msgid ""
 "Black and white without dithering: text and codes stay sharp, photos become "
 "hard black and white, as the preview shows."
-msgstr "디더링 없는 흑백: 텍스트와 코드는 선명하게 유지되고, 사진은 미리보기에 보이는 것처럼 강한 흑백이 됩니다."
+msgstr "디더링 없는 흑백: 텍스트와 코드는 선명하게 유지되고, 사진은 미리 보기에 보이는 것처럼 강한 흑백이 됩니다."
 
 #. type: Title ###
 #: docs/printer.md
@@ -2574,10 +2575,10 @@ msgid ""
 "job, Tavletta prints it the other way and says so.  From then on the choice "
 "follows the roll."
 msgstr ""
-"[[ui:Colours]]: [[ui:Red and black]]는 62 mm 연속 롤이 장착되어 있을 때 QL-800 시리즈에 "
-"표시됩니다. 라벨의 빨간 부분은 빨강/검정 롤 DK-22251에서 빨갛게 인쇄됩니다. 이 롤은 검은색 라벨이라도 빨강/검정 작업이 "
-"필요합니다. 선택이 장착된 롤과 맞지 않으면 프린터가 작업을 거부하며, Tavletta는 다른 방식으로 인쇄하고 그 사실을 알립니다. 그"
-" 이후에는 선택이 롤에 맞춰집니다."
+"[[ui:Colours]]: [[ui:Red and black]]는 62 mm 연속 롤이 들어 있을 때 QL-800 시리즈에 표시됩니다."
+" 라벨의 빨간 부분은 빨강/검정 롤 DK-22251에서 빨갛게 인쇄됩니다. 이 롤은 검은색 라벨이라도 빨강/검정 작업이 필요합니다. "
+"선택이 넣은 롤과 맞지 않으면 프린터가 작업을 거부하며, Tavletta는 다른 방식으로 인쇄하고 그 사실을 알립니다. 그 이후에는 "
+"선택이 롤에 맞춰집니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2623,7 +2624,7 @@ msgid ""
 " label on continuous roll, or the other way round. Load the other roll or "
 "choose the other entry under [[ui:Printer model]]."
 msgstr ""
-"\"장착된 롤이 라벨과 일치하지 않습니다\": 연속 롤용 라벨에 다이컷 롤이 장착되어 있거나 그 반대입니다. 다른 롤을 장착하거나 "
+"\"넣은 롤이 라벨과 일치하지 않습니다\": 연속 롤용 라벨에 다이컷 롤이 들어 있거나 그 반대입니다. 다른 롤을 넣거나 "
 "[[ui:Printer model]]에서 다른 항목을 선택하십시오."
 
 #. type: Bullet: '- '
@@ -2631,7 +2632,7 @@ msgstr ""
 msgid ""
 "Out of labels: load a new roll. Cover open: close it. Label jammed: open the"
 " cover and remove it, check the cutter."
-msgstr "라벨 없음: 새 롤을 장착하십시오. 덮개가 열림: 닫으십시오. 라벨이 걸림: 덮개를 열어 제거하고 커터를 확인하십시오."
+msgstr "라벨 없음: 새 롤을 넣으십시오. 덮개가 열림: 닫으십시오. 라벨이 걸림: 덮개를 열어 제거하고 커터를 확인하십시오."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2684,7 +2685,7 @@ msgid ""
 "supported yet."
 msgstr ""
 "라벨: 간격이 있는 다이컷 라벨이며, 라벨 센서는 \"Gap Sensor\"입니다. Tavletta는 작업마다 센서를 설정합니다. 연속 "
-"미디어와 커터는 아직 지원되지 않습니다."
+"용지와 커터는 아직 지원되지 않습니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2728,8 +2729,8 @@ msgid ""
 "once after changing the roll so it measures again."
 msgstr ""
 "[[ui:Different labels loaded]]: 프린터가 측정한 라벨 사이의 거리가 라벨의 높이와 간격을 더한 값과 다릅니다. "
-"[[ui:Label size]]와 [[ui:Gap]]을 확인하거나 올바른 롤을 장착하십시오. 롤을 교체한 후에는 프린터가 다시 측정하도록"
-" 프린터의 Feed를 한 번 누르십시오."
+"[[ui:Label size]]와 [[ui:Gap]]을 확인하거나 올바른 롤을 넣으십시오. 롤을 교체한 후에는 프린터가 다시 측정하도록 "
+"프린터의 Feed를 한 번 누르십시오."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2742,7 +2743,7 @@ msgstr "문제로 인해 중단된 인쇄는 취소되므로, 다시 인쇄해�
 #: docs/printer.md
 msgid ""
 "Out of labels: load a new roll, the printer then synchronises by itself."
-msgstr "라벨 없음: 새 롤을 장착하십시오. 그러면 프린터가 스스로 동기화합니다."
+msgstr "라벨 없음: 새 롤을 넣으십시오. 그러면 프린터가 스스로 동기화합니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2755,7 +2756,7 @@ msgid ""
 "Next label not found: labels not threaded through the label sensor, or "
 "labels without gaps (continuous media is not supported yet)."
 msgstr ""
-"다음 라벨을 찾을 수 없음: 라벨이 라벨 센서에 통과되지 않았거나, 라벨에 간격이 없습니다(연속 미디어는 아직 지원되지 않음)."
+"다음 라벨을 찾을 수 없음: 라벨이 라벨 센서에 통과되지 않았거나, 라벨에 간격이 없습니다(연속 용지는 아직 지원되지 않음)."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2764,7 +2765,7 @@ msgid ""
 "direct mode. Load or remove the ribbon, or choose the other [[ui:Print "
 "method]]."
 msgstr ""
-"리본 문제: 열전사 모드에서 리본이 없거나, 감열 모드에서 리본이 있습니다. 리본을 장착하거나 제거하거나, 다른 [[ui:Print "
+"리본 문제: 열전사 모드에서 리본이 없거나, 직접 감열 모드에서 리본이 있습니다. 리본을 넣거나 제거하거나, 다른 [[ui:Print "
 "method]]를 선택하십시오."
 
 #. type: Bullet: '- '
@@ -2774,7 +2775,7 @@ msgid ""
 "printer is set to thermal direct. Choose [[ui:Thermal transfer (ribbon)]] "
 "under [[ui:Print method]]."
 msgstr ""
-"리본이 있는 라벨이 빈 채로 또는 번져서 인쇄되고 리본이 움직이지 않음: 프린터가 감열(direct)로 설정되어 있습니다. "
+"리본이 있는 라벨이 빈 채로 또는 번져서 인쇄되고 리본이 움직이지 않음: 프린터가 직접 감열(direct)로 설정되어 있습니다. "
 "[[ui:Print method]]에서 [[ui:Thermal transfer (ribbon)]]를 선택하십시오."
 
 #. type: Bullet: '- '
@@ -2846,8 +2847,8 @@ msgid ""
 "Tavletta shows the inserted tape, its type (laminated, heat-shrink tube, "
 "...) and the printable width under [[ui:Printer details]]."
 msgstr ""
-"Tavletta는 삽입된 테이프, 그 종류(라미네이트, 열수축 튜브 등), 인쇄 가능한 너비를 [[ui:Printer details]]에"
-" 표시합니다."
+"Tavletta는 삽입된 테이프, 그 종류(라미네이트, 열수축 튜브 등), 인쇄 가능 폭를 [[ui:Printer details]]에 "
+"표시합니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -2928,7 +2929,7 @@ msgstr "문제 { #ptouch-problems }"
 msgid ""
 "[[ui:Wrong cassette]]: another tape width is inserted. The label is scaled "
 "to the tape."
-msgstr "[[ui:Wrong cassette]]: 다른 테이프 너비가 삽입되어 있습니다. 라벨은 테이프에 맞춰 축소됩니다."
+msgstr "[[ui:Wrong cassette]]: 다른 테이프 폭가 삽입되어 있습니다. 라벨은 테이프에 맞춰 축소됩니다."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3028,8 +3029,8 @@ msgid ""
 "transparent labels, as loaded). Tavletta offers what the connected model "
 "takes and remembers the choice."
 msgstr ""
-"프린터 그룹에서: [[ui:Print density]] (높을수록 진하게 인쇄됨)와 [[ui:Label sensor]] (장착된 대로 "
-"간격이 있는 라벨, 검은 표시, 연속 롤, 투명 라벨). Tavletta는 연결된 모델이 지원하는 것을 제시하고 선택을 기억합니다."
+"프린터 그룹에서: [[ui:Print density]] (높을수록 진하게 인쇄됨)와 [[ui:Label sensor]] (넣은 대로 "
+"간격이 있는 라벨, 블랙 마크, 연속 롤, 투명 라벨). Tavletta는 연결된 모델이 지원하는 것을 제시하고 선택을 기억합니다."
 
 #. type: Title ###
 #: docs/printer.md
@@ -3058,7 +3059,7 @@ msgid ""
 "Cover open, out of labels or a low battery: close the cover, load a roll or "
 "charge the printer, then [[ui:Refresh]]."
 msgstr ""
-"덮개가 열림, 라벨 없음, 또는 배터리 부족: 덮개를 닫거나, 롤을 장착하거나, 프린터를 충전한 다음 [[ui:Refresh]]하십시오."
+"덮개가 열림, 라벨 없음, 또는 배터리 부족: 덮개를 닫거나, 롤을 넣거나, 프린터를 충전한 다음 [[ui:Refresh]]하십시오."
 
 #. type: Bullet: '- '
 #: docs/printer.md
@@ -3253,7 +3254,7 @@ msgid ""
 " the mark) like the roll."
 msgstr ""
 "[[ui:Label sensor]]: [[ui:As set on the printer]]는 프린터 자체 설정을 유지합니다. "
-"[[ui:Gap between labels]]는 다이컷 라벨용, [[ui:Black mark]]는 뒷면에 검은 표시가 있는 라벨용, "
+"[[ui:Gap between labels]]는 다이컷 라벨용, [[ui:Black mark]]는 뒷면에 블랙 마크가 있는 라벨용, "
 "[[ui:Continuous media]]는 간격 없는 롤용입니다. [[ui:Label size]]와 [[ui:Gap]] (또는 표시의 "
 "높이)을 롤에 맞게 설정하십시오."
 
@@ -3291,9 +3292,9 @@ msgid ""
 "mm on 58 mm paper, 72 mm on 80 mm paper). [[ui:Cut]] in the print dialog "
 "cuts the paper after each label."
 msgstr ""
-"영수증 프린터는 라벨을 연속 용지에 인쇄합니다. [[ui:Tape width]]에서 용지 너비를 선택하십시오. 인쇄 가능한 너비는 "
-"용지보다 좁습니다(58 mm 용지에서 48 mm, 80 mm 용지에서 72 mm). 인쇄 대화 상자의 [[ui:Cut]]은 각 라벨 뒤에"
-" 용지를 자릅니다."
+"영수증 프린터는 라벨을 연속 용지에 인쇄합니다. [[ui:Tape width]]에서 용지 너비를 선택하십시오. 인쇄 가능 폭는 용지보다 "
+"좁습니다(58 mm 용지에서 48 mm, 80 mm 용지에서 72 mm). 인쇄 대화 상자의 [[ui:Cut]]은 각 라벨 뒤에 용지를 "
+"자릅니다."
 
 #. type: Title ###
 #: docs/printer.md
@@ -3375,7 +3376,7 @@ msgstr ""
 #: docs/serial.md
 #, no-wrap
 msgid "Serial labels"
-msgstr "연속 라벨"
+msgstr "데이터 병합 라벨"
 
 #. type: Plain text
 #: docs/serial.md
@@ -3393,8 +3394,8 @@ msgid ""
 "![Serial labels](media/serial.png#only-light)  ![Serial "
 "labels](media/serial-dark.png#only-dark)"
 msgstr ""
-"![연속 라벨](media/serial.png#only-light)  ![연속 라벨](media/serial-dark.png#only-"
-"dark)"
+"![데이터 병합 라벨](media/serial.png#only-light)  ![데이터 병합 라벨](media/serial-"
+"dark.png#only-dark)"
 
 #. type: Title ##
 #: docs/serial.md
@@ -3564,7 +3565,7 @@ msgstr "값은 중괄호가 들어 있어도 그대로 인쇄됩니다."
 msgid ""
 "A placeholder without a column of that name is printed as it is; the line "
 "under the preview names it."
-msgstr "해당 이름의 열이 없는 플레이스홀더는 그대로 인쇄됩니다. 미리보기 아래의 줄에 그 이름이 표시됩니다."
+msgstr "해당 이름의 열이 없는 플레이스홀더는 그대로 인쇄됩니다. 미리 보기 아래의 줄에 그 이름이 표시됩니다."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -3591,7 +3592,7 @@ msgstr ""
 #: docs/serial.md
 #, no-wrap
 msgid "Preview"
-msgstr "미리보기"
+msgstr "미리 보기"
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -3600,8 +3601,9 @@ msgid ""
 "[[ui:Previous row]], [[ui:Next row]] and [[ui:Last row]], or Alt+Page Up, "
 "Alt+Page Down, Alt+Home and Alt+End."
 msgstr ""
-"미리보기 아래의 버튼으로 행을 차례로 이동합니다: [[ui:First row]], [[ui:Previous row]], [[ui:Next"
-" row]], [[ui:Last row]], 또는 Alt+Page Up, Alt+Page Down, Alt+Home, Alt+End."
+"미리 보기 아래의 버튼으로 행을 차례로 이동합니다: [[ui:First row]], [[ui:Previous row]], "
+"[[ui:Next row]], [[ui:Last row]], 또는 Alt+Page Up, Alt+Page Down, Alt+Home, "
+"Alt+End."
 
 #. type: Bullet: '- '
 #: docs/serial.md
@@ -4761,7 +4763,7 @@ msgid ""
 "print job then warn with `font_missing` (for example `Element 2: the font "
 "Source Sans 3 is not installed – another font is used`)."
 msgstr ""
-"라벨은 인쇄하는 컴퓨터의 글꼴로 그려집니다. 서버에 없는 글꼴의 텍스트는 다른 글꼴로 그려지며, 미리보기와 인쇄 작업이 "
+"라벨은 인쇄하는 컴퓨터의 글꼴로 그려집니다. 서버에 없는 글꼴의 텍스트는 다른 글꼴로 그려지며, 미리 보기와 인쇄 작업이 "
 "`font_missing`으로 경고합니다(예: `Element 2: the font Source Sans 3 is not "
 "installed – another font is used`)."
 
@@ -4938,7 +4940,7 @@ msgstr ""
 "| `413 label_too_large` | 라벨의 요소가 너무 많거나, 텍스트가 너무 길거나, 렌더링이 40메가픽셀을 초과합니다: 라벨을 단순화하거나 요청당 데이터 행을 줄이십시오. |\n"
 "| `421 wrong_host` | 리버스 프록시가 공개 호스트 이름을 `127.0.0.1`의 서버로 전달합니다: [nginx](#nginx)와 [Caddy](#caddy)를 참조하십시오. |\n"
 "| 경고에 `font_missing`이 있고 텍스트가 이상하게 보임 | 글꼴이 서버에 설치되어 있지 않습니다: [글꼴](#fonts)을 참조하십시오. |\n"
-"| 경고에 `other_labels_loaded`가 있음 | 프린터에 라벨과 다른 라벨이 장착되어 있습니다: 맞는 롤을 장착하거나 라벨의 크기와 간격을 확인하십시오. ZPL 프린터는 이전 롤에서 측정한 거리를 보고할 수 있습니다: 보정하십시오. |\n"
+"| 경고에 `other_labels_loaded`가 있음 | 프린터에 라벨과 다른 라벨이 들어 있습니다: 맞는 롤을 넣거나 라벨의 크기와 간격을 확인하십시오. ZPL 프린터는 이전 롤에서 측정한 거리를 보고할 수 있습니다: 보정하십시오. |\n"
 "| `409 counter_not_saved` | 서버의 사용자가 라벨 파일에 쓸 수 없습니다: 그 사용자에게 `chown`하십시오(Docker: 1000, 네이티브: `tavletta`). |\n"
 "| 라벨의 날짜나 시간이 한두 시간 어긋남 | 컨테이너가 UTC로 실행됩니다: `.env`에 `TAVLETTA_TZ=Europe/Zurich`를 설정한 다음 `docker compose up -d`를 실행하십시오. |\n"
 "| 서버가 시작되지 않음 | `docker compose logs` 또는 `journalctl -u tavletta-server`: `printers.toml` 또는 `tokens.toml`의 오류는 해당 키와 함께 표시됩니다. |\n"
@@ -5102,8 +5104,8 @@ msgid ""
 "labels are found: `media.media_type` and `media.job_media_type`."
 msgstr ""
 "프린터의 상태에는 프린터에 설정된 인쇄 방식(`media.print_method`)과 그 작업이 인쇄에 사용하는 "
-"방식(`media.job_print_method`)이 표시됩니다. `method = \"transfer\"`이면 감열로 설정된 cab도 "
-"서버의 작업을 리본을 사용하여 인쇄합니다. 라벨을 찾는 방식도 마찬가지로 `media.media_type`과 "
+"방식(`media.job_print_method`)이 표시됩니다. `method = \"transfer\"`이면 직접 감열로 설정된 "
+"cab도 서버의 작업을 리본을 사용하여 인쇄합니다. 라벨을 찾는 방식도 마찬가지로 `media.media_type`과 "
 "`media.job_media_type`이 있습니다."
 
 #. type: Bullet: '- '
@@ -5197,8 +5199,8 @@ msgid ""
 "`preview` only lists and shows previews, `print` also prints and follows its"
 " own jobs, `admin` sees and cancels all jobs."
 msgstr ""
-"`preview`는 목록과 미리보기만 보여 주고, `print`는 인쇄와 자신의 작업 추적도 할 수 있으며, `admin`은 모든 작업을"
-" 보고 취소할 수 있습니다."
+"`preview`는 목록과 미리 보기만 보여 주고, `print`는 인쇄와 자신의 작업 추적도 할 수 있으며, `admin`은 모든 "
+"작업을 보고 취소할 수 있습니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5297,8 +5299,9 @@ msgid ""
 "label uses (`[{\"Name\": \"Tea\", …}, {\"Name\": \"Rice\", …}]`), or "
 "`\"data_file\"` with a table in the labels folder."
 msgstr ""
-"연속 라벨: `\"data_rows\"`는 라벨이 사용하는 모든 열을 가진 라벨당 하나의 객체이며(`[{\"Name\": \"Tea\","
-" …}, {\"Name\": \"Rice\", …}]`), 또는 `\"data_file\"`로 라벨 폴더의 표를 지정합니다."
+"데이터 병합 라벨: `\"data_rows\"`는 라벨이 사용하는 모든 열을 가진 라벨당 하나의 객체이며(`[{\"Name\": "
+"\"Tea\", …}, {\"Name\": \"Rice\", …}]`), 또는 `\"data_file\"`로 라벨 폴더의 표를 "
+"지정합니다."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -5348,8 +5351,8 @@ msgid ""
 "follow or cancel print jobs. It asks before it uses a tool, depending on its"
 " settings."
 msgstr ""
-"어시스턴트는 라벨과 프린터를 나열하고, 미리보기를 보여 주고, 인쇄하고, 인쇄 작업을 추적하거나 취소할 수 있습니다. 설정에 따라 도구를"
-" 사용하기 전에 확인을 요청합니다."
+"어시스턴트는 라벨과 프린터를 나열하고, 미리 보기를 보여 주고, 인쇄하고, 인쇄 작업을 추적하거나 취소할 수 있습니다. 설정에 따라 "
+"도구를 사용하기 전에 확인을 요청합니다."
 
 #. type: Plain text
 #: docs/server.md
@@ -5394,7 +5397,7 @@ msgstr ""
 #. type: Bullet: '- '
 #: docs/server.md
 msgid "Printing uses real labels: ask for a preview first."
-msgstr "인쇄에는 실제 라벨이 사용됩니다. 먼저 미리보기를 요청하십시오."
+msgstr "인쇄에는 실제 라벨이 사용됩니다. 먼저 미리 보기를 요청하십시오."
 
 #. type: Title ##
 #: docs/server.md
@@ -5557,7 +5560,7 @@ msgid ""
 "designed as a rectangle, and printed only inside their shape; the preview "
 "shows them that way."
 msgstr ""
-"이제 라벨은 시트의 라벨 크기가 됩니다. 원형 라벨과 CD는 직사각형으로 디자인되며 그 모양 안쪽에만 인쇄됩니다. 미리보기에도 그렇게 "
+"이제 라벨은 시트의 라벨 크기가 됩니다. 원형 라벨과 CD는 직사각형으로 디자인되며 그 모양 안쪽에만 인쇄됩니다. 미리 보기에도 그렇게 "
 "표시됩니다."
 
 #. type: Bullet: '- '
@@ -5612,8 +5615,8 @@ msgid ""
 "the rows times the copies of each."
 msgstr ""
 "[[ui:Labels]]: 인쇄할 라벨 수입니다. 처음에는 선택된 위치의 수와 같으며, 더 많으면 다음 시트를 채웁니다. 대화 상자에 "
-"필요한 시트 수가 표시됩니다. 인쇄 작업 하나에는 최대 999장의 라벨을 담을 수 있으며, 연속 라벨에서는 행 수에 각 행의 사본 수를 "
-"곱한 값입니다."
+"필요한 시트 수가 표시됩니다. 인쇄 작업 하나에는 최대 999장의 라벨을 담을 수 있으며, 데이터 병합 라벨에서는 행 수에 각 행의 사본"
+" 수를 곱한 값입니다."
 
 #. type: Bullet: '- '
 #: docs/sheets.md
@@ -6086,7 +6089,7 @@ msgstr "처음 자유 레이아웃으로 전환하면 모든 요소가 원래 �
 msgid ""
 "An element that reaches beyond the label is cut off there; the preview warns"
 " about it."
-msgstr "라벨 밖으로 나간 요소는 거기서 잘립니다. 미리보기가 이에 대해 경고합니다."
+msgstr "라벨 밖으로 나간 요소는 거기서 잘립니다. 미리 보기가 이에 대해 경고합니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6291,7 +6294,7 @@ msgstr ""
 msgid ""
 "Texts and codes can contain [variables](#variables), e.g. a date or a "
 "running number."
-msgstr "텍스트와 코드에는 [변수](#variables)(예: 날짜나 일련번호)를 넣을 수 있습니다."
+msgstr "텍스트와 코드에는 [변수](#variables)(예: 날짜나 카운터)를 넣을 수 있습니다."
 
 #. type: Title ##
 #: docs/use.md
@@ -6573,8 +6576,8 @@ msgid ""
 "parcel on its way; for labels that must last, use thermal transfer labels "
 "with a ribbon."
 msgstr ""
-"대부분의 배송 라벨 롤은 감열 라벨입니다. 리본이 필요 없지만, 열과 햇빛에 몇 달 안에 인쇄가 바랩니다. 배송 중인 소포에는 문제가 "
-"없습니다. 오래 가야 하는 라벨에는 리본을 사용하는 열전사 라벨을 사용하십시오."
+"대부분의 배송 라벨 롤은 직접 감열 라벨입니다. 리본이 필요 없지만, 열과 햇빛에 몇 달 안에 인쇄가 바랩니다. 배송 중인 소포에는 "
+"문제가 없습니다. 오래 가야 하는 라벨에는 리본을 사용하는 열전사 라벨을 사용하십시오."
 
 #. type: Plain text
 #: docs/use.md
@@ -6643,7 +6646,7 @@ msgstr ""
 "| `{=date:%d.%m.%Y}` | 자신만의 형식의 오늘. 예: 31.12.2026 |\n"
 "| `{=date+30d}` | 30일 후. 예: \"유통기한\". `w`(주), `m`(월), `y`(년), `h`(시간)도 사용할 수 있으며 `{=date+1m-1d}`처럼 조합할 수 있습니다 |\n"
 "| `{=time}`, `{=time:%H:%M}` | 시각 |\n"
-"| `{=counter}` | 일련번호 |\n"
+"| `{=counter}` | 카운터 |\n"
 "| `{=counter:0001}` | 앞에 0을 붙여, 패턴과 같은 자릿수 |\n"
 "| `{=copy}`, `{=copies}` | 이 사본과 전체 사본의 번호 |\n"
 "| `{=id}`, `{=id:12}` | 짧은 무작위 ID. 기본값은 8자 |\n"
@@ -6680,8 +6683,8 @@ msgid ""
 "text and in the QR code is the same number. The preview shows the values the"
 " next print uses."
 msgstr ""
-"하나의 라벨에서 각 변수는 하나의 값을 가집니다. 텍스트와 QR 코드에 사용된 카운터나 ID는 같은 번호입니다. 미리보기에는 다음 인쇄에"
-" 사용될 값이 표시됩니다."
+"하나의 라벨에서 각 변수는 하나의 값을 가집니다. 텍스트와 QR 코드에 사용된 카운터나 ID는 같은 번호입니다. 미리 보기에는 다음 "
+"인쇄에 사용될 값이 표시됩니다."
 
 #. type: Plain text
 #: docs/use.md
@@ -6691,7 +6694,8 @@ msgid ""
 "[serial labels](serial.md): then `{{` and `}}` always print one brace."
 msgstr ""
 "중괄호를 인쇄하려면 두 번 씁니다: `{{=date}}`는 `{=date}`로 인쇄됩니다. 변수가 없는 텍스트는 입력한 그대로 "
-"인쇄됩니다. 단, 라벨에 [연속 라벨](serial.md)용 데이터 파일이 있으면 `{{`와 `}}`는 항상 중괄호 하나로 인쇄됩니다."
+"인쇄됩니다. 단, 라벨에 [데이터 병합 라벨](serial.md)용 데이터 파일이 있으면 `{{`와 `}}`는 항상 중괄호 하나로 "
+"인쇄됩니다."
 
 #. type: Plain text
 #: docs/use.md
@@ -6801,8 +6805,8 @@ msgid ""
 "ribbon, thermal direct), also with `--printer-defaults`."
 msgstr ""
 "`--print-method printer|transfer|direct`는 이를 지원하는 감열 프린터의 [[ui:Print "
-"method]]를 이번 인쇄에 한해 설정합니다(프린터에 설정된 대로, 리본 사용, 감열). `--printer-defaults`와 함께 "
-"사용할 수도 있습니다."
+"method]]를 이번 인쇄에 한해 설정합니다(프린터에 설정된 대로, 리본 사용, 직접 감열). `--printer-defaults`와 "
+"함께 사용할 수도 있습니다."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6825,7 +6829,7 @@ msgid ""
 "says so); an answer in that time is used.  `--no-query` skips the question."
 msgstr ""
 "일부 프린터는 라벨을 그리기 전에 질의를 받습니다. 프린터가 보고하는 것(테이프, 해상도)에 따라 달라지기 때문이며, 위의 안내를 위해 "
-"DK 라벨의 Brother QL(장착된 라벨)에도 질의합니다. 5초 안에(`--dry-run`에서는 2초) 응답하지 않는 프린터는 질의 "
+"DK 라벨의 Brother QL(넣은 라벨)에도 질의합니다. 5초 안에(`--dry-run`에서는 2초) 응답하지 않는 프린터는 질의 "
 "없이 라벨이 그려집니다. 아직 진행 중인 질의에는 라벨이 전송되기 전에 끝나도록 최대 10초가 더 주어지며(Tavletta가 이를 "
 "알림), 그 시간 안에 응답이 오면 사용됩니다. `--no-query`는 질의를 건너뜁니다."
 
@@ -6839,10 +6843,10 @@ msgid ""
 "column or a code a row cannot make stops the print before the first label. "
 "See [Serial labels](serial.md)."
 msgstr ""
-"연속 라벨: 데이터 파일의 각 행마다 라벨 한 장을 `--copies`만큼 인쇄합니다. `--data`는 데이터 파일(기본값은 라벨 "
-"폴더에 있으면 라벨 자체의 것), `--sheet`는 시트, `--rows`는 행(`3-10`, `5`, `7-`은 마지막까지)을 "
+"데이터 병합 라벨: 데이터 파일의 각 행마다 라벨 한 장을 `--copies`만큼 인쇄합니다. `--data`는 데이터 파일(기본값은 "
+"라벨 폴더에 있으면 라벨 자체의 것), `--sheet`는 시트, `--rows`는 행(`3-10`, `5`, `7-`은 마지막까지)을 "
 "지정합니다. 카운터는 행에서 행으로 이어집니다. 열이 없는 플레이스홀더나 행이 만들 수 없는 코드가 있으면 첫 번째 라벨 전에 인쇄가 "
-"중단됩니다. [연속 라벨](serial.md)을 참조하십시오."
+"중단됩니다. [데이터 병합 라벨](serial.md)을 참조하십시오."
 
 #. type: Bullet: '- '
 #: docs/use.md
@@ -6858,10 +6862,10 @@ msgid ""
 "code fits."
 msgstr ""
 "`--dry-run`은 확인과 렌더링만 하며, 각 라벨의 텍스트를 나열합니다. `--output file.png`는 [[ui:Export"
-" PNG…]]처럼 각 라벨을 저장합니다: 인쇄되는 그대로, 테이프 전체로, 미리보기처럼 최대 600 dpi로(큰 페이지는 더 거칠게), "
-"그 해상도로 저장합니다(해상도가 다르면 `file-1.png`, `file-2.png` …, `-`는 첫 번째를 표준 출력에 씁니다). "
-"첫 번째 라벨은 프린터가 받는 대로도 그려집니다. `--output`이 있으면 모든 라벨이 그려지고, 들어가지 않는 코드가 있으면 드라이"
-" 런이 중단됩니다(종료 코드 4). 없으면 첫 번째 이후의 라벨은 그려지지 않으며, 그 열과 코드는 확인되지만 코드가 들어가는지는 "
+" PNG…]]처럼 각 라벨을 저장합니다: 인쇄되는 그대로, 테이프 전체로, 미리 보기처럼 최대 600 dpi로(큰 페이지는 더 거칠게),"
+" 그 해상도로 저장합니다(해상도가 다르면 `file-1.png`, `file-2.png` …, `-`는 첫 번째를 표준 출력에 씁니다)."
+" 첫 번째 라벨은 프린터가 받는 대로도 그려집니다. `--output`이 있으면 모든 라벨이 그려지고, 들어가지 않는 코드가 있으면 "
+"드라이 런이 중단됩니다(종료 코드 4). 없으면 첫 번째 이후의 라벨은 그려지지 않으며, 그 열과 코드는 확인되지만 코드가 들어가는지는 "
 "확인되지 않습니다."
 
 #. type: Plain text
