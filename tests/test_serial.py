@@ -452,6 +452,24 @@ def test_serial_labels_on_sheets_fail_with_where_to_go_on():
     assert error.outcome.labels == 5
 
 
+def test_serial_labels_on_sheets_fail_after_every_sheet_came_out():
+    """A backend may fail after the last sheet is out (a job state asked
+    afterwards): the last row stops with all its copies printed, no
+    position left, every label counted; not an IndexError."""
+    label = Label(tape_mm=12, printer="fake-mono", elements=[TextElement(text="{=counter}")])
+
+    class FailsAtTheEnd(SheetPrinter):
+        def print_pages(self, pages, host, options, progress=None):
+            raise PaperJam("jam", printed=len(pages), copies=len(pages), pages=True)
+
+    with pytest.raises(SeriesError) as info:
+        print_series(FailsAtTheEnd(), "office", sheet_series(copies=2, label=label))
+    error = info.value
+    assert (error.row, error.copies_printed, error.position) == (3, 2, None)
+    assert error.printed == [1, 2] and isinstance(error.error, PaperJam)
+    assert error.outcome.labels == 6 and error.outcome.counter == 7
+
+
 def test_serial_labels_on_sheets_that_cannot_be_drawn():
     backend = SheetPrinter()
     backend.prepare_error = RuntimeError("cairo")

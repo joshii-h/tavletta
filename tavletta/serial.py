@@ -353,13 +353,20 @@ def _print_on_sheets(
             outcome.counter = values.counter + values.step * outcome.labels
 
     def stopped_at(done: int, error: Exception, preparing: bool) -> SeriesError:
-        """The SeriesError after `done` labels came out (whole sheets)."""
+        """The SeriesError after `done` labels came out (whole sheets). A
+        backend that fails after every sheet came out stops at the last
+        row with all its copies printed, as a row's own job that fails
+        after its last copy (_print_row); there is no position left."""
         count(done)
         at = min(done // copies, len(rows) - 1)
-        page = next((i for i, first in enumerate(starts) if first + len(slots[i]) > done), 0)
-        where = (slots[page][done - starts[page]] + 1, page + 1)
+        where = None
+        if done < total:
+            page = next(i for i, first in enumerate(starts) if first + len(slots[i]) > done)
+            where = (slots[page][done - starts[page]] + 1, page + 1)
+        else:
+            outcome.printed = rows[:at]
         printed = list(outcome.printed)
-        return SeriesError(rows[at], printed, error, preparing, outcome, done % copies, where)
+        return SeriesError(rows[at], printed, error, preparing, outcome, done - at * copies, where)
 
     options = replace(series.options, copies=total)
     job = Job(backend, series.label, options, series.safe_mm, values, None, sheet, position)
