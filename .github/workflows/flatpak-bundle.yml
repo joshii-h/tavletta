@@ -8,6 +8,11 @@
 # the tavletta-bot user (write access to joshii/tavletta only).
 #
 # Forgejo also reads .github/workflows, hence the server_url guard.
+#
+# CrowdSec on the Forgejo host bans an address that asks for non-static
+# pages often (scenario crowdsecurity/http-crawl-non_statics) and then
+# answers 403: the steps that wait for the Forgejo release ask every 3
+# minutes (see release-mirror.yml).
 
 name: Flatpak bundle
 
@@ -65,11 +70,12 @@ jobs:
           set -euo pipefail
           bundle="Tavletta-$TAG-x86_64.flatpak"
           sha256sum "$bundle" > "$bundle.sha256"
-          # the release is created by release-mirror.yml from the Forgejo release
-          for i in $(seq 120); do
+          # release-mirror.yml creates the release as soon as the tag arrives, before
+          # Forgejo's files (GitHub's API: no CrowdSec there)
+          for i in $(seq 20); do
             gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 && break
-            [ "$i" = 120 ] && { echo "::error::no GitHub release for $TAG"; exit 1; }
-            sleep 15
+            [ "$i" = 20 ] && { echo "::error::no GitHub release for $TAG: did release-mirror.yml fail?"; exit 1; }
+            sleep 30
           done
           gh release upload "$TAG" "$bundle" "$bundle.sha256" --clobber -R "$GITHUB_REPOSITORY"
 
@@ -82,7 +88,18 @@ jobs:
           set -euo pipefail
           bundle="Tavletta-$TAG-x86_64.flatpak"
           auth=(-H "Authorization: token $FORGEJO_TOKEN")
-          release="$(curl -sS --fail "${auth[@]}" "$FORGEJO_API/releases/tags/$TAG")"
+          # release.yml creates it within minutes of the tag: asked every 3 minutes
+          for i in $(seq 10); do
+            code="$(curl -sS "${auth[@]}" -o release.json -w '%{http_code}' \
+              "$FORGEJO_API/releases/tags/$TAG")" || code=000
+            [ "$code" = 200 ] && break
+            if [ "$code" = 403 ] || [ "$code" = 429 ]; then
+              echo "::warning::git.joshuahirsig.xyz answers $code: CrowdSec may have banned this runner's address"
+            fi
+            [ "$i" = 10 ] && { echo "::error::no Forgejo release for $TAG (HTTP $code)"; exit 1; }
+            sleep 180
+          done
+          release="$(cat release.json)"
           id="$(jq -r .id <<<"$release")"
           for f in "$bundle" "$bundle.sha256"; do
             if jq -e --arg n "$f" 'any(.assets[]?; .name == $n)' <<<"$release" > /dev/null; then
@@ -100,6 +117,9 @@ jobs:
           FORGEJO_REPOSITORY: joshii/tavletta
           TOKEN: ${{ secrets.FORGEJO_TOKEN }}
           GH_TOKEN: ${{ github.token }}
+          # release-assets.sh's wait for the Forgejo release: every 3 minutes
+          RELEASE_WAIT_SECONDS: "180"
+          RELEASE_WAIT_TRIES: "10"
         run: |
           set -euo pipefail
           line="- Any Linux distribution with Flatpak, x86-64: \`Tavletta-$TAG-x86_64.flatpak\`; checksum in \`.sha256\`"

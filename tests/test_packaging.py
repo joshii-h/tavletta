@@ -894,6 +894,36 @@ def test_the_package_workflows():
     assert 'packaging/release-assets.sh notes "$TAG" "$line"' in bundle
 
 
+def test_the_mirror_creates_the_release_first_and_polls_forgejo_rarely():
+    """release-mirror.yml creates the GitHub release before it asks Forgejo
+    anything (flatpak-bundle.yml attaches to it; v1.2.0 had none for 40
+    minutes), and asks Forgejo once per pass, every few minutes, longer
+    after a 403: CrowdSec on the Forgejo host took the frequent polling for
+    a crawler and banned the runner's address. flatpak-bundle.yml waits for
+    the Forgejo release as rarely."""
+    mirror = _workflow("release-mirror.yml")
+    job = mirror["jobs"]["mirror"]
+    assert int(job["env"]["POLL_SECONDS"]) >= 120
+    (step,) = job["steps"]
+    run = step["run"]
+    main = run.split("\ncreate\n")[1]  # what runs after the release is created
+    assert "while :; do" in main and "fetch" in main
+    assert run.count("$FORGEJO_API") == 1  # one request for the release per pass
+    assert 'sleep "$wait"' in main and "403|429) state=refused" in run
+    assert "wait * 2 > 900 ? 900 : wait * 2" in main
+    # no other waits between requests to Forgejo (20 s: a retried upload to GitHub)
+    assert re.findall(r"sleep \S+", run) == ["sleep 20", 'sleep "$wait"']
+    text = (ROOT / ".github" / "workflows" / "release-mirror.yml").read_text(encoding="utf-8")
+    assert "crowdsecurity/http-crawl-non_statics" in text
+    bundle = _workflow("flatpak-bundle.yml")
+    steps = {step.get("name"): step for step in bundle["jobs"]["bundle"]["steps"]}
+    assert "sleep 180" in steps["Attach to the Forgejo release"]["run"]
+    notes = steps["Name the bundle in the release notes"]["env"]
+    assert int(notes["RELEASE_WAIT_SECONDS"]) >= 120 and int(notes["RELEASE_WAIT_TRIES"]) <= 10
+    text = (ROOT / ".github" / "workflows" / "flatpak-bundle.yml").read_text(encoding="utf-8")
+    assert "crowdsecurity/http-crawl-non_statics" in text
+
+
 def test_the_release_notes_name_this_workflows_downloads(tmp_path):
     """release.yml's notes step, run: the metainfo's notes of this version,
     then its own downloads (the package workflows add theirs)."""
