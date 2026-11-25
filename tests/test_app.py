@@ -17,6 +17,7 @@ import threading
 import time
 from dataclasses import replace
 from datetime import date, timedelta
+from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlparse
 
@@ -2425,11 +2426,45 @@ def test_docs_url_follows_the_interface_language():
         def info(self):
             return {"language": self._language}
 
-    assert i18n.docs_url(Catalog("de")) == "https://tavletta.joshuahirsig.xyz/de/"
-    assert i18n.docs_url(Catalog("de_CH")) == "https://tavletta.joshuahirsig.xyz/de/"
+    site = "https://tavletta.joshuahirsig.xyz/"
+    assert i18n.docs_url(Catalog("de")) == site + "de/"
+    assert i18n.docs_url(Catalog("de_CH")) == site + "de/"
+    assert i18n.docs_url(Catalog("ja")) == site + "ja/"
+    assert i18n.docs_url(Catalog("pt_BR")) == site + "pt_BR/"
     # no documentation in that language yet: English
-    assert i18n.docs_url(Catalog("ja")) == "https://tavletta.joshuahirsig.xyz/en/"
-    assert i18n.docs_url(object()) == "https://tavletta.joshuahirsig.xyz/en/"
+    assert i18n.docs_url(Catalog("sr")) == site + "en/"
+    assert i18n.docs_url(object()) == site + "en/"
+
+
+@pytest.mark.parametrize(
+    "language, docs",
+    [
+        ("pt_BR", "pt_BR"),
+        ("pt_PT", "pt"),
+        ("pt", "pt"),
+        ("zh_TW", "zh_TW"),
+        ("zh_HK", "zh_HK"),
+        ("zh_MO", "zh_HK"),
+        ("zh_CN", "zh_CN"),
+        ("zh_SG", "zh_CN"),
+        ("zh", "zh_CN"),
+        ("zh-Hant-TW", "zh_TW"),
+        ("fr_CA.UTF-8", "fr"),
+        ("de_CH", "de"),
+        ("en_GB", "en"),
+        ("sr@latin", "en"),
+        ("", "en"),
+    ],
+)
+def test_docs_language_knows_regions(language, docs):
+    assert i18n.docs_language(language) == docs
+
+
+def test_docs_languages_are_the_website_languages():
+    site_po = Path(__file__).resolve().parent.parent / "site" / "po"
+    website = {"en"} | {path.stem for path in site_po.glob("*.po")}
+    assert len(website) >= 27
+    assert website == i18n.DOCS_LANGUAGES
 
 
 def test_month_year_is_one_translatable_pattern():
@@ -4138,7 +4173,6 @@ def test_third_party_notices_and_the_about_dialog_name_the_same():
     are the About dialog's legal sections and its protocol sources the
     About dialog's list, both ways; labelburg is in both."""
     import re
-    from pathlib import Path
 
     notices = (Path(__file__).parent.parent / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
     shipped, sources = notices.split("## 2. ")

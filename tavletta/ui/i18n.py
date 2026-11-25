@@ -123,14 +123,63 @@ def isolate(text: str) -> str:
 
 
 DOCS_URL = "https://tavletta.joshuahirsig.xyz"
-# languages the documentation is available in (site/po/<lang>.po)
-DOCS_LANGUAGES = ("en", "de")
+# languages of the documentation, one directory each on the website: English
+# and every catalog in site/po (the installed package has no site/po; a test
+# keeps both in step)
+DOCS_LANGUAGES = frozenset(
+    {
+        "en",
+        "ar",
+        "de",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "hi",
+        "hu",
+        "id",
+        "it",
+        "ja",
+        "ko",
+        "ms",
+        "nl",
+        "pl",
+        "pt",
+        "pt_BR",
+        "ru",
+        "sv",
+        "th",
+        "tr",
+        "uk",
+        "vi",
+        "zh_CN",
+        "zh_HK",
+        "zh_TW",
+    }
+)
+# languages and regions that read the documentation of another one
+_DOCS_ALIASES = {"zh": "zh_CN", "zh_SG": "zh_CN", "zh_MO": "zh_HK"}
+
+
+def docs_language(language: str) -> str:
+    """The documentation's language for a gettext or BCP 47 language name:
+    the one of the region ("pt_BR", "zh_TW") if there is one, then the
+    language ("de_CH" -> "de", "pt_PT" -> "pt"), English otherwise."""
+    base, *rest = language.split(".")[0].split("@")[0].replace("-", "_").split("_")
+    base = base.lower()
+    region = [part.upper() for part in rest if len(part) == 2][:1]
+    regional = "_".join([base] + region)
+    for name in (regional, base):
+        name = _DOCS_ALIASES.get(name, name)
+        if name in DOCS_LANGUAGES:
+            return name
+    return "en"
 
 
 def docs_url(translation=TRANSLATION) -> str:
     """The documentation in the interface language, English otherwise."""
-    short = _language(translation)
-    return "%s/%s/" % (DOCS_URL, short if short in DOCS_LANGUAGES else "en")
+    language = translation.info().get("language", "") if hasattr(translation, "info") else ""
+    return "%s/%s/" % (DOCS_URL, docs_language(language))
 
 
 def month_year(month: int, year: int) -> str:

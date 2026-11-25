@@ -51,7 +51,8 @@ them the build uses the English README screenshots.
   (any PO editor, e.g. Poedit, GNOME Translation Editor), remove the `fuzzy`
   flag. Keep `[[ui:…]]`, links, `{ #id }` and code exactly as they are.
 - New language: `msginit -i site/po/tavletta-docs.pot -o site/po/<lang>.po -l <lang>`.
-  Nothing else to register: the build, the language selector and the
-  screenshots pick up every `po/*.po`. Use the same code as the app (`pt_BR`,
-  `zh_TW`, …).
+  The build, the language selector and the screenshots pick up every
+  `po/*.po`; the app's help links need the language in `DOCS_LANGUAGES`
+  (`tavletta/ui/i18n.py`, a test checks). Use the same code as the app
+  (`pt_BR`, `zh_TW`, …).
 - `python3 site/check_translations.py` lists what is left to do.
