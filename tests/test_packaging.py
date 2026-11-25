@@ -508,21 +508,79 @@ def test_every_tag_check_takes_the_same_semver_tags():
         assert bool(re.fullmatch(pattern, tag)) == bool(flathub.TAG.fullmatch(tag)), tag
 
 
+XML_LANG = "{http://www.w3.org/XML/1998/namespace}lang"
+
+
+def _metainfo():
+    import xml.etree.ElementTree as ET
+
+    return ET.parse(ROOT / "data" / "xyz.joshuahirsig.Tavletta.metainfo.xml").getroot()
+
+
 def test_the_screenshots_come_from_the_github_mirror_at_this_release():
     """Software centres and Flathub fetch them by these URLs: from the
     GitHub mirror (no rate limit for automated clients, as flathub.py
     explains), at the tag of this version, files that are there."""
-    import xml.etree.ElementTree as ET
-
     from tavletta import __version__
 
-    root = ET.parse(ROOT / "data" / "xyz.joshuahirsig.Tavletta.metainfo.xml").getroot()
+    root = _metainfo()
     images = [image.text for image in root.iterfind("screenshots/screenshot/image")]
     assert images
     prefix = f"https://raw.githubusercontent.com/joshii-h/tavletta/v{__version__}/"
     for url in images:
         assert url.startswith(prefix), url
         assert (ROOT / url.removeprefix(prefix)).is_file(), url
+
+
+def test_the_metainfo_is_in_every_language():
+    """Software centres show the description and the screenshot captions
+    in the user's language: every English <p> and <li> of the description
+    (not of the release notes) and every <caption> is followed by one
+    translation for each language of the app (po/*.po), and no other."""
+    languages = sorted(path.stem for path in (ROOT / "po").glob("*.po"))
+    assert len(languages) >= 26
+    root = _metainfo()
+    description = root.find("description")
+    texts = [
+        [el for el in description if el.tag == "p"],
+        *([li for li in ul if li.tag == "li"] for ul in description.iterfind("ul")),
+        *(screenshot.findall("caption") for screenshot in root.iterfind("screenshots/screenshot")),
+    ]
+    count = 0
+    for elements in texts:
+        groups: list[tuple[str, list[str]]] = []
+        for el in elements:
+            language = el.get(XML_LANG)
+            if language is None:
+                groups.append(("".join(el.itertext()).strip(), []))
+            else:
+                assert groups, "a translation before its English text: %s" % language
+                groups[-1][1].append(language)
+        for english, translated in groups:
+            assert translated == languages, english
+        count += len(groups)
+    assert count > 30
+
+
+def test_the_launcher_and_its_keywords_are_in_every_language():
+    """The desktop file has GenericName, Comment and Keywords in each
+    language of the app; the software centre's keywords in a language
+    (the metainfo's) are the launcher's."""
+    desktop = (ROOT / "data" / "xyz.joshuahirsig.Tavletta.desktop").read_text(encoding="utf-8")
+    languages = sorted(path.stem for path in (ROOT / "po").glob("*.po"))
+    for key in ("GenericName", "Comment", "Keywords"):
+        found = re.findall(rf"^{key}\[(\w+)\]=", desktop, re.M)
+        assert sorted(found) == languages, key
+    launcher = {
+        lang: words.rstrip(";").split(";")
+        for lang, words in re.findall(r"^Keywords\[(\w+)\]=(.*)$", desktop, re.M)
+    }
+    found: dict[str, list[str]] = {}
+    for keyword in _metainfo().iterfind("keywords/keyword"):
+        language = keyword.get(XML_LANG)
+        if language:
+            found.setdefault(language, []).append(keyword.text)
+    assert found == launcher
 
 
 def test_the_manual_page_names_every_command_and_printer():
@@ -1202,9 +1260,11 @@ def test_the_bundle_asks_forgejo_for_its_release_every_3_minutes(tmp_path, answe
     assert int(notes["RELEASE_WAIT_SECONDS"]) >= 120 and int(notes["RELEASE_WAIT_TRIES"]) <= 3
 
 
-def test_the_release_notes_name_this_workflows_downloads(tmp_path):
-    """release.yml's notes step, run: the metainfo's notes of this version,
-    then its own downloads (the package workflows add theirs)."""
+@pytest.mark.parametrize("translated", [False, True])
+def test_the_release_notes_name_this_workflows_downloads(tmp_path, translated):
+    """release.yml's notes step, run: the metainfo's notes of this version
+    in English (not their translations), then its own downloads (the
+    package workflows add theirs)."""
     import os
     import subprocess
 
@@ -1221,7 +1281,17 @@ def test_the_release_notes_name_this_workflows_downloads(tmp_path):
     (src / "data").mkdir()
     (src / "tavletta" / "__init__.py").write_text(f'__version__ = "{__version__}"\n')
     metainfo = "xyz.joshuahirsig.Tavletta.metainfo.xml"
-    (src / "data" / metainfo).write_bytes((ROOT / "data" / metainfo).read_bytes())
+    text = (ROOT / "data" / metainfo).read_text(encoding="utf-8")
+    release = f'<release version="{__version__}"'
+    head, tail = text.split(release, 1)
+    description, rest = tail.split("</description>", 1)
+    if translated:  # a paragraph and a list, each translated
+        description = (
+            description.replace("</p>", '</p>\n<p xml:lang="de">Absatz</p>', 1)
+            + '<ul><li>Item</li><li xml:lang="de">Punkt</li></ul>'
+        )
+    text = head + release + description + "</description>" + rest
+    (src / "data" / metainfo).write_text(text, encoding="utf-8")
     env_file = tmp_path / "env"
     done = subprocess.run(
         [sys.executable, "-c", script],
@@ -1235,6 +1305,8 @@ def test_the_release_notes_name_this_workflows_downloads(tmp_path):
     assert done.returncode == 0, done.stderr
     body = (tmp_path / "release-notes.md").read_text()
     assert body.index("**Downloads**") > 0  # after the version's notes
+    assert "Absatz" not in body and "Punkt" not in body
+    assert ("- Item\n" in body) == translated
     assert body.endswith(
         f"- pip: `tavletta-{__version__}.tar.gz` (the source) and the `.whl`;"
         " checksums in `SHA256SUMS`\n"

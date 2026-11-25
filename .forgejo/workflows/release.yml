@@ -100,6 +100,9 @@ jobs:
           def text(el):
               return " ".join("".join(el.itertext()).split())
 
+          def english(el):  # not one of the translations (xml:lang)
+              return el.get("{http://www.w3.org/XML/1998/namespace}lang") is None
+
           notes = []
           for path in pathlib.Path("data").glob("*.metainfo.xml"):
               for rel in ET.parse(path).getroot().iterfind("releases/release"):
@@ -107,10 +110,11 @@ jobs:
                       continue
                   desc = rel.find("description")
                   for el in desc if desc is not None else []:
-                      if el.tag == "p":
+                      if el.tag == "p" and english(el):
                           notes.append(text(el))
                       elif el.tag in ("ul", "ol"):
-                          notes.append("\n".join(f"- {text(li)}" for li in el.iterfind("li")))
+                          items = [li for li in el.iterfind("li") if english(li)]
+                          notes.append("\n".join(f"- {text(li)}" for li in items))
           if not notes:  # fall back to the tag annotation (empty for lightweight tags)
               ann = subprocess.run(
                   ["git", "for-each-ref", f"refs/tags/{tag}", "--format=%(contents)"],

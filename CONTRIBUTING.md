@@ -254,17 +254,18 @@ extension of the interface first; please open an issue before you start.
    on top of that.
 
 4. Texts: a row in the table of [docs/printers.md](docs/printers.md) and,
-   in short, in the "Supported printers" list of the README, an entry
-   under "Supported printers" in the metainfo description, a section in
+   in short, in the "Supported printers" list of the README, a section in
    `site/docs/printer.md` (setup and problems), protocol notes in
-   `docs/<name>.md` (listed in [docs/README.md](docs/README.md)), and the
-   trademark in the README's License section and the metainfo;
-   the printer's names among the `Keywords` of the desktop file and the
-   `<keywords>` of the metainfo, so a search finds it. Protocol knowledge
+   `docs/<name>.md` (listed in [docs/README.md](docs/README.md)), the
+   trademark in the README's License section. In the metainfo, in every
+   language (`xml:lang`, a test checks): an entry under "Supported
+   printers" in the description and the trademark. The printer's names
+   among the `Keywords` of the desktop file and the `<keywords>` of the
+   metainfo, in every language, so a search finds it. Protocol knowledge
    from other projects goes into `THIRD_PARTY_NOTICES.md` (section 2) and
    `PROTOCOL_SOURCES` in `tavletta/app.py` (a test keeps both in step), code
    or data you ship into section 1 and `LEGAL`. Nothing else names
-   printers, so no existing sentence needs a new translation.
+   printers, so no other sentence needs a new translation.
 
 Labels store the backend id in the `printer` field; files without it belong
 to the VC-500W. Die-cut labels also store `gap_mm` and `orientation`;
@@ -517,8 +518,9 @@ Thai (`th`), Vietnamese (`vi`), Indonesian (`id`), Malay (`ms`), Korean
   Icons names them, and the symbol search is in English: do not translate
   them (there are over 7000, and a label file stores the name).
 - Wrap every user-facing string in `_()` (a text defined before its
-  language is known: `N_()` where it is defined, `_()` where it is used). Use named placeholders
-  (`%(width)d`) so translators can reorder them.
+  language is known: `N_()` where it is defined, `_()` where it is
+  used). Use named placeholders (`%(width)d`) so translators can reorder
+  them.
 - After changing strings:
 
   ```sh
@@ -538,7 +540,9 @@ Thai (`th`), Vietnamese (`vi`), Indonesian (`id`), Malay (`ms`), Korean
   `python3 tools/fill_po.py` (all languages, or name some: `de fr`).
   Missing strings are listed.
 - New languages are welcome: add `tools/strings_<lang>.py`, the plural rule
-  in `tools/fill_po.py`, and the language to the desktop and metainfo files.
+  in `tools/fill_po.py`, and the language to the desktop file
+  (`GenericName`, `Comment`, `Keywords`) and to every text and the
+  keywords of the metainfo (tests check).
 
 ## Maintainer setup
 
