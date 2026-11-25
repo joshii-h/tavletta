@@ -542,6 +542,7 @@ def test_the_metainfo_is_in_every_language():
     root = _metainfo()
     description = root.find("description")
     texts = [
+        root.findall("summary"),
         [el for el in description if el.tag == "p"],
         *([li for li in ul if li.tag == "li"] for ul in description.iterfind("ul")),
         *(screenshot.findall("caption") for screenshot in root.iterfind("screenshots/screenshot")),
@@ -564,22 +565,20 @@ def test_the_metainfo_is_in_every_language():
 
 def test_the_launcher_and_its_keywords_are_in_every_language():
     """The desktop file has GenericName, Comment and Keywords in each
-    language of the app; the software centre's keywords in a language
-    (the metainfo's) are the launcher's."""
+    language of the app; the software centre's keywords (the metainfo's)
+    are the launcher's, in English and in each language."""
     desktop = (ROOT / "data" / "xyz.joshuahirsig.Tavletta.desktop").read_text(encoding="utf-8")
     languages = sorted(path.stem for path in (ROOT / "po").glob("*.po"))
     for key in ("GenericName", "Comment", "Keywords"):
         found = re.findall(rf"^{key}\[(\w+)\]=", desktop, re.M)
         assert sorted(found) == languages, key
     launcher = {
-        lang: words.rstrip(";").split(";")
-        for lang, words in re.findall(r"^Keywords\[(\w+)\]=(.*)$", desktop, re.M)
+        lang or "en": words.rstrip(";").split(";")
+        for lang, words in re.findall(r"^Keywords(?:\[(\w+)\])?=(.*)$", desktop, re.M)
     }
     found: dict[str, list[str]] = {}
     for keyword in _metainfo().iterfind("keywords/keyword"):
-        language = keyword.get(XML_LANG)
-        if language:
-            found.setdefault(language, []).append(keyword.text)
+        found.setdefault(keyword.get(XML_LANG, "en"), []).append(keyword.text)
     assert found == launcher
 
 
@@ -1286,9 +1285,10 @@ def test_the_release_notes_name_this_workflows_downloads(tmp_path, translated):
     head, tail = text.split(release, 1)
     description, rest = tail.split("</description>", 1)
     if translated:  # a paragraph and a list, each translated
-        description = (
-            description.replace("</p>", '</p>\n<p xml:lang="de">Absatz</p>', 1)
-            + '<ul><li>Item</li><li xml:lang="de">Punkt</li></ul>'
+        description += (
+            '<p>Paragraph</p><p xml:lang="de">Absatz</p>'
+            '<ul><li>Item</li><li xml:lang="de">Punkt</li></ul>'
+            '<ul><li xml:lang="de">Nur übersetzt</li></ul>'
         )
     text = head + release + description + "</description>" + rest
     (src / "data" / metainfo).write_text(text, encoding="utf-8")
@@ -1306,7 +1306,8 @@ def test_the_release_notes_name_this_workflows_downloads(tmp_path, translated):
     body = (tmp_path / "release-notes.md").read_text()
     assert body.index("**Downloads**") > 0  # after the version's notes
     assert "Absatz" not in body and "Punkt" not in body
-    assert ("- Item\n" in body) == translated
+    assert ("Paragraph\n\n- Item\n" in body) == translated
+    assert "übersetzt" not in body and "\n\n\n" not in body
     assert body.endswith(
         f"- pip: `tavletta-{__version__}.tar.gz` (the source) and the `.whl`;"
         " checksums in `SHA256SUMS`\n"

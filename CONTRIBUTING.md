@@ -256,7 +256,7 @@ extension of the interface first; please open an issue before you start.
 4. Texts: a row in the table of [docs/printers.md](docs/printers.md) and,
    in short, in the "Supported printers" list of the README, a section in
    `site/docs/printer.md` (setup and problems), protocol notes in
-   `docs/<name>.md` (listed in [docs/README.md](docs/README.md)), the
+   `docs/<name>.md` (listed in [docs/README.md](docs/README.md)) and the
    trademark in the README's License section. In the metainfo, in every
    language (`xml:lang`, a test checks): an entry under "Supported
    printers" in the description and the trademark. The printer's names

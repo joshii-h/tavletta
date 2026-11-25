@@ -114,7 +114,8 @@ jobs:
                           notes.append(text(el))
                       elif el.tag in ("ul", "ol"):
                           items = [li for li in el.iterfind("li") if english(li)]
-                          notes.append("\n".join(f"- {text(li)}" for li in items))
+                          if items:
+                              notes.append("\n".join(f"- {text(li)}" for li in items))
           if not notes:  # fall back to the tag annotation (empty for lightweight tags)
               ann = subprocess.run(
                   ["git", "for-each-ref", f"refs/tags/{tag}", "--format=%(contents)"],
