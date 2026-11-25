@@ -73,11 +73,14 @@ fi
 # ImageMagick 7 is `magick`, ImageMagick 6 (some distributions) `convert`
 if command -v magick >/dev/null; then IM=magick; IDENTIFY="magick identify"; else IM=convert; IDENTIFY=identify; fi
 
-# the app reads its translations from tavletta/locale
+# the app reads its translations from tavletta/locale; written aside and
+# renamed, so a second run in parallel (the docs workflow) never reads half
 for po in po/*.po; do
     lang="$(basename "$po" .po)"
-    mkdir -p "tavletta/locale/$lang/LC_MESSAGES"
-    msgfmt -o "tavletta/locale/$lang/LC_MESSAGES/tavletta.mo" "$po"
+    mo="tavletta/locale/$lang/LC_MESSAGES/tavletta.mo"
+    mkdir -p "${mo%/*}"
+    msgfmt -o "$mo.$$" "$po"
+    mv -f "$mo.$$" "$mo"
 done
 
 size_window() { # pid

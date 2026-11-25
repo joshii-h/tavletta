@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:trixie
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Check the deploy folder
         run: |
@@ -105,7 +105,23 @@ jobs:
         working-directory: src
         env:
           GDK_BACKEND: x11
-        run: xvfb-run -a -s "-screen 0 1280x900x24" tools/screenshots.sh --docs
+        # about 3 minutes per language, one after the other: four displays at
+        # once, each with every fourth language (fixed display numbers: two
+        # `xvfb-run -a` started together can pick the same one)
+        run: |
+          set -eu
+          langs="en $(for p in site/po/*.po; do basename "$p" .po; done)"
+          pids=""
+          for g in 0 1 2 3; do
+            group=$(printf '%s\n' $langs | awk -v g="$g" 'NR % 4 == g' | tr '\n' ' ')
+            xvfb-run -n "$((90 + g))" -s "-screen 0 1280x900x24" \
+              tools/screenshots.sh --docs $group > "shots-$g.log" 2>&1 &
+            pids="$pids $!"
+          done
+          failed=0
+          for p in $pids; do wait "$p" || failed=1; done
+          cat shots-*.log
+          exit "$failed"
 
       - name: Build
         working-directory: src
