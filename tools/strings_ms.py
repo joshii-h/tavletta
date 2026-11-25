@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "Membaca fail mengambil masa terlalu lama – hantar fail yang lebih kecil",
     "The label could not be deleted from the labels folder": "Label tidak dapat dipadam daripada folder label",
     "%s was changed while the request was checked – send it again": "%s telah diubah semasa permintaan disemak – hantar semula",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Halaman web Tavletta memerlukan JavaScript. REST API berada di /api/v1.",
 }

@@ -38,6 +38,12 @@ def _(message: str) -> str:
     return _catalog().gettext(message)
 
 
+def N_(message: str) -> str:  # noqa: N802 (the gettext name)
+    """A text marked for xgettext (--keyword=N_) where it is defined, and
+    translated with _() where it is used."""
+    return message
+
+
 def pgettext(context: str, message: str) -> str:
     """A translation with context, for words with several meanings ("May")."""
     return _catalog().pgettext(context, message)

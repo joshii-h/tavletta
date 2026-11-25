@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 19:56+0100\n"
+"PO-Revision-Date: 2026-11-25 13:18+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: tr\n"
 "Language: tr\n"
@@ -324,14 +324,14 @@ msgid ""
 msgstr "yeni bir belirteç oluşturmak yerine kendi seçtiğiniz belirteci standart girişten alır (scrypt ile saklanır)"
 
 #: tavletta/cli.py:493 tavletta/server/config.py:221
-#: tavletta/server/service.py:646
+#: tavletta/server/service.py:645
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "Bilinmeyen yazıcı modeli: %s"
 
 #: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:351 tavletta/ui/texts.py:754
-#: tavletta/server/service.py:988
+#: tavletta/server/service.py:987
 #, python-format
 msgid "Cannot open %s"
 msgstr "%s açılamıyor"
@@ -352,7 +352,7 @@ msgid "The label has no element or variable named %s"
 msgstr "Etikette %s adında bir öğe veya değişken yok"
 
 #: tavletta/cli.py:605 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1390
+#: tavletta/server/service.py:1397
 msgid "The label is empty"
 msgstr "Etiket boş"
 
@@ -365,9 +365,9 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output PNG görüntüleri yazar: .png ile biten bir ad verin"
 
 #: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:749 tavletta/server/service.py:1235
-#: tavletta/server/service.py:1258 tavletta/server/service.py:1580
-#: tavletta/server/service.py:1852
+#: tavletta/ui/printing.py:749 tavletta/server/service.py:1240
+#: tavletta/server/service.py:1263 tavletta/server/service.py:1587
+#: tavletta/server/service.py:1891
 msgid "The label cannot be prepared for printing."
 msgstr "Etiket yazdırmaya hazırlanamıyor."
 
@@ -380,16 +380,16 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "Birden çok yazıcı bulundu – --host ile birini seçin (tavletta list-printers)"
 
-#: tavletta/cli.py:798 tavletta/ui/texts.py:806 tavletta/server/service.py:1842
+#: tavletta/cli.py:798 tavletta/ui/texts.py:806 tavletta/server/service.py:1881
 #, python-format
 msgid "Cannot save %s"
 msgstr "%s kaydedilemiyor"
 
-#: tavletta/cli.py:800 tavletta/server/service.py:1845
+#: tavletta/cli.py:800 tavletta/server/service.py:1884
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "etiketler yazdırıldı ancak sonraki sayaç değeri kaydedilmedi"
 
-#: tavletta/cli.py:815 tavletta/server/service.py:1419
+#: tavletta/cli.py:815 tavletta/server/service.py:1426
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "hiçbir şey yazdırılmadı: sonraki sayaç değeri kaydedilemeyecekti"
 
@@ -398,7 +398,7 @@ msgid "Interrupted"
 msgstr "Kesildi"
 
 #: tavletta/cli.py:958 tavletta/ui/printing.py:488
-#: tavletta/server/service.py:1281
+#: tavletta/server/service.py:1286
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "Bir yazdırma işinde en fazla %d etiket"
@@ -413,7 +413,7 @@ msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet ve --rows bir veri dosyası gerektirir (--data)"
 
 #: tavletta/cli.py:1028 tavletta/ui/printing.py:616
-#: tavletta/server/service.py:1093
+#: tavletta/server/service.py:1098
 msgid "No rows to print"
 msgstr "Yazdırılacak satır yok"
 
@@ -422,7 +422,7 @@ msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "Etiket, klasörünün dışındaki bir veri dosyasını kullanıyor: --data ile belirtin"
 
 #: tavletta/cli.py:1065 tavletta/ui/window.py:922
-#: tavletta/server/service.py:1152
+#: tavletta/server/service.py:1157
 #, python-format
 msgid "No such column: %s"
 msgstr "Böyle bir sütun yok: %s"
@@ -444,8 +444,8 @@ msgstr "Satırlar: %s"
 msgid "Waiting for another print of %s to finish…"
 msgstr "%s dosyasının başka bir yazdırmasının bitmesi bekleniyor…"
 
-#: tavletta/cli.py:1090 tavletta/server/service.py:843
-#: tavletta/server/service.py:1574
+#: tavletta/cli.py:1090 tavletta/server/service.py:842
+#: tavletta/server/service.py:1581
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s hâlâ başka bir yazdırma tarafından kilitli – daha sonra yeniden deneyin"
@@ -988,67 +988,67 @@ msgid "How much of the code may be damaged and still be read"
 msgstr "Kodun ne kadarının hasarlı olup yine de okunabileceği"
 
 #. translators: a month and a year, e.g. "May 2018"; reorder as your language needs
-#: tavletta/ui/i18n.py:132
+#: tavletta/ui/i18n.py:138
 #, python-format
 msgid "%(month)s %(year)d"
 msgstr "%(month)s %(year)d"
 
-#: tavletta/ui/i18n.py:137
+#: tavletta/ui/i18n.py:143
 msgctxt "month name"
 msgid "January"
 msgstr "Ocak"
 
-#: tavletta/ui/i18n.py:138
+#: tavletta/ui/i18n.py:144
 msgctxt "month name"
 msgid "February"
 msgstr "Şubat"
 
-#: tavletta/ui/i18n.py:139
+#: tavletta/ui/i18n.py:145
 msgctxt "month name"
 msgid "March"
 msgstr "Mart"
 
-#: tavletta/ui/i18n.py:140
+#: tavletta/ui/i18n.py:146
 msgctxt "month name"
 msgid "April"
 msgstr "Nisan"
 
-#: tavletta/ui/i18n.py:141
+#: tavletta/ui/i18n.py:147
 msgctxt "month name"
 msgid "May"
 msgstr "Mayıs"
 
-#: tavletta/ui/i18n.py:142
+#: tavletta/ui/i18n.py:148
 msgctxt "month name"
 msgid "June"
 msgstr "Haziran"
 
-#: tavletta/ui/i18n.py:143
+#: tavletta/ui/i18n.py:149
 msgctxt "month name"
 msgid "July"
 msgstr "Temmuz"
 
-#: tavletta/ui/i18n.py:144
+#: tavletta/ui/i18n.py:150
 msgctxt "month name"
 msgid "August"
 msgstr "Ağustos"
 
-#: tavletta/ui/i18n.py:145
+#: tavletta/ui/i18n.py:151
 msgctxt "month name"
 msgid "September"
 msgstr "Eylül"
 
-#: tavletta/ui/i18n.py:146
+#: tavletta/ui/i18n.py:152
 msgctxt "month name"
 msgid "October"
 msgstr "Ekim"
 
-#: tavletta/ui/i18n.py:147
+#: tavletta/ui/i18n.py:153
 msgctxt "month name"
 msgid "November"
 msgstr "Kasım"
 
-#: tavletta/ui/i18n.py:148
+#: tavletta/ui/i18n.py:154
 msgctxt "month name"
 msgid "December"
 msgstr "Aralık"
@@ -3258,7 +3258,7 @@ msgid "%s is not a Tavletta label"
 msgstr "%s bir Tavletta etiketi değil"
 
 #: tavletta/ui/texts.py:745 tavletta/ui/texts.py:765
-#: tavletta/server/service.py:999
+#: tavletta/server/service.py:998
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "Dosya bozuk: %s"
@@ -3555,7 +3555,7 @@ msgid "printers can only be limited with --printers"
 msgstr "yazıcılar yalnızca --printers ile sınırlandırılabilir"
 
 #: tavletta/server/config.py:486 tavletta/server/oidc.py:251
-#: tavletta/server/service.py:585
+#: tavletta/server/service.py:584
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "Bilinmeyen yazıcı: %s"
@@ -3565,77 +3565,77 @@ msgstr "Bilinmeyen yazıcı: %s"
 msgid "Invalid value for %s"
 msgstr "%s için geçersiz değer"
 
-#: tavletta/server/http.py:486 tavletta/server/http.py:535
+#: tavletta/server/http.py:490 tavletta/server/http.py:539
 msgid "The request took too long"
 msgstr "İstek çok uzun sürdü"
 
-#: tavletta/server/http.py:495 tavletta/server/service.py:1763
+#: tavletta/server/http.py:499 tavletta/server/service.py:1802
 msgid "The server is busy – try again later"
 msgstr "Sunucu meşgul – daha sonra yeniden deneyin"
 
-#: tavletta/server/http.py:538
+#: tavletta/server/http.py:542
 msgid "Internal error"
 msgstr "İç hata"
 
-#: tavletta/server/http.py:543
+#: tavletta/server/http.py:547
 msgid "This server only answers on its local address"
 msgstr "Bu sunucu yalnızca yerel adresinde yanıt verir"
 
-#: tavletta/server/http.py:547 tavletta/server/http.py:670
-#: tavletta/server/http.py:674
+#: tavletta/server/http.py:551 tavletta/server/http.py:674
+#: tavletta/server/http.py:678
 msgid "Requests from this web page are not allowed"
 msgstr "Bu web sayfasından gelen isteklere izin verilmiyor"
 
-#: tavletta/server/http.py:575 tavletta/server/http.py:585
-#: tavletta/server/http.py:683
+#: tavletta/server/http.py:579 tavletta/server/http.py:589
+#: tavletta/server/http.py:687
 msgid "Access token missing or wrong"
 msgstr "Erişim belirteci eksik veya yanlış"
 
-#: tavletta/server/http.py:583
+#: tavletta/server/http.py:587 tavletta/server/http.py:717
 msgid "Too many requests – try again later"
 msgstr "Çok fazla istek – daha sonra yeniden deneyin"
 
-#: tavletta/server/http.py:663 tavletta/server/http.py:815
+#: tavletta/server/http.py:667 tavletta/server/http.py:824
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Bu istekle birlikte %s başlığını gönderin"
 
-#: tavletta/server/http.py:694 tavletta/server/http.py:789
-#: tavletta/server/http.py:799 tavletta/server/http.py:922
+#: tavletta/server/http.py:698 tavletta/server/http.py:798
+#: tavletta/server/http.py:808 tavletta/server/http.py:934
 msgid "Not found"
 msgstr "Bulunamadı"
 
-#: tavletta/server/http.py:696 tavletta/server/http.py:798
-#: tavletta/server/http.py:913
+#: tavletta/server/http.py:700 tavletta/server/http.py:807
+#: tavletta/server/http.py:923
 msgid "Method not allowed"
 msgstr "Yönteme izin verilmiyor"
 
-#: tavletta/server/http.py:731 tavletta/server/http.py:736
+#: tavletta/server/http.py:740 tavletta/server/http.py:745
 msgid "The request needs a Content-Length"
 msgstr "İstek bir Content-Length gerektiriyor"
 
-#: tavletta/server/http.py:733
+#: tavletta/server/http.py:742
 msgid "The request has more than one Content-Length"
 msgstr "İstekte birden fazla Content-Length var"
 
-#: tavletta/server/http.py:739 tavletta/server/service.py:904
+#: tavletta/server/http.py:748 tavletta/server/service.py:903
 msgid "The request is too large"
 msgstr "İstek çok büyük"
 
-#: tavletta/server/http.py:744
+#: tavletta/server/http.py:753
 msgid "The request body is incomplete"
 msgstr "İstek gövdesi eksik"
 
-#: tavletta/server/http.py:751
+#: tavletta/server/http.py:760
 msgid "Send the request as application/json"
 msgstr "İsteği application/json olarak gönderin"
 
-#: tavletta/server/http.py:860 tavletta/server/service.py:661
-#: tavletta/server/service.py:1736
+#: tavletta/server/http.py:869 tavletta/server/service.py:660
+#: tavletta/server/service.py:1775
 msgid "This access token may not do this"
 msgstr "Bu erişim belirtecinin buna izni yok"
 
-#: tavletta/server/http.py:1045
+#: tavletta/server/http.py:1057
 msgid "The request is not valid JSON"
 msgstr "İstek geçerli bir JSON değil"
 
@@ -3766,8 +3766,8 @@ msgstr "en az bir rol eşleyin"
 msgid "use either printers_claim or [oidc.printers]"
 msgstr "printers_claim veya [oidc.printers] seçeneklerinden yalnızca birini kullanın"
 
-#: tavletta/server/paths.py:46 tavletta/server/service.py:877
-#: tavletta/server/service.py:1310
+#: tavletta/server/paths.py:46 tavletta/server/service.py:876
+#: tavletta/server/service.py:1317
 #, python-format
 msgid "No such label: %s"
 msgstr "Böyle bir etiket yok: %s"
@@ -3804,106 +3804,110 @@ msgstr "Çok fazla veri satırı: en fazla %d"
 msgid "Too many columns: at most %d"
 msgstr "Çok fazla sütun: en fazla %d"
 
-#: tavletta/server/requests.py:239 tavletta/server/service.py:902
+#: tavletta/server/requests.py:239 tavletta/server/service.py:901
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "Çok fazla hücre: en fazla %d"
 
-#: tavletta/server/service.py:597
+#: tavletta/server/service.py:596
 msgid "Choose a printer by its name"
 msgstr "Bir yazıcıyı adıyla seçin"
 
-#: tavletta/server/service.py:719
+#: tavletta/server/service.py:718
 msgid "No printer address: give it as host"
 msgstr "Yazıcı adresi yok: host olarak verin"
 
-#: tavletta/server/service.py:728
+#: tavletta/server/service.py:727
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "Bu yazıcı adresine izin verilmiyor: %s"
 
-#: tavletta/server/service.py:812 tavletta/server/service.py:1007
+#: tavletta/server/service.py:811 tavletta/server/service.py:1006
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content içinde belge sayfalarına izin verilmez (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:848
+#: tavletta/server/service.py:847
 #, python-format
 msgid "%s has print jobs waiting or printing – try again when they are done"
 msgstr "%s için bekleyen veya yazdırılan yazdırma işleri var – bittiklerinde yeniden deneyin"
 
-#: tavletta/server/service.py:895
+#: tavletta/server/service.py:894
 msgid "Reading the file takes too long – send a smaller one"
 msgstr "Dosyayı okumak çok uzun sürüyor – daha küçük bir dosya gönderin"
 
-#: tavletta/server/service.py:1042
+#: tavletta/server/service.py:1043
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s bir veri sütunu ({%(name)s}) – bunu data_rows içinde gönderin"
 
-#: tavletta/server/service.py:1101
+#: tavletta/server/service.py:1106
 msgid "A sheet needs a data file"
 msgstr "Sayfa için bir veri dosyası gerekir"
 
-#: tavletta/server/service.py:1107
+#: tavletta/server/service.py:1112
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "Etiket, etiket klasörünün dışındaki bir veri dosyasını kullanıyor: satırlarını da gönderin"
 
-#: tavletta/server/service.py:1315
+#: tavletta/server/service.py:1322
 #, python-format
 msgid "%s was changed while the request was checked – send it again"
 msgstr "%s, istek denetlenirken değiştirildi – yeniden gönderin"
 
-#: tavletta/server/service.py:1321
+#: tavletta/server/service.py:1328
 msgid "Too many print jobs are waiting – try again later"
 msgstr "Çok fazla yazdırma işi bekliyor – daha sonra yeniden deneyin"
 
-#: tavletta/server/service.py:1596
+#: tavletta/server/service.py:1603
 #, python-format
 msgid "No such print job: %s"
 msgstr "Böyle bir yazdırma işi yok: %s"
 
-#: tavletta/server/service.py:1608
+#: tavletta/server/service.py:1615
 msgid "The print job has already finished"
 msgstr "Yazdırma işi zaten tamamlandı"
 
-#: tavletta/server/service.py:1680
+#: tavletta/server/service.py:1687
 #, python-format
 msgid "A label named %s exists already"
 msgstr "%s adlı bir etiket zaten var"
 
-#: tavletta/server/service.py:1698
+#: tavletta/server/service.py:1737
 msgid "The label could not be deleted from the labels folder"
 msgstr "Etiket, etiketler klasöründen silinemedi"
 
-#: tavletta/server/service.py:1709
+#: tavletta/server/service.py:1748
 msgid "The label could not be saved in the labels folder"
 msgstr "Etiket, etiketler klasörüne kaydedilemedi"
 
-#: tavletta/server/service.py:1767
+#: tavletta/server/service.py:1806
 msgid "The label is too large to render"
 msgstr "Etiket işlenemeyecek kadar büyük"
 
-#: tavletta/server/service.py:1781
+#: tavletta/server/service.py:1820
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "Etiket çok büyük: en fazla %d görsel ve kod"
 
-#: tavletta/server/service.py:1804
+#: tavletta/server/service.py:1843
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "Etiket çok büyük: en fazla %(elements)d öge ve bir metinde en fazla %(chars)d karakter"
 
-#: tavletta/server/service.py:1823
+#: tavletta/server/service.py:1862
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "Bu yazıcıda en fazla %d kopya"
 
-#: tavletta/server/service.py:1828
+#: tavletta/server/service.py:1867
 msgid "Printers are chosen by name: leave out host"
 msgstr "Yazıcılar adla seçilir: host alanını belirtmeyin"
+
+#: tavletta/server/webui.py:71
+msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
+msgstr "Tavletta’nın web sayfası JavaScript gerektirir. REST API /api/v1 adresindedir."
 
 #: tavletta/server/web/api.js:68 tavletta/server/web/app.js:561
 msgid "No connection to the server. Your input is kept."

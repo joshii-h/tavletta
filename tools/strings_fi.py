@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "Tiedoston lukeminen kestää liian kauan – lähetä pienempi tiedosto",
     "The label could not be deleted from the labels folder": "Tarraa ei voitu poistaa tarrakansiosta",
     "%s was changed while the request was checked – send it again": "%s muuttui pyyntöä tarkistettaessa – lähetä se uudelleen",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavlettan verkkosivu tarvitsee JavaScriptin. REST API on osoitteessa /api/v1.",
 }

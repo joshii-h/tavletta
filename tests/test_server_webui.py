@@ -46,6 +46,40 @@ def test_the_page_is_served_without_a_token(base):
         assert response.getheader("Content-Security-Policy") == webui.CSP
 
 
+def test_the_page_comes_in_the_language_asked_for(base, monkeypatch):
+    """/ names its language and direction, and the note for browsers
+    without JavaScript is translated."""
+    monkeypatch.setattr(webui, "languages", lambda: ("en", "ar", "de"))
+    status, response, body = call(base, "GET", "/", headers={"Accept-Language": "de-CH"})
+    assert status == 200 and response.getheader("Vary") == "Accept-Language"
+    page = body.decode("utf-8")
+    assert '<html lang="de" dir="ltr">' in page
+    assert "Die Webseite von Tavletta braucht JavaScript." in page
+    assert "needs JavaScript" not in page
+    page = call(base, "GET", "/?lang=ar")[2].decode("utf-8")
+    assert '<html lang="ar" dir="rtl">' in page and "JavaScript" in page
+    page = call(base, "GET", "/ui/index.html?lang=xx")[2].decode("utf-8")
+    assert '<html lang="en" dir="ltr">' in page
+    assert "Tavletta&#x27;s web page needs JavaScript." in page
+
+
+def test_the_page_needs_its_markers(monkeypatch):
+    """A changed index.html without the <html lang="en"> or the note is
+    noticed instead of served untranslated."""
+    webui._page.cache_clear()
+    plain = webui.Asset(b"<html><body></body></html>", "text/html", '"x"')
+    monkeypatch.setattr(webui, "asset", lambda name: plain)
+    with pytest.raises(RuntimeError):
+        webui._page("de")
+    webui._page.cache_clear()
+
+
+def test_the_note_is_translated_everywhere():
+    """Every catalog has the note of the page (a text outside the scripts)."""
+    for po in sorted(PO_DIR.glob("*.po")):
+        assert webui.NOSCRIPT in webui.read_po(po), po.name
+
+
 def test_the_page_answers_304_while_unchanged(base):
     _status, response, _body = call(base, "GET", "/ui/app.js")
     tag = response.getheader("ETag")

@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "读取文件耗时过长，请发送更小的文件",
     "The label could not be deleted from the labels folder": "无法从标签文件夹中删除标签",
     "%s was changed while the request was checked – send it again": "检查请求期间 %s 已被更改，请重新发送",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta 的网页需要 JavaScript。REST API 位于 /api/v1。",
 }

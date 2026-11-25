@@ -516,12 +516,13 @@ Thai (`th`), Vietnamese (`vi`), Indonesian (`id`), Malay (`ms`), Korean
 - Symbol names, aliases and categories stay English, as Material Design
   Icons names them, and the symbol search is in English: do not translate
   them (there are over 7000, and a label file stores the name).
-- Wrap every user-facing string in `_()`. Use named placeholders
+- Wrap every user-facing string in `_()` (a text defined before its
+  language is known: `N_()` where it is defined, `_()` where it is used). Use named placeholders
   (`%(width)d`) so translators can reorder them.
 - After changing strings:
 
   ```sh
-  xgettext --language=Python --keyword=_ --keyword=pgettext:1c,2 --add-comments=translators: --from-code=UTF-8 \
+  xgettext --language=Python --keyword=_ --keyword=N_ --keyword=pgettext:1c,2 --add-comments=translators: --from-code=UTF-8 \
       --package-name=tavletta -o po/tavletta.pot tavletta/*.py tavletta/ui/*.py \
       tavletta/backends/*.py tavletta/merge/*.py tavletta/sheets/*.py \
       tavletta/shipping/*.py tavletta/symbols/*.py tavletta/server/*.py

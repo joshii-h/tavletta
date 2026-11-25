@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "La lettura del file richiede troppo tempo – inviane uno più piccolo",
     "The label could not be deleted from the labels folder": "Impossibile eliminare l’etichetta dalla cartella delle etichette",
     "%s was changed while the request was checked – send it again": "%s è stato modificato mentre la richiesta veniva verificata – inviala di nuovo",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "La pagina web di Tavletta richiede JavaScript. L’API REST è su /api/v1.",
 }

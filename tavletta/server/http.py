@@ -917,13 +917,16 @@ class Handler(BaseHTTPRequestHandler):
         self._send(202, service.job_dict(service.cancel(parts[1], self.caller)))
 
     def _web(self, method: str, path: str) -> None:
-        """The web page: its files, and its texts in the language asked for."""
+        """The web page: its files, and the page and its texts in the
+        language asked for."""
         if method != "GET":
             raise ApiError(405, "method_not_allowed", _("Method not allowed"))
         name = "index.html" if path == "/" else path[len(WEB_PREFIX) :]
-        if name == "messages.json":
+        found: webui.Asset | None
+        if name in ("index.html", "messages.json"):
             asked = self._query().get("lang", [None])[-1]
-            found: webui.Asset | None = webui.messages(asked, self.headers.get("Accept-Language"))
+            in_language = webui.page if name == "index.html" else webui.messages
+            found = in_language(asked, self.headers.get("Accept-Language"))
             extra = {"Vary": "Accept-Language"}
         else:
             found, extra = webui.asset(name), {}

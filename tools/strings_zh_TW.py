@@ -479,7 +479,7 @@ TRANSLATIONS = {
     "Standard": "標準",
     "High resolution (600 dpi)": "高解析度 (600 dpi)",
     "%s, continuous rolls": "%s，連續標籤捲",
-    "%s, die-cut labels": "%s，預切標籤",
+    "%s, die-cut labels": "%s，模切標籤",
     "The loaded roll does not match the label. Load a matching roll, or choose the label size or printer model of the roll that is loaded.": "裝入的標籤捲與標籤不符。請裝入相符的標籤捲，或選擇與裝入的標籤捲相符的標籤尺寸或印表機型號。",
     "The loaded roll is for “%s”": "裝入的標籤捲適用於「%s」",
     "Switch": "切換",
@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "讀取檔案耗時過久，請傳送較小的檔案",
     "The label could not be deleted from the labels folder": "無法從標籤資料夾中刪除標籤",
     "%s was changed while the request was checked – send it again": "檢查要求期間 %s 已被變更，請重新傳送",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta 的網頁需要 JavaScript。REST API 位於 /api/v1。",
 }

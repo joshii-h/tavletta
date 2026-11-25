@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-24 19:56+0100\n"
+"PO-Revision-Date: 2026-11-25 13:18+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ja\n"
 "Language: ja\n"
@@ -324,14 +324,14 @@ msgid ""
 msgstr "トークンを作成する代わりに、自分で選んだトークンを標準入力から読み取る (scrypt で保存)"
 
 #: tavletta/cli.py:493 tavletta/server/config.py:221
-#: tavletta/server/service.py:646
+#: tavletta/server/service.py:645
 #, python-format
 msgid "Unknown printer model: %s"
 msgstr "不明なプリンターの機種: %s"
 
 #: tavletta/cli.py:500 tavletta/ui/files.py:84 tavletta/ui/files.py:137
 #: tavletta/ui/texts.py:351 tavletta/ui/texts.py:754
-#: tavletta/server/service.py:988
+#: tavletta/server/service.py:987
 #, python-format
 msgid "Cannot open %s"
 msgstr "%s を開けません"
@@ -352,7 +352,7 @@ msgid "The label has no element or variable named %s"
 msgstr "ラベルに %s という名前の要素または変数がありません"
 
 #: tavletta/cli.py:605 tavletta/ui/printing.py:123
-#: tavletta/server/service.py:1390
+#: tavletta/server/service.py:1397
 msgid "The label is empty"
 msgstr "ラベルが空です"
 
@@ -365,9 +365,9 @@ msgid "--output writes PNG images: give a name ending in .png"
 msgstr "--output は PNG 画像を書き込みます: .png で終わる名前を指定してください"
 
 #: tavletta/cli.py:698 tavletta/cli.py:907 tavletta/ui/printing.py:582
-#: tavletta/ui/printing.py:749 tavletta/server/service.py:1235
-#: tavletta/server/service.py:1258 tavletta/server/service.py:1580
-#: tavletta/server/service.py:1852
+#: tavletta/ui/printing.py:749 tavletta/server/service.py:1240
+#: tavletta/server/service.py:1263 tavletta/server/service.py:1587
+#: tavletta/server/service.py:1891
 msgid "The label cannot be prepared for printing."
 msgstr "ラベルを印刷用に準備できません。"
 
@@ -380,16 +380,16 @@ msgid ""
 "Several printers found – choose one with --host (tavletta list-printers)"
 msgstr "複数のプリンターが見つかりました。--host で 1 台選んでください (tavletta list-printers)"
 
-#: tavletta/cli.py:798 tavletta/ui/texts.py:806 tavletta/server/service.py:1842
+#: tavletta/cli.py:798 tavletta/ui/texts.py:806 tavletta/server/service.py:1881
 #, python-format
 msgid "Cannot save %s"
 msgstr "%s を保存できません"
 
-#: tavletta/cli.py:800 tavletta/server/service.py:1845
+#: tavletta/cli.py:800 tavletta/server/service.py:1884
 msgid "the labels were printed, but the next counter value was not saved"
 msgstr "ラベルは印刷されましたが、次のカウンター値は保存されませんでした"
 
-#: tavletta/cli.py:815 tavletta/server/service.py:1419
+#: tavletta/cli.py:815 tavletta/server/service.py:1426
 msgid "nothing was printed: the next counter value could not be saved"
 msgstr "何も印刷されていません: 次のカウンター値を保存できないためです"
 
@@ -398,7 +398,7 @@ msgid "Interrupted"
 msgstr "中断しました"
 
 #: tavletta/cli.py:958 tavletta/ui/printing.py:488
-#: tavletta/server/service.py:1281
+#: tavletta/server/service.py:1286
 #, python-format
 msgid "At most %d labels in one print job"
 msgstr "1 つの印刷ジョブで最大 %d 枚のラベルです"
@@ -413,7 +413,7 @@ msgid "--sheet and --rows need a data file (--data)"
 msgstr "--sheet と --rows にはデータファイル (--data) が必要です"
 
 #: tavletta/cli.py:1028 tavletta/ui/printing.py:616
-#: tavletta/server/service.py:1093
+#: tavletta/server/service.py:1098
 msgid "No rows to print"
 msgstr "印刷する行がありません"
 
@@ -422,7 +422,7 @@ msgid "The label uses a data file outside its folder: give it with --data"
 msgstr "ラベルはフォルダーの外にあるデータファイルを使っています: --data で指定してください"
 
 #: tavletta/cli.py:1065 tavletta/ui/window.py:922
-#: tavletta/server/service.py:1152
+#: tavletta/server/service.py:1157
 #, python-format
 msgid "No such column: %s"
 msgstr "その列はありません: %s"
@@ -444,8 +444,8 @@ msgstr "行: %s"
 msgid "Waiting for another print of %s to finish…"
 msgstr "%s の別の印刷が終わるのを待っています…"
 
-#: tavletta/cli.py:1090 tavletta/server/service.py:843
-#: tavletta/server/service.py:1574
+#: tavletta/cli.py:1090 tavletta/server/service.py:842
+#: tavletta/server/service.py:1581
 #, python-format
 msgid "%s is still locked by another print – try again later"
 msgstr "%s は別の印刷によってまだロックされています – 後でもう一度お試しください"
@@ -988,67 +988,67 @@ msgid "How much of the code may be damaged and still be read"
 msgstr "コードのどれだけが損傷しても読み取れるか"
 
 #. translators: a month and a year, e.g. "May 2018"; reorder as your language needs
-#: tavletta/ui/i18n.py:132
+#: tavletta/ui/i18n.py:138
 #, python-format
 msgid "%(month)s %(year)d"
 msgstr "%(year)d年%(month)s"
 
-#: tavletta/ui/i18n.py:137
+#: tavletta/ui/i18n.py:143
 msgctxt "month name"
 msgid "January"
 msgstr "1月"
 
-#: tavletta/ui/i18n.py:138
+#: tavletta/ui/i18n.py:144
 msgctxt "month name"
 msgid "February"
 msgstr "2月"
 
-#: tavletta/ui/i18n.py:139
+#: tavletta/ui/i18n.py:145
 msgctxt "month name"
 msgid "March"
 msgstr "3月"
 
-#: tavletta/ui/i18n.py:140
+#: tavletta/ui/i18n.py:146
 msgctxt "month name"
 msgid "April"
 msgstr "4月"
 
-#: tavletta/ui/i18n.py:141
+#: tavletta/ui/i18n.py:147
 msgctxt "month name"
 msgid "May"
 msgstr "5月"
 
-#: tavletta/ui/i18n.py:142
+#: tavletta/ui/i18n.py:148
 msgctxt "month name"
 msgid "June"
 msgstr "6月"
 
-#: tavletta/ui/i18n.py:143
+#: tavletta/ui/i18n.py:149
 msgctxt "month name"
 msgid "July"
 msgstr "7月"
 
-#: tavletta/ui/i18n.py:144
+#: tavletta/ui/i18n.py:150
 msgctxt "month name"
 msgid "August"
 msgstr "8月"
 
-#: tavletta/ui/i18n.py:145
+#: tavletta/ui/i18n.py:151
 msgctxt "month name"
 msgid "September"
 msgstr "9月"
 
-#: tavletta/ui/i18n.py:146
+#: tavletta/ui/i18n.py:152
 msgctxt "month name"
 msgid "October"
 msgstr "10月"
 
-#: tavletta/ui/i18n.py:147
+#: tavletta/ui/i18n.py:153
 msgctxt "month name"
 msgid "November"
 msgstr "11月"
 
-#: tavletta/ui/i18n.py:148
+#: tavletta/ui/i18n.py:154
 msgctxt "month name"
 msgid "December"
 msgstr "12月"
@@ -3258,7 +3258,7 @@ msgid "%s is not a Tavletta label"
 msgstr "%s は Tavletta のラベルではありません"
 
 #: tavletta/ui/texts.py:745 tavletta/ui/texts.py:765
-#: tavletta/server/service.py:999
+#: tavletta/server/service.py:998
 #, python-format
 msgid "The file is damaged: %s"
 msgstr "ファイルが壊れています: %s"
@@ -3555,7 +3555,7 @@ msgid "printers can only be limited with --printers"
 msgstr "プリンターを制限できるのは --printers 指定時のみです"
 
 #: tavletta/server/config.py:486 tavletta/server/oidc.py:251
-#: tavletta/server/service.py:585
+#: tavletta/server/service.py:584
 #, python-format
 msgid "Unknown printer: %s"
 msgstr "不明なプリンター: %s"
@@ -3565,77 +3565,77 @@ msgstr "不明なプリンター: %s"
 msgid "Invalid value for %s"
 msgstr "%s の値が無効です"
 
-#: tavletta/server/http.py:486 tavletta/server/http.py:535
+#: tavletta/server/http.py:490 tavletta/server/http.py:539
 msgid "The request took too long"
 msgstr "リクエストに時間がかかりすぎました"
 
-#: tavletta/server/http.py:495 tavletta/server/service.py:1763
+#: tavletta/server/http.py:499 tavletta/server/service.py:1802
 msgid "The server is busy – try again later"
 msgstr "サーバーがビジー状態です。しばらくしてからもう一度お試しください"
 
-#: tavletta/server/http.py:538
+#: tavletta/server/http.py:542
 msgid "Internal error"
 msgstr "内部エラー"
 
-#: tavletta/server/http.py:543
+#: tavletta/server/http.py:547
 msgid "This server only answers on its local address"
 msgstr "このサーバーはローカルアドレスでのみ応答します"
 
-#: tavletta/server/http.py:547 tavletta/server/http.py:670
-#: tavletta/server/http.py:674
+#: tavletta/server/http.py:551 tavletta/server/http.py:674
+#: tavletta/server/http.py:678
 msgid "Requests from this web page are not allowed"
 msgstr "この Web ページからのリクエストは許可されていません"
 
-#: tavletta/server/http.py:575 tavletta/server/http.py:585
-#: tavletta/server/http.py:683
+#: tavletta/server/http.py:579 tavletta/server/http.py:589
+#: tavletta/server/http.py:687
 msgid "Access token missing or wrong"
 msgstr "アクセストークンがないか、正しくありません"
 
-#: tavletta/server/http.py:583
+#: tavletta/server/http.py:587 tavletta/server/http.py:717
 msgid "Too many requests – try again later"
 msgstr "リクエストが多すぎます。しばらくしてからもう一度お試しください"
 
-#: tavletta/server/http.py:663 tavletta/server/http.py:815
+#: tavletta/server/http.py:667 tavletta/server/http.py:824
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "このリクエストでヘッダー %s を送信してください"
 
-#: tavletta/server/http.py:694 tavletta/server/http.py:789
-#: tavletta/server/http.py:799 tavletta/server/http.py:922
+#: tavletta/server/http.py:698 tavletta/server/http.py:798
+#: tavletta/server/http.py:808 tavletta/server/http.py:934
 msgid "Not found"
 msgstr "見つかりません"
 
-#: tavletta/server/http.py:696 tavletta/server/http.py:798
-#: tavletta/server/http.py:913
+#: tavletta/server/http.py:700 tavletta/server/http.py:807
+#: tavletta/server/http.py:923
 msgid "Method not allowed"
 msgstr "許可されていないメソッドです"
 
-#: tavletta/server/http.py:731 tavletta/server/http.py:736
+#: tavletta/server/http.py:740 tavletta/server/http.py:745
 msgid "The request needs a Content-Length"
 msgstr "リクエストには Content-Length が必要です"
 
-#: tavletta/server/http.py:733
+#: tavletta/server/http.py:742
 msgid "The request has more than one Content-Length"
 msgstr "リクエストに Content-Length が複数あります"
 
-#: tavletta/server/http.py:739 tavletta/server/service.py:904
+#: tavletta/server/http.py:748 tavletta/server/service.py:903
 msgid "The request is too large"
 msgstr "リクエストが大きすぎます"
 
-#: tavletta/server/http.py:744
+#: tavletta/server/http.py:753
 msgid "The request body is incomplete"
 msgstr "リクエスト本文が不完全です"
 
-#: tavletta/server/http.py:751
+#: tavletta/server/http.py:760
 msgid "Send the request as application/json"
 msgstr "リクエストは application/json として送信してください"
 
-#: tavletta/server/http.py:860 tavletta/server/service.py:661
-#: tavletta/server/service.py:1736
+#: tavletta/server/http.py:869 tavletta/server/service.py:660
+#: tavletta/server/service.py:1775
 msgid "This access token may not do this"
 msgstr "このアクセストークンではこの操作はできません"
 
-#: tavletta/server/http.py:1045
+#: tavletta/server/http.py:1057
 msgid "The request is not valid JSON"
 msgstr "リクエストが有効な JSON ではありません"
 
@@ -3766,8 +3766,8 @@ msgstr "少なくとも 1 つのロールを割り当ててください"
 msgid "use either printers_claim or [oidc.printers]"
 msgstr "printers_claim か [oidc.printers] のどちらか一方を使ってください"
 
-#: tavletta/server/paths.py:46 tavletta/server/service.py:877
-#: tavletta/server/service.py:1310
+#: tavletta/server/paths.py:46 tavletta/server/service.py:876
+#: tavletta/server/service.py:1317
 #, python-format
 msgid "No such label: %s"
 msgstr "そのラベルはありません: %s"
@@ -3804,106 +3804,110 @@ msgstr "データ行が多すぎます: 最大 %d"
 msgid "Too many columns: at most %d"
 msgstr "列が多すぎます: 最大 %d"
 
-#: tavletta/server/requests.py:239 tavletta/server/service.py:902
+#: tavletta/server/requests.py:239 tavletta/server/service.py:901
 #, python-format
 msgid "Too many cells: at most %d"
 msgstr "セルが多すぎます: 最大 %d"
 
-#: tavletta/server/service.py:597
+#: tavletta/server/service.py:596
 msgid "Choose a printer by its name"
 msgstr "プリンターは名前で選択してください"
 
-#: tavletta/server/service.py:719
+#: tavletta/server/service.py:718
 msgid "No printer address: give it as host"
 msgstr "プリンターアドレスがありません: host で指定してください"
 
-#: tavletta/server/service.py:728
+#: tavletta/server/service.py:727
 #, python-format
 msgid "This printer address is not allowed: %s"
 msgstr "このプリンターアドレスは許可されていません: %s"
 
-#: tavletta/server/service.py:812 tavletta/server/service.py:1007
+#: tavletta/server/service.py:811 tavletta/server/service.py:1006
 msgid "Document pages in label_content are not allowed (--allow-pdf-pages)"
 msgstr "label_content では文書ページは使えません (--allow-pdf-pages)"
 
-#: tavletta/server/service.py:848
+#: tavletta/server/service.py:847
 #, python-format
 msgid "%s has print jobs waiting or printing – try again when they are done"
 msgstr "%s の印刷ジョブが待機中または印刷中です – 完了してからもう一度お試しください"
 
-#: tavletta/server/service.py:895
+#: tavletta/server/service.py:894
 msgid "Reading the file takes too long – send a smaller one"
 msgstr "ファイルの読み込みに時間がかかりすぎます – もっと小さいファイルを送ってください"
 
-#: tavletta/server/service.py:1042
+#: tavletta/server/service.py:1043
 #, python-format
 msgid "%(name)s is a data column ({%(name)s}) – send it in data_rows"
 msgstr "%(name)s はデータ列です ({%(name)s}) – data_rows で送信してください"
 
-#: tavletta/server/service.py:1101
+#: tavletta/server/service.py:1106
 msgid "A sheet needs a data file"
 msgstr "シートにはデータファイルが必要です"
 
-#: tavletta/server/service.py:1107
+#: tavletta/server/service.py:1112
 msgid ""
 "The label uses a data file outside the labels folder: send its rows along"
 msgstr "ラベルはラベルフォルダーの外にあるデータファイルを使っています: その行も一緒に送信してください"
 
-#: tavletta/server/service.py:1315
+#: tavletta/server/service.py:1322
 #, python-format
 msgid "%s was changed while the request was checked – send it again"
 msgstr "リクエストの確認中に %s が変更されました – もう一度送信してください"
 
-#: tavletta/server/service.py:1321
+#: tavletta/server/service.py:1328
 msgid "Too many print jobs are waiting – try again later"
 msgstr "待機中の印刷ジョブが多すぎます。しばらくしてからもう一度お試しください"
 
-#: tavletta/server/service.py:1596
+#: tavletta/server/service.py:1603
 #, python-format
 msgid "No such print job: %s"
 msgstr "その印刷ジョブはありません: %s"
 
-#: tavletta/server/service.py:1608
+#: tavletta/server/service.py:1615
 msgid "The print job has already finished"
 msgstr "印刷ジョブはすでに終了しています"
 
-#: tavletta/server/service.py:1680
+#: tavletta/server/service.py:1687
 #, python-format
 msgid "A label named %s exists already"
 msgstr "%s という名前のラベルはすでに存在します"
 
-#: tavletta/server/service.py:1698
+#: tavletta/server/service.py:1737
 msgid "The label could not be deleted from the labels folder"
 msgstr "ラベルをラベルフォルダーから削除できませんでした"
 
-#: tavletta/server/service.py:1709
+#: tavletta/server/service.py:1748
 msgid "The label could not be saved in the labels folder"
 msgstr "ラベルをラベルフォルダーに保存できませんでした"
 
-#: tavletta/server/service.py:1767
+#: tavletta/server/service.py:1806
 msgid "The label is too large to render"
 msgstr "ラベルが大きすぎて描画できません"
 
-#: tavletta/server/service.py:1781
+#: tavletta/server/service.py:1820
 #, python-format
 msgid "The label is too large: at most %d images and codes"
 msgstr "ラベルが大きすぎます: 画像とコードは最大 %d 個です"
 
-#: tavletta/server/service.py:1804
+#: tavletta/server/service.py:1843
 #, python-format
 msgid ""
 "The label is too large: at most %(elements)d elements and %(chars)d "
 "characters in a text"
 msgstr "ラベルが大きすぎます: 要素は最大 %(elements)d 個、テキスト 1 つあたり最大 %(chars)d 文字です"
 
-#: tavletta/server/service.py:1823
+#: tavletta/server/service.py:1862
 #, python-format
 msgid "At most %d copies on this printer"
 msgstr "このプリンターでは最大 %d 部です"
 
-#: tavletta/server/service.py:1828
+#: tavletta/server/service.py:1867
 msgid "Printers are chosen by name: leave out host"
 msgstr "プリンターは名前で選択します: host は指定しないでください"
+
+#: tavletta/server/webui.py:71
+msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
+msgstr "Tavletta の Web ページには JavaScript が必要です。REST API は /api/v1 にあります。"
 
 #: tavletta/server/web/api.js:68 tavletta/server/web/app.js:561
 msgid "No connection to the server. Your input is kept."

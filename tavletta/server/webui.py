@@ -12,7 +12,9 @@ files, nothing inline, no eval, no frames, no requests elsewhere.
 Its texts are translated from the app's gettext catalogs:
 /ui/messages.json holds the texts the scripts ask for (t("…") in the
 .js files, found when the server starts) in the language of ?lang= or
-Accept-Language, and the direction of its script. Every catalog of the
+Accept-Language, and the direction of its script. The page itself (/)
+comes in that language too: its lang and dir, and the note shown without
+JavaScript. Every catalog of the
 app is offered: the compiled ones of the installation, and in a checkout
 (an editable install has none compiled) po/<lang>.po read directly.
 """
@@ -24,9 +26,10 @@ import json
 import re
 from dataclasses import dataclass
 from functools import cache
+from html import escape
 from pathlib import Path
 
-from tavletta.ui.i18n import LOCALE_DIR, RTL_LANGUAGES, _, accepted_languages, language
+from tavletta.ui.i18n import LOCALE_DIR, N_, RTL_LANGUAGES, _, accepted_languages, language
 
 WEB_DIR = Path(__file__).parent / "web"
 # a checkout's catalogs (not in an installed package: there they are compiled)
@@ -64,6 +67,8 @@ _SCRIPT_REGION = {"hant": "zh-TW", "hans": "zh-CN"}
 # a language whose catalogs all have a region: the one for a region
 # without its own catalog, or none named
 _NEAREST = {"zh_MO": "zh_HK", "zh": "zh_CN"}
+# the one text of index.html itself, for browsers without JavaScript
+NOSCRIPT = N_("Tavletta's web page needs JavaScript. The REST API is at /api/v1.")
 
 
 @dataclass(frozen=True)
@@ -153,14 +158,40 @@ def messages(asked: str | None, header: str | None) -> Asset:
     return _messages(code)
 
 
-@cache
-def _messages(code: str) -> Asset:
+def _translated(code: str, wanted: tuple[str, ...]) -> dict[str, str]:
+    """The texts in a language: from its compiled catalog, else (a checkout)
+    from its po file."""
     if code == "en" or code in _compiled():
         with language(code.replace("_", "-")):
-            table = {text: _(text) for text in texts()}
-    else:  # a checkout: its po file
-        catalog = read_po(PO_DIR / f"{code}.po")
-        table = {text: catalog.get(text, text) for text in texts()}
+            return {text: _(text) for text in wanted}
+    catalog = read_po(PO_DIR / f"{code}.po")
+    return {text: catalog.get(text, text) for text in wanted}
+
+
+def page(asked: str | None, header: str | None) -> Asset | None:
+    """The page (/) in the chosen language: index.html with its lang, dir
+    and the note for browsers without JavaScript; None without index.html."""
+    return _page(chosen_language(asked, header))
+
+
+@cache
+def _page(code: str) -> Asset | None:
+    found = asset("index.html")
+    if found is None:
+        return None
+    source = found.data.decode("utf-8")
+    opening, note = '<html lang="en">', escape(NOSCRIPT)
+    if source.count(opening) != 1 or source.count(note) != 1:
+        raise RuntimeError('index.html: no single <html lang="en"> or note without JavaScript')
+    lang = '<html lang="%s" dir="%s">' % (code.replace("_", "-"), direction(code))
+    translated = escape(_translated(code, (NOSCRIPT,))[NOSCRIPT])
+    data = source.replace(opening, lang).replace(note, translated).encode("utf-8")
+    return Asset(data, found.kind, _etag(data))
+
+
+@cache
+def _messages(code: str) -> Asset:
+    table = _translated(code, texts())
     body = {
         "language": code,
         "dir": direction(code),

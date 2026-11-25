@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "파일을 읽는 데 너무 오래 걸립니다 – 더 작은 파일을 보내십시오",
     "The label could not be deleted from the labels folder": "라벨 폴더에서 라벨을 삭제할 수 없습니다",
     "%s was changed while the request was checked – send it again": "요청을 확인하는 동안 %s이(가) 변경되었습니다 – 다시 보내십시오",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta 웹 페이지에는 JavaScript가 필요합니다. REST API는 /api/v1에 있습니다.",
 }

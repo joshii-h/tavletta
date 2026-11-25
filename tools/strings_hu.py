@@ -1067,4 +1067,5 @@ TRANSLATIONS = {
     "Reading the file takes too long – send a smaller one": "A fájl beolvasása túl sokáig tart – küldjön kisebbet",
     "The label could not be deleted from the labels folder": "A címkét nem sikerült törölni a címkemappából",
     "%s was changed while the request was checked – send it again": "A(z) %s megváltozott a kérés ellenőrzése közben – küldje el újra",
+    "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "A Tavletta weboldalához JavaScript szükséges. A REST API a /api/v1 címen érhető el.",
 }
