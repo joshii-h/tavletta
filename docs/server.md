@@ -45,7 +45,7 @@ build provenance and a signature
 ([how to check them](#container)):
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.2.1
+docker pull ghcr.io/joshii-h/tavletta:1.2.2
 ```
 
 ## Options
@@ -1070,13 +1070,13 @@ for `linux/amd64` and `linux/arm64` and publishes it as
 
 | Tag | |
 |---|---|
-| `1.2.1` | a release, from its tag `v1.2.1` |
+| `1.2.2` | a release, from its tag `v1.2.2` |
 | `1.2` | the latest bug fix release of 1.2 (what `compose.yaml` uses) |
 | `latest` | the latest release (not a pre-release) |
 | `edge` | the state of `main`, not a release |
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.2.1
+docker pull ghcr.io/joshii-h/tavletta:1.2.2
 ```
 
 Before anything is pushed the amd64 image is started with
@@ -1088,11 +1088,11 @@ cosign signature. To check that an image was built by this workflow from
 this repository:
 
 ```sh
-gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.1 --repo joshii-h/tavletta
-cosign verify ghcr.io/joshii-h/tavletta:1.2.1 \
+gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.2 --repo joshii-h/tavletta
+cosign verify ghcr.io/joshii-h/tavletta:1.2.2 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     --certificate-identity-regexp '^https://github\.com/joshii-h/tavletta/\.github/workflows/docker\.yml@refs/tags/v'
-docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.2.1 --format '{{ json .SBOM }}'
+docker buildx imagetools inspect ghcr.io/joshii-h/tavletta:1.2.2 --format '{{ json .SBOM }}'
 ```
 
 ## Roadmap

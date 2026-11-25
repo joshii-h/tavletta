@@ -4,7 +4,7 @@
 openapi: 3.1.0
 info:
   title: Tavletta
-  version: 1.2.1
+  version: 1.2.2
   description: 'Print labels made with Tavletta. JSON in and out. All requests but /health need ''Authorization:
     Bearer <token>'' when the server has a token. Named tokens (tokens.toml) have a role: preview (look
     only), print (also print and follow its own jobs) or admin (also all jobs); x-tavletta-role names
@@ -1986,7 +1986,7 @@ components:
           type: string
       example:
         status: ok
-        version: 1.2.1
+        version: 1.2.2
     NamedPrinter:
       type: object
       description: A printer of printers.toml.

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta-docs VERSION\n"
-"POT-Creation-Date: 2026-11-24 20:32+0100\n"
+"POT-Creation-Date: 2026-11-25 15:32+0100\n"
 "PO-Revision-Date: 2026-11-24 13:42+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4501,7 +4501,7 @@ msgstr "1. 파일과 이미지 가져오기 { #docker-build }"
 msgid ""
 "sudo git clone https://git.joshuahirsig.xyz/joshii/tavletta.git /opt/tavletta\n"
 "cd /opt/tavletta\n"
-"sudo git checkout v1.2.1      # the release to run: git tag lists them\n"
+"sudo git checkout v1.2.2      # the release to run: git tag lists them\n"
 "cd packaging/docker\n"
 "sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.2, for x86-64 and ARM64\n"
 msgstr ""
@@ -4785,7 +4785,7 @@ msgstr ""
 #. type: Fenced code block (text)
 #: docs/server-install.md
 #, no-wrap
-msgid "{\"status\": \"ok\", \"version\": \"1.2.1\"}\n"
+msgid "{\"status\": \"ok\", \"version\": \"1.2.2\"}\n"
 msgstr ""
 
 #. type: Bullet: '- '
@@ -4899,7 +4899,7 @@ msgstr "업데이트 { #docker-update }"
 msgid ""
 "cd /opt/tavletta\n"
 "sudo git fetch --tags\n"
-"sudo git checkout v1.2.1         # the new release\n"
+"sudo git checkout v1.2.2         # the new release\n"
 "cd packaging/docker\n"
 "sudo docker compose pull\n"
 "sudo docker compose up -d\n"
@@ -5023,7 +5023,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo python3 -m venv --system-site-packages /opt/tavletta\n"
-"sudo /opt/tavletta/bin/pip install \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1\"\n"
+"sudo /opt/tavletta/bin/pip install \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.2\"\n"
 "/opt/tavletta/bin/tavletta --version\n"
 msgstr ""
 
@@ -5103,7 +5103,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \\\n"
-"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service\n"
+"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.2/packaging/systemd/tavletta-server.service\n"
 "sudo systemctl daemon-reload\n"
 "sudo systemctl enable --now tavletta-server\n"
 "systemctl status tavletta-server\n"
@@ -5157,9 +5157,9 @@ msgstr "업데이트 { #native-update }"
 #: docs/server-install.md
 #, no-wrap
 msgid ""
-"sudo /opt/tavletta/bin/pip install --upgrade \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1\"\n"
+"sudo /opt/tavletta/bin/pip install --upgrade \"git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.2\"\n"
 "sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \\\n"
-"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service\n"
+"    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.2/packaging/systemd/tavletta-server.service\n"
 "sudo systemctl daemon-reload\n"
 "sudo systemctl restart tavletta-server\n"
 msgstr ""
@@ -6465,16 +6465,16 @@ msgstr ""
 #. type: Fenced code block (sh)
 #: docs/server.md
 #, no-wrap
-msgid "docker pull ghcr.io/joshii-h/tavletta:1.2.1\n"
+msgid "docker pull ghcr.io/joshii-h/tavletta:1.2.2\n"
 msgstr ""
 
 #. type: Bullet: '- '
 #: docs/server.md
 msgid ""
-"`1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
+"`1.2.2` is a release, `1.2` the latest bug fix release of 1.2, `latest` the "
 "latest release. `edge` is the state of development, not a release."
 msgstr ""
-"`1.2.1`은 릴리스이고, `1.2`는 1.2의 최신 버그 수정 릴리스이며, `latest`는 최"
+"`1.2.2`은 릴리스이고, `1.2`는 1.2의 최신 버그 수정 릴리스이며, `latest`는 최"
 "신 릴리스입니다. `edge`는 개발 중인 상태이며 릴리스가 아닙니다."
 
 #. type: Bullet: '- '
@@ -6517,8 +6517,8 @@ msgstr ""
 #: docs/server.md
 #, no-wrap
 msgid ""
-"gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.1 --repo joshii-h/tavletta\n"
-"cosign verify ghcr.io/joshii-h/tavletta:1.2.1 \\\n"
+"gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.2 --repo joshii-h/tavletta\n"
+"cosign verify ghcr.io/joshii-h/tavletta:1.2.2 \\\n"
 "    --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n"
 "    --certificate-identity-regexp '^https://github\\.com/joshii-h/tavletta/\\.github/workflows/docker\\.yml@refs/tags/v'\n"
 msgstr ""

@@ -871,7 +871,7 @@
       <caption xml:lang="zh_CN">带有 QR 码和文字的标签</caption>
       <caption xml:lang="zh_HK">帶有 QR 碼和文字的標籤</caption>
       <caption xml:lang="zh_TW">帶有 QR 碼和文字的標籤</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/main.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/main.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A label with a QR code and text</caption>
@@ -901,7 +901,7 @@
       <caption xml:lang="zh_CN">带有 QR 码和文字的标签</caption>
       <caption xml:lang="zh_HK">帶有 QR 碼和文字的標籤</caption>
       <caption xml:lang="zh_TW">帶有 QR 碼和文字的標籤</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/main-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/main-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Full colour background printed edge to edge</caption>
@@ -931,7 +931,7 @@
       <caption xml:lang="zh_CN">印到边缘的全彩背景</caption>
       <caption xml:lang="zh_HK">印到邊緣的全彩背景</caption>
       <caption xml:lang="zh_TW">印到邊緣的全彩背景</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/colour.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/colour.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Full colour background printed edge to edge</caption>
@@ -961,7 +961,7 @@
       <caption xml:lang="zh_CN">印到边缘的全彩背景</caption>
       <caption xml:lang="zh_HK">印到邊緣的全彩背景</caption>
       <caption xml:lang="zh_TW">印到邊緣的全彩背景</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/colour-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/colour-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>A square sticker with an image and a border</caption>
@@ -991,7 +991,7 @@
       <caption xml:lang="zh_CN">带有图片和边框的方形贴纸</caption>
       <caption xml:lang="zh_HK">帶有圖片和邊框的方形貼紙</caption>
       <caption xml:lang="zh_TW">帶有圖片和邊框的方形貼紙</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/sticker.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/sticker.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>A square sticker with an image and a border</caption>
@@ -1021,7 +1021,7 @@
       <caption xml:lang="zh_CN">带有图片和边框的方形贴纸</caption>
       <caption xml:lang="zh_HK">帶有圖片和邊框的方形貼紙</caption>
       <caption xml:lang="zh_TW">帶有圖片和邊框的方形貼紙</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/sticker-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/sticker-dark.png</image>
     </screenshot>
     <screenshot environment="gnome">
       <caption>Print options: copies, cut mode and colour mode</caption>
@@ -1051,7 +1051,7 @@
       <caption xml:lang="zh_CN">打印选项：份数、切割模式和彩色模式</caption>
       <caption xml:lang="zh_HK">列印選項：份數、裁切模式和彩色模式</caption>
       <caption xml:lang="zh_TW">列印選項：份數、裁切模式和彩色模式</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/print.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/print.png</image>
     </screenshot>
     <screenshot environment="gnome:dark">
       <caption>Print options: copies, cut mode and colour mode</caption>
@@ -1081,7 +1081,7 @@
       <caption xml:lang="zh_CN">打印选项：份数、切割模式和彩色模式</caption>
       <caption xml:lang="zh_HK">列印選項：份數、裁切模式和彩色模式</caption>
       <caption xml:lang="zh_TW">列印選項：份數、裁切模式和彩色模式</caption>
-      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.1/docs/screenshots/print-dark.png</image>
+      <image>https://raw.githubusercontent.com/joshii-h/tavletta/v1.2.2/docs/screenshots/print-dark.png</image>
     </screenshot>
   </screenshots>
 
@@ -1727,6 +1727,12 @@
   </provides>
 
   <releases>
+    <release version="1.2.2" date="2026-11-25">
+      <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.2.2</url>
+      <description>
+        <p>Help opens the documentation in all 27 of its languages; the print server's web page and the software centre description in every language.</p>
+      </description>
+    </release>
     <release version="1.2.1" date="2026-11-24">
       <url type="details">https://git.joshuahirsig.xyz/joshii/tavletta/releases/tag/v1.2.1</url>
       <description>

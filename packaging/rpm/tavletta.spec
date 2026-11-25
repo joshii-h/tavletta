@@ -1,7 +1,7 @@
 %global app_id xyz.joshuahirsig.Tavletta
 
 Name:           tavletta
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Design and print labels on label printers
 
@@ -166,6 +166,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{app_id}.meta
 
 
 %changelog
+* Wed Nov 25 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.2.2-1
+- New upstream release: help opens the documentation in all 27 of its
+  languages; the web page and the description in every language
+
 * Tue Nov 24 2026 Joshua Hirsig <tavletta@joshuahirsig.xyz> - 1.2.1-1
 - New upstream release: test fixes, the packages for 1.2
 - BuildRequires: nodejs, for the web page's JavaScript tests

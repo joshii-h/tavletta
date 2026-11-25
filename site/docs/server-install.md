@@ -54,7 +54,7 @@ through it over the network. What the server does and how programs use it:
 ```sh
 sudo git clone https://git.joshuahirsig.xyz/joshii/tavletta.git /opt/tavletta
 cd /opt/tavletta
-sudo git checkout v1.2.1      # the release to run: git tag lists them
+sudo git checkout v1.2.2      # the release to run: git tag lists them
 cd packaging/docker
 sudo docker compose pull      # ghcr.io/joshii-h/tavletta:1.2, for x86-64 and ARM64
 ```
@@ -189,7 +189,7 @@ curl http://127.0.0.1:8790/api/v1/health
 ```
 
 ```text
-{"status": "ok", "version": "1.2.1"}
+{"status": "ok", "version": "1.2.2"}
 ```
 
 - The container restarts by itself after a crash or a reboot.
@@ -238,7 +238,7 @@ and label contents are never logged.
 ```sh
 cd /opt/tavletta
 sudo git fetch --tags
-sudo git checkout v1.2.1         # the new release
+sudo git checkout v1.2.2         # the new release
 cd packaging/docker
 sudo docker compose pull
 sudo docker compose up -d
@@ -294,7 +294,7 @@ system's PyGObject:
 
 ```sh
 sudo python3 -m venv --system-site-packages /opt/tavletta
-sudo /opt/tavletta/bin/pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1"
+sudo /opt/tavletta/bin/pip install "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.2"
 /opt/tavletta/bin/tavletta --version
 ```
 
@@ -331,7 +331,7 @@ capabilities, 1 GB memory):
 
 ```sh
 sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \
-    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service
+    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.2/packaging/systemd/tavletta-server.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now tavletta-server
 systemctl status tavletta-server
@@ -351,9 +351,9 @@ For a single user on a desktop there is the user service
 ### Updating { #native-update }
 
 ```sh
-sudo /opt/tavletta/bin/pip install --upgrade "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.1"
+sudo /opt/tavletta/bin/pip install --upgrade "git+https://git.joshuahirsig.xyz/joshii/tavletta.git@v1.2.2"
 sudo curl -fsSLo /etc/systemd/system/tavletta-server.service \
-    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.1/packaging/systemd/tavletta-server.service
+    https://git.joshuahirsig.xyz/joshii/tavletta/raw/tag/v1.2.2/packaging/systemd/tavletta-server.service
 sudo systemctl daemon-reload
 sudo systemctl restart tavletta-server
 ```

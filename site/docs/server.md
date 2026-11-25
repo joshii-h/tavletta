@@ -244,10 +244,10 @@ The print server is published as a container image for amd64 and arm64
 (also a Raspberry Pi with a 64-bit system):
 
 ```sh
-docker pull ghcr.io/joshii-h/tavletta:1.2.1
+docker pull ghcr.io/joshii-h/tavletta:1.2.2
 ```
 
-- `1.2.1` is a release, `1.2` the latest bug fix release of 1.2, `latest`
+- `1.2.2` is a release, `1.2` the latest bug fix release of 1.2, `latest`
   the latest release. `edge` is the state of development, not a release.
 - `packaging/docker/compose.yaml` uses the published image:
   `docker compose pull`, then `docker compose up -d`.
@@ -259,8 +259,8 @@ docker pull ghcr.io/joshii-h/tavletta:1.2.1
   [GitHub CLI](https://cli.github.com) or [cosign](https://docs.sigstore.dev):
 
 ```sh
-gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.1 --repo joshii-h/tavletta
-cosign verify ghcr.io/joshii-h/tavletta:1.2.1 \
+gh attestation verify oci://ghcr.io/joshii-h/tavletta:1.2.2 --repo joshii-h/tavletta
+cosign verify ghcr.io/joshii-h/tavletta:1.2.2 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     --certificate-identity-regexp '^https://github\.com/joshii-h/tavletta/\.github/workflows/docker\.yml@refs/tags/v'
 ```
