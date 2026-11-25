@@ -478,7 +478,7 @@ TRANSLATIONS = {
     "Red and black": "赤と黒",
     "Standard": "標準",
     "High resolution (600 dpi)": "高解像度 (600 dpi)",
-    "%s, continuous rolls": "%s、長尺ロール",
+    "%s, continuous rolls": "%s、連続ロール",
     "%s, die-cut labels": "%s、ダイカットラベル",
     "The loaded roll does not match the label. Load a matching roll, or choose the label size or printer model of the roll that is loaded.": "セットされたロールがラベルに合いません。合うロールをセットするか、セットされたロールに合うラベルサイズまたはプリンターの機種を選んでください。",
     "The loaded roll is for “%s”": "セットされたロールは「%s」用です",

@@ -2658,7 +2658,7 @@ msgstr "レシートプリンター (ESC/POS)"
 #: tavletta/ui/texts.py:364
 #, python-format
 msgid "%s, continuous rolls"
-msgstr "%s、長尺ロール"
+msgstr "%s、連続ロール"
 
 #. translators: %s is a printer model, e.g. "Brother QL"
 #: tavletta/ui/texts.py:366
