@@ -479,7 +479,7 @@ TRANSLATIONS = {
     "Standard": "Standardowa",
     "High resolution (600 dpi)": "Wysoka rozdzielczość (600 dpi)",
     "%s, continuous rolls": "%s, rolki ciągłe",
-    "%s, die-cut labels": "%s, etykiety wycinane",
+    "%s, die-cut labels": "%s, etykiety wykrojone",
     "The loaded roll does not match the label. Load a matching roll, or choose the label size or printer model of the roll that is loaded.": "Załadowana rolka nie pasuje do etykiety. Załaduj pasującą rolkę albo wybierz rozmiar etykiety lub model drukarki odpowiadający załadowanej rolce.",
     "The loaded roll is for “%s”": "Załadowana rolka pasuje do „%s”",
     "Switch": "Przełącz",

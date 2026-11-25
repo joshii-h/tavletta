@@ -5933,7 +5933,7 @@ msgstr ""
 "Andere Programme, KI-Assistenten und Personen im Browser können über "
 "Tavletta Etiketten drucken, ohne das Fenster zu öffnen: `tavletta serve` "
 "bietet eine Webseite für Personen und eine Web-Schnittstelle für Programme "
-"(REST API), `tavletta mcp` verbindet KI-Assistenten wie Claude."
+"(REST-API), `tavletta mcp` verbindet KI-Assistenten wie Claude."
 
 #. type: Bullet: '- '
 #: docs/server.md
@@ -6377,7 +6377,7 @@ msgstr ""
 #: docs/server.md
 #, no-wrap
 msgid "Programs (REST API) { #api }"
-msgstr "Programme (REST API) { #api }"
+msgstr "Programme (REST-API) { #api }"
 
 #. type: Bullet: '- '
 #: docs/server.md

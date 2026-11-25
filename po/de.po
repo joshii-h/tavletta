@@ -209,11 +209,11 @@ msgstr "Dokumentseiten (PDF, Bilder) in mitgeschickten Etiketten erlauben; PDFs 
 
 #: tavletta/cli.py:361
 msgid "run a print server with a REST API"
-msgstr "einen Druckserver mit REST API starten"
+msgstr "einen Druckserver mit REST-API starten"
 
 #: tavletta/cli.py:362
 msgid "Run a print server: a REST API and, with --mcp, MCP for AI clients."
-msgstr "Einen Druckserver starten: eine REST API und mit --mcp MCP für KI-Clients."
+msgstr "Einen Druckserver starten: eine REST-API und mit --mcp MCP für KI-Clients."
 
 #: tavletta/cli.py:365
 msgid "address to listen on (default 127.0.0.1)"

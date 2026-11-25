@@ -2664,7 +2664,7 @@ msgstr "%s, sürekli rulolar"
 #: tavletta/ui/texts.py:366
 #, python-format
 msgid "%s, die-cut labels"
-msgstr "%s, kesimli etiketler"
+msgstr "%s, kalıp kesim etiketler"
 
 #: tavletta/ui/texts.py:389
 #, python-format

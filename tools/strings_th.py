@@ -479,7 +479,7 @@ TRANSLATIONS = {
     "Standard": "มาตรฐาน",
     "High resolution (600 dpi)": "ความละเอียดสูง (600 dpi)",
     "%s, continuous rolls": "%s, ม้วนต่อเนื่อง",
-    "%s, die-cut labels": "%s, ฉลากไดคัท",
+    "%s, die-cut labels": "%s, ฉลากไดคัต",
     "The loaded roll does not match the label. Load a matching roll, or choose the label size or printer model of the roll that is loaded.": "ม้วนที่ใส่อยู่ไม่ตรงกับฉลาก ใส่ม้วนที่ตรงกัน หรือเลือกขนาดฉลากหรือรุ่นเครื่องพิมพ์ให้ตรงกับม้วนที่ใส่อยู่",
     "The loaded roll is for “%s”": "ม้วนที่ใส่อยู่ใช้กับ “%s”",
     "Switch": "สลับ",

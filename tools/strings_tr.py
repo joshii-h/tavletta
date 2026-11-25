@@ -479,7 +479,7 @@ TRANSLATIONS = {
     "Standard": "Standart",
     "High resolution (600 dpi)": "Yüksek çözünürlük (600 dpi)",
     "%s, continuous rolls": "%s, sürekli rulolar",
-    "%s, die-cut labels": "%s, kesimli etiketler",
+    "%s, die-cut labels": "%s, kalıp kesim etiketler",
     "The loaded roll does not match the label. Load a matching roll, or choose the label size or printer model of the roll that is loaded.": "Takılı rulo etikete uymuyor. Uygun bir rulo takın ya da takılı rulonun etiket boyutunu veya yazıcı modelini seçin.",
     "The loaded roll is for “%s”": "Takılı rulo “%s” için",
     "Switch": "Geç",
