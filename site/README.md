@@ -31,9 +31,8 @@ them the build uses the English README screenshots.
 
 ## Writing
 
-- Short: bullet points, one fact per line. The app is translated into 27
-  languages; the documentation is in English and German so far, and every
-  sentence is to be translated into each language added.
+- Short: bullet points, one fact per line. The app and the documentation
+  are in 27 languages: every sentence added is to be translated into each.
 - Prefer a screenshot (add it to `tools/screenshots.list`) over a description.
 - Name buttons and settings as `[[ui:Safety margin]]` with the exact English
   text of the app (`po/tavletta.pot`). The build inserts the app's own
