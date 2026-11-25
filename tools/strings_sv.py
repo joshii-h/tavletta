@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "Etiketten kunde inte tas bort från etikettmappen",
     "%s was changed while the request was checked – send it again": "%s ändrades medan begäran kontrollerades – skicka den igen",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavlettas webbsida behöver JavaScript. REST-API:t finns på /api/v1.",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "Webbsidans filer är skadade eller saknas (%s): installera om Tavletta eller starta med --no-web-ui",
 }

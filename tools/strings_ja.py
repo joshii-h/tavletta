@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "ラベルをラベルフォルダーから削除できませんでした",
     "%s was changed while the request was checked – send it again": "リクエストの確認中に %s が変更されました – もう一度送信してください",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta の Web ページには JavaScript が必要です。REST API は /api/v1 にあります。",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "Web ページのファイルが壊れているか見つかりません（%s）。Tavletta を再インストールするか、--no-web-ui を付けて起動してください",
 }

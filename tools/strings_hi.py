@@ -336,7 +336,7 @@ TRANSLATIONS = {
     "Page": "पृष्ठ",
     "Whole area, centred": "पूरा क्षेत्र, बीच में",
     "Fill the label, edges cut off": "लेबल भरें, किनारे कट जाते हैं",
-    "Endless, %(width)s wide": "निरंतर, %(width)s चौड़ा",
+    "Endless, %(width)s wide": "लगातार, %(width)s चौड़ा",
     "Check that all of the label is inside the selection. Drag to move it or its edges, or draw a new one.": "जाँचें कि पूरा लेबल चयन के अंदर है। चयन या उसके किनारों को खिसकाने के लिए खींचें, या नया बनाएँ।",
     "Several areas could be the label. Check the selection or try the next one.": "कई क्षेत्र लेबल हो सकते हैं। चयन जाँचें या अगला आज़माएँ।",
     "Everything printed on the page is selected. Drag to choose the label.": "पृष्ठ पर छपा सब कुछ चुना गया है। लेबल चुनने के लिए खींचें।",
@@ -479,7 +479,7 @@ TRANSLATIONS = {
     "Standard": "मानक",
     "High resolution (600 dpi)": "उच्च रिज़ॉल्यूशन (600 dpi)",
     "%s, continuous rolls": "%s, लगातार रोल",
-    "%s, die-cut labels": "%s, पहले से कटे लेबल",
+    "%s, die-cut labels": "%s, डाई-कट लेबल",
     "The loaded roll does not match the label. Load a matching roll, or choose the label size or printer model of the roll that is loaded.": "लगाया गया रोल लेबल से मेल नहीं खाता। सही रोल लगाएँ, या लगाए गए रोल के अनुसार लेबल का आकार या प्रिंटर मॉडल चुनें।",
     "The loaded roll is for “%s”": "लगाया गया रोल “%s” के लिए है",
     "Switch": "बदलें",
@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "लेबल को लेबल फ़ोल्डर से हटाया नहीं जा सका",
     "%s was changed while the request was checked – send it again": "अनुरोध की जाँच के दौरान %s बदल गया – इसे फिर से भेजें",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta के वेब पेज को JavaScript चाहिए। REST API /api/v1 पर है।",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "वेब पेज की फ़ाइलें खराब हैं या मौजूद नहीं हैं (%s): Tavletta को फिर से इंस्टॉल करें, या --no-web-ui के साथ शुरू करें",
 }

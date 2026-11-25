@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "Không xóa được nhãn khỏi thư mục nhãn",
     "%s was changed while the request was checked – send it again": "%s đã bị thay đổi trong khi yêu cầu được kiểm tra – hãy gửi lại",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Trang web của Tavletta cần JavaScript. REST API nằm tại /api/v1.",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "Các tệp của trang web bị hỏng hoặc bị thiếu (%s): cài đặt lại Tavletta, hoặc khởi động với --no-web-ui",
 }

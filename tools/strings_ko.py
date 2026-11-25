@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "라벨 폴더에서 라벨을 삭제할 수 없습니다",
     "%s was changed while the request was checked – send it again": "요청을 확인하는 동안 %s이(가) 변경되었습니다 – 다시 보내십시오",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta 웹 페이지에는 JavaScript가 필요합니다. REST API는 /api/v1에 있습니다.",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "웹 페이지 파일이 손상되었거나 없습니다(%s). Tavletta를 다시 설치하거나 --no-web-ui로 시작하세요",
 }

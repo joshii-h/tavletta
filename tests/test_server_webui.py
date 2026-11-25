@@ -113,6 +113,55 @@ def test_the_page_needs_its_markers(index_html, make_server, page):
     make_server(token=TOKEN, mcp=False, web_ui=False)  # without the page: no matter
 
 
+@pytest.fixture
+def serve(monkeypatch, tmp_path, server_env):
+    """tavletta serve on a free port, its exit code; stopped at once."""
+    from tavletta import cli
+    from tavletta.server import http as server_http
+    from tavletta.server import main as server_main
+
+    def serve_forever(self):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(server_http.Server, "serve_forever", serve_forever)
+    monkeypatch.setattr(server_main.signal, "signal", lambda *args: None)
+    return lambda *extra: cli.main(["serve", "--port", "0", "--labels-dir", str(tmp_path), *extra])
+
+
+def test_serve_says_the_page_is_damaged(index_html, serve, capsys):
+    """tavletta serve: a clear error before anything starts, not a
+    traceback; with --no-web-ui the page does not matter."""
+    from tavletta import cli
+
+    index_html(b"<html><body></body></html>")
+    assert serve() == cli.EXIT_FILE
+    err = capsys.readouterr().err
+    assert "web page's files are damaged or missing" in err and "--no-web-ui" in err
+    assert serve("--no-web-ui") == cli.EXIT_OK
+
+
+@pytest.fixture
+def no_web_dir(monkeypatch, tmp_path):
+    """An installation without web/."""
+    monkeypatch.setattr(webui, "WEB_DIR", tmp_path / "missing")
+    caches = (webui._assets, webui._page)
+    for cached in caches:
+        cached.cache_clear()
+    yield
+    monkeypatch.undo()
+    for cached in caches:
+        cached.cache_clear()
+
+
+def test_serve_says_the_page_is_missing(no_web_dir, serve, capsys):
+    """Without web/: the same error, not "Cannot listen"."""
+    from tavletta import cli
+
+    assert serve() == cli.EXIT_FILE
+    err = capsys.readouterr().err
+    assert "web page's files are damaged or missing" in err and "Cannot listen" not in err
+
+
 @pytest.mark.parametrize("apostrophe", [b"'", b"&#39;", b"&#x27;", b"&apos;"])
 def test_the_note_in_any_html_spelling(index_html, checkout, apostrophe):
     note = webui.NOSCRIPT.encode().replace(b"'", apostrophe)
@@ -127,6 +176,8 @@ def test_the_note_is_translated_everywhere():
     """Every catalog has the note of the page (a text outside the scripts)."""
     for po in sorted(PO_DIR.glob("*.po")):
         assert webui.NOSCRIPT in webui.read_po(po), po.name
+    # right to left: the path isolated, so that it stays intact
+    assert "\u2068/api/v1\u2069" in webui.read_po(PO_DIR / "ar.po")[webui.NOSCRIPT]
 
 
 def test_the_page_answers_304_while_unchanged(base):
@@ -333,6 +384,9 @@ def test_the_language_of_a_region_or_script(checkout):
     assert choose(None, "ar-EG") == "ar"
     assert choose(None, "de-AT") == "de"
     assert choose("zh-HK", "de") == "zh_HK"
+    assert choose("zh-Hant", "de") == "zh_TW"
+    assert choose("zh_Hans", "de") == "zh_CN"
+    assert choose(None, "zh_Hant") == "zh_TW"
     assert choose(None, "en-US, de-CH;q=0.8") == "en"
 
 

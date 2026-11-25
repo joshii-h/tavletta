@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-25 13:18+0100\n"
+"PO-Revision-Date: 2026-11-25 15:26+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: zh_HK\n"
 "Language: zh_HK\n"
@@ -336,7 +336,7 @@ msgstr "未知的印表機型號：%s"
 msgid "Cannot open %s"
 msgstr "無法開啟 %s"
 
-#: tavletta/cli.py:522 tavletta/server/main.py:337
+#: tavletta/cli.py:522 tavletta/server/main.py:357
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s 不是日期，應類似 2026-12-31 或 2026-12-31T08:30"
@@ -988,67 +988,67 @@ msgid "How much of the code may be damaged and still be read"
 msgstr "條碼可損壞多少仍能被讀取"
 
 #. translators: a month and a year, e.g. "May 2018"; reorder as your language needs
-#: tavletta/ui/i18n.py:138
+#: tavletta/ui/i18n.py:195
 #, python-format
 msgid "%(month)s %(year)d"
 msgstr "%(year)d年%(month)s"
 
-#: tavletta/ui/i18n.py:143
+#: tavletta/ui/i18n.py:200
 msgctxt "month name"
 msgid "January"
 msgstr "1 月"
 
-#: tavletta/ui/i18n.py:144
+#: tavletta/ui/i18n.py:201
 msgctxt "month name"
 msgid "February"
 msgstr "2 月"
 
-#: tavletta/ui/i18n.py:145
+#: tavletta/ui/i18n.py:202
 msgctxt "month name"
 msgid "March"
 msgstr "3 月"
 
-#: tavletta/ui/i18n.py:146
+#: tavletta/ui/i18n.py:203
 msgctxt "month name"
 msgid "April"
 msgstr "4 月"
 
-#: tavletta/ui/i18n.py:147
+#: tavletta/ui/i18n.py:204
 msgctxt "month name"
 msgid "May"
 msgstr "5 月"
 
-#: tavletta/ui/i18n.py:148
+#: tavletta/ui/i18n.py:205
 msgctxt "month name"
 msgid "June"
 msgstr "6 月"
 
-#: tavletta/ui/i18n.py:149
+#: tavletta/ui/i18n.py:206
 msgctxt "month name"
 msgid "July"
 msgstr "7 月"
 
-#: tavletta/ui/i18n.py:150
+#: tavletta/ui/i18n.py:207
 msgctxt "month name"
 msgid "August"
 msgstr "8 月"
 
-#: tavletta/ui/i18n.py:151
+#: tavletta/ui/i18n.py:208
 msgctxt "month name"
 msgid "September"
 msgstr "9 月"
 
-#: tavletta/ui/i18n.py:152
+#: tavletta/ui/i18n.py:209
 msgctxt "month name"
 msgid "October"
 msgstr "10 月"
 
-#: tavletta/ui/i18n.py:153
+#: tavletta/ui/i18n.py:210
 msgctxt "month name"
 msgid "November"
 msgstr "11 月"
 
-#: tavletta/ui/i18n.py:154
+#: tavletta/ui/i18n.py:211
 msgctxt "month name"
 msgid "December"
 msgstr "12 月"
@@ -3463,7 +3463,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:90 tavletta/server/config.py:94
-#: tavletta/server/config.py:100 tavletta/server/main.py:419
+#: tavletta/server/config.py:100 tavletta/server/main.py:439
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "無法讀取 %(file)s：%(reason)s"
@@ -3549,7 +3549,7 @@ msgstr "不是權杖雜湊值：應為 sha256:… 或 scrypt:…"
 msgid "expected a list of printer names"
 msgstr "應為印表機名稱清單"
 
-#: tavletta/server/config.py:484 tavletta/server/main.py:445
+#: tavletta/server/config.py:484 tavletta/server/main.py:465
 #: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "只能透過 --printers 限制印表機"
@@ -3565,77 +3565,77 @@ msgstr "未知的印表機：%s"
 msgid "Invalid value for %s"
 msgstr "%s 的值無效"
 
-#: tavletta/server/http.py:490 tavletta/server/http.py:539
+#: tavletta/server/http.py:492 tavletta/server/http.py:541
 msgid "The request took too long"
 msgstr "要求耗時過長"
 
-#: tavletta/server/http.py:499 tavletta/server/service.py:1802
+#: tavletta/server/http.py:501 tavletta/server/service.py:1802
 msgid "The server is busy – try again later"
 msgstr "伺服器忙碌中，請稍後再試"
 
-#: tavletta/server/http.py:542
+#: tavletta/server/http.py:544
 msgid "Internal error"
 msgstr "內部錯誤"
 
-#: tavletta/server/http.py:547
+#: tavletta/server/http.py:549
 msgid "This server only answers on its local address"
 msgstr "此伺服器只在其本機位址上回應"
 
-#: tavletta/server/http.py:551 tavletta/server/http.py:674
-#: tavletta/server/http.py:678
+#: tavletta/server/http.py:553 tavletta/server/http.py:676
+#: tavletta/server/http.py:680
 msgid "Requests from this web page are not allowed"
 msgstr "不允許來自此網頁的要求"
 
-#: tavletta/server/http.py:579 tavletta/server/http.py:589
-#: tavletta/server/http.py:687
+#: tavletta/server/http.py:581 tavletta/server/http.py:591
+#: tavletta/server/http.py:689
 msgid "Access token missing or wrong"
 msgstr "存取權杖遺失或錯誤"
 
-#: tavletta/server/http.py:587 tavletta/server/http.py:717
+#: tavletta/server/http.py:589 tavletta/server/http.py:719
 msgid "Too many requests – try again later"
 msgstr "要求過多，請稍後再試"
 
-#: tavletta/server/http.py:667 tavletta/server/http.py:824
+#: tavletta/server/http.py:669 tavletta/server/http.py:826
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "請隨此要求傳送標頭 %s"
 
-#: tavletta/server/http.py:698 tavletta/server/http.py:798
-#: tavletta/server/http.py:808 tavletta/server/http.py:934
+#: tavletta/server/http.py:700 tavletta/server/http.py:800
+#: tavletta/server/http.py:810 tavletta/server/http.py:936
 msgid "Not found"
 msgstr "找不到"
 
-#: tavletta/server/http.py:700 tavletta/server/http.py:807
-#: tavletta/server/http.py:923
+#: tavletta/server/http.py:702 tavletta/server/http.py:809
+#: tavletta/server/http.py:925
 msgid "Method not allowed"
 msgstr "不允許的方法"
 
-#: tavletta/server/http.py:740 tavletta/server/http.py:745
+#: tavletta/server/http.py:742 tavletta/server/http.py:747
 msgid "The request needs a Content-Length"
 msgstr "要求需要 Content-Length"
 
-#: tavletta/server/http.py:742
+#: tavletta/server/http.py:744
 msgid "The request has more than one Content-Length"
 msgstr "要求包含多個 Content-Length"
 
-#: tavletta/server/http.py:748 tavletta/server/service.py:903
+#: tavletta/server/http.py:750 tavletta/server/service.py:903
 msgid "The request is too large"
 msgstr "要求過大"
 
-#: tavletta/server/http.py:753
+#: tavletta/server/http.py:755
 msgid "The request body is incomplete"
 msgstr "要求主體不完整"
 
-#: tavletta/server/http.py:760
+#: tavletta/server/http.py:762
 msgid "Send the request as application/json"
 msgstr "請以 application/json 格式傳送要求"
 
-#: tavletta/server/http.py:869 tavletta/server/service.py:660
+#: tavletta/server/http.py:871 tavletta/server/service.py:660
 #: tavletta/server/service.py:1775
 msgid "This access token may not do this"
 msgstr "此存取權杖無權執行此操作"
 
-#: tavletta/server/http.py:1057
+#: tavletta/server/http.py:1065
 msgid "The request is not valid JSON"
 msgstr "要求不是有效的 JSON"
 
@@ -3649,12 +3649,12 @@ msgstr "標籤資料夾 %s 不存在"
 msgid "Cannot read the token file %s"
 msgstr "無法讀取權杖檔案 %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:390
+#: tavletta/server/main.py:54 tavletta/server/main.py:410
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "存取權杖只能包含不含空格的可列印 ASCII 字元"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:395
+#: tavletta/server/main.py:59 tavletta/server/main.py:415
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "存取權杖長度至少須為 %d 個字元"
@@ -3679,66 +3679,73 @@ msgid ""
 "--token-file"
 msgstr "拒絕在沒有存取權杖的情況下監聽 %s：請設定 TAVLETTA_TOKEN 或使用 --token-file"
 
-#: tavletta/server/main.py:143
+#: tavletta/server/main.py:145
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "無法監聽 %(address)s：%(reason)s"
 
-#: tavletta/server/main.py:160
+#: tavletta/server/main.py:162
+#, python-format
+msgid ""
+"The web page's files are damaged or missing (%s): reinstall Tavletta, or "
+"start with --no-web-ui"
+msgstr "網頁檔案已損毀或遺失（%s）：請重新安裝 Tavletta，或使用 --no-web-ui 啟動"
+
+#: tavletta/server/main.py:180
 msgid "--oidc signs in to the web page: not with --no-web-ui"
 msgstr "--oidc 用於登入網頁：不能與 --no-web-ui 併用"
 
-#: tavletta/server/main.py:167
+#: tavletta/server/main.py:187
 msgid ""
 "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm "
 "package, the container image or with pip for it"
 msgstr "Flatpak 中無法使用 --oidc：如需使用，請透過 deb 或 rpm 套件、容器映像檔或 pip 安裝 Tavletta"
 
-#: tavletta/server/main.py:173
+#: tavletta/server/main.py:193
 msgid ""
 "--oidc needs PyJWT with cryptography (python3-jwt, pip install "
 "tavletta[oidc])"
 msgstr "--oidc 需要含 cryptography 的 PyJWT（python3-jwt、pip install tavletta[oidc]）"
 
-#: tavletta/server/main.py:210
+#: tavletta/server/main.py:230
 msgid ""
 "--oidc with --trusted-proxy needs public_url in the OIDC settings: the "
 "address people open the web page at"
 msgstr "與 --trusted-proxy 一起使用時，--oidc 需要在 OIDC 設定中提供 public_url：開啟網頁所用的位址"
 
-#: tavletta/server/main.py:349
+#: tavletta/server/main.py:369
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "名稱無效：只能使用字母、數字、. _ -（最多 64 個）"
 
-#: tavletta/server/main.py:360
+#: tavletta/server/main.py:380
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s 正由另一個程式使用，請稍後再試"
 
-#: tavletta/server/main.py:367
+#: tavletta/server/main.py:387
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "權杖 %(name)s 已加入 %(file)s。"
 
-#: tavletta/server/main.py:374
+#: tavletta/server/main.py:394
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "權杖僅顯示這一次；%s 只保留其雜湊值。"
 
-#: tavletta/server/main.py:385
+#: tavletta/server/main.py:405
 msgid "Access token: "
 msgstr "存取權杖："
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:420
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "自選權杖不得看起來像產生的權杖（tav_…）"
 
-#: tavletta/server/main.py:450
+#: tavletta/server/main.py:470
 #, python-format
 msgid "A token named %s exists already"
 msgstr "名為 %s 的權杖已存在"
 
-#: tavletta/server/main.py:477
+#: tavletta/server/main.py:497
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "此權杖已在檔案中，名稱為 %s"
@@ -3905,7 +3912,7 @@ msgstr "此印表機最多 %d 份"
 msgid "Printers are chosen by name: leave out host"
 msgstr "印表機依名稱選擇：請省略 host"
 
-#: tavletta/server/webui.py:71
+#: tavletta/server/webui.py:73
 msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
 msgstr "Tavletta 的網頁需要 JavaScript。REST API 位於 /api/v1。"
 

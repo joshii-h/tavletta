@@ -61,8 +61,9 @@ HEADERS = {
 _TEXT = re.compile(r'\bt\(\s*"((?:[^"\\\n]|\\.)*)"')
 _LANG = re.compile(r"[a-z]{2,3}(?:[_-][A-Za-z]{2})?\Z")
 # Chinese named by its script (zh-Hant, zh-Hans, without a region): the
-# region of the catalog in that script, before Accept-Language loses it
-_SCRIPT = re.compile(r"\bzh-(hant|hans)(?=\s*(?:[;,]|\Z))", re.IGNORECASE)
+# region of the catalog in that script, before Accept-Language (or the
+# check of ?lang=) loses it
+_SCRIPT = re.compile(r"\bzh[-_](hant|hans)(?=\s*(?:[;,]|\Z))", re.IGNORECASE)
 _SCRIPT_REGION = {"hant": "zh-TW", "hans": "zh-CN"}
 # a language whose catalogs all have a region: the one for a region
 # without its own catalog, or none named
@@ -137,14 +138,19 @@ def chosen_language(asked: str | None, header: str | None) -> str:
     language name, counts as none; English in Accept-Language ends the
     search there ("en, de": English)."""
     available = languages()
+    asked = _by_script(asked) if asked else asked
     wanted = [asked.replace("-", "_")] if asked and _LANG.match(asked) else []
     if header:
-        header = _SCRIPT.sub(lambda m: _SCRIPT_REGION[m.group(1).lower()], header)
-        wanted += accepted_languages(header) or ["en"]
+        wanted += accepted_languages(_by_script(header)) or ["en"]
     for code in wanted:
         if found := _catalog_for(code, available):
             return found
     return "en"
+
+
+def _by_script(languages: str) -> str:
+    """zh-Hant and zh-Hans (without a region) as zh-TW and zh-CN."""
+    return _SCRIPT.sub(lambda m: _SCRIPT_REGION[m.group(1).lower()], languages)
 
 
 def _catalog_for(code: str, available: tuple[str, ...]) -> str | None:

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-25 13:18+0100\n"
+"PO-Revision-Date: 2026-11-25 15:26+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: vi\n"
 "Language: vi\n"
@@ -336,7 +336,7 @@ msgstr "Kiểu máy in không xác định: %s"
 msgid "Cannot open %s"
 msgstr "Không thể mở %s"
 
-#: tavletta/cli.py:522 tavletta/server/main.py:337
+#: tavletta/cli.py:522 tavletta/server/main.py:357
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s không phải ngày, cần ví dụ 2026-12-31 hoặc 2026-12-31T08:30"
@@ -988,67 +988,67 @@ msgid "How much of the code may be damaged and still be read"
 msgstr "Bao nhiêu phần của mã có thể bị hỏng mà vẫn đọc được"
 
 #. translators: a month and a year, e.g. "May 2018"; reorder as your language needs
-#: tavletta/ui/i18n.py:138
+#: tavletta/ui/i18n.py:195
 #, python-format
 msgid "%(month)s %(year)d"
 msgstr "%(month)s năm %(year)d"
 
-#: tavletta/ui/i18n.py:143
+#: tavletta/ui/i18n.py:200
 msgctxt "month name"
 msgid "January"
 msgstr "tháng 1"
 
-#: tavletta/ui/i18n.py:144
+#: tavletta/ui/i18n.py:201
 msgctxt "month name"
 msgid "February"
 msgstr "tháng 2"
 
-#: tavletta/ui/i18n.py:145
+#: tavletta/ui/i18n.py:202
 msgctxt "month name"
 msgid "March"
 msgstr "tháng 3"
 
-#: tavletta/ui/i18n.py:146
+#: tavletta/ui/i18n.py:203
 msgctxt "month name"
 msgid "April"
 msgstr "tháng 4"
 
-#: tavletta/ui/i18n.py:147
+#: tavletta/ui/i18n.py:204
 msgctxt "month name"
 msgid "May"
 msgstr "tháng 5"
 
-#: tavletta/ui/i18n.py:148
+#: tavletta/ui/i18n.py:205
 msgctxt "month name"
 msgid "June"
 msgstr "tháng 6"
 
-#: tavletta/ui/i18n.py:149
+#: tavletta/ui/i18n.py:206
 msgctxt "month name"
 msgid "July"
 msgstr "tháng 7"
 
-#: tavletta/ui/i18n.py:150
+#: tavletta/ui/i18n.py:207
 msgctxt "month name"
 msgid "August"
 msgstr "tháng 8"
 
-#: tavletta/ui/i18n.py:151
+#: tavletta/ui/i18n.py:208
 msgctxt "month name"
 msgid "September"
 msgstr "tháng 9"
 
-#: tavletta/ui/i18n.py:152
+#: tavletta/ui/i18n.py:209
 msgctxt "month name"
 msgid "October"
 msgstr "tháng 10"
 
-#: tavletta/ui/i18n.py:153
+#: tavletta/ui/i18n.py:210
 msgctxt "month name"
 msgid "November"
 msgstr "tháng 11"
 
-#: tavletta/ui/i18n.py:154
+#: tavletta/ui/i18n.py:211
 msgctxt "month name"
 msgid "December"
 msgstr "tháng 12"
@@ -3463,7 +3463,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:90 tavletta/server/config.py:94
-#: tavletta/server/config.py:100 tavletta/server/main.py:419
+#: tavletta/server/config.py:100 tavletta/server/main.py:439
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "Không thể đọc %(file)s: %(reason)s"
@@ -3549,7 +3549,7 @@ msgstr "không phải giá trị băm của mã: cần sha256:… hoặc scrypt:
 msgid "expected a list of printer names"
 msgstr "cần một danh sách tên máy in"
 
-#: tavletta/server/config.py:484 tavletta/server/main.py:445
+#: tavletta/server/config.py:484 tavletta/server/main.py:465
 #: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "chỉ có thể giới hạn máy in khi dùng --printers"
@@ -3565,77 +3565,77 @@ msgstr "Máy in không xác định: %s"
 msgid "Invalid value for %s"
 msgstr "Giá trị không hợp lệ cho %s"
 
-#: tavletta/server/http.py:490 tavletta/server/http.py:539
+#: tavletta/server/http.py:492 tavletta/server/http.py:541
 msgid "The request took too long"
 msgstr "Yêu cầu mất quá nhiều thời gian"
 
-#: tavletta/server/http.py:499 tavletta/server/service.py:1802
+#: tavletta/server/http.py:501 tavletta/server/service.py:1802
 msgid "The server is busy – try again later"
 msgstr "Máy chủ đang bận – hãy thử lại sau"
 
-#: tavletta/server/http.py:542
+#: tavletta/server/http.py:544
 msgid "Internal error"
 msgstr "Lỗi nội bộ"
 
-#: tavletta/server/http.py:547
+#: tavletta/server/http.py:549
 msgid "This server only answers on its local address"
 msgstr "Máy chủ này chỉ trả lời trên địa chỉ cục bộ của nó"
 
-#: tavletta/server/http.py:551 tavletta/server/http.py:674
-#: tavletta/server/http.py:678
+#: tavletta/server/http.py:553 tavletta/server/http.py:676
+#: tavletta/server/http.py:680
 msgid "Requests from this web page are not allowed"
 msgstr "Không cho phép yêu cầu từ trang web này"
 
-#: tavletta/server/http.py:579 tavletta/server/http.py:589
-#: tavletta/server/http.py:687
+#: tavletta/server/http.py:581 tavletta/server/http.py:591
+#: tavletta/server/http.py:689
 msgid "Access token missing or wrong"
 msgstr "Thiếu mã truy cập hoặc mã truy cập sai"
 
-#: tavletta/server/http.py:587 tavletta/server/http.py:717
+#: tavletta/server/http.py:589 tavletta/server/http.py:719
 msgid "Too many requests – try again later"
 msgstr "Quá nhiều yêu cầu – hãy thử lại sau"
 
-#: tavletta/server/http.py:667 tavletta/server/http.py:824
+#: tavletta/server/http.py:669 tavletta/server/http.py:826
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Hãy gửi tiêu đề %s cùng yêu cầu này"
 
-#: tavletta/server/http.py:698 tavletta/server/http.py:798
-#: tavletta/server/http.py:808 tavletta/server/http.py:934
+#: tavletta/server/http.py:700 tavletta/server/http.py:800
+#: tavletta/server/http.py:810 tavletta/server/http.py:936
 msgid "Not found"
 msgstr "Không tìm thấy"
 
-#: tavletta/server/http.py:700 tavletta/server/http.py:807
-#: tavletta/server/http.py:923
+#: tavletta/server/http.py:702 tavletta/server/http.py:809
+#: tavletta/server/http.py:925
 msgid "Method not allowed"
 msgstr "Phương thức không được phép"
 
-#: tavletta/server/http.py:740 tavletta/server/http.py:745
+#: tavletta/server/http.py:742 tavletta/server/http.py:747
 msgid "The request needs a Content-Length"
 msgstr "Yêu cầu cần có Content-Length"
 
-#: tavletta/server/http.py:742
+#: tavletta/server/http.py:744
 msgid "The request has more than one Content-Length"
 msgstr "Yêu cầu có nhiều hơn một Content-Length"
 
-#: tavletta/server/http.py:748 tavletta/server/service.py:903
+#: tavletta/server/http.py:750 tavletta/server/service.py:903
 msgid "The request is too large"
 msgstr "Yêu cầu quá lớn"
 
-#: tavletta/server/http.py:753
+#: tavletta/server/http.py:755
 msgid "The request body is incomplete"
 msgstr "Nội dung yêu cầu không đầy đủ"
 
-#: tavletta/server/http.py:760
+#: tavletta/server/http.py:762
 msgid "Send the request as application/json"
 msgstr "Hãy gửi yêu cầu dưới dạng application/json"
 
-#: tavletta/server/http.py:869 tavletta/server/service.py:660
+#: tavletta/server/http.py:871 tavletta/server/service.py:660
 #: tavletta/server/service.py:1775
 msgid "This access token may not do this"
 msgstr "Mã truy cập này không được phép làm việc này"
 
-#: tavletta/server/http.py:1057
+#: tavletta/server/http.py:1065
 msgid "The request is not valid JSON"
 msgstr "Yêu cầu không phải JSON hợp lệ"
 
@@ -3649,12 +3649,12 @@ msgstr "Thư mục nhãn %s không tồn tại"
 msgid "Cannot read the token file %s"
 msgstr "Không thể đọc tệp mã truy cập %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:390
+#: tavletta/server/main.py:54 tavletta/server/main.py:410
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "Mã truy cập chỉ được chứa các ký tự ASCII in được, không có khoảng trắng"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:395
+#: tavletta/server/main.py:59 tavletta/server/main.py:415
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "Mã truy cập phải dài ít nhất %d ký tự"
@@ -3679,66 +3679,73 @@ msgid ""
 "--token-file"
 msgstr "Từ chối lắng nghe trên %s khi không có mã truy cập: hãy đặt TAVLETTA_TOKEN hoặc dùng --token-file"
 
-#: tavletta/server/main.py:143
+#: tavletta/server/main.py:145
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "Không thể lắng nghe trên %(address)s: %(reason)s"
 
-#: tavletta/server/main.py:160
+#: tavletta/server/main.py:162
+#, python-format
+msgid ""
+"The web page's files are damaged or missing (%s): reinstall Tavletta, or "
+"start with --no-web-ui"
+msgstr "Các tệp của trang web bị hỏng hoặc bị thiếu (%s): cài đặt lại Tavletta, hoặc khởi động với --no-web-ui"
+
+#: tavletta/server/main.py:180
 msgid "--oidc signs in to the web page: not with --no-web-ui"
 msgstr "--oidc dùng để đăng nhập trang web: không dùng cùng --no-web-ui"
 
-#: tavletta/server/main.py:167
+#: tavletta/server/main.py:187
 msgid ""
 "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm "
 "package, the container image or with pip for it"
 msgstr "--oidc không có trong bản Flatpak: để dùng, hãy cài Tavletta từ gói deb hoặc rpm, ảnh container hoặc bằng pip"
 
-#: tavletta/server/main.py:173
+#: tavletta/server/main.py:193
 msgid ""
 "--oidc needs PyJWT with cryptography (python3-jwt, pip install "
 "tavletta[oidc])"
 msgstr "--oidc cần PyJWT kèm cryptography (python3-jwt, pip install tavletta[oidc])"
 
-#: tavletta/server/main.py:210
+#: tavletta/server/main.py:230
 msgid ""
 "--oidc with --trusted-proxy needs public_url in the OIDC settings: the "
 "address people open the web page at"
 msgstr "--oidc cùng --trusted-proxy cần public_url trong cài đặt OIDC: địa chỉ dùng để mở trang web"
 
-#: tavletta/server/main.py:349
+#: tavletta/server/main.py:369
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "Tên không hợp lệ: chữ cái, chữ số, . _ - (tối đa 64)"
 
-#: tavletta/server/main.py:360
+#: tavletta/server/main.py:380
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s đang được một chương trình khác sử dụng – hãy thử lại sau"
 
-#: tavletta/server/main.py:367
+#: tavletta/server/main.py:387
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "Đã thêm mã truy cập %(name)s vào %(file)s."
 
-#: tavletta/server/main.py:374
+#: tavletta/server/main.py:394
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "Mã chỉ hiển thị một lần này; %s chỉ lưu giá trị băm của mã."
 
-#: tavletta/server/main.py:385
+#: tavletta/server/main.py:405
 msgid "Access token: "
 msgstr "Mã truy cập: "
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:420
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "Mã truy cập tự chọn không được trông giống mã được tạo (tav_…)"
 
-#: tavletta/server/main.py:450
+#: tavletta/server/main.py:470
 #, python-format
 msgid "A token named %s exists already"
 msgstr "Đã có mã tên %s"
 
-#: tavletta/server/main.py:477
+#: tavletta/server/main.py:497
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "Mã truy cập này đã có trong tệp, với tên %s"
@@ -3905,7 +3912,7 @@ msgstr "Tối đa %d bản trên máy in này"
 msgid "Printers are chosen by name: leave out host"
 msgstr "Máy in được chọn theo tên: hãy bỏ host"
 
-#: tavletta/server/webui.py:71
+#: tavletta/server/webui.py:73
 msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
 msgstr "Trang web của Tavletta cần JavaScript. REST API nằm tại /api/v1."
 

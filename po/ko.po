@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-25 13:18+0100\n"
+"PO-Revision-Date: 2026-11-25 15:26+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: ko\n"
 "Language: ko\n"
@@ -336,7 +336,7 @@ msgstr "알 수 없는 프린터 모델: %s"
 msgid "Cannot open %s"
 msgstr "열 수 없음: %s"
 
-#: tavletta/cli.py:522 tavletta/server/main.py:337
+#: tavletta/cli.py:522 tavletta/server/main.py:357
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "%s은(는) 날짜가 아닙니다. 예: 2026-12-31 또는 2026-12-31T08:30"
@@ -988,67 +988,67 @@ msgid "How much of the code may be damaged and still be read"
 msgstr "코드가 얼마나 손상되어도 읽을 수 있는지"
 
 #. translators: a month and a year, e.g. "May 2018"; reorder as your language needs
-#: tavletta/ui/i18n.py:138
+#: tavletta/ui/i18n.py:195
 #, python-format
 msgid "%(month)s %(year)d"
 msgstr "%(year)d년 %(month)s"
 
-#: tavletta/ui/i18n.py:143
+#: tavletta/ui/i18n.py:200
 msgctxt "month name"
 msgid "January"
 msgstr "1월"
 
-#: tavletta/ui/i18n.py:144
+#: tavletta/ui/i18n.py:201
 msgctxt "month name"
 msgid "February"
 msgstr "2월"
 
-#: tavletta/ui/i18n.py:145
+#: tavletta/ui/i18n.py:202
 msgctxt "month name"
 msgid "March"
 msgstr "3월"
 
-#: tavletta/ui/i18n.py:146
+#: tavletta/ui/i18n.py:203
 msgctxt "month name"
 msgid "April"
 msgstr "4월"
 
-#: tavletta/ui/i18n.py:147
+#: tavletta/ui/i18n.py:204
 msgctxt "month name"
 msgid "May"
 msgstr "5월"
 
-#: tavletta/ui/i18n.py:148
+#: tavletta/ui/i18n.py:205
 msgctxt "month name"
 msgid "June"
 msgstr "6월"
 
-#: tavletta/ui/i18n.py:149
+#: tavletta/ui/i18n.py:206
 msgctxt "month name"
 msgid "July"
 msgstr "7월"
 
-#: tavletta/ui/i18n.py:150
+#: tavletta/ui/i18n.py:207
 msgctxt "month name"
 msgid "August"
 msgstr "8월"
 
-#: tavletta/ui/i18n.py:151
+#: tavletta/ui/i18n.py:208
 msgctxt "month name"
 msgid "September"
 msgstr "9월"
 
-#: tavletta/ui/i18n.py:152
+#: tavletta/ui/i18n.py:209
 msgctxt "month name"
 msgid "October"
 msgstr "10월"
 
-#: tavletta/ui/i18n.py:153
+#: tavletta/ui/i18n.py:210
 msgctxt "month name"
 msgid "November"
 msgstr "11월"
 
-#: tavletta/ui/i18n.py:154
+#: tavletta/ui/i18n.py:211
 msgctxt "month name"
 msgid "December"
 msgstr "12월"
@@ -3463,7 +3463,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:90 tavletta/server/config.py:94
-#: tavletta/server/config.py:100 tavletta/server/main.py:419
+#: tavletta/server/config.py:100 tavletta/server/main.py:439
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "%(file)s 파일을 읽을 수 없음: %(reason)s"
@@ -3549,7 +3549,7 @@ msgstr "토큰 해시가 아님: sha256:… 또는 scrypt:…가 필요함"
 msgid "expected a list of printer names"
 msgstr "프린터 이름 목록이 필요함"
 
-#: tavletta/server/config.py:484 tavletta/server/main.py:445
+#: tavletta/server/config.py:484 tavletta/server/main.py:465
 #: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "프린터 제한은 --printers와 함께일 때만 가능"
@@ -3565,77 +3565,77 @@ msgstr "알 수 없는 프린터: %s"
 msgid "Invalid value for %s"
 msgstr "%s에 잘못된 값"
 
-#: tavletta/server/http.py:490 tavletta/server/http.py:539
+#: tavletta/server/http.py:492 tavletta/server/http.py:541
 msgid "The request took too long"
 msgstr "요청 시간이 너무 오래 걸렸습니다"
 
-#: tavletta/server/http.py:499 tavletta/server/service.py:1802
+#: tavletta/server/http.py:501 tavletta/server/service.py:1802
 msgid "The server is busy – try again later"
 msgstr "서버가 사용 중입니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/http.py:542
+#: tavletta/server/http.py:544
 msgid "Internal error"
 msgstr "내부 오류"
 
-#: tavletta/server/http.py:547
+#: tavletta/server/http.py:549
 msgid "This server only answers on its local address"
 msgstr "이 서버는 로컬 주소에서만 응답합니다"
 
-#: tavletta/server/http.py:551 tavletta/server/http.py:674
-#: tavletta/server/http.py:678
+#: tavletta/server/http.py:553 tavletta/server/http.py:676
+#: tavletta/server/http.py:680
 msgid "Requests from this web page are not allowed"
 msgstr "이 웹 페이지에서 온 요청은 허용되지 않습니다"
 
-#: tavletta/server/http.py:579 tavletta/server/http.py:589
-#: tavletta/server/http.py:687
+#: tavletta/server/http.py:581 tavletta/server/http.py:591
+#: tavletta/server/http.py:689
 msgid "Access token missing or wrong"
 msgstr "액세스 토큰이 없거나 잘못되었습니다"
 
-#: tavletta/server/http.py:587 tavletta/server/http.py:717
+#: tavletta/server/http.py:589 tavletta/server/http.py:719
 msgid "Too many requests – try again later"
 msgstr "요청이 너무 많습니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/http.py:667 tavletta/server/http.py:824
+#: tavletta/server/http.py:669 tavletta/server/http.py:826
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "이 요청과 함께 %s 헤더를 보내십시오"
 
-#: tavletta/server/http.py:698 tavletta/server/http.py:798
-#: tavletta/server/http.py:808 tavletta/server/http.py:934
+#: tavletta/server/http.py:700 tavletta/server/http.py:800
+#: tavletta/server/http.py:810 tavletta/server/http.py:936
 msgid "Not found"
 msgstr "찾을 수 없음"
 
-#: tavletta/server/http.py:700 tavletta/server/http.py:807
-#: tavletta/server/http.py:923
+#: tavletta/server/http.py:702 tavletta/server/http.py:809
+#: tavletta/server/http.py:925
 msgid "Method not allowed"
 msgstr "허용되지 않는 메서드"
 
-#: tavletta/server/http.py:740 tavletta/server/http.py:745
+#: tavletta/server/http.py:742 tavletta/server/http.py:747
 msgid "The request needs a Content-Length"
 msgstr "요청에 Content-Length가 필요합니다"
 
-#: tavletta/server/http.py:742
+#: tavletta/server/http.py:744
 msgid "The request has more than one Content-Length"
 msgstr "요청에 Content-Length가 두 개 이상 있습니다"
 
-#: tavletta/server/http.py:748 tavletta/server/service.py:903
+#: tavletta/server/http.py:750 tavletta/server/service.py:903
 msgid "The request is too large"
 msgstr "요청이 너무 큽니다"
 
-#: tavletta/server/http.py:753
+#: tavletta/server/http.py:755
 msgid "The request body is incomplete"
 msgstr "요청 본문이 불완전합니다"
 
-#: tavletta/server/http.py:760
+#: tavletta/server/http.py:762
 msgid "Send the request as application/json"
 msgstr "요청을 application/json으로 보내십시오"
 
-#: tavletta/server/http.py:869 tavletta/server/service.py:660
+#: tavletta/server/http.py:871 tavletta/server/service.py:660
 #: tavletta/server/service.py:1775
 msgid "This access token may not do this"
 msgstr "이 액세스 토큰으로는 이 작업을 할 수 없습니다"
 
-#: tavletta/server/http.py:1057
+#: tavletta/server/http.py:1065
 msgid "The request is not valid JSON"
 msgstr "요청이 올바른 JSON이 아닙니다"
 
@@ -3649,12 +3649,12 @@ msgstr "라벨 폴더가 없음: %s"
 msgid "Cannot read the token file %s"
 msgstr "토큰 파일을 읽을 수 없음: %s"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:390
+#: tavletta/server/main.py:54 tavletta/server/main.py:410
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "액세스 토큰에는 공백 없이 인쇄 가능한 ASCII 문자만 포함할 수 있습니다"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:395
+#: tavletta/server/main.py:59 tavletta/server/main.py:415
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "액세스 토큰은 %d자 이상이어야 합니다"
@@ -3679,66 +3679,73 @@ msgid ""
 "--token-file"
 msgstr "액세스 토큰 없이 %s에서 수신 대기하지 않습니다: TAVLETTA_TOKEN을 설정하거나 --token-file을 사용하십시오"
 
-#: tavletta/server/main.py:143
+#: tavletta/server/main.py:145
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "%(address)s에서 수신 대기할 수 없음: %(reason)s"
 
-#: tavletta/server/main.py:160
+#: tavletta/server/main.py:162
+#, python-format
+msgid ""
+"The web page's files are damaged or missing (%s): reinstall Tavletta, or "
+"start with --no-web-ui"
+msgstr "웹 페이지 파일이 손상되었거나 없습니다(%s). Tavletta를 다시 설치하거나 --no-web-ui로 시작하세요"
+
+#: tavletta/server/main.py:180
 msgid "--oidc signs in to the web page: not with --no-web-ui"
 msgstr "--oidc는 웹 페이지 로그인용입니다: --no-web-ui와 함께 쓸 수 없습니다"
 
-#: tavletta/server/main.py:167
+#: tavletta/server/main.py:187
 msgid ""
 "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm "
 "package, the container image or with pip for it"
 msgstr "--oidc는 Flatpak에서 사용할 수 없습니다: 사용하려면 deb 또는 rpm 패키지, 컨테이너 이미지 또는 pip로 Tavletta를 설치하십시오"
 
-#: tavletta/server/main.py:173
+#: tavletta/server/main.py:193
 msgid ""
 "--oidc needs PyJWT with cryptography (python3-jwt, pip install "
 "tavletta[oidc])"
 msgstr "--oidc에는 cryptography가 포함된 PyJWT가 필요합니다 (python3-jwt, pip install tavletta[oidc])"
 
-#: tavletta/server/main.py:210
+#: tavletta/server/main.py:230
 msgid ""
 "--oidc with --trusted-proxy needs public_url in the OIDC settings: the "
 "address people open the web page at"
 msgstr "--trusted-proxy와 함께 쓰는 --oidc에는 OIDC 설정의 public_url(웹 페이지를 여는 주소)이 필요합니다"
 
-#: tavletta/server/main.py:349
+#: tavletta/server/main.py:369
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "올바른 이름이 아닙니다: 영문자, 숫자, . _ - (최대 64자)"
 
-#: tavletta/server/main.py:360
+#: tavletta/server/main.py:380
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "다른 프로그램이 %s을(를) 사용 중입니다 – 나중에 다시 시도하십시오"
 
-#: tavletta/server/main.py:367
+#: tavletta/server/main.py:387
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "토큰 %(name)s을(를) %(file)s에 추가했습니다."
 
-#: tavletta/server/main.py:374
+#: tavletta/server/main.py:394
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "토큰은 이번 한 번만 표시됩니다. %s에는 해시만 저장됩니다."
 
-#: tavletta/server/main.py:385
+#: tavletta/server/main.py:405
 msgid "Access token: "
 msgstr "액세스 토큰: "
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:420
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "직접 정한 토큰은 생성된 토큰처럼 보이면 안 됩니다 (tav_…)"
 
-#: tavletta/server/main.py:450
+#: tavletta/server/main.py:470
 #, python-format
 msgid "A token named %s exists already"
 msgstr "이름이 %s인 토큰이 이미 있습니다"
 
-#: tavletta/server/main.py:477
+#: tavletta/server/main.py:497
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "이 토큰은 이미 파일에 %s(으)로 있습니다"
@@ -3905,7 +3912,7 @@ msgstr "이 프린터에서는 최대 %d매까지 가능합니다"
 msgid "Printers are chosen by name: leave out host"
 msgstr "프린터는 이름으로 선택합니다: host를 지정하지 마십시오"
 
-#: tavletta/server/webui.py:71
+#: tavletta/server/webui.py:73
 msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
 msgstr "Tavletta 웹 페이지에는 JavaScript가 필요합니다. REST API는 /api/v1에 있습니다."
 

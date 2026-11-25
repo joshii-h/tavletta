@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tavletta\n"
-"PO-Revision-Date: 2026-11-25 13:18+0100\n"
+"PO-Revision-Date: 2026-11-25 15:26+0100\n"
 "Last-Translator: Tavletta contributors\n"
 "Language-Team: hu\n"
 "Language: hu\n"
@@ -336,7 +336,7 @@ msgstr "Ismeretlen nyomtatómodell: %s"
 msgid "Cannot open %s"
 msgstr "Nem nyitható meg: %s"
 
-#: tavletta/cli.py:522 tavletta/server/main.py:337
+#: tavletta/cli.py:522 tavletta/server/main.py:357
 #, python-format
 msgid "%s is not a date, expected e.g. 2026-12-31 or 2026-12-31T08:30"
 msgstr "A(z) %s nem dátum, várható pl. 2026-12-31 vagy 2026-12-31T08:30"
@@ -988,67 +988,67 @@ msgid "How much of the code may be damaged and still be read"
 msgstr "A kód mekkora része sérülhet úgy, hogy még olvasható legyen"
 
 #. translators: a month and a year, e.g. "May 2018"; reorder as your language needs
-#: tavletta/ui/i18n.py:138
+#: tavletta/ui/i18n.py:195
 #, python-format
 msgid "%(month)s %(year)d"
 msgstr "%(year)d. %(month)s"
 
-#: tavletta/ui/i18n.py:143
+#: tavletta/ui/i18n.py:200
 msgctxt "month name"
 msgid "January"
 msgstr "január"
 
-#: tavletta/ui/i18n.py:144
+#: tavletta/ui/i18n.py:201
 msgctxt "month name"
 msgid "February"
 msgstr "február"
 
-#: tavletta/ui/i18n.py:145
+#: tavletta/ui/i18n.py:202
 msgctxt "month name"
 msgid "March"
 msgstr "március"
 
-#: tavletta/ui/i18n.py:146
+#: tavletta/ui/i18n.py:203
 msgctxt "month name"
 msgid "April"
 msgstr "április"
 
-#: tavletta/ui/i18n.py:147
+#: tavletta/ui/i18n.py:204
 msgctxt "month name"
 msgid "May"
 msgstr "május"
 
-#: tavletta/ui/i18n.py:148
+#: tavletta/ui/i18n.py:205
 msgctxt "month name"
 msgid "June"
 msgstr "június"
 
-#: tavletta/ui/i18n.py:149
+#: tavletta/ui/i18n.py:206
 msgctxt "month name"
 msgid "July"
 msgstr "július"
 
-#: tavletta/ui/i18n.py:150
+#: tavletta/ui/i18n.py:207
 msgctxt "month name"
 msgid "August"
 msgstr "augusztus"
 
-#: tavletta/ui/i18n.py:151
+#: tavletta/ui/i18n.py:208
 msgctxt "month name"
 msgid "September"
 msgstr "szeptember"
 
-#: tavletta/ui/i18n.py:152
+#: tavletta/ui/i18n.py:209
 msgctxt "month name"
 msgid "October"
 msgstr "október"
 
-#: tavletta/ui/i18n.py:153
+#: tavletta/ui/i18n.py:210
 msgctxt "month name"
 msgid "November"
 msgstr "november"
 
-#: tavletta/ui/i18n.py:154
+#: tavletta/ui/i18n.py:211
 msgctxt "month name"
 msgid "December"
 msgstr "december"
@@ -3463,7 +3463,7 @@ msgid "%(file)s: %(key)s: %(problem)s"
 msgstr "%(file)s: %(key)s: %(problem)s"
 
 #: tavletta/server/config.py:90 tavletta/server/config.py:94
-#: tavletta/server/config.py:100 tavletta/server/main.py:419
+#: tavletta/server/config.py:100 tavletta/server/main.py:439
 #, python-format
 msgid "Cannot read %(file)s: %(reason)s"
 msgstr "A(z) %(file)s nem olvasható: %(reason)s"
@@ -3549,7 +3549,7 @@ msgstr "nem token-hash: sha256:… vagy scrypt:… várható"
 msgid "expected a list of printer names"
 msgstr "nyomtatónevek listája várható"
 
-#: tavletta/server/config.py:484 tavletta/server/main.py:445
+#: tavletta/server/config.py:484 tavletta/server/main.py:465
 #: tavletta/server/oidc.py:242 tavletta/server/oidc.py:279
 msgid "printers can only be limited with --printers"
 msgstr "a nyomtatók csak a --printers kapcsolóval korlátozhatók"
@@ -3565,77 +3565,77 @@ msgstr "Ismeretlen nyomtató: %s"
 msgid "Invalid value for %s"
 msgstr "Érvénytelen érték ehhez: %s"
 
-#: tavletta/server/http.py:490 tavletta/server/http.py:539
+#: tavletta/server/http.py:492 tavletta/server/http.py:541
 msgid "The request took too long"
 msgstr "A kérés túl sokáig tartott"
 
-#: tavletta/server/http.py:499 tavletta/server/service.py:1802
+#: tavletta/server/http.py:501 tavletta/server/service.py:1802
 msgid "The server is busy – try again later"
 msgstr "A kiszolgáló foglalt – próbálja újra később"
 
-#: tavletta/server/http.py:542
+#: tavletta/server/http.py:544
 msgid "Internal error"
 msgstr "Belső hiba"
 
-#: tavletta/server/http.py:547
+#: tavletta/server/http.py:549
 msgid "This server only answers on its local address"
 msgstr "Ez a kiszolgáló csak a helyi címén válaszol"
 
-#: tavletta/server/http.py:551 tavletta/server/http.py:674
-#: tavletta/server/http.py:678
+#: tavletta/server/http.py:553 tavletta/server/http.py:676
+#: tavletta/server/http.py:680
 msgid "Requests from this web page are not allowed"
 msgstr "Erről a weboldalról nem engedélyezettek a kérések"
 
-#: tavletta/server/http.py:579 tavletta/server/http.py:589
-#: tavletta/server/http.py:687
+#: tavletta/server/http.py:581 tavletta/server/http.py:591
+#: tavletta/server/http.py:689
 msgid "Access token missing or wrong"
 msgstr "A hozzáférési token hiányzik vagy hibás"
 
-#: tavletta/server/http.py:587 tavletta/server/http.py:717
+#: tavletta/server/http.py:589 tavletta/server/http.py:719
 msgid "Too many requests – try again later"
 msgstr "Túl sok kérés – próbálja újra később"
 
-#: tavletta/server/http.py:667 tavletta/server/http.py:824
+#: tavletta/server/http.py:669 tavletta/server/http.py:826
 #, python-format
 msgid "Send the header %s with this request"
 msgstr "Küldje el a(z) %s fejlécet ezzel a kéréssel"
 
-#: tavletta/server/http.py:698 tavletta/server/http.py:798
-#: tavletta/server/http.py:808 tavletta/server/http.py:934
+#: tavletta/server/http.py:700 tavletta/server/http.py:800
+#: tavletta/server/http.py:810 tavletta/server/http.py:936
 msgid "Not found"
 msgstr "Nem található"
 
-#: tavletta/server/http.py:700 tavletta/server/http.py:807
-#: tavletta/server/http.py:923
+#: tavletta/server/http.py:702 tavletta/server/http.py:809
+#: tavletta/server/http.py:925
 msgid "Method not allowed"
 msgstr "A metódus nem engedélyezett"
 
-#: tavletta/server/http.py:740 tavletta/server/http.py:745
+#: tavletta/server/http.py:742 tavletta/server/http.py:747
 msgid "The request needs a Content-Length"
 msgstr "A kéréshez Content-Length szükséges"
 
-#: tavletta/server/http.py:742
+#: tavletta/server/http.py:744
 msgid "The request has more than one Content-Length"
 msgstr "A kérésben több Content-Length is szerepel"
 
-#: tavletta/server/http.py:748 tavletta/server/service.py:903
+#: tavletta/server/http.py:750 tavletta/server/service.py:903
 msgid "The request is too large"
 msgstr "A kérés túl nagy"
 
-#: tavletta/server/http.py:753
+#: tavletta/server/http.py:755
 msgid "The request body is incomplete"
 msgstr "A kérés törzse hiányos"
 
-#: tavletta/server/http.py:760
+#: tavletta/server/http.py:762
 msgid "Send the request as application/json"
 msgstr "A kérést application/json formátumban küldje"
 
-#: tavletta/server/http.py:869 tavletta/server/service.py:660
+#: tavletta/server/http.py:871 tavletta/server/service.py:660
 #: tavletta/server/service.py:1775
 msgid "This access token may not do this"
 msgstr "Ez a hozzáférési token ezt nem teheti meg"
 
-#: tavletta/server/http.py:1057
+#: tavletta/server/http.py:1065
 msgid "The request is not valid JSON"
 msgstr "A kérés nem érvényes JSON"
 
@@ -3649,12 +3649,12 @@ msgstr "A(z) %s címkemappa nem létezik"
 msgid "Cannot read the token file %s"
 msgstr "A(z) %s tokenfájl nem olvasható"
 
-#: tavletta/server/main.py:54 tavletta/server/main.py:390
+#: tavletta/server/main.py:54 tavletta/server/main.py:410
 msgid ""
 "The access token may only contain printable ASCII characters without spaces"
 msgstr "A hozzáférési token csak nyomtatható ASCII-karaktereket tartalmazhat, szóközök nélkül"
 
-#: tavletta/server/main.py:59 tavletta/server/main.py:395
+#: tavletta/server/main.py:59 tavletta/server/main.py:415
 #, python-format
 msgid "The access token must be at least %d characters long"
 msgstr "A hozzáférési tokennek legalább %d karakter hosszúnak kell lennie"
@@ -3679,66 +3679,73 @@ msgid ""
 "--token-file"
 msgstr "Hozzáférési token nélkül nem figyelek a(z) %s címen: állítsa be az TAVLETTA_TOKEN változót, vagy használja a --token-file kapcsolót"
 
-#: tavletta/server/main.py:143
+#: tavletta/server/main.py:145
 #, python-format
 msgid "Cannot listen on %(address)s: %(reason)s"
 msgstr "Nem lehet figyelni a(z) %(address)s címen: %(reason)s"
 
-#: tavletta/server/main.py:160
+#: tavletta/server/main.py:162
+#, python-format
+msgid ""
+"The web page's files are damaged or missing (%s): reinstall Tavletta, or "
+"start with --no-web-ui"
+msgstr "A weboldal fájljai sérültek vagy hiányoznak (%s): telepítse újra a Tavlettát, vagy indítsa a --no-web-ui kapcsolóval"
+
+#: tavletta/server/main.py:180
 msgid "--oidc signs in to the web page: not with --no-web-ui"
 msgstr "--oidc a weboldalra való bejelentkezéshez kell: nem a --no-web-ui kapcsolóval"
 
-#: tavletta/server/main.py:167
+#: tavletta/server/main.py:187
 msgid ""
 "--oidc is not available in the Flatpak: install Tavletta from the deb or rpm "
 "package, the container image or with pip for it"
 msgstr "Az --oidc nem érhető el a Flatpakban: ehhez telepítse a Tavlettát a deb vagy rpm csomagból, a konténerképből vagy pip-pel"
 
-#: tavletta/server/main.py:173
+#: tavletta/server/main.py:193
 msgid ""
 "--oidc needs PyJWT with cryptography (python3-jwt, pip install "
 "tavletta[oidc])"
 msgstr "A --oidc kapcsolóhoz PyJWT kell cryptographyval (python3-jwt, pip install tavletta[oidc])"
 
-#: tavletta/server/main.py:210
+#: tavletta/server/main.py:230
 msgid ""
 "--oidc with --trusted-proxy needs public_url in the OIDC settings: the "
 "address people open the web page at"
 msgstr "Az --oidc a --trusted-proxy kapcsolóval public_url-t igényel az OIDC-beállításokban: azt a címet, ahol a weboldalt megnyitják"
 
-#: tavletta/server/main.py:349
+#: tavletta/server/main.py:369
 msgid "Not a valid name: letters, digits, . _ - (up to 64)"
 msgstr "Érvénytelen név: betűk, számjegyek, . _ - (legfeljebb 64)"
 
-#: tavletta/server/main.py:360
+#: tavletta/server/main.py:380
 #, python-format
 msgid "%s is in use by another program – try again later"
 msgstr "%s fájlt egy másik program használja – próbálja újra később"
 
-#: tavletta/server/main.py:367
+#: tavletta/server/main.py:387
 #, python-format
 msgid "The token %(name)s was added to %(file)s."
 msgstr "A(z) %(name)s token hozzáadva ehhez: %(file)s."
 
-#: tavletta/server/main.py:374
+#: tavletta/server/main.py:394
 #, python-format
 msgid "The token is shown only this once; %s keeps only its hash."
 msgstr "A token csak most, egyetlen alkalommal jelenik meg; a(z) %s csak a hash-ét tárolja."
 
-#: tavletta/server/main.py:385
+#: tavletta/server/main.py:405
 msgid "Access token: "
 msgstr "Hozzáférési token: "
 
-#: tavletta/server/main.py:400
+#: tavletta/server/main.py:420
 msgid "A chosen token must not look like a made one (tav_…)"
 msgstr "A választott token nem hasonlíthat egy létrehozottra (tav_…)"
 
-#: tavletta/server/main.py:450
+#: tavletta/server/main.py:470
 #, python-format
 msgid "A token named %s exists already"
 msgstr "Már létezik %s nevű token"
 
-#: tavletta/server/main.py:477
+#: tavletta/server/main.py:497
 #, python-format
 msgid "This token is in the file already, as %s"
 msgstr "Ez a token már szerepel a fájlban, %s néven"
@@ -3905,7 +3912,7 @@ msgstr "Ezen a nyomtatón legfeljebb %d példány"
 msgid "Printers are chosen by name: leave out host"
 msgstr "A nyomtatókat név szerint kell választani: hagyja el a host mezőt"
 
-#: tavletta/server/webui.py:71
+#: tavletta/server/webui.py:73
 msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
 msgstr "A Tavletta weboldalához JavaScript szükséges. A REST API a /api/v1 címen érhető el."
 

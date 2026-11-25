@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "A címkét nem sikerült törölni a címkemappából",
     "%s was changed while the request was checked – send it again": "A(z) %s megváltozott a kérés ellenőrzése közben – küldje el újra",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "A Tavletta weboldalához JavaScript szükséges. A REST API a /api/v1 címen érhető el.",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "A weboldal fájljai sérültek vagy hiányoznak (%s): telepítse újra a Tavlettát, vagy indítsa a --no-web-ui kapcsolóval",
 }

@@ -157,18 +157,26 @@ DOCS_LANGUAGES = frozenset(
         "zh_TW",
     }
 )
-# languages and regions that read the documentation of another one
-_DOCS_ALIASES = {"zh": "zh_CN", "zh_SG": "zh_CN", "zh_MO": "zh_HK"}
+# languages, regions and scripts that read the documentation of another one
+_DOCS_ALIASES = {
+    "zh": "zh_CN",
+    "zh_SG": "zh_CN",
+    "zh_MO": "zh_HK",
+    "zh_Hans": "zh_CN",
+    "zh_Hant": "zh_TW",
+}
 
 
 def docs_language(language: str) -> str:
     """The documentation's language for a gettext or BCP 47 language name:
-    the one of the region ("pt_BR", "zh_TW") if there is one, then the
-    language ("de_CH" -> "de", "pt_PT" -> "pt"), English otherwise."""
+    the one of the region ("pt_BR", "zh_TW") if there is one, else of the
+    script without a region ("zh-Hant" -> "zh_TW"), then the language
+    ("de_CH" -> "de", "pt_PT" -> "pt"), English otherwise."""
     base, *rest = language.split(".")[0].split("@")[0].replace("-", "_").split("_")
     base = base.lower()
     region = [part.upper() for part in rest if len(part) == 2][:1]
-    regional = "_".join([base] + region)
+    script = [part.title() for part in rest if len(part) == 4 and part.isalpha()][:1]
+    regional = "_".join([base] + (region or script))
     for name in (regional, base):
         name = _DOCS_ALIASES.get(name, name)
         if name in DOCS_LANGUAGES:

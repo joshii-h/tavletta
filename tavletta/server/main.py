@@ -121,6 +121,8 @@ def serve(args) -> int:
             % args.host,
             EXIT_USAGE,
         )
+    if not args.no_web_ui:
+        _check_web_page()
     _warm_up()
     service = _service(args, printers)
     config = Config(
@@ -145,6 +147,24 @@ def serve(args) -> int:
             EXIT_USAGE,
         ) from None
     return _run(server, service)
+
+
+def _check_web_page() -> None:
+    """The files of the web page, before anything is started: a damaged or
+    missing one is an error of the installation, said as one."""
+    from tavletta.server import webui
+
+    try:
+        webui.check()
+    except (RuntimeError, OSError) as e:
+        raise CliError(
+            _(
+                "The web page's files are damaged or missing (%s): reinstall Tavletta, "
+                "or start with --no-web-ui"
+            )
+            % e,
+            EXIT_FILE,
+        ) from None
 
 
 def _web_login(args, printers):

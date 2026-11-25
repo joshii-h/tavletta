@@ -620,15 +620,15 @@ packages, Flatpak). `--no-web-ui` turns it off.
   full. The result says when not all numbers from the first to the last
   label were printed.
 - **Languages**: every language of the app (`po/*.po`); the texts come
-  from its catalogs (`/ui/messages.json?lang=de`, by default in the
-  language of the browser; a region without a catalog takes the
-  language's, `zh-Hant` and `zh-MO` traditional Chinese), from the
-  compiled ones of the installation or, in a checkout, from `po/`
-  directly. Arabic is laid out right to left (`dir` of messages.json).
-  `/` itself comes in that language too (`/?lang=de`): its `lang` and
-  `dir`, and the note for browsers without JavaScript.
-  Numbers follow the page's language in the region the browser names
-  for it, German always Swiss as `2'686`. Times are on a 24-hour clock
+  from its catalogs (`/ui/messages.json?lang=de`, by default and for a
+  `lang` without a catalog in the language of the browser; a region
+  without a catalog takes the language's, `zh-Hant` and `zh-MO`
+  traditional Chinese), from the compiled ones of the installation or,
+  in a checkout, from `po/` directly. Arabic is laid out right to left
+  (`dir` of messages.json). `/` itself comes in that language too
+  (`/?lang=de`): its `lang` and `dir`, and the note for browsers without
+  JavaScript. Numbers follow the page's language in the region the
+  browser names for it, German always Swiss as `2'686`. Times are on a 24-hour clock
   in every language (`15:49`): browsers tell neither the system's clock
   setting nor its region, and English browsers say `en-US` wherever they
   are. The scripts' texts are

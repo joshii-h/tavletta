@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "无法从标签文件夹中删除标签",
     "%s was changed while the request was checked – send it again": "检查请求期间 %s 已被更改，请重新发送",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavletta 的网页需要 JavaScript。REST API 位于 /api/v1。",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "网页文件已损坏或缺失（%s）：请重新安装 Tavletta，或使用 --no-web-ui 启动",
 }

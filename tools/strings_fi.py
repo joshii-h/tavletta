@@ -1068,4 +1068,5 @@ TRANSLATIONS = {
     "The label could not be deleted from the labels folder": "Tarraa ei voitu poistaa tarrakansiosta",
     "%s was changed while the request was checked – send it again": "%s muuttui pyyntöä tarkistettaessa – lähetä se uudelleen",
     "Tavletta's web page needs JavaScript. The REST API is at /api/v1.": "Tavlettan verkkosivu tarvitsee JavaScriptin. REST API on osoitteessa /api/v1.",
+    "The web page's files are damaged or missing (%s): reinstall Tavletta, or start with --no-web-ui": "Verkkosivun tiedostot ovat vioittuneet tai puuttuvat (%s): asenna Tavletta uudelleen tai käynnistä se valitsimella --no-web-ui",
 }
