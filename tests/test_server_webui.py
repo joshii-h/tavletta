@@ -46,10 +46,9 @@ def test_the_page_is_served_without_a_token(base):
         assert response.getheader("Content-Security-Policy") == webui.CSP
 
 
-def test_the_page_comes_in_the_language_asked_for(base, monkeypatch):
+def test_the_page_comes_in_the_language_asked_for(base, checkout):
     """/ names its language and direction, and the note for browsers
     without JavaScript is translated."""
-    monkeypatch.setattr(webui, "languages", lambda: ("en", "ar", "de"))
     status, response, body = call(base, "GET", "/", headers={"Accept-Language": "de-CH"})
     assert status == 200 and response.getheader("Vary") == "Accept-Language"
     page = body.decode("utf-8")
@@ -63,15 +62,65 @@ def test_the_page_comes_in_the_language_asked_for(base, monkeypatch):
     assert "Tavletta&#x27;s web page needs JavaScript." in page
 
 
-def test_the_page_needs_its_markers(monkeypatch):
+def test_the_page_vary_keeps_the_origin(make_server):
+    """For an allowed origin the answer depends on Origin and on
+    Accept-Language: Vary names both."""
+    _server, url = make_server(token=TOKEN, mcp=False, origins=("https://app.example",))
+    headers = {"Origin": "https://app.example", "Accept-Language": "de"}
+    for path in ("/", "/ui/messages.json"):
+        status, response, _body = call(url, "GET", path, headers=headers)
+        assert status == 200
+        assert response.getheader("Access-Control-Allow-Origin") == "https://app.example"
+        assert response.getheader("Vary") == "Origin, Accept-Language"
+    response = call(url, "GET", "/ui/app.js", headers=headers)[1]
+    assert response.getheader("Vary") == "Origin"
+
+
+@pytest.fixture
+def index_html(monkeypatch):
+    """Serve another index.html: webui.asset with these bytes for it."""
+    real = webui.asset
+
+    def use(data: bytes) -> None:
+        page = webui.Asset(data, "text/html", '"x"')
+        monkeypatch.setattr(
+            webui, "asset", lambda name: page if name == "index.html" else real(name)
+        )
+
+    webui._page.cache_clear()
+    yield use
+    webui._page.cache_clear()
+
+
+@pytest.mark.parametrize(
+    "page",
+    [
+        b"<html><body></body></html>",
+        b'<html lang="en"><body><p class="noscript">JavaScript!</p></body></html>',
+        b'<html lang="en"><body><p class="noscript">%s</p><p class="noscript">%s</p></body></html>'
+        % ((webui.NOSCRIPT.encode(),) * 2),
+    ],
+    ids=["no markers", "another note", "the note twice"],
+)
+def test_the_page_needs_its_markers(index_html, make_server, page):
     """A changed index.html without the <html lang="en"> or the note is
-    noticed instead of served untranslated."""
-    webui._page.cache_clear()
-    plain = webui.Asset(b"<html><body></body></html>", "text/html", '"x"')
-    monkeypatch.setattr(webui, "asset", lambda name: plain)
+    noticed when the server starts, instead of served untranslated."""
+    index_html(page)
     with pytest.raises(RuntimeError):
-        webui._page("de")
-    webui._page.cache_clear()
+        webui.check()
+    with pytest.raises(RuntimeError):
+        make_server(token=TOKEN, mcp=False)
+    make_server(token=TOKEN, mcp=False, web_ui=False)  # without the page: no matter
+
+
+@pytest.mark.parametrize("apostrophe", [b"'", b"&#39;", b"&#x27;", b"&apos;"])
+def test_the_note_in_any_html_spelling(index_html, checkout, apostrophe):
+    note = webui.NOSCRIPT.encode().replace(b"'", apostrophe)
+    index_html(b'<html lang="en"><body><p class="noscript">%s</p></body></html>' % note)
+    webui.check()
+    page = webui.page("de", None).data.decode("utf-8")
+    assert '<html lang="de" dir="ltr">' in page
+    assert '<p class="noscript">Die Webseite von Tavletta braucht JavaScript.' in page
 
 
 def test_the_note_is_translated_everywhere():
@@ -164,6 +213,10 @@ def test_the_texts_come_in_the_language_asked_for(base, monkeypatch):
     assert body["language"] == "de" and body["languages"] == ["en", "de"]
     status, _response, body = call(base, "GET", "/ui/messages.json?lang=xx")
     assert body["language"] == "en"
+    # no catalog for ?lang=: Accept-Language decides
+    headers = {"Accept-Language": "de"}
+    status, _response, body = call(base, "GET", "/ui/messages.json?lang=xx", headers=headers)
+    assert body["language"] == "de"
     status, _response, body = call(base, "GET", "/ui/messages.json?lang=../../etc")
     assert body["language"] == "en"
 
@@ -177,6 +230,8 @@ def test_chosen_language(monkeypatch):
     assert webui.chosen_language(None, "fr, de;q=0.5") == "de"
     assert webui.chosen_language(None, "en, de") == "en"
     assert webui.chosen_language("<script>", "de") == "de"
+    assert webui.chosen_language("fr", "de") == "de"
+    assert webui.chosen_language("fr", "en, de") == "en"
     assert webui.chosen_language(None, None) == "en"
 
 
@@ -231,11 +286,12 @@ def checkout(monkeypatch, tmp_path):
     """No compiled catalog (an editable install): the po files of po/."""
     monkeypatch.setattr(webui, "LOCALE_DIR", tmp_path)
     monkeypatch.setattr(webui, "PO_DIR", PO_DIR)
-    webui.languages.cache_clear()
-    webui._messages.cache_clear()
+    caches = (webui.languages, webui._messages, webui._page)
+    for cached in caches:
+        cached.cache_clear()
     yield
-    webui.languages.cache_clear()
-    webui._messages.cache_clear()
+    for cached in caches:
+        cached.cache_clear()
 
 
 def test_every_catalog_of_the_app_is_offered(checkout):

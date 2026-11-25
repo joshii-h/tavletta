@@ -3907,7 +3907,7 @@ msgstr "تُختار الطابعات بالاسم: احذف host"
 
 #: tavletta/server/webui.py:71
 msgid "Tavletta's web page needs JavaScript. The REST API is at /api/v1."
-msgstr "تحتاج صفحة الويب الخاصة بـ Tavletta إلى JavaScript. واجهة REST API موجودة على /api/v1."
+msgstr "تحتاج صفحة الويب الخاصة بـ Tavletta إلى JavaScript. واجهة REST API موجودة على ⁨/api/v1⁩."
 
 #: tavletta/server/web/api.js:68 tavletta/server/web/app.js:561
 msgid "No connection to the server. Your input is kept."

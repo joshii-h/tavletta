@@ -14,9 +14,9 @@ Its texts are translated from the app's gettext catalogs:
 .js files, found when the server starts) in the language of ?lang= or
 Accept-Language, and the direction of its script. The page itself (/)
 comes in that language too: its lang and dir, and the note shown without
-JavaScript. Every catalog of the
-app is offered: the compiled ones of the installation, and in a checkout
-(an editable install has none compiled) po/<lang>.po read directly.
+JavaScript. Every catalog of the app is offered: the compiled ones of
+the installation, and in a checkout (an editable install has none
+compiled) po/<lang>.po read directly.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ import json
 import re
 from dataclasses import dataclass
 from functools import cache
-from html import escape
+from html import escape, unescape
 from pathlib import Path
 
 from tavletta.ui.i18n import LOCALE_DIR, N_, RTL_LANGUAGES, _, accepted_languages, language
@@ -67,8 +67,11 @@ _SCRIPT_REGION = {"hant": "zh-TW", "hans": "zh-CN"}
 # a language whose catalogs all have a region: the one for a region
 # without its own catalog, or none named
 _NEAREST = {"zh_MO": "zh_HK", "zh": "zh_CN"}
-# the one text of index.html itself, for browsers without JavaScript
+# the one text of index.html itself, for browsers without JavaScript: the
+# content of its <p class="noscript">, in any HTML spelling (&#39; or ')
 NOSCRIPT = N_("Tavletta's web page needs JavaScript. The REST API is at /api/v1.")
+_NOTE = re.compile(r'<p class="noscript">(.*?)</p>', re.DOTALL)
+_OPENING = '<html lang="en">'
 
 
 @dataclass(frozen=True)
@@ -128,13 +131,16 @@ def direction(code: str) -> str:
 
 
 def chosen_language(asked: str | None, header: str | None) -> str:
-    """The language of the page: ?lang= if there is a catalog for it, else
-    the first of Accept-Language there is one for, else English."""
+    """The language of the page: ?lang= if there is a catalog for it (or
+    for its language or nearest region), else the first of Accept-Language
+    there is one for, else English. A ?lang= without a catalog, or not a
+    language name, counts as none; English in Accept-Language ends the
+    search there ("en, de": English)."""
     available = languages()
     wanted = [asked.replace("-", "_")] if asked and _LANG.match(asked) else []
-    if not wanted and header:
+    if header:
         header = _SCRIPT.sub(lambda m: _SCRIPT_REGION[m.group(1).lower()], header)
-        wanted = accepted_languages(header) or ["en"]
+        wanted += accepted_languages(header) or ["en"]
     for code in wanted:
         if found := _catalog_for(code, available):
             return found
@@ -174,18 +180,28 @@ def page(asked: str | None, header: str | None) -> Asset | None:
     return _page(chosen_language(asked, header))
 
 
+def check() -> None:
+    """Raise RuntimeError if index.html lacks what its translation needs:
+    called when the server starts, so a changed file fails there and in
+    the tests, not with an error on each request for /."""
+    _page("en")
+
+
 @cache
 def _page(code: str) -> Asset | None:
     found = asset("index.html")
     if found is None:
         return None
     source = found.data.decode("utf-8")
-    opening, note = '<html lang="en">', escape(NOSCRIPT)
-    if source.count(opening) != 1 or source.count(note) != 1:
-        raise RuntimeError('index.html: no single <html lang="en"> or note without JavaScript')
-    lang = '<html lang="%s" dir="%s">' % (code.replace("_", "-"), direction(code))
+    notes = [m for m in _NOTE.finditer(source) if unescape(m.group(1)) == NOSCRIPT]
+    if source.count(_OPENING) != 1 or len(notes) != 1:
+        raise RuntimeError(
+            'index.html needs one <html lang="en"> and one <p class="noscript"> with NOSCRIPT'
+        )
+    start, end = notes[0].span(1)
     translated = escape(_translated(code, (NOSCRIPT,))[NOSCRIPT])
-    data = source.replace(opening, lang).replace(note, translated).encode("utf-8")
+    lang = '<html lang="%s" dir="%s">' % (code.replace("_", "-"), direction(code))
+    data = (source[:start] + translated + source[end:]).replace(_OPENING, lang).encode("utf-8")
     return Asset(data, found.kind, _etag(data))
 
 

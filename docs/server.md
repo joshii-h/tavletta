@@ -625,6 +625,8 @@ packages, Flatpak). `--no-web-ui` turns it off.
   language's, `zh-Hant` and `zh-MO` traditional Chinese), from the
   compiled ones of the installation or, in a checkout, from `po/`
   directly. Arabic is laid out right to left (`dir` of messages.json).
+  `/` itself comes in that language too (`/?lang=de`): its `lang` and
+  `dir`, and the note for browsers without JavaScript.
   Numbers follow the page's language in the region the browser names
   for it, German always Swiss as `2'686`. Times are on a 24-hour clock
   in every language (`15:49`): browsers tell neither the system's clock

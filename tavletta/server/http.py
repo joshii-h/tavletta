@@ -242,6 +242,8 @@ class Server(ThreadingHTTPServer):
         self.loopback = is_loopback(address)
         self.mcp = HttpTransport(Mcp(service)) if config.mcp else None
         self.web_ui = config.web_ui
+        if self.web_ui:
+            webui.check()
         self.rate_limit = RateLimit()  # wrong tokens
         self.exchange_limit = RateLimit(EXCHANGE_FAILURES)  # weblogin.Answer.exchange_failed
         self.parses = threading.BoundedSemaphore(PARSES)
@@ -990,7 +992,13 @@ class Handler(BaseHTTPRequestHandler):
         self, status: int, data: bytes, kind: str | None, headers: dict[str, str] | None = None
     ) -> None:
         self.send_response(status)
-        extra = dict(self._cors(), **(headers or {}))
+        extra = self._cors()
+        for key, value in (headers or {}).items():
+            # Vary names every header the answer depends on: Origin of
+            # CORS and Accept-Language of the web page, for example
+            if key == "Vary" and key in extra:
+                value = "%s, %s" % (extra[key], value)
+            extra[key] = value
         if kind:
             self.send_header("Content-Type", kind)
         for cookie in getattr(self, "set_cookies", []):
